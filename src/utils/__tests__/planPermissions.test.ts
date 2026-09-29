@@ -1,12 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  PLANS,
-  normalizePlan,
-  hasModuleAccess,
-  PLAN_LIMITS,
-  getPlanDefinition,
-  getPlanTierLevel
-} from '../planPermissions';
+import { PLANS, normalizePlan, hasModuleAccess, PLAN_LIMITS, getPlanDefinition, getPlanTierLevel } from '../planPermissions';
 
 describe('planPermissions - PROMO y PROMO+', () => {
   it('define correctamente el plan promo básico', () => {

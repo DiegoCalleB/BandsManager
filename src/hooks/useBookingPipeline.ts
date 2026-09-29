@@ -16,9 +16,9 @@ export function useBookingPipeline(leads: Lead[]) {
   }, [leads, searchQuery, statusFilter, typeFilter]);
 
   const scoredLeads = useMemo(() => {
-    return filteredLeads.map(lead => ({
+    return filteredLeads.map((lead) => ({
       ...lead,
-      qualityScore: calculateLeadScore(lead)
+      qualityScore: calculateLeadScore(lead),
     }));
   }, [filteredLeads]);
 

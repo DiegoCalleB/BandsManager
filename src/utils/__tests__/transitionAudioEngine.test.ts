@@ -4,7 +4,7 @@ import {
   getTransitionGains,
   diagnoseTransition,
   DEFAULT_TRANSITION_CONFIG,
-  resolveSongAudioUrl
+  resolveSongAudioUrl,
 } from '../transitionAudioEngine';
 import { Song } from '../../types';
 
@@ -15,7 +15,7 @@ describe('transitionAudioEngine', () => {
       fadeDurationSec: 5,
       tailDurationSec: 8,
       headDurationSec: 8,
-      pauseDurationSec: 2
+      pauseDurationSec: 2,
     });
 
     expect(timeline.songAStartSec).toBe(0);
@@ -33,7 +33,7 @@ describe('transitionAudioEngine', () => {
       fadeDurationSec: 5,
       tailDurationSec: 8,
       headDurationSec: 8,
-      pauseDurationSec: 2
+      pauseDurationSec: 2,
     });
 
     expect(timeline.songAStartSec).toBe(0);
@@ -51,7 +51,7 @@ describe('transitionAudioEngine', () => {
       fadeDurationSec: 5,
       tailDurationSec: 6,
       headDurationSec: 6,
-      pauseDurationSec: 3
+      pauseDurationSec: 3,
     });
 
     expect(timeline.songAStartSec).toBe(0);
@@ -67,7 +67,7 @@ describe('transitionAudioEngine', () => {
       fadeDurationSec: 4,
       tailDurationSec: 8,
       headDurationSec: 8,
-      pauseDurationSec: 2
+      pauseDurationSec: 2,
     };
     const timeline = computeTransitionTimeline(config);
 
@@ -100,7 +100,7 @@ describe('transitionAudioEngine', () => {
       tonalidad: 'Lam',
       bpm: 120,
       energia: 10,
-      duracionMinutos: 3
+      duracionMinutos: 3,
     };
 
     const songB: Song = {
@@ -110,7 +110,7 @@ describe('transitionAudioEngine', () => {
       tonalidad: 'Lam',
       bpm: 122,
       energia: 12,
-      duracionMinutos: 4
+      duracionMinutos: 4,
     };
 
     const diag = diagnoseTransition(songA, songB);
@@ -120,7 +120,7 @@ describe('transitionAudioEngine', () => {
     expect(diag.scorePercent).toBeGreaterThanOrEqual(90);
     expect(diag.verdict.status).toBe('excelente');
     expect(diag.porQueSi.length).toBeGreaterThan(0);
-    expect(diag.porQueSi.some(p => p.category === 'armonia')).toBe(true);
+    expect(diag.porQueSi.some((p) => p.category === 'armonia')).toBe(true);
     expect(diag.stageRecommendations.length).toBeGreaterThan(0);
   });
 
@@ -132,7 +132,7 @@ describe('transitionAudioEngine', () => {
       tonalidad: 'Do',
       bpm: 90,
       energia: 8,
-      duracionMinutos: 3
+      duracionMinutos: 3,
     };
 
     const songB: Song = {
@@ -142,7 +142,7 @@ describe('transitionAudioEngine', () => {
       tonalidad: 'Fa#', // Tritono en círculo de quintas (distancia 6 -> choque)
       bpm: 140, // Gran salto de tempo (+50 BPM)
       energia: 18,
-      duracionMinutos: 4
+      duracionMinutos: 4,
     };
 
     const diag = diagnoseTransition(songA, songB);
@@ -150,7 +150,7 @@ describe('transitionAudioEngine', () => {
     expect(diag.bpmDelta).toBe(50);
     expect(diag.recommendedStyle).toBe('pause');
     expect(diag.porQueNo.length).toBeGreaterThan(0);
-    expect(diag.porQueNo.some(c => c.severity === 'critico')).toBe(true);
+    expect(diag.porQueNo.some((c) => c.severity === 'critico')).toBe(true);
     expect(diag.verdict.status).toBe('desaconsejada');
     expect(diag.stageRecommendations.length).toBeGreaterThan(0);
     expect(diag.tips.length).toBeGreaterThan(0);
@@ -162,7 +162,7 @@ describe('transitionAudioEngine', () => {
       bandId: 'band-1',
       titulo: 'Tema 1',
       audioPrincipalUrl: 'https://example.com/audio.mp3',
-      duracionMinutos: 3
+      duracionMinutos: 3,
     };
     expect(resolveSongAudioUrl(songWithUrl)).toBe('https://example.com/audio.mp3');
 
@@ -171,7 +171,7 @@ describe('transitionAudioEngine', () => {
       bandId: 'band-1',
       titulo: 'Tema 2',
       audioIdeas: [{ id: 'idea-1', titulo: 'Solo', audioUrl: 'https://example.com/idea.mp3', tipo: 'guitarra' }],
-      duracionMinutos: 3
+      duracionMinutos: 3,
     };
     expect(resolveSongAudioUrl(songWithIdeas)).toBe('https://example.com/idea.mp3');
   });

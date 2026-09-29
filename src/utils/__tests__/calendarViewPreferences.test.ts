@@ -6,7 +6,7 @@ import {
   setCalendarDefaultMonths,
   isTwoMonthsDefault,
   getAllDevicePreferences,
-  syncCalendarPreferencesFromUser
+  syncCalendarPreferencesFromUser,
 } from '../calendarViewPreferences';
 
 describe('calendarViewPreferences: Configuración de vista 1M vs 2M en el calendario diferenciada por dispositivo', () => {
@@ -14,9 +14,15 @@ describe('calendarViewPreferences: Configuración de vista 1M vs 2M en el calend
 
   const mockLocalStorage = {
     getItem: (key: string) => storage[key] || null,
-    setItem: (key: string, val: string) => { storage[key] = val; },
-    removeItem: (key: string) => { delete storage[key]; },
-    clear: () => { storage = {}; },
+    setItem: (key: string, val: string) => {
+      storage[key] = val;
+    },
+    removeItem: (key: string) => {
+      delete storage[key];
+    },
+    clear: () => {
+      storage = {};
+    },
   };
 
   beforeEach(() => {
@@ -63,9 +69,9 @@ describe('calendarViewPreferences: Configuración de vista 1M vs 2M en el calend
       ui_preferences: {
         calendar_default_months: {
           mobile: '1',
-          desktop: '2'
-        }
-      }
+          desktop: '2',
+        },
+      },
     };
 
     syncCalendarPreferencesFromUser(mockUser);
@@ -79,4 +85,3 @@ describe('calendarViewPreferences: Configuración de vista 1M vs 2M en el calend
     expect(getCalendarDefaultMonths('mobile')).toBe('1');
   });
 });
-

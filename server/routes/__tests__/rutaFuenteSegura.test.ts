@@ -31,7 +31,7 @@ describe('rutaFuenteSegura', () => {
   it('rechaza lo que no sea una ruta', () => {
     expect(rutaFuenteSegura(undefined)).toBeNull();
     expect(rutaFuenteSegura('')).toBeNull();
-    expect(rutaFuenteSegura('   ')).toBeNull();
+    expect(rutaFuenteSegura( '  ')).toBeNull();
     expect(rutaFuenteSegura({ toString: () => '/etc/passwd' })).toBeNull();
   });
 
@@ -44,7 +44,7 @@ describe('rutaFuenteSegura', () => {
 describe('urlDeVideoValida', () => {
   it('acepta http y https', () => {
     expect(urlDeVideoValida('https://www.youtube.com/watch?v=abc')).toBe('https://www.youtube.com/watch?v=abc');
-    expect(urlDeVideoValida('  http://ejemplo.com/v.mp4  ')).toBe('http://ejemplo.com/v.mp4');
+    expect(urlDeVideoValida( 'http://ejemplo.com/v.mp4  ')).toBe('http://ejemplo.com/v.mp4');
   });
 
   it('RECHAZA esquemas que harían leer del disco del servidor', () => {

@@ -27,7 +27,7 @@ const NOTE_PREFIXES: Array<{ re: RegExp; pc: number }> = [
   { re: /^f/, pc: 5 },
   { re: /^g/, pc: 7 },
   { re: /^a/, pc: 9 },
-  { re: /^b/, pc: 11 }
+  { re: /^b/, pc: 11 },
 ];
 
 /**
@@ -41,7 +41,7 @@ export function parseTonalidad(tonalidad?: string | null): ParsedKey | null {
   const norm = tonalidad.trim().toLowerCase();
   if (!norm) return null;
 
-  const noteMatch = NOTE_PREFIXES.find(n => n.re.test(norm));
+  const noteMatch = NOTE_PREFIXES.find((n) => n.re.test(norm));
   if (!noteMatch) return null;
 
   let pc = noteMatch.pc;
@@ -80,7 +80,7 @@ export function tonalidadesSonFiables(songs: Array<Song | undefined>): boolean {
   const relevantes = songs.filter((s): s is Song => !!s && !!s.tonalidad && s.tonalidad.trim().length > 0);
   if (relevantes.length < 3) return false;
 
-  const enFallback = relevantes.filter(s => normalizarParaComparar(s.tonalidad) === TONALIDAD_FALLBACK).length;
+  const enFallback = relevantes.filter((s) => normalizarParaComparar(s.tonalidad) === TONALIDAD_FALLBACK).length;
   // Menos de la mitad en el valor por defecto: hay variedad real detrás.
   return enFallback / relevantes.length < 0.5;
 }
@@ -103,7 +103,7 @@ export type CompatibilidadArmonica = 'identica' | 'compatible' | 'neutra' | 'cho
 /**
  * Evalúa la transición armónica entre dos tonalidades consecutivas del setlist.
  * - identica/compatible: misma tonalidad, relativa mayor/menor, quinta adyacente, o "subida de
- *   tono" (mismo modo, +1/+2 semitonos — un recurso compositivo real, no un choque)
+ * tono" (mismo modo, +1/+2 semitonos — un recurso compositivo real, no un choque)
  * - neutra: relación intermedia, ni un enlace clásico ni claramente disonante — no se avisa
  * - choque: las tónicas están lejos en el círculo de quintas (nada en común), probable salto brusco
  */

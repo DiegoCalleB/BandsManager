@@ -19,7 +19,7 @@ describe('ExportLeadsModal Data Formatting', () => {
       genero: 'Rock / Ska',
       fuente: 'Scout',
       pitch_generado: 'Hola Sala Caracol, nos encantaría tocar...',
-      notas: 'Concierto confirmado para noviembre'
+      notas: 'Concierto confirmado para noviembre',
     },
     {
       id: 'lead-2',
@@ -37,14 +37,14 @@ describe('ExportLeadsModal Data Formatting', () => {
       genero: 'Mestizaje',
       fuente: 'Manual',
       pitch_generado: 'Hola Razzmatazz...',
-      notas: 'Respuesta pendiente'
-    }
+      notas: 'Respuesta pendiente',
+    },
   ];
 
   it('formatea celdas de CSV con comillas dobles y escapado seguro', () => {
     const cleanCsvCell = (val: any) => {
       if (val === undefined || val === null) return '""';
-      const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, ' ');
+      const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, '');
       return `"${str}"`;
     };
 
@@ -55,7 +55,7 @@ describe('ExportLeadsModal Data Formatting', () => {
 
   it('genera contenido CSV con prefijo UTF-8 BOM (\\uFEFF)', () => {
     const headers = ['ID', 'Nombre', 'Ciudad'];
-    const rows = mockLeads.map(l => `"${l.id}","${l.nombre_sala}","${l.ciudad}"`);
+    const rows = mockLeads.map((l) => `"${l.id}","${l.nombre_sala}","${l.ciudad}"`);
     const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
 
     expect(csvContent.startsWith('\uFEFF')).toBe(true);

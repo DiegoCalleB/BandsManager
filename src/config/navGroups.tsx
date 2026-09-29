@@ -1,10 +1,45 @@
 import type { LucideIcon } from 'lucide-react';
-import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Briefcase, Mic2 } from 'lucide-react';
+import {
+  LayoutGrid,
+  Building2,
+  Radio,
+  Users,
+  CalendarRange,
+  Truck,
+  BookOpen,
+  QrCode,
+  Video,
+  Disc3,
+  Guitar,
+  Coins,
+  Sparkles,
+  Clock,
+  Music,
+  Disc2,
+  Briefcase,
+  Mic2,
+} from 'lucide-react';
 
 export type NavItemId =
-  | 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'giras'
-  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'ensayos' | 'catalogo' | 'discografia' | 'chat' | 'finanzas' | 'merchan'
-  | 'metronome' | 'tuner';
+  | 'resumen'
+  | 'booking'
+  | 'medios'
+  | 'management'
+  | 'bandas'
+  | 'calendario'
+  | 'giras'
+  | 'epk'
+  | 'fans'
+  | 'reels'
+  | 'repertorio'
+  | 'ensayos'
+  | 'catalogo'
+  | 'discografia'
+  | 'chat'
+  | 'finanzas'
+  | 'merchan'
+  | 'metronome'
+  | 'tuner';
 
 export interface NavItemDef {
   id: NavItemId;
@@ -15,10 +50,10 @@ export interface NavItemDef {
 }
 
 // labelKey siempre resuelve contra el diccionario de LanguageContext (TRANSLATIONS['es']
-// define todas las claves 'nav.*' usadas aquí), así que labelDefault en la práctica solo
+// define todas las claves'nav.*' usadas aquí), así que labelDefault en la práctica solo
 // se usa si esa clave llegara a faltar del diccionario — mismo texto en los tres navs.
 export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
-  resumen: { id: 'resumen', icon: Table, labelKey: 'nav.resumen', labelDefault: 'Resumen' },
+  resumen: { id: 'resumen', icon: LayoutGrid, labelKey: 'nav.resumen', labelDefault: 'Dashboard' },
   booking: { id: 'booking', icon: Building2, labelKey: 'nav.booking', labelDefault: 'Escenarios' },
   medios: { id: 'medios', icon: Radio, labelKey: 'nav.medios', labelDefault: 'Medios' },
   management: { id: 'management', icon: Briefcase, labelKey: 'nav.management', labelDefault: 'Management' },
@@ -67,9 +102,9 @@ export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
  */
 export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
   {
-    id: 'contactos',
-    titleKey: 'navGroup.contactos',
-    titleDefault: 'Contactos',
+    id: 'directorio',
+    titleKey: 'navGroup.directorio',
+    titleDefault: 'Directorio',
     itemIds: ['booking', 'medios', 'management', 'bandas'],
   },
   {
@@ -104,9 +139,9 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
  */
 export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
   {
-    id: 'contactos',
-    titleKey: 'navGroup.contactos',
-    titleDefault: 'Contactos',
+    id: 'directorio',
+    titleKey: 'navGroup.directorio',
+    titleDefault: 'Directorio',
     itemIds: ['booking', 'medios', 'management', 'bandas'],
   },
   {
@@ -141,12 +176,27 @@ export const NAV_GROUPS = NAV_GROUPS_DESKTOP;
 /**
  * Orden plano actual del <aside> de escritorio y del drawer móvil. Se usa tal cual
  * cuando el plan no supera MIN_MODULES_FOR_GROUPED_NAV (hoy, solo `promo`), para no
- * cambiar nada visualmente en ese caso. Incluye 'repertorio' (no los 4 submódulos que
+ * cambiar nada visualmente en ese caso. Incluye'repertorio' (no los 4 submódulos que
  * solo aparecen en el grupo Música de la vista agrupada). metronome/tuner también
  * solo en vista agrupada.
  */
 export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
+  'resumen',
+  'booking',
+  'medios',
+  'management',
+  'bandas',
+  'calendario',
+  'giras',
+  'epk',
+  'fans',
+  'reels',
+  'repertorio',
+  'ensayos',
+  'discografia',
+  'chat',
+  'finanzas',
+  'merchan',
 ];
 
 /**
@@ -156,7 +206,22 @@ export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
  * sidebar — mantiene la lista de módulos principales para scroll horizontal.)
  */
 export const TOP_TABS_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
+  'resumen',
+  'booking',
+  'medios',
+  'management',
+  'calendario',
+  'bandas',
+  'giras',
+  'epk',
+  'fans',
+  'reels',
+  'repertorio',
+  'ensayos',
+  'discografia',
+  'chat',
+  'finanzas',
+  'merchan',
 ];
 
 // Todos los planes (incluyendo `promo` y `promo_plus`) agrupan sus secciones en el menú (Música, Promoción, etc.).
@@ -174,9 +239,9 @@ export function findNavGroupIdForItem(itemId: string): string | undefined {
 export interface BottomNavSlotDef {
   id: string;
   kind: 'view' | 'group' | 'more';
-  /** Solo para kind 'view' o vista inicial por defecto de 'group': navega directo a este NavItemId. */
+  /** Solo para kind'view' o vista inicial por defecto de'group': navega directo a este NavItemId. */
   itemId?: NavItemId;
-  /** Solo para kind 'group': abre un sheet con los itemIds de este NAV_GROUPS_MOBILE. */
+  /** Solo para kind'group': abre un sheet con los itemIds de este NAV_GROUPS_MOBILE. */
   groupId?: string;
   labelKey: string;
   labelDefault: string;

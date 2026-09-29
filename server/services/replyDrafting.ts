@@ -1,3 +1,4 @@
+import { findSemanticallySimilarPitches } from "./pitchVectorStore.js";
 // Lógica compartida de redacción de respuestas (el "Contestador"), extraída de
 // server/routes/leads/reply.ts para poder llamarla también desde el Agente Lector
 // (server/services/lectorAgent.ts) cuando detecta una respuesta real de una sala - así el
@@ -10,6 +11,8 @@ import { dbGetReplyFewShotThreads } from "../db/pitchLearning.js";
 import { dbGetAutonomyConfig } from "../db/autonomy.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
+import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
+import { getBandOperationalContext, evaluateIncomingTactics, type TacticalEvaluation } from "./agentIntelligence.js";
 
 // Palabras clave para detectar el tipo de respuesta entrante. Se comparten con lectorAgent.ts
 // (PALABRAS_NEGOCIACION) las que son específicamente de precio, para que ambos clasificadores no
@@ -164,6 +167,7 @@ export { matchesKeyword };
 export interface DraftReplyResult {
   draftReply: string;
   isSimulated: boolean;
+  sentimentAnalysis?: MessageSentimentAnalysis;
 }
 
 export async function generarBorradorRespuesta(
@@ -172,7 +176,8 @@ export async function generarBorradorRespuesta(
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
   provider?: string,
-  feedbackDetails?: string[]
+  feedbackDetails?: string[],
+  sentimentAnalysisInput?: MessageSentimentAnalysis
 ): Promise<DraftReplyResult> {
   const state = loadState();
   // Modo 'reply': lee reglas de estilo aprendidas del cubo de RESPUESTAS, no del de pitches
@@ -186,15 +191,30 @@ export async function generarBorradorRespuesta(
   // (detectPitchLanguage, según el país del lead), para que un lead italiano/francés/etc. no
   // caiga siempre en "neutral" solo porque las keywords fueran únicamente en español.
   const leadLanguage = detectPitchLanguage(lead);
-  const responseType = detectResponseType(incomingMessage, leadLanguage.code);
+  let responseType = detectResponseType(incomingMessage, leadLanguage.code);
   console.log(`[Contestador] Tipo de respuesta detectado: ${responseType} (idioma: ${leadLanguage.code})`);
+
+  // Analizar o reutilizar análisis de sentimiento
+  let sentimentAnalysis = sentimentAnalysisInput;
+  if (!sentimentAnalysis) {
+    try {
+      sentimentAnalysis = await analyzeIncomingMessageSentiment(incomingMessage, leadLanguage.code, {
+        name: lead?.nombre_sala,
+        city: lead?.ciudad,
+        tipo: lead?.tipo
+      });
+    } catch (err) {
+      console.warn("[Contestador] Fallo menor calculando análisis de sentimiento:", err);
+    }
+  }
 
   // Guía condicional configurada a mano por la banda para este tipo de respuesta (opcional -
   // ver AgentAutonomySettingsModal.tsx > "Estrategias de Respuesta"). Si no hay ninguna, cae a
   // la guía automática fija de código dentro de buildReplySystemPrompt.
   let responseStrategy = null;
+  let autonomyConfig: any = null;
   try {
-    const autonomyConfig = await dbGetAutonomyConfig(bandId);
+    autonomyConfig = await dbGetAutonomyConfig(bandId);
     if (autonomyConfig?.responseStrategies?.[responseType]) {
       responseStrategy = autonomyConfig.responseStrategies[responseType];
       console.log(`[Contestador] Usando estrategia configurada para: ${responseType}`);
@@ -207,11 +227,83 @@ export async function generarBorradorRespuesta(
   try {
     const threads = await dbGetReplyFewShotThreads(bandId, category, 2);
     replyFewShotSection = formatReplyFewShotForPrompt(threads);
+
+    // [RAG VECTORIAL]: Recuperar semánticamente objeciones o respuestas exitosas afines
+    const vectorCategory = responseType === "price_negotiation" 
+      ? "negociacion_cache" 
+      : (lead.tipo || category);
+
+    const vectorMatches = await findSemanticallySimilarPitches({
+      band_id: bandId,
+      lead: {
+        nombre_sala: lead.nombre_sala || "Sala",
+        tipo: vectorCategory,
+        ciudad: lead.ciudad,
+        notas: incomingMessage
+      },
+      matchCount: 2,
+      threshold: 0.1
+    });
+
+    if (vectorMatches.length > 0) {
+      const vectorLines = vectorMatches.map((m, idx) => {
+        return 'CASO ' + (idx + 1) + ' (' + m.nombre_sala + '):\n' + m.texto_pitch;
+      }).join('\n\n');
+      const vectorSection = '\nEJEMPLOS MAESTROS DE NEGOCIACIÓN Y RESPUESTA (RECUPERADOS POR RAG VECTORIAL):\n' + vectorLines;
+      replyFewShotSection = (replyFewShotSection ? replyFewShotSection + '\n' : '') + vectorSection;
+    }
   } catch (err) {
-    console.warn("Notice cargando ejemplos de respuesta para el Contestador:", err);
+    console.warn("Notice cargando ejemplos de respuesta RAG para el Contestador:", err);
   }
 
-  const systemPrompt = buildReplySystemPrompt(bandDna, lead, incomingMessage, threadSoFar, replyFewShotSection, responseType, responseStrategy, feedbackDetails);
+  // [AGENT INTELLIGENCE]: Obtener contexto operativo en tiempo real (Agenda / Gira / Conflictos de fecha)
+  let operationalContextPrompt = "";
+  try {
+    const opContext = await getBandOperationalContext(bandId, lead?.ciudad);
+    operationalContextPrompt = opContext.resumenTacticoParaPrompt;
+  } catch (err) {
+    console.warn("[Contestador] Notice cargando contexto operativo de agenda:", err);
+  }
+
+  // [TACTICAL EVALUATION]: Evaluación estructurada de intenciones y ofertas económicas
+  let tacticalEval: TacticalEvaluation | null = null;
+  try {
+    tacticalEval = await evaluateIncomingTactics(incomingMessage, {
+      name: lead?.nombre_sala,
+      city: lead?.ciudad,
+      tipo: lead?.tipo
+    });
+    if (tacticalEval) {
+      if (tacticalEval.intencion_sala === "contraoferta_precio" && responseType !== "price_negotiation") {
+        responseType = "price_negotiation";
+      }
+      operationalContextPrompt += `
+═════════════════════════════════════════════════════════════════════
+🎯 DIAGNÓSTICO TÁCTICO DE ÉLITE (IA AGÉNTICA):
+═════════════════════════════════════════════════════════════════════
+- Intención real detectada: ${tacticalEval.intencion_sala} (${tacticalEval.resumen_intencion})
+- Nivel de interés: ${tacticalEval.nivel_interes.toUpperCase()}
+${tacticalEval.propuesta_economica_sala_eur ? `- Oferta económica explícita de la sala: ${tacticalEval.propuesta_economica_sala_eur}€\n` : ""}${tacticalEval.fechas_mencionadas.length > 0 ? `- Fechas/ventanas mencionadas en el mensaje: ${tacticalEval.fechas_mencionadas.join(", ")}\n` : ""}- Acción táctica recomendada: ${tacticalEval.accion_estrategica_recomendada}
+`;
+    }
+  } catch (err) {
+    console.warn("[Contestador] Notice en evaluación táctica:", err);
+  }
+
+  const systemPrompt = buildReplySystemPrompt(
+    bandDna,
+    lead,
+    incomingMessage,
+    threadSoFar,
+    replyFewShotSection,
+    responseType,
+    responseStrategy,
+    feedbackDetails,
+    autonomyConfig?.minCacheByType,
+    autonomyConfig?.negotiationStartCacheByType,
+    sentimentAnalysis,
+    operationalContextPrompt
+  );
   const prompt = `Redacta la respuesta al mensaje entrante indicado en las instrucciones del sistema. Devuelve ÚNICAMENTE el cuerpo del email, sin asunto.`;
 
   const pitchLinks = { spotify: bandDna.spotifyUrl, youtube: bandDna.youtubeUrl, epk: bandDna.epkUrl };
@@ -237,7 +329,7 @@ export async function generarBorradorRespuesta(
     draftReply = generateFallbackReply(lead, incomingMessage, responseType);
   }
 
-  return { draftReply, isSimulated };
+  return { draftReply, isSimulated, sentimentAnalysis };
 }
 
 function generateFallbackReply(lead: any, incomingMessage: string, responseType: ResponseType): string {
@@ -246,18 +338,48 @@ function generateFallbackReply(lead: any, incomingMessage: string, responseType:
 
   switch (responseType) {
     case "confirmation":
-      return `Hola ${name},\n\nMuchas gracias por confirmarlo. Estamos muy emocionados de poder compartir escenario en ${sala}.\n\nQuedamos a vuestra disposición para cuadrar los últimos detalles técnicos y de producción.\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Muchas gracias por la propuesta, nos hace mucha ilusión la fecha en ${sala}.
+
+Para dejarla asegurada mientras cuadramos la logística de viaje y disponibilidad de los músicos, ¿os parece bien dejar la fecha en Pre-reserva (Hold) durante 48 horas? En cuanto lo tengamos coordinado os confirmo de inmediato para formalizar contrato y rider.
+
+Un abrazo,`;
 
     case "price_negotiation":
-      return `Hola ${name},\n\nGracias por vuestro interés. Disponemos de amplia flexibilidad en condiciones: taquilla compartida, caché fijo, o cualquier modelo que funcione mejor para ${sala}.\n\nOs envío en un mensaje posterior nuestra propuesta económica detallada.\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Gracias por la respuesta. Tenemos total flexibilidad en formato (taquilla compartida, fecha doble con banda local o acuerdo de caché) para adaptar el modelo a lo que mejor funcione en ${sala}.
+
+Si os parece, comentamos por aquí o en una breve llamada para ajustar la cifra según la fecha que tengáis libre.
+
+Un saludo,`;
 
     case "rejection":
-      return `Hola ${name},\n\nAgradecemos sinceramente vuestro tiempo y consideración. Esperamos poder colaborar en futuros proyectos.\n\n¡Mucho ánimo con la programación de ${sala}!\n\nUn saludo cordial,`;
+      return `Hola ${name},
+
+Muchas gracias por responder y por valorar la propuesta. Una lástima que no encaje esta vez, pero dejamos la puerta abierta para próximas giras.
+
+¡Mucha suerte con la programación de ${sala}!
+
+Un saludo,`;
 
     case "follow_up":
-      return `Hola ${name},\n\nEncantados de aclarar cualquier duda. Disponemos de toda la información en nuestro Dossier Oficial (enlace en la firma), pero con gusto respondemos a lo que necesitéis.\n\n¿Cuál es la mejor forma de ponernos en contacto para resolver esto?\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Encantados de comentar cualquier detalle. Tenemos el rider y dossier listos, y nos adaptamos a lo que mejor os venga.
+
+¿Cómo lo veis para hablarlo esta semana?
+
+Un saludo,`;
 
     default:
-      return `Hola ${name},\n\nMuchas gracias por vuestra respuesta. Nos encantaría seguir hablando para cuadrar los detalles.\n\n¿Cómo tenéis la agenda para coordinar una llamada o cerrar los últimos detalles?\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Muchas gracias por la respuesta. Seguimos a vuestra disposición para lo que necesitéis.
+
+¿Cómo os viene mejor que lo coordinemos?
+
+Un saludo,`;
   }
 }

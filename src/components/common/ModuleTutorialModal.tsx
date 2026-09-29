@@ -1,14 +1,36 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
-  X, ChevronLeft, ChevronRight, Check, BookOpen, Music, QrCode,
-  Calendar, Disc, FileText, Sliders, Sparkles, Share2, Mic,
-  Users, Smartphone, Radio, Layers, Zap, HelpCircle, Printer,
-  Target, MapPin, MousePointer, Maximize2, Minimize2
-} from 'lucide-react';
-import { ModuleTutorialConfig, ModuleTutorialId } from '../../types/tutorial';
-import { MODULE_TUTORIALS } from '../../config/moduleTutorials';
-import { ModalPortal } from './ModalPortal';
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  BookOpen,
+  Music,
+  QrCode,
+  Calendar,
+  Disc,
+  FileText,
+  Sliders,
+  Sparkles,
+  Share2,
+  Mic,
+  Users,
+  Smartphone,
+  Radio,
+  Layers,
+  Zap,
+  HelpCircle,
+  Printer,
+  Target,
+  MapPin,
+  MousePointer,
+  Maximize2,
+  Minimize2,
+} from "lucide-react";
+import { ModuleTutorialConfig, ModuleTutorialId } from "../../types/tutorial";
+import { MODULE_TUTORIALS } from "../../config/moduleTutorials";
+import { ModalPortal } from "./ModalPortal";
 
 interface ModuleTutorialModalProps {
   moduleId: ModuleTutorialId;
@@ -33,20 +55,21 @@ const ICON_MAP = {
   Layers,
   Zap,
   HelpCircle,
-  Printer
+  Printer,
 };
 
 export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
   moduleId,
   isOpen,
-  onClose
+  onClose,
 }) => {
-  const tutorialConfig: ModuleTutorialConfig | undefined = MODULE_TUTORIALS[moduleId];
+  const tutorialConfig: ModuleTutorialConfig | undefined =
+    MODULE_TUTORIALS[moduleId];
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [dontShowAgain, setDontShowAgain] = useState(true);
   const [isFloatingMode, setIsFloatingMode] = useState(true);
   const [isDesktop, setIsDesktop] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth >= 768 : true
+    typeof window !== "undefined" ? window.innerWidth >= 768 : true,
   );
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [targetFound, setTargetFound] = useState(false);
@@ -57,8 +80,8 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 768);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Reset step index and default directly to floating mode whenever modal opens
@@ -73,45 +96,54 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
   const currentStep = tutorialConfig?.steps[currentStepIndex];
 
   // Locate target element in the DOM and calculate its bounding box
-  const locateTargetElement = useCallback((shouldScroll = false) => {
-    if (!currentStep?.uiTarget?.selector) {
-      setTargetRect(null);
-      setTargetFound(false);
-      return null;
-    }
+  const locateTargetElement = useCallback(
+    (shouldScroll = false) => {
+      if (!currentStep?.uiTarget?.selector) {
+        setTargetRect(null);
+        setTargetFound(false);
+        return null;
+      }
 
-    const selectors = currentStep.uiTarget.selector.split(',').map(s => s.trim());
-    let el: Element | null = null;
-    for (const sel of selectors) {
-      try {
-        const found = document.querySelector(sel);
-        if (found) {
-          el = found;
-          break;
+      const selectors = currentStep.uiTarget.selector
+        .split(",")
+        .map((s) => s.trim());
+      let el: Element | null = null;
+      for (const sel of selectors) {
+        try {
+          const found = document.querySelector(sel);
+          if (found) {
+            el = found;
+            break;
+          }
+        } catch (err) {
+          // Ignore invalid selectors safely
         }
-      } catch (err) {
-        // Ignore invalid selectors safely
-      }
-    }
-
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      setTargetRect(rect);
-      setTargetFound(true);
-
-      if (shouldScroll) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
       }
 
-      setIsHighlighting(true);
-      setTimeout(() => setIsHighlighting(false), 2600);
-      return el;
-    } else {
-      setTargetRect(null);
-      setTargetFound(false);
-      return null;
-    }
-  }, [currentStep?.uiTarget?.selector]);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        setTargetRect(rect);
+        setTargetFound(true);
+
+        if (shouldScroll) {
+          el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
+        }
+
+        setIsHighlighting(true);
+        setTimeout(() => setIsHighlighting(false), 2600);
+        return el;
+      } else {
+        setTargetRect(null);
+        setTargetFound(false);
+        return null;
+      }
+    },
+    [currentStep?.uiTarget?.selector],
+  );
 
   // Monitor position and scroll to target when step changes or floating mode is active
   useEffect(() => {
@@ -125,39 +157,47 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       locateTargetElement(false);
     };
 
-    window.addEventListener('scroll', handleScrollOrResize, true);
-    window.addEventListener('resize', handleScrollOrResize);
+    window.addEventListener("scroll", handleScrollOrResize, true);
+    window.addEventListener("resize", handleScrollOrResize);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('scroll', handleScrollOrResize, true);
-      window.removeEventListener('resize', handleScrollOrResize);
+      window.removeEventListener("scroll", handleScrollOrResize, true);
+      window.removeEventListener("resize", handleScrollOrResize);
     };
-  }, [isOpen, currentStepIndex, effectiveFloatingMode, locateTargetElement, currentStep]);
+  }, [
+    isOpen,
+    currentStepIndex,
+    effectiveFloatingMode,
+    locateTargetElement,
+    currentStep,
+  ]);
 
   // Keyboard navigation: Escape to close, Left/Right arrows to step
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose(dontShowAgain);
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         e.preventDefault();
         handleNext();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         e.preventDefault();
         handlePrev();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   });
 
   // Reposicionar automáticamente la tarjeta flotante si coincide con la posición del elemento señalado en pantalla
-  const dockPosition = useMemo<'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'>(() => {
-    if (!targetRect || typeof window === 'undefined') return 'bottom-right';
+  const dockPosition = useMemo<
+    "bottom-right" | "bottom-left" | "top-right" | "top-left"
+  >(() => {
+    if (!targetRect || typeof window === "undefined") return "bottom-right";
 
     const winW = window.innerWidth;
     const winH = window.innerHeight;
@@ -165,7 +205,12 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
     const cardH = 490;
     const buffer = 40;
 
-    const checkCollision = (area: { left: number; right: number; top: number; bottom: number }) => {
+    const checkCollision = (area: {
+      left: number;
+      right: number;
+      top: number;
+      bottom: number;
+    }) => {
       return (
         targetRect.left - buffer < area.right &&
         targetRect.right + buffer > area.left &&
@@ -182,7 +227,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       bottom: winH,
     };
     if (!checkCollision(bottomRightArea)) {
-      return 'bottom-right';
+      return "bottom-right";
     }
 
     // 2. Si tapa el control en la esquina inferior derecha, mover a la esquina inferior izquierda
@@ -193,7 +238,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       bottom: winH,
     };
     if (!checkCollision(bottomLeftArea)) {
-      return 'bottom-left';
+      return "bottom-left";
     }
 
     // 3. Si ambos lados inferiores colisionan, mover a la esquina superior derecha
@@ -204,11 +249,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       bottom: cardH,
     };
     if (!checkCollision(topRightArea)) {
-      return 'top-right';
+      return "top-right";
     }
 
     // 4. Último recurso: esquina superior izquierda
-    return 'top-left';
+    return "top-left";
   }, [targetRect]);
 
   if (!isOpen || !tutorialConfig || !currentStep) return null;
@@ -221,80 +266,90 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
     if (isLastStep) {
       onClose(dontShowAgain);
     } else {
-      setCurrentStepIndex(prev => Math.min(totalSteps - 1, prev + 1));
+      setCurrentStepIndex((prev) => Math.min(totalSteps - 1, prev + 1));
     }
   };
 
   const handlePrev = () => {
-    setCurrentStepIndex(prev => Math.max(0, prev - 1));
+    setCurrentStepIndex((prev) => Math.max(0, prev - 1));
   };
 
   // Color accents based on module
   const accentStyles = {
     purple: {
-      badgeBg: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
-      iconBox: 'bg-purple-500/20 text-purple-400 border-purple-500/30 shadow-purple-500/10',
-      activeDot: 'bg-purple-400 w-7',
-      primaryBtn: 'bg-purple-600 hover:bg-purple-500 text-white shadow-purple-900/30',
-      hookBorder: 'border-purple-500/25 bg-purple-500/10 text-purple-100',
-      highlightText: 'text-purple-400',
-      targetCard: 'border-purple-500/40 bg-purple-500/5',
-      targetBadge: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-      targetBtn: 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/40'
+      badgeBg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80",
+      iconBox: "bg-[var(--tentative)]/20 text-[var(--acc)]/30",
+      activeDot: "bg-[var(--acc)] w-7",
+      primaryBtn:
+        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]",
+      hookBorder: "bg-[var(--tentative)]/10 text-[var(--ink)]",
+      highlightText: "text-[var(--acc)]",
+      targetCard: "bg-[var(--tentative)]/5",
+      targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
+      targetBtn:
+        "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80",
     },
     amber: {
-      badgeBg: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-      iconBox: 'bg-amber-500/20 text-amber-400 border-amber-500/30 shadow-amber-500/10',
-      activeDot: 'bg-amber-400 w-7',
-      primaryBtn: 'bg-amber-500 hover:bg-amber-400 text-stone-950 font-black shadow-amber-900/30',
-      hookBorder: 'border-amber-500/25 bg-amber-500/10 text-amber-100',
-      highlightText: 'text-amber-400',
-      targetCard: 'border-amber-500/40 bg-amber-500/5',
-      targetBadge: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-      targetBtn: 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40'
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 ",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--acc)] ",
+      activeDot: "bg-[var(--acc)]/60 w-7",
+      primaryBtn:
+        "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-black",
+      hookBorder: " bg-[var(--acc)]/10 text-[var(--acc)]",
+      highlightText: "text-[var(--acc)]",
+      targetCard: " bg-[var(--acc)]/5",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--acc)]/70 ",
+      targetBtn:
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 ",
     },
     blue: {
-      badgeBg: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
-      iconBox: 'bg-sky-500/20 text-sky-400 border-sky-500/30 shadow-sky-500/10',
-      activeDot: 'bg-sky-400 w-7',
-      primaryBtn: 'bg-sky-500 hover:bg-sky-400 text-stone-950 font-bold shadow-sky-900/30',
-      hookBorder: 'border-sky-500/25 bg-sky-500/10 text-sky-100',
-      highlightText: 'text-sky-400',
-      targetCard: 'border-sky-500/40 bg-sky-500/5',
-      targetBadge: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
-      targetBtn: 'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-sky-500/40'
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--ink-2)]/30",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
+      activeDot: "bg-[var(--tentative)] w-7",
+      primaryBtn:
+        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold",
+      hookBorder: "bg-[var(--acc)]/10 text-[var(--tentative)]/40",
+      highlightText: "text-[var(--ink-2)]",
+      targetCard: "bg-[var(--acc)]/5",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
+      targetBtn:
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-2)]/40",
     },
     emerald: {
-      badgeBg: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-      iconBox: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-emerald-500/10',
-      activeDot: 'bg-emerald-400 w-7',
-      primaryBtn: 'bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black shadow-emerald-900/30',
-      hookBorder: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-100',
-      highlightText: 'text-emerald-400',
-      targetCard: 'border-emerald-500/40 bg-emerald-500/5',
-      targetBadge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-      targetBtn: 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/40'
+      badgeBg: "bg-[var(--ok)]/15 text-[var(--ink-2)]/30",
+      iconBox: "bg-[var(--ok)]/20 text-[var(--ok)]/30",
+      activeDot: "bg-[var(--ok)] w-7",
+      primaryBtn:
+        "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black",
+      hookBorder: "bg-[var(--ok)]/10 text-[var(--ok)]/40",
+      highlightText: "text-[var(--ok)]",
+      targetCard: "bg-[var(--ok)]/5",
+      targetBadge: "bg-[var(--ok)]/20 text-[var(--ink-2)]/30",
+      targetBtn:
+        "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)]/40",
     },
     rose: {
-      badgeBg: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
-      iconBox: 'bg-rose-500/20 text-rose-400 border-rose-500/30 shadow-rose-500/10',
-      activeDot: 'bg-rose-400 w-7',
-      primaryBtn: 'bg-rose-500 hover:bg-rose-400 text-white font-bold shadow-rose-900/30',
-      hookBorder: 'border-rose-500/25 bg-rose-500/10 text-rose-100',
-      highlightText: 'text-rose-400',
-      targetCard: 'border-rose-500/40 bg-rose-500/5',
-      targetBadge: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-      targetBtn: 'bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border-rose-500/40'
-    }
+      badgeBg: "bg-[var(--alert)]/15 text-[var(--ink-2)]/30",
+      iconBox: "bg-[var(--alert)]/20 text-[var(--alert)]/30",
+      activeDot: "bg-[var(--alert)] w-7",
+      primaryBtn:
+        "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold",
+      hookBorder: "bg-[var(--alert)]/10 text-[var(--alert)]/40",
+      highlightText: "text-[var(--alert)]",
+      targetCard: "bg-[var(--alert)]/5",
+      targetBadge: "bg-[var(--alert)]/20 text-[var(--ink-2)]/30",
+      targetBtn:
+        "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]/40",
+    },
   }[tutorialConfig.accent];
 
   const CurrentIcon = ICON_MAP[currentStep.iconName] || BookOpen;
 
   const dockClass = {
-    'bottom-right': 'items-end justify-end',
-    'bottom-left': 'items-end justify-start',
-    'top-right': 'items-start justify-end',
-    'top-left': 'items-start justify-start',
+    "bottom-right": "items-end justify-end",
+    "bottom-left": "items-end justify-start",
+    "top-right": "items-start justify-end",
+    "top-left": "items-start justify-start",
   }[dockPosition];
 
   return (
@@ -303,7 +358,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       {targetRect && effectiveFloatingMode && (
         <div className="fixed inset-0 z-[9999] pointer-events-none">
           <div
-            className="absolute border-2 sm:border-3 border-amber-400 rounded-xl transition-all duration-300 shadow-[0_0_35px_rgba(251,191,36,0.75)] animate-pulse pointer-events-none"
+            className="absolute sm:border-3 rounded-[var(--r-m)] transition-all duration-300 pointer-events-none"
             style={{
               top: Math.max(0, targetRect.top - 4),
               left: Math.max(0, targetRect.left - 4),
@@ -313,26 +368,26 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           >
             {/* Corner Ping Beacon */}
             <span className="absolute -top-2 -right-2 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border border-slate-900"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
+              <span className="relative inline-flex rounded-[var(--r-pill)] h-4 w-4 bg-[var(--acc)]"></span>
             </span>
 
             {/* Target Tooltip Badge */}
-            <div 
-              className={`absolute ${targetRect.top < 36 ? '-bottom-7' : '-top-7'} left-0 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap`}
+            <div
+              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] flex items-center gap-1 whitespace-nowrap`}
             >
-              <span>👉 {currentStep.uiTarget?.label || 'Aquí'}</span>
+              <span>👉 {currentStep.uiTarget?.label || "Aquí"}</span>
             </div>
           </div>
         </div>
       )}
 
-      <div 
+      <div
         id={`tutorial-modal-overlay-${moduleId}`}
         className={
           effectiveFloatingMode
             ? `fixed inset-0 z-[10000] pointer-events-none p-3 sm:p-5 flex ${dockClass} transition-all duration-300`
-            : "fixed inset-0 z-[10000] bg-black/85 backdrop-blur-md flex items-center justify-center p-0 md:p-4 overflow-y-auto"
+            : "fixed inset-0 z-[10000] bg-[var(--scrim)]/85 flex items-center justify-center p-0 md:p-4 overflow-y-auto"
         }
         onClick={(e) => {
           if (!effectiveFloatingMode && e.target === e.currentTarget) {
@@ -346,20 +401,22 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 12 }}
-          transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+          transition={{ type: "spring", stiffness: 350, damping: 30 }}
           className={
             effectiveFloatingMode
-              ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[#131217]/95 backdrop-blur-md border-2 border-amber-500/50 rounded-2xl shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
-              : "relative w-full h-full md:h-auto md:max-w-xl bg-[#131217] border-0 md:border md:border-stone-800/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+              ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95  rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
+              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] md:border md:border-[var(--hair)]/90 rounded-none md:rounded-[var(--r-xl)] shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
           }
         >
           {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
-          <div className="p-3.5 sm:p-4 border-b border-stone-800/70 flex items-center justify-between bg-stone-900/50 shrink-0">
+          <div className="p-3.5 sm:p-4/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
             <div className="flex items-center gap-2">
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase border ${accentStyles.badgeBg}`}>
+              <span
+                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold ${accentStyles.badgeBg}`}
+              >
                 {tutorialConfig.badge}
               </span>
-              <span className="text-[11px] font-mono text-stone-400 hidden xs:inline">
+              <span className="text-[11px] font-sans text-[var(--ink-2)] hidden xs:inline">
                 Paso {currentStepIndex + 1}/{totalSteps}
               </span>
             </div>
@@ -376,17 +433,21 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                       setTimeout(() => locateTargetElement(true), 150);
                     }
                   }}
-                  className="p-1.5 px-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-stone-800/80 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
-                  title={isFloatingMode ? "Expandir a tarjeta centrada" : "Fijar como tarjeta flotante en esquina para ver la pantalla"}
+                  className="p-1.5 px-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-sans"
+                  title={
+                    isFloatingMode
+                      ? "Expandir a tarjeta centrada"
+                      : "Fijar como tarjeta flotante en esquina para ver la pantalla"
+                  }
                 >
                   {isFloatingMode ? (
                     <>
-                      <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                      <Maximize2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>Centrar</span>
                     </>
                   ) : (
                     <>
-                      <Minimize2 className="w-3.5 h-3.5 text-amber-400" />
+                      <Minimize2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>Flotante</span>
                     </>
                   )}
@@ -400,10 +461,10 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    className={`h-1.5 rounded-[var(--r-pill)] transition-all duration-300 cursor-pointer ${
                       idx === currentStepIndex
                         ? accentStyles.activeDot
-                        : 'w-1.5 bg-stone-700 hover:bg-stone-500'
+                        : "w-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]"
                     }`}
                     title={`Ir al paso ${idx + 1}`}
                   />
@@ -414,7 +475,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 id={`tutorial-close-btn-${moduleId}`}
                 type="button"
                 onClick={() => onClose(dontShowAgain)}
-                className="p-1.5 rounded-xl text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
+                className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
                 title="Cerrar guía (Esc)"
               >
                 <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -423,7 +484,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           </div>
 
           {/* MAIN STEP CONTENT */}
-          <div className={`p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 ${effectiveFloatingMode ? 'max-h-[60vh]' : 'max-h-none md:max-h-[70vh]'}`}>
+          <div
+            className={`p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 ${effectiveFloatingMode ? "max-h-[60vh]" : "max-h-none md:max-h-[70vh]"}`}
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep.id}
@@ -435,45 +498,49 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
               >
                 {/* Step Header with Icon */}
                 <div className="flex items-start gap-3">
-                  <div className={`p-2.5 rounded-xl border shadow-inner shrink-0 ${accentStyles.iconBox}`}>
+                  <div
+                    className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${accentStyles.iconBox}`}
+                  >
                     <CurrentIcon className="w-5 h-5" />
                   </div>
                   <div className="space-y-0.5 min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 font-semibold block">
+                    <span className="text-[10px] font-sans text-[var(--ink-2)] font-semibold block">
                       {currentStep.badge}
                     </span>
-                    <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-white leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-[var(--ink)] leading-snug">
                       {currentStep.title}
                     </h3>
                   </div>
                 </div>
 
                 {/* Practical Takeaway / Musician Hook */}
-                <div className={`p-3 rounded-xl border text-xs leading-relaxed font-sans ${accentStyles.hookBorder}`}>
-                  <p className="font-medium">
-                    {currentStep.musicianHook}
-                  </p>
+                <div
+                  className={`p-3 rounded-[var(--r-m)] text-xs leading-relaxed font-sans ${accentStyles.hookBorder}`}
+                >
+                  <p className="font-medium">{currentStep.musicianHook}</p>
                 </div>
 
                 {/* TARJETITA DE REFERENCIA AL BOTÓN O SECCIÓN EN LA APP */}
                 {currentStep.uiTarget && (
-                  <div className={`rounded-2xl border p-3.5 space-y-2.5 shadow-sm ${accentStyles.targetCard}`}>
+                  <div
+                    className={`rounded-[var(--r-l)] p-3.5 space-y-2.5 ${accentStyles.targetCard}`}
+                  >
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
+                          <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--acc)]"></span>
                         </span>
-                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-300">
-                          {currentStep.uiTarget.type === 'button'
-                            ? '🔘 Botón en pantalla'
-                            : currentStep.uiTarget.type === 'tab'
-                            ? '📑 Pestaña / Vista'
-                            : currentStep.uiTarget.type === 'menu'
-                            ? '⚙️ Menú de opciones'
-                            : currentStep.uiTarget.type === 'section'
-                            ? '📦 Bloque / Sección'
-                            : '🎯 Control en pantalla'}
+                        <span className="text-[10px] font-sans font-bold text-[var(--acc)]/70">
+                          {currentStep.uiTarget.type === "button"
+                            ? "🔘 Botón en pantalla"
+                            : currentStep.uiTarget.type === "tab"
+                              ? "📑 Pestaña / Vista"
+                              : currentStep.uiTarget.type === "menu"
+                                ? "⚙️ Menú de opciones"
+                                : currentStep.uiTarget.type === "section"
+                                  ? "📦 Bloque / Sección"
+                                  : "🎯 Control en pantalla"}
                         </span>
                       </div>
 
@@ -485,58 +552,72 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                             setIsFloatingMode(true);
                             setTimeout(() => locateTargetElement(true), 100);
                           }}
-                          className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-xs ${accentStyles.targetBtn}`}
+                          className={`text-[11px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer active:scale-95 ${accentStyles.targetBtn}`}
                           title="Fijar modo flotante y enfocar este elemento en la pantalla"
                         >
-                          <Target className="w-3.5 h-3.5 text-amber-400" />
+                          <Target className="w-3.5 h-3.5 text-[var(--acc)]" />
                           <span>Señalar en pantalla</span>
                         </button>
                       )}
                     </div>
 
                     {/* Nombre del elemento simulando botón o control */}
-                    <div className="flex items-center gap-2 p-2 rounded-xl bg-stone-950/90 border border-stone-800 text-xs shadow-inner">
-                      <span className="text-amber-400 font-mono font-black text-xs shrink-0">
-                        {currentStep.uiTarget.type === 'button' ? '▶' : '▪'}
+                    <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 text-xs">
+                      <span className="text-[var(--acc)] font-sans font-black text-xs shrink-0">
+                        {currentStep.uiTarget.type === "button" ? "▶" : "▪"}
                       </span>
-                      <span className="font-bold text-white font-mono truncate">
+                      <span className="font-bold text-[var(--ink)] font-sans truncate">
                         {currentStep.uiTarget.label}
                       </span>
                     </div>
 
                     {/* Ubicación y Para qué sirve */}
-                    <div className="grid grid-cols-1 gap-1.5 text-[11px] font-mono text-stone-300">
-                      <div className="flex items-start gap-1.5 text-stone-400">
-                        <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                        <span className="leading-tight"><strong className="text-stone-300 font-semibold">Dónde está:</strong> {currentStep.uiTarget.location}</span>
+                    <div className="grid grid-cols-1 gap-1.5 text-[11px] font-sans text-[var(--ink-2)]/80">
+                      <div className="flex items-start gap-1.5 text-[var(--ink-2)]">
+                        <MapPin className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
+                        <span className="leading-tight">
+                          <strong className="text-[var(--ink-2)]/80 font-semibold">
+                            Dónde está:
+                          </strong>{" "}
+                          {currentStep.uiTarget.location}
+                        </span>
                       </div>
-                      <div className="flex items-start gap-1.5 text-stone-400">
-                        <MousePointer className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                        <span className="leading-tight"><strong className="text-stone-300 font-semibold">Para qué sirve:</strong> {currentStep.uiTarget.actionHint}</span>
+                      <div className="flex items-start gap-1.5 text-[var(--ink-2)]">
+                        <MousePointer className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
+                        <span className="leading-tight">
+                          <strong className="text-[var(--ink-2)]/80 font-semibold">
+                            Para qué sirve:
+                          </strong>{" "}
+                          {currentStep.uiTarget.actionHint}
+                        </span>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Step Description */}
-                <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+                <p className="text-xs sm:text-sm text-[var(--ink-2)]/80 leading-relaxed">
                   {currentStep.description}
                 </p>
 
                 {/* Key takeaways pills / cards */}
-                <div className={`grid gap-2 pt-0.5 ${effectiveFloatingMode ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
+                <div
+                  className={`grid gap-2 pt-0.5 ${effectiveFloatingMode ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}
+                >
                   {currentStep.keyPoints.map((point, i) => (
-                    <div 
+                    <div
                       key={i}
-                      className="p-2.5 rounded-xl bg-stone-900/70 border border-stone-800/80 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
+                      className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex flex-col justify-between space-y-0.5 hover:bg-[var(--surface)] transition-colors"
                     >
                       <div className="flex items-center gap-1.5">
-                        <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />
-                        <h4 className="text-xs font-bold text-white font-mono">
+                        <Check
+                          className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`}
+                        />
+                        <h4 className="text-xs font-bold text-[var(--ink)] font-sans">
                           {point.title}
                         </h4>
                       </div>
-                      <p className="text-[11px] text-stone-400 leading-normal pl-5">
+                      <p className="text-[11px] text-[var(--ink-2)] leading-normal pl-5">
                         {point.desc}
                       </p>
                     </div>
@@ -547,17 +628,19 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           </div>
 
           {/* BOTTOM ACTIONS BAR */}
-          <div className="p-3.5 sm:p-4 border-t border-stone-800/80 bg-stone-950/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
+          <div className="p-3.5 sm:p-4/80 bg-[var(--bg)]/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
             {/* Don't show again toggle */}
-            <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-mono text-stone-400 hover:text-stone-300">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)]/80">
               <input
                 id={`tutorial-dont-show-again-checkbox-${moduleId}`}
                 type="checkbox"
                 checked={dontShowAgain}
                 onChange={(e) => setDontShowAgain(e.target.checked)}
-                className="rounded border-stone-700 bg-stone-900 text-amber-500 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
+                className="rounded bg-[var(--sunken)] text-[var(--acc)] focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
               />
-              <span className="truncate">No volver a abrir automáticamente</span>
+              <span className="truncate">
+                No volver a abrir automáticamente
+              </span>
             </label>
 
             {/* Nav buttons */}
@@ -567,7 +650,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                   id={`tutorial-prev-btn-${moduleId}`}
                   type="button"
                   onClick={handlePrev}
-                  className="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink)]/80 text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Anterior</span>
@@ -578,7 +661,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 id={`tutorial-next-btn-${moduleId}`}
                 type="button"
                 onClick={handleNext}
-                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-lg ${accentStyles.primaryBtn}`}
+                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 ${accentStyles.primaryBtn}`}
               >
                 {isLastStep ? (
                   <>

@@ -6,115 +6,108 @@ interface UseTonePitchShiftProps {
   semitones: number;
 }
 
+// Map to cache MediaElementAudioSourceNode per HTMLMediaElement to avoid InvalidStateError (can only create once per element)
+const mediaElementSourceMap = new WeakMap<HTMLMediaElement, MediaElementAudioSourceNode>();
+
+interface NodeRecord {
+  pitchShift: Tone.PitchShift;
+  limiter: Tone.Limiter;
+}
+
+// Map to cache PitchShift + Limiter chain per HTMLMediaElement
+const pitchShiftMap = new WeakMap<HTMLMediaElement, NodeRecord>();
+
+/**
+ * Hook to apply real-time pitch shifting (transposition) to an HTMLAudioElement using Tone.js / Web Audio API.
+ * Ensures smooth, uninterrupted playback when semitones change dynamically while audio is playing.
+ */
 export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShiftProps) {
-  const pitchShiftRef = useRef<Tone.PitchShift | null>(null);
-  const mediaSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const isConnectedRef = useRef<boolean>(false);
   const currentAudioElRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!audioElement) return;
+    currentAudioElRef.current = audioElement;
 
-    if (currentAudioElRef.current !== audioElement) {
-      currentAudioElRef.current = audioElement;
-      isConnectedRef.current = false;
-      mediaSourceRef.current = null;
+    // Ensure crossOrigin is set for Web Audio compatibility
+    if (!audioElement.crossOrigin) {
+      audioElement.crossOrigin = 'anonymous';
     }
 
-    if (semitones === 0) {
-      if (pitchShiftRef.current) {
-        pitchShiftRef.current.pitch = 0;
-      }
-      return;
-    }
-
-    const initAudioNode = async () => {
-      // createMediaElementSource() desconecta la salida NATIVA del <audio> en cuanto se llama, con
-      // éxito o no en lo que venga después — así que en cuanto lo invocamos, un fallo más adelante
-      // (Tone.start() que no resuelve, el nodo PitchShift que no llega a construirse, el connect()
-      // que lanza) deja la pista completamente muda el resto de la sesión, sin ningún indicio en
-      // pantalla. Por eso todo el intento vive en un try/catch con una red de seguridad: si algo
-      // falla, reconectamos el source ya capturado directamente al destino real del AudioContext,
-      // sin pasar por PitchShift — se pierde la trasposición de esa pista, pero nunca el sonido.
-      let rawAudioContext: AudioContext | null = null;
+    const syncAudioContextAndPitch = async () => {
       try {
+        const rawCtx = Tone.getContext().rawContext as AudioContext;
+
+        // Auto-resume AudioContext on user interaction if suspended
         if (Tone.getContext().state !== 'running') {
-          await Tone.start();
-        }
-        if (Tone.getContext().state !== 'running') {
-          throw new Error(`AudioContext sigue en estado "${Tone.getContext().state}" tras Tone.start() — el navegador puede estar bloqueando el audio hasta un gesto más directo del usuario.`);
-        }
-
-        rawAudioContext = Tone.getContext().rawContext as AudioContext;
-
-        if (!pitchShiftRef.current) {
-          const limiter = new Tone.Limiter(-1).toDestination();
-          pitchShiftRef.current = new Tone.PitchShift({
-            pitch: semitones,
-            windowSize: 0.08, // Ventana óptima de 80ms para mezclas musicales completas (elimina el comb-filtering metálico)
-            delayTime: 0,
-            feedback: 0
-          }).connect(limiter);
-        } else {
-          pitchShiftRef.current.pitch = semitones;
-        }
-
-        if (!mediaSourceRef.current && audioElement) {
-          if (!audioElement.crossOrigin) {
-            audioElement.crossOrigin = 'anonymous';
+          try {
+            await Tone.start();
+          } catch {
+            // may require user gesture
           }
-          const createSource = rawAudioContext.createMediaElementSource || (rawAudioContext as any).createMediaElementAudioSource;
-          mediaSourceRef.current = createSource.call(rawAudioContext, audioElement);
         }
 
-        if (!mediaSourceRef.current || !pitchShiftRef.current) {
-          throw new Error('No se pudo construir el nodo de trasposición o capturar la pista de audio.');
+        // Get or create MediaElementAudioSourceNode once for this HTMLAudioElement
+        let sourceNode = mediaElementSourceMap.get(audioElement);
+        if (!sourceNode) {
+          const createSource = rawCtx.createMediaElementSource || (rawCtx as any).createMediaElementAudioSource;
+          sourceNode = createSource.call(rawCtx, audioElement);
+          mediaElementSourceMap.set(audioElement, sourceNode);
         }
 
-        if (!isConnectedRef.current) {
-          Tone.connect(mediaSourceRef.current, pitchShiftRef.current);
-          isConnectedRef.current = true;
+        // Get or create Tone.PitchShift chain once for this HTMLAudioElement
+        let nodeRecord = pitchShiftMap.get(audioElement);
+        if (!nodeRecord) {
+          const limiter = new Tone.Limiter(-1).toDestination();
+          const pitchShift = new Tone.PitchShift({
+            pitch: semitones,
+            windowSize: 0.08, // 80ms window for optimal musical pitch shifting without comb-filtering
+            delayTime: 0,
+            feedback: 0,
+          }).connect(limiter);
+
+          Tone.connect(sourceNode, pitchShift);
+
+          nodeRecord = { pitchShift, limiter };
+          pitchShiftMap.set(audioElement, nodeRecord);
+        }
+
+        // Update pitch shift dynamically in real-time
+        if (nodeRecord) {
+          if (semitones === 0) {
+            nodeRecord.pitchShift.pitch = 0;
+            nodeRecord.pitchShift.wet.value = 0; // Pure dry pass-through when at 0 semitones
+          } else {
+            nodeRecord.pitchShift.wet.value = 1;
+            nodeRecord.pitchShift.pitch = semitones;
+          }
         }
       } catch (err) {
-        console.warn('[useTonePitchShift] AudioContext connect warning — se pierde la trasposición de esta pista, pero se intenta mantener el sonido:', err);
-        try {
-          if (mediaSourceRef.current && rawAudioContext) {
-            mediaSourceRef.current.disconnect();
-            mediaSourceRef.current.connect(rawAudioContext.destination);
-            isConnectedRef.current = true;
-          }
-        } catch (fallbackErr) {
-          console.warn('[useTonePitchShift] No se pudo reconectar la pista a la salida tras el fallo — puede quedar muda:', fallbackErr);
-        }
+        console.warn('[useTonePitchShift] Web Audio pitch shift notice:', err);
       }
     };
 
-    initAudioNode();
-  }, [audioElement, semitones]);
+    // Keep AudioContext active whenever audio plays
+    const handlePlay = () => {
+      if (Tone.getContext().state !== 'running') {
+        Tone.getContext()
+          .resume()
+          .catch(() => {});
+      }
+    };
 
-  useEffect(() => {
-    if (pitchShiftRef.current) {
-      pitchShiftRef.current.pitch = semitones;
-    }
-  }, [semitones]);
+    audioElement.addEventListener('play', handlePlay);
+    audioElement.addEventListener('playing', handlePlay);
 
-  useEffect(() => {
+    syncAudioContextAndPitch();
+
     return () => {
-      if (pitchShiftRef.current) {
-        try {
-          pitchShiftRef.current.dispose();
-        } catch {
-          // ignore
-        }
-        pitchShiftRef.current = null;
-      }
-      mediaSourceRef.current = null;
-      isConnectedRef.current = false;
+      audioElement.removeEventListener('play', handlePlay);
+      audioElement.removeEventListener('playing', handlePlay);
     };
-  }, []);
+  }, [audioElement, semitones]);
 
   return {
     semitones,
-    isToneActive: semitones !== 0 && isConnectedRef.current
+    isToneActive: semitones !== 0,
   };
 }

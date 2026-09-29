@@ -29,7 +29,7 @@ export function bufferToWavBlob(buffer: AudioBuffer): Blob {
   writeString('RIFF');
   setUint32(length - 8);
   writeString('WAVE');
-  writeString('fmt ');
+  writeString('fmt');
   setUint32(16);
   setUint16(1);
   setUint16(numOfChan);

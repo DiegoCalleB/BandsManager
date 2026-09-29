@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  isValidStatusTransition,
-  validateLeadConcurrency,
-  filterLeads
-} from '../sheetsUtils';
+import { isValidStatusTransition, validateLeadConcurrency, filterLeads } from '../sheetsUtils';
 import { Lead } from '../../types';
 
 describe('sheetsUtils', () => {
@@ -36,7 +32,7 @@ describe('sheetsUtils', () => {
       fuente: 'scout',
       estado: 'aprobado',
       pitch_generado: 'Hola Sala Caracol',
-      notas: ''
+      notas: '',
     };
 
     it('returns no conflict when expectedStatus matches database state', () => {
@@ -67,7 +63,7 @@ describe('sheetsUtils', () => {
         estado: 'pendiente_aprobacion',
         fuente: 'scout',
         pitch_generado: '',
-        notas: ''
+        notas: '',
       },
       {
         id: '2',
@@ -82,7 +78,7 @@ describe('sheetsUtils', () => {
         estado: 'aprobado',
         fuente: 'scout',
         pitch_generado: '',
-        notas: ''
+        notas: '',
       },
       {
         id: '3',
@@ -97,8 +93,8 @@ describe('sheetsUtils', () => {
         estado: 'interesado',
         fuente: 'manual',
         pitch_generado: '',
-        notas: ''
-      }
+        notas: '',
+      },
     ];
 
     it('filters leads by status', () => {

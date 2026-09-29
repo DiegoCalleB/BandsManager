@@ -101,15 +101,35 @@ export async function dbUpsertUser(user: any) {
   const targetBandId = cleanBandId(user.band_id || user.bandId);
   await ensureRegisteredBandExists(targetBandId, user.bandName || user.band_name);
 
+  const rawUsername = (user.username || user.email || "").trim();
+  const rawEmail = (user.email || user.username || "").trim();
+
+  // Comprobar si ya existe en Supabase un usuario con este username o email para reutilizar su ID
+  let resolvedId = user.id;
+  if (!resolvedId) {
+    try {
+      const { data: existingUser } = await sb
+        .from("users")
+        .select("id")
+        .or(`username.ilike.${rawUsername},email.ilike.${rawEmail}`)
+        .maybeSingle();
+      if (existingUser?.id) {
+        resolvedId = existingUser.id;
+      }
+    } catch {
+      // Continuar con ID generado si la consulta falla
+    }
+  }
+
   const payload: any = {
-    id: user.id || `user-${Date.now()}`,
-    username: user.username || user.email,
+    id: resolvedId || `user-${Date.now()}`,
+    username: rawUsername,
     name: user.name || user.username || "Usuario",
     role: user.role || "member",
     plan: normalizePlan(user.plan),
     band_name: user.bandName || user.band_name || "",
     band_id: targetBandId,
-    email: user.email || user.username || "",
+    email: rawEmail,
     instrument: user.instrument || "",
     avatar_color: user.avatarColor || user.avatar_color || "bg-amber-500",
     password_hash: user.passwordHash || user.password_hash || "",
@@ -120,7 +140,16 @@ export async function dbUpsertUser(user: any) {
     ui_preferences: user.ui_preferences || user.uiPreferences || {}
   };
 
-  const { data, error } = await sb.from("users").upsert(payload).select().single();
+  let res = await sb.from("users").upsert(payload).select().single();
+
+  // Si da error de clave única por username duplicado (por id distinto), actualizar directamente por username
+  if (res.error && res.error.message && res.error.message.includes('users_username_key')) {
+    const updatePayload = { ...payload };
+    delete updatePayload.id;
+    res = await sb.from("users").update(updatePayload).eq("username", rawUsername).select().single();
+  }
+
+  const { data, error } = res;
   if (error) {
     // If columns like band_order, main_band_id or ui_preferences are not yet migrated in Supabase table schema, fallback gracefully
     if (error.message && (error.message.includes('band_order') || error.message.includes('main_band_id') || error.message.includes('ui_preferences'))) {
@@ -128,8 +157,14 @@ export async function dbUpsertUser(user: any) {
       delete fallbackPayload.band_order;
       delete fallbackPayload.main_band_id;
       delete fallbackPayload.ui_preferences;
-      const { data: fbData, error: fbError } = await sb.from("users").upsert(fallbackPayload).select().single();
-      if (fbError) throw new Error(`Supabase Error (upsert user fallback): ${fbError.message}`);
+      let fbRes = await sb.from("users").upsert(fallbackPayload).select().single();
+      if (fbRes.error && fbRes.error.message && fbRes.error.message.includes('users_username_key')) {
+        const updateFbPayload = { ...fallbackPayload };
+        delete updateFbPayload.id;
+        fbRes = await sb.from("users").update(updateFbPayload).eq("username", rawUsername).select().single();
+      }
+      if (fbRes.error) throw new Error(`Supabase Error (upsert user fallback): ${fbRes.error.message}`);
+      const fbData = fbRes.data;
       return {
         ...fbData,
         bandName: fbData.band_name,

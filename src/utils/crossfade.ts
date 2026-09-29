@@ -16,10 +16,7 @@ export const CROSSFADE_SECONDS = 5;
  * (coseno/seno) para que el volumen percibido no caiga a mitad de camino, como pasaría con una
  * simple rampa lineal.
  */
-export function computeCrossfadeGains(
-  elapsedMs: number,
-  fadeDurationMs: number
-): { fromGain: number; toGain: number } {
+export function computeCrossfadeGains(elapsedMs: number, fadeDurationMs: number): { fromGain: number; toGain: number } {
   const t = fadeDurationMs > 0 ? Math.max(0, Math.min(1, elapsedMs / fadeDurationMs)) : 1;
   const angle = (t * Math.PI) / 2;
   return { fromGain: Math.cos(angle), toGain: Math.sin(angle) };

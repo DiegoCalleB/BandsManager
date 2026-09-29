@@ -1,5 +1,13 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, User } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  User,
+} from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { EmailMessage } from '../types';
 
@@ -64,10 +72,7 @@ getRedirectResult(auth)
   });
 
 // Initialize auth state listener
-export const initAuth = (
-  onAuthSuccess?: (user: User, token: string) => void,
-  onAuthFailure?: () => void
-) => {
+export const initAuth = (onAuthSuccess?: (user: User, token: string) => void, onAuthFailure?: () => void) => {
   return onAuthStateChanged(auth, async (user: User | null) => {
     const validToken = getStoredToken();
     if (user && validToken) {
@@ -130,7 +135,9 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
     }
 
     if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
-      throw new Error('El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.');
+      throw new Error(
+        'El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.'
+      );
     }
 
     if (errCode === 'auth/operation-not-allowed' || errMsg.includes('operation-not-allowed')) {
@@ -167,7 +174,7 @@ function decodeBase64Url(str: string): string {
     return decodeURIComponent(
       atob(base64)
         .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .map((c) => '% ' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
         .join('')
     );
   } catch (e) {
@@ -212,10 +219,7 @@ function getMessageBody(payload: any): string {
 }
 
 // Fetch messages from Gmail for a specific contact email
-export const fetchGmailThreadsForEmail = async (
-  email: string,
-  token: string
-): Promise<EmailMessage[]> => {
+export const fetchGmailThreadsForEmail = async (email: string, token: string): Promise<EmailMessage[]> => {
   if (!email || !token) return [];
 
   try {
@@ -255,14 +259,14 @@ export const fetchGmailThreadsForEmail = async (
       const headers = m.payload?.headers || [];
       const fromHeader = getHeader(headers, 'from');
       const subject = getHeader(headers, 'subject') || '(Sin Asunto)';
-      
+
       // Determine if sender is the lead (sala) or the band (banda)
       const isFromLead = fromHeader.toLowerCase().includes(email.toLowerCase());
       const remitente = isFromLead ? ('sala' as const) : ('banda' as const);
-      
+
       // Clean up sender name
       const cleanSender = fromHeader.replace(/<.*?>/, '').trim();
-      
+
       // Parse Date
       const dateHeader = getHeader(headers, 'date');
       let fechaFormatted = '';
@@ -312,10 +316,7 @@ function base64UrlEncode(str: string): string {
   for (let i = 0; i < bytes.byteLength; i++) {
     binary += String.fromCharCode(bytes[i]);
   }
-  return btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 export interface EmailAttachment {
@@ -358,9 +359,7 @@ export function buildRawMimeMessage(
 
     // Body Part
     mimeParts += `--${boundary}\r\n`;
-    mimeParts += isHtml
-      ? 'Content-Type: text/html; charset=UTF-8\r\n'
-      : 'Content-Type: text/plain; charset=UTF-8\r\n';
+    mimeParts += isHtml ? 'Content-Type: text/html; charset=UTF-8\r\n' : 'Content-Type: text/plain; charset=UTF-8\r\n';
     mimeParts += 'Content-Transfer-Encoding: 8bit\r\n\r\n';
     mimeParts += bodyContent + '\r\n\r\n';
 
@@ -383,11 +382,7 @@ export function buildRawMimeMessage(
     }
     headers.push(`Subject: =?UTF-8?B?${subjectB64}?=`);
     headers.push('MIME-Version: 1.0');
-    headers.push(
-      isHtml
-        ? 'Content-Type: text/html; charset=UTF-8'
-        : 'Content-Type: text/plain; charset=UTF-8'
-    );
+    headers.push(isHtml ? 'Content-Type: text/html; charset=UTF-8' : 'Content-Type: text/plain; charset=UTF-8');
 
     rawMime = headers.join('\r\n') + '\r\n\r\n' + bodyContent;
   }
@@ -416,15 +411,15 @@ export const createGmailDraft = async (
     method: 'POST',
     headers: {
       Authorization: `Bearer ${activeToken}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      message: { raw }
-    })
+      message: { raw },
+    }),
   });
 
   if (response.status === 401) {
-    console.warn("Gmail token expirado (401), reintentando actualización automática...");
+    console.warn('Gmail token expirado (401), reintentando actualización automática...');
     const authRes = await googleSignIn();
     if (authRes?.accessToken) {
       activeToken = authRes.accessToken;
@@ -432,11 +427,11 @@ export const createGmailDraft = async (
         method: 'POST',
         headers: {
           Authorization: `Bearer ${activeToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: { raw }
-        })
+          message: { raw },
+        }),
       });
     }
   }
@@ -470,13 +465,13 @@ export const sendGmailMessage = async (
     method: 'POST',
     headers: {
       Authorization: `Bearer ${activeToken}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ raw })
+    body: JSON.stringify({ raw }),
   });
 
   if (response.status === 401) {
-    console.warn("Gmail token expirado (401), reintentando actualización automática...");
+    console.warn('Gmail token expirado (401), reintentando actualización automática...');
     const authRes = await googleSignIn();
     if (authRes?.accessToken) {
       activeToken = authRes.accessToken;
@@ -484,9 +479,9 @@ export const sendGmailMessage = async (
         method: 'POST',
         headers: {
           Authorization: `Bearer ${activeToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ raw })
+        body: JSON.stringify({ raw }),
       });
     }
   }

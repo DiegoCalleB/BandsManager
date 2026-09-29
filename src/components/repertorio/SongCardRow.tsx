@@ -18,8 +18,15 @@ import {
   Volume2,
   Music,
   Check,
-  GripVertical
+  GripVertical,
+  Sparkles,
+  Cpu,
 } from 'lucide-react';
+import { hasIrisStems } from '../../utils/irisTracks';
+
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
 
 export interface SongCardRowProps {
   song: Song;
@@ -32,6 +39,7 @@ export interface SongCardRowProps {
   onOpenChords?: () => void;
   onOpenMemberNotes?: () => void;
   onOpenStudio?: () => void;
+  onOpenIris?: () => void;
   onEditSong?: () => void;
   onDeleteSong?: () => void;
   onShareSong?: () => void;
@@ -54,7 +62,6 @@ export interface SongCardRowProps {
   isDragging?: boolean;
   isDragOver?: boolean;
   colors?: ThemeColors;
-  isStitchLight?: boolean;
 }
 
 export const SongCardRow: React.FC<SongCardRowProps> = ({
@@ -68,6 +75,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   onOpenChords,
   onOpenMemberNotes,
   onOpenStudio,
+  onOpenIris,
   onEditSong,
   onDeleteSong,
   onShareSong,
@@ -90,7 +98,6 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   isDragging = false,
   isDragOver = false,
   colors,
-  isStitchLight = false,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -110,7 +117,11 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   const isPlaying = isPlayingCurrent && isPlayerPlaying;
   const displayTitle = formatSongTitle(song.titulo) || song.titulo;
   const albumLabel = song.albumDisco || song.album || 'Sin Disco';
-  const durationText = song.duracion || (song.duracionSegundos ? `${Math.floor(song.duracionSegundos / 60)}:${String(Math.floor(song.duracionSegundos % 60)).padStart(2, '0')}` : '—');
+  const durationText =
+    song.duracion ||
+    (song.duracionSegundos
+      ? `${Math.floor(song.duracionSegundos / 60)}:${String(Math.floor(song.duracionSegundos % 60)).padStart(2, '0')}`
+      : '—');
   const hasMemberNotes = song.notasMiembros && Object.values(song.notasMiembros).some((v) => typeof v === 'string' && v.trim().length > 0);
   const ideasCount = (song.audioIdeas || []).length;
   const isDriveAudio = (song.audioPrincipalUrl || '').includes('drive.google.com');
@@ -123,29 +134,23 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       onDragEnd={onDragEnd}
-      className={`group relative rounded-xl transition-all duration-150 border ${
+      className={`group relative rounded-[var(--r-m)] transition-all duration-150 ${
         isDragging
-          ? 'opacity-30 scale-[0.98] border-dashed border-emerald-500'
+          ? 'opacity-30 scale-[0.98]'
           : isDragOver
-          ? 'border-emerald-500 ring-2 ring-emerald-500/50 bg-emerald-500/10'
-          : isPlayingCurrent
-          ? isStitchLight
-            ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 shadow-sm ring-1 ring-emerald-400/30'
-            : 'bg-emerald-500/10 border-emerald-500/30 text-white shadow-sm ring-1 ring-emerald-500/20'
-          : isSelected
-          ? isStitchLight
-            ? 'bg-amber-50/80 border-amber-300 text-slate-900'
-            : 'bg-amber-500/10 border-amber-500/30 text-zinc-100'
-          : isStitchLight
-          ? 'bg-white hover:bg-slate-50 border-slate-200/80 text-slate-800 shadow-xs'
-          : 'bg-[#16161a]/90 hover:bg-[#1f1f24] border-neutral-800/80 hover:border-neutral-700 text-zinc-200 shadow-xs'
+            ? 'ring-2 ring-[var(--ok)]/50 bg-[var(--ok)]/10'
+            : isPlayingCurrent
+              ? 'bg-[var(--ok)]/10 text-[var(--ink)] ring-1 ring-[var(--ok)]/20'
+              : isSelected
+                ? 'bg-[var(--acc)]/10 text-[var(--ink)]'
+                : 'bg-[var(--sunken)] hover:bg-[var(--bg)] text-[var(--ink)]'
       } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
-      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto">
+      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto shrink-0">
         {/* Drag Handle (when draggable) */}
         {draggable && (
-          <div 
-            className="shrink-0 text-zinc-500 hover:text-zinc-300 cursor-grab active:cursor-grabbing -mr-0.5"
+          <div
+            className="shrink-0 text-[var(--ink-2)] hover:text-[var(--ink-2)] cursor-grab active:cursor-grabbing -mr-0.5"
             title="Arrastrar para reordenar canción"
           >
             <GripVertical className="w-4 h-4 opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -170,20 +175,18 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           <button
             type="button"
             onClick={onPlay}
-            className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+            className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-[var(--r-pill)] flex items-center justify-center transition-all cursor-pointer ${
               isPlaying
-                ? 'bg-emerald-500 text-black shadow-md scale-105'
-                : isStitchLight
-                ? 'bg-slate-100 hover:bg-emerald-500 text-slate-700 hover:text-black'
-                : 'bg-neutral-800 hover:bg-emerald-500 text-zinc-300 hover:text-black group-hover:scale-105 shadow-xs'
+                ? 'bg-[var(--ok)] text-[var(--ink)] scale-105'
+                : 'bg-[var(--surface)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
             title={isPlaying ? 'Pausar canción' : `Reproducir ${displayTitle}`}
           >
             {isPlaying ? (
               <div className="flex items-center gap-0.5">
-                <span className="w-0.5 h-3 bg-black rounded-full animate-pulse" />
-                <span className="w-0.5 h-4 bg-black rounded-full animate-pulse delay-75" />
-                <span className="w-0.5 h-2.5 bg-black rounded-full animate-pulse delay-150" />
+                <span className="w-0.5 h-3 bg-[var(--sunken)] rounded-[var(--r-pill)]" />
+                <span className="w-0.5 h-4 bg-[var(--sunken)] rounded-[var(--r-pill)] delay-75" />
+                <span className="w-0.5 h-2.5 bg-[var(--sunken)] rounded-[var(--r-pill)] delay-150" />
               </div>
             ) : (
               <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
@@ -193,15 +196,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
         {/* Optional Cover image (hidden on tiny screens if no cover) */}
         {song.portadaUrl ? (
-          <div className="hidden sm:block w-8.5 h-8.5 rounded-lg overflow-hidden shrink-0 border border-slate-700/60 shadow-xs">
+          <div className="hidden sm:block w-8.5 h-8.5 rounded-[var(--r-s)] overflow-hidden shrink-0">
             <img src={song.portadaUrl} alt={displayTitle} className="w-full h-full object-cover" />
           </div>
         ) : null}
 
         {/* Track Number display (subtle) */}
-        <span className="text-xs text-slate-500 w-4 shrink-0 text-center hidden md:inline-block font-medium">
-          {index}
-        </span>
+        <span className="text-xs text-[var(--ink-2)] w-4 shrink-0 text-center hidden md:inline-block font-medium">{index}</span>
 
         {/* Central Info: Title, Details & Badges */}
         <div
@@ -214,13 +215,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           <div className="flex items-center gap-2">
             <span
               className={`truncate text-xs sm:text-sm font-semibold tracking-tight ${
-                isPlayingCurrent
-                  ? isStitchLight
-                    ? 'text-emerald-900 font-bold'
-                    : 'text-emerald-400 font-bold'
-                  : isStitchLight
-                  ? 'text-slate-900 hover:text-indigo-600'
-                  : 'text-slate-100 group-hover:text-white'
+                isPlayingCurrent ? 'text-[var(--ok)] font-bold' : 'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
               }`}
               title={displayTitle}
             >
@@ -234,10 +229,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 e.stopPropagation();
                 onToggleFavorite();
               }}
-              className={`p-1 rounded-full transition-all cursor-pointer shrink-0 ${
+              className={`p-1 rounded-[var(--r-pill)] transition-all cursor-pointer shrink-0 ${
                 song.favoritoGeneral
-                  ? 'text-amber-400 hover:text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]'
-                  : 'text-slate-500 hover:text-amber-400 opacity-60 hover:opacity-100'
+                  ? 'text-[var(--acc)] hover:text-[var(--acc)]/70'
+                  : 'text-[var(--ink-2)] hover:text-[var(--acc)] opacity-60 hover:opacity-100'
               }`}
               title={song.favoritoGeneral ? 'Quitar de favoritas' : 'Marcar como favorita'}
             >
@@ -249,30 +244,26 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           <div className="flex items-center gap-1.5 sm:gap-2 mt-1 text-xs flex-wrap">
             {/* Tone & BPM pill */}
             <span
-              title={(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? 'Detectado automáticamente por Iris desde el audio' : undefined}
-              className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
-                isStitchLight
-                  ? 'bg-slate-100 text-slate-700 border border-slate-200'
-                  : 'bg-neutral-800/90 text-zinc-300 border border-neutral-700/70'
-              }`}
+              title={song.bpmDetectadoEn || song.tonalidadDetectadaEn ? 'Detectado automáticamente por Iris desde el audio' : undefined}
+              className="px-2 py-0.5 rounded-[var(--r-pill)] text-[11px] font-medium bg-[var(--surface)] text-[var(--ink-2)]"
             >
-              {song.tonalidad || '—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? ' 🤖' : ''}
+              {song.tonalidad || '—'}
+              {song.bpm ? ` • ${song.bpm} BPM` : ''}
+              {song.bpmDetectadoEn || song.tonalidadDetectadaEn ? '🤖' : ''}
             </span>
 
             {/* Duration */}
-            <span className="text-zinc-400 text-xs font-normal">
-              {durationText}
-            </span>
+            <span className="text-[var(--ink-2)] text-xs font-normal">{durationText}</span>
 
             {/* Status badge */}
             {song.estadoTema && (
               <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide ${
+                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-medium tracking-wide ${
                   song.estadoTema === 'listo'
-                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/25'
+                    ? 'bg-[var(--ok)]/15 text-[var(--ink-2)]'
                     : song.estadoTema === 'ensayando'
-                    ? 'bg-amber-500/15 text-amber-300 border border-amber-500/25'
-                    : 'bg-neutral-800 text-zinc-400 border border-neutral-700/50'
+                      ? 'bg-[var(--acc)]/15 text-[var(--acc)]/70'
+                      : 'bg-[var(--surface)]text-[var(--ink-2)]'
                 }`}
               >
                 {song.estadoTema === 'listo' ? 'Listo' : song.estadoTema === 'ensayando' ? 'Ensayando' : song.estadoTema}
@@ -281,7 +272,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
             {/* Album Badge (if displayed in full catalog mode) */}
             {showAlbumBadge && albumLabel !== 'Sin Disco' && (
-              <span className="hidden sm:inline-flex items-center gap-1 text-slate-400 text-xs max-w-[140px] truncate">
+              <span className="hidden sm:inline-flex items-center gap-1 text-[var(--ink-2)] text-xs max-w-[140px] truncate">
                 <span>•</span>
                 <span className="truncate">{albumLabel}</span>
               </span>
@@ -289,12 +280,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
             {/* Audio Indicator */}
             {song.audioPrincipalUrl ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink-2)]">
                 <Volume2 className="w-2.5 h-2.5" />
                 <span>{isDriveAudio ? 'Drive' : 'Audio'}</span>
               </span>
             ) : ideasCount > 0 ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">
+              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
                 <Headphones className="w-2.5 h-2.5" />
                 <span>{ideasCount} ideas</span>
               </span>
@@ -303,99 +294,52 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
           {/* Subtle Notes Preview (desktop only to save vertical mobile space) */}
           {song.notasInternas && (
-            <p className="hidden md:block text-[10px] text-neutral-500 line-clamp-1 italic mt-0.5 font-sans">
-              {song.notasInternas}
-            </p>
+            <p className="hidden md:block text-[10px] text-[var(--ink-2)] line-clamp-1 italic mt-0.5 font-sans">{song.notasInternas}</p>
           )}
         </div>
 
-        {/* Right Section: Direct Quick Actions + Overflow ⋯ Menu */}
+        {/* Right Section: Streamlined Quick Action + Overflow ⋯ Menu */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-1.5" onClick={(e) => e.stopPropagation()}>
-          {/* 1. Direct Acordes / Chords Button */}
-          {onOpenChords && (
-            <button
-              type="button"
-              onClick={onOpenChords}
-              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-medium items-center gap-1.5 transition-all cursor-pointer border ${
-                isStitchLight
-                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
-                  : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/25'
-              }`}
-              title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-xs">Acordes</span>
-            </button>
-          )}
-
-          {/* 2. Direct Studio Button */}
-          {onOpenStudio && (
+          {/* 1. Primary Direct Button: Studio (or Acordes if no studio) */}
+          {onOpenStudio ? (
             <button
               type="button"
               onClick={onOpenStudio}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                 ideasCount > 0
-                  ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border-amber-500/40 shadow-xs'
-                  : isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200'
-                  : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 border-neutral-700/80'
+                  ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--ink)]'
+                  : 'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]'
               }`}
               title="Abrir Studio de Grabación Multipista & Pistas"
             >
-              <Headphones className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <Headphones className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
               <span className="hidden xs:inline text-xs">Studio</span>
               {ideasCount > 0 && (
-                <span className="px-1.5 py-0.2 bg-amber-500/40 text-white rounded-full text-[10px] font-bold">
-                  {ideasCount}
-                </span>
+                <span className="px-1.5 py-0.2 bg-[var(--acc)]/40 text-[var(--ink)] rounded-[var(--r-pill)] text-[10px] font-bold">{ideasCount}</span>
               )}
             </button>
-          )}
-
-          {/* 3. Direct Member Notes Button */}
-          {onOpenMemberNotes && (
+          ) : onOpenChords ? (
             <button
               type="button"
-              onClick={onOpenMemberNotes}
-              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-medium items-center gap-1.5 transition-all cursor-pointer border ${
-                hasMemberNotes
-                  ? 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border-amber-500/30 shadow-xs'
-                  : isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
-                  : 'bg-neutral-800/80 hover:bg-neutral-700 text-zinc-400 hover:text-zinc-200 border-neutral-700/70'
+              onClick={onOpenChords}
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] '
               }`}
-              title="Ver y editar notas específicas por miembro de la banda"
+              title="Ver cifrado de acordes, armonía y letra"
             >
-              <Users className={`w-3.5 h-3.5 ${hasMemberNotes ? 'text-amber-400' : 'text-zinc-400'}`} />
-              <span className="hidden md:inline text-xs">Notas</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span className="hidden xs:inline text-xs">Acordes</span>
             </button>
-          )}
+          ) : null}
 
-          {/* 4. Direct Edit Song Button */}
-          {onEditSong && (
-            <button
-              type="button"
-              onClick={onEditSong}
-              className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-lg text-xs font-medium items-center gap-1.5 transition-all cursor-pointer border ${
-                isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
-                  : 'bg-neutral-800/80 hover:bg-neutral-700 text-zinc-400 hover:text-zinc-100 border-neutral-700/70'
-              }`}
-              title="Editar canción (título, tonalidad, BPM, afinación, disco...)"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline text-xs">Editar</span>
-            </button>
-          )}
-
-          {/* Reorder Buttons (alternative to drag & drop for accessibility) */}
+          {/* Reorder Buttons (alternative to drag & drop) */}
           {showReorder && (
             <div className="hidden sm:flex flex-col">
               <button
                 type="button"
                 disabled={!canMoveUp}
                 onClick={onMoveUp}
-                className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
+                className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 cursor-pointer disabled:cursor-default"
                 title="Subir orden"
               >
                 <ArrowUp className="w-3 h-3" />
@@ -404,7 +348,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 type="button"
                 disabled={!canMoveDown}
                 onClick={onMoveDown}
-                className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
+                className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 cursor-pointer disabled:cursor-default"
                 title="Bajar orden"
               >
                 <ArrowDown className="w-3 h-3" />
@@ -417,14 +361,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={() => setShowMenu((prev) => !prev)}
-              className={`p-1.5 rounded-lg transition-all cursor-pointer border ${
+              className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer ${
                 showMenu
-                  ? 'bg-slate-700 text-white border-slate-600'
-                  : isStitchLight
-                  ? 'text-slate-600 hover:bg-slate-100 border-transparent hover:border-slate-200'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/80 border-transparent'
+                  ? 'bg-[var(--surface)] text-[var(--ink)]'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
               }`}
-              title="Más opciones del tema"
+              title="Opciones de la canción"
               aria-label="Más opciones"
             >
               <MoreVertical className="w-4 h-4" />
@@ -433,42 +375,51 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             {/* Menu Popover */}
             {showMenu && (
               <div
-                className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-xl p-1.5 shadow-2xl border text-xs backdrop-blur-md ${
-                  isStitchLight
-                    ? 'bg-white border-slate-200 text-slate-800 divide-y divide-slate-100'
-                    : 'bg-slate-900/95 border-slate-700/80 text-slate-200 divide-y divide-slate-800/60'
-                }`}
+                className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
               >
                 <div className="py-1 space-y-0.5">
-                  {/* Acordes / Notas / Editar: solo en móvil, en escritorio ya son botones directos */}
+                  {/* Acordes */}
                   {onOpenChords && (
                     <button
                       type="button"
-                      onClick={() => { setShowMenu(false); onOpenChords(); }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                      onClick={() => {
+                        setShowMenu(false);
+                        onOpenChords();
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      <span>Ver Acordes</span>
+                      <span>Ver Acordes y Letra</span>
                     </button>
                   )}
-                  {onOpenMemberNotes && (
-                    <button
-                      type="button"
-                      onClick={() => { setShowMenu(false); onOpenMemberNotes(); }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
-                    >
-                      <Users className="w-3.5 h-3.5" />
-                      <span>Notas por Miembro</span>
-                    </button>
-                  )}
+
+                  {/* Editar Canción */}
                   {onEditSong && (
                     <button
                       type="button"
-                      onClick={() => { setShowMenu(false); onEditSong(); }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-zinc-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                      onClick={() => {
+                        setShowMenu(false);
+                        onEditSong();
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                     >
-                      <Edit3 className="w-3.5 h-3.5" />
+                      <Edit3 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Editar Canción</span>
+                    </button>
+                  )}
+
+                  {/* Member Notes */}
+                  {onOpenMemberNotes && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        onOpenMemberNotes();
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-m)] hover:bg-[var(--acc)]/15 text-[var(--acc)] transition-colors flex items-center gap-2 cursor-pointer font-medium"
+                    >
+                      <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
+                      <span>Notas por Miembro</span>
                     </button>
                   )}
 
@@ -480,10 +431,26 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onOpenStudio();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-500/20 text-indigo-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/50 transition-colors flex items-center gap-2 cursor-pointer font-bold"
                     >
-                      <Headphones className="w-3.5 h-3.5 text-indigo-400" />
+                      <Headphones className="w-3.5 h-3.5 text-[var(--tentative)]" />
                       <span>Abrir Studio / Grabadora</span>
+                    </button>
+                  )}
+
+                  {/* Iris Stem Separator */}
+                  {(onOpenIris || onOpenStudio) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        if (onOpenIris) onOpenIris();
+                        else if (onOpenStudio) onOpenStudio();
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
+                      <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris' : '✨ Separar Stems con Iris'}</span>
                     </button>
                   )}
 
@@ -495,7 +462,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onShareSong();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                       <span>Compartir por WhatsApp</span>
@@ -509,9 +476,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       target="_blank"
                       rel="noreferrer"
                       onClick={() => setShowMenu(false)}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer"
                     >
-                      <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+                      <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Partitura / Enlace</span>
                     </a>
                   )}
@@ -526,9 +493,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                             setShowMenu(false);
                             onMoveUp();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                         >
-                          <ArrowUp className="w-3.5 h-3.5 text-neutral-400" />
+                          <ArrowUp className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                           <span>Mover arriba</span>
                         </button>
                       )}
@@ -539,9 +506,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                             setShowMenu(false);
                             onMoveDown();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                         >
-                          <ArrowDown className="w-3.5 h-3.5 text-neutral-400" />
+                          <ArrowDown className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                           <span>Mover abajo</span>
                         </button>
                       )}
@@ -558,7 +525,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onDeleteSong();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-500/20 text-rose-400 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Eliminar Canción</span>

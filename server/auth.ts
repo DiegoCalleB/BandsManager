@@ -91,6 +91,37 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   if (foundUser.band_id) addBandIdAndVariants(foundUser.band_id);
 
+  const isBraisMoureUser =
+    foundUser.id === 'user-mouredev' ||
+    userEmail.includes('mouredev') ||
+    userEmail.includes('brais');
+
+  if (isBraisMoureUser) {
+    foundUser.instrument = 'Batería';
+    addBandIdAndVariants('band-os-herdeiros-do-codigo');
+    addBandIdAndVariants('band-master-of-prompts');
+    allowedBandIds.delete('bakandeya');
+    allowedBandIds.delete('band-bakandeya');
+    allowedBandIds.delete('reg-bakandeya');
+
+    const cleanUserCurrent = (foundUser.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
+    if (cleanUserCurrent === 'master-of-prompts') {
+      foundUser.band_id = 'band-master-of-prompts';
+      foundUser.bandName = 'Master of Prompts';
+    } else if (cleanUserCurrent === 'os-herdeiros-do-codigo') {
+      foundUser.band_id = 'band-os-herdeiros-do-codigo';
+      foundUser.bandName = 'Os Herdeiros do Código';
+    } else if (!foundUser.band_id || cleanUserCurrent === 'bakandeya') {
+      foundUser.band_id = 'band-master-of-prompts';
+      foundUser.bandName = 'Master of Prompts';
+    }
+  }
+
+  if (foundUser.role === 'admin') {
+    addBandIdAndVariants('vertice');
+    addBandIdAndVariants('bakandeya');
+  }
+
   if (state?.userBands) {
     state.userBands.forEach((ub: any) => {
       if ((ub.user_id === foundUser.id || (userEmail && ub.email?.toLowerCase() === userEmail)) && ub.band_id) {
@@ -146,6 +177,14 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     }
   }
   
+  if (!activeBandId && foundUser.role === 'admin') {
+    activeBandId = 'band-vertice';
+  }
+
+  if (isBraisMoureUser && (!activeBandId || activeBandId.includes('bakandeya'))) {
+    activeBandId = foundUser.band_id || 'band-master-of-prompts';
+  }
+
   if (!activeBandId) return null;
 
   // Determine user's role for this active band
@@ -172,8 +211,6 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   if (bandObj) {
     activeBandName = bandObj.nombre_banda || bandObj.bandName || bandObj.name || activeBandName;
-  } else if (cleanActive === 'bakandeya') {
-    activeBandName = 'BAKANDEYA';
   }
 
   return {

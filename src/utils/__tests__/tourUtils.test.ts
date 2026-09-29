@@ -5,7 +5,7 @@ import {
   calculateDrivingTimeHours,
   calculateTourSummary,
   TourStop,
-  TourVehicle
+  TourVehicle,
 } from '../tourUtils';
 
 describe('tourUtils', () => {
@@ -28,14 +28,14 @@ describe('tourUtils', () => {
           id: 'v1',
           nombre: 'Furgoneta Sprinter',
           consumoL100km: 10,
-          precioCarburanteEUR: 1.50
+          precioCarburanteEUR: 1.5,
         },
         {
           id: 'v2',
           nombre: 'Turismo Coche Apoyo',
           consumoL100km: 6,
-          precioCarburanteEUR: 1.60
-        }
+          precioCarburanteEUR: 1.6,
+        },
       ];
 
       // Distance 200 km:
@@ -68,7 +68,7 @@ describe('tourUtils', () => {
           gastosGasolina: 63,
           gastosAlojamiento: 120,
           gastosDietas: 80,
-          ingresoCacheEstimated: 800
+          ingresoCacheEstimated: 800,
         },
         {
           ciudad: 'Barcelona',
@@ -76,8 +76,8 @@ describe('tourUtils', () => {
           gastosGasolina: 112,
           gastosAlojamiento: 150,
           gastosDietas: 100,
-          ingresoCacheEstimated: 1200
-        }
+          ingresoCacheEstimated: 1200,
+        },
       ];
 
       const summary = calculateTourSummary(stops);
@@ -96,7 +96,7 @@ describe('tourUtils', () => {
         totalGastos: 0,
         totalIngresos: 0,
         beneficioNeto: 0,
-        margenPorcentaje: 0
+        margenPorcentaje: 0,
       });
     });
   });

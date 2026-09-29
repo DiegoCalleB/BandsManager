@@ -59,36 +59,59 @@ export function buildTemplateOptimizationPrompt(params: {
 }): string {
   const categoryLabel = CATEGORY_LABELS[params.category] || params.category || "General";
 
-  return `Eres el Especialista Director de Redacción de la banda "${params.bandName}" (${params.bandBio || "banda de música en directo"}).
-Tu tarea es REGENERAR Y OPTIMIZAR la plantilla de correo por defecto y sus pautas de IA para la categoría: "${categoryLabel}".
+  return `Eres el Director Estratégico de Booking y Redacción de la banda "${params.bandName}" (${params.bandBio || "banda de música en directo"}).
+Tu objetivo es REGENERAR Y PERFECCIONAR la plantilla de correo maestro (Blueprint) y sus pautas de IA para la categoría: "${categoryLabel}".
+
+================================================================================
+REGLAS MAESTRAS DE ORO PARA PLANTILLAS DE BOOKING (NIVEL ÉLITE):
+================================================================================
+1. DIFERENCIA CRUCIAL ENTRE "PLANTILLA" Y "PITCH FINAL":
+   - Esta plantilla es un BLUEPRINT ESTRUCTURAL REUTILIZABLE para toda la categoría, NO un correo para una fecha cerrada puntual.
+   - Debe contener variables dinámicas bien situadas: {{nombre_sala}}, {{ciudad}}, {{website}}, etc.
+   - NUNCA incluyas fechas fijas cerradas (ej: "el 4 de diciembre" o "el puente"), usa conceptos de temporada o {{ventana_fechas}}.
+   - NUNCA nombres una sala concreta fija (ej: "Nazca"), usa siempre {{nombre_sala}}.
+
+2. ESTRUCTURA Y BREVEDAD ESCANEABLE (<130 PALABRAS TOTAL):
+   - Párrafo 1 (Halago sincero y conocimiento): 1-2 líneas reconociendo el criterio cultural, cartelera o labor de la entidad en {{ciudad}}.
+   - Párrafo 2 (Identidad sonora y formato escénico): 2 líneas describiendo la instrumentación real y energía de directo sin clichés comerciales.
+   - Párrafo 3 (Llamada a la acción clara y abierta): Pregunta directa sobre calendario/disponibilidad para los próximos meses.
+   - Cierre: 1 línea remitiendo al Dossier / EPK con directos y rider al pie.
+
+3. ESPECIALIZACIÓN OBLIGATORIA POR CATEGORÍA:
+   - SALAS/TEATROS: Respeto a la acústica, labor cultural, aforos medios. Prohibido hablar de copas o barras en espacios escénicos.
+   - FESTIVALES: Ultra-breve (<90 palabras), cómo defiende el grupo un escenario grande, rapidez de rotación y solidez.
+   - DISCOTECAS/CLUBBING: Formato Live Set / híbrido bailable, horario nocturno, integración con cabina DJ.
+   - MEDIOS/RADIO/PRENSA: Gancho periodístico (single/gira/hito), enlace streaming/WAV (sin adjuntos pesados), disponibilidad de entrevista.
+   - GRUPOS (CO-BOOKING): Tono de músico a músico, intercambio de ciudades (mi ciudad x tu ciudad), compartir sala y backline.
+   - MANAGEMENTS/AGENCIAS: Profesionalidad, métricas/hitos, solvencia de producción y sinergias.
+   - AYUNTAMIENTOS/FESTEJOS: Tratamiento formal de usted o formal cercano, fiestas patronales/ciclos, facturación oficial y alta en SS.
+
+4. DON'Ts ESTRICTOS (ANTIPATRONES PROHIBIDOS):
+   - PROHIBIDO hablar de caché, taquilla o alquiler en el primer contacto. El objetivo es solo abrir conversación y consultar fechas.
+   - PROHIBIDO meter muletillas operativas ("montamos en 30 min", "recogemos en 5 min"). Los técnicos ya lo ven en el EPK.
+   - PROHIBIDO el tono de spam publicitario corporativo.
 
 PLANTILLA ACTUAL:
 - Asunto: "${params.currentSubject || ""}"
 - Cuerpo: "${params.currentBody || ""}"
 - Pautas de IA: "${params.currentGuidelines || ""}"
 
-VALORACIÓN DIRECTA DEL MÁNAGER SOBRE ESTA PLANTILLA ACTUAL:
+VALORACIÓN DIRECTA DEL MÁNAGER:
 - Tono y Estilo: ${params.toneRating ? `${params.toneRating}/5 estrellas` : "Sin calificar"}
 - Contenido y Estructura: ${params.contentRating ? `${params.contentRating}/5 estrellas` : "Sin calificar"}
 
-${params.customInstruction && params.customInstruction.trim() ? `INSTRUCCIÓN / COMENTARIO DIRECTO DEL MÁNAGER PARA ESTA PLANTILLA (CUMPLIR OBLIGATORIAMENTE):
+${params.customInstruction && params.customInstruction.trim() ? `INSTRUCCIÓN / COMENTARIO DIRECTO DEL MÁNAGER (MÁXIMA PRIORIDAD):
 "${params.customInstruction.trim()}"` : ""}
 
-MEMORIA COMPLETA Y APRENDIZAJES ACUMULADOS DE VALORACIONES Y CORRECCIONES PREVIAS DEL MÁNAGER EN OTROS CORREOS (${params.feedbackCount} entradas de feedback):
+MEMORIA HISTÓRICA DE VALORACIONES DEL MÁNAGER (${params.feedbackCount} entradas):
 ${params.globalMemory}
 
-INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
-1. Si el mánager ha dado una puntuación baja en Tono/Estilo (1-3/5), ajusta radicalmente la voz, el ritmo y la cercanía/respeto del mensaje. Si ha dado puntuación baja en Contenido/Estructura (1-3/5), reorganiza los bloques de información, acorta o aclara los puntos clave.
-2. Si el mánager ha introducido un comentario o instrucción específica arriba, cúplela como máxima prioridad.
-3. Analiza cuidadosamente todo el feedback acumulado del mánager en correos anteriores. Si ha pedido acortar correos, cambiar el tono, destacar el violín o evitar clichés, aplica esos aprendizajes para perfeccionar esta plantilla.
-4. Preserva las variables dinámicas de plantilla en el cuerpo si son útiles: {{nombre_sala}}, {{ciudad}}, {{website}}, etc.
-5. Asegúrate de mantener la firma y personalidad de ${params.bandName}.
-6. Devuelve un objeto JSON VÁLIDO exactamente con esta estructura (sin texto alrededor):
+Devuelve un objeto JSON VÁLIDO exactamente con esta estructura (sin texto alrededor):
 {
   "subject": "Asunto optimizado para ${categoryLabel}",
   "body": "Cuerpo completo de la plantilla optimizado...",
-  "guidelines": "Nuevas pautas de IA refinadas para que el agente Redactor las aplique...",
-  "explanation": "Explicación breve (1-2 frases) de qué aprendizajes, estrellas e instrucciones del mánager se han aplicado en esta regeneración."
+  "guidelines": "Pautas de IA refinadas para que el agente Redactor las aplique...",
+  "explanation": "Explicación breve de las mejoras aplicadas según las Reglas Maestras y feedback."
 }`;
 }
 
@@ -151,8 +174,144 @@ export async function generateOptimizedCategoryTemplate(params: {
   };
 }
 
+export interface CampaignContextData {
+  name?: string;
+  targetCities?: string[];
+  targetDates?: string[];
+  minCapacity?: number;
+  maxCapacity?: number;
+  notes?: string;
+}
+
+export async function generateAllCategoryTemplatesFromBase(params: {
+  bandName: string;
+  bandBio: string;
+  baseProposal: string;
+  globalMemory?: string;
+  feedbackCount?: number;
+  campaignContext?: CampaignContextData;
+}): Promise<Record<string, OptimizedTemplateResult>> {
+  const categories = Object.keys(CATEGORY_LABELS);
+  const ai = getAiClient();
+
+  const campaignBlock = params.campaignContext ? `
+================================================================================
+OBJETIVO ESPECÍFICO DE ESTA CAMPAÑA DE BOOKING:
+================================================================================
+- Nombre de la campaña: "${params.campaignContext.name || "Campaña de Booking"}"
+- Ciudades objetivo prioritarias: ${params.campaignContext.targetCities?.length ? params.campaignContext.targetCities.join(", ") : "Varias ciudades"}
+- Fechas objetivo en búsqueda: ${params.campaignContext.targetDates?.length ? params.campaignContext.targetDates.join(", ") : "Próximos meses"}
+- Rango de aforo deseado: ${params.campaignContext.minCapacity || 100} a ${params.campaignContext.maxCapacity || 500} personas
+- Notas estratégicas de la campaña: "${params.campaignContext.notes || ""}"
+
+INSTRUCCIÓN ESPECIAL PARA CAMPAÑA:
+Adapta cada una de las 7 plantillas para que sirvan de marco táctico para esta campaña concreta (mencionando las ciudades o el marco temporal de la gira de forma elegante y persuasiva), manteniendo las variables dinámicas {{nombre_sala}}, {{ciudad}} y la brevedad radical (<130 palabras).
+` : "";
+
+  const prompt = `Eres el Director Estratégico de Booking de la banda "${params.bandName}".
+BIOGRAFÍA/ADN DE LA BANDA: "${params.bandBio || "Propuesta musical en directo"}"
+
+INFORMACIÓN / PROPUESTA BASE APORTADA POR EL MÁNAGER:
+"""
+${params.baseProposal.trim()}
+"""
+${campaignBlock}
+${params.globalMemory ? `MEMORIA HISTÓRICA DE VALORACIONES:
+${params.globalMemory}
+` : ""}
+
+TU TAREA:
+Genera simultáneamente las 7 PLANTILLAS MAESTRAS (Blueprints) y sus 7 PAUTAS DE IA (guidelines) adaptando la propuesta base de la banda a cada uno de los 7 tipos de destinatarios:
+1. "salas" (Salas y Teatros de Conciertos)
+2. "festivales" (Festivales de Música)
+3. "discotecas" (Discotecas y Clubbing Nocturno)
+4. "medios" (Medios de Comunicación, Radio y Prensa)
+5. "grupos" (Grupos y Bandas para Intercambio de Fechas / Co-Booking)
+6. "managements" (Agencias de Booking y Management)
+7. "ayuntamientos" (Ayuntamientos, Festejos y Fiestas Patronales)
+
+================================================================================
+REGLAS MAESTRAS DE ORO (NIVEL ÉLITE PARA TODAS LAS PLANTILLAS):
+================================================================================
+1. SON PLANTILLAS REUTILIZABLES (BLUEPRINTS), NO EMAILS PARA UNA FECHA O SALA CERRADA:
+   - Usa variables dinámicas: {{nombre_sala}}, {{ciudad}}, {{website}}, etc.
+   - NUNCA incluyas fechas fijas de un solo día (ej: "el 4 de diciembre" o "el puente"), usa conceptos de temporada o {{ventana_fechas}}.
+   - NUNCA nombres una sala concreta fija en el texto de la plantilla.
+2. BREVEDAD (<130 palabras total, en festivales <90 palabras). 3 párrafos concisos:
+   - Párrafo 1: Reconocimiento sincero al criterio/espacio en {{ciudad}}.
+   - Párrafo 2: Sonido diferenciador, instrumentación real y potencia de directo sin clichés.
+   - Párrafo 3: Pregunta directa sobre disponibilidad de calendario/temporada.
+   - Cierre: 1 línea remitiendo al Dossier / EPK al pie.
+3. ADAPTACIÓN DE SECTOR:
+   - Salas/Teatros: Acústica, mimo de programación, aforos medios. Prohibido hablar de copas o barras en espacios escénicos.
+   - Festivales: Escenario grande, ultra-conciso, cambio ágil de backline.
+   - Discotecas: Live set bailable, horario nocturno, conexión con DJ.
+   - Medios: Gancho de actualidad/single/gira, enlace streaming/WAV (sin adjuntos pesados) y entrevistas.
+   - Grupos: Tono de colega músico, intercambio de ciudades y backline.
+   - Managements: Solvencia técnica, tracción y sinergias.
+   - Ayuntamientos: Registro formal (usted o formal cercano), fiestas patronales, factura y alta en SS.
+4. DON'Ts:
+   - Prohibido hablar de condiciones económicas (taquilla/caché) en el primer contacto.
+   - Prohibido meter muletillas de montaje innecesarias ("montamos en 30 min y recogemos en 5 min").
+
+Devuelve un único JSON VÁLIDO con esta estructura exacta (sin texto antes ni después):
+{
+  "salas": {
+    "subject": "Asunto...",
+    "body": "Cuerpo con {{nombre_sala}} y {{ciudad}}...",
+    "guidelines": "Pautas de IA...",
+    "explanation": "Adaptado para salas y teatros."
+  },
+  "festivales": { ... },
+  "discotecas": { ... },
+  "medios": { ... },
+  "grupos": { ... },
+  "managements": { ... },
+  "ayuntamientos": { ... }
+}`;
+
+  let resultJson: any = null;
+  if (ai) {
+    try {
+      const response = await generateContentWithFallback(ai, {
+        contents: prompt,
+        config: { temperature: 0.35, responseMimeType: "application/json" }
+      });
+      resultJson = safeParseJson(response?.text || "");
+    } catch (err) {
+      console.warn("AI multi-template generation failed, using fallback:", err);
+    }
+  }
+
+  const results: Record<string, OptimizedTemplateResult> = {};
+
+  for (const cat of categories) {
+    if (resultJson && resultJson[cat] && resultJson[cat].subject && resultJson[cat].body) {
+      results[cat] = {
+        subject: resultJson[cat].subject,
+        body: resultJson[cat].body,
+        guidelines: resultJson[cat].guidelines || `Pautas adaptadas para ${CATEGORY_LABELS[cat]}`,
+        explanation: resultJson[cat].explanation || `Generada y adaptada para ${CATEGORY_LABELS[cat]} a partir de la propuesta base.`,
+        isSimulated: false
+      };
+    } else {
+      // Fallback
+      results[cat] = {
+        subject: `Propuesta de directo: ${params.bandName} en {{nombre_sala}}`,
+        body: `Hola, equipo de {{nombre_sala}}:\n\nSomos ${params.bandName}. ${params.baseProposal.slice(0, 150)}...\n\n¿Cómo tenéis el calendario para los próximos meses?\n\n¡Un saludo!\n${params.bandName}`,
+        guidelines: `Pautas adaptadas a ${CATEGORY_LABELS[cat]}.`,
+        explanation: `Plantilla base adaptada para ${CATEGORY_LABELS[cat]}.`,
+        isSimulated: true
+      };
+    }
+  }
+
+  return results;
+}
+
 /**
  * Si esta categoría acumula AUTO_OPTIMIZE_FEEDBACK_THRESHOLD valoraciones o más desde la
+
  * última optimización, la regenera y persiste sola, sin esperar a que el mánager pulse
  * "optimizar con IA". Pensada para llamarse en segundo plano tras cada guardado
  * (POST /api/templates/save), igual que triggerSelfRefiningToneDnaBackground para pitches.

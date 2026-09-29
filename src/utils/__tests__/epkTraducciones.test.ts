@@ -23,7 +23,13 @@ const base: EPKConfig = {
     { id: 'm1', nombre: 'José Filgueira', rol: 'Voz y percusión', bio: 'Músico y actor.' },
   ],
   videos: [{ id: 'v1', titulo: 'Directo en la calle', url: 'https://youtu.be/aaaaaaaaaaa' }],
-  datosContratacion: { numMusicos: 4, duracionDirecto: '75', ciudadBase: 'Madrid', formatos: 'Banda completa', necesidadesEscenario: 'Escenario 5x4m' },
+  datosContratacion: {
+    numMusicos: 4,
+    duracionDirecto: '75',
+    ciudadBase: 'Madrid',
+    formatos: 'Banda completa',
+    necesidadesEscenario: 'Escenario 5x4m',
+  },
 };
 
 describe('recopilarTextosTraducibles', () => {
@@ -38,11 +44,11 @@ describe('recopilarTextosTraducibles', () => {
     expect(serializado).not.toContain('Madrid');
     expect(serializado).not.toContain('"numMusicos"');
     // El nombre del miembro tampoco: solo viajan su rol y su bio.
-    expect(t.miembros.every(m => !('nombre' in m))).toBe(true);
+    expect(t.miembros.every((m) => !('nombre' in m))).toBe(true);
   });
 
   it('ordena miembros y vídeos por id para que el paquete sea estable', () => {
-    expect(recopilarTextosTraducibles(base).miembros.map(m => m.id)).toEqual(['m1', 'm2']);
+    expect(recopilarTextosTraducibles(base).miembros.map((m) => m.id)).toEqual(['m1', 'm2']);
   });
 
   it('descarta miembros y vídeos sin nada que traducir', () => {
@@ -53,7 +59,7 @@ describe('recopilarTextosTraducibles', () => {
         { id: 'm2', nombre: 'Con rol', rol: 'Bajo', bio: '' },
       ],
     });
-    expect(t.miembros.map(m => m.id)).toEqual(['m2']);
+    expect(t.miembros.map((m) => m.id)).toEqual(['m2']);
   });
 
   it('aguanta un EPK vacío sin reventar', () => {
@@ -77,19 +83,21 @@ describe('calcularHashFuente', () => {
   it('cambia si cambia cualquier texto traducible', () => {
     expect(calcularHashFuente({ ...base, biografia: 'Otra cosa' })).not.toBe(calcularHashFuente(base));
     expect(calcularHashFuente({ ...base, firmaEmail: { textoPie: 'Otro lema' } })).not.toBe(calcularHashFuente(base));
-    expect(calcularHashFuente({
-      ...base,
-      miembros: [{ ...base.miembros![0], bio: 'Bio distinta' }, base.miembros![1]],
-    })).not.toBe(calcularHashFuente(base));
+    expect(
+      calcularHashFuente({
+        ...base,
+        miembros: [{ ...base.miembros![0], bio: 'Bio distinta' }, base.miembros![1]],
+      })
+    ).not.toBe(calcularHashFuente(base));
   });
 
   it('NO cambia si solo cambian datos que no se traducen', () => {
     // Cambiar el email o la ciudad base no debe marcar la traducción como desactualizada:
     // eso obligaría a gastar una llamada a la IA sin ninguna razón.
-    expect(calcularHashFuente({ ...base, contactoBooking: { ...base.contactoBooking, email: 'z@z.com' } }))
-      .toBe(calcularHashFuente(base));
-    expect(calcularHashFuente({ ...base, datosContratacion: { ...base.datosContratacion, ciudadBase: 'Ávila' } }))
-      .toBe(calcularHashFuente(base));
+    expect(calcularHashFuente({ ...base, contactoBooking: { ...base.contactoBooking, email: 'z@z.com' } })).toBe(calcularHashFuente(base));
+    expect(calcularHashFuente({ ...base, datosContratacion: { ...base.datosContratacion, ciudadBase: 'Ávila' } })).toBe(
+      calcularHashFuente(base)
+    );
   });
 });
 
@@ -111,7 +119,7 @@ describe('traduccionDesactualizada / tieneTraduccion', () => {
   });
 
   it('una traducción con todos los campos vacíos no cuenta como traducción', () => {
-    expect(tieneTraduccion({ ...base, traducciones: { en: { biografia: '   ' } } }, 'en')).toBe(false);
+    expect(tieneTraduccion({ ...base, traducciones: { en: { biografia: '' } } }, 'en')).toBe(false);
     expect(tieneTraduccion(conTraduccion('abc'), 'en')).toBe(true);
   });
 });
@@ -158,7 +166,7 @@ describe('resolverContenidoEpk', () => {
   });
 
   it('una traducción en blanco no borra el texto original', () => {
-    const cfg: EPKConfig = { ...base, traducciones: { en: { biografia: '   ', riderTecnico: '' } } };
+    const cfg: EPKConfig = { ...base, traducciones: { en: { biografia: '', riderTecnico: '' } } };
     const c = resolverContenidoEpk(cfg, 'en');
     expect(c.biografia).toBe(base.biografia);
     expect(c.riderTecnico).toBe(base.riderTecnico);

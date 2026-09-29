@@ -69,7 +69,7 @@ describe('bookingUtils', () => {
     expect(metrics.leadsPorEstado['aprobado']).toBe(1);
     expect(metrics.leadsPorEstado['negociando']).toBe(1);
     expect(metrics.leadsPorEstado['nuevo']).toBe(1);
-    // 'aprobado' = aprobado internamente y en cola de envío (ver BookingCRM.tsx
+    //'aprobado' = aprobado internamente y en cola de envío (ver BookingCRM.tsx
     // "En cola de envío"), NO implica que el local haya respondido todavía.
     // Solo l2 ('negociando') es una respuesta real -> 1 de 3 = 33.3%.
     expect(metrics.tasaRespuesta).toBe(33.3); // 1 respondido out of 3 = 33.3%

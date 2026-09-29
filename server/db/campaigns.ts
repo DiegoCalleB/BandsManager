@@ -136,7 +136,8 @@ export async function dbGetCampaigns(bandId: string) {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      return data.map(normalizeCampaignFromDb);
+      const validated = data.filter((c: any) => cleanBandId(c.band_id) === cleanId);
+      return validated.map(normalizeCampaignFromDb);
     }
 
     // 2. Fallback to 'booking_campaigns' if 'campaigns' was not found
@@ -150,7 +151,8 @@ export async function dbGetCampaigns(bandId: string) {
       console.warn("Supabase campaigns query warning:", error?.message || fallbackError.message);
       return [];
     }
-    return (fallbackData || []).map(normalizeCampaignFromDb);
+    const validatedFallback = (fallbackData || []).filter((c: any) => cleanBandId(c.band_id) === cleanId);
+    return validatedFallback.map(normalizeCampaignFromDb);
   } catch (err: any) {
     console.warn("Could not query campaigns from Supabase:", err?.message || err);
     return [];

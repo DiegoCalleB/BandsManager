@@ -14,12 +14,7 @@ interface ModalPortalProps {
  * viewport of the browser window, escaping any ancestor CSS transforms, perspective,
  * filters, or overflow-hidden stacking contexts on mobile devices and desktops.
  */
-export const ModalPortal: React.FC<ModalPortalProps> = ({
-  children,
-  isOpen = true,
-  onClose,
-  lockScroll = true,
-}) => {
+export const ModalPortal: React.FC<ModalPortalProps> = ({ children, isOpen = true, onClose, lockScroll = true }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

@@ -19,10 +19,10 @@ const PPQ = 480;
  * que se escuchó en la app en vez de a un piano por defecto.
  */
 const PROGRAMA_GM: Record<MelodicInstrument, number> = {
-  guitarra: 25,   // Acoustic Guitar (steel)
-  violin: 40,     // Violin
-  handpan: 114,   // Steel Drums: lo más cercano en GM a un handpan, por construcción y timbre
-  percusion: 0    // Ignorado: la percusión va por el canal 10 de batería
+  guitarra: 25, // Acoustic Guitar (steel)
+  violin: 40, // Violin
+  handpan: 114, // Steel Drums: lo más cercano en GM a un handpan, por construcción y timbre
+  percusion: 0, // Ignorado: la percusión va por el canal 10 de batería
 };
 
 /**
@@ -48,22 +48,20 @@ function varLen(valor: number): number[] {
 function texto(str: string): number[] {
   // Se limita a ASCII imprimible: los metadatos de nombre de pista los pintan los DAW con
   // codificaciones muy dispares y un acento puede salir como basura.
-  return Array.from(str).map((c) => c.charCodeAt(0)).filter((c) => c >= 32 && c < 127);
+  return Array.from(str)
+    .map((c) => c.charCodeAt(0))
+    .filter((c) => c >= 32 && c < 127);
 }
 
 function chunk(tipo: string, datos: number[]): number[] {
   const len = datos.length;
-  return [
-    ...texto(tipo),
-    (len >> 24) & 0xff, (len >> 16) & 0xff, (len >> 8) & 0xff, len & 0xff,
-    ...datos
-  ];
+  return [...texto(tipo), (len >> 24) & 0xff, (len >> 16) & 0xff, (len >> 8) & 0xff, len & 0xff, ...datos];
 }
 
 interface EventoMidi {
   tick: number;
   /** Los note-off van antes que los note-on en el mismo tick: si no, al repicar la misma nota el
-   *  off de la anterior mataría a la que acaba de empezar. */
+   * off de la anterior mataría a la que acaba de empezar. */
   orden: 0 | 1;
   bytes: number[];
 }
@@ -97,8 +95,13 @@ export function eventosAMidiBlob(opts: {
   const microsegundosPorNegra = Math.round(60_000_000 / bpm);
   const pista: number[] = [
     // Tempo, para que el DAW abra el fichero a la velocidad correcta y la rejilla cuadre.
-    ...varLen(0), 0xff, 0x51, 0x03,
-    (microsegundosPorNegra >> 16) & 0xff, (microsegundosPorNegra >> 8) & 0xff, microsegundosPorNegra & 0xff
+    ...varLen(0),
+    0xff,
+    0x51,
+    0x03,
+    (microsegundosPorNegra >> 16) & 0xff,
+    (microsegundosPorNegra >> 8) & 0xff,
+    microsegundosPorNegra & 0xff,
   ];
 
   const nombre = texto(opts.nombrePista || `Idea IA ${opts.instrument}`);
@@ -117,9 +120,12 @@ export function eventosAMidiBlob(opts: {
   pista.push(...varLen(0), 0xff, 0x2f, 0x00); // Fin de pista
 
   const cabecera = chunk('MThd', [
-    0x00, 0x00, // formato 0: una sola pista
-    0x00, 0x01, // número de pistas
-    (PPQ >> 8) & 0xff, PPQ & 0xff
+    0x00,
+    0x00, // formato 0: una sola pista
+    0x00,
+    0x01, // número de pistas
+    (PPQ >> 8) & 0xff,
+    PPQ & 0xff,
   ]);
 
   const bytes = new Uint8Array([...cabecera, ...chunk('MTrk', pista)]);

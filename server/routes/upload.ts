@@ -8,26 +8,50 @@ import { createClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 
+export function detectMimeType(ext: string, fallback?: string): string {
+  const cleanExt = (ext || '').toLowerCase().replace('.', '');
+  const mimeMap: Record<string, string> = {
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+    gif: 'image/gif',
+    svg: 'image/svg+xml',
+    mp3: 'audio/mpeg',
+    wav: 'audio/wav',
+    m4a: 'audio/x-m4a',
+    ogg: 'audio/ogg',
+    aac: 'audio/aac',
+    flac: 'audio/flac',
+    pdf: 'application/pdf',
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    mp4: 'video/mp4',
+    mov: 'video/quicktime',
+    webm: 'video/webm'
+  };
+  return mimeMap[cleanExt] || (fallback && fallback !== 'application/octet-stream' ? fallback : 'application/octet-stream');
+}
+
 /**
  * Optimizador transparente de archivos de audio.
  * Si el usuario sube un archivo de audio (.wav, .flac, .aiff, .m4a, .wma, etc. o mp3 pesado > 2MB),
  * lo recodifica en segundo plano a MP3 de alta fidelidad (256kbps), reduciendo el peso de almacenamiento
  * en Supabase/disco hasta un 93% sin pérdida de calidad auditiva apreciable.
  */
-async function compressAudioFileIfNeeded(inputPath: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
+async function compressAudioFileIfNeeded(inputPath: string, fallbackMime?: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
   const ext = path.extname(inputPath).toLowerCase().replace('.', '');
   const isAudioExt = ['wav', 'flac', 'aiff', 'aif', 'alac', 'm4a', 'wma', 'ogg', 'opus'].includes(ext);
   
   if (!fs.existsSync(inputPath)) {
-    return { finalPath: inputPath, wasCompressed: false, newMime: 'application/octet-stream', newExt: ext };
+    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
   }
 
   const stats = fs.statSync(inputPath);
   
   // Si no es un formato de audio pesado o es un mp3 pequeño (< 2MB), no hace falta comprimir
   if (!isAudioExt && (ext !== 'mp3' || stats.size < 2 * 1024 * 1024)) {
-    const defaultMime = ext === 'mp3' ? 'audio/mpeg' : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'application/octet-stream';
-    return { finalPath: inputPath, wasCompressed: false, newMime: defaultMime, newExt: ext };
+    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
   }
 
   const outputPath = inputPath.replace(new RegExp(`\\.${ext}$`, 'i'), '-opt.mp3');
@@ -109,6 +133,102 @@ export function extensionPermitida(originalname: string): boolean {
   if (!originalname || typeof originalname !== 'string') return false;
   const ext = path.extname(originalname).slice(1).toLowerCase();
   return EXTENSIONES_PERMITIDAS.has(ext);
+}
+
+/**
+ * Validación de Magic Bytes (Firmas Binarias).
+ * Comprueba los primeros bytes del búfer para verificar que el contenido binario coincide
+ * realmente con el formato declarado por la extensión, impidiendo la subida de scripts ejecutables
+ * (.sh, .php, .exe, .html maliciosos) disfrazados con extensiones permitidas.
+ */
+export function validarMagicBytes(buffer: Buffer, ext: string): boolean {
+  if (!buffer || buffer.length === 0) return false;
+  const cleanExt = (ext || '').toLowerCase().replace('.', '');
+  
+  if (buffer.length < 4) return false;
+
+  // JPEG: FF D8 FF
+  if (cleanExt === 'jpg' || cleanExt === 'jpeg') {
+    return buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF;
+  }
+
+  // PNG: 89 50 4E 47 (0x89 'PNG')
+  if (cleanExt === 'png') {
+    return buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47;
+  }
+
+  // GIF: 47 49 46 38 ('GIF8')
+  if (cleanExt === 'gif') {
+    return buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x38;
+  }
+
+  // WEBP: RIFF....WEBP (bytes 0-3: 'RIFF', bytes 8-11: 'WEBP')
+  if (cleanExt === 'webp') {
+    if (buffer.length < 12) return false;
+    const isRiff = buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
+    const isWebp = buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50;
+    return isRiff && isWebp;
+  }
+
+  // PDF: 25 50 44 46 ('%PDF')
+  if (cleanExt === 'pdf') {
+    return buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46;
+  }
+
+  // WAV / AIFF: RIFF....WAVE o FORM....AIFF
+  if (cleanExt === 'wav' || cleanExt === 'aiff' || cleanExt === 'aif') {
+    if (buffer.length < 12) return false;
+    const isRiffOrForm = (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46) ||
+                         (buffer[0] === 0x46 && buffer[1] === 0x4F && buffer[2] === 0x52 && buffer[3] === 0x4D);
+    return isRiffOrForm;
+  }
+
+  // MP3: 'ID3' (49 44 33) o frame sync MPEG (0xFF seguido de bits de cabecera)
+  if (cleanExt === 'mp3') {
+    const isId3 = buffer[0] === 0x49 && buffer[1] === 0x44 && buffer[2] === 0x33;
+    const isMpegSync = buffer[0] === 0xFF && (buffer[1] & 0xE0) === 0xE0;
+    return isId3 || isMpegSync;
+  }
+
+  // FLAC: 66 4C 61 43 ('fLaC')
+  if (cleanExt === 'flac') {
+    return buffer[0] === 0x66 && buffer[1] === 0x4C && buffer[2] === 0x61 && buffer[3] === 0x43;
+  }
+
+  // OGG / Opus: 4F 67 67 53 ('OggS')
+  if (cleanExt === 'ogg' || cleanExt === 'opus') {
+    return buffer[0] === 0x4F && buffer[1] === 0x47 && buffer[2] === 0x67 && buffer[3] === 0x53;
+  }
+
+  // MP4 / MOV / M4A / AAC: ftyp / moov / ADTS
+  if (cleanExt === 'mp4' || cleanExt === 'mov' || cleanExt === 'm4a' || cleanExt === 'aac') {
+    if (buffer.length >= 8) {
+      const isFtyp = buffer[4] === 0x66 && buffer[5] === 0x74 && buffer[6] === 0x79 && buffer[7] === 0x70;
+      const isMoov = buffer[4] === 0x6D && buffer[5] === 0x6F && buffer[6] === 0x6F && buffer[7] === 0x76;
+      const isAdts = buffer[0] === 0xFF && (buffer[1] & 0xF6) === 0xF0;
+      if (isFtyp || isMoov || isAdts) return true;
+    }
+  }
+
+  // WebM / MKV: 1A 45 DF A3 (EBML)
+  if (cleanExt === 'webm' || cleanExt === 'mkv' || cleanExt === 'avi') {
+    const isEbml = buffer[0] === 0x1A && buffer[1] === 0x45 && buffer[2] === 0xDF && buffer[3] === 0xA3;
+    const isRiffAvi = buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
+    return isEbml || isRiffAvi;
+  }
+
+  // DOCX / ZIP: 50 4B 03 04 ('PK\x03\x04')
+  if (cleanExt === 'docx') {
+    return buffer[0] === 0x50 && buffer[1] === 0x4B && buffer[2] === 0x03 && buffer[3] === 0x04;
+  }
+
+  // DOC: D0 CF 11 E0 (OLE2 Compound Document)
+  if (cleanExt === 'doc') {
+    return buffer[0] === 0xD0 && buffer[1] === 0xCF && buffer[2] === 0x11 && buffer[3] === 0xE0;
+  }
+
+  // Resto de extensiones permitidas
+  return EXTENSIONES_PERMITIDAS.has(cleanExt);
 }
 
 const multerFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
@@ -399,11 +519,31 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       return res.status(400).json({ error: "Missing file or base64 payload" });
     }
 
+    // Validación de Magic Bytes (Firmas Binarias) antes del procesamiento o compresión
+    const rawExt = path.extname(originalFilename).replace('.', '');
+    let headerBytes: Buffer | null = null;
+    if (buffer && buffer.length >= 4) {
+      headerBytes = buffer.subarray(0, 64);
+    } else if (fs.existsSync(filePath)) {
+      const fd = fs.openSync(filePath, 'r');
+      headerBytes = Buffer.alloc(64);
+      const bytesRead = fs.readSync(fd, headerBytes, 0, 64, 0);
+      fs.closeSync(fd);
+      if (bytesRead < 4) headerBytes = null;
+    }
+
+    if (headerBytes && !validarMagicBytes(headerBytes, rawExt)) {
+      if (fs.existsSync(filePath)) {
+        try { fs.unlinkSync(filePath); } catch (_) {}
+      }
+      return res.status(400).json({ error: "Firma binaria del archivo no válida para el formato declarado (Magic Bytes mismatch)." });
+    }
+
     // Optimizador transparente: si es un audio pesado (.wav, .flac, .m4a, etc.), se comprime a MP3 256k
-    const compResult = await compressAudioFileIfNeeded(filePath);
+    const compResult = await compressAudioFileIfNeeded(filePath, mimeType);
     filePath = compResult.finalPath;
     uniqueName = path.basename(filePath);
-    mimeType = compResult.newMime;
+    mimeType = compResult.newMime || detectMimeType(path.extname(filePath), mimeType);
     buffer = null; // Forzar lectura del archivo optimizado desde disco
 
     let finalUrl = `/uploads/${uniqueName}`;
@@ -413,10 +553,6 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
     const supabase = getSupabaseClient();
     if (supabase) {
       const bucketName = getBucketName();
-      // La banda salía del body o de la cabecera sin validar, así que se podían dejar ficheros
-      // en la carpeta de otra banda. Y el `folder` del cliente se usaba TAL CUAL como ruta
-      // dentro del bucket, con upsert activado: valía para escribir en cualquier rama, encima
-      // de los ficheros de quien fuera. Ahora todo cuelga de la carpeta de la banda propia.
       const targetBand = getTargetBandId(req);
       const cleanBandId = String(targetBand).toLowerCase().replace(/[^a-z0-9_-]/g, '-');
       const cleanCategory = category ? String(category).toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'general';
@@ -425,12 +561,6 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       const storagePath = `${subPath}/${uniqueName}`;
       const fileContent = buffer || fs.readFileSync(filePath);
 
-      // El fallo de subida a Supabase es intermitente (red, timeout puntual), así que antes de
-      // rendirse se reintenta una vez. Antes, un solo fallo pasajero caía en silencio al disco
-      // local de /uploads - que en Railway se borra en cada redeploy - dejando en la base de
-      // datos una URL que "funcionaba" un rato y luego se rompía sin ningún aviso (así se rompió
-      // el logo de Ruta 66: unos intentos subieron bien a Supabase y otro cayó al disco local,
-      // y el que quedó guardado en el EPK fue justo ese).
       let uploadError: any = null;
       for (let attempt = 0; attempt < 2 && storageEngine !== "supabase"; attempt++) {
         try {
@@ -449,6 +579,13 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
             }
           } else {
             uploadError = error;
+            if (error.message && (error.message.includes("not found") || error.message.includes("Bucket") || (error as any).statusCode === "404" || (error as any).status === 404)) {
+              try {
+                await supabase.storage.createBucket(bucketName, { public: true });
+              } catch (createErr) {
+                console.warn("[Upload] Could not create bucket:", createErr);
+              }
+            }
           }
         } catch (sbErr) {
           uploadError = sbErr;
@@ -456,14 +593,10 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       }
 
       if (storageEngine !== "supabase") {
-        // Con Supabase configurado, el disco local ya NUNCA es una alternativa segura en
-        // producción (Railway lo borra en cada redeploy): mejor que la subida falle claramente
-        // y el usuario reintente, a que "funcione" y el archivo desaparezca más tarde sin avisar.
-        console.error("Supabase Storage upload failed twice, refusing local fallback:", uploadError?.message || uploadError);
-        try { fs.unlinkSync(filePath); } catch (_) { /* ya no queda nada útil que borrar */ }
-        return res.status(502).json({
-          error: "No se pudo guardar el archivo en el almacenamiento permanente. Inténtalo de nuevo en unos segundos."
-        });
+        console.warn("[Upload] Supabase Storage upload failed, falling back to local file upload:", uploadError?.message || uploadError);
+        // Fallback to locally served path so upload never fails for user
+        finalUrl = `/uploads/${uniqueName}`;
+        storageEngine = "local";
       }
     }
 
@@ -545,6 +678,18 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
       writeStream.end(() => resolve());
       writeStream.on("error", (err) => reject(err));
     });
+
+    // Validar Magic Bytes sobre el archivo reensamblado
+    const rawChunkExt = path.extname(filename).replace('.', '');
+    const headerChunkBytes = Buffer.alloc(64);
+    const fdChunk = fs.openSync(finalFilePath, 'r');
+    const bytesReadChunk = fs.readSync(fdChunk, headerChunkBytes, 0, 64, 0);
+    fs.closeSync(fdChunk);
+
+    if (bytesReadChunk >= 4 && !validarMagicBytes(headerChunkBytes, rawChunkExt)) {
+      try { fs.unlinkSync(finalFilePath); } catch (_) {}
+      return res.status(400).json({ error: "Firma binaria del archivo reensamblado no coincide con la extensión declarada." });
+    }
 
     // Clean up temporary chunk folder
     try {

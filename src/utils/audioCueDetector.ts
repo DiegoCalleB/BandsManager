@@ -48,12 +48,7 @@ export function detectAudioCuesFromFloatChannel(
   totalDuration: number,
   options: CueDetectionOptions = {}
 ): AudioCueAnalysis {
-  const {
-    minSilenceDb = -42,
-    preRollSec = 1.5,
-    postRollSec = 0.5,
-    minSustainDurationSec = 0.25
-  } = options;
+  const { minSilenceDb = -42, preRollSec = 1.5, postRollSec = 0.5, minSustainDurationSec = 0.25 } = options;
 
   const numSamples = channelData.length;
   if (numSamples === 0 || totalDuration <= 0) {
@@ -67,7 +62,7 @@ export function detectAudioCuesFromFloatChannel(
       hasApplauseIntro: false,
       hasApplauseOutro: false,
       confidence: 0,
-      waveformPeaks: []
+      waveformPeaks: [],
     };
   }
 
@@ -87,7 +82,7 @@ export function detectAudioCuesFromFloatChannel(
       hasApplauseIntro: false,
       hasApplauseOutro: false,
       confidence: 0.5,
-      waveformPeaks: [1]
+      waveformPeaks: [1],
     };
   }
 
@@ -251,17 +246,14 @@ export function detectAudioCuesFromFloatChannel(
     hasApplauseIntro,
     hasApplauseOutro,
     confidence,
-    waveformPeaks
+    waveformPeaks,
   };
 }
 
 /**
  * Analiza un AudioBuffer de la Web Audio API
  */
-export function detectAudioCuesFromBuffer(
-  audioBuffer: AudioBuffer,
-  options?: CueDetectionOptions
-): AudioCueAnalysis {
+export function detectAudioCuesFromBuffer(audioBuffer: AudioBuffer, options?: CueDetectionOptions): AudioCueAnalysis {
   const channelData = audioBuffer.getChannelData(0);
   const sampleRate = audioBuffer.sampleRate;
   const duration = audioBuffer.duration;
@@ -348,8 +340,8 @@ export function applyDetectedCuesToSong(song: Song, analysis: AudioCueAnalysis):
       intro: analysis.hasApplauseIntro,
       outro: analysis.hasApplauseOutro,
       introDurationSec: analysis.introSilenceSec,
-      outroDurationSec: analysis.outroSilenceSec
-    }
+      outroDurationSec: analysis.outroSilenceSec,
+    },
   };
 }
 
@@ -369,7 +361,7 @@ export function detectLiveConcertTrackCues(
     preRollSec: 0.35,
     postRollSec: 0.5,
     minSustainDurationSec: 0.2,
-    ...options
+    ...options,
   });
 }
 
@@ -383,4 +375,3 @@ export function formatCueOffset(seconds: number): string {
   const padSecs = parseFloat(secs) < 10 ? `0${secs}` : secs;
   return `${mins}:${padSecs}`;
 }
-

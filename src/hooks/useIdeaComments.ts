@@ -26,14 +26,14 @@ export function useIdeaComments(
       instrumento: trackTag,
       timestampSegundos: timeTag ?? Math.floor(currentTimeMap[idea.id] || 0),
       texto: text.trim(),
-      fecha: 'Ahora'
+      fecha: 'Ahora',
     };
 
-    const updatedIdeas = (song.audioIdeas || []).map(i => {
+    const updatedIdeas = (song.audioIdeas || []).map((i) => {
       if (i.id === idea.id) {
         return {
           ...i,
-          comentarios: [...(i.comentarios || []), newComment]
+          comentarios: [...(i.comentarios || []), newComment],
         };
       }
       return i;
@@ -41,15 +41,18 @@ export function useIdeaComments(
 
     onUpdateSong({ ...song, audioIdeas: updatedIdeas });
 
-    setCommentTextMap(prev => ({ ...prev, [idea.id]: '' }));
-    setCommentTimeTagMap(prev => ({ ...prev, [idea.id]: null }));
-    setCommentTrackTagMap(prev => ({ ...prev, [idea.id]: null }));
+    setCommentTextMap((prev) => ({ ...prev, [idea.id]: '' }));
+    setCommentTimeTagMap((prev) => ({ ...prev, [idea.id]: null }));
+    setCommentTrackTagMap((prev) => ({ ...prev, [idea.id]: null }));
   };
 
   return {
-    commentTextMap, setCommentTextMap,
-    commentTimeTagMap, setCommentTimeTagMap,
-    commentTrackTagMap, setCommentTrackTagMap,
+    commentTextMap,
+    setCommentTextMap,
+    commentTimeTagMap,
+    setCommentTimeTagMap,
+    commentTrackTagMap,
+    setCommentTrackTagMap,
     handleAddComment,
   };
 }

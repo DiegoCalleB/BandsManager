@@ -18,7 +18,9 @@ import { dbGetCampaigns } from "./campaigns.js";
 import { dbGetCategoryTemplates } from "./categoryTemplates.js";
 
 const bandStateCache = new Map<string, { timestamp: number; result: any }>();
-const BAND_CACHE_TTL_MS = 10_000; // 10s TTL cache for fast reads
+// TTL de caché en memoria para lecturas pasivas: 30 minutos por defecto (o configurable por BAND_CACHE_TTL_MS).
+// Cualquier mutación (crear lead, evento, etc.) invalida inmediatamente la clave con invalidateBandStateCache().
+const BAND_CACHE_TTL_MS = Number(process.env.BAND_CACHE_TTL_MS) || (30 * 60 * 1000);
 
 export function invalidateBandStateCache(bandId?: string) {
   if (bandId) {
@@ -45,31 +47,40 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
 
   await ensureRegisteredBandExists(cleanId, user?.bandName || user?.band_name);
 
-  // Determine all bands relevant to this user (for multi-band calendar view)
+  // Determine all bands relevant to this user (strictly authorized bands only)
   const userBandIds = new Set<string>();
-  userBandIds.add(cleanId);
+  if (cleanId && cleanId !== '__sin_banda__') {
+    userBandIds.add(cleanId);
+  }
   if (user) {
     if (user.band_id) userBandIds.add(cleanBandId(user.band_id));
     if (user.main_band_id) userBandIds.add(cleanBandId(user.main_band_id));
     if (Array.isArray(user.allowedBandIds)) {
-      user.allowedBandIds.forEach((b: string) => userBandIds.add(cleanBandId(b)));
+      user.allowedBandIds.forEach((b: string) => {
+        const cb = cleanBandId(b);
+        if (cb && cb !== '__sin_banda__') userBandIds.add(cb);
+      });
     }
   }
 
-  // Also query userBands relations from Supabase for this user
+  // Also query userBands relations from Supabase for this specific user ID
   if (user?.id) {
     try {
       const sb = getSupabase();
       const { data: uBands } = await sb.from("user_bands").select("band_id").eq("user_id", user.id);
       if (uBands && Array.isArray(uBands)) {
         uBands.forEach((ub: any) => {
-          if (ub.band_id) userBandIds.add(cleanBandId(ub.band_id));
+          if (ub.band_id) {
+            const cb = cleanBandId(ub.band_id);
+            if (cb && cb !== '__sin_banda__') userBandIds.add(cb);
+          }
         });
       }
     } catch (_) {}
   }
 
   const allRelevantBandIds = Array.from(userBandIds);
+  const eventsBandParam = allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId;
 
   const [
     leads,
@@ -93,8 +104,8 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     categoryTemplates
   ] = await Promise.all([
     dbGetLeads(cleanId).catch(() => []),
-    dbGetRehearsals(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
-    dbGetConcerts(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
+    dbGetRehearsals(eventsBandParam).catch(() => []),
+    dbGetConcerts(eventsBandParam).catch(() => []),
     dbGetSongs(cleanId).catch(() => []),
     dbGetSetlists(cleanId).catch(() => []),
     dbGetEpkConfig(cleanId).catch(() => null),
@@ -113,27 +124,53 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     dbGetCategoryTemplates(cleanId).catch(() => ({}))
   ]);
 
+  // Strict tenant scoping and validation layer
+  const activeBandSet = new Set([cleanId, cleanId.startsWith('band-') ? cleanId.replace(/^band-/, '') : `band-${cleanId}`]);
+  const permittedBandsSet = new Set(allRelevantBandIds.flatMap(id => [id, id.startsWith('band-') ? id.replace(/^band-/, '') : `band-${id}`]));
+
+  // Calendar events: visible for all bands the user is permitted to see
+  const validatedConcerts = (concerts || []).filter((c: any) => c.band_id && permittedBandsSet.has(cleanBandId(c.band_id)));
+  const validatedRehearsals = (rehearsals || []).filter((r: any) => r.band_id && permittedBandsSet.has(cleanBandId(r.band_id)));
+
+  // All other modules: strictly scoped to the active band
+  const validatedLeads = (leads || []).filter((l: any) => l.band_id && activeBandSet.has(cleanBandId(l.band_id)));
+  const validatedSongs = (songs || []).filter((s: any) => s.band_id && activeBandSet.has(cleanBandId(s.band_id)));
+  const validatedSetlists = (setlists || []).filter((s: any) => s.band_id && activeBandSet.has(cleanBandId(s.band_id)));
+  const validatedPosts = (posts || []).filter((p: any) => p.band_id && activeBandSet.has(cleanBandId(p.band_id)));
+  const validatedPayments = (payments || []).filter((p: any) => p.band_id && activeBandSet.has(cleanBandId(p.band_id)));
+  const validatedTours = (tours || []).filter((t: any) => t.band_id && activeBandSet.has(cleanBandId(t.band_id)));
+  const validatedFans = (fans || []).filter((f: any) => f.band_id && activeBandSet.has(cleanBandId(f.band_id)));
+  const validatedBands = (bands || []).filter((b: any) => b.band_id && activeBandSet.has(cleanBandId(b.band_id)));
+  const validatedCampaigns = (campaigns || []).filter((c: any) => c.band_id && activeBandSet.has(cleanBandId(c.band_id)));
+
+  // Strict tenant scoping: never leak other bands' registered info to unauthorized users
+  const filteredRegisteredBands = (registeredBands || []).filter((b: any) => {
+    const rawBandId = b.band_id ? b.band_id : (b.id ?? '');
+    const bId = cleanBandId(rawBandId);
+    return allRelevantBandIds.includes(bId);
+  });
+
   const resState = {
-    leads,
-    rehearsals,
-    concerts,
-    posts,
-    payments,
+    leads: validatedLeads,
+    rehearsals: validatedRehearsals,
+    concerts: validatedConcerts,
+    posts: validatedPosts,
+    payments: validatedPayments,
     metrics,
-    songs,
-    setlists,
-    bands,
-    tours,
-    fans,
-    campaigns,
+    songs: validatedSongs,
+    setlists: validatedSetlists,
+    bands: validatedBands,
+    tours: validatedTours,
+    fans: validatedFans,
+    campaigns: validatedCampaigns,
     messages: [],
     runOfShow,
     gearChecklists,
     epkConfig: epkConfig || (cleanId === 'bakandeya' ? {
-      biografia: "Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos con sección de metales potente y letras combativas pero festivas. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
+      biografia: "Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
       logoUrl: "/logo_bakandeya.jpg",
       bandPhotos: ["/logo_bakandeya.jpg"],
-      riderTecnico: "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para sección de metales (2 x SM57 / clip condenser)\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)",
+      riderTecnico: "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 2 Micrófonos dinámicos vocal (Shure SM58)\n- Líneas de inyección DI para violín solista y sintetizadores analógicos/secuencias\n- Microfonía para percusión y batería estándar en vivo (Kick, Snare, 2 Toms, Overheads)\n- 1 Línea DI para bajo eléctrico",
       enlacesRedes: {
         spotify: "https://open.spotify.com/artist/bakandeya",
         youtube: "https://youtube.com/@bakandeya_oficial",
@@ -197,7 +234,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
       notifyOnEveryProposal: true,
       requireHumanForFinalSignOff: true
     },
-    registeredBands,
+    registeredBands: filteredRegisteredBands,
     users,
     categoryTemplates
   };

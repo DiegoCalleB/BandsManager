@@ -11,10 +11,7 @@
  * pendientes se pueden "reajustar" en el frontend sin tener que volver a llamar a la IA.
  */
 
-export type IndexChange =
-  | { type: 'move'; from: number; to: number }
-  | { type: 'remove'; at: number }
-  | { type: 'insert'; at: number };
+export type IndexChange = { type: 'move'; from: number; to: number } | { type: 'remove'; at: number } | { type: 'insert'; at: number };
 
 /**
  * Ajusta una posición 0-indexada tras un cambio en OTRO punto del mismo array. Devuelve null si

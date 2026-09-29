@@ -8,21 +8,23 @@ export function useInteractionLog(
 ) {
   const [interactionType, setInteractionType] = useState<'Llamada' | 'WhatsApp' | 'Email' | 'Reunión' | 'Otro'>('Llamada');
   const [interactionNotes, setInteractionNotes] = useState<string>('');
-  const [interactionResultado, setInteractionResultado] = useState<'Interesado' | 'Enviar propuesta' | 'Seguimiento pendiente' | 'Rechazado' | 'Info recibida' | 'Acuerdo cerrado'>('Seguimiento pendiente');
+  const [interactionResultado, setInteractionResultado] = useState<
+    'Interesado' | 'Enviar propuesta' | 'Seguimiento pendiente' | 'Rechazado' | 'Info recibida' | 'Acuerdo cerrado'
+  >('Seguimiento pendiente');
   const [interactionAutor, setInteractionAutor] = useState<string>('Mánager / Booking');
 
   const handleAddInteractionLog = (e: FormEvent) => {
     e.preventDefault();
     if (!selectedLead || !interactionNotes.trim()) return;
 
-    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
+    const nowStr = new Date().toISOString().replace('T', '').slice(0, 16);
     const newLog: InteractionLog = {
       id: `log-${Date.now()}`,
       fecha: nowStr,
       tipo: interactionType,
       autor: interactionAutor,
       notas: interactionNotes.trim(),
-      resultado: interactionResultado
+      resultado: interactionResultado,
     };
 
     const existingLogs = selectedLead.historial_contacto || [];
@@ -40,31 +42,39 @@ export function useInteractionLog(
     onUpdateLead(selectedLead.id, {
       historial_contacto: updatedLogs,
       estado: newStatus,
-      fecha_ultima_respuesta: new Date().toISOString().slice(0, 10)
+      fecha_ultima_respuesta: new Date().toISOString().slice(0, 10),
     });
 
-    setSelectedLead(prev => prev ? {
-      ...prev,
-      historial_contacto: updatedLogs,
-      estado: newStatus,
-      fecha_ultima_respuesta: new Date().toISOString().slice(0, 10)
-    } : null);
+    setSelectedLead((prev) =>
+      prev
+        ? {
+            ...prev,
+            historial_contacto: updatedLogs,
+            estado: newStatus,
+            fecha_ultima_respuesta: new Date().toISOString().slice(0, 10),
+          }
+        : null
+    );
 
     setInteractionNotes('');
   };
 
   const handleDeleteInteractionLog = (logId: string) => {
     if (!selectedLead || !selectedLead.historial_contacto) return;
-    const updated = selectedLead.historial_contacto.filter(l => l.id !== logId);
+    const updated = selectedLead.historial_contacto.filter((l) => l.id !== logId);
     onUpdateLead(selectedLead.id, { historial_contacto: updated });
-    setSelectedLead(prev => prev ? { ...prev, historial_contacto: updated } : null);
+    setSelectedLead((prev) => (prev ? { ...prev, historial_contacto: updated } : null));
   };
 
   return {
-    interactionType, setInteractionType,
-    interactionNotes, setInteractionNotes,
-    interactionResultado, setInteractionResultado,
-    interactionAutor, setInteractionAutor,
+    interactionType,
+    setInteractionType,
+    interactionNotes,
+    setInteractionNotes,
+    interactionResultado,
+    setInteractionResultado,
+    interactionAutor,
+    setInteractionAutor,
     handleAddInteractionLog,
     handleDeleteInteractionLog,
   };

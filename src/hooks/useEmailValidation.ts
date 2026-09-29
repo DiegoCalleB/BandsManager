@@ -34,7 +34,11 @@ export function useEmailValidation() {
 /**
  * Helper para obtener status de email de un lead
  */
-export function getEmailStatus(leadId: string, email: string | null | undefined, emailValidities: Record<string, boolean>): 'valid' | 'invalid' | 'empty' {
+export function getEmailStatus(
+  leadId: string,
+  email: string | null | undefined,
+  emailValidities: Record<string, boolean>
+): 'valid' | 'invalid' | 'empty' {
   if (!email) return 'empty';
   return emailValidities[leadId] === false ? 'invalid' : 'valid';
 }

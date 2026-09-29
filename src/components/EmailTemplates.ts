@@ -1,85 +1,78 @@
 export const EMAIL_TEMPLATES = {
   sala: {
     subject: 'Propuesta de concierto 2026: {bandName} en {{nombre_sala}}',
-    body: `Hola equipo de booking de {{nombre_sala}},
+    body: `Hola equipo de {{nombre_sala}},
 
-Nos dirigimos a vosotros desde {bandName}, proyecto independiente de música en directo ({estilo}).
+Os escribo desde {bandName} ({estilo}). Seguimos de cerca vuestra programación y nos encantaría valorar fecha en vuestra sala para los próximos meses.
 
-Seguimos la programación de {{nombre_sala}} y creemos que nuestro directo encaja perfectamente con vuestra línea artística. Ofrecemos un espectáculo enérgico, festivo y muy bailable con cuarteto compacto (violín solista, sintetizadores analógicos, percusión en vivo, bajo y voz).
+Traemos un directo enérgico y bailable en formato compacto (violín solista, sintetizadores analógicos, percusión, bajo y voz). Nos adaptamos con total flexibilidad a taquilla, co-booking con banda local o caché, y montamos rápido con un rider muy ágil.
 
-Puntos clave:
-- Montaje ágil y rider técnico limpio (30-45 min).
-- Enlaces oficiales de directo y dossier EPK: {enlace_videos}
-- Flexibilidad total en taquilla o caché y colaboración con bandas locales de {{ciudad}}.
+Podéis consultar nuestro directo, vídeos y dossier en el enlace de la firma.
 
-¿Tenéis disponibilidad en los próximos meses para valorar una fecha?
+¿Cómo tenéis la disponibilidad de agenda para esos meses?
 
-Un saludo cordial,
-{bandName} Agent Manager IA`
+Un saludo,
+Booking & Management — {bandName}`,
   },
   festival: {
-    subject: 'Propuesta de cartel / contratación 2026: {bandName} (Live Set)',
-    body: `Estimada organización de {{nombre_sala}},
+    subject: 'Propuesta de cartel 2026: {bandName} (Live Set)',
+    body: `Hola equipo de programación de {{nombre_sala}},
 
-Escribimos en representación de {bandName} para presentar nuestra propuesta artística ({estilo}) de cara a la próxima edición de vuestro festival.
+Os escribo desde {bandName} para presentar nuestra propuesta de directo ({estilo}) de cara a la próxima edición de vuestro festival.
 
-{bandName} es un proyecto de alto impacto para escenarios de festivales, destacando por un directo arrollador de 75-90 minutos liderado por violín solista, electrónica analógica y percusión en vivo.
+Es un show de 75-90 minutos de alta intensidad pensada para hacer bailar al público, con montaje limpio y rotación técnica muy rápida en cambios de escenario.
 
-Ventajas técnicas y de producción:
-- Espectáculo dinámico de alta intensidad para hacer bailar a todo el público.
-- Montaje limpio y cambio de escenario ultra-rápido.
-- Dossier completo y directos en YouTube: {enlace_videos}
+Tenéis disponible nuestro dossier completo y vídeos de directo en el enlace adjunto.
 
-Estaríamos encantados de enviaros rider técnico detallado y propuesta económica.
+Estaremos encantados de enviaros propuesta económica y disponibilidad para valorar nuestra entrada en el cartel.
 
-Atentamente,
-{bandName} Agent Manager IA`
+Un saludo,
+Booking & Management — {bandName}`,
   },
   discoteca: {
     subject: 'Propuesta Live Set nocturno: {bandName} en {{nombre_sala}}',
-    body: `Hola equipo de programación de {{nombre_sala}},
+    body: `Hola equipo de {{nombre_sala}},
 
-Os escribimos desde {bandName} para presentar nuestro formato especial de **Live Set nocturno** ({estilo}), diseñado específicamente para la sesión de madrugada en discotecas y clubs.
+Os escribo desde {bandName} para proponer nuestro formato de **Live Set nocturno** ({estilo}), diseñado específicamente para la madrugada en clubes y discotecas.
 
-El show combina secuencias electrónicas, percusión en vivo y violín enérgico, creando el puente perfecto entre un directo potente y la pista de baile.
+Combina electrónica, percusión en vivo y violín enérgico, creando el puente perfecto para mantener la pista encendida entre sesiones de DJs.
 
-Dossier y vídeos en directo: {enlace_videos}
+Podéis consultar el dossier y vídeos de directo en el enlace adjunto.
 
-¿Cómo tenéis la agenda para los próximos meses para coordinar una fecha?
+¿Tenéis hueco en la agenda de los próximos meses para coordinar una fecha?
 
-Saludos cordiales,
-{bandName} Agent Manager IA`
+Un saludo,
+Booking & Management — {bandName}`,
   },
   medio: {
-    subject: '[Nota de Prensa / Dossier] {bandName} presenta su gira 2026 y nuevos lanzamientos',
+    subject: '[Nota de prensa] {bandName} presenta gira 2026 y nuevos lanzamientos',
     body: `Hola equipo de redacción de {{nombre_sala}},
 
-Nos ponemos en contacto desde {bandName} ({estilo}) para haceros llegar nuestro dossier promocional y últimos lanzamientos con motivo de nuestra gira 2026.
+Os escribo desde {bandName} ({estilo}) para haceros llegar nuestro dossier promocional y últimos lanzamientos con motivo de nuestra gira 2026.
 
-Nos ponemos a vuestra total disposición para:
-- Enviaros temas en máxima calidad (WAV/broadcast) para su emisión en vuestro programa.
-- Entrevistas, directos acústicos en estudio o reseñas de la gira.
+Nos ponemos a vuestra disposición para:
+- Enviaros temas en máxima calidad (WAV/broadcast) para vuestro programa.
+- Entrevistas, acústicos en estudio o reseñas de la gira.
 
-Dossier EPK interactivo y videoclips: {enlace_videos}
+Tenéis el dossier EPK interactivo y videoclips en el enlace de la firma.
 
-Muchas gracias por vuestro apoyo a la música independiente en directo,
-{bandName} Comunicación & Prensa`
+Muchas gracias por apoyar la música independiente en directo,
+
+Prensa & Comunicación — {bandName}`,
   },
   grupo: {
-    subject: 'Propuesta de concierto compartido e intercambio de fechas (Date Swap): {bandName} x {{nombre_sala}}',
-    body: `¡Buenas chavales de {{nombre_sala}}! 🎸🔥
+    subject: 'Concierto compartido e intercambio de fechas (Date Swap): {bandName} x {{nombre_sala}}',
+    body: `¡Buenas, gente de {{nombre_sala}}!
 
-Os escribimos desde {bandName} ({estilo}). Nos mola mucho vuestro proyecto y creemos que nuestros directos conectarían genial en una fecha compartida.
+Os escribo desde {bandName} ({estilo}). Nos gusta mucho vuestro proyecto y creemos que nuestros directos encajarían genial en una fecha compartida.
 
-Queremos proponeros un **intercambio de fechas / co-booking**:
-1. Os invitamos a tocar con nosotros en nuestra ciudad compartiendo sala, backline y taquilla al 50%.
-2. Coordinamos la fecha de vuelta en {{ciudad}} en vuestro espacio habitual para sumar ambos públicos locales y compartir gastos.
+Queríamos proponeros un intercambio de fechas (date swap): os invitamos a tocar con nosotros en nuestra zona compartiendo sala y taquilla al 50%, y montamos la fecha de vuelta en {{ciudad}} para sumar públicos y compartir gastos.
 
-Podéis escuchar lo que hacemos aquí: {enlace_videos}
+Podéis escuchar nuestro material en el enlace de abajo.
 
-¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos una breve llamada?
+¿Cómo lo veis? ¿Hablamos por WhatsApp esta semana para cuadrarlo?
 
-¡Un fuerte abrazo!
-{bandName}`
-  }
+¡Un abrazo!
+{bandName}`,
+  },
 };

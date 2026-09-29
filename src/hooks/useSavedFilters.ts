@@ -8,37 +8,37 @@ const DEFAULT_PRESET_FILTERS: SavedFilter[] = [
     sectionTab: 'salas',
     selectedCityFilter: 'Barcelona',
     statusFilter: 'nuevo',
-    minCapacityFilter: 300
+    minCapacityFilter: 300,
   },
   {
     id: 'preset-festivales-pendientes',
     nombre: 'Festivales pendientes de respuesta',
     sectionTab: 'salas',
     typeFilter: 'festival',
-    statusFilter: 'esperando_respuesta'
+    statusFilter: 'esperando_respuesta',
   },
   {
     id: 'preset-prensa-madrid',
     nombre: 'Medios y prensa en Madrid',
     sectionTab: 'medios',
     selectedCityFilter: 'Madrid',
-    typeFilter: 'medio'
+    typeFilter: 'medio',
   },
   {
     id: 'preset-interesados-negociando',
     nombre: 'Salas interesadas / Negociando',
     sectionTab: 'salas',
-    statusFilter: 'interesado'
-  }
+    statusFilter: 'interesado',
+  },
 ];
 
 export function useSavedFilters(
   sectionTab: 'salas' | 'medios' | 'grupos',
   setSectionTab: (tab: 'salas' | 'medios' | 'grupos') => void,
-  initialStatusFilter: LeadStatus | 'todos'
+  initialStatusFilter: LeadStatus | 'todos' | 'seguimientos'
 ) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(initialStatusFilter);
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos' | 'seguimientos'>(initialStatusFilter);
   // Para sectionTab === 'medios', typeFilter también acepta las sub-categorías heurísticas de
   // matchesMedioType en BookingCRM ('radio', 'tv', 'prensa', 'redes', 'podcast'), que no son
   // LeadType reales sino un filtro por palabras clave sobre el lead.
@@ -89,7 +89,7 @@ export function useSavedFilters(
       selectedCityFilter,
       statusFilter,
       typeFilter,
-      minCapacityFilter
+      minCapacityFilter,
     };
 
     const updated = [newSf, ...savedFilters];
@@ -107,7 +107,7 @@ export function useSavedFilters(
 
   const handleDeleteSavedFilter = (filterId: string, e: MouseEvent) => {
     e.stopPropagation();
-    const updated = savedFilters.filter(f => f.id !== filterId);
+    const updated = savedFilters.filter((f) => f.id !== filterId);
     setSavedFilters(updated);
     try {
       localStorage.setItem('bakandeya_saved_crm_filters', JSON.stringify(updated));
@@ -131,17 +131,27 @@ export function useSavedFilters(
   };
 
   return {
-    searchTerm, setSearchTerm,
-    statusFilter, setStatusFilter,
-    typeFilter, setTypeFilter,
-    selectedCityFilter, setSelectedCityFilter,
-    minCapacityFilter, setMinCapacityFilter,
-    onlyFavoritesFilter, setOnlyFavoritesFilter,
-    onlyVerifiedFilter, setOnlyVerifiedFilter,
+    searchTerm,
+    setSearchTerm,
+    statusFilter,
+    setStatusFilter,
+    typeFilter,
+    setTypeFilter,
+    selectedCityFilter,
+    setSelectedCityFilter,
+    minCapacityFilter,
+    setMinCapacityFilter,
+    onlyFavoritesFilter,
+    setOnlyFavoritesFilter,
+    onlyVerifiedFilter,
+    setOnlyVerifiedFilter,
     savedFilters,
-    isSavingFilterOpen, setIsSavingFilterOpen,
-    newFilterName, setNewFilterName,
-    activeSavedFilterId, setActiveSavedFilterId,
+    isSavingFilterOpen,
+    setIsSavingFilterOpen,
+    newFilterName,
+    setNewFilterName,
+    activeSavedFilterId,
+    setActiveSavedFilterId,
     handleApplySavedFilter,
     handleSaveCurrentFilter,
     handleDeleteSavedFilter,

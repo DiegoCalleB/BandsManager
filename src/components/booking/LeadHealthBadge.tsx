@@ -13,15 +13,15 @@ export interface LeadHealthInfo {
 
 export function getLeadHealth(lead: Lead): LeadHealthInfo {
   const now = new Date();
-  
+
   // Detect latest activity date
   let lastActivityDate: Date | null = null;
-  
+
   if (lead.fecha_ultima_respuesta) {
     const d = new Date(lead.fecha_ultima_respuesta);
     if (!isNaN(d.getTime())) lastActivityDate = d;
   }
-  
+
   if (lead.historial_contacto && lead.historial_contacto.length > 0) {
     for (const log of lead.historial_contacto) {
       const logD = new Date(log.fecha);
@@ -44,53 +44,60 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     }
   }
 
-  // 1. 🔥 Lead Caliente: Sala que respondió o tuvo contacto en los últimos 3 días O en negociación / interesado activo
+  // 1. 🔥 Lead Caliente: Clic en EPK, múltiples aperturas, respuesta reciente o negociación activa
+  const hasClickedEpk = Boolean(lead.clics_epk && lead.clics_epk > 0);
+  const multipleOpens = Boolean(lead.veces_abierto && lead.veces_abierto >= 2);
+
   if (
+    hasClickedEpk ||
+    multipleOpens ||
     (daysSinceLastActivity !== null && daysSinceLastActivity <= 3) ||
     lead.estado === 'interesado' ||
     lead.estado === 'negociando'
   ) {
-    const desc = daysSinceLastActivity !== null 
-      ? (daysSinceLastActivity === 0 ? 'Actividad hoy' : `Actividad hace ${daysSinceLastActivity}d`)
-      : 'Negociación / Respuesta activa';
+    let desc = 'Interés activo';
+    if (hasClickedEpk) {
+      desc = `Dossier EPK revisado (${lead.clics_epk} ${lead.clics_epk === 1 ? 'clic' : 'clics'})`;
+    } else if (multipleOpens) {
+      desc = `Email abierto ${lead.veces_abierto} veces`;
+    } else if (daysSinceLastActivity !== null) {
+      desc = daysSinceLastActivity === 0 ? 'Actividad hoy' : `Actividad hace ${daysSinceLastActivity}d`;
+    } else {
+      desc = 'Negociación / Respuesta activa';
+    }
+
     return {
       type: 'caliente',
-      label: '🔥 Lead Caliente',
-      badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold',
+      label: hasClickedEpk ? '🔥 EPK Visto' : multipleOpens ? '🔥 Releyendo' : '🔥 Lead Caliente',
+      badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold',
       icon: '🔥',
-      description: desc
+      description: desc,
     };
   }
 
   // 2. ⏳ Seguimiento Necesario: Más de 7 días sin respuesta tras enviar el pitch
-  if (
-    lead.estado === 'esperando_respuesta' ||
-    (lead.fecha_envio && !lead.fecha_ultima_respuesta && lead.estado !== 'no_interesado')
-  ) {
+  if (lead.estado === 'esperando_respuesta' || (lead.fecha_envio && !lead.fecha_ultima_respuesta && lead.estado !== 'no_interesado')) {
     const days = daysSincePitch ?? daysSinceLastActivity ?? 7;
     if (days >= 7) {
       return {
         type: 'seguimiento',
         label: '⏳ Seguimiento Necesario',
-        badgeClass: 'bg-amber-500/20 text-amber-400 border border-amber-500/50 font-bold',
+        badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold',
         icon: '⏳',
-        description: `Enviado hace ${days}d sin respuesta`
+        description: `Enviado hace ${days}d sin respuesta`,
       };
     }
   }
 
   // 3. 🧊 Lead Frío: Más de 14 días sin interacción registrada / sin respuesta
-  if (
-    (daysSinceLastActivity !== null && daysSinceLastActivity >= 14) ||
-    (daysSincePitch !== null && daysSincePitch >= 14)
-  ) {
+  if ((daysSinceLastActivity !== null && daysSinceLastActivity >= 14) || (daysSincePitch !== null && daysSincePitch >= 14)) {
     const days = daysSinceLastActivity ?? daysSincePitch ?? 14;
     return {
       type: 'frio',
       label: '🧊 Lead Frío',
-      badgeClass: 'bg-sky-500/20 text-sky-300 border border-sky-500/40 font-medium',
+      badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc)] font-medium',
       icon: '🧊',
-      description: `Sin interacción desde hace ${days}d`
+      description: `Sin interacción desde hace ${days}d`,
     };
   }
 
@@ -98,9 +105,9 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
   return {
     type: 'neutral',
     label: '✨ Activo',
-    badgeClass: 'bg-zinc-800/80 text-zinc-300 border border-zinc-700/60 font-medium',
+    badgeClass: 'bg-[var(--sunken)]/80 text-[var(--ink-2)] font-medium',
     icon: '✨',
-    description: 'En seguimiento regular'
+    description: 'En seguimiento regular',
   };
 }
 
@@ -110,26 +117,18 @@ interface LeadHealthBadgeProps {
   size?: 'sm' | 'md';
 }
 
-export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({
-  lead,
-  showDescription = false,
-  size = 'md'
-}) => {
+export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({ lead, showDescription = false, size = 'md' }) => {
   const health = getLeadHealth(lead);
 
   return (
     <div className="inline-flex flex-col items-start gap-0.5">
       <span
-        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] sm:text-xs shadow-xs ${health.badgeClass}`}
+        className={`inline-flex items-center gap-1 rounded-[var(--r-pill)] px-2 py-0.5 text-[10px] sm:text-xs ${health.badgeClass}`}
         title={health.description}
       >
         <span>{health.label}</span>
       </span>
-      {showDescription && (
-        <span className="text-[10px] text-zinc-400 font-mono tracking-tight pl-1">
-          {health.description}
-        </span>
-      )}
+      {showDescription && <span className="text-[10px] text-[var(--ink-2)] font-sans tracking-tight pl-1">{health.description}</span>}
     </div>
   );
 };

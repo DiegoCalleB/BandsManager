@@ -28,7 +28,7 @@ export async function urlToDataUrl(url: string): Promise<string> {
     const blob = await res.blob();
     return new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string || '');
+      reader.onloadend = () => resolve((reader.result as string) || '');
       reader.onerror = () => resolve('');
       reader.readAsDataURL(blob);
     });
@@ -43,13 +43,13 @@ export async function urlToDataUrl(url: string): Promise<string> {
  */
 export function getCleanSvgString(svgEl: SVGElement, includeLogo?: { dataUrl: string; sizePercent?: number }): string {
   const cloned = svgEl.cloneNode(true) as SVGElement;
-  
+
   // Asegurar namespaces y viewBox
   cloned.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   cloned.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-  
+
   const viewBox = cloned.getAttribute('viewBox') || '0 0 256 256';
-  const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
+  const [, , vbWidth, vbHeight] = viewBox.split('').map(Number);
   const w = vbWidth || 256;
   const h = vbHeight || 256;
 
@@ -67,7 +67,7 @@ export function getCleanSvgString(svgEl: SVGElement, includeLogo?: { dataUrl: st
     bgRect.setAttribute('height', String(logoSize + 8));
     bgRect.setAttribute('rx', String(radius + 2));
     bgRect.setAttribute('fill', '#ffffff');
-    bgRect.setAttribute('stroke', '#f59e0b');
+    bgRect.setAttribute('stroke', 'var(--acc)');
     bgRect.setAttribute('stroke-width', '2');
     cloned.appendChild(bgRect);
 
@@ -166,7 +166,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Borde exterior ámbar / dorado
-    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeStyle = 'var(--acc)';
     ctx.lineWidth = 24;
     ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
@@ -191,7 +191,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
 
     // Concierto / Sala / Ciudad
     if (options.concertTitle) {
-      ctx.fillStyle = '#f59e0b';
+      ctx.fillStyle = 'var(--acc)';
       ctx.font = '800 52px system-ui, -apple-system, sans-serif';
       ctx.fillText(options.concertTitle.toUpperCase(), canvas.width / 2, curY);
       curY += 60;
@@ -230,7 +230,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
     ctx.shadowColor = 'transparent';
 
-    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeStyle = 'var(--acc)';
     ctx.lineWidth = 16;
     ctx.strokeRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
 
@@ -241,9 +241,9 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const centerLogoSize = 280;
       const cx = qrX + (qrSize - centerLogoSize) / 2;
       const cy = qrY + (qrSize - centerLogoSize) / 2;
-      
+
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeStyle = 'var(--acc)';
       ctx.lineWidth = 10;
       ctx.beginPath();
       ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
@@ -266,7 +266,6 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillStyle = '#94a3b8';
     ctx.font = '500 28px system-ui, -apple-system, sans-serif';
     ctx.fillText('BandManager • Gestión y Captura de Fans para Músicos', canvas.width / 2, canvas.height - 100);
-
   } else if (template === 'badge-card') {
     // Tarjeta Cuadrada para Merchandising / Pegatina 2400 x 2400 px
     canvas.width = 2400;
@@ -275,7 +274,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeStyle = 'var(--acc)';
     ctx.lineWidth = 20;
     ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
 
@@ -287,7 +286,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     curY += 70;
 
     if (options.concertTitle) {
-      ctx.fillStyle = '#f59e0b';
+      ctx.fillStyle = 'var(--acc)';
       ctx.font = '700 44px system-ui, -apple-system, sans-serif';
       ctx.fillText(options.concertTitle, canvas.width / 2, curY);
       curY += 70;
@@ -303,9 +302,9 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const centerLogoSize = 300;
       const cx = qrX + (qrSize - centerLogoSize) / 2;
       const cy = qrY + (qrSize - centerLogoSize) / 2;
-      
+
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeStyle = 'var(--acc)';
       ctx.lineWidth = 10;
       ctx.beginPath();
       ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
@@ -319,7 +318,6 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillStyle = '#475569';
     ctx.font = 'bold 36px monospace';
     ctx.fillText(options.url || '', canvas.width / 2, curY);
-
   } else {
     // QR-ONLY (3000 x 3000 px Ultra HD limpio para maquetadores)
     const dim = 3000;
@@ -332,7 +330,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
 
     // Padding de silencio de 200px
     const pad = 200;
-    const qrSize = dim - (pad * 2);
+    const qrSize = dim - pad * 2;
     ctx.drawImage(qrImg, pad, pad, qrSize, qrSize);
 
     // Logo central integrado en HD
@@ -342,7 +340,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const cy = pad + (qrSize - centerLogoSize) / 2;
 
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeStyle = 'var(--acc)';
       ctx.lineWidth = 16;
       ctx.beginPath();
       ctx.roundRect(cx - 20, cy - 20, centerLogoSize + 40, centerLogoSize + 40, 32);
@@ -356,17 +354,21 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
   URL.revokeObjectURL(svgUrl);
 
   // Descarga como archivo PNG
-  canvas.toBlob((blob) => {
-    if (!blob) return;
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${options.filename || 'codigo-qr-ultra-hd'}-${template}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, 'image/png', 1.0);
+  canvas.toBlob(
+    (blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${options.filename || 'codigo-qr-ultra-hd'}-${template}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+    'image/png',
+    1.0
+  );
 }
 
 /**
@@ -406,195 +408,196 @@ export function printHighQualityFlyer(options: {
   const subtitle = options.subtitle || 'Únete a nuestra comunidad oficial, accede a canciones inéditas, sorpresas exclusivas y sorteos.';
 
   printWin.document.write(`
-    <!DOCTYPE html>
-    <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <title>Cartel QR A4 - ${bandName} ${concertTitle ? `(${concertTitle})` : ''}</title>
-        <style>
-          @page {
-            size: A4 portrait;
-            margin: 12mm;
-          }
-          * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-          }
-          body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #ffffff;
-            color: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 0;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-          .poster {
-            width: 100%;
-            max-width: 680px;
-            margin: 0 auto;
-            border: 6px solid #f59e0b;
-            border-radius: 28px;
-            padding: 40px 32px;
-            text-align: center;
-            background: #ffffff;
-            position: relative;
-          }
-          .logo-box {
-            margin: 0 auto 16px auto;
-            max-width: 220px;
-            max-height: 90px;
-          }
-          .logo-box img {
-            max-width: 100%;
-            max-height: 90px;
-            object-fit: contain;
-          }
-          h1.band-title {
-            font-size: 32px;
-            font-weight: 900;
-            color: #0f172a;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            line-height: 1.1;
-            margin-bottom: 6px;
-          }
-          h2.concert-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #d97706;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-          }
-          p.date-city {
-            font-size: 15px;
-            font-weight: 600;
-            color: #64748b;
-            font-family: monospace;
-            margin-bottom: 24px;
-          }
-          .cta-banner {
-            background: #0f172a;
-            color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 16px;
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-            display: inline-block;
-          }
-          p.desc {
-            font-size: 14px;
-            color: #475569;
-            line-height: 1.4;
-            max-width: 480px;
-            margin: 0 auto 20px auto;
-            font-weight: 500;
-          }
-          .qr-wrapper {
-            position: relative;
-            display: inline-block;
-            padding: 20px;
-            background: #ffffff;
-            border: 4px solid #f59e0b;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-          }
-          .qr-wrapper svg {
-            width: 280px;
-            height: 280px;
-            display: block;
-          }
-          .qr-center-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 64px;
-            height: 64px;
-            background: #ffffff;
-            border-radius: 16px;
-            border: 3px solid #f59e0b;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 4px;
-          }
-          .qr-center-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-          }
-          .url-box {
-            margin-top: 24px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-family: monospace;
-            font-size: 13px;
-            color: #334155;
-            font-weight: 700;
-            word-break: break-all;
-          }
-          .footer-note {
-            margin-top: 20px;
-            font-size: 11px;
-            color: #94a3b8;
-            font-weight: 500;
-          }
-          @media print {
-            body {
-              min-height: auto;
-              padding: 0;
-            }
-            .poster {
-              box-shadow: none;
-              border-width: 4px;
-              padding: 28px 24px;
-            }
-            .no-print {
-              display: none !important;
-            }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="poster">
-          ${logoUrl ? `<div class="logo-box"><img src="${logoUrl}" alt="${bandName}" /></div>` : ''}
-          <h1 class="band-title">${bandName}</h1>
-          ${concertTitle ? `<h2 class="concert-title">${concertTitle}</h2>` : ''}
-          ${dateCity ? `<p class="date-city">${dateCity}</p>` : ''}
-          
-          <div class="cta-banner">${cta}</div>
-          <p class="desc">${subtitle}</p>
+ <!DOCTYPE html>
+ <html lang="es">
+ <head>
+ <meta charset="UTF-8">
+ <title>Cartel QR A4 - ${bandName} ${concertTitle ? `(${concertTitle})` : ''}</title>
+ <style>
+ @page {
+ size: A4 portrait;
+ margin: 12mm;
+ }
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ body {
+ font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+ background: #ffffff;
+ color: #0f172a;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ min-height: 100vh;
+ padding: 0;
+ -webkit-print-color-adjust: exact;
+ print-color-adjust: exact;
+ }
+ .poster {
+ width: 100%;
+ max-width: 680px;
+ margin: 0 auto;
+ border-radius: 28px;
+ padding: 40px 32px;
+ text-align: center;
+ background: #ffffff;
+ position: relative;
+ box-shadow: 0 0 0 3px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
+ }
+ .logo-box {
+ margin: 0 auto 16px auto;
+ max-width: 220px;
+ max-height: 90px;
+ }
+ .logo-box img {
+ max-width: 100%;
+ max-height: 90px;
+ object-fit: contain;
+ }
+ h1.band-title {
+ font-size: 32px;
+ font-weight: 900;
+ color: #0f172a;
+ text-transform:;
+ letter-spacing: 1px;
+ line-height: 1.1;
+ margin-bottom: 6px;
+ }
+ h2.concert-title {
+ font-size: 22px;
+ font-weight: 800;
+ color: #d97706;
+ text-transform:;
+ margin-bottom: 4px;
+ }
+ p.date-city {
+ font-size: 15px;
+ font-weight: 600;
+ color: #64748b;
+ font-family: monospace;
+ margin-bottom: 24px;
+ }
+ .cta-banner {
+ background: #0f172a;
+ color: #ffffff;
+ padding: 12px 20px;
+ border-radius: 16px;
+ font-size: 18px;
+ font-weight: 800;
+ letter-spacing: 0.5px;
+ margin-bottom: 12px;
+ display: inline-block;
+ }
+ p.desc {
+ font-size: 14px;
+ color: #475569;
+ line-height: 1.4;
+ max-width: 480px;
+ margin: 0 auto 20px auto;
+ font-weight: 500;
+ }
+ .qr-wrapper {
+ position: relative;
+ display: inline-block;
+ padding: 20px;
+ background: #ffffff;
+ border-radius: 24px;
+ box-shadow: 0 0 0 2px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
+ }
+ .qr-wrapper svg {
+ width: 280px;
+ height: 280px;
+ display: block;
+ }
+ .qr-center-logo {
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+ width: 64px;
+ height: 64px;
+ background: #ffffff;
+ border-radius: 16px;
+ box-shadow: 0 0 0 2px var(--acc-soft), 0 4px 12px rgba(0,0,0,0.15);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ overflow: hidden;
+ padding: 4px;
+ }
+ .qr-center-logo img {
+ width: 100%;
+ height: 100%;
+ object-fit: contain;
+ }
+ .url-box {
+ margin-top: 24px;
+ background: #e8eef5;
+ border-radius: 12px;
+ padding: 10px 16px;
+ font-family: monospace;
+ font-size: 13px;
+ color: #334155;
+ font-weight: 700;
+ word-break: break-all;
+ }
+ .footer-note {
+ margin-top: 20px;
+ font-size: 11px;
+ color: #94a3b8;
+ font-weight: 500;
+ }
+ @media print {
+ body {
+ min-height: auto;
+ padding: 0;
+ }
+ .poster {
+ box-shadow: none;
+ border-width: 4px;
+ padding: 28px 24px;
+ }
+ .no-print {
+ display: none !important;
+ }
+ }
+ </style>
+ </head>
+ <body>
+ <div class="poster">
+ ${logoUrl ? `<div class="logo-box"><img src="${logoUrl}" alt="${bandName}" /></div>` : ''}
+ <h1 class="band-title">${bandName}</h1>
+ ${concertTitle ? `<h2 class="concert-title">${concertTitle}</h2>` : ''}
+ ${dateCity ? `<p class="date-city">${dateCity}</p>` : ''}
+ 
+ <div class="cta-banner">${cta}</div>
+ <p class="desc">${subtitle}</p>
 
-          <div class="qr-wrapper">
-            <div id="svg-container">${svgString}</div>
-            ${logoUrl ? `
-              <div class="qr-center-logo">
-                <img src="${logoUrl}" alt="Logo" />
-              </div>
-            ` : ''}
-          </div>
+ <div class="qr-wrapper">
+ <div id="svg-container">${svgString}</div>
+ ${
+   logoUrl
+     ? `
+ <div class="qr-center-logo">
+ <img src="${logoUrl}" alt="Logo" />
+ </div>
+ `
+     : ''
+ }
+ </div>
 
-          <div class="url-box">${url}</div>
-          <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
-        </div>
-        <script>
-          setTimeout(() => {
-            window.print();
-          }, 350);
-        </script>
-      </body>
-    </html>
-  `);
+ <div class="url-box">${url}</div>
+ <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
+ </div>
+ <script>
+ setTimeout(() => {
+ window.print();
+ }, 350);
+ </script>
+ </body>
+ </html>
+ `);
   printWin.document.close();
 }

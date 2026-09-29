@@ -1,8 +1,26 @@
 import { Song } from '../types';
 
 const ROMAN_NUMERALS = new Set([
-  'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-  'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'
+  'I',
+  'II',
+  'III',
+  'IV',
+  'V',
+  'VI',
+  'VII',
+  'VIII',
+  'IX',
+  'X',
+  'XI',
+  'XII',
+  'XIII',
+  'XIV',
+  'XV',
+  'XVI',
+  'XVII',
+  'XVIII',
+  'XIX',
+  'XX',
 ]);
 
 const PRESERVE_LOWER = new Set(['feat.', 'ft.', 'vs.']);
@@ -18,7 +36,7 @@ export function formatSongTitle(rawTitle?: string | null): string {
   const trimmed = rawTitle.trim();
   if (!trimmed) return '';
 
-  // Separar tokens respetando espacios y signos de delimitación (, [ ] ( ) / - _ – — : " ' )
+  // Separar tokens respetando espacios y signos de delimitación (, [ ] ( ) / - _ – — : "' )
   const tokens = trimmed.split(/(\s+|[()\[\]/\-_–—:\",])/);
 
   const formatted = tokens.map((token) => {
@@ -47,7 +65,7 @@ export function formatSongTitle(rawTitle?: string | null): string {
       return lower;
     }
 
-    // Si comienza con comilla o apóstrofe (ej. 'N', "Intro")
+    // Si comienza con comilla o apóstrofe (ej.'N', "Intro")
     if ((lower.startsWith("'") || lower.startsWith('"')) && lower.length > 1) {
       const quote = lower.charAt(0);
       const rest = lower.slice(1);

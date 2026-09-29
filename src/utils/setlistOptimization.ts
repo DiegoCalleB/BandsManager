@@ -6,7 +6,7 @@ import { Setlist, Song, SetlistItem } from '../types';
  */
 export function calculateSetlistDurationSec(setlist: Setlist, songs: Song[]): number {
   if (!setlist || !setlist.items) return 0;
-  const songMap = new Map(songs.map(s => [s.id, s]));
+  const songMap = new Map(songs.map((s) => [s.id, s]));
 
   let totalSec = 0;
   for (const item of setlist.items) {
@@ -103,14 +103,14 @@ export function findBestSetlistMatch(
       }
 
       if (isFestival && st.tipoFormato === 'festival') {
-        reason += ' · Formato festival';
+        reason += '· Formato festival';
       }
 
       bestMatch = {
         setlist: st,
         durationMin,
         differenceMin: diff,
-        reason
+        reason,
       };
     }
   }
@@ -132,12 +132,12 @@ export function generateAutoSetlistForConcert(
   const nombre = `Bolo ${venueName || 'Directo'} (${targetMinutes} min)`;
 
   // Ordenar canciones por energía descendente si es festival, o balanceada para sala
-  const availableSongs = [...songs].filter(s => s.id);
+  const availableSongs = [...songs].filter((s) => s.id);
   if (availableSongs.length === 0) {
     return {
       nombre,
       items: [],
-      estimatedDurationMin: 0
+      estimatedDurationMin: 0,
     };
   }
 
@@ -166,7 +166,7 @@ export function generateAutoSetlistForConcert(
         tipoItem: 'bloque',
         bloqueSubtipo: 'presentacion',
         tituloCustom: 'Saludo al público',
-        duracionEstimadaMinutos: 2
+        duracionEstimadaMinutos: 2,
       });
       accumulatedSec += 120;
     }
@@ -178,7 +178,7 @@ export function generateAutoSetlistForConcert(
         tipoItem: 'bloque',
         bloqueSubtipo: 'bis',
         tituloCustom: 'Petición de Bises / Parón',
-        duracionEstimadaMinutos: 2
+        duracionEstimadaMinutos: 2,
       });
       accumulatedSec += 120;
     }
@@ -186,7 +186,7 @@ export function generateAutoSetlistForConcert(
     items.push({
       id: `item-auto-${s.id}-${Date.now()}-${songIndex}`,
       tipoItem: 'cancion',
-      songId: s.id
+      songId: s.id,
     });
     accumulatedSec += duration;
     songIndex++;
@@ -195,6 +195,6 @@ export function generateAutoSetlistForConcert(
   return {
     nombre,
     items,
-    estimatedDurationMin: Math.round(accumulatedSec / 60)
+    estimatedDurationMin: Math.round(accumulatedSec / 60),
   };
 }

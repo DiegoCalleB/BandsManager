@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/* Sistema «Espectro» — ver skills/visual-identity/SKILL.md.
+   Por defecto [data-theme="classic"]: no cambia el aspecto actual. */
+@import "./styles/tokens.css";
+
 :root {
   --font-sans-current: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display-current: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -20,6 +24,11 @@ html, body {
   font-family: var(--font-sans-current);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 .font-display {
@@ -43,12 +52,12 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--ink-rgb), 0.15);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--ink-rgb), 0.25);
 }
 
 /* Hide scrollbar utility */
@@ -61,6 +70,15 @@ html, body {
   scrollbar-width: none;
 }
 
+/* Espectro: Remove borders globally per Law 1 "Ningún borde" */
+button, input, textarea, select, iframe {
+  border: none;
+}
+/* Focus ring only on interactive elements, not their ancestors */
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: none;
+}
+
 /* Iconography with clean precision */
 .lucide {
   stroke-width: 2;
@@ -70,97 +88,110 @@ html, body {
 
 /* --- MICRO-ANIMATIONS & HIGH PERFORMANCE TACTILE UI --- */
 
-/* Targeted interactive press effect */
+/* Targeted interactive press effect with Apple spring physics */
 .btn-interactive,
 .btn-primary,
 .btn-secondary {
-  will-change: transform, background-color, border-color;
-  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.15s ease,
-              border-color 0.15s ease,
-              box-shadow 0.15s ease,
-              color 0.15s ease;
+  will-change: transform, background-color, border-color, box-shadow;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-interactive:active:not(:disabled),
 .btn-primary:active:not(:disabled),
 .btn-secondary:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
-/* Primary Modern Softened Action Button */
+/* Primary Modern Action Button - Studio Calm */
 .btn-primary {
-  background-color: #6366f1;
-  color: #ffffff;
+  background-color: var(--acc);
+  color: var(--on-acc);
   font-weight: 600;
   border-radius: 0.75rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.55rem 1.15rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+  box-shadow: none;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #4f46e5;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  background-color: var(--acc);
+  opacity: 0.9;
+  box-shadow: none;
 }
 
-/* Secondary Sleek Modern Surface Button */
+/* Secondary Sleek Surface Button */
 .btn-secondary {
-  background-color: rgba(30, 41, 59, 0.7);
-  color: #f1f5f9;
+  background-color: var(--surface);
+  color: var(--ink);
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.75rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.55rem 1.15rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  backdrop-filter: blur(8px);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: rgba(51, 65, 85, 0.8);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
+  background-color: var(--sunken);
+  border-color: transparent;
+  color: var(--ink);
 }
 
-/* Minimalist Card Container */
+/* Minimalist Card Container - Studio Surface */
 .card-minimal {
-  background-color: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--surface);
   border-radius: 0.875rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .card-minimal:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  background-color: var(--sunken);
 }
 
 .card-interactive {
-  background-color: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--surface);
   border-radius: 0.875rem;
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .card-interactive:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+  background-color: var(--sunken);
+  transform: translateY(-2px);
 }
 
-/* Lightweight Hardware-Accelerated Entrance Animations */
+/* Entrance animations — solo opacity, nunca transform.
+ *
+ * Antes tenían un translate3d/scale de "from" que volvía a transform:none en "to". Con
+ * animation-fill-mode:forwards (ver .animate-fade-in/.animate-pop-in abajo), el navegador
+ * mantiene el valor animado de "transform" indefinidamente incluso después de terminar la
+ * animación — getComputedStyle() ya no devuelve la palabra 'none', devuelve una matriz
+ * identidad (matrix(1,0,0,1,0,0)), que SÍ cuenta como "transform distinto de none" a
+ * efectos de containing block. Cualquier position:fixed descendiente (un modal, un menú)
+ * deja de posicionarse contra el viewport y pasa a posicionarse contra esta caja.
+ *
+ * Esto es justo lo que rompía el modal de "Añadir Widget" en producción (sesión
+ * 2026-09-23): App.tsx:~1393 envuelve CADA vista de la app en un div con animate-fade-in
+ * — no era un bug de ese modal en concreto, afectaba a cualquier position:fixed montado
+ * dentro de cualquier vista. El z-index nunca fue suficiente por sí solo: el contenedor
+ * ya estaba mal posicionado antes de comparar z-index con nada.
+ */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translate3d(0, 3px, 0); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .animate-fade-in {
@@ -186,11 +217,13 @@ html, body {
 
 /* Subtle Glow Effect for Active Statuses */
 .glow-amber {
-  box-shadow: 0 0 16px -2px rgba(245, 158, 11, 0.3);
+  box-shadow: none;
+  background-color: var(--acc-soft);
 }
 
 .glow-emerald {
-  box-shadow: 0 0 16px -2px rgba(16, 185, 129, 0.3);
+  box-shadow: none;
+  background-color: var(--ok-soft);
 }
 
 /* --- GOOGLE TRANSLATE STYLING CLEANUP --- */
@@ -283,8 +316,50 @@ iframe.goog-te-banner-frame {
   .animate-donate-cta-glow,
   .animate-donate-cta-glow-delayed,
   .animate-donate-sheen,
-  .animate-donate-sheen-delayed {
-    animation: none;
+  .animate-donate-sheen-delayed,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
   }
+}
+
+/* Móvil táctil: backdrop-filter con blur obliga a la GPU a varias pasadas por frame (calor y
+   batería). Espectro ya prohíbe el blur, pero si queda algún resto heredado se apaga aquí y se
+   sustituye por la superficie opaca del tema activo (token, no un negro fijo que rompería el
+   tema claro). */
+@media (hover: none) and (pointer: coarse) {
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: var(--surface) !important;
+  }
+
+  .animate-pulse {
+    animation-duration: 3.5s !important;
+  }
+
+  .animate-ping {
+    animation-duration: 3s !important;
+  }
+}
+
+/* =========================================================================
+   TEXTAREAS AMPLIABLES Y ESPACIOSAS (EXPANDABLE & RESIZABLE TEXTAREAS)
+   ========================================================================= */
+textarea {
+  resize: vertical !important;
+  min-height: 5.5rem;
+  line-height: 1.5;
+}
+
+/* Permitir que textareas específicas de inputs rápidos de una línea o modales pequeños tengan control */
+textarea.resize-y {
+  resize: vertical !important;
+}
+
+textarea::-webkit-resizer {
+  background-color: transparent;
+  background-image: radial-gradient(circle at center, rgba(212, 212, 216, 0.45) 1.5px, transparent 1.5px);
+  background-size: 5px 5px;
 }
 

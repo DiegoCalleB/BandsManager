@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import {
-  AlertCircle, CheckCircle2
-} from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { EPK_LANGUAGES } from '../i18n/epkTranslations';
@@ -18,6 +16,7 @@ import { EPKDonacionesBlock } from './epk/EPKDonacionesBlock';
 import { EPKFirmaQRBlock } from './epk/EPKFirmaQRBlock';
 import { EPKPlantillasBlock } from './epk/EPKPlantillasBlock';
 import { normalizePlan } from '../utils/planPermissions';
+import { getPublicEpkUrl } from '../utils/bandHash';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 
@@ -32,7 +31,11 @@ interface EPKManagerProps {
 }
 
 const DEFAULT_EPK_CONFIG: EPKConfig = {
-  biografia: 'Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos con sección de metales potente y letras combativas pero festivas. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.',
+  biografia:
+    'Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.',
+  genero: 'Mestizaje / Balkan-Ska / Reggae / Electrónica',
+  bandasSimilares: ['Macaco', 'La Pegatina', 'Green Valley', 'Ojos de Brujo', 'Bomba Estéreo'],
+  mostrarBandasSimilares: true,
   logoUrl: '/logo_bakandeya.jpg',
   dossierPdfUrl: '',
   dossierPdfName: '',
@@ -42,9 +45,10 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
   contactoBooking: {
     nombre: 'Booking & Management',
     email: '',
-    telefono: ''
+    telefono: '',
   },
-  riderTecnico: '- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para instrumentos y percusión\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)',
+  riderTecnico:
+    '- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para instrumentos y percusión\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)',
   enlacesRedes: {
     spotify: 'https://open.spotify.com',
     youtube: 'https://youtube.com',
@@ -57,7 +61,7 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     facebook: '',
     twitter: '',
     revolut: '',
-    paypal: ''
+    paypal: '',
   },
   donacionRevolut: {
     habilitado: true,
@@ -67,7 +71,7 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     paypalUrl: '',
     metodoPorDefecto: 'revolut',
     titulo: 'Colabora con la banda',
-    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
   },
   firmaEmail: {
     nombreRemitente: 'Booking & Management',
@@ -85,9 +89,9 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
       appleMusic: 'https://music.apple.com',
       bandcamp: 'https://bandcamp.com',
       website: 'https://bandmanager.io',
-      whatsapp: ''
-    }
-  }
+      whatsapp: '',
+    },
+  },
 };
 
 // Base vacía para cualquier banda que NO sea Bakandeya: los datos de
@@ -95,6 +99,9 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
 // como fallback para rellenar el dossier de una banda nueva o distinta.
 const EMPTY_EPK_CONFIG: EPKConfig = {
   biografia: '',
+  genero: '',
+  bandasSimilares: [],
+  mostrarBandasSimilares: true,
   logoUrl: '',
   dossierPdfUrl: '',
   dossierPdfName: '',
@@ -104,7 +111,7 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
   contactoBooking: {
     nombre: '',
     email: '',
-    telefono: ''
+    telefono: '',
   },
   riderTecnico: '',
   enlacesRedes: {
@@ -119,7 +126,7 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
     facebook: '',
     twitter: '',
     revolut: '',
-    paypal: ''
+    paypal: '',
   },
   donacionRevolut: {
     habilitado: true,
@@ -129,7 +136,7 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
     paypalUrl: '',
     metodoPorDefecto: 'revolut',
     titulo: 'Colabora con la banda',
-    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
   },
   firmaEmail: {
     nombreRemitente: '',
@@ -146,24 +153,42 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
       tiktok: '',
       appleMusic: '',
       bandcamp: '',
+      soundcloud: '',
+      bandsintown: '',
+      songkick: '',
+      wegow: '',
+      tidal: '',
+      deezer: '',
+      amazonMusic: '',
+      twitch: '',
+      threads: '',
       website: '',
       whatsapp: '',
       revolut: '',
-      paypal: ''
-    }
-  }
+      paypal: '',
+    },
+  },
 };
 
 const UNIFIED_PLATFORMS = [
   { key: 'spotify', label: 'Spotify', icon: '🟢', placeholder: 'https://open.spotify.com/artist/...' },
   { key: 'instagram', label: 'Instagram', icon: '📸', placeholder: 'https://instagram.com/...' },
   { key: 'youtube', label: 'YouTube', icon: '🔴', placeholder: 'https://youtube.com/...' },
+  { key: 'soundcloud', label: 'SoundCloud', icon: '☁️', placeholder: 'https://soundcloud.com/...' },
+  { key: 'bandsintown', label: 'Bandsintown', icon: '🎪', placeholder: 'https://bandsintown.com/a/...' },
+  { key: 'songkick', label: 'Songkick', icon: '🎫', placeholder: 'https://songkick.com/artists/...' },
+  { key: 'wegow', label: 'Wegow', icon: '🎟️', placeholder: 'https://wegow.com/es-es/artistas/...' },
   { key: 'tiktok', label: 'TikTok', icon: '🎵', placeholder: 'https://tiktok.com/@...' },
   { key: 'appleMusic', label: 'Apple Music', icon: '🍎', placeholder: 'https://music.apple.com/...' },
   { key: 'bandcamp', label: 'Bandcamp', icon: '⛺', placeholder: 'https://tubanda.bandcamp.com' },
+  { key: 'tidal', label: 'TIDAL', icon: '⬛', placeholder: 'https://tidal.com/browse/artist/...' },
+  { key: 'deezer', label: 'Deezer', icon: '🟣', placeholder: 'https://deezer.com/artist/...' },
+  { key: 'amazonMusic', label: 'Amazon Music', icon: '🔷', placeholder: 'https://music.amazon.com/artists/...' },
+  { key: 'twitch', label: 'Twitch', icon: '💜', placeholder: 'https://twitch.tv/...' },
+  { key: 'threads', label: 'Threads', icon: '🧵', placeholder: 'https://threads.net/@...' },
   { key: 'website', label: 'Sitio Web Oficial', icon: '🌐', placeholder: 'https://www.tubanda.com' },
   { key: 'facebook', label: 'Facebook', icon: '📘', placeholder: 'https://facebook.com/...' },
-  { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' }
+  { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' },
 ];
 
 export const EPKManager: React.FC<EPKManagerProps> = ({
@@ -171,10 +196,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   songs: songsProp,
   onSave,
   currentUser,
-  isPromoPlan: isPromoPlanProp
+  isPromoPlan: isPromoPlanProp,
 }) => {
-  const isPromoUser = isPromoPlanProp ?? (normalizePlan(currentUser?.plan) === 'promo');
-  // App.tsx monta este componente sin pasarle 'songs', así que el selector de temas
+  const isPromoUser = isPromoPlanProp ?? normalizePlan(currentUser?.plan) === 'promo';
+  // App.tsx monta este componente sin pasarle'songs', así que el selector de temas
   // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
   // por prop, se piden al backend igual que hace RepertorioSetlists.
   const [songsCargadas, setSongsCargadas] = useState<Song[]>([]);
@@ -192,7 +217,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     const initialRedes = {
       ...baseDefaults.enlacesRedes,
       ...(epkConfig?.firmaEmail?.redesSociales || {}),
-      ...(epkConfig?.enlacesRedes || {})
+      ...(epkConfig?.enlacesRedes || {}),
     };
     return {
       ...baseDefaults,
@@ -201,8 +226,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       firmaEmail: {
         ...baseDefaults.firmaEmail,
         ...(epkConfig?.firmaEmail || {}),
-        redesSociales: initialRedes
-      }
+        redesSociales: initialRedes,
+      },
     };
   });
 
@@ -210,15 +235,18 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     if (songsProp && songsProp.length > 0) return;
     let cancelado = false;
     setErrorSongs(null);
-    api.getSongs()
-      .then(data => {
+    api
+      .getSongs()
+      .then((data) => {
         if (!cancelado && Array.isArray(data?.songs)) setSongsCargadas(data.songs);
       })
-      .catch(err => {
+      .catch((err) => {
         console.warn('No se pudo cargar el repertorio para el EPK:', err);
         if (!cancelado) setErrorSongs('No se pudo cargar tu repertorio. Recarga la página o inténtalo en unos minutos.');
       });
-    return () => { cancelado = true; };
+    return () => {
+      cancelado = true;
+    };
   }, [songsProp, activeBandId]);
 
   React.useEffect(() => {
@@ -227,16 +255,16 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         ...baseDefaults.enlacesRedes,
         ...(config.enlacesRedes || {}),
         ...(epkConfig.firmaEmail?.redesSociales || {}),
-        ...(epkConfig.enlacesRedes || {})
+        ...(epkConfig.enlacesRedes || {}),
       };
       const mergedContacto = {
         ...baseDefaults.contactoBooking,
-        ...(epkConfig.contactoBooking || {})
+        ...(epkConfig.contactoBooking || {}),
       };
       const mergedFirma = {
         ...baseDefaults.firmaEmail,
         ...(epkConfig.firmaEmail || {}),
-        redesSociales: mergedRedes
+        redesSociales: mergedRedes,
       };
       if (!mergedFirma.telefono && mergedContacto.telefono) {
         mergedFirma.telefono = mergedContacto.telefono;
@@ -245,13 +273,13 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         mergedFirma.email = mergedContacto.email;
       }
 
-      setConfig(prev => ({
+      setConfig((prev) => ({
         ...prev,
         ...epkConfig,
         logoUrl: epkConfig.logoUrl || prev.logoUrl || (isBakandeya ? '/logo_bakandeya.jpg' : ''),
         contactoBooking: mergedContacto,
         enlacesRedes: mergedRedes,
-        firmaEmail: mergedFirma
+        firmaEmail: mergedFirma,
       }));
     }
   }, [epkConfig, isBakandeya]);
@@ -276,18 +304,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [errorTraduccion, setErrorTraduccion] = useState<string | null>(null);
   const [avisoTraduccion, setAvisoTraduccion] = useState<string | null>(null);
 
-  // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
-  // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
-  // defecto del servidor para resolver de qué banda es el dossier. Sin banda activa, no hay
-  // banda de la que generar un enlace (antes esto generaba, sin querer, un enlace válido al EPK
-  // público real de Bakandeya).
-  const bandQueryParam = activeBandId ? `?band=${encodeURIComponent(activeBandId)}` : '';
-  const rawEpkBase = typeof window !== 'undefined' 
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
-        ? `${window.location.origin}/epk` 
-        : 'https://bandmanager.io/epk') 
-    : 'https://bandmanager.io/epk';
-  const publicEpkUrl = `${rawEpkBase}${bandQueryParam}`;
+  // Genera el enlace público seguro con ID cifrado/hasheado
+  const publicEpkUrl = getPublicEpkUrl(activeBandId);
 
   const handleSave = async () => {
     setSaveError(null);
@@ -298,8 +316,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         bandId: activeBandId,
         firmaEmail: {
           ...(config.firmaEmail || {}),
-          redesSociales: { ...(config.enlacesRedes || {}) }
-        }
+          redesSociales: { ...(config.enlacesRedes || {}) },
+        },
       };
 
       await api.updateEpkConfig(payload);
@@ -311,8 +329,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3500);
     } catch (err: any) {
-      console.error("Error saving EPK config:", err);
-      setSaveError(err?.message || "No se pudo guardar el dossier. Inténtalo de nuevo.");
+      console.error('Error saving EPK config:', err);
+      setSaveError(err?.message || 'No se pudo guardar el dossier. Inténtalo de nuevo.');
     } finally {
       setSaving(false);
     }
@@ -332,10 +350,13 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     setIsUploadingLogo(true);
     setSaveError(null);
     try {
-      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'logo' });
+      const url = await uploadFileToServer(file, {
+        bandId: activeBandId,
+        category: 'logo',
+      });
       await persistEpkUpdate({ ...config, logoUrl: url });
     } catch (err: any) {
-      console.error("Error uploading logo:", err);
+      console.error('Error uploading logo:', err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
         if (ev.target?.result) {
@@ -343,8 +364,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
           try {
             await persistEpkUpdate({ ...config, logoUrl: url });
           } catch (fallbackErr: any) {
-            console.error("Error saving logo fallback:", fallbackErr);
-            setSaveError(fallbackErr?.message || "No se pudo subir el logo. Inténtalo de nuevo.");
+            console.error('Error saving logo fallback:', fallbackErr);
+            setSaveError(fallbackErr?.message || 'No se pudo subir el logo. Inténtalo de nuevo.');
           }
         }
       };
@@ -361,16 +382,19 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     setIsUploadingDossier(true);
     setSaveError(null);
     try {
-      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'dossier' });
+      const url = await uploadFileToServer(file, {
+        bandId: activeBandId,
+        category: 'dossier',
+      });
       await persistEpkUpdate({
         ...config,
         dossierPdfUrl: url,
         dossierPdfName: file.name,
         dossierDocumentUrl: url,
-        dossierDocumentName: file.name
+        dossierDocumentName: file.name,
       });
     } catch (err: any) {
-      console.error("Error uploading dossier:", err);
+      console.error('Error uploading dossier:', err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
         if (ev.target?.result) {
@@ -381,11 +405,11 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               dossierPdfUrl: url,
               dossierPdfName: file.name,
               dossierDocumentUrl: url,
-              dossierDocumentName: file.name
+              dossierDocumentName: file.name,
             });
           } catch (fallbackErr: any) {
-            console.error("Error saving dossier fallback:", fallbackErr);
-            setSaveError(fallbackErr?.message || "No se pudo subir el dossier. Inténtalo de nuevo.");
+            console.error('Error saving dossier fallback:', fallbackErr);
+            setSaveError(fallbackErr?.message || 'No se pudo subir el dossier. Inténtalo de nuevo.');
           }
         }
       };
@@ -402,14 +426,17 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     setIsUploadingRider(true);
     setSaveError(null);
     try {
-      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'rider' });
+      const url = await uploadFileToServer(file, {
+        bandId: activeBandId,
+        category: 'rider',
+      });
       await persistEpkUpdate({
         ...config,
         riderPdfUrl: url,
-        riderPdfName: file.name
+        riderPdfName: file.name,
       });
     } catch (err: any) {
-      console.error("Error uploading rider:", err);
+      console.error('Error uploading rider:', err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
         if (ev.target?.result) {
@@ -417,11 +444,11 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             await persistEpkUpdate({
               ...config,
               riderPdfUrl: ev.target!.result as string,
-              riderPdfName: file.name
+              riderPdfName: file.name,
             });
           } catch (fallbackErr: any) {
-            console.error("Error saving rider fallback:", fallbackErr);
-            setSaveError(fallbackErr?.message || "No se pudo subir el rider. Inténtalo de nuevo.");
+            console.error('Error saving rider fallback:', fallbackErr);
+            setSaveError(fallbackErr?.message || 'No se pudo subir el rider. Inténtalo de nuevo.');
           }
         }
       };
@@ -440,9 +467,17 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     setSaveError(null);
     try {
       const urls = await Promise.all(
-        Array.from(files).map(file => uploadFileToServer(file, { bandId: activeBandId, category: 'galeria' }))
+        Array.from(files).map((file) =>
+          uploadFileToServer(file, {
+            bandId: activeBandId,
+            category: 'galeria',
+          })
+        )
       );
-      setConfig(prev => ({ ...prev, bandPhotos: [...(prev.bandPhotos || []), ...urls] }));
+      setConfig((prev) => ({
+        ...prev,
+        bandPhotos: [...(prev.bandPhotos || []), ...urls],
+      }));
     } catch (err: any) {
       console.error('Error subiendo fotos de galería:', err);
       setSaveError(err?.message || 'No se pudieron subir una o varias fotos. Inténtalo de nuevo.');
@@ -452,7 +487,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   const quitarFotoGaleria = (url: string) => {
-    setConfig(prev => ({ ...prev, bandPhotos: (prev.bandPhotos || []).filter(p => p !== url) }));
+    setConfig((prev) => ({
+      ...prev,
+      bandPhotos: (prev.bandPhotos || []).filter((p) => p !== url),
+    }));
   };
 
   const handleCopyUrl = () => {
@@ -462,7 +500,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   // --- Formación de la banda (miembros con foto) ---
-  const miembros: BandMember[] = config.miembros || [];
+  const miembros: BandMember[] = (config.miembros || []).map((m, idx) => ({
+    ...m,
+    id: m.id || `m-${idx + 1}-${(m.nombre || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
+  }));
 
   const actualizarMiembros = (nuevos: BandMember[]) => setConfig({ ...config, miembros: nuevos });
 
@@ -471,16 +512,19 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   const editarMiembro = (id: string, campos: Partial<BandMember>) => {
-    actualizarMiembros(miembros.map(m => (m.id === id ? { ...m, ...campos } : m)));
+    actualizarMiembros(miembros.map((m) => (m.id === id ? { ...m, ...campos } : m)));
   };
 
-  const quitarMiembro = (id: string) => actualizarMiembros(miembros.filter(m => m.id !== id));
+  const quitarMiembro = (id: string) => actualizarMiembros(miembros.filter((m) => m.id !== id));
 
   const subirFotoMiembro = async (id: string, file: File) => {
     setSubiendoFotoMiembro(id);
     setSaveError(null);
     try {
-      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'miembros' });
+      const url = await uploadFileToServer(file, {
+        bandId: activeBandId,
+        category: 'miembros',
+      });
       editarMiembro(id, { fotoUrl: url });
     } catch (err: any) {
       console.error('Error subiendo foto de miembro:', err);
@@ -491,28 +535,39 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   // --- Vídeos de directo ---
-  const videos: EPKVideo[] = config.videos || [];
+  const videos: EPKVideo[] = (config.videos || []).map((v, idx) => ({
+    ...v,
+    id: v.id || `v-${idx + 1}-${(v.titulo || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
+  }));
 
   const actualizarVideos = (nuevos: EPKVideo[]) => setConfig({ ...config, videos: nuevos });
 
   const anadirVideo = () => {
     // El primero que se añade queda destacado por defecto: es el que se ve grande arriba.
-    actualizarVideos([...videos, { id: `v-${Date.now()}`, titulo: '', url: '', destacado: videos.length === 0 }]);
+    actualizarVideos([
+      ...videos,
+      {
+        id: `v-${Date.now()}`,
+        titulo: '',
+        url: '',
+        destacado: videos.length === 0,
+      },
+    ]);
   };
 
   const editarVideo = (id: string, campos: Partial<EPKVideo>) => {
-    actualizarVideos(videos.map(v => (v.id === id ? { ...v, ...campos } : v)));
+    actualizarVideos(videos.map((v) => (v.id === id ? { ...v, ...campos } : v)));
   };
 
   const quitarVideo = (id: string) => {
-    const restantes = videos.filter(v => v.id !== id);
+    const restantes = videos.filter((v) => v.id !== id);
     // Si se borra el destacado, asciende el primero que quede para no dejar el EPK sin vídeo principal.
-    if (restantes.length > 0 && !restantes.some(v => v.destacado)) restantes[0].destacado = true;
+    if (restantes.length > 0 && !restantes.some((v) => v.destacado)) restantes[0].destacado = true;
     actualizarVideos(restantes);
   };
 
   const destacarVideo = (id: string) => {
-    actualizarVideos(videos.map(v => ({ ...v, destacado: v.id === id })));
+    actualizarVideos(videos.map((v) => ({ ...v, destacado: v.id === id })));
   };
 
   const editarDatoContratacion = (campo: keyof DatosContratacion, valor: string) => {
@@ -523,7 +578,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
   // --- EPK multiidioma -------------------------------------------------------------------
   // Idiomas a los que se puede traducir (todos menos el original, que es el español).
-  const idiomasDestino = EPK_LANGUAGES.filter(l => l.code !== IDIOMA_ORIGEN);
+  const idiomasDestino = EPK_LANGUAGES.filter((l) => l.code !== IDIOMA_ORIGEN);
 
   /**
    * Pide a la IA un borrador de traducción. GASTA TOKENS: una llamada por pulsación. El
@@ -540,9 +595,12 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       // devolvía la traducción del texto viejo.
       await api.updateEpkConfig({ ...config, bandId: activeBandId });
       const res = await api.traducirEpk({ idioma, bandId: activeBandId });
-      setConfig(prev => ({
+      setConfig((prev) => ({
         ...prev,
-        traducciones: { ...(prev.traducciones || {}), [idioma]: res.traduccion }
+        traducciones: {
+          ...(prev.traducciones || {}),
+          [idioma]: res.traduccion,
+        },
       }));
       if (res.yaEstabaAlDia) {
         setAvisoTraduccion(res.mensaje || 'La traducción ya estaba al día: no se ha gastado ninguna llamada a la IA.');
@@ -556,26 +614,37 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
   /** Edición a mano de la traducción. Marca _revisadoAMano para saber que ya pasó por un humano. */
   const editarTraduccion = (idioma: string, campo: 'biografia' | 'textoPie' | 'riderTecnico', valor: string) => {
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
       traducciones: {
         ...(prev.traducciones || {}),
-        [idioma]: { ...(prev.traducciones?.[idioma] || {}), [campo]: valor, _revisadoAMano: true }
-      }
+        [idioma]: {
+          ...(prev.traducciones?.[idioma] || {}),
+          [campo]: valor,
+          _revisadoAMano: true,
+        },
+      },
     }));
   };
 
   const editarTraduccionMiembro = (idioma: string, miembroId: string, campo: 'rol' | 'bio', valor: string) => {
-    setConfig(prev => {
+    setConfig((prev) => {
       const traduccion = prev.traducciones?.[idioma] || {};
       const miembrosTraducidos = { ...(traduccion.miembros || {}) };
-      miembrosTraducidos[miembroId] = { ...(miembrosTraducidos[miembroId] || {}), [campo]: valor };
+      miembrosTraducidos[miembroId] = {
+        ...(miembrosTraducidos[miembroId] || {}),
+        [campo]: valor,
+      };
       return {
         ...prev,
         traducciones: {
           ...(prev.traducciones || {}),
-          [idioma]: { ...traduccion, miembros: miembrosTraducidos, _revisadoAMano: true }
-        }
+          [idioma]: {
+            ...traduccion,
+            miembros: miembrosTraducidos,
+            _revisadoAMano: true,
+          },
+        },
       };
     });
   };
@@ -583,14 +652,17 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const toggleHighlightedSong = (songId: string) => {
     const current = config.temasDestacadosIds || [];
     if (current.includes(songId)) {
-      setConfig({ ...config, temasDestacadosIds: current.filter(id => id !== songId) });
+      setConfig({
+        ...config,
+        temasDestacadosIds: current.filter((id) => id !== songId),
+      });
     } else {
       setConfig({ ...config, temasDestacadosIds: [...current, songId] });
     }
   };
 
   return (
-    <div className="space-y-3.5 sm:space-y-6">
+    <div data-modulo="dossier" className="space-y-3.5 sm:space-y-6">
       {/* HEADER MODULARIZADO */}
       <EPKHeader
         activeBlock={activeBlock}
@@ -605,26 +677,25 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       />
 
       {savedSuccess && (
-        <div className="p-3 sm:p-4 bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 shrink-0" />
+        <div className="p-3 sm:p-4 bg-[var(--ok-soft)] text-[var(--ok)] text-xs sm:text-sm font-semibold rounded-[var(--r-m)] flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--ok)] shrink-0" />
           <span>¡Información del dossier y kit de prensa guardada y sincronizada correctamente!</span>
         </div>
       )}
 
       {saveError && (
-        <div className="p-3 sm:p-4 bg-red-950/80 border border-red-500/50 text-red-200 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+        <div className="p-3 sm:p-4 bg-[var(--alert-soft)] text-[var(--alert)] text-xs sm:text-sm font-semibold rounded-[var(--r-m)] flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
           <span>{saveError}</span>
         </div>
       )}
 
       {/* BLOQUES MODULARES DEL DOSSIER */}
       <div className="space-y-4 sm:space-y-6">
-          
         {(activeBlock === 'plantillas' || activeBlock === 'todos') && (
           <EPKPlantillasBlock
             config={config}
-            onChange={(updated) => setConfig(prev => ({ ...prev, ...updated }))}
+            onChange={(updated) => setConfig((prev) => ({ ...prev, ...updated }))}
             publicEpkUrl={publicEpkUrl}
             prevBlock={prevBlockMeta}
             nextBlock={nextBlockMeta}
@@ -748,23 +819,22 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         )}
       </div>
 
-
       {/* Modal Simulador / Vista Previa In-App del Formulario Únete */}
       <FansLandingPreviewModal
         isOpen={showFansPreviewModal}
         onClose={() => setShowFansPreviewModal(false)}
         currentBandId={activeBandId}
-        currentBandName={currentUser?.bandName || config.contactoBooking?.nombre || (isBakandeya ? 'Bakandeya' : 'Tu Banda')}
+        currentBandName={
+          (currentUser?.bandName && currentUser.bandName !== 'Banda' ? currentUser.bandName : '') ||
+          (config.contactoBooking?.nombre && config.contactoBooking.nombre !== 'Banda' ? config.contactoBooking.nombre : '') ||
+          (isBakandeya ? 'Bakandeya' : cleanBandId ? cleanBandId.charAt(0).toUpperCase() + cleanBandId.slice(1) : 'Tu Banda')
+        }
         currentBandLogo={config.logoUrl}
         epkConfig={config}
       />
 
       {/* Tutorial Interactivo Paso a Paso */}
-      <ModuleTutorialModal
-        moduleId="epk"
-        isOpen={isTutorialOpen}
-        onClose={closeTutorial}
-      />
+      <ModuleTutorialModal moduleId="epk" isOpen={isTutorialOpen} onClose={closeTutorial} />
     </div>
   );
 };

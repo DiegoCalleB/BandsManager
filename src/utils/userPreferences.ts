@@ -11,7 +11,10 @@ export const PROFILE_WIZARD_GLOBAL_KEY = 'bandmanager_profile_wizard_completed';
  */
 export function cleanBandKey(bandId?: string): string {
   if (!bandId) return '';
-  return bandId.replace(/^(band|reg)-/, '').trim().toLowerCase();
+  return bandId
+    .replace(/^(band|reg)-/, '')
+    .trim()
+    .toLowerCase();
 }
 
 /**
@@ -122,7 +125,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
         }
         user.ui_preferences = {
           ...currentPrefs,
-          tutorials_seen: currentTutorials
+          tutorials_seen: currentTutorials,
         };
         localStorage.setItem('bakandeya_user', JSON.stringify(user));
       }
@@ -132,13 +135,11 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
   // 3. Persistir en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined'
-        ? (localStorage.getItem('bakandeya_token') || localStorage.getItem('token'))
-        : null;
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
 
       if (token) {
         const response = await api.saveUiPreferences({
-          tutorials_seen: currentTutorials.length > 0 ? currentTutorials : [moduleId]
+          tutorials_seen: currentTutorials.length > 0 ? currentTutorials : [moduleId],
         });
         if (response?.user && typeof localStorage !== 'undefined') {
           localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
@@ -156,7 +157,10 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
 /**
  * Comprueba si el onboarding o asistente de perfil de una banda ya ha sido completado.
  */
-export function isOnboardingCompleted(bandId?: string, user?: User | null): {
+export function isOnboardingCompleted(
+  bandId?: string,
+  user?: User | null
+): {
   wizardCompleted: boolean;
   onboardingCompleted: boolean;
 } {
@@ -225,9 +229,7 @@ export async function markOnboardingCompleted(
       if (cachedUserStr) {
         const user = JSON.parse(cachedUserStr);
         const currentPrefs = user.ui_preferences || {};
-        updatedOnboardingBands = Array.isArray(currentPrefs.onboarding_completed_bands)
-          ? [...currentPrefs.onboarding_completed_bands]
-          : [];
+        updatedOnboardingBands = Array.isArray(currentPrefs.onboarding_completed_bands) ? [...currentPrefs.onboarding_completed_bands] : [];
         updatedWizardBands = Array.isArray(currentPrefs.profile_wizard_completed_bands)
           ? [...currentPrefs.profile_wizard_completed_bands]
           : [];
@@ -241,7 +243,7 @@ export async function markOnboardingCompleted(
           ...currentPrefs,
           onboarding_completed: true,
           onboarding_completed_bands: updatedOnboardingBands,
-          profile_wizard_completed_bands: updatedWizardBands
+          profile_wizard_completed_bands: updatedWizardBands,
         };
         localStorage.setItem('bakandeya_user', JSON.stringify(user));
       }
@@ -251,15 +253,15 @@ export async function markOnboardingCompleted(
   // 3. Sincronizar en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined'
-        ? (localStorage.getItem('bakandeya_token') || localStorage.getItem('token'))
-        : null;
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
 
       if (token) {
         const response = await api.saveUiPreferences({
           onboarding_completed: true,
-          onboarding_completed_bands: clean && !updatedOnboardingBands.includes(clean) ? [...updatedOnboardingBands, clean] : updatedOnboardingBands,
-          profile_wizard_completed_bands: clean && !updatedWizardBands.includes(clean) ? [...updatedWizardBands, clean] : updatedWizardBands
+          onboarding_completed_bands:
+            clean && !updatedOnboardingBands.includes(clean) ? [...updatedOnboardingBands, clean] : updatedOnboardingBands,
+          profile_wizard_completed_bands:
+            clean && !updatedWizardBands.includes(clean) ? [...updatedWizardBands, clean] : updatedWizardBands,
         });
         if (response?.user && typeof localStorage !== 'undefined') {
           localStorage.setItem('bakandeya_user', JSON.stringify(response.user));

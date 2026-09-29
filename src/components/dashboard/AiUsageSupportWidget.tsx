@@ -5,16 +5,16 @@ import { api } from '../../services/api';
 const KOFI_URL = 'https://ko-fi.com/bandmanager';
 /**
  * Bote de billetes/monedas neón que pidió Diego para el CTA de aportación económica: es el
- * mismo asset que ya usa FansLanding.tsx en su tarjeta "Colabora con una aportación económica"
+ * mismo asset que ya usa FansLanding.tsx en su tarjeta"Colabora con una aportación económica"
  * (public/Screenshot_20260824_164054_Google.jpg), reutilizado en vez de duplicarlo.
  */
 const BUCKET_ICON_SRC = '/Screenshot_20260824_164054_Google.jpg';
 
 /**
- * A propósito no monta ningún checkout propio: ya existe uno (Stripe con "pay what you want",
+ * A propósito no monta ningún checkout propio: ya existe uno (Stripe con"pay what you want",
  * server/routes/donations.ts) pero mantener dos vías de donar a la vez es justo el patrón de
- * "flujo divergente" que este proyecto ya sufrió una vez con el login de Gmail. Ko-fi es el único
- * botón de "aportar" visible; el checkout de Stripe se queda montado y probado por si algún día
+ *"flujo divergente" que este proyecto ya sufrió una vez con el login de Gmail. Ko-fi es el único
+ * botón de"aportar" visible; el checkout de Stripe se queda montado y probado por si algún día
  * hace falta un cobro dentro de la propia app, pero no se enlaza desde ningún sitio.
  */
 function useAiDebtEur(): number | null {
@@ -22,10 +22,17 @@ function useAiDebtEur(): number | null {
 
   useEffect(() => {
     let isMounted = true;
-    api.getDonationStatus()
-      .then((status) => { if (isMounted) setOwedEur(status.owed_eur); })
-      .catch(() => { if (isMounted) setOwedEur(null); });
-    return () => { isMounted = false; };
+    api
+      .getDonationStatus()
+      .then((status) => {
+        if (isMounted) setOwedEur(status.owed_eur);
+      })
+      .catch(() => {
+        if (isMounted) setOwedEur(null);
+      });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return owedEur;
@@ -33,10 +40,11 @@ function useAiDebtEur(): number | null {
 
 interface AiSupportWidgetProps {
   variant: 'sidebar' | 'card';
+  isStitchLight?: boolean;
 }
 
 /** CTA de apoyo económico a BandManager.io. Independiente de la tarjeta de consumo de IA. */
-export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => {
+export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant, isStitchLight = false }) => {
   const owedEur = useAiDebtEur();
   const costeLabel = owedEur === null ? '—' : `${owedEur.toFixed(2).replace('.', ',')} €`;
 
@@ -46,15 +54,17 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => 
         href={KOFI_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="mx-3 mb-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm flex items-center justify-between gap-2"
+        className="mx-3 mb-2 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-95 transition-colors cursor-pointer group flex items-center justify-between gap-2"
         title="Consumo real de IA de tu banda este mes. Apoya BandManager económicamente (vía Ko-fi)."
       >
         <div className="flex items-center gap-1.5 min-w-0">
-          <Zap className="w-3 h-3 text-amber-400 shrink-0" />
-          <span className="text-[10px] font-mono text-neutral-300 truncate">IA este mes: <strong className="text-amber-300">{costeLabel}</strong></span>
+          <Zap className="w-3 h-3 text-[var(--acc-ink)] shrink-0" />
+          <span className="text-[10px] text-[var(--ink-2)] truncate">
+            IA este mes: <strong className="text-[var(--ink)]">{costeLabel}</strong>
+          </span>
         </div>
-        <span className="text-[10px] font-mono font-bold text-amber-400 group-hover:text-amber-300 transition-colors flex items-center gap-1.5 shrink-0">
-          <span className="w-5 h-5 rounded-md overflow-hidden border border-amber-500/30 shrink-0">
+        <span className="text-[10px] font-bold text-[var(--acc-ink)] transition-colors flex items-center gap-1.5 shrink-0">
+          <span className="w-5 h-5 rounded-[var(--r-s)] overflow-hidden shrink-0">
             <img src={BUCKET_ICON_SRC} alt="" className="w-full h-full object-cover" />
           </span>
           Apoyar
@@ -68,31 +78,31 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => 
       href={KOFI_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="p-4 sm:p-5 rounded-2xl transition-all border shadow-sm bg-[#181716] border-stone-800 text-zinc-100 flex items-center gap-3 hover:border-amber-500/50 group cursor-pointer"
+      className="p-4 sm:p-5 rounded-[var(--r-l)] transition-colors bg-[var(--surface)] text-[var(--ink)] flex items-center gap-3 hover:brightness-95 group cursor-pointer"
     >
-      <span className="w-11 h-11 rounded-xl overflow-hidden border border-amber-500/30 shrink-0">
+      <span className="w-11 h-11 rounded-[var(--r-m)] overflow-hidden shrink-0">
         <img src={BUCKET_ICON_SRC} alt="" className="w-full h-full object-cover" />
       </span>
       <div className="flex-1 min-w-0">
-        <h3 className="text-xs sm:text-sm font-bold font-mono uppercase tracking-wider text-amber-400 group-hover:text-amber-300 transition-colors">Apoya BandManager económicamente</h3>
-        <p className="text-[11px] text-neutral-400 mt-0.5">Cualquier aportación ayuda a mantener el proyecto y sus agentes de IA en marcha.</p>
+        <h3 className="text-xs sm:text-sm font-bold text-[var(--acc-ink)] transition-colors">Apoya BandManager económicamente</h3>
+        <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+          Cualquier aportación ayuda a mantener el proyecto y sus agentes de IA en marcha.
+        </p>
       </div>
-      <span className="text-[10px] font-mono text-neutral-500 shrink-0 hidden sm:block">vía Ko-fi →</span>
+      <span className="text-[10px] text-[var(--ink-2)] shrink-0 hidden sm:block">vía Ko-fi →</span>
     </a>
   );
 };
 
-interface AiUsageCardProps {
-  isStitchLight?: boolean;
-}
+interface AiUsageCardProps {}
 
 // Por debajo de esto no merece la pena ni mostrar la tarjeta: Diego prefiere que una banda que
-// apenas ha usado IA este mes no vea un número casi a cero, en vez de "ocultar hasta que gaste".
+// apenas ha usado IA este mes no vea un número casi a cero, en vez de"ocultar hasta que gaste".
 const MIN_EUR_TO_SHOW_USAGE = 2;
 
 /** Tarjeta puramente informativa: cuánto ha gastado la banda en IA este mes. Sin CTA propio.
  * No se muestra nada si el gasto real (o aún desconocido) no supera los 2€. */
-export const AiUsageCard: React.FC<AiUsageCardProps> = ({ isStitchLight = false }) => {
+export const AiUsageCard: React.FC<AiUsageCardProps> = () => {
   const owedEur = useAiDebtEur();
 
   if (owedEur === null || owedEur <= MIN_EUR_TO_SHOW_USAGE) return null;
@@ -100,17 +110,16 @@ export const AiUsageCard: React.FC<AiUsageCardProps> = ({ isStitchLight = false 
   const costeLabel = `${owedEur.toFixed(2).replace('.', ',')} €`;
 
   return (
-    <div className={`p-4 sm:p-5 rounded-2xl transition-all border shadow-sm flex items-center gap-3 ${
-      isStitchLight
-        ? 'bg-white border-slate-200 text-slate-800'
-        : 'bg-[#181716] border-stone-800 text-zinc-100'
-    }`}>
-      <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+    <div className="p-4 sm:p-5 rounded-[var(--r-l)] transition-colors flex items-center gap-3 bg-[var(--surface)] text-[var(--ink)]">
+      <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] flex items-center justify-center shrink-0">
         <Zap className="w-4 h-4" />
       </div>
       <div>
-        <h3 className="text-xs font-bold font-mono uppercase tracking-wider">Consumo de IA este mes</h3>
-        <p className="text-[11px] text-neutral-400 mt-0.5">Tu banda ha gastado <strong className="text-amber-400">{costeLabel}</strong> en generación de IA (copys, acordes, música, análisis de reels).</p>
+        <h3 className="text-xs font-bold">Consumo de IA este mes</h3>
+        <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+          Tu banda ha gastado <strong className="text-[var(--acc-ink)]">{costeLabel}</strong> en generación de IA (copys, acordes, música,
+          análisis de reels).
+        </p>
       </div>
     </div>
   );

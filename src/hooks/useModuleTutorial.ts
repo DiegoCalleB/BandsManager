@@ -48,12 +48,15 @@ export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime 
     setIsOpen(true);
   }, []);
 
-  const closeTutorial = useCallback((markAsSeen = true) => {
-    setIsOpen(false);
-    if (markAsSeen) {
-      markTutorialSeen(moduleId, true).catch(() => {});
-    }
-  }, [moduleId]);
+  const closeTutorial = useCallback(
+    (markAsSeen = true) => {
+      setIsOpen(false);
+      if (markAsSeen) {
+        markTutorialSeen(moduleId, true).catch(() => {});
+      }
+    },
+    [moduleId]
+  );
 
   const resetTutorialSeen = useCallback(() => {
     try {
@@ -68,6 +71,6 @@ export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime 
     hasLoaded,
     openTutorial,
     closeTutorial,
-    resetTutorialSeen
+    resetTutorialSeen,
   };
 }

@@ -4,7 +4,7 @@ import {
   detectLiveConcertTrackCues,
   formatCueOffset,
   applyDetectedCuesToSong,
-  AudioCueAnalysis
+  AudioCueAnalysis,
 } from '../audioCueDetector';
 import { Song } from '../../types';
 
@@ -81,9 +81,7 @@ describe('audioCueDetector', () => {
         channel[i] = (Math.random() * 2 - 1) * 0.12;
       } else if (t >= 3 && t <= 9) {
         // Música potente (acorde)
-        channel[i] =
-          0.6 * Math.sin(2 * Math.PI * 150 * t) +
-          0.3 * Math.sin(2 * Math.PI * 300 * t);
+        channel[i] = 0.6 * Math.sin(2 * Math.PI * 150 * t) + 0.3 * Math.sin(2 * Math.PI * 300 * t);
       } else {
         // Aplausos de despedida
         channel[i] = (Math.random() * 2 - 1) * 0.15;
@@ -108,7 +106,7 @@ describe('audioCueDetector', () => {
       duracion: '3:30',
       duracionSegundos: 210,
       tonalidad: 'Em',
-      bpm: 120
+      bpm: 120,
     };
 
     const mockAnalysis: AudioCueAnalysis = {
@@ -121,7 +119,7 @@ describe('audioCueDetector', () => {
       hasApplauseIntro: true,
       hasApplauseOutro: true,
       confidence: 0.94,
-      waveformPeaks: [0.1, 0.5, 0.9, 0.2]
+      waveformPeaks: [0.1, 0.5, 0.9, 0.2],
     };
 
     const updatedSong = applyDetectedCuesToSong(mockSong, mockAnalysis);
@@ -172,4 +170,3 @@ describe('audioCueDetector', () => {
     expect(formatCueOffset(65.2)).toBe('1:05.2');
   });
 });
-

@@ -47,7 +47,7 @@ describe('computeAutoFitPlan', () => {
   it('nunca genera una página vacía', () => {
     const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60 });
     const result = computeAutoFitPlan(37, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
-    expect(result.pageItemCounts.every(c => c > 0)).toBe(true);
+    expect(result.pageItemCounts.every((c) => c > 0)).toBe(true);
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(37);
   });
 
@@ -62,7 +62,7 @@ describe('computeAutoFitPlan', () => {
     const measure = makeUniformMeasure({ 28: 1000, 25: 900, 22: 800, 19: 700, 17: 600 });
     const result = computeAutoFitPlan(5, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
     expect(result.titleFontPt).toBe(17);
-    expect(result.pageItemCounts.every(c => c >= 1)).toBe(true);
+    expect(result.pageItemCounts.every((c) => c >= 1)).toBe(true);
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(5);
   });
 
@@ -131,7 +131,7 @@ describe('computeAutoFitPlan', () => {
     const measure: MeasureRangeFn = (_pt, from, to) => heights.slice(from, to).reduce((a, b) => a + b, 0);
     const result = computeAutoFitPlan(26, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 150 });
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(26);
-    expect(result.pageItemCounts.every(c => c > 0)).toBe(true);
+    expect(result.pageItemCounts.every((c) => c > 0)).toBe(true);
   });
 
   it('rebalancea entre las 2 últimas páginas en vez de dejar 1 sola canción pesada, cuando hay margen para mejorar', () => {
@@ -176,7 +176,7 @@ describe('computeAutoFitPlan', () => {
     };
     const result = computeAutoFitPlan(20, measure, {
       candidateTitleFontPt: [22, 17],
-      pageAvailableHeightPx: 200
+      pageAvailableHeightPx: 200,
     });
 
     expect(result.titleFontPt).toBe(17); // el conjunto completo se queda en el tamaño base
@@ -197,7 +197,7 @@ describe('computeAutoFitPlan', () => {
   it('pageFontSizes nunca baja del tamaño base elegido para el conjunto completo', () => {
     const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60 });
     const result = computeAutoFitPlan(30, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
-    expect(result.pageFontSizes.every(pt => pt >= result.titleFontPt)).toBe(true);
+    expect(result.pageFontSizes.every((pt) => pt >= result.titleFontPt)).toBe(true);
     expect(result.pageFontSizes.length).toBe(result.pageItemCounts.length);
   });
 
@@ -217,7 +217,7 @@ describe('computeAutoFitPlan', () => {
     // desigual para mantener el equilibrio de altura. Repartir siempre al mínimo evita esto.
     const heights: Record<number, Record<number, number>> = {
       17: { light: 2, heavy: 50 },
-      19: { light: 2.2, heavy: 100 } // el salto de 50->100 es MUCHO más que proporcional (+10%)
+      19: { light: 2.2, heavy: 100 }, // el salto de 50->100 es MUCHO más que proporcional (+10%)
     };
     const totalItems = 201; // 200 ligeras + 1 pesada al final
     const measure: MeasureRangeFn = (pt, from, to) => {
@@ -228,7 +228,7 @@ describe('computeAutoFitPlan', () => {
     };
     const result = computeAutoFitPlan(totalItems, measure, {
       candidateTitleFontPt: [19, 17],
-      pageAvailableHeightPx: 300
+      pageAvailableHeightPx: 300,
     });
 
     expect(result.titleFontPt).toBe(17); // el reparto nunca se hace a un tamaño mayor
@@ -251,7 +251,7 @@ describe('computeAutoFitPlan', () => {
       const result = computeAutoFitPlan(30, measure, {
         candidateTitleFontPt: CANDIDATES,
         pageAvailableHeightPx: 500,
-        emergencyFontPt: 15
+        emergencyFontPt: 15,
       });
       expect(result.titleFontPt).toBe(15);
       expect(result.pageItemCounts).toEqual([30]);
@@ -264,7 +264,7 @@ describe('computeAutoFitPlan', () => {
       const result = computeAutoFitPlan(30, measure, {
         candidateTitleFontPt: CANDIDATES,
         pageAvailableHeightPx: 500,
-        emergencyFontPt: 15
+        emergencyFontPt: 15,
       });
       expect(result.pageItemCounts.length).toBeGreaterThan(1);
       // El reparto en varias páginas nunca debe usar el tamaño de emergencia, solo el ideal.
@@ -282,7 +282,7 @@ describe('computeAutoFitPlan', () => {
       const result = computeAutoFitPlan(30, measure, {
         candidateTitleFontPt: CANDIDATES,
         pageAvailableHeightPx: 500,
-        emergencyFontPt: 15
+        emergencyFontPt: 15,
       });
       expect(result.titleFontPt).toBe(15);
       expect(result.pageItemCounts).toEqual([30]);
@@ -299,7 +299,7 @@ describe('computeAutoFitPlan', () => {
       };
       const result = computeAutoFitPlan(30, measure, {
         candidateTitleFontPt: CANDIDATES,
-        pageAvailableHeightPx: 500
+        pageAvailableHeightPx: 500,
       });
       expect(result.pageItemCounts.length).toBeGreaterThan(1);
       expect(result.titleFontPt).toBeGreaterThanOrEqual(17);
@@ -314,7 +314,7 @@ describe('tryFitInPageCount', () => {
       candidateTitleFontPt: CANDIDATES,
       pageAvailableHeightPx: 500,
       forcedPageCount: 1,
-      maxOverflowTolerance: 0.12
+      maxOverflowTolerance: 0.12,
     });
     expect(result).not.toBeNull();
     expect(result!.pageItemCounts).toEqual([10]);
@@ -329,7 +329,7 @@ describe('tryFitInPageCount', () => {
       candidateTitleFontPt: CANDIDATES,
       pageAvailableHeightPx: 500,
       forcedPageCount: 1,
-      maxOverflowTolerance: 0.12
+      maxOverflowTolerance: 0.12,
     });
     expect(result).not.toBeNull();
     expect(result!.titleFontPt).toBe(19);
@@ -344,7 +344,7 @@ describe('tryFitInPageCount', () => {
       candidateTitleFontPt: CANDIDATES,
       pageAvailableHeightPx: 500,
       forcedPageCount: 1,
-      maxOverflowTolerance: 0.12
+      maxOverflowTolerance: 0.12,
     });
     expect(result).toBeNull();
   });
@@ -355,7 +355,7 @@ describe('tryFitInPageCount', () => {
       candidateTitleFontPt: CANDIDATES,
       pageAvailableHeightPx: 500,
       forcedPageCount: 2,
-      maxOverflowTolerance: 0.12
+      maxOverflowTolerance: 0.12,
     });
     // 30 items a 17pt = 1800px, ni repartido en 2 páginas con tolerancia (2*560=1120 < 1800) cabe.
     expect(result).toBeNull();
@@ -367,7 +367,7 @@ describe('tryFitInPageCount', () => {
       candidateTitleFontPt: CANDIDATES,
       pageAvailableHeightPx: 500,
       forcedPageCount: 1,
-      maxOverflowTolerance: 0.12
+      maxOverflowTolerance: 0.12,
     });
     expect(result).not.toBeNull();
     expect(result!.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(20);
@@ -388,7 +388,7 @@ describe('computeExpandedPlan (modo "de pie")', () => {
     const measure = makeUniformMeasure({ 28: 40 });
     const result = computeExpandedPlan(30, measure, { titleFontPt: 28, pageAvailableHeightPx: 500 });
     expect(result.titleFontPt).toBe(28);
-    expect(result.pageFontSizes.every(pt => pt === 28)).toBe(true);
+    expect(result.pageFontSizes.every((pt) => pt === 28)).toBe(true);
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(30);
     expect(result.pageItemCounts.length).toBeGreaterThan(1);
   });
@@ -398,7 +398,7 @@ describe('computeExpandedPlan (modo "de pie")', () => {
     const measure: MeasureRangeFn = (_pt, from, to) => heights.slice(from, to).reduce((a, b) => a + b, 0);
     const result = computeExpandedPlan(26, measure, { titleFontPt: 28, pageAvailableHeightPx: 150 });
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(26);
-    expect(result.pageItemCounts.every(c => c > 0)).toBe(true);
+    expect(result.pageItemCounts.every((c) => c > 0)).toBe(true);
   });
 
   it('con un repertorio vacío no lanza y devuelve una página vacía', () => {
@@ -415,7 +415,7 @@ describe('computeExpandedPlan (modo "de pie")', () => {
     const result = computeExpandedPlan(10, measure, {
       titleFontPt: 28,
       pageAvailableHeightPx: 500,
-      maxTitleFontPt: 44
+      maxTitleFontPt: 44,
     });
     expect(result.titleFontPt).toBe(28); // la referencia de reparto no cambia
     expect(result.pageFontSizes[0]).toBeGreaterThan(28); // pero la página sí se ve más grande
@@ -427,7 +427,7 @@ describe('computeExpandedPlan (modo "de pie")', () => {
     const result = computeExpandedPlan(5, measure, {
       titleFontPt: 28,
       pageAvailableHeightPx: 1000,
-      maxTitleFontPt: 40
+      maxTitleFontPt: 40,
     });
     expect(result.pageFontSizes[0]).toBeLessThanOrEqual(40);
   });
@@ -437,7 +437,7 @@ describe('computeExpandedPlan (modo "de pie")', () => {
     const result = computeExpandedPlan(29, measure, {
       titleFontPt: 28,
       pageAvailableHeightPx: 500,
-      maxTitleFontPt: 44
+      maxTitleFontPt: 44,
     });
     expect(result.pageItemCounts.length).toBeGreaterThan(1);
     // Cada página, medida a SU PROPIO tamaño ya elegido, debe seguir cabiendo en el alto real.
@@ -449,6 +449,6 @@ describe('computeExpandedPlan (modo "de pie")', () => {
     });
     // Al menos alguna página debe haber subido por encima del tamaño base: si no, el "de pie"
     // no estaría aprovechando el alto de sobra que sí tiene disponible.
-    expect(result.pageFontSizes.some(pt => pt > 28)).toBe(true);
+    expect(result.pageFontSizes.some((pt) => pt > 28)).toBe(true);
   });
 });

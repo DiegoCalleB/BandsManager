@@ -9,133 +9,108 @@ interface SongStudioCubaseHelpModalProps {
 export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps> = ({ onClose }) => {
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
-        <div className="bg-[#12111d] border border-purple-500/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-zinc-100 relative my-auto max-h-[90vh] overflow-y-auto">
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center gap-3 border-b border-purple-500/20 pb-4">
-          <div className="p-3 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30">
-            <Keyboard className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              Atajos de Teclado Tipo Cubase DAW
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/30 text-purple-200 border border-purple-500/40">
-                Modo Studio
-              </span>
-            </h3>
-            <p className="text-xs text-neutral-400">
-              Controla la reproducción y grabación multipista directamente con tu teclado en tiempo real.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Play / Pausa</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-purple-500/40 text-purple-300 font-bold shadow">
-              Espacio
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Pausar Mantenida</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-amber-500/40 text-amber-300 font-bold shadow">
-              P
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Detener e ir a Inicio (Stop)</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-rose-500/40 text-rose-300 font-bold shadow">
-              0 / Stop / Home
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Alternar Bucle (Loop ON/OFF)</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-purple-500/40 text-purple-300 font-bold shadow">
-              L / /
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Fijar Cue In (Inicio Bucle)</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-indigo-500/40 text-indigo-300 font-bold shadow">
-              I
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Fijar Cue Out (Fin Bucle)</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-purple-500/40 text-purple-300 font-bold shadow">
-              O
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Grabar Pista Overdub</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-rose-500/40 text-rose-300 font-bold shadow">
-              R / Numpad *
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Nueva Idea / Proyecto</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-emerald-500/40 text-emerald-300 font-bold shadow">
-              N
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Retroceder 5s / 15s</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-purple-500/40 text-purple-300 font-bold shadow">
-              ←  /  Shift + ←
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Avanzar 5s / 15s</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-purple-500/40 text-purple-300 font-bold shadow">
-              →  /  Shift + →
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Alternar Silencio (Mute)</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-amber-500/40 text-amber-300 font-bold shadow">
-              M
-            </kbd>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <span className="text-neutral-300">Alternar Solo</span>
-            <kbd className="px-2 py-1 rounded bg-black/80 border border-amber-500/40 text-amber-300 font-bold shadow">
-              S
-            </kbd>
-          </div>
-        </div>
-
-        <div className="pt-2 flex items-center justify-between border-t border-white/10">
-          <span className="text-[11px] text-neutral-500 font-mono">
-            💡 Presiona <kbd className="px-1 py-0.5 rounded bg-black/50 border border-white/20 text-neutral-300">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-black/50 border border-white/20 text-neutral-300">?</kbd> en cualquier momento para abrir este menú.
-          </span>
+      <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] relative my-auto max-h-[90vh] overflow-y-auto">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 transition-all cursor-pointer shadow-lg"
+            className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
           >
-            Entendido
+            <X className="w-5 h-5" />
           </button>
+
+          <div className="flex items-center gap-3/20 pb-4">
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
+              <Keyboard className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
+                Atajos de Teclado Tipo Cubase DAW
+                <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--acc)]/40">Modo Studio</span>
+              </h3>
+              <p className="text-xs text-[var(--ink-2)]">
+                Controla la reproducción y grabación multipista directamente con tu teclado en tiempo real.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Play / Pausa</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">Espacio</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Pausar Mantenida</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">P</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Detener e ir a Inicio (Stop)</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">0 / Stop / Home</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Alternar Bucle (Loop ON/OFF)</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">L / /</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Fijar Cue In (Inicio Bucle)</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/50 font-bold shadow">I</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Fijar Cue Out (Fin Bucle)</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">O</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Grabar Pista Overdub</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">R / Numpad *</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Nueva Idea / Proyecto</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">N</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Retroceder 5s / 15s</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">← / Shift + ←</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Avanzar 5s / 15s</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">→ / Shift + →</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Alternar Silencio (Mute)</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">M</kbd>
+            </div>
+
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
+              <span className="text-[var(--ink-2)]">Alternar Solo</span>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">S</kbd>
+            </div>
+          </div>
+
+          <div className="pt-2 flex items-center justify-between">
+            <span className="text-[11px] text-[var(--ink-2)] font-sans">
+              💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">K</kbd> o{' '}
+              <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-all cursor-pointer"
+            >
+              Entendido
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </ModalPortal>
   );
 };

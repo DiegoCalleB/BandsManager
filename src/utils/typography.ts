@@ -18,7 +18,8 @@ export const FONT_PRESETS: FontPreset[] = [
     subtitle: 'Limpia, Neoclásica & Profesional',
     displayFont: '"Helvetica Neue", Helvetica, "Inter", Arial, sans-serif',
     bodyFont: '"Helvetica Neue", Helvetica, "Inter", Arial, sans-serif',
-    description: 'Estilo internacional limpio y equilibrado. Elimina cualquier aspecto retro o de programador para ofrecer una lectura sofisticada y accesible.',
+    description:
+      'Estilo internacional limpio y equilibrado. Elimina cualquier aspecto retro o de programador para ofrecer una lectura sofisticada y accesible.',
     badge: 'Recomendada',
     isSoft: true,
   },
@@ -91,25 +92,25 @@ export const FONT_PRESETS: FontPreset[] = [
     description: 'Diseño tecnológico moderno, nítido y bien espaciado para un toque vanguardista.',
     badge: 'Tech',
     isSoft: true,
-  }
+  },
 ];
 
 export function getStoredFontPreset(): FontPresetKey {
   const saved = localStorage.getItem('bakandeya_font') as FontPresetKey;
-  if (saved && FONT_PRESETS.some(p => p.id === saved)) {
+  if (saved && FONT_PRESETS.some((p) => p.id === saved)) {
     return saved;
   }
   return 'helvetica'; // Default to Helvetica Modern for a clean modern style
 }
 
 export function applyFontPreset(presetKey: FontPresetKey) {
-  const preset = FONT_PRESETS.find(p => p.id === presetKey) || FONT_PRESETS[0];
+  const preset = FONT_PRESETS.find((p) => p.id === presetKey) || FONT_PRESETS[0];
   document.documentElement.style.setProperty('--font-display-current', preset.displayFont);
   document.documentElement.style.setProperty('--font-sans-current', preset.bodyFont);
   document.documentElement.setAttribute('data-font', preset.id);
-  
+
   // Apply direct style properties to body and root to ensure instant recalculation
   document.body.style.fontFamily = preset.bodyFont;
-  
+
   localStorage.setItem('bakandeya_font', preset.id);
 }

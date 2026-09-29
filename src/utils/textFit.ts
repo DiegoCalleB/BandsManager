@@ -19,7 +19,7 @@ export interface NoteLine {
   text: string;
   className: string;
   /** Tamaño propio de esta línea: igual al `fontSizePx` común salvo para la nota excepcional
-   *  que ni al mínimo compartido cupo, que se encoge más por su cuenta (ver fitStackedNoteSegments). */
+   * que ni al mínimo compartido cupo, que se encoge más por su cuenta (ver fitStackedNoteSegments). */
   fontSizePx: number;
 }
 
@@ -65,7 +65,7 @@ function shrinkFontToFit(text: string, startSizePx: number, maxWidthPx: number, 
  * absoluto si ni así llega.
  */
 export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions): StackedFitResult {
-  const nonEmpty = segments.filter(s => s.text && s.text.trim().length > 0);
+  const nonEmpty = segments.filter((s) => s.text && s.text.trim().length > 0);
   if (nonEmpty.length === 0) {
     return { fontSizePx: opts.maxFontSizePx, lines: [] };
   }
@@ -74,13 +74,13 @@ export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions
 
   let fontSizePx = minFontSizePx;
   for (let size = maxFontSizePx; size >= minFontSizePx; size -= fontStepPx) {
-    if (nonEmpty.every(seg => measure(seg.text, size) <= maxWidthPx)) {
+    if (nonEmpty.every((seg) => measure(seg.text, size) <= maxWidthPx)) {
       fontSizePx = size;
       break;
     }
   }
 
-  const lines: NoteLine[] = nonEmpty.map(seg =>
+  const lines: NoteLine[] = nonEmpty.map((seg) =>
     measure(seg.text, fontSizePx) <= maxWidthPx
       ? { text: seg.text, className: seg.className, fontSizePx }
       : { text: seg.text, className: seg.className, fontSizePx: shrinkFontToFit(seg.text, fontSizePx, maxWidthPx, measure, fontStepPx) }
@@ -90,12 +90,7 @@ export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions
 }
 
 /** Medidor real basado en canvas, para usar en producción (impresión y vista previa). */
-export function makeCanvasMeasurer(): (
-  text: string,
-  fontSizePx: number,
-  fontFamily: string,
-  fontWeight?: string | number
-) => number {
+export function makeCanvasMeasurer(): (text: string, fontSizePx: number, fontFamily: string, fontWeight?: string | number) => number {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   return (text, fontSizePx, fontFamily, fontWeight = 400) => {

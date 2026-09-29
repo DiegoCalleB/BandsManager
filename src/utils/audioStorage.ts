@@ -113,10 +113,7 @@ function openAudioDB(): Promise<IDBDatabase> {
 /**
  * Execute an IDB operation with automatic retry if the database was closing or tab hidden
  */
-async function executeIDBOperation<T>(
-  mode: IDBTransactionMode,
-  op: (store: IDBObjectStore) => Promise<T>
-): Promise<T> {
+async function executeIDBOperation<T>(mode: IDBTransactionMode, op: (store: IDBObjectStore) => Promise<T>): Promise<T> {
   let attempts = 0;
   let lastError: any = null;
 
@@ -182,18 +179,26 @@ async function executeIDBOperation<T>(
         cachedDb = null;
       }
 
-      const isClosingOrHidden = err && (
-        err.name === 'InvalidStateError' || 
-        err.name === 'AbortError' ||
-        String(err.message || '').toLowerCase().includes('closing') ||
-        String(err.message || '').toLowerCase().includes('closed') ||
-        String(err.message || '').toLowerCase().includes('hidden') ||
-        String(err.message || '').toLowerCase().includes('database')
-      );
+      const isClosingOrHidden =
+        err &&
+        (err.name === 'InvalidStateError' ||
+          err.name === 'AbortError' ||
+          String(err.message || '')
+            .toLowerCase()
+            .includes('closing') ||
+          String(err.message || '')
+            .toLowerCase()
+            .includes('closed') ||
+          String(err.message || '')
+            .toLowerCase()
+            .includes('hidden') ||
+          String(err.message || '')
+            .toLowerCase()
+            .includes('database'));
 
       if (isClosingOrHidden && attempts < 3) {
         // Wait exponentially and retry with fresh connection
-        await new Promise(r => setTimeout(r, 80 * attempts));
+        await new Promise((r) => setTimeout(r, 80 * attempts));
         continue;
       }
       break;
@@ -259,15 +264,14 @@ export async function getAudioFromStorage(id: string): Promise<string | null> {
 export function parseGoogleDriveAudioUrl(url: string): string {
   if (!url || typeof url !== 'string') return '';
   const trimmed = url.trim();
-  
+
   // If it's already a direct download link or raw data/blob URL, return as is
   if (trimmed.startsWith('data:') || trimmed.startsWith('blob:') || trimmed.includes('uc?export=download')) {
     return trimmed;
   }
 
   // Extract ID from /file/d/ID/view or ?id=ID
-  const fileIdMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
-                      trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  const fileIdMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
 
   if (fileIdMatch && fileIdMatch[1]) {
     const fileId = fileIdMatch[1];
@@ -294,10 +298,10 @@ export function isGoogleDriveUrl(url: string): boolean {
  * Falls back safely to IndexedDB / DataURL if server upload fails or endpoint is unreachable.
  */
 export async function uploadFileToServer(
-  file: File, 
+  file: File,
   options?: { bandId?: string; category?: string; folder?: string } | string
 ): Promise<string> {
-  const opts = typeof options === 'string' ? { bandId: options } : (options || {});
+  const opts = typeof options === 'string' ? { bandId: options } : options || {};
 
   try {
     const authHeaders = getAuthHeaders() as Record<string, string>;
@@ -315,7 +319,7 @@ export async function uploadFileToServer(
     const response = await fetch('/api/upload', {
       method: 'POST',
       headers,
-      body: formData
+      body: formData,
     });
 
     if (response.ok) {
@@ -325,7 +329,7 @@ export async function uploadFileToServer(
       console.warn(`/api/upload returned status ${response.status}, trying fallback`);
     }
   } catch (formDataErr) {
-    console.warn("FormData upload failed, trying base64 fallback:", formDataErr);
+    console.warn('FormData upload failed, trying base64 fallback:', formDataErr);
   }
 
   try {
@@ -333,36 +337,37 @@ export async function uploadFileToServer(
     const authHeaders = getAuthHeaders() as Record<string, string>;
     const headers: Record<string, string> = {
       ...authHeaders,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
     if (opts.bandId) headers['x-band-id'] = opts.bandId;
 
     const response = await fetch('/api/upload', {
       method: 'POST',
       headers,
-      body: JSON.stringify({ 
-        filename: file.name, 
+      body: JSON.stringify({
+        filename: file.name,
         base64,
         bandId: opts.bandId,
         category: opts.category,
-        folder: opts.folder
-      })
+        folder: opts.folder,
+      }),
     });
     if (response.ok) {
       const data = await response.json();
       if (data && data.url) return data.url;
     }
   } catch (err) {
-    console.warn("Server upload failed, falling back to local storage:", err);
+    console.warn('Server upload failed, falling back to local storage:', err);
   }
 
   // Fallback: ONLY use IndexedDB for audio tracks (not for images/documents like logo/dossier/rider)
-  const isDocOrImage = opts.category === 'logo' || 
-                       opts.category === 'dossier' || 
-                       opts.category === 'rider' || 
-                       opts.category === 'epk' || 
-                       file.type.startsWith('image/') || 
-                       file.type.includes('pdf');
+  const isDocOrImage =
+    opts.category === 'logo' ||
+    opts.category === 'dossier' ||
+    opts.category === 'rider' ||
+    opts.category === 'epk' ||
+    file.type.startsWith('image/') ||
+    file.type.includes('pdf');
 
   if (!isDocOrImage) {
     try {
@@ -370,7 +375,7 @@ export async function uploadFileToServer(
       await saveAudioToStorage(fileKey, file);
       return `indexeddb:${fileKey}`;
     } catch (idbErr) {
-      console.warn("IndexedDB fallback failed, returning base64 DataURL:", idbErr);
+      console.warn('IndexedDB fallback failed, returning base64 DataURL:', idbErr);
     }
   }
 
@@ -455,7 +460,7 @@ export async function resolveAudioUrl(url: string): Promise<string> {
 /**
  * Safely saves the songs catalog to localStorage by persisting large data URLs
  * to IndexedDB first and keeping lightweight references in localStorage,
- * preventing 'Setting the value exceeded the quota' errors.
+ * preventing'Setting the value exceeded the quota' errors.
  */
 export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: string): Promise<void> {
   if (!songs || !Array.isArray(songs)) return;
@@ -518,7 +523,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
                 }
                 return {
                   ...pista,
-                  audioUrl: trackUrl
+                  audioUrl: trackUrl,
                 };
               })
             );
@@ -526,7 +531,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
             return {
               ...idea,
               audioUrl: ideaUrl,
-              pistas: sanitizedPistas.length > 0 ? sanitizedPistas : idea.pistas
+              pistas: sanitizedPistas.length > 0 ? sanitizedPistas : idea.pistas,
             };
           })
         );
@@ -535,22 +540,24 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
           ...song,
           audioPrincipalUrl: principalUrl,
           portadaUrl: coverUrl,
-          audioIdeas: sanitizedIdeas
+          audioIdeas: sanitizedIdeas,
         };
       })
     );
 
     const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
     const isBakandeya = clean === 'bakandeya';
-    const finalSongs = isBakandeya ? sanitizedSongs : sanitizedSongs.filter((s: any) => {
-      const sId = (s?.id || '').toLowerCase();
-      return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
-    });
+    const finalSongs = isBakandeya
+      ? sanitizedSongs
+      : sanitizedSongs.filter((s: any) => {
+          const sId = (s?.id || '').toLowerCase();
+          return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
+        });
     const key = `band_songs_${clean || 'default'}`;
     localStorage.setItem(key, JSON.stringify(finalSongs));
-    if (isBakandeya || !clean) {
-      localStorage.setItem('bakandeya_songs_catalog', JSON.stringify(sanitizedSongs));
-    }
+    // NOTE: Removed bakandeya_songs_catalog setItem() to ensure multi-tenant data isolation.
+    // Band data is persisted to Supabase API (band_id validated server-side), not localStorage.
+    // React state is the source of truth; band-scoped localStorage is an anti-pattern.
   } catch (e) {
     console.warn('Could not save songs catalog to localStorage:', e);
   }
@@ -580,31 +587,31 @@ export async function saveSetlistsToLocalStorageSafely(setlists: any[], bandId?:
             }
             return {
               ...item,
-              audioUrl: itemAudioUrl
+              audioUrl: itemAudioUrl,
             };
           })
         );
 
         return {
           ...setlist,
-          items: sanitizedItems
+          items: sanitizedItems,
         };
       })
     );
 
     const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
     const isBakandeya = clean === 'bakandeya';
-    const finalSetlists = isBakandeya ? sanitizedSetlists : sanitizedSetlists.filter((sl: any) => {
-      const slId = (sl?.id || '').toLowerCase();
-      return slId !== 'setlist-1' && slId !== 'setlist-2';
-    });
+    const finalSetlists = isBakandeya
+      ? sanitizedSetlists
+      : sanitizedSetlists.filter((sl: any) => {
+          const slId = (sl?.id || '').toLowerCase();
+          return slId !== 'setlist-1' && slId !== 'setlist-2';
+        });
     const key = `band_setlists_${clean || 'default'}`;
     localStorage.setItem(key, JSON.stringify(finalSetlists));
-    if (isBakandeya || !clean) {
-      localStorage.setItem('bakandeya_setlists', JSON.stringify(sanitizedSetlists));
-    }
+    // NOTE: Removed bakandeya_setlists setItem() for multi-tenant safety.
+    // Setlist data is persisted to Supabase API (band_id validated), not localStorage.
   } catch (e) {
     console.warn('Could not save setlists to localStorage:', e);
   }
 }
-

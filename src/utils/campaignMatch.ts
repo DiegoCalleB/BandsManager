@@ -1,14 +1,34 @@
 import { BookingCampaign, Lead } from '../types';
 
 const MONTH_NAMES_ES: Record<string, number> = {
-  enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
-  julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11,
-  ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5,
-  jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11
+  enero: 0,
+  febrero: 1,
+  marzo: 2,
+  abril: 3,
+  mayo: 4,
+  junio: 5,
+  julio: 6,
+  agosto: 7,
+  septiembre: 8,
+  octubre: 9,
+  noviembre: 10,
+  diciembre: 11,
+  ene: 0,
+  feb: 1,
+  mar: 2,
+  abr: 3,
+  may: 4,
+  jun: 5,
+  jul: 6,
+  ago: 7,
+  sep: 8,
+  oct: 9,
+  nov: 10,
+  dic: 11,
 };
 
 export function parseFlexibleDate(dateStr: string | null | undefined): Date | null {
-  if (!dateStr || typeof dateStr !== "string") return null;
+  if (!dateStr || typeof dateStr !== 'string') return null;
   const trimmed = dateStr.trim().toLowerCase();
   if (!trimmed) return null;
 
@@ -65,10 +85,10 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
 // que el filtro fallara a veces, es que nunca fue el mismo filtro.
 export function leadMatchesCampaignCity(lead: Lead, campaign: BookingCampaign): boolean {
   const targetCities = ((campaign.targetCities || (campaign as any).target_cities || []) as string[])
-    .map(c => c.toLowerCase().trim())
+    .map((c) => c.toLowerCase().trim())
     .filter(Boolean);
   const targetRegions = (((campaign as any).targetRegions || (campaign as any).target_regions || []) as string[])
-    .map(r => r.toLowerCase().trim())
+    .map((r) => r.toLowerCase().trim())
     .filter(Boolean);
 
   if (targetCities.length === 0 && targetRegions.length === 0) return true;
@@ -76,9 +96,14 @@ export function leadMatchesCampaignCity(lead: Lead, campaign: BookingCampaign): 
   const leadCity = (lead.ciudad || '').toLowerCase().trim();
   const leadRegion = (lead.region || '').toLowerCase().trim();
 
-  return targetCities.some(c =>
-    leadCity.includes(c) || leadRegion.includes(c) || (c.includes('madrid') && (leadCity.includes('madrid') || leadRegion.includes('madrid')))
-  ) || targetRegions.some(r => leadCity.includes(r) || leadRegion.includes(r));
+  return (
+    targetCities.some(
+      (c) =>
+        leadCity.includes(c) ||
+        leadRegion.includes(c) ||
+        (c.includes('madrid') && (leadCity.includes('madrid') || leadRegion.includes('madrid')))
+    ) || targetRegions.some((r) => leadCity.includes(r) || leadRegion.includes(r))
+  );
 }
 
 export function leadMatchesCampaignCapacity(lead: Lead, campaign: BookingCampaign): boolean {
@@ -134,8 +159,8 @@ export function leadMatchesCampaignDates(lead: Lead, campaign: BookingCampaign):
 }
 
 export function leadMatchesCampaign(lead: Lead, campaign: BookingCampaign): boolean {
-  const isMedio = !!lead.tipo && (String(lead.tipo).includes('medio') || String(lead.tipo).includes('prensa') || String(lead.tipo).includes('radio'));
+  const isMedio =
+    !!lead.tipo && (String(lead.tipo).includes('medio') || String(lead.tipo).includes('prensa') || String(lead.tipo).includes('radio'));
   if (isMedio) return false;
   return leadMatchesCampaignCity(lead, campaign) && leadMatchesCampaignCapacity(lead, campaign) && leadMatchesCampaignDates(lead, campaign);
 }
-

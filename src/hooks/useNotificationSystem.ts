@@ -15,15 +15,15 @@ export function useNotificationSystem() {
     const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
     const newToast: ToastNotification = { id, type, title, message, timestamp: Date.now() };
 
-    setNotifications(prev => [...prev.slice(-4), newToast]); // keep max 5 active
+    setNotifications((prev) => [...prev.slice(-4), newToast]); // keep max 5 active
 
     setTimeout(() => {
-      setNotifications(prev => prev.filter(t => t.id !== id));
+      setNotifications((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
   }, []);
 
   const removeNotification = useCallback((id: string) => {
-    setNotifications(prev => prev.filter(t => t.id !== id));
+    setNotifications((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
   return {

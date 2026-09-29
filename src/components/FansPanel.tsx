@@ -1,26 +1,73 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from "react";
 import {
-  Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles,
-  Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
-  Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
-  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers, Eye,
-  MoreHorizontal, Settings2
-} from 'lucide-react';
-import QRCode from 'react-qr-code';
-import * as XLSX from 'xlsx';
-import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
-import { THEMES } from '../utils/theme';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { ReelsMetricsView } from './reels/ReelsMetricsView';
-import { FansCommunityView } from './fans/FansCommunityView';
-import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
-import { QrExportModal } from './QrExportModal';
-import { FansLandingPreviewModal } from './FansLandingPreviewModal';
-import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
-import { useModuleTutorial } from '../hooks/useModuleTutorial';
-import { ModuleTutorialModal } from './common/ModuleTutorialModal';
-import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+  Users,
+  Heart,
+  QrCode,
+  Download,
+  Search,
+  Plus,
+  Trash2,
+  Sparkles,
+  Copy,
+  Check,
+  FileSpreadsheet,
+  ShieldCheck,
+  Mail,
+  MapPin,
+  Calendar,
+  ExternalLink,
+  Filter,
+  LayoutGrid,
+  List,
+  Map as MapIcon,
+  X,
+  TrendingUp,
+  Printer,
+  Share2,
+  MessageCircle,
+  Gift,
+  Tag,
+  Music,
+  Save,
+  CheckCircle2,
+  Flame,
+  Star,
+  Award,
+  Instagram,
+  FileCode,
+  Layers,
+  Eye,
+  MoreHorizontal,
+  Settings2,
+} from "lucide-react";
+import QRCode from "react-qr-code";
+import * as XLSX from "xlsx";
+import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from "../types";
+import { THEMES } from "../utils/theme";
+import { Onda } from "./ui/Onda";
+import { ReelsMetricsView } from "./reels/ReelsMetricsView";
+import { FansCommunityView } from "./fans/FansCommunityView";
+import {
+  FAN_FORM_LANGUAGES,
+  FanFormLanguage,
+  DEFAULT_FAN_FORM_LANGUAGE,
+  isFanFormLanguage,
+} from "../i18n/fansTranslations";
+import { QrExportModal } from "./QrExportModal";
+import { FansLandingPreviewModal } from "./FansLandingPreviewModal";
+import {
+  downloadQrAsSvg,
+  downloadQrAsHighResPng,
+  printHighQualityFlyer,
+} from "../utils/qrExport";
+import { useModuleTutorial } from "../hooks/useModuleTutorial";
+import { ModuleTutorialModal } from "./common/ModuleTutorialModal";
+import { ModuleTutorialTrigger } from "./common/ModuleTutorialTrigger";
+import { PublicoSilhouette } from "./ui/PublicoSilhouette";
+import { openWhatsAppChat } from "../utils/whatsapp";
+import { encodeBandIdClient } from "../utils/bandHash";
 
+import { FansDashboardView } from "./fans/FansDashboardView";
 interface FansPanelProps {
   fans: Fan[];
   concerts: Concert[];
@@ -28,28 +75,38 @@ interface FansPanelProps {
   onAddFan: (fan: Fan) => void;
   onDeleteFan: (id: string) => void;
   onUpdateFan?: (id: string, updates: Partial<Fan>) => void;
-  onUpdateIncentive?: (newIncentive: EPKConfig['incentivoFans']) => void;
+  onUpdateIncentive?: (newIncentive: EPKConfig["incentivoFans"]) => void;
   onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
   currentBandId?: string;
   currentBandName?: string;
   currentBandLogo?: string;
   metrics?: SocialMetric[];
   onAddMetric?: (metric: SocialMetric) => Promise<void>;
-  onUpdateMetric?: (id: string, updatedFields: Partial<SocialMetric>) => Promise<void>;
+  onUpdateMetric?: (
+    id: string,
+    updatedFields: Partial<SocialMetric>,
+  ) => Promise<void>;
   onDeleteMetric?: (id: string) => Promise<void>;
   onScanRealMetrics?: () => Promise<void>;
   onSyncMetrics?: () => Promise<void>;
   isScanningMetrics?: boolean;
   isSyncingMetrics?: boolean;
   colors?: ThemeColors;
-  isStitchLight?: boolean;
-  onNavigate?: (view: 'epk') => void;
+  onNavigate?: (view: "epk") => void;
   isPromo?: boolean;
   onUpdateConcert?: (id: string, updates: Partial<Concert>) => void;
   initialConcertId?: string;
 }
 
-const COLORS = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
+const COLORS = [
+  "var(--acc)",
+  "var(--ok)",
+  "var(--acc)",
+  "var(--acc)",
+  "var(--alert)",
+  "var(--ok)",
+  "var(--ink-2)",
+];
 
 export const FansPanel: React.FC<FansPanelProps> = ({
   fans = [],
@@ -72,32 +129,52 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   isScanningMetrics,
   isSyncingMetrics,
   colors,
-  isStitchLight,
   onNavigate,
   isPromo = false,
   onUpdateConcert,
-  initialConcertId
+  initialConcertId,
 }) => {
-  const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
-  const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
-  const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
-  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('fans');
-  const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>(
-    initialConcertId || isPromo ? 'qr' : 'metrics'
+  const effectiveBandName =
+    currentBandName ||
+    epkConfig?.contactoBooking?.nombre ||
+    (currentBandId?.includes("bakandeya") ? "Bakandeya" : "Tu Banda");
+  const effectiveBandLogo =
+    currentBandLogo ||
+    epkConfig?.logoUrl ||
+    (effectiveBandName.toLowerCase().includes("bakandeya")
+      ? "/logo_bakandeya_bueno_sin_fondo.png"
+      : "");
+  const cleanBandId =
+    (currentBandId || "").toLowerCase().replace(/^(band|reg)-/, "") || "banda";
+  const {
+    isOpen: isTutorialOpen,
+    openTutorial,
+    closeTutorial,
+  } = useModuleTutorial("fans");
+  const [activeTab, setActiveTab] = useState<
+    "metrics" | "fans" | "qr" | "dashboard"
+  >(initialConcertId || isPromo ? "qr" : "metrics");
+  const [viewMode, setViewMode] = useState<"feed" | "grid" | "table" | "map">(
+    "feed",
   );
-  const [viewMode, setViewMode] = useState<'feed' | 'grid' | 'table' | 'map'>('feed');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterOrigen, setFilterOrigen] = useState<string>('');
-  const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
-  const [selectedNivelFilter, setSelectedNivelFilter] = useState<string>('');
-  const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId || '');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterOrigen, setFilterOrigen] = useState<string>("");
+  const [selectedCityFilter, setSelectedCityFilter] = useState<string>("");
+  const [selectedNivelFilter, setSelectedNivelFilter] = useState<string>("");
+  const [selectedConcertId, setSelectedConcertId] = useState<string>(
+    initialConcertId || "",
+  );
   const [savedToConcertFeedback, setSavedToConcertFeedback] = useState(false);
   const [clickStats, setClickStats] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    fetch('/api/epk/clicks')
-      .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json() : null)
-      .then(data => {
+    fetch("/api/epk/clicks")
+      .then((res) =>
+        res.ok && res.headers.get("content-type")?.includes("application/json")
+          ? res.json()
+          : null,
+      )
+      .then((data) => {
         if (data && data.clicks) {
           setClickStats(data.clicks);
         }
@@ -108,28 +185,54 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   useEffect(() => {
     if (initialConcertId) {
       setSelectedConcertId(initialConcertId);
-      setActiveTab('qr');
+      setActiveTab("qr");
     }
   }, [initialConcertId]);
 
   // Configurable City Tabs state (synced with DB epkConfig.ciudadesConfig)
   const [customCityChips, setCustomCityChips] = useState<string[]>(() => {
-    if (epkConfig?.ciudadesConfig && Array.isArray(epkConfig.ciudadesConfig) && epkConfig.ciudadesConfig.length > 0) {
+    if (
+      epkConfig?.ciudadesConfig &&
+      Array.isArray(epkConfig.ciudadesConfig) &&
+      epkConfig.ciudadesConfig.length > 0
+    ) {
       return epkConfig.ciudadesConfig;
     }
     try {
-      const saved = localStorage.getItem('bakandeya_custom_cities');
-      return saved ? JSON.parse(saved) : ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
+      const saved = localStorage.getItem("bakandeya_custom_cities");
+      return saved
+        ? JSON.parse(saved)
+        : [
+            "Madrid",
+            "Sevilla",
+            "Barcelona",
+            "Málaga",
+            "Valencia",
+            "Granada",
+            "Cádiz",
+          ];
     } catch {
-      return ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
+      return [
+        "Madrid",
+        "Sevilla",
+        "Barcelona",
+        "Málaga",
+        "Valencia",
+        "Granada",
+        "Cádiz",
+      ];
     }
   });
 
   const [isAddingCity, setIsAddingCity] = useState(false);
-  const [newCityInput, setNewCityInput] = useState('');
+  const [newCityInput, setNewCityInput] = useState("");
 
   useEffect(() => {
-    if (epkConfig?.ciudadesConfig && Array.isArray(epkConfig.ciudadesConfig) && epkConfig.ciudadesConfig.length > 0) {
+    if (
+      epkConfig?.ciudadesConfig &&
+      Array.isArray(epkConfig.ciudadesConfig) &&
+      epkConfig.ciudadesConfig.length > 0
+    ) {
       setCustomCityChips(epkConfig.ciudadesConfig);
     }
   }, [epkConfig?.ciudadesConfig]);
@@ -141,38 +244,48 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     if (!customCityChips.includes(formatted)) {
       const updated = [...customCityChips, formatted];
       setCustomCityChips(updated);
-      try { localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated)); } catch {}
+      try {
+        localStorage.setItem(
+          "bakandeya_custom_cities",
+          JSON.stringify(updated),
+        );
+      } catch {}
       if (onUpdateEpkConfig) {
         onUpdateEpkConfig({ ciudadesConfig: updated });
       }
     }
     setSelectedCityFilter(formatted);
-    setNewCityInput('');
+    setNewCityInput("");
     setIsAddingCity(false);
   };
 
   const handleRemoveCityTab = (cityToRemove: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const updated = customCityChips.filter(c => c !== cityToRemove);
+    const updated = customCityChips.filter((c) => c !== cityToRemove);
     setCustomCityChips(updated);
-    try { localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated)); } catch {}
+    try {
+      localStorage.setItem("bakandeya_custom_cities", JSON.stringify(updated));
+    } catch {}
     if (selectedCityFilter === cityToRemove) {
-      setSelectedCityFilter('');
+      setSelectedCityFilter("");
     }
     if (onUpdateEpkConfig) {
       onUpdateEpkConfig({ ciudadesConfig: updated });
     }
   };
-  
+
   // Incentive state. Antes, mientras una banda no configuraba su propio incentivo, este
   // formulario mostraba (y podía llegar a guardar) un enlace de descarga real de Bakandeya y un
   // código de descuento con su nombre — datos inventados de una banda concreta colándose como
-  // "valor por defecto" en el panel de cualquier otra.
-  const [incentivo, setIncentivo] = useState(epkConfig?.incentivoFans || {
-    mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de la banda!",
-    enlaceDescarga: "",
-    codigoDescuento: ""
-  });
+  //"valor por defecto" en el panel de cualquier otra.
+  const [incentivo, setIncentivo] = useState(
+    epkConfig?.incentivoFans || {
+      mensajeAgradecimiento:
+        "¡Muchas gracias por unirte a la familia de la banda!",
+      enlaceDescarga: "",
+      codigoDescuento: "",
+    },
+  );
   const [savedIncentive, setSavedIncentive] = useState(false);
 
   useEffect(() => {
@@ -195,77 +308,106 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
   // Manual Add Modal State
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newNombre, setNewNombre] = useState('');
-  const [newEmail, setNewEmail] = useState('');
-  const [newCiudad, setNewCiudad] = useState('');
-  const [newOrigen, setNewOrigen] = useState('Manual');
-  const [newCancionFavorita, setNewCancionFavorita] = useState('');
-  const [newInstagram, setNewInstagram] = useState('');
-  const [newMensaje, setNewMensaje] = useState('');
-  const [newNivel, setNewNivel] = useState<'fiel' | 'superfan' | 'fundador' | 'backstage'>('fiel');
+  const [newNombre, setNewNombre] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newCiudad, setNewCiudad] = useState("");
+  const [newOrigen, setNewOrigen] = useState("Manual");
+  const [newCancionFavorita, setNewCancionFavorita] = useState("");
+  const [newInstagram, setNewInstagram] = useState("");
+  const [newMensaje, setNewMensaje] = useState("");
+  const [newNivel, setNewNivel] = useState<
+    "fiel" | "superfan" | "fundador" | "backstage"
+  >("fiel");
 
   const filteredFans = useMemo(() => {
-    return fans.filter(f => {
-      const matchQuery = f.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    return fans.filter((f) => {
+      const matchQuery =
+        f.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
         f.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (f.ciudad && f.ciudad.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (f.conciertoOrigenNombre && f.conciertoOrigenNombre.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      const matchFilter = filterOrigen 
-        ? (f.conciertoOrigenId === filterOrigen || (filterOrigen === 'Otros' && !f.conciertoOrigenId))
+        (f.ciudad &&
+          f.ciudad.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (f.conciertoOrigenNombre &&
+          f.conciertoOrigenNombre
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()));
+
+      const matchFilter = filterOrigen
+        ? f.conciertoOrigenId === filterOrigen ||
+          (filterOrigen === "Otros" && !f.conciertoOrigenId)
         : true;
 
       const matchCity = selectedCityFilter
-        ? (f.ciudad && f.ciudad.toLowerCase().includes(selectedCityFilter.toLowerCase()))
+        ? f.ciudad &&
+          f.ciudad.toLowerCase().includes(selectedCityFilter.toLowerCase())
         : true;
 
       const matchNivel = selectedNivelFilter
-        ? (f.nivelFan === selectedNivelFilter)
+        ? f.nivelFan === selectedNivelFilter
         : true;
 
       return matchQuery && matchFilter && matchCity && matchNivel;
     });
-  }, [fans, searchQuery, filterOrigen, selectedCityFilter, selectedNivelFilter]);
+  }, [
+    fans,
+    searchQuery,
+    filterOrigen,
+    selectedCityFilter,
+    selectedNivelFilter,
+  ]);
 
   // Analytics Data - Channel of Origin (robust categorization)
   const originData = useMemo(() => {
     if (!fans || fans.length === 0) return [];
     const counts: Record<string, number> = {};
-    
-    fans.forEach(f => {
-      let raw = (f.comoConocio || f.conciertoOrigenNombre || '').trim();
+
+    fans.forEach((f) => {
+      let raw = (f.comoConocio || f.conciertoOrigenNombre || "").trim();
       if (!raw) {
-        if (f.conciertoOrigenId) raw = 'Concierto en Directo';
-        else raw = 'Registro Directo / QR';
+        if (f.conciertoOrigenId) raw = "Concierto en Directo";
+        else raw = "Registro Directo / QR";
       }
 
       let category = raw;
       const lower = raw.toLowerCase();
-      if (lower.includes('sala') || lower.includes('concierto') || lower.includes('festival') || lower.includes('directo') || lower.includes('bolo') || lower.includes('caracol') || lower.includes('viña')) {
-        category = 'Conciertos / Directo';
-      } else if (lower.includes('insta') || lower.includes('ig')) {
-        category = 'Instagram';
-      } else if (lower.includes('tik')) {
-        category = 'TikTok';
-      } else if (lower.includes('qr') || lower.includes('escenario')) {
-        category = 'Escaneo QR';
-      } else if (lower.includes('amigo') || lower.includes('boca')) {
-        category = 'Boca a Boca / Amigos';
-      } else if (lower.includes('spot') || lower.includes('you') || lower.includes('web')) {
-        category = 'Web / Streaming';
-      } else if (lower.includes('manual')) {
-        category = 'Registro Manual';
+      if (
+        lower.includes("sala") ||
+        lower.includes("concierto") ||
+        lower.includes("festival") ||
+        lower.includes("directo") ||
+        lower.includes("bolo") ||
+        lower.includes("caracol") ||
+        lower.includes("viña")
+      ) {
+        category = "Conciertos / Directo";
+      } else if (lower.includes("insta") || lower.includes("ig")) {
+        category = "Instagram";
+      } else if (lower.includes("tik")) {
+        category = "TikTok";
+      } else if (lower.includes("qr") || lower.includes("escenario")) {
+        category = "Escaneo QR";
+      } else if (lower.includes("amigo") || lower.includes("boca")) {
+        category = "Boca a Boca / Amigos";
+      } else if (
+        lower.includes("spot") ||
+        lower.includes("you") ||
+        lower.includes("web")
+      ) {
+        category = "Web / Streaming";
+      } else if (lower.includes("manual")) {
+        category = "Registro Manual";
       }
 
       counts[category] = (counts[category] || 0) + 1;
     });
 
     const total = fans.length;
-    return Object.entries(counts).map(([name, value]) => ({
-      name,
-      value,
-      percentage: Math.round((value / total) * 100)
-    })).sort((a, b) => b.value - a.value);
+    return Object.entries(counts)
+      .map(([name, value]) => ({
+        name,
+        value,
+        percentage: Math.round((value / total) * 100),
+      }))
+      .sort((a, b) => b.value - a.value);
   }, [fans]);
 
   // Analytics Data - Evolutionary Cumulative Growth Chart
@@ -273,57 +415,77 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     if (!fans || fans.length === 0) return [];
 
     const monthMap: Record<string, number> = {};
-    fans.forEach(f => {
-      const month = f.fechaCaptura ? f.fechaCaptura.substring(0, 7) : '2026-05';
+    fans.forEach((f) => {
+      const month = f.fechaCaptura ? f.fechaCaptura.substring(0, 7) : "2026-05";
       monthMap[month] = (monthMap[month] || 0) + 1;
     });
 
     const sortedMonths = Object.keys(monthMap).sort();
     let runningTotal = 0;
-    const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const monthNames = [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic",
+    ];
 
-    return sortedMonths.map(month => {
+    return sortedMonths.map((month) => {
       const newCount = monthMap[month];
       runningTotal += newCount;
-      const [y, m] = month.split('-');
+      const [y, m] = month.split("-");
       const mIdx = m ? parseInt(m, 10) - 1 : 0;
-      const label = `${monthNames[mIdx] || m} '${y ? y.slice(2) : '26'}`;
+      const label = `${monthNames[mIdx] || m}'${y ? y.slice(2) : "26"}`;
       return {
         month,
         date: label,
         nuevos: newCount,
-        total: runningTotal
+        total: runningTotal,
       };
     });
   }, [fans]);
 
   const uniqueConcertIds = useMemo(() => {
     const ids = new Set<string>();
-    fans.forEach(f => {
+    fans.forEach((f) => {
       if (f.conciertoOrigenId) ids.add(f.conciertoOrigenId);
     });
-    return Array.from(ids).map(id => {
-      const concert = concerts.find(c => c.id === id);
+    return Array.from(ids).map((id) => {
+      const concert = concerts.find((c) => c.id === id);
       return { id, name: concert ? `${concert.sala} (${concert.fecha})` : id };
     });
   }, [fans, concerts]);
 
   const handleExportCSV = () => {
-    const dataToExport = filteredFans.map(f => ({
+    const dataToExport = filteredFans.map((f) => ({
       ID: f.id,
       Nombre: f.nombre,
       Email: f.email,
-      Ciudad: f.ciudad || '',
-      Origen: f.comoConocio || f.conciertoOrigenNombre || '',
-      'Concierto ID': f.conciertoOrigenId || '',
-      'Fecha Registro': f.fechaCaptura,
-      'Consentimiento RGPD': f.consentimientoRGPD ? 'SÍ' : 'NO'
+      Ciudad: f.ciudad || "",
+      Origen: f.comoConocio || f.conciertoOrigenNombre || "",
+      "Concierto ID": f.conciertoOrigenId || "",
+      "Fecha Registro": f.fechaCaptura,
+      "Consentimiento RGPD": f.consentimientoRGPD ? "SÍ" : "NO",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, `Fans ${effectiveBandName}`);
-    XLSX.writeFile(workbook, `Fans_${effectiveBandName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      `Fans ${effectiveBandName}`,
+    );
+    XLSX.writeFile(
+      workbook,
+      `Fans_${effectiveBandName.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.xlsx`,
+    );
   };
 
   const handleManualAddSubmit = (e: React.FormEvent) => {
@@ -337,69 +499,96 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       ciudad: newCiudad.trim() || undefined,
       comoConocio: newOrigen,
       cancionFavorita: newCancionFavorita.trim() || undefined,
-      instagram: newInstagram.trim().replace(/^@/, '') || undefined,
+      instagram: newInstagram.trim().replace(/^@/, "") || undefined,
       mensaje: newMensaje.trim() || undefined,
       nivelFan: newNivel,
       reacciones: { likes: 1, fire: 0, applause: 0, guitars: 0 },
-      fechaCaptura: new Date().toISOString().split('T')[0],
-      consentimientoRGPD: true
+      fechaCaptura: new Date().toISOString().split("T")[0],
+      consentimientoRGPD: true,
     };
     onAddFan(fan);
     setShowAddModal(false);
-    setNewNombre(''); 
-    setNewEmail(''); 
-    setNewCiudad(''); 
-    setNewOrigen('Manual');
-    setNewCancionFavorita('');
-    setNewInstagram('');
-    setNewMensaje('');
-    setNewNivel('fiel');
+    setNewNombre("");
+    setNewEmail("");
+    setNewCiudad("");
+    setNewOrigen("Manual");
+    setNewCancionFavorita("");
+    setNewInstagram("");
+    setNewMensaje("");
+    setNewNivel("fiel");
   };
 
-
-
-  const selectedConcert = concerts.find(c => c.id === selectedConcertId);
-  const [customSlug, setCustomSlug] = useState('');
+  const selectedConcert = concerts.find((c) => c.id === selectedConcertId);
+  const [customSlug, setCustomSlug] = useState("");
   const [useCustomDomain, setUseCustomDomain] = useState(true); // Default to clean custom domain like bandmanager.io
-  const defaultDomain = 'bandmanager.io';
+  const defaultDomain = "bandmanager.io";
   const [customDomain, setCustomDomain] = useState(defaultDomain);
-  const [routePrefix, setRoutePrefix] = useState('unete');
-  const [qrLanguage, setQrLanguage] = useState<FanFormLanguage>(DEFAULT_FAN_FORM_LANGUAGE);
+  const [routePrefix, setRoutePrefix] = useState("unete");
+  const [qrLanguage, setQrLanguage] = useState<FanFormLanguage>(
+    DEFAULT_FAN_FORM_LANGUAGE,
+  );
 
   useEffect(() => {
     if (selectedConcert) {
-      const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "-");
       setCustomSlug(defaultSlug);
       // Precarga el idioma guardado en el concierto; el manager siempre puede cambiarlo a mano abajo.
-      setQrLanguage(isFanFormLanguage(selectedConcert.idioma) ? selectedConcert.idioma : DEFAULT_FAN_FORM_LANGUAGE);
+      setQrLanguage(
+        isFanFormLanguage(selectedConcert.idioma)
+          ? selectedConcert.idioma
+          : DEFAULT_FAN_FORM_LANGUAGE,
+      );
     } else {
-      setCustomSlug('');
+      setCustomSlug("");
     }
   }, [selectedConcertId]);
 
   // Build clean target URL
-  const rawDomain = useCustomDomain 
-    ? (customDomain.trim().startsWith('http') ? customDomain.trim() : `https://${customDomain.trim().replace(/\/$/, '')}`)
-    : (typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io');
+  const rawDomain = useCustomDomain
+    ? customDomain.trim().startsWith("http")
+      ? customDomain.trim()
+      : `https://${customDomain.trim().replace(/\/$/, "")}`
+    : typeof window !== "undefined"
+      ? window.location.origin
+      : "https://bandmanager.io";
 
-  const cleanPrefix = routePrefix.trim().replace(/^\/+|\/+$/g, '');
-  const cleanSlugVal = customSlug.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '');
+  const cleanPrefix = routePrefix.trim().replace(/^\/+|\/+$/g, "");
+  const cleanSlugVal = customSlug
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-_]/g, "");
 
-  const pathFormatted = cleanSlugVal 
-    ? (cleanPrefix ? `/${cleanPrefix}/${cleanSlugVal}` : `/${cleanSlugVal}`)
-    : (cleanPrefix ? `/${cleanPrefix}` : '/unete');
+  const pathFormatted = cleanSlugVal
+    ? cleanPrefix
+      ? `/${cleanPrefix}/${cleanSlugVal}`
+      : `/${cleanSlugVal}`
+    : cleanPrefix
+      ? `/${cleanPrefix}`
+      : "/unete";
 
   const qrQueryParams: string[] = [];
-  if (currentBandId) qrQueryParams.push(`band=${encodeURIComponent(currentBandId)}`);
-  else if (cleanBandId) qrQueryParams.push(`band=${encodeURIComponent(cleanBandId)}`);
-  if (qrLanguage !== DEFAULT_FAN_FORM_LANGUAGE) qrQueryParams.push(`lang=${qrLanguage}`);
+  if (currentBandId)
+    qrQueryParams.push(
+      `b=${encodeURIComponent(encodeBandIdClient(currentBandId))}`,
+    );
+  else if (cleanBandId)
+    qrQueryParams.push(
+      `b=${encodeURIComponent(encodeBandIdClient(cleanBandId))}`,
+    );
+  if (qrLanguage !== DEFAULT_FAN_FORM_LANGUAGE)
+    qrQueryParams.push(`lang=${qrLanguage}`);
   if (selectedConcert) {
     // Permite que /api/public/fans guarde el concierto de origen real (concierto_origen_id)
     // en vez de depender solo del slug de la URL para adivinar el nombre.
     qrQueryParams.push(`concertId=${encodeURIComponent(selectedConcert.id)}`);
-    qrQueryParams.push(`concertName=${encodeURIComponent(`${selectedConcert.sala} (${selectedConcert.ciudad})`)}`);
+    qrQueryParams.push(
+      `concertName=${encodeURIComponent(`${selectedConcert.sala} (${selectedConcert.ciudad})`)}`,
+    );
   }
-  const qrConcertUrl = `${rawDomain}${pathFormatted}${qrQueryParams.length ? `?${qrQueryParams.join('&')}` : ''}`;
+  const qrConcertUrl = `${rawDomain}${pathFormatted}${qrQueryParams.length ? `?${qrQueryParams.join("&")}` : ""}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(qrConcertUrl);
@@ -415,9 +604,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   };
 
   const handleShareWhatsApp = () => {
-    const concertTitle = selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : effectiveBandName;
+    const concertTitle = selectedConcert
+      ? `${selectedConcert.sala} (${selectedConcert.ciudad})`
+      : effectiveBandName;
     const text = `¡Únete a ${effectiveBandName} en ${concertTitle}! 🎶 Escanea o entra en el enlace para recibir sorpresas exclusivas y estar al día:\n\n${qrConcertUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    openWhatsAppChat(undefined, text);
   };
 
   const handleShareNative = async () => {
@@ -425,11 +616,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       try {
         await navigator.share({
           title: `Únete a ${effectiveBandName}`,
-          text: 'Escanea o entra para unirte a nuestra comunidad.',
+          text: "Escanea o entra para unirte a nuestra comunidad.",
           url: qrConcertUrl,
         });
       } catch (err) {
-        console.log('Share canceled or not supported', err);
+        console.log("Share canceled or not supported", err);
       }
     } else {
       handleCopyQrUrl();
@@ -446,14 +637,16 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const handleDownloadSvg = async () => {
     setIsExportingDirect(true);
     try {
-      const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
+      const concertTitle = selectedConcert
+        ? `${selectedConcert.sala}`
+        : effectiveBandName;
       await downloadQrAsSvg({
-        svgElementId: 'qr-code-svg-container',
-        filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-vectorial`,
-        logoUrl: effectiveBandLogo
+        svgElementId: "qr-code-svg-container",
+        filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, "-")}-vectorial`,
+        logoUrl: effectiveBandLogo,
       });
     } catch (err) {
-      console.error('Error al descargar SVG:', err);
+      console.error("Error al descargar SVG:", err);
     } finally {
       setIsExportingDirect(false);
     }
@@ -462,15 +655,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const handleDownloadPng4k = async () => {
     setIsExportingDirect(true);
     try {
-      const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
+      const concertTitle = selectedConcert
+        ? `${selectedConcert.sala}`
+        : effectiveBandName;
       await downloadQrAsHighResPng({
-        svgElementId: 'qr-code-svg-container',
-        filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-4k`,
-        template: 'qr-only',
-        logoUrl: effectiveBandLogo
+        svgElementId: "qr-code-svg-container",
+        filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, "-")}-4k`,
+        template: "qr-only",
+        logoUrl: effectiveBandLogo,
       });
     } catch (err) {
-      console.error('Error al descargar PNG 4K:', err);
+      console.error("Error al descargar PNG 4K:", err);
     } finally {
       setIsExportingDirect(false);
     }
@@ -478,33 +673,36 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
   const handlePrintQr = () => {
     const concertTitle = selectedConcert ? selectedConcert.sala : undefined;
-    const dateCity = selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : undefined;
-    
+    const dateCity = selectedConcert
+      ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}`
+      : undefined;
+
     printHighQualityFlyer({
-      svgElementId: 'qr-code-svg-container',
+      svgElementId: "qr-code-svg-container",
       bandName: effectiveBandName,
       concertTitle,
       dateCity,
       url: qrConcertUrl,
       logoUrl: effectiveBandLogo,
-      ctaText: '¡ESCANEA CON LA CÁMARA DE TU MÓVIL!',
-      subtitle: `Únete a la comunidad oficial de ${effectiveBandName} para acceder a canciones inéditas, sorpresas exclusivas y descuentos en merchandising.`
+      ctaText: "¡ESCANEA CON LA CÁMARA DE TU MÓVIL!",
+      subtitle: `Únete a la comunidad oficial de ${effectiveBandName} para acceder a canciones inéditas, sorpresas exclusivas y descuentos en merchandising.`,
     });
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+    <div data-modulo="fans" className="space-y-6">
+      <div className="flex items-center justify-between gap-3 bg-[var(--surface)] rounded-[var(--r-l)] p-4 sm:p-6">
         <div className="min-w-0">
           <h2
-            className="text-lg sm:text-2xl font-black text-white font-display flex items-center gap-2 sm:gap-3"
+            className="text-lg sm:text-2xl font-black text-[var(--ink)] font-display flex items-center gap-2 sm:gap-3"
             title="Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento."
           >
-            <QrCode className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 shrink-0" />
+            <QrCode className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--acc)] shrink-0" />
             <span className="truncate">Captura QR & Fans</span>
           </h2>
-          <p className="hidden sm:block text-slate-400 font-mono text-sm mt-1">
-            Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento.
+          <p className="hidden sm:block text-[var(--ink-2)] font-sans text-sm mt-1">
+            Captura de fans en directo con códigos QR, métricas de redes,
+            comunidad interactiva y analítica de crecimiento.
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -517,267 +715,143 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           <div className="relative shrink-0">
             <button
               type="button"
-              onClick={() => setShowFansHeaderMenu(v => !v)}
+              onClick={() => setShowFansHeaderMenu((v) => !v)}
               title="Previsualizar formulario, copiar enlace, registrar fan manual, exportar CSV o ver guía"
-              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
+              className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
             {showFansHeaderMenu && (
               <>
-                <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
-                <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-1.5 space-y-0.5 text-xs font-mono">
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => setShowFansHeaderMenu(false)}
+                />
+                <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--sunken)] p-1.5 space-y-0.5 text-xs font-sans">
                   <button
                     type="button"
-                    onClick={() => { setShowFansHeaderMenu(false); openTutorial(); }}
-                    className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2 font-bold"
+                    onClick={() => {
+                      setShowFansHeaderMenu(false);
+                      openTutorial();
+                    }}
+                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
-                    <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-400" /> Guía Rápida & Tutorial
+                    <Sparkles className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />{" "}
+                    Guía Rápida & Tutorial
                   </button>
                   <button
                     type="button"
-                    onClick={() => { setShowFansHeaderMenu(false); setShowFansPreviewModal(true); }}
-                    className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2 font-bold"
+                    onClick={() => {
+                      setShowFansHeaderMenu(false);
+                      setShowFansPreviewModal(true);
+                    }}
+                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
-                    <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar Formulario
+                    <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
+                    Formulario
                   </button>
-                <button
-                  type="button"
-                  onClick={() => { setShowFansHeaderMenu(false); copyLink(); }}
-                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
-                >
-                  <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de Captura Corto
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setShowFansHeaderMenu(false); setShowAddModal(true); }}
-                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
-                >
-                  <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan Manual
-                </button>
-                <button
-                  id="fans-export-csv-btn"
-                  type="button"
-                  onClick={() => { setShowFansHeaderMenu(false); handleExportCSV(); }}
-                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
-                >
-                  <Download className="w-3.5 h-3.5 shrink-0" /> Exportar CSV
-                </button>
-              </div>
-            </>
-          )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowFansHeaderMenu(false);
+                      copyLink();
+                    }}
+                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+                  >
+                    <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de Captura
+                    Corto
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowFansHeaderMenu(false);
+                      setShowAddModal(true);
+                    }}
+                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+                  >
+                    <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan
+                    Manual
+                  </button>
+                  <button
+                    id="fans-export-csv-btn"
+                    type="button"
+                    onClick={() => {
+                      setShowFansHeaderMenu(false);
+                      handleExportCSV();
+                    }}
+                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+                  >
+                    <Download className="w-3.5 h-3.5 shrink-0" /> Exportar CSV
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
 
       {/* Tabs (metrics tab hidden for Promo) */}
-      <div className="flex overflow-x-auto border-b border-slate-800 hide-scrollbar gap-1">
+      <div className="flex overflow-x-auto shrink-0 hide-scrollbar gap-1">
         {!isPromo && (
-        <button
-          id="tab-btn-fans-metrics"
-          onClick={() => setActiveTab('metrics')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'metrics' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
-        >
-          <TrendingUp className="w-4 h-4 text-amber-500" /> 1. Seguimiento & Métricas de Redes
-        </button>
+          <button
+            id="tab-btn-fans-metrics"
+            onClick={() => setActiveTab("metrics")}
+            className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "metrics" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
+          >
+            <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento
+            & Métricas de Redes
+          </button>
         )}
         <button
           id="tab-btn-fans-qr"
-          onClick={() => setActiveTab('qr')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'qr' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          onClick={() => setActiveTab("qr")}
+          className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "qr" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
         >
-          <QrCode className="w-4 h-4 text-amber-500" /> {isPromo ? '1' : '2'}. Captura en Vivo & QR
+          <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "1" : "2"}
+          . Captura en Vivo & QR
         </button>
         <button
           id="tab-btn-fans-dashboard"
-          onClick={() => setActiveTab('dashboard')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'dashboard' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          onClick={() => setActiveTab("dashboard")}
+          className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "dashboard" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
         >
-          <Heart className="w-4 h-4 text-amber-500" /> {isPromo ? '2' : '3'}. Dashboard & Analítica
+          <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "2" : "3"}.
+          Dashboard & Analítica
         </button>
         <button
           id="tab-btn-fans-directory"
-          onClick={() => setActiveTab('fans')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'fans' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          onClick={() => setActiveTab("fans")}
+          className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "fans" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
         >
-          <Users className="w-4 h-4 text-amber-500" /> {isPromo ? '3' : '4'}. Comunidad & Red Social ({fans.length})
+          <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "3" : "4"}.
+          Comunidad & Red Social ({fans.length})
         </button>
       </div>
 
-      {activeTab === 'dashboard' && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">Total Fans Registrados</p>
-              <h3 className="text-5xl font-black text-white font-display">{fans.length}</h3>
-            </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">Consentimiento RGPD</p>
-              <h3 className="text-4xl font-black text-emerald-400 font-display flex items-center gap-2">
-                <ShieldCheck className="w-8 h-8" />
-                100%
-              </h3>
-            </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">Ciudades Activas</p>
-              <h3 className="text-4xl font-black text-amber-400 font-display flex items-center gap-2">
-                <MapPin className="w-8 h-8" />
-                {new Set(fans.map(f => f.ciudad).filter(Boolean)).size}
-              </h3>
-            </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">Clics Totales en QR & Redes</p>
-              <h3 className="text-4xl font-black text-sky-400 font-display flex items-center gap-2">
-                <ExternalLink className="w-7 h-7" />
-                {Object.entries(clickStats).filter(([k]) => !k.endsWith('_last_at')).reduce((a, b) => a + Number(b[1] || 0), 0)}
-              </h3>
-            </div>
-          </div>
-
-          {/* Breakdown de Clics por Red Social, Métodos de Pago y Dossier */}
-          {Object.keys(clickStats).length > 0 && (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
-              <h4 className="text-xs font-bold text-amber-400 font-mono uppercase tracking-wider flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" /> Impacto de Enlaces en FansLanding & QR (Por Canal y Donaciones)
-              </h4>
-              <div className="flex flex-wrap items-center gap-2 pt-1">
-                {Object.entries(clickStats)
-                  .filter(([k]) => !k.endsWith('_last_at'))
-                  .map(([key, count]) => (
-                    <div key={key} className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono flex items-center gap-2">
-                      <span className="font-semibold text-slate-200 uppercase">{key}:</span>
-                      <span className="font-black text-amber-400">{count} {count === 1 ? 'clic' : 'clics'}</span>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Crecimiento Evolutivo de Fans */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 h-88 flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-amber-500" />
-                    Crecimiento Evolutivo de Fans
-                  </p>
-                  <p className="text-[11px] text-slate-500 font-mono">Curva acumulativa de la comunidad {effectiveBandName}</p>
-                </div>
-                <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
-                  Total: {fans.length} fans
-                </span>
-              </div>
-              
-              <div className="flex-1 min-h-0">
-                {evolutionaryGrowthData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={evolutionaryGrowthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="fanGrowthGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4}/>
-                          <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} domain={[0, 'auto']} />
-                      <Tooltip 
-                        contentStyle={{backgroundColor: '#0f172a', borderColor: '#334155', fontSize: '12px', borderRadius: '12px', color: '#fff'}}
-                        formatter={(val: any, name: any) => [
-                          name === 'total' ? `${val} fans acumulados` : `${val} nuevos capturados`,
-                          name === 'total' ? 'Comunidad Total' : 'Capturados en el mes'
-                        ]}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="total" 
-                        stroke="#f59e0b" 
-                        strokeWidth={3} 
-                        fillOpacity={1} 
-                        fill="url(#fanGrowthGrad)" 
-                        name="total" 
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                ) : (
-                   <div className="flex items-center justify-center h-full text-slate-500 text-xs font-mono">No hay datos suficientes</div>
-                )}
-              </div>
-            </div>
-            
-            {/* Canal de Origen (Fixed & Visual) */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 h-88 flex flex-col">
-              <div className="mb-2">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">Canal de Origen de Fans</p>
-                <p className="text-[11px] text-slate-500 font-mono">De dónde provienen los registros</p>
-              </div>
-
-              <div className="flex-1 min-h-0 flex flex-col sm:flex-row items-center gap-4">
-                {originData.length > 0 ? (
-                  <>
-                    <div className="w-full sm:w-1/2 h-48 sm:h-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={originData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={50}
-                            outerRadius={75}
-                            paddingAngle={4}
-                            dataKey="value"
-                            nameKey="name"
-                          >
-                            {originData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                          </Pie>
-                          <Tooltip 
-                            contentStyle={{backgroundColor: '#0f172a', borderColor: '#334155', fontSize: '12px', borderRadius: '12px', color: '#fff'}}
-                            formatter={(val: any, name: any) => [`${val} fans (${Math.round((val / (fans.length || 1)) * 100)}%)`, name]}
-                          />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-
-                    {/* Channel Legend List */}
-                    <div className="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar pr-1">
-                      {originData.map((item, idx) => (
-                        <div key={item.name} className="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-slate-800/80 text-xs font-mono">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
-                            <span className="text-slate-200 font-bold truncate">{item.name}</span>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-amber-400 font-bold">{item.value}</span>
-                            <span className="text-slate-500 text-[10px]">({item.percentage}%)</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex items-center justify-center w-full h-full text-slate-500 text-xs font-mono">No hay datos suficientes</div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+      {activeTab === "dashboard" && (
+        <FansDashboardView
+          fans={fans}
+          clickStats={clickStats}
+          effectiveBandName={effectiveBandName}
+          evolutionaryGrowthData={evolutionaryGrowthData}
+          originData={originData}
+          COLORS={COLORS}
+        />
       )}
 
-      {activeTab === 'fans' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5">
+      {activeTab === "fans" && (
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-5">
           {/* Configurable City Tabs Bar */}
-          <div className="space-y-2 border-b border-slate-800 pb-4">
+          <div className="space-y-2 pb-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-amber-500" />
+              <span className="text-xs font-bold text-[var(--ink-2)] font-sans flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Filtrar por Ciudad (Pestañas Configurables Guardadas en BBDD)
               </span>
               {selectedCityFilter && (
                 <button
-                  onClick={() => setSelectedCityFilter('')}
-                  className="text-[11px] font-mono text-amber-400 hover:underline cursor-pointer"
+                  onClick={() => setSelectedCityFilter("")}
+                  className="text-[11px] font-sans text-[var(--acc)] hover:underline cursor-pointer"
                 >
                   Limpiar filtro ciudad
                 </button>
@@ -787,40 +861,51 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <button
                 type="button"
-                onClick={() => setSelectedCityFilter('')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
-                  selectedCityFilter === ''
-                    ? 'bg-amber-500 text-slate-950 shadow-md'
-                    : 'bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800'
+                onClick={() => setSelectedCityFilter("")}
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
+                  selectedCityFilter === ""
+                    ? "bg-[var(--acc)] text-[var(--ink)]"
+                    : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                 }`}
               >
                 Todas ({fans.length})
               </button>
 
-              {customCityChips.map(city => {
-                const count = fans.filter(f => f.ciudad && f.ciudad.toLowerCase().includes(city.toLowerCase())).length;
-                const isSelected = selectedCityFilter.toLowerCase() === city.toLowerCase();
+              {customCityChips.map((city) => {
+                const count = fans.filter(
+                  (f) =>
+                    f.ciudad &&
+                    f.ciudad.toLowerCase().includes(city.toLowerCase()),
+                ).length;
+                const isSelected =
+                  selectedCityFilter.toLowerCase() === city.toLowerCase();
                 return (
                   <div
                     key={city}
                     onClick={() => setSelectedCityFilter(city)}
-                    className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                    className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-amber-500 text-slate-950 shadow-md'
-                        : 'bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800'
+                        ? "bg-[var(--acc)] text-[var(--ink)]"
+                        : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     }`}
                   >
                     <span>{city}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                      isSelected ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-amber-400'
-                    }`}>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-bold ${
+                        isSelected
+                          ? "bg-[var(--surface)]/20 text-[var(--ink)]"
+                          : "bg-[var(--surface)] text-[var(--acc)]"
+                      }`}
+                    >
                       {count}
                     </span>
                     <button
                       type="button"
                       onClick={(e) => handleRemoveCityTab(city, e)}
-                      className={`p-0.5 rounded-full hover:bg-rose-500/30 transition opacity-60 group-hover/city:opacity-100 ${
-                        isSelected ? 'hover:text-rose-950 text-slate-950' : 'hover:text-rose-300 text-slate-400'
+                      className={`p-0.5 rounded-[var(--r-pill)] hover:bg-[var(--alert)]/30 transition opacity-60 group-hover/city:opacity-100 ${
+                        isSelected
+                          ? "hover:text-[var(--alert)] text-[var(--ink)]"
+                          : "hover:text-[var(--ink-2)] text-[var(--ink-2)]"
                       }`}
                       title={`Eliminar pestaña ${city}`}
                     >
@@ -831,26 +916,32 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               })}
 
               {isAddingCity ? (
-                <form onSubmit={handleAddCityTab} className="flex items-center gap-1">
+                <form
+                  onSubmit={handleAddCityTab}
+                  className="flex items-center gap-1"
+                >
                   <input
                     type="text"
                     autoFocus
                     placeholder="Nueva ciudad..."
                     value={newCityInput}
-                    onChange={e => setNewCityInput(e.target.value)}
-                    className="bg-slate-950 border border-amber-500 rounded-xl px-2.5 py-1 text-xs text-white font-mono outline-none w-36"
+                    onChange={(e) => setNewCityInput(e.target.value)}
+                    className="bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1 text-xs text-[var(--ink)] font-sans outline-none w-36"
                   />
                   <button
                     type="submit"
-                    className="p-1 bg-amber-500 text-slate-950 rounded-lg hover:bg-amber-400 transition cursor-pointer"
+                    className="p-1 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition cursor-pointer"
                     title="Guardar ciudad"
                   >
                     <Check className="w-3.5 h-3.5" />
                   </button>
                   <button
                     type="button"
-                    onClick={() => { setIsAddingCity(false); setNewCityInput(''); }}
-                    className="p-1 bg-slate-800 text-slate-400 rounded-lg hover:bg-slate-700 transition cursor-pointer"
+                    onClick={() => {
+                      setIsAddingCity(false);
+                      setNewCityInput("");
+                    }}
+                    className="p-1 bg-[var(--sunken)] text-[var(--ink-2)] rounded-[var(--r-s)] hover:bg-[var(--surface)] transition cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -859,7 +950,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsAddingCity(true)}
-                  className="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-950 hover:bg-slate-800 text-amber-400 border border-amber-500/30 border-dashed flex items-center gap-1 transition cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] flex items-center gap-1 transition cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Añadir ciudad</span>
@@ -871,25 +962,27 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
               <div className="relative w-full sm:w-80">
-                <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Buscar por nombre, email o ciudad..."
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl pl-9 pr-3 py-2 text-xs text-white outline-none"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] pl-9 pr-3 py-2 text-xs text-[var(--ink)] outline-none"
                 />
               </div>
               <div className="relative w-full sm:w-64">
-                <Filter className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Filter className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
                 <select
                   value={filterOrigen}
-                  onChange={e => setFilterOrigen(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl pl-9 pr-3 py-2 text-xs text-white outline-none appearance-none font-mono"
+                  onChange={(e) => setFilterOrigen(e.target.value)}
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] pl-9 pr-3 py-2 text-xs text-[var(--ink)] outline-none appearance-none font-sans"
                 >
                   <option value="">Todos los orígenes</option>
-                  {uniqueConcertIds.map(c => (
-                    <option key={c.id} value={c.id}>Concierto: {c.name}</option>
+                  {uniqueConcertIds.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      Concierto: {c.name}
+                    </option>
                   ))}
                   <option value="Otros">Redes Sociales / Amigos / Otros</option>
                 </select>
@@ -897,8 +990,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div className="relative w-full sm:w-48">
                 <select
                   value={selectedNivelFilter}
-                  onChange={e => setSelectedNivelFilter(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-white outline-none font-mono cursor-pointer"
+                  onChange={(e) => setSelectedNivelFilter(e.target.value)}
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans cursor-pointer"
                 >
                   <option value="">Todos los niveles</option>
                   <option value="superfan">🔥 Superfan</option>
@@ -911,12 +1004,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
             <div className="flex items-center gap-2">
               {/* View Switcher */}
-              <div className="flex items-center gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800">
+              <div className="flex items-center gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)]">
                 <button
                   type="button"
-                  onClick={() => setViewMode('feed')}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'feed' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  onClick={() => setViewMode("feed")}
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    viewMode === "feed"
+                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Muro Social & Comunidad"
                 >
@@ -925,9 +1020,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setViewMode('grid')}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'grid' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  onClick={() => setViewMode("grid")}
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    viewMode === "grid"
+                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Vista en Tarjetas"
                 >
@@ -936,9 +1033,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setViewMode('table')}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'table' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  onClick={() => setViewMode("table")}
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    viewMode === "table"
+                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Vista en Detalles / Tabla"
                 >
@@ -947,9 +1046,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setViewMode('map')}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'map' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  onClick={() => setViewMode("map")}
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    viewMode === "map"
+                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Vista en Mapa por Ciudades"
                 >
@@ -958,20 +1059,19 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
               </div>
 
-              <span className="text-xs text-slate-400 font-mono shrink-0 hidden sm:inline">
+              <span className="text-xs text-[var(--ink-2)] font-sans shrink-0 hidden sm:inline">
                 {filteredFans.length} resultados
               </span>
             </div>
           </div>
 
-          {viewMode === 'feed' && (
+          {viewMode === "feed" && (
             <FansCommunityView
               fans={filteredFans}
               concerts={concerts}
               effectiveBandName={effectiveBandName}
               effectiveBandLogo={effectiveBandLogo}
               colors={colors}
-              isStitchLight={isStitchLight}
               onUpdateFan={onUpdateFan}
               onDeleteFan={onDeleteFan}
               onOpenAddModal={() => setShowAddModal(true)}
@@ -979,23 +1079,36 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             />
           )}
 
-          {viewMode === 'grid' && (
+          {viewMode === "grid" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredFans.length === 0 ? (
-                <div className="col-span-full p-8 text-center text-slate-500 font-mono bg-slate-950/50 rounded-xl border border-slate-800">
-                  No hay fans registrados que coincidan con los filtros aplicados.
+                <div className="col-span-full flex flex-col items-center justify-center py-12">
+                  <PublicoSilhouette opacity={0.12} size="medium" />
+                  <p className="mt-6 font-medium text-[var(--ink)] text-sm">
+                    Sin fans que coincidan
+                  </p>
+                  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
+                    Ajusta los filtros o espera a que tus primeros fans se unan.
+                  </p>
                 </div>
               ) : (
-                filteredFans.map(fan => (
-                  <div key={fan.id} className="bg-slate-950 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-4 transition-all space-y-3 relative group">
+                filteredFans.map((fan) => (
+                  <div
+                    key={fan.id}
+                    className="bg-[var(--sunken)]  rounded-[var(--r-l)] p-4 transition-all space-y-3 relative group"
+                  >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 font-bold uppercase text-sm">
+                        <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-sm">
                           {fan.nombre.charAt(0)}
                         </div>
                         <div>
-                          <h4 className="font-bold text-white text-sm truncate max-w-[160px]">{fan.nombre}</h4>
-                          <p className="text-[11px] font-mono text-slate-400 truncate max-w-[160px]">{fan.email}</p>
+                          <h4 className="font-bold text-[var(--ink)] text-sm truncate max-w-[160px]">
+                            {fan.nombre}
+                          </h4>
+                          <p className="text-[11px] font-sans text-[var(--ink-2)] truncate max-w-[160px]">
+                            {fan.email}
+                          </p>
                         </div>
                       </div>
                       <button
@@ -1005,31 +1118,41 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             onDeleteFan(fan.id);
                           }
                         }}
-                        className="p-1.5 text-slate-500 hover:bg-rose-500/20 hover:text-rose-400 rounded-lg transition cursor-pointer"
+                        className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)]/20 hover:text-[var(--alert)] rounded-[var(--r-s)] transition cursor-pointer"
                         title="Eliminar Fan"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 text-[11px] font-mono pt-2 border-t border-slate-800/80">
-                      <div className="bg-slate-900/80 p-2 rounded-lg">
-                        <span className="text-slate-500 text-[9px] block uppercase">Ciudad</span>
-                        <span className="text-slate-200 flex items-center gap-1 font-semibold">
-                          <MapPin className="w-3 h-3 text-amber-500 shrink-0" />
-                          <span className="truncate">{fan.ciudad || 'No especificada'}</span>
+                    <div className="grid grid-cols-2 gap-2 text-[11px] font-sans pt-2 ">
+                      <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
+                        <span className="text-[var(--ink-2)] text-[9px] block">
+                          Ciudad
+                        </span>
+                        <span className="text-[var(--ink-2)] flex items-center gap-1 font-semibold">
+                          <MapPin className="w-3 h-3 text-[var(--acc)] shrink-0" />
+                          <span className="truncate">
+                            {fan.ciudad || "No especificada"}
+                          </span>
                         </span>
                       </div>
-                      <div className="bg-slate-900/80 p-2 rounded-lg">
-                        <span className="text-slate-500 text-[9px] block uppercase">Origen / Canal</span>
-                        <span className="text-amber-400 truncate block font-semibold">{fan.comoConocio || fan.conciertoOrigenNombre || 'Directo'}</span>
+                      <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
+                        <span className="text-[var(--ink-2)] text-[9px] block">
+                          Origen / Canal
+                        </span>
+                        <span className="text-[var(--acc)] truncate block font-semibold">
+                          {fan.comoConocio ||
+                            fan.conciertoOrigenNombre ||
+                            "Directo"}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1">
-                      <span>Registrado: {fan.fechaCaptura || 'Reciente'}</span>
+                    <div className="flex items-center justify-between text-[10px] font-sans text-[var(--ink-2)] pt-1">
+                      <span>Registrado: {fan.fechaCaptura || "Reciente"}</span>
                       {fan.consentimientoRGPD && (
-                        <span className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                        <span className="text-[var(--ok)] font-bold flex items-center gap-1 bg-[var(--ok)]/10 px-2 py-0.5 rounded-[var(--r-pill)]">
                           <Check className="w-3 h-3" /> RGPD Ok
                         </span>
                       )}
@@ -1040,137 +1163,170 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </div>
           )}
 
-          {viewMode === 'map' && (
+          {viewMode === "map" && (
             <div className="space-y-4">
-              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs font-mono text-slate-300">
-                <div className="flex items-center gap-2 text-amber-400 font-bold mb-3">
+              <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-4 text-xs font-sans text-[var(--ink-2)]">
+                <div className="flex items-center gap-2 text-[var(--acc)] font-bold mb-3">
                   <MapIcon className="w-4 h-4" />
-                  <span>Distribución Geográfica de la Comunidad de Fans por Ciudades</span>
+                  <span>
+                    Distribución Geográfica de la Comunidad de Fans por Ciudades
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                   {Object.entries(
-                    filteredFans.reduce((acc, f) => {
-                      const city = f.ciudad || 'Ciudad no indicada';
-                      acc[city] = (acc[city] || 0) + 1;
-                      return acc;
-                    }, {} as Record<string, number>)
+                    filteredFans.reduce(
+                      (acc, f) => {
+                        const city = f.ciudad || "Ciudad no indicada";
+                        acc[city] = (acc[city] || 0) + 1;
+                        return acc;
+                      },
+                      {} as Record<string, number>,
+                    ),
                   )
-                  .sort((a,b) => (b[1] as number) - (a[1] as number))
-                  .map(([city, count]) => (
-                    <div key={city} className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
-                      <div className="flex items-center gap-2 truncate">
-                        <MapPin className="w-4 h-4 text-amber-500 shrink-0" />
-                        <span className="font-bold text-white truncate">{city}</span>
+                    .sort((a, b) => (b[1] as number) - (a[1] as number))
+                    .map(([city, count]) => (
+                      <div
+                        key={city}
+                        className="bg-[var(--surface)] p-3 rounded-[var(--r-m)] flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-2 truncate">
+                          <MapPin className="w-4 h-4 text-[var(--acc)] shrink-0" />
+                          <span className="font-bold text-[var(--ink)] truncate">
+                            {city}
+                          </span>
+                        </div>
+                        <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)]">
+                          {count} {count === 1 ? "fan" : "fans"}
+                        </span>
                       </div>
-                      <span className="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">
-                        {count} {count === 1 ? 'fan' : 'fans'}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             </div>
           )}
 
-          {viewMode === 'table' && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-amber-400 uppercase font-bold border-b border-slate-800 font-mono">
-                <tr>
-                  <th className="p-3">Nombre</th>
-                  <th className="p-3">Correo Electrónico</th>
-                  <th className="p-3">Ciudad</th>
-                  <th className="p-3">Canal</th>
-                  <th className="p-3">Concierto Asociado</th>
-                  <th className="p-3 text-center">RGPD</th>
-                  <th className="p-3 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/50">
-                {filteredFans.length === 0 ? (
+          {viewMode === "table" && (
+            <div className="overflow-x-auto shrink-0">
+              <table className="w-full text-left text-xs text-[var(--ink-2)]">
+                <thead className="bg-[var(--surface)] text-[var(--acc)] font-bold font-sans">
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-slate-500 font-mono">
-                      No hay fans registrados que coincidan con los filtros aplicados.
-                    </td>
+                    <th className="p-3">Nombre</th>
+                    <th className="p-3">Correo Electrónico</th>
+                    <th className="p-3">Ciudad</th>
+                    <th className="p-3">Canal</th>
+                    <th className="p-3">Concierto Asociado</th>
+                    <th className="p-3 text-center">RGPD</th>
+                    <th className="p-3 text-right">Acciones</th>
                   </tr>
-                ) : (
-                  filteredFans.map(fan => (
-                    <tr key={fan.id} className="hover:bg-slate-800/20 transition group">
-                      <td className="p-3 font-semibold text-white">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 font-bold uppercase text-[10px]">
-                            {fan.nombre.charAt(0)}
-                          </div>
-                          {fan.nombre}
+                </thead>
+                <tbody className="divide-y divide-[var(--hair)]">
+                  {filteredFans.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="p-12">
+                        <div className="flex flex-col items-center justify-center">
+                          <PublicoSilhouette opacity={0.12} size="medium" />
+                          <p className="mt-6 font-medium text-[var(--ink)] text-sm">
+                            Sin fans que coincidan
+                          </p>
+                          <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
+                            Ajusta los filtros o espera a que tus primeros fans
+                            se unan.
+                          </p>
                         </div>
                       </td>
-                      <td className="p-3 font-mono">{fan.email}</td>
-                      <td className="p-3">
-                        {fan.ciudad ? (
-                          <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-slate-500" /> {fan.ciudad}</span>
-                        ) : (
-                          <span className="text-slate-600">-</span>
-                        )}
-                      </td>
-                      <td className="p-3 font-mono text-[10px] text-slate-400 uppercase tracking-wider">
-                        {fan.comoConocio || '-'}
-                      </td>
-                      <td className="p-3 text-[11px] text-emerald-400 font-mono">
-                        {fan.conciertoOrigenNombre || '-'}
-                      </td>
-                      <td className="p-3 text-center">
-                        {fan.consentimientoRGPD ? (
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-emerald-500/10 text-emerald-400">
-                            <Check className="w-3.5 h-3.5" />
-                          </span>
-                        ) : '-'}
-                      </td>
-                      <td className="p-3 text-right">
-                        <button
-                          onClick={() => {
-                            if (confirm(`¿Eliminar fan ${fan.nombre}?`)) {
-                              onDeleteFan(fan.id);
-                            }
-                          }}
-                          className="p-1.5 text-slate-500 hover:bg-rose-500 hover:text-white rounded transition opacity-0 group-hover:opacity-100 cursor-pointer"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ) : (
+                    filteredFans.map((fan) => (
+                      <tr
+                        key={fan.id}
+                        className="hover:bg-[var(--surface)]/20 transition group"
+                      >
+                        <td className="p-3 font-semibold text-[var(--ink)]">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-[var(--r-pill)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-[10px]">
+                              {fan.nombre.charAt(0)}
+                            </div>
+                            {fan.nombre}
+                          </div>
+                        </td>
+                        <td className="p-3 font-sans">{fan.email}</td>
+                        <td className="p-3">
+                          {fan.ciudad ? (
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3 text-[var(--ink-2)]" />{" "}
+                              {fan.ciudad}
+                            </span>
+                          ) : (
+                            <span className="text-[var(--ink-2)]">-</span>
+                          )}
+                        </td>
+                        <td className="p-3 font-sans text-[10px] text-[var(--ink-2)]">
+                          {fan.comoConocio || "-"}
+                        </td>
+                        <td className="p-3 text-[11px] text-[var(--ok)] font-sans">
+                          {fan.conciertoOrigenNombre || "-"}
+                        </td>
+                        <td className="p-3 text-center">
+                          {fan.consentimientoRGPD ? (
+                            <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
+                              <Check className="w-3.5 h-3.5" />
+                            </span>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          <button
+                            onClick={() => {
+                              if (confirm(`¿Eliminar fan ${fan.nombre}?`)) {
+                                onDeleteFan(fan.id);
+                              }
+                            }}
+                            className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)] hover:text-[var(--ink)] rounded transition opacity-0 group-hover:opacity-100 cursor-pointer"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}
 
-      {activeTab === 'qr' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-5">
-          <div className="space-y-1 border-b border-slate-800 pb-4">
-            <h3 className="text-xl font-black text-white flex items-center gap-2 font-display">
-              <QrCode className="w-6 h-6 text-amber-400" /> Generador de QR
+      {activeTab === "qr" && (
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 lg:p-8 space-y-5">
+          <div className="space-y-1 pb-4">
+            <h3 className="text-xl font-black text-[var(--ink)] flex items-center gap-2 font-display">
+              <QrCode className="w-6 h-6 text-[var(--acc)]" /> Generador de QR
             </h3>
-            <p className="text-xs text-slate-400 font-mono">
-              Genera el código, descárgalo o imprímelo. La recompensa al fan, el dominio y el idioma están abajo, plegados.
+            <p className="text-xs text-[var(--ink-2)] font-sans">
+              Genera el código, descárgalo o imprímelo. La recompensa al fan, el
+              dominio y el idioma están abajo, plegados.
             </p>
           </div>
 
           {/* Vínculo a concierto: única decisión que cambia la URL, por eso va siempre visible */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-            <label className="text-[11px] font-bold text-amber-400 uppercase font-mono tracking-wider shrink-0" title="Los fans que escaneen se registrarán con este origen en el CRM">
+            <label
+              className="text-[11px] font-bold text-[var(--acc)] font-sans shrink-0"
+              title="Los fans que escaneen se registrarán con este origen en el CRM"
+            >
               Vincular a:
             </label>
             <select
               id="fans-concert-selector"
               value={selectedConcertId}
-              onChange={e => setSelectedConcertId(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
+              onChange={(e) => setSelectedConcertId(e.target.value)}
+              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
             >
-              <option value="">-- Campaña General / QR Genérico de la Banda --</option>
-              {concerts.map(c => (
+              <option value="">
+                -- Campaña General / QR Genérico de la Banda --
+              </option>
+              {concerts.map((c) => (
                 <option key={c.id} value={c.id}>
                   📅 {c.fecha} — {c.sala} ({c.ciudad})
                 </option>
@@ -1179,20 +1335,23 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           </div>
 
           {/* Contenido principal: el QR, grande y arriba del todo */}
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center space-y-4">
-            <div id="qr-code-svg-container" className="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-500 inline-block relative">
+          <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-6 flex flex-col items-center text-center space-y-4">
+            <div
+              id="qr-code-svg-container"
+              className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block relative"
+            >
               <QRCode value={qrConcertUrl} size={210} level="H" />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 {effectiveBandLogo ? (
-                  <div className="w-14 h-14 bg-slate-950 rounded-xl flex items-center justify-center overflow-hidden border-2 border-amber-500 shadow-xl p-0.5">
+                  <div className="w-14 h-14 bg-[var(--sunken)] rounded-[var(--r-m)] flex items-center justify-center overflow-hidden p-0.5">
                     <img
                       src={effectiveBandLogo}
                       alt={`Logo ${effectiveBandName}`}
-                      className="w-full h-full object-contain rounded-lg"
+                      className="w-full h-full object-contain rounded-[var(--r-s)]"
                     />
                   </div>
                 ) : (
-                  <div className="w-12 h-12 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center border-2 border-slate-950 shadow-xl">
+                  <div className="w-12 h-12 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] flex items-center justify-center">
                     <Users className="w-6 h-6" />
                   </div>
                 )}
@@ -1200,22 +1359,28 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </div>
 
             <div className="space-y-1">
-              <h4 className="font-black text-white font-display text-lg uppercase tracking-wider">
-                {selectedConcert ? selectedConcert.sala : `Únete a ${effectiveBandName}`}
+              <h4 className="font-black text-[var(--ink)] font-display text-lg">
+                {selectedConcert
+                  ? selectedConcert.sala
+                  : `Únete a ${effectiveBandName}`}
               </h4>
-              <p className="text-xs text-slate-400 font-mono">
-                {selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : 'Escanea para conseguir tema exclusivo y descuentos'}
+              <p className="text-xs text-[var(--ink-2)] font-sans">
+                {selectedConcert
+                  ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}`
+                  : "Escanea para conseguir tema exclusivo y descuentos"}
               </p>
             </div>
 
-            <div className="w-full flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2">
-              <span className="flex-1 min-w-0 truncate font-mono text-amber-300 text-[11px] text-left">{qrConcertUrl}</span>
+            <div className="w-full flex items-center gap-2 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2">
+              <span className="flex-1 min-w-0 truncate font-sans text-[var(--acc)]/70 text-[11px] text-left">
+                {qrConcertUrl}
+              </span>
               <button
                 type="button"
                 onClick={handleCopyQrUrl}
-                className="shrink-0 text-[11px] text-amber-400 hover:underline font-mono cursor-pointer"
+                className="shrink-0 text-[11px] text-[var(--acc)] hover:underline font-sans cursor-pointer"
               >
-                {copiedQrUrl ? '¡Copiado!' : 'Copiar'}
+                {copiedQrUrl ? "¡Copiado! " : "Copiar"}
               </button>
             </div>
 
@@ -1225,76 +1390,104 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 id="fans-qr-export-btn"
                 type="button"
                 onClick={handlePrintQr}
-                className="flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-lg"
+                className="flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
               >
                 <Printer className="w-4 h-4" /> Cartel A4 / PDF
               </button>
               <div className="relative shrink-0">
                 <button
                   type="button"
-                  onClick={() => setShowQrMoreMenu(v => !v)}
+                  onClick={() => setShowQrMoreMenu((v) => !v)}
                   title="Más opciones: SVG, PNG 4K, tarjetas, compartir, previsualizar el formulario..."
-                  className="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
+                  className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
                 >
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
                 {showQrMoreMenu && (
                   <>
-                    <div className="fixed inset-0 z-30" onClick={() => setShowQrMoreMenu(false)} />
-                    <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-1.5 space-y-0.5 text-[11px] font-mono">
+                    <div
+                      className="fixed inset-0 z-30"
+                      onClick={() => setShowQrMoreMenu(false)}
+                    />
+                    <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-[11px] font-sans">
                       <button
                         type="button"
-                        onClick={() => { setShowQrMoreMenu(false); handleDownloadSvg(); }}
+                        onClick={() => {
+                          setShowQrMoreMenu(false);
+                          handleDownloadSvg();
+                        }}
                         disabled={isExportingDirect}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-sky-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG (imprenta/lonas)
+                        <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG
+                        (imprenta/lonas)
                       </button>
                       <button
                         type="button"
-                        onClick={() => { setShowQrMoreMenu(false); handleDownloadPng4k(); }}
+                        onClick={() => {
+                          setShowQrMoreMenu(false);
+                          handleDownloadPng4k();
+                        }}
                         disabled={isExportingDirect}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-purple-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--tentative)]/80 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Download className="w-3.5 h-3.5 shrink-0" /> PNG Ultra HD 4K
+                        <Download className="w-3.5 h-3.5 shrink-0" /> PNG Ultra
+                        HD 4K
                       </button>
                       <button
                         type="button"
-                        onClick={() => { setShowQrMoreMenu(false); setShowQrExportModal(true); }}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                        onClick={() => {
+                          setShowQrMoreMenu(false);
+                          setShowQrExportModal(true);
+                        }}
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos (tarjeta, pegatina...)
+                        <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos
+                        (tarjeta, pegatina...)
                       </button>
-                      <div className="h-px bg-slate-800 my-1" />
+                      <div className="h-px bg-[var(--surface)] my-1" />
                       <button
                         type="button"
-                        onClick={() => { setShowQrMoreMenu(false); handleShareWhatsApp(); }}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-emerald-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                        onClick={() => {
+                          setShowQrMoreMenu(false);
+                          handleShareWhatsApp();
+                        }}
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <MessageCircle className="w-3.5 h-3.5 shrink-0" /> Compartir por WhatsApp
+                        <MessageCircle className="w-3.5 h-3.5 shrink-0" />{" "}
+                        Compartir por WhatsApp
                       </button>
                       <button
                         type="button"
-                        onClick={() => { setShowQrMoreMenu(false); handleShareNative(); }}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                        onClick={() => {
+                          setShowQrMoreMenu(false);
+                          handleShareNative();
+                        }}
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Share2 className="w-3.5 h-3.5 shrink-0" /> Compartir enlace
+                        <Share2 className="w-3.5 h-3.5 shrink-0" /> Compartir
+                        enlace
                       </button>
                       <a
                         href={qrConcertUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setShowQrMoreMenu(false)}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <ExternalLink className="w-3.5 h-3.5 shrink-0" /> Abrir landing en pestaña nueva
+                        <ExternalLink className="w-3.5 h-3.5 shrink-0" /> Abrir
+                        landing en pestaña nueva
                       </a>
                       <button
                         type="button"
-                        onClick={() => { setShowQrMoreMenu(false); setShowFansPreviewModal(true); }}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                        onClick={() => {
+                          setShowQrMoreMenu(false);
+                          setShowFansPreviewModal(true);
+                        }}
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar formulario "Únete"
+                        <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
+                        formulario"Únete"
                       </button>
                     </div>
                   </>
@@ -1304,74 +1497,98 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           </div>
 
           {/* Personalización avanzada: recompensa, dominio/slug e idioma — plegada porque no se toca en cada visita */}
-          <div className="border-t border-slate-800 pt-4">
+          <div className=" pt-4">
             <button
               type="button"
-              onClick={() => setShowAdvancedQrConfig(v => !v)}
-              className="w-full flex items-center justify-between text-xs font-bold text-slate-400 hover:text-amber-300 uppercase font-mono tracking-wider transition cursor-pointer"
+              onClick={() => setShowAdvancedQrConfig((v) => !v)}
+              className="w-full flex items-center justify-between text-xs font-bold text-[var(--ink-2)] hover:text-[var(--acc)]/70 font-sans transition cursor-pointer"
             >
               <span className="flex items-center gap-1.5">
-                <Settings2 className="w-3.5 h-3.5" /> Personalización avanzada (recompensa, dominio, idioma)
+                <Settings2 className="w-3.5 h-3.5" /> Personalización avanzada
+                (recompensa, dominio, idioma)
               </span>
-              <span>{showAdvancedQrConfig ? '▲' : '▼'}</span>
+              <span>{showAdvancedQrConfig ? "▲" : "▼"}</span>
             </button>
 
             {showAdvancedQrConfig && (
               <div className="mt-4 space-y-4">
                 {/* Incentivo / Recompensa al Fan */}
-                <div id="fans-incentive-section" className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                <div
+                  id="fans-incentive-section"
+                  className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-4"
+                >
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                      <Gift className="w-4 h-4 text-amber-400" />
+                    <label className="text-xs font-bold text-[var(--acc)] font-sans flex items-center gap-2">
+                      <Gift className="w-4 h-4 text-[var(--acc)]" />
                       Recompensa / Incentivo para el Fan
                     </label>
                     {savedIncentive && (
-                      <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
+                      <span className="text-[11px] font-sans text-[var(--ok)] flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-400 font-mono">
-                    Ofrece algo de valor al fan tras registrarse (un tema en directo exclusivo o descuento de merchan) para disparar la tasa de escaneos.
+                  <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                    Ofrece algo de valor al fan tras registrarse (un tema en
+                    directo exclusivo o descuento de merchan) para disparar la
+                    tasa de escaneos.
                   </p>
 
                   <div className="space-y-3 pt-1">
                     <div>
-                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Mensaje de Bienvenida / Agradecimiento:
+                      <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
+                        <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
+                        Mensaje de Bienvenida / Agradecimiento:
                       </label>
                       <input
                         type="text"
                         value={incentivo.mensajeAgradecimiento}
-                        onChange={e => setIncentivo(prev => ({ ...prev, mensajeAgradecimiento: e.target.value }))}
+                        onChange={(e) =>
+                          setIncentivo((prev) => ({
+                            ...prev,
+                            mensajeAgradecimiento: e.target.value,
+                          }))
+                        }
                         placeholder="¡Muchas gracias por unirte a la familia de la banda!"
-                        className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none"
+                        className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                          <Music className="w-3.5 h-3.5 text-amber-500" /> Enlace de Descarga (Tema inédito/directo):
+                        <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
+                          <Music className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
+                          Enlace de Descarga (Tema inédito/directo):
                         </label>
                         <input
                           type="url"
                           value={incentivo.enlaceDescarga}
-                          onChange={e => setIncentivo(prev => ({ ...prev, enlaceDescarga: e.target.value }))}
+                          onChange={(e) =>
+                            setIncentivo((prev) => ({
+                              ...prev,
+                              enlaceDescarga: e.target.value,
+                            }))
+                          }
                           placeholder="https://..."
-                          className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
+                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
                         />
                       </div>
                       <div>
-                        <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                          <Tag className="w-3.5 h-3.5 text-amber-500" /> Código Cupón Merchandising:
+                        <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
+                          <Tag className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
+                          Código Cupón Merchandising:
                         </label>
                         <input
                           type="text"
                           value={incentivo.codigoDescuento}
-                          onChange={e => setIncentivo(prev => ({ ...prev, codigoDescuento: e.target.value.toUpperCase() }))}
+                          onChange={(e) =>
+                            setIncentivo((prev) => ({
+                              ...prev,
+                              codigoDescuento: e.target.value.toUpperCase(),
+                            }))
+                          }
                           placeholder="TUBANDA-FAN-10"
-                          className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-amber-300 font-bold outline-none font-mono"
+                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--acc)]/70 font-bold outline-none font-sans"
                         />
                       </div>
                     </div>
@@ -1380,7 +1597,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       <button
                         type="button"
                         onClick={() => handleSaveIncentive()}
-                        className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
                       >
                         <Save className="w-3.5 h-3.5" /> Guardar Incentivo
                       </button>
@@ -1389,29 +1606,32 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </div>
 
                 {/* Apoyo Económico / Revolut: se configura ahora desde el Dossier EPK, fuente única
-                    del resto de datos de marca (booking, redes, etc.) — aquí solo un acceso directo. */}
-                <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-3">
-                  <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-sky-400" />
-                    Colaboración Económica & Donaciones (Revolut, PayPal y Bizum)
+ del resto de datos de marca (booking, redes, etc.) — aquí solo un acceso directo. */}
+                <div className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-3">
+                  <label className="text-xs font-bold text-[var(--ink-2)] font-sans flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-[var(--ink-2)]" />
+                    Colaboración Económica & Donaciones (Revolut, PayPal y
+                    Bizum)
                   </label>
-                  <p className="text-[11px] text-slate-400 font-mono">
-                    {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
-                      ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
-                      : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios.'}
+                  <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                    {epkConfig?.donacionRevolut?.habilitado !== false &&
+                    epkConfig?.donacionRevolut?.revolutTag
+                      ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público"Únete" y en la pantalla de confirmación.`
+                      : "Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios."}
                   </p>
                   <button
                     type="button"
-                    onClick={() => onNavigate?.('epk')}
-                    className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
+                    onClick={() => onNavigate?.("epk")}
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Configurar en el Dossier EPK
+                    <ExternalLink className="w-3.5 h-3.5" /> Configurar en el
+                    Dossier EPK
                   </button>
                 </div>
 
                 {/* Ruta Limpia y Dominio */}
-                <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
-                  <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                <div className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-4">
+                  <label className="text-xs font-bold text-[var(--acc)] font-sans flex items-center gap-2">
                     Ruta Limpia y Dominio Base
                   </label>
 
@@ -1419,84 +1639,113 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <button
                       type="button"
                       onClick={() => setUseCustomDomain(true)}
-                      className={`p-2.5 rounded-xl border text-left font-mono transition flex flex-col gap-1 ${
+                      className={`p-2.5 rounded-[var(--r-m)] text-left font-sans transition flex flex-col gap-1 ${
                         useCustomDomain
-                          ? 'bg-amber-500/15 border-amber-500 text-amber-300 font-bold'
-                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                          ? "bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold"
+                          : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                       }`}
                     >
                       <span>🌐 Dominio Web Oficial</span>
-                      <span className="text-[10px] text-slate-400 font-normal">Para impresiones/carteles</span>
+                      <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                        Para impresiones/carteles
+                      </span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setUseCustomDomain(false)}
-                      className={`p-2.5 rounded-xl border text-left font-mono transition flex flex-col gap-1 ${
+                      className={`p-2.5 rounded-[var(--r-m)] text-left font-sans transition flex flex-col gap-1 ${
                         !useCustomDomain
-                          ? 'bg-amber-500/15 border-amber-500 text-amber-300 font-bold'
-                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                          ? "bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold"
+                          : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                       }`}
                     >
                       <span>🧪 Servidor Dev</span>
-                      <span className="text-[10px] text-slate-400 font-normal">Para pruebas en visor actual</span>
+                      <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                        Para pruebas en visor actual
+                      </span>
                     </button>
                   </div>
 
                   {useCustomDomain && (
                     <div className="space-y-1">
-                      <label className="text-[11px] font-mono text-slate-400">Dominio del Proyecto:</label>
+                      <label className="text-[11px] font-sans text-[var(--ink-2)]">
+                        Dominio del Proyecto:
+                      </label>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-slate-500 bg-slate-900 px-3 py-2.5 rounded-lg border border-slate-800">https://</span>
+                        <span className="text-xs font-sans text-[var(--ink-2)] bg-[var(--surface)] px-3 py-2.5 rounded-[var(--r-s)]">
+                          https://
+                        </span>
                         <input
                           type="text"
                           value={customDomain}
-                          onChange={e => setCustomDomain(e.target.value)}
+                          onChange={(e) => setCustomDomain(e.target.value)}
                           placeholder="bandmanager.io"
-                          className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-lg p-2.5 text-xs text-white outline-none font-mono"
+                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
                         />
                       </div>
                     </div>
                   )}
 
                   <div className="space-y-1 pt-1">
-                    <label className="text-[11px] font-mono text-slate-400">Slug personalizado:</label>
+                    <label className="text-[11px] font-sans text-[var(--ink-2)]">
+                      Slug personalizado:
+                    </label>
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center bg-slate-900 rounded-xl border border-slate-800 px-2.5 shrink-0">
-                        <span className="text-[11px] font-mono text-slate-500">/</span>
+                      <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] px-2.5 shrink-0">
+                        <span className="text-[11px] font-sans text-[var(--ink-2)]">
+                          /
+                        </span>
                         <input
                           type="text"
                           value={routePrefix}
-                          onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-                          className="w-16 bg-transparent text-amber-400 text-xs font-mono py-2.5 font-bold outline-none"
+                          onChange={(e) =>
+                            setRoutePrefix(
+                              e.target.value
+                                .toLowerCase()
+                                .replace(/[^a-z0-9]/g, ""),
+                            )
+                          }
+                          className="w-16 bg-transparent text-[var(--acc)] text-xs font-sans py-2.5 font-bold outline-none"
                           placeholder="unete"
                         />
-                        <span className="text-[11px] font-mono text-slate-500">/</span>
+                        <span className="text-[11px] font-sans text-[var(--ink-2)]">
+                          /
+                        </span>
                       </div>
                       <input
                         type="text"
                         value={customSlug}
-                        onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''))}
+                        onChange={(e) =>
+                          setCustomSlug(
+                            e.target.value
+                              .toLowerCase()
+                              .replace(/\s+/g, "-")
+                              .replace(/[^a-z0-9-_]/g, ""),
+                          )
+                        }
                         placeholder="ej. madrid-sala-siroco"
-                        className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
+                        className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1 pt-1">
-                    <label className="text-[11px] font-mono text-slate-400">Idioma del formulario para este enlace:</label>
+                    <label className="text-[11px] font-sans text-[var(--ink-2)]">
+                      Idioma del formulario para este enlace:
+                    </label>
                     {/* grid en vez de flex de una sola fila: con 4+ idiomas (español, inglés,
-                        italiano, checo) un flex sin wrap se salía de la pantalla en móvil en
-                        vez de pasar a una segunda fila. */}
+ italiano, checo) un flex sin wrap se salía de la pantalla en móvil en
+ vez de pasar a una segunda fila. */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      {FAN_FORM_LANGUAGES.map(l => (
+                      {FAN_FORM_LANGUAGES.map((l) => (
                         <button
                           key={l.code}
                           type="button"
                           onClick={() => setQrLanguage(l.code)}
-                          className={`py-2 px-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
+                          className={`py-2 px-2 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors ${
                             qrLanguage === l.code
-                              ? 'bg-amber-500/15 border-amber-500/50 text-amber-300'
-                              : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                              ? "bg-[var(--acc)]/15  text-[var(--acc)]/70"
+                              : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                           }`}
                         >
                           <span>{l.flag}</span>
@@ -1504,30 +1753,36 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         </button>
                       ))}
                     </div>
-                    <p className="text-[10px] font-mono text-slate-500">
-                      El formulario se abrirá en este idioma por defecto; quien lo escanee siempre podrá cambiarlo a mano.
+                    <p className="text-[10px] font-sans text-[var(--ink-2)]">
+                      El formulario se abrirá en este idioma por defecto; quien
+                      lo escanee siempre podrá cambiarlo a mano.
                     </p>
                   </div>
 
                   {selectedConcert && onUpdateConcert && (
-                    <div className="pt-2 border-t border-slate-800/80">
+                    <div className="pt-2 ">
                       <button
                         type="button"
                         onClick={() => {
-                          onUpdateConcert(selectedConcert.id, { customQrUrl: qrConcertUrl });
+                          onUpdateConcert(selectedConcert.id, {
+                            customQrUrl: qrConcertUrl,
+                          });
                           setSavedToConcertFeedback(true);
-                          setTimeout(() => setSavedToConcertFeedback(false), 3500);
+                          setTimeout(
+                            () => setSavedToConcertFeedback(false),
+                            3500,
+                          );
                         }}
-                        className={`w-full py-2.5 px-3 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-md ${
+                        className={`w-full py-2.5 px-3 font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer ${
                           savedToConcertFeedback
-                            ? 'bg-emerald-500 text-slate-950'
-                            : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+                            ? "bg-[var(--ok)] text-[var(--ink)]"
+                            : "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]"
                         }`}
                       >
                         <CheckCircle2 className="w-4 h-4" />
                         {savedToConcertFeedback
-                          ? '¡QR Asignado a este Concierto en el Calendario!'
-                          : '💾 Asignar este QR a este Concierto en el Calendario'}
+                          ? "¡QR Asignado a este Concierto en el Calendario!"
+                          : "💾 Asignar este QR a este Concierto en el Calendario"}
                       </button>
                     </div>
                   )}
@@ -1543,20 +1798,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             svgElementId="qr-code-svg-container"
             bandName={effectiveBandName}
             concertTitle={selectedConcert ? selectedConcert.sala : undefined}
-            dateCity={selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : undefined}
+            dateCity={
+              selectedConcert
+                ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}`
+                : undefined
+            }
             url={qrConcertUrl}
             logoUrl={effectiveBandLogo}
           />
         </div>
       )}
 
-
-
-      {activeTab === 'metrics' && (
+      {activeTab === "metrics" && (
         <div className="space-y-6">
           <ReelsMetricsView
             colors={colors || THEMES.indie_velvet}
-            isStitchLight={isStitchLight}
             metrics={metrics || []}
             epkConfig={epkConfig}
             currentBandName={effectiveBandName}
@@ -1573,17 +1829,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       )}
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-lg font-black text-white font-display uppercase tracking-widest flex items-center gap-2">
-                <Users className="w-5 h-5 text-amber-500" />
+        <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3">
+              <h3 className="text-lg font-black text-[var(--ink)] font-display flex items-center gap-2">
+                <Users className="w-5 h-5 text-[var(--acc)]" />
                 Registrar Fan / Seguidor Manual
               </h3>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
               >
                 ✕
               </button>
@@ -1591,49 +1847,59 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             <form onSubmit={handleManualAddSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Nombre *</label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                    Nombre *
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="Nombre completo o alias"
                     value={newNombre}
-                    onChange={e => setNewNombre(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                    onChange={(e) => setNewNombre(e.target.value)}
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Email *</label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                    Email *
+                  </label>
                   <input
                     type="email"
                     required
                     placeholder="email@ejemplo.com"
                     value={newEmail}
-                    onChange={e => setNewEmail(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Ciudad</label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                    Ciudad
+                  </label>
                   <input
                     type="text"
                     placeholder="Ej: Madrid, Sevilla..."
                     value={newCiudad}
-                    onChange={e => setNewCiudad(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                    onChange={(e) => setNewCiudad(e.target.value)}
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Origen / Canal</label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                    Origen / Canal
+                  </label>
                   <select
                     value={newOrigen}
-                    onChange={e => setNewOrigen(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                    onChange={(e) => setNewOrigen(e.target.value)}
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   >
                     <option value="Manual">Registro Manual</option>
-                    <option value="Concierto Directo">Concierto / Directo</option>
+                    <option value="Concierto Directo">
+                      Concierto / Directo
+                    </option>
                     <option value="Instagram">Instagram</option>
                     <option value="TikTok">TikTok</option>
                     <option value="Spotify">Spotify / Streaming</option>
@@ -1645,11 +1911,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Nivel Fan</label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                    Nivel Fan
+                  </label>
                   <select
                     value={newNivel}
-                    onChange={e => setNewNivel(e.target.value as any)}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                    onChange={(e) => setNewNivel(e.target.value as any)}
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   >
                     <option value="fiel">🎵 Oyente Fiel</option>
                     <option value="superfan">🔥 Superfan Directos</option>
@@ -1658,50 +1926,56 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Instagram (Opcional)</label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                    Instagram (Opcional)
+                  </label>
                   <input
                     type="text"
                     placeholder="@usuario"
                     value={newInstagram}
-                    onChange={e => setNewInstagram(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                    onChange={(e) => setNewInstagram(e.target.value)}
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Canción Favorita (Opcional)</label>
+                <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  Canción Favorita (Opcional)
+                </label>
                 <input
                   type="text"
                   placeholder="Ej: La Noche Entera, Balada..."
                   value={newCancionFavorita}
-                  onChange={e => setNewCancionFavorita(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                  onChange={(e) => setNewCancionFavorita(e.target.value)}
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Mensaje / Dedicatoria para el Muro (Opcional)</label>
+                <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  Mensaje / Dedicatoria para el Muro (Opcional)
+                </label>
                 <textarea
                   rows={2}
                   placeholder="Dedicatoria o saludo que aparecerá en el muro de la comunidad..."
                   value={newMensaje}
-                  onChange={e => setNewMensaje(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-sans resize-none"
+                  onChange={(e) => setNewMensaje(e.target.value)}
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-3 border-t border-slate-800">
+              <div className="pt-2 flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-5 py-2.5 bg-slate-800 text-slate-300 font-mono text-xs font-bold uppercase tracking-widest rounded-xl transition hover:bg-slate-700 cursor-pointer"
+                  className="px-5 py-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--surface)] cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-amber-500 text-slate-950 font-mono text-xs font-black uppercase tracking-widest rounded-xl shadow-lg transition hover:bg-amber-400 cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-black rounded-[var(--r-m)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" /> Guardar Fan
                 </button>

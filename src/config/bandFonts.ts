@@ -16,7 +16,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Anton', 'Oswald', sans-serif",
     badge: 'Rock / Metal / Headliner',
     description: 'Mayúsculas contundentes y de alto impacto para escenarios principales y festivales.',
-    previewExample: 'POTENCIA DIRECTO'
+    previewExample: 'POTENCIA DIRECTO',
   },
   {
     id: 'bebas',
@@ -25,7 +25,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Bebas Neue', sans-serif",
     badge: 'Cartel / Festival',
     description: 'Estilo póster de festival limpio, condensado y contundente.',
-    previewExample: 'EN DIRECTO 2026'
+    previewExample: 'EN DIRECTO 2026',
   },
   {
     id: 'space-grotesk',
@@ -34,7 +34,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Space Grotesk', system-ui, sans-serif",
     badge: 'Indie / Vanguardia',
     description: 'Geométrica, moderna y alternativa para bandas vanguardistas y synth.',
-    previewExample: 'MODERN SOUND'
+    previewExample: 'MODERN SOUND',
   },
   {
     id: 'permanent-marker',
@@ -43,7 +43,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Permanent Marker', cursive",
     badge: 'Punk / Underground',
     description: 'Estilo rotulador analógico, desgastado y con actitud callejera/garage.',
-    previewExample: 'RAW NOISE'
+    previewExample: 'RAW NOISE',
   },
   {
     id: 'caveat',
@@ -52,7 +52,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Caveat', cursive",
     badge: 'Folk / Cantautor',
     description: 'Caligráfica manuscrita, cercana, orgánica y cálida para acústicos.',
-    previewExample: 'Canciones del alma'
+    previewExample: 'Canciones del alma',
   },
   {
     id: 'playfair',
@@ -61,7 +61,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Playfair Display', Georgia, serif",
     badge: 'Elegante / Vinilo',
     description: 'Serif distinguida, estética de disco de vinilo y elegancia atemporal.',
-    previewExample: 'Edición Exclusiva'
+    previewExample: 'Edición Exclusiva',
   },
   {
     id: 'cinzel',
@@ -70,7 +70,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Cinzel', serif",
     badge: 'Sinfónico / Clásico',
     description: 'Inspiración clásica y majestuosa para directos orquestales o metal sinfónico.',
-    previewExample: 'SYMPHONIC TOUR'
+    previewExample: 'SYMPHONIC TOUR',
   },
   {
     id: 'courier',
@@ -79,7 +79,7 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Courier Prime', monospace",
     badge: 'Vintage / Master Tape',
     description: 'Tipografía mecanográfica analógica inspirada en cintas y libretas de estudio.',
-    previewExample: 'ANALOG SESSION'
+    previewExample: 'ANALOG SESSION',
   },
   {
     id: 'plus-jakarta',
@@ -88,12 +88,12 @@ export const BAND_FONT_OPTIONS: BandFontOption[] = [
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     badge: 'Pop / Clean Global',
     description: 'Limpia, equilibrada y de máxima legibilidad en streaming y redes sociales.',
-    previewExample: 'GLOBAL SOUND'
-  }
+    previewExample: 'GLOBAL SOUND',
+  },
 ];
 
 export function getFontFamilyById(fontId?: string): string {
   if (!fontId) return "'Anton', 'Oswald', sans-serif";
-  const found = BAND_FONT_OPTIONS.find(f => f.id === fontId || f.fontFamily === fontId || f.name.toLowerCase() === fontId.toLowerCase());
+  const found = BAND_FONT_OPTIONS.find((f) => f.id === fontId || f.fontFamily === fontId || f.name.toLowerCase() === fontId.toLowerCase());
   return found ? found.fontFamily : fontId;
 }

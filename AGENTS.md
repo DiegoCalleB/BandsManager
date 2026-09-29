@@ -1,4 +1,4 @@
-# AGENTS.md — Instrucciones para agentes de código (BandManager.io / Bakandeya)
+# AGENTS.md — Instrucciones para agentes de código (BandManager.io)
 
 Plataforma integral para bandas y artistas independientes (booking CRM, agentes de IA, EPK, repertorio, finanzas) y núcleo técnico de un Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica. Este documento tiene precedencia sobre convenciones genéricas — léelo antes de tocar el repositorio.
 
@@ -13,9 +13,9 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 ## ⚡ 1. Arquitectura General y Persistencia (CRÍTICO)
 
-* **Arranque local (Quickstart):** `npm install` → copiar `.env.example` a `.env` y rellenar al menos `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` y `GEMINI_API_KEY` (el resto son opcionales por subsistema, ver abajo) → `npm run dev` (Express + Vite, `server.ts`). Sin `.env` configurado la app también arranca (ver `e2e/onboarding-journey.spec.ts`, §5.3.2) usando los usuarios semilla de `src/db_seed.ts` y estado en memoria, pero sin IA/Supabase real. `npm run build` tipa (`tsc --noEmit`) antes de compilar — un fallo de tipos rompe el build, no solo el lint. `npm run typecheck` / `npm run lint:eslint` / `npm test` / `npm run test:e2e` para verificación puntual.
-* **Variables de entorno por subsistema (`.env.example` es la referencia completa, ~20 variables):** Supabase (persistencia, obligatoria) · `GEMINI_API_KEY`/`DEEPSEEK_API_KEY`/`OPENAI_API_KEY` (generación de pitches, transcripción, ver `generateMultiModelProposals`) · `STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET` (billing) · `RESEND_API_KEY` (emails transaccionales; sin ella, modo simulación en consola) · `AGENT_EMAIL_MODE` (interruptor global de envío, §3) · `CRON_SECRET` (triggers internos) · `GOOGLE_OAUTH_CLIENT_ID`/`_SECRET`/`_REDIRECT_URI` (Gmail OAuth2 por banda) · `SENTRY_DSN` (observabilidad, ver abajo) · `REPLICATE_API_TOKEN`/`FAL_KEY` (separación de stems). Ninguna de estas hace fallar el arranque si falta — cada subsistema se degrada solo (ver comentarios en `.env.example`).
-* **Observabilidad — dos capas distintas, no una:** (1) `agent_execution_logs` en Supabase audita fallos de **negocio** esperables de los agentes (banda sin cuenta de email conectada, sala con email inválido...) con su propio panel en la app. (2) `server/utils/errorTracking.ts` (Sentry) captura el resto — bugs no anticipados que hoy solo terminaban en `console.error`. Sentry es un no-op total sin `SENTRY_DSN` (ni carga el SDK): en local/dev esto no cambia nada, se activa solo en Railway. No pisan responsabilidades: si un fallo es "de negocio, esperable", va a `agent_execution_logs`; si es "nadie lo vio venir", a Sentry.
+* **Arranque local (Quickstart):** `npm install` → copiar `.env.example` a `.env` y rellenar al menos `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` y `GEMINI_API_KEY` (el resto son opcionales por subsistema, ver abajo) → `npm run dev` (Express + Vite, `server.ts`). Sin `.env` configurado la app también arranca (ver `e2e/onboarding-journey.spec.ts`, §5.3.2) usando los usuarios semilla de `src/db_seed.ts` y estado en memoria, pero sin IA/Supabase real. `npm run build` tipa (`tsc --noEmit`) antes de compilar — un fallo de tipos rompe el build, no solo el lint. `npm run typecheck` / `npm run lint:eslint` / `npm test` / `npm run test:e2e` / `npm run test:visual` para verificación puntual.
+* **Variables de entorno por subsistema (`.env.example` es la referencia completa, ~20 variables):** Supabase (persistencia, obligatoria) · `GEMINI_API_KEY`/`DEEPSEEK_API_KEY`/`OPENAI_API_KEY` (generación de pitches, transcripción, ver `generateMultiModelProposals`) · `STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET` (billing) · `RESEND_API_KEY` (emails transaccionales; sin ella, modo simulación en consola) · `AGENT_EMAIL_MODE` (interruptor global de envío, §3) · `CRON_SECRET` (triggers internos) · `GOOGLE_OAUTH_CLIENT_ID`/`_SECRET`/`_REDIRECT_URI` (Gmail OAuth2 por banda) · `SENTRY_DSN`/`VITE_SENTRY_DSN` (observabilidad backend/frontend, ver abajo) · `REPLICATE_API_TOKEN`/`FAL_KEY` (separación de stems). Ninguna de estas hace fallar el arranque si falta — cada subsistema se degrada solo (ver comentarios en `.env.example`).
+* **Observabilidad — dos capas distintas, no una:** (1) `agent_execution_logs` en Supabase audita fallos de **negocio** esperables de los agentes (banda sin cuenta de email conectada, sala con email inválido...) con su propio panel en la app. (2) `server/utils/errorTracking.ts` (Sentry backend) y `src/utils/errorTracking.ts` (Sentry frontend en React ErrorBoundary) capturan el resto — bugs no anticipados que de otro modo solo terminaban en `console.error`. Sentry es un no-op total sin `SENTRY_DSN` / `VITE_SENTRY_DSN` (ni carga el SDK): en local/dev esto no cambia nada, se activa al definir los DSNs en Railway / Vercel / `.env`. No pisan responsabilidades: si un fallo es "de negocio, esperable", va a `agent_execution_logs`; si es "nadie lo vio venir", a Sentry.
 * **Única Fuente de Verdad (Single Source of Truth):** **Supabase (PostgreSQL)**.
 * **Prohibición Estricta:** Google Sheets está **totalmente descartado y en desuso**. No se debe mencionar ni utilizar. Toda la persistencia (`leads`, `bands`, `users`, `tours`, `songs`, `finances`, `fans`, `social`, `autonomy_configs`, etc.) se gestiona exclusivamente a través de **Supabase**.
 * **Estado en Memoria & Sincronización:** El backend Express mantiene un estado sincronizado (`server/state.ts` / `server/db.ts`) cargado desde Supabase (`loadStateFromSupabase`).
@@ -86,6 +86,38 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * **Prevención de Inyecciones (SQLi, NoSQLi, XSS):** Todas las consultas a Supabase se canalizan parametrizadas mediante el cliente tipado oficial o funciones de sanitización.
    * **Sanitización de Archivos y Path Traversal:** Validadores dedicados (`subcarpetaSegura`, `rutaFuenteSegura`) impiden la manipulación de rutas en el sistema de archivos del servidor.
 
+### 2.5 Persistencia de Datos en Cliente (localStorage, sessionStorage)
+**Regla fundamental: localStorage NUNCA debe persistir datos específicos de banda sin `band_id` explícito en la clave.**
+
+1. **Qué SÍ va en localStorage (seguro, multi-tenant):**
+   * Tokens de autenticación (`bakandeya_token`, con expiración)
+   * Usuario autenticado (`bakandeya_user`, con banda_id adentro del objeto)
+   * Preferencias de UI (`bakandeya_theme`, `bakandeya_language`, `bakandeya_font`)
+   * Filtros y vistas guardadas por el usuario (scoped a sessionStorage si es genérico; `bakandeya_saved_crm_filters` si lleva band_id implícito)
+
+2. **Qué NO va en localStorage (prohibido sin banda_id explícito):**
+   * Canciones, setlists, álbumes de banda → **React state + API** (band_id validado server-side via `getTargetBandId`)
+   * Agendas, riders, hojas de ruta → React state local (reset al cambiar banda o recargarp)
+   * Datos de configuración de banda (autonomy, agentes) → API con band_id en payload
+   
+3. **Patrón Seguro (Implementado):**
+   ```
+   // ✗ PROHIBIDO (datos de banda sin band_id en clave)
+   localStorage.setItem('bakandeya_songs', JSON.stringify(songs));
+   
+   // ✓ PERMITIDO (datos de banda obtenidos via API con band_id validado)
+   const [songs, setSongs] = useState([]);
+   useEffect(() => {
+     fetch('/api/repertorio/songs', { headers: { 'Authorization': `Bearer ${token}` } })
+       .then(r => r.json())
+       .then(data => setSongs(data.songs || []))
+   }, [currentBandId]);
+   ```
+   
+4. **Vida útil de React State:** cuando la banda activa cambia (`currentBandId` en dependencias), todos los useEffect() que montan datos se re-ejecutan. El estado local se resetea automáticamente, evitando que datos de Banda A contaminen la sesión de Banda B.
+
+5. **No hay "caché local persistente" para datos de banda:** si se necesita persistencia real (no perder cambios entre recargas), eso vive en Supabase vía API. localStorage es transporte prohibido.
+
 ---
 
 ## 🤖 3. Reglas de Negocio de Agentes IA (Human-in-the-Loop)
@@ -115,6 +147,30 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 3. **Ciclo de Vida de los Agentes de Booking:**
    * **Scout:** Descubre y enriquece salas en Supabase, las marca como estado `nuevo`.
    * **Redactor:** Genera propuesta personalizada por IA, marca sub-estado como `pendiente_aprobacion` (lead listo para revisión humana).
+     * **Directrices de redacción del pitch (`server/utils/bandDna.ts`, `server/promptsManager.ts`):**
+       - Estructura breve (<120 palabras), 2 párrafos concisos, cercana y humana sin clichés ni jerga corporativa.
+       - **Mentalidad de Socio de Negocio (Creator-Artist Partnership):** Posicionarse como activo de bajo riesgo y rentabilidad/convocatoria para el comprador de talento (ROI y mitigación de riesgo), nunca como fan o amateur pidiendo favores.
+       - **Regla del 20% de Personalización:** 80% estructura eficiente probada, 20% personalización genuina sobre la trayectoria o programación del espacio.
+       - **Regla Anti-Truncamiento de Gmail & Mandato Link-Only:** Mantener el cuerpo ultra-compacto (<120 palabras) con enlace interactivo único al EPK/Dossier. Cero adjuntos PDF pesados o fotos spam que disparen filtros de spam o botones de "ver mensaje completo".
+       - **Five Things to Kill in Email:** (1) Bio fluff / nombres de músicos, (2) Vídeos de conciertos enteros de 30 min (reemplazar por teaser de 30-60s en EPK), (3) Spam de fotos, (4) Adjuntos pesados de EPK, (5) Unearned hype / superlativos no verificables.
+       - **Halago sincero y conocimiento del espacio:** Iniciar reconociendo la trayectoria del espacio, el mimo en su cartelera y su labor cultural en la ciudad.
+       - **Adaptación por tipo de espacio:** En fundaciones/teatros/auditorios enfocar en calidad acústica, riqueza tímbrica/instrumental y respeto al espacio (jamás hablar de copas o dinamizar barras); en salas y discotecas enfocar en energía y ambiente.
+       - **Cero obsesión operativa en primer contacto:** Prohibido meter muletillas de tiempos ("montamos en 30 min", "recogemos en 5 min", "rider ágil", "taquilla o caché") en el correo inicial.
+       - **Zero Personnel Bio:** Prohibido listar nombres o instrumentos de los músicos ("Juan al bajo..."), salvo colaboración con figura de renombre internacional.
+       - **Slot Mirroring en Festivales:** Citar la franja horaria o el artista del año anterior que ocupó el slot que se quiere replicar.
+       - **Impact Metrics vs. Vanity Metrics:** Citar a lo sumo UN dato verificable de tracción local (ej: "180 entradas en Sala X" o oyentes en la zona), nunca listas exhaustivas ni cifras infladas de streaming sin conversión.
+       - **Anti-Tells de IA Avanzados & The Read Aloud Test:**
+         * Prohibición absoluta de guiones largos (`—`) y dobles guiones (`--`).
+         * Prohibición de gerundios encadenados ("...ofreciendo show, haciendo que...").
+         * Prohibición de tríadas de adjetivos / Rule of Three ("rápido, directo y potente").
+         * Prohibición de IA-ismos corporativos: *delve, tapestry, multifaceted, furthermore, moreover, leverage, harness the power of*.
+         * Burstiness y sintaxis asimétrica (oraciones cortas de 3-5 palabras con medianas; conectores "Y", "Pero").
+         * Minúsculas estilísticas B2B en saludos de salas independientes ("hola [nombre],") para cercanía.
+         * Prohibición del postureo amateur clónico ("Tras meter más de X personas en nuestra última fecha...").
+         * Contextualización geográfica natural ("en el centro de Madrid", "en la zona de Malasaña") en lugar de nombres de calles forzados ("en pleno Valverde").
+         * Zero Blind Asking: Si se conocen fechas ocupadas/libres por la agenda real, referenciarlo de forma constructiva ("vimos que el 4 tenéis evento X, pero nos cuadraría el 5 u 11").
+         * Mandato Dossier Web en Firma & Cero Enlaces en Cuerpo: Prohibido pegar enlaces URL en el cuerpo del correo. Mencionar de forma natural el **dossier web** en la firma del correo. En la firma automática y QRs se usa el enlace seguro cifrado/hasheado (`https://bandmanager.io/epk?b={{token}}`).
+         * Protocolo Phone-to-Email / Conversión de redes: traslación inmediata de chats a correo ("¿Te parece bien si te lo dejo por mail para fijar la ventana de fechas?").
    * **Usuario (Human-in-the-Loop):** Lee/edita el borrador y aprueba explícitamente, transicionando a `aprobado_propuesta` (pitch inicial) o `aprobado_respuesta` (réplica a sala).
    * **Enviador** (`server/services/agentEngine.ts`): Lee leads en estado aprobado, despacha respetando ventana comercial de la banda y rate-limits. Registra el envío en `lead_messages`.
    * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes cada ~60s (vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.
@@ -186,7 +242,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Resiliencia ante Rechazos Asíncronos:** Mantener el handler global `unhandledRejection` en `server.ts` para evitar caídas del servidor Node ante fallos puntuales. Usar `try/catch` en todos los handlers asíncronos.
 
 ### 5.2 Frontend (React 19 + Vite + CSS)
-* **Diseño e Interfaz Premium:** Interfaces vibrantes con dark mode moderno, glassmorphism, micro-animaciones (`motion`), iconografía clara (`lucide-react`) y tipografía cuidada. Sin placeholders.
+* **Diseño e Interfaz — la autoridad es `skills/visual-identity/SKILL.md`, no esta línea.** Cárgala antes de escribir un solo `className`; tiene precedencia sobre cualquier otra guía estética, brand book externo incluido. Resumen de lo no negociable: todo color y fuente salen de tokens (cero hexadecimales literales, cero `dark:` en el marcado), una sola escala de gris (`neutral`), el oro `#F2CA50` ilumina y nunca rellena (prohibidos halos, `glow-*` y degradados dorados), `font-mono` solo en dato tabular real, y toda serie de datos se dibuja con `<Onda>`. Micro-animaciones sobrias con `motion`, respetando `prefers-reduced-motion`. Sin placeholders.
+  > Esta línea pedía antes *«interfaces vibrantes con dark mode moderno, glassmorphism»*, y la skill `fullstack-ux-design` lo desarrollaba con `bg-slate-900/80`, `backdrop-blur-md` y degradados `indigo→purple`. Los agentes obedecieron: 154 `backdrop-blur`, 209 degradados, 138 `animate-pulse` y una app que parecía un panel de trading de criptomonedas. Se retiró a propósito en septiembre de 2026 — no lo reintroduzcas.
 * **Consumo de API:** Todas las llamadas HTTP desde componentes deben canalizarse a través de `src/services/api.ts` o `src/utils/api.ts` (inyecta automáticamente JWT de auth y cabeceras `x-band-id`).
 * **Excepción i18n:** El componente del EPK público (`/epk`) se renderiza fuera de `LanguageProvider` para prevenir que Google Translate altere nombres de canciones o bandas.
 
@@ -217,7 +274,11 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Journey test (`onboarding-journey.spec.ts`):** a diferencia de los smoke de arriba (una acción aislada cada uno), este encadena el flujo completo de alguien nuevo — registro → asistente de configuración inicial de 12 pasos (`OnboardingWizardModal`, se dispara solo en el primer login) → panel funcionando. Crea una banda real distinta en cada corrida (sufijo con timestamp) para no chocar con ejecuciones anteriores. Es el candidato natural a journey test en esta app porque es la única secuencia multi-paso que se puede probar sin credenciales de IA/email/Stripe — el otro journey obvio (lead → aprobación humana → borrador del Enviador, el subsistema más crítico del negocio, ver §3) queda pendiente hasta decidir cómo evitar gastar cuota real de Gemini en cada corrida de CI.
 * **Corre sin credenciales:** `npm run test:e2e` arranca el servidor de dev (`npm run dev`) sin `SUPABASE_URL`/`STRIPE_SECRET_KEY`/`GEMINI_API_KEY` configurados — la app arranca igual, y el login del test funciona contra los usuarios semilla de `src/db_seed.ts` (`diego` / `bakandeya2026`) porque la sincronización con Supabase en `/auth/login` está en `try/catch` y sigue con el estado en memoria si falla. No añadir aquí ningún test que dependa de Stripe/Gemini/SMTP reales sin antes confirmar que hay secretos de un proyecto de pruebas configurados en CI — si no, se queda en verde por accidente o roto por accidente, ninguna de las dos cosas vale.
 * **Selectores estables:** usar `getByPlaceholder`/`getByRole` sobre el texto visible, no clases CSS (cambian en cada rediseño). El selector del panel autenticado usa un `title` fijo del componente, no el nombre de la banda ni el logo.
-* **Page Object Model / fixtures — deliberadamente NO implementado todavía:** con 3 specs y un único test haciendo login, sería abstraer antes de que haga falta. **Disparador para añadirlo:** en cuanto un SEGUNDO archivo de `e2e/` necesite sesión iniciada, extraer un fixture de login reutilizable (`test.extend`, no una clase POM clásica — más simple para el nivel del proyecto) en ese mismo commit, no antes. Si añades ese segundo test, hazlo ahí mismo.
+* **Login reutilizable — el disparador ya saltó (2026-09-19), y se resolvió con `storageState`, no con `test.extend`.** La regla anterior decía: "en cuanto un SEGUNDO archivo de `e2e/` necesite sesión iniciada, extraer un fixture de login reutilizable en ese mismo commit". Ese segundo archivo es `visual.spec.ts`. Se extrajo a `e2e/auth.setup.ts` + un proyecto `setup-visual` que guarda la sesión en `e2e/.auth/user.json` (ignorado por git), en vez de un fixture `test.extend`, **por una razón concreta y no por gusto**: el backend limita el login a 10 intentos/minuto (`loginRateLimiter`, §2.2) y un fixture que hace login por test agotaba la cuota a mitad de corrida — la suite fallaba con "Demasiadas peticiones" de forma aleatoria. Con sesión reutilizada hay **un solo login por corrida completa** y la suite bajó de 4,7 min a ~37 s. Si un tercer archivo necesita sesión, apúntalo al proyecto `visual` o crea uno análogo; no vuelvas a loguear por test.
+* **Regresión visual (`visual.spec.ts`, proyecto `visual`):** 15 capturas de referencia — 9 pantallas en escritorio (1280×800) y 5 en móvil (390×844), más el login en ambos. `npm run test:visual` compara; `npm run test:visual:update` regenera. **Es la única red que detecta que un cambio de estilos haya desplazado, solapado o recortado media pantalla**, porque los 1000+ tests unitarios son de lógica y no miran `className`. Validada a propósito: con un desplazamiento inyectado de 7px fallan 9 de 15; sin él, 15/15 en tres corridas seguidas.
+  * **Determinismo, y por qué cada pieza está ahí:** reloj congelado (`page.clock.setFixedTime`) o el calendario cambia solo cada día; animaciones y transiciones apagadas; `document.fonts.ready` antes de disparar; y sobre todo **los tutoriales de módulo silenciados sembrando `bm_tutorial_seen_*` en `addInitScript`** (`useModuleTutorial` los abre la primera vez que entras en booking/calendario/epk/fans/repertorio/song_studio). Cerrarlos de forma reactiva NO vale: se montan con retraso variable y salían dibujados encima en una corrida sí y otra no. Si añades un módulo con tutorial, añádelo a `MODULOS_CON_TUTORIAL`.
+  * **Qué NO cubre, y por qué:** `finanzas` y `merchan` quedan fuera porque el usuario semilla está en plan `de_gira`, cuyo `allowedModules` (`planPermissions.ts`) no los incluye — el sidebar los filtra bien, no hay nada que capturar. Para cubrirlos hace falta un semilla en `cabeza_de_cartel`.
+  * **Cuándo regenerar:** solo cuando el cambio visual sea DELIBERADO y esté revisado. Regenerar "para que pase el CI" es exactamente el fallo que esta suite existe para detectar. Las referencias se sufijan por plataforma; si CI renderiza fuentes distinto, hay que regenerarlas allí una vez.
 * **En CI (`.github/workflows/ci.yml`):** paso E2E separado — verifica que el deploy no queda completamente roto, sin necesidad de verde en todos los specs. Salta tests que cambian de run a run (ej. timestamps de banda nueva) usando sufijos temporales.
 
 ### 5.4 Code smells — hábito de revisión, no un "sistema" nuevo
@@ -290,17 +351,27 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
                      transitionAudioEngine.ts, midiExport.ts)
      services/       Cliente HTTP (api.ts) — todas las llamadas al backend pasan por aquí
      context/        React Context providers (auth, idioma, banda activa)
-   e2e/              Playwright — smoke suite + 1 journey (§5.3.2)
+   e2e/              Playwright — smoke suite + 1 journey + regresión visual (§5.3.2)
    supabase/         Migraciones SQL idempotentes (§1)
-   skills/           Fuente única de los 4 skills especializados (agentic-harness,
-                     security-multitenancy, fullstack-ux-design, supabase-architect)
-   .claude/
-     skills/         Copia real de skills/ (no symlink) — la lee Claude Code (`/skill <nombre>`)
-     hooks/          Scripts de hooks (ver §2.2 punto 7)
-     settings.json   Config de hooks
+   skills/           Fuente única de las 9 Golden Tier Skills Universales:
+                     - cyber-and-trust-guardian (Security, multi-tenancy & OWASP LLM Defense)
+                     - graphify (AST TypeScript & Obsidian Knowledge Graph integration)
+                     - llm-evals-benchmark (Evaluación cuantitativa y Read Aloud test)
+                     - tdd-fast-feedback (Ciclo Red-Green-Refactor y check:fast <1.5s)
+                     - agentic-runtime-telemetry (Observabilidad 2 capas y contabilidad aiLedger)
+                     - prompt-craft-and-dna (Inyección Band DNA, anti-cliché & Read Aloud)
+                     - supabase-schema-architect (Migraciones PostgreSQL, índices & RLS)
+                     - human-in-the-loop-flow (Protocolo de estados CRM y despacho seguro)
+                     - audio-and-media-engine (Tone.js synth, MIDI export & Supabase Storage)
+   .claude/          Skills nativas para Claude Code CLI (`.claude/skills/`) y hooks (`.claude/hooks/`)
+   .opencode/        Skills nativas para Open Code (`.opencode/skills/`)
+   .cursor/          Reglas unificadas para Cursor y Windsurf (`.cursor/rules/00-agentic-rules.mdc`)
+   .gemini/          Skills nativas para Google AI Studio y Gemini (`.gemini/skills/`)
+   docs/
+     knowledge_graph/ Vault de Obsidian nativo (.obsidian/app.json y graph.json) sincronizable vía `npm run graph:sync`
    CLAUDE.md          Pointer corto a este archivo — Claude Code lo lee al arrancar
    ```
-   `.gemini/skills/` (copia real para AI Studio) sigue el mismo patrón. Si editas un `SKILL.md`, cópialo a las tres ubicaciones en el mismo commit (`skills/README.md` tiene el porqué) — ya hubo una vez documentación duplicada que se desincronizó sin que nadie se enterara (`context/`, retirada 2026-09-17, ver `git log -- context/`).
+   Todas las carpetas de skills (`skills/`, `.claude/skills/`, `.opencode/skills/`, `.gemini/skills/`) comparten la misma definición estandarizada y están 100% sincronizadas para operar con cualquier agente (Claude Code, Open Code, Cursor, Gemini). Si editas un `SKILL.md`, cópialo a todas las ubicaciones en el mismo commit.
    Antes de un glob/grep exploratorio, mirar aquí primero si la pregunta es "¿en qué carpeta vive esto?".
 1. **Lecturas dirigidas:** en un archivo largo, leer solo el rango de líneas relevante cuando la herramienta lo permita, no el archivo entero, si solo hace falta tocar una función o interfaz concreta.
 2. **Ediciones quirúrgicas:** diffs mínimos y contiguos sobre el archivo existente, no reescrituras completas salvo que el cambio lo justifique.

@@ -25,17 +25,17 @@ export async function generateAccompanimentAudioBlob(opts: {
 
   // Key frequencies (root notes for bass synthesis based on song key)
   const keyFrequencies: Record<string, number[]> = {
-    'Do': [65.41, 58.27, 43.65, 49.00], // C2, A1#, F1, G1
-    'Re': [73.42, 65.41, 49.00, 55.00], // D2, C2, G1, A1
-    'Mi': [82.41, 73.42, 55.00, 61.74], // E2, D2, A1, B1
-    'Fa': [87.31, 77.78, 58.27, 65.41], // F2, D#2, A#1, C2
-    'Sol': [98.00, 87.31, 65.41, 73.42], // G2, F2, C2, D2
-    'La': [55.00, 49.00, 36.71, 41.20], // A1, G1, D1, E1
-    'Si': [61.74, 55.00, 41.20, 46.25], // B1, A1, E1, F#1
+    Do: [65.41, 58.27, 43.65, 49.0], // C2, A1#, F1, G1
+    Re: [73.42, 65.41, 49.0, 55.0], // D2, C2, G1, A1
+    Mi: [82.41, 73.42, 55.0, 61.74], // E2, D2, A1, B1
+    Fa: [87.31, 77.78, 58.27, 65.41], // F2, D#2, A#1, C2
+    Sol: [98.0, 87.31, 65.41, 73.42], // G2, F2, C2, D2
+    La: [55.0, 49.0, 36.71, 41.2], // A1, G1, D1, E1
+    Si: [61.74, 55.0, 41.2, 46.25], // B1, A1, E1, F#1
   };
 
   const cleanKey = opts.keyName ? opts.keyName.replace(/m|min|Maj|may|#/g, '').trim() : 'La';
-  const roots = keyFrequencies[cleanKey] || [55.00, 43.65, 36.71, 41.20];
+  const roots = keyFrequencies[cleanKey] || [55.0, 43.65, 36.71, 41.2];
 
   // Drums synthesis triggers
   const triggerKick = (time: number) => {

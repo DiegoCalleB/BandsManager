@@ -17,6 +17,7 @@ import express from "express";
 import crypto from "crypto";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import { getSupabase } from "../db/core.js";
 import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, toSafeGmailOAuthResponse } from "../db/gmailOAuth.js";
 
 const router = express.Router();
@@ -27,14 +28,9 @@ const router = express.Router();
 // necesita el Agente Lector para detectar respuestas de una banda conectada solo por OAuth, sin
 // IMAP. Una banda que conectó antes de este cambio solo tiene gmail.compose concedido y necesita
 // reconectar (botón "Desconectar" + "Conectar con Google" de nuevo) para que el Lector funcione.
-const GMAIL_OAUTH_SCOPE = "https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.modify";
+const GMAIL_OAUTH_SCOPE = "https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.modify email";
 const AUTHORIZE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
-// La API de userinfo clásica (https://www.googleapis.com/oauth2/v2/userinfo) exige los scopes
-// "email"/"profile", que este flujo nunca pide (solo gmail.compose/gmail.modify) - por eso
-// gmail_email se guardaba siempre vacío. El propio endpoint de perfil de la API de Gmail sí
-// funciona con esos scopes (lo confirma obtenerEmailDeLaCuentaConectada en gmailApiClient.ts,
-// que ya lo usa con éxito), así que se reutiliza aquí en vez de pedir un scope nuevo.
 const PROFILE_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/profile";
 const ESTADO_VALIDEZ_MS = 10 * 60 * 1000; // 10 minutos: tiempo de sobra para completar el consentimiento en Google
 
@@ -141,11 +137,40 @@ router.get("/callback", async (req, res) => {
       return redirigirConError("google_no_devolvio_refresh_token");
     }
 
-    const profileRes = await fetch(PROFILE_ENDPOINT, {
-      headers: { Authorization: `Bearer ${tokenData.access_token}` }
-    });
-    const profile = profileRes.ok ? await profileRes.json() : {};
-    const gmailEmail = profile.emailAddress || "";
+    let gmailEmail = "";
+    try {
+      const profileRes = await fetch(PROFILE_ENDPOINT, {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` }
+      });
+      if (profileRes.ok) {
+        const profile = await profileRes.json();
+        gmailEmail = profile.emailAddress || "";
+      }
+    } catch (_) {}
+
+    // Fallback 1: Decodificar id_token si Google lo envió
+    if (!gmailEmail && tokenData.id_token) {
+      try {
+        const payloadBase64 = String(tokenData.id_token).split(".")[1];
+        if (payloadBase64) {
+          const decoded = JSON.parse(Buffer.from(payloadBase64, "base64").toString("utf8"));
+          gmailEmail = decoded.email || "";
+        }
+      } catch (_) {}
+    }
+
+    // Fallback 2: Endpoint userinfo clásico
+    if (!gmailEmail) {
+      try {
+        const userinfoRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+          headers: { Authorization: `Bearer ${tokenData.access_token}` }
+        });
+        if (userinfoRes.ok) {
+          const uData = await userinfoRes.json();
+          gmailEmail = uData.email || "";
+        }
+      } catch (_) {}
+    }
 
     await dbUpsertBandGmailOAuth({
       band_id: bandId,
@@ -153,6 +178,15 @@ router.get("/callback", async (req, res) => {
       refresh_token: refreshToken,
       scope: String(tokenData.scope || GMAIL_OAUTH_SCOPE)
     });
+
+    if (gmailEmail && gmailEmail.trim()) {
+      try {
+        const sb = getSupabase();
+        await sb.from("registered_bands").update({ email: gmailEmail.trim().toLowerCase() }).eq("band_id", bandId);
+      } catch (syncErr) {
+        console.warn("[gmailOAuth] No se pudo sincronizar registered_bands.email:", syncErr);
+      }
+    }
 
     res.redirect("/?gmail_oauth=conectado");
   } catch (err: any) {

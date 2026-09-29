@@ -7,9 +7,15 @@ describe('stageOfflineCache: Cacheado persistente para directos sin internet', (
 
   const mockLocalStorage = {
     getItem: (key: string) => storage[key] || null,
-    setItem: (key: string, val: string) => { storage[key] = val; },
-    removeItem: (key: string) => { delete storage[key]; },
-    clear: () => { storage = {}; },
+    setItem: (key: string, val: string) => {
+      storage[key] = val;
+    },
+    removeItem: (key: string) => {
+      delete storage[key];
+    },
+    clear: () => {
+      storage = {};
+    },
   };
 
   beforeEach(() => {
@@ -28,8 +34,8 @@ describe('stageOfflineCache: Cacheado persistente para directos sin internet', (
     items: [
       { id: 'i1', tipoItem: 'cancion', songId: 's1' },
       { id: 'i2', tipoItem: 'bloque', bloqueSubtipo: 'chapa', tituloCustom: 'Saludo' },
-      { id: 'i3', tipoItem: 'cancion', songId: 's2' }
-    ]
+      { id: 'i3', tipoItem: 'cancion', songId: 's2' },
+    ],
   };
 
   const mockSongs: Song[] = [
@@ -38,20 +44,20 @@ describe('stageOfflineCache: Cacheado persistente para directos sin internet', (
       titulo: 'Canción Clave',
       cifradoTexto: '[Intro]\n[Do] [Sol]',
       bpm: 128,
-      tonalidad: 'Do'
+      tonalidad: 'Do',
     },
     {
       id: 's2',
       titulo: 'Canción Cierre',
       cifradoTexto: '[Verso]\n[Lam] [Fa]',
       bpm: 140,
-      tonalidad: 'Lam'
+      tonalidad: 'Lam',
     },
     {
       id: 's3_no_en_setlist',
       titulo: 'Tema descartado',
-      bpm: 90
-    }
+      bpm: 90,
+    },
   ];
 
   beforeEach(() => {
@@ -66,7 +72,7 @@ describe('stageOfflineCache: Cacheado persistente para directos sin internet', (
     expect(cached).not.toBeNull();
     expect(cached?.setlist.nombre).toBe('Setlist Gira 2026');
     expect(cached?.totalSongsCount).toBe(2);
-    expect(cached?.songs.map(s => s.id)).toEqual(['s1', 's2']);
+    expect(cached?.songs.map((s) => s.id)).toEqual(['s1', 's2']);
     expect(cached?.songs[0].cifradoTexto).toContain('[Do] [Sol]');
   });
 

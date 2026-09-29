@@ -3,7 +3,7 @@ export interface ReelCard {
   title: string;
   duration: string;
   category: string;
-  stage: 'draft' | 'edit' | 'ready';
+  stage: "draft" | "edit" | "ready";
   ideas: string;
 }
 
@@ -17,6 +17,9 @@ export interface HighlightClip {
   confidence?: number;
   energyLevel?: string;
   recommendedCopy?: string;
+  copyViral?: string;
+  copyComunidad?: string;
+  copyConversion?: string;
   hashtags?: string[];
   /** Segundos exactos que devuelve el backend, ya recortados a la duración real del vídeo. */
   startSec?: number;
@@ -28,6 +31,13 @@ export interface HighlightClip {
   copyYouTube?: string;
   copyFacebook?: string;
   cta?: string;
+  lengthCategory?: "micro_hook" | "hit_moment" | "story_bts";
+}
+
+export interface SubtitleCue {
+  start: number;
+  end: number;
+  text: string;
 }
 
 export interface OptimalTime {
@@ -38,11 +48,44 @@ export interface OptimalTime {
 }
 
 /**
+ * Parses time range string like "01:15 - 01:45" or "01:15-01:45" into start, end, duration numbers
+ */
+export function parseRangeTimes(rangeStr?: string): {
+  start: number;
+  end: number;
+  duration: number;
+} {
+  if (!rangeStr) return { start: 0, end: 0, duration: 0 };
+  const parts = rangeStr.split("-").map((p) => p.trim());
+  if (parts.length < 2) return { start: 0, end: 0, duration: 0 };
+
+  const parsePart = (p: string) => {
+    const sub = p.split(":").map(Number);
+    if (sub.length === 2) return (sub[0] || 0) * 60 + (sub[1] || 0);
+    if (sub.length === 3)
+      return (sub[0] || 0) * 3600 + (sub[1] || 0) * 60 + (sub[2] || 0);
+    return Number(p) || 0;
+  };
+
+  const start = parsePart(parts[0]);
+  const end = parsePart(parts[1]);
+  const duration = Math.max(0, end - start);
+  return { start, end, duration };
+}
+
+export function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+}
+
+/**
  * Extracts YouTube video ID from a URL
  */
 export function getYouTubeId(url?: string): string | null {
   if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const regExp =
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
   return match && match[2].length === 11 ? match[2] : null;
 }
@@ -52,8 +95,8 @@ export function getYouTubeId(url?: string): string | null {
  */
 export function getStartTimeInSeconds(rangeStr?: string): number {
   if (!rangeStr) return 0;
-  const firstPart = rangeStr.split('-')[0].trim();
-  const timeParts = firstPart.split(':');
+  const firstPart = rangeStr.split("-")[0].trim();
+  const timeParts = firstPart.split(":");
   if (timeParts.length === 2) {
     const mins = parseInt(timeParts[0], 10) || 0;
     const secs = parseInt(timeParts[1], 10) || 0;
@@ -68,17 +111,20 @@ export function getStartTimeInSeconds(rangeStr?: string): number {
  * Formats seconds into MM:SS format
  */
 export function formatSecondsToTime(seconds: number): string {
-  if (!seconds || seconds < 0) return '00:00';
+  if (!seconds || seconds < 0) return "00:00";
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
-  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
 /** Fecha por defecto para programar un post: mañana, en vez de una fecha fija que se queda vieja. */
-export function defaultScheduleDate(daysAhead = 1, now: Date = new Date()): string {
+export function defaultScheduleDate(
+  daysAhead = 1,
+  now: Date = new Date(),
+): string {
   const d = new Date(now);
   d.setDate(d.getDate() + daysAhead);
-  return d.toISOString().split('T')[0];
+  return d.toISOString().split("T")[0];
 }
 
 export interface ScheduleReadinessInput {
@@ -96,23 +142,28 @@ export interface ScheduleReadinessInput {
  * nada y no se explicaba por qué): faltaban fecha/hora en el pasado y un hashtag olvidado
  * se descubrían ya con el post en la cola, no al programarlo.
  */
-export function validateScheduleReadiness(input: ScheduleReadinessInput): string[] {
+export function validateScheduleReadiness(
+  input: ScheduleReadinessInput,
+): string[] {
   const problemas: string[] = [];
-  const copy = (input.copy || '').trim();
+  const copy = (input.copy || "").trim();
 
   if (!copy) {
-    problemas.push('Falta el texto del copy.');
+    problemas.push("Falta el texto del copy.");
   } else if (!/#\w+/.test(copy)) {
-    problemas.push('El copy no lleva ningún hashtag: añade al menos uno.');
+    problemas.push("El copy no lleva ningún hashtag: añade al menos uno.");
   }
 
   if (!input.scheduledDate || !input.scheduledTime) {
-    problemas.push('Elige fecha y hora de publicación.');
+    problemas.push("Elige fecha y hora de publicación.");
   } else {
     const momento = new Date(`${input.scheduledDate}T${input.scheduledTime}`);
     const ahora = input.now || new Date();
-    if (!Number.isNaN(momento.getTime()) && momento.getTime() < ahora.getTime()) {
-      problemas.push('La fecha y hora elegidas ya han pasado.');
+    if (
+      !Number.isNaN(momento.getTime()) &&
+      momento.getTime() < ahora.getTime()
+    ) {
+      problemas.push("La fecha y hora elegidas ya han pasado.");
     }
   }
 
@@ -138,20 +189,32 @@ export interface CadenceCheckInput {
 export function getCadenceWarnings(input: CadenceCheckInput): string[] {
   const avisos: string[] = [];
   const objetivo = new Date(`${input.scheduledDate}T${input.scheduledTime}`);
-  if (!input.scheduledDate || !input.scheduledTime || Number.isNaN(objetivo.getTime())) return avisos;
+  if (
+    !input.scheduledDate ||
+    !input.scheduledTime ||
+    Number.isNaN(objetivo.getTime())
+  )
+    return avisos;
 
   const minHoras = input.minHoursBetweenSamePlatform ?? 4;
   const maxDiasHueco = input.maxDaysGapWarning ?? 10;
 
   const conFecha = (input.posts || [])
-    .map((p) => ({ ...p, ts: new Date((p.fecha || '').replace(' ', 'T')).getTime() }))
+    .map((p) => ({
+      ...p,
+      ts: new Date((p.fecha || "").replace("", "T")).getTime(),
+    }))
     .filter((p) => !Number.isNaN(p.ts));
 
   const mismaRedCercana = conFecha.find(
-    (p) => p.plataforma === input.platform && Math.abs(p.ts - objetivo.getTime()) < minHoras * 3600 * 1000
+    (p) =>
+      p.plataforma === input.platform &&
+      Math.abs(p.ts - objetivo.getTime()) < minHoras * 3600 * 1000,
   );
   if (mismaRedCercana) {
-    avisos.push(`Ya tienes otro post en ${input.platform} programado a menos de ${minHoras}h de esta fecha y hora.`);
+    avisos.push(
+      `Ya tienes otro post en ${input.platform} programado a menos de ${minHoras}h de esta fecha y hora.`,
+    );
   }
 
   const anteriores = conFecha.filter((p) => p.ts < objetivo.getTime());
@@ -159,7 +222,9 @@ export function getCadenceWarnings(input: CadenceCheckInput): string[] {
     const ultimo = Math.max(...anteriores.map((p) => p.ts));
     const diasHueco = (objetivo.getTime() - ultimo) / (24 * 3600 * 1000);
     if (diasHueco > maxDiasHueco) {
-      avisos.push(`Llevas ${Math.round(diasHueco)} días sin nada programado antes de este post: la constancia pesa más que un post suelto.`);
+      avisos.push(
+        `Llevas ${Math.round(diasHueco)} días sin nada programado antes de este post: la constancia pesa más que un post suelto.`,
+      );
     }
   }
 

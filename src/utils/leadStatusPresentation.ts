@@ -1,6 +1,6 @@
 // Tabla única de colores/etiqueta por estado de lead - antes vivía duplicada (y con valores
 // distintos entre sí) en BookingCRM.tsx y Dashboard.tsx. La versión de Dashboard.tsx no cubría
-// 'confirmado', 'aplazado', 'respondido', 'borrador_creado' ni 'aprobado_propuesta/respuesta',
+//'confirmado', 'aplazado', 'respondido', 'borrador_creado' ni'aprobado_propuesta/respuesta',
 // así que un lead en esos estados se pintaba en gris por defecto en la vista móvil. Esta tabla
 // es la de BookingCRM.tsx (la completa) - se convierte en la única fuente para ambos sitios.
 
@@ -12,90 +12,90 @@ interface LeadStatusStyle {
 }
 
 const DEFAULT_STYLE: LeadStatusStyle = {
-  dot: 'bg-stone-400',
-  badgeLight: 'bg-slate-50 text-slate-500',
-  badgeDark: 'bg-neutral-800/60 text-neutral-400',
-  label: '',
+  dot: "bg-[var(--ink-2)]/40",
+  badgeLight: "bg-slate-50 text-[var(--ink-2)]",
+  badgeDark: "bg-[var(--sunken)]/60 text-[var(--ink-3)]",
+  label: "",
 };
 
 export const LEAD_STATUS_STYLES: Record<string, LeadStatusStyle> = {
   nuevo: {
-    dot: 'bg-amber-400',
-    badgeLight: 'bg-amber-50 text-amber-800 border border-amber-200',
-    badgeDark: 'bg-amber-500/15 text-amber-300 border border-amber-500/30',
-    label: 'Por contactar',
+    dot: "bg-[var(--acc)]/80",
+    badgeLight: "bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]",
+    badgeDark: "bg-[var(--acc)]/15 text-[var(--acc)]/80",
+    label: "Por contactar",
   },
   esperando_respuesta: {
-    dot: 'bg-sky-400',
-    badgeLight: 'bg-sky-50 text-sky-700 border border-sky-200',
-    badgeDark: 'bg-sky-500/15 text-sky-300 border border-sky-500/30',
-    label: 'Contactado',
+    dot: "bg-[var(--tentative)]",
+    badgeLight: "bg-[var(--tentative)]/10 text-[var(--tentative)]/30",
+    badgeDark: "bg-[var(--acc)]/15 text-[var(--ink-3)]/30",
+    label: "Contactado",
   },
   enviado: {
-    dot: 'bg-sky-400',
-    badgeLight: 'bg-sky-50 text-sky-700 border border-sky-200',
-    badgeDark: 'bg-sky-500/15 text-sky-300 border border-sky-500/30',
-    label: 'Contactado',
+    dot: "bg-[var(--tentative)]",
+    badgeLight: "bg-[var(--tentative)]/10 text-[var(--tentative)]/30",
+    badgeDark: "bg-[var(--acc)]/15 text-[var(--ink-3)]/30",
+    label: "Contactado",
   },
   respondido: {
-    dot: 'bg-indigo-400',
-    badgeLight: 'bg-indigo-50 text-indigo-700 border border-indigo-200',
-    badgeDark: 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30',
-    label: 'En conversación',
+    dot: "bg-[var(--tentative)]/80",
+    badgeLight: "bg-[var(--tentative)]/5 text-[var(--tentative)]",
+    badgeDark: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80",
+    label: "En conversación",
   },
   negociando: {
-    dot: 'bg-purple-400',
-    badgeLight: 'bg-purple-50 text-purple-700 border border-purple-200',
-    badgeDark: 'bg-purple-500/15 text-purple-300 border border-purple-500/30',
-    label: 'Negociando',
+    dot: "bg-[var(--acc)]",
+    badgeLight: "bg-[var(--acc)]/10 text-[var(--acc)]",
+    badgeDark: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80",
+    label: "Negociando",
   },
   confirmado: {
-    dot: 'bg-emerald-400',
-    badgeLight: 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-300',
-    badgeDark: 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40',
-    label: 'Confirmado 🎉',
+    dot: "bg-[var(--ok)]/80",
+    badgeLight: "bg-[var(--ok)]-soft text-[var(--ink)] font-bold/80",
+    badgeDark: "bg-[var(--ok)]/20 text-[var(--ok)]/80 font-bold/40",
+    label: "Confirmado 🎉",
   },
   aplazado: {
-    dot: 'bg-yellow-500',
-    badgeLight: 'bg-yellow-50 text-yellow-800 border border-yellow-200',
-    badgeDark: 'bg-yellow-500/15 text-yellow-300 border border-yellow-500/30',
-    label: 'Aplazado ⏳',
+    dot: "bg-[var(--acc)]",
+    badgeLight: "bg-[var(--surface)] text-[var(--accent-alt)]",
+    badgeDark: "bg-[var(--acc)]/15 text-[var(--acc)]/80",
+    label: "Aplazado ⏳",
   },
   no_interesado: {
-    dot: 'bg-neutral-500',
-    badgeLight: 'bg-slate-100 text-slate-500 border border-slate-200',
-    badgeDark: 'bg-neutral-800/80 text-neutral-400 border border-neutral-700/50',
-    label: 'Descartado',
+    dot: "bg-[var(--surface)]0",
+    badgeLight: "bg-[var(--surface)] text-[var(--ink-2)]",
+    badgeDark: "bg-[var(--sunken)]/80 text-[var(--ink-3)]",
+    label: "Descartado",
   },
   pendiente_aprobacion: {
-    dot: 'bg-amber-400 animate-pulse',
-    badgeLight: 'bg-amber-50 text-amber-700 border border-amber-300',
-    badgeDark: 'bg-amber-500/15 text-amber-400 border border-amber-500/40',
-    label: 'Borrador por aprobar',
+    dot: "bg-[var(--acc)]/80",
+    badgeLight: "bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]",
+    badgeDark: "bg-[var(--acc)]/15 text-[var(--acc)]/80",
+    label: "Borrador por aprobar",
   },
   aprobado: {
-    dot: 'bg-emerald-400',
-    badgeLight: 'bg-emerald-50 text-emerald-700 border border-emerald-300',
-    badgeDark: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/40',
-    label: 'En cola de envío',
+    dot: "bg-[var(--ok)]/80",
+    badgeLight: "bg-[var(--ok)]-soft text-[var(--ink)]/80",
+    badgeDark: "bg-[var(--ok)]/15 text-[var(--ok)]/40",
+    label: "En cola de envío",
   },
   aprobado_propuesta: {
-    dot: 'bg-emerald-400',
-    badgeLight: 'bg-emerald-50 text-emerald-700 border border-emerald-300',
-    badgeDark: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/40',
-    label: 'En cola de envío',
+    dot: "bg-[var(--ok)]/80",
+    badgeLight: "bg-[var(--ok)]-soft text-[var(--ink)]/80",
+    badgeDark: "bg-[var(--ok)]/15 text-[var(--ok)]/40",
+    label: "En cola de envío",
   },
   aprobado_respuesta: {
-    dot: 'bg-emerald-400',
-    badgeLight: 'bg-emerald-50 text-emerald-700 border border-emerald-300',
-    badgeDark: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/40',
-    label: 'En cola de envío',
+    dot: "bg-[var(--ok)]/80",
+    badgeLight: "bg-[var(--ok)]-soft text-[var(--ink)]/80",
+    badgeDark: "bg-[var(--ok)]/15 text-[var(--ok)]/40",
+    label: "En cola de envío",
   },
   borrador_creado: {
-    dot: 'bg-cyan-400',
-    badgeLight: 'bg-cyan-50 text-cyan-700 border border-cyan-300',
-    badgeDark: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40',
-    label: 'Borrador en tu email 📝',
+    dot: "bg-[var(--acc)]/80",
+    badgeLight: "bg-[var(--surface)] text-[var(--tentative)]",
+    badgeDark: "bg-[var(--acc)]/15 text-[var(--acc)]/80",
+    label: "Borrador en tu email 📝",
   },
 };
 
@@ -106,12 +106,15 @@ export function leadStatusDotColor(normalizedStatus: string): string {
   return styleFor(normalizedStatus).dot;
 }
 
-export function leadStatusBadgeClass(normalizedStatus: string, isStitchLight: boolean): string {
+export function leadStatusBadgeClass(normalizedStatus: string): string {
   const style = styleFor(normalizedStatus);
-  return isStitchLight ? style.badgeLight : style.badgeDark;
+  return style.badgeLight;
 }
 
-export function leadStatusLabel(normalizedStatus: string, fallback: string): string {
+export function leadStatusLabel(
+  normalizedStatus: string,
+  fallback: string,
+): string {
   const style = LEAD_STATUS_STYLES[normalizedStatus];
   return style ? style.label : fallback;
 }

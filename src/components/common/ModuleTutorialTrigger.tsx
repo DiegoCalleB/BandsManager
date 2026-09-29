@@ -17,7 +17,7 @@ export const ModuleTutorialTrigger: React.FC<ModuleTutorialTriggerProps> = ({
   onOpen,
   label = 'Guía rápida',
   variant = 'pill',
-  className = ''
+  className = '',
 }) => {
   const handleClick = onClick || onOpen || (() => {});
 
@@ -28,7 +28,7 @@ export const ModuleTutorialTrigger: React.FC<ModuleTutorialTriggerProps> = ({
         type="button"
         onClick={handleClick}
         title={`Abrir guía y tutorial interactivo de ${moduleId}`}
-        className={`p-2 rounded-xl bg-stone-800/80 hover:bg-stone-700 text-stone-300 hover:text-amber-400 border border-stone-700/70 transition-all cursor-pointer flex items-center justify-center active:scale-95 ${className}`}
+        className={`p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--acc-ink)] transition-colors cursor-pointer flex items-center justify-center active:scale-95 ${className}`}
       >
         <HelpCircle className="w-4 h-4" />
       </button>
@@ -41,11 +41,11 @@ export const ModuleTutorialTrigger: React.FC<ModuleTutorialTriggerProps> = ({
       type="button"
       onClick={handleClick}
       title="Abrir guía interactiva paso a paso con las funciones clave"
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-800/80 hover:bg-stone-700/90 text-stone-300 hover:text-amber-300 border border-stone-700/70 hover:border-amber-500/30 text-xs font-mono font-bold transition-all cursor-pointer active:scale-95 shadow-xs ${className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-bold transition-colors cursor-pointer active:scale-95 ${className}`}
     >
-      <HelpCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+      <HelpCircle className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
       <span className="hidden sm:inline">{label}</span>
-      <span className="sm:hidden font-mono font-black text-amber-400">?</span>
+      <span className="sm:hidden font-black text-[var(--acc-ink)]">?</span>
     </button>
   );
 };

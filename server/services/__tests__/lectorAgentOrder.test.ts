@@ -31,6 +31,7 @@ const dbUpsertLeadMock = vi.fn();
 const dbLeadMessageExistsMock = vi.fn();
 const dbCreateLeadMessageMock = vi.fn();
 const dbGetLeadMessagesMock = vi.fn();
+const dbGetAutonomyConfigMock = vi.fn().mockResolvedValue(null);
 const getSupabaseMock = vi.fn();
 vi.mock('../../db.js', () => ({
   dbGetLeads: (...args: any[]) => dbGetLeadsMock(...args),
@@ -38,6 +39,7 @@ vi.mock('../../db.js', () => ({
   dbLeadMessageExists: (...args: any[]) => dbLeadMessageExistsMock(...args),
   dbCreateLeadMessage: (...args: any[]) => dbCreateLeadMessageMock(...args),
   dbGetLeadMessages: (...args: any[]) => dbGetLeadMessagesMock(...args),
+  dbGetAutonomyConfig: (...args: any[]) => dbGetAutonomyConfigMock(...args),
   getSupabase: (...args: any[]) => getSupabaseMock(...args)
 }));
 
@@ -49,6 +51,19 @@ vi.mock('../replyDrafting.js', async (importOriginal) => {
     generarBorradorRespuesta: (...args: any[]) => generarBorradorRespuestaMock(...args)
   };
 });
+
+vi.mock('../sentimentAnalysis.js', () => ({
+  analyzeIncomingMessageSentiment: vi.fn().mockResolvedValue({
+    sentimiento: 'positivo',
+    sentimiento_score: 0.8,
+    sentimiento_label: 'Interesado',
+    intencion: 'proponer_fechas',
+    intencion_etiqueta: 'Pide fechas disponibles',
+    temperatura: 'caliente',
+    fechas_mencionadas: [],
+    resumen_ejecutivo: 'Interesado en propuesta'
+  })
+}));
 
 import { runLectorAgent, puedeGenerarBorradorIA } from '../lectorAgent';
 

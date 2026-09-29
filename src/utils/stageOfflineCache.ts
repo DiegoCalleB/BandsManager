@@ -14,32 +14,24 @@ const STAGE_CACHE_PREFIX = 'bandmanager_stage_offline_';
  * (letras, acordes cifradoTexto, tonalidades, duraciones y BPM) para garantizar que el
  * músico pueda tocar en recintos subterráneos, sótanos o festivales sin cobertura ni wifi.
  */
-export function cacheActiveStageSetlist(
-  setlist: Setlist | null,
-  songs: Song[],
-  bandId?: string
-): boolean {
+export function cacheActiveStageSetlist(setlist: Setlist | null, songs: Song[], bandId?: string): boolean {
   if (typeof localStorage === 'undefined' || !setlist || !setlist.items || setlist.items.length === 0) {
     return false;
   }
 
   try {
     const key = `${STAGE_CACHE_PREFIX}${bandId || 'default'}`;
-    
-    // Filtramos solo las canciones que pertenecen al setlist para no saturar la cuota
-    const relevantSongIds = new Set(
-      setlist.items
-        .filter(it => it.tipoItem === 'cancion' && it.songId)
-        .map(it => it.songId as string)
-    );
 
-    const relevantSongs = songs.filter(s => relevantSongIds.has(s.id));
+    // Filtramos solo las canciones que pertenecen al setlist para no saturar la cuota
+    const relevantSongIds = new Set(setlist.items.filter((it) => it.tipoItem === 'cancion' && it.songId).map((it) => it.songId as string));
+
+    const relevantSongs = songs.filter((s) => relevantSongIds.has(s.id));
 
     const payload: StageOfflineCachePayload = {
       setlist,
       songs: relevantSongs,
       cachedAt: new Date().toISOString(),
-      totalSongsCount: relevantSongs.length
+      totalSongsCount: relevantSongs.length,
     };
 
     localStorage.setItem(key, JSON.stringify(payload));

@@ -22,7 +22,7 @@ export const EPK_LANGUAGES: { code: EpkLanguage; label: string; flag: string }[]
 ];
 
 export function isEpkLanguage(value: string | null | undefined): value is EpkLanguage {
-  return !!value && EPK_LANGUAGES.some(l => l.code === value);
+  return !!value && EPK_LANGUAGES.some((l) => l.code === value);
 }
 
 /**
@@ -180,7 +180,6 @@ const es: EpkDict = {
   seccionEscucha: 'Escúchanos y Míranos en Directo',
   tituloSpotify: '{bandName} en Spotify',
 
-
   seccionFechas: 'Próximas Fechas de Gira',
   descargarDossier: 'Descargar Dossier en PDF',
   pieDerechos: '© {year} {bandName} — Todos los derechos reservados. Kit de prensa generado por BandManager.io',
@@ -251,7 +250,6 @@ const en: EpkDict = {
 
   seccionEscucha: 'Listen & Watch Us Live',
   tituloSpotify: '{bandName} on Spotify',
-
 
   seccionFechas: 'Upcoming Tour Dates',
   descargarDossier: 'Download Press Kit PDF',
@@ -324,7 +322,6 @@ const it: EpkDict = {
   seccionEscucha: 'Ascoltaci e Guardaci dal Vivo',
   tituloSpotify: '{bandName} su Spotify',
 
-
   seccionFechas: 'Prossime Date del Tour',
   descargarDossier: 'Scarica Press Kit in PDF',
   pieDerechos: '© {year} {bandName} — Tutti i diritti riservati. Press kit generato da BandManager.io',
@@ -396,7 +393,6 @@ const cs: EpkDict = {
   seccionEscucha: 'Poslechněte si a sledujte nás naživo',
   tituloSpotify: '{bandName} na Spotify',
 
-
   seccionFechas: 'Nadcházející termíny turné',
   descargarDossier: 'Stáhnout press kit v PDF',
   pieDerechos: '© {year} {bandName} — Všechna práva vyhrazena. Press kit vygenerován pomocí BandManager.io',
@@ -424,8 +420,18 @@ export const EPK_TRANSLATIONS: Record<EpkLanguage, EpkDict> = { es, en, it, cs }
 // usa para decidir a qué versión del EPK apunta el enlace de la firma. Si se separan, un lead
 // de Londres acabaría recibiendo un pitch en inglés con un enlace a la página en español.
 export const KEYWORDS_ANGLOFONOS = [
-  'reino unido', 'united kingdom', 'inglaterra', 'england', 'scotland', 'wales',
-  'ireland', 'irlanda', 'estados unidos', 'united states', ' usa', 'u.s.a.',
+  'reino unido',
+  'united kingdom',
+  'inglaterra',
+  'england',
+  'scotland',
+  'wales',
+  'ireland',
+  'irlanda',
+  'estados unidos',
+  'united states',
+  'usa',
+  'u.s.a.',
 ];
 
 /**
@@ -436,5 +442,5 @@ export const KEYWORDS_ANGLOFONOS = [
 export function idiomaEpkParaLead(lead: { direccion?: string; ciudad?: string; region?: string } | null | undefined): EpkLanguage {
   if (!lead) return DEFAULT_EPK_LANGUAGE;
   const texto = ` ${lead.direccion || ''} ${lead.region || ''} ${lead.ciudad || ''} `.toLowerCase();
-  return KEYWORDS_ANGLOFONOS.some(kw => texto.includes(kw)) ? 'en' : DEFAULT_EPK_LANGUAGE;
+  return KEYWORDS_ANGLOFONOS.some((kw) => texto.includes(kw)) ? 'en' : DEFAULT_EPK_LANGUAGE;
 }

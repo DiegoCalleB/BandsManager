@@ -9,16 +9,17 @@ const baseCampaign: BookingCampaign = {
   minCapacity: 300,
   maxCapacity: 500,
   targetDates: ['2026-12-04', '2026-12-05', '2026-12-11', '2026-12-12'],
-  isActive: true
+  isActive: true,
 };
 
-const baseLead = (overrides: Partial<Lead> = {}): Lead => ({
-  id: 'lead-1',
-  nombre_sala: 'Sala Test',
-  ciudad: 'Madrid',
-  estado: 'nuevo',
-  ...overrides
-} as Lead);
+const baseLead = (overrides: Partial<Lead> = {}): Lead =>
+  ({
+    id: 'lead-1',
+    nombre_sala: 'Sala Test',
+    ciudad: 'Madrid',
+    estado: 'nuevo',
+    ...overrides,
+  }) as Lead;
 
 describe('leadMatchesCampaignCapacity', () => {
   it('matches a venue inside the exact range', () => {
@@ -60,7 +61,7 @@ describe('leadMatchesCampaignDates', () => {
       nombre_sala: 'ReggaeMad Fest',
       tipo: 'festival' as any,
       festival_start_date: '05/06/2027',
-      festival_end_date: '06/06/2027'
+      festival_end_date: '06/06/2027',
     });
     expect(leadMatchesCampaignDates(festival, baseCampaign)).toBe(false);
   });
@@ -70,7 +71,7 @@ describe('leadMatchesCampaignDates', () => {
       nombre_sala: 'Festival de Invierno',
       tipo: 'festival' as any,
       festival_start_date: '05/12/2026',
-      festival_end_date: '06/12/2026'
+      festival_end_date: '06/12/2026',
     });
     expect(leadMatchesCampaignDates(festival, baseCampaign)).toBe(true);
   });
@@ -86,4 +87,3 @@ describe('leadMatchesCampaign', () => {
     expect(leadMatchesCampaign(baseLead({ ciudad: 'Madrid', aforo: 350 }), baseCampaign)).toBe(true);
   });
 });
-

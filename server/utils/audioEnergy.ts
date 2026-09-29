@@ -292,6 +292,25 @@ export async function resolverFuenteAudioLocal(
   }
 
   if (!/^https?:\/\//i.test(fuente)) {
+    if (fs.existsSync(fuente)) {
+      return { ruta: fuente, limpiar: () => {} };
+    }
+
+    // Si es una ruta web pública o relativa (ej. /audio/samples/..., /clips/..., /uploads/...)
+    const cleanRelative = fuente.replace(/^\/+/, "");
+    const candidatos = [
+      path.join(process.cwd(), "public", cleanRelative),
+      path.join(process.cwd(), cleanRelative),
+      path.join(process.cwd(), "dist", cleanRelative),
+      path.resolve(process.cwd(), "public", cleanRelative),
+      path.resolve(process.cwd(), "dist", cleanRelative)
+    ];
+    for (const candidato of candidatos) {
+      if (fs.existsSync(candidato)) {
+        return { ruta: candidato, limpiar: () => {} };
+      }
+    }
+
     return { ruta: fuente, limpiar: () => {} };
   }
 

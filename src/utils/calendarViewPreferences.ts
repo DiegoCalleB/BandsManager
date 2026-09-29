@@ -16,7 +16,7 @@ export function detectDeviceType(): DeviceType {
   try {
     const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
     const isNarrowScreen = window.innerWidth < 768;
-    return (isMobileUA || isNarrowScreen) ? 'mobile' : 'desktop';
+    return isMobileUA || isNarrowScreen ? 'mobile' : 'desktop';
   } catch {
     return 'desktop';
   }
@@ -24,7 +24,7 @@ export function detectDeviceType(): DeviceType {
 
 /**
  * Obtiene la configuración de vista de meses por defecto para el calendario según el tipo de dispositivo.
- * Por defecto devuelve '1' (vista limpia de 1 mes).
+ * Por defecto devuelve'1' (vista limpia de 1 mes).
  */
 export function getCalendarDefaultMonths(deviceType?: DeviceType): CalendarMonthsView {
   try {
@@ -59,7 +59,7 @@ export function getCalendarDefaultMonths(deviceType?: DeviceType): CalendarMonth
       return legacySaved;
     }
 
-    // 4. Por defecto inicial sin configurar: '1' mes en móvil y '2' meses en ordenador
+    // 4. Por defecto inicial sin configurar: '1' mes en móvil y'2' meses en ordenador
     return targetDevice === 'desktop' ? '2' : '1';
   } catch {
     return '1';
@@ -98,8 +98,8 @@ export async function setCalendarDefaultMonths(
             ...currentUiPrefs,
             calendar_default_months: {
               ...currentMonthsPrefs,
-              [targetDevice]: mode
-            }
+              [targetDevice]: mode,
+            },
           };
           localStorage.setItem('bakandeya_user', JSON.stringify(user));
         } catch {
@@ -114,15 +114,13 @@ export async function setCalendarDefaultMonths(
   // Sincronizar en Supabase si hay sesión y está habilitado
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined'
-        ? (localStorage.getItem('bakandeya_token') || localStorage.getItem('token'))
-        : null;
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
 
       if (token) {
         const response = await api.saveUiPreferences({
           calendar_default_months: {
-            [targetDevice]: mode
-          }
+            [targetDevice]: mode,
+          },
         });
         if (response?.user && typeof localStorage !== 'undefined') {
           localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
@@ -164,7 +162,7 @@ export function syncCalendarPreferencesFromUser(user?: User | null): void {
 export function getAllDevicePreferences(): { mobile: CalendarMonthsView; desktop: CalendarMonthsView } {
   return {
     mobile: getCalendarDefaultMonths('mobile'),
-    desktop: getCalendarDefaultMonths('desktop')
+    desktop: getCalendarDefaultMonths('desktop'),
   };
 }
 

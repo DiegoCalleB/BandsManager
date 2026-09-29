@@ -1,0 +1,296 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ESPECTRO — sistema de tokens de BandManager.io
+   Autoridad: skills/visual-identity/SKILL.md
+
+   Dos leyes:
+     1 · Ningún borde. La separación es luz y espacio.
+     2 · Cada módulo tiene su color. El resto es gris.
+
+   Los músicos pasan de 4 a 6 horas seguidas aquí dentro: la fatiga visual
+   manda sobre cualquier consideración estética. Por eso el contraste de
+   texto se queda en 12,4:1 (ni menos, que es ilegible, ni 21:1, que quema),
+   no hay blanco ni negro puros, y no hay una sola mayúscula decorativa.
+
+   NADA se sustituye: el diseño anterior vive en [data-theme="classic"] y no
+   se elimina nunca. Cambiar de tema es un interruptor, no una migración.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────── CLARO (por defecto) ───────────────────────── */
+:root {
+  /* Superficies — la tarjeta es MÁS clara que el fondo. Ese escalón es lo
+     que separa: no hay bordes. */
+  --bg:       #F6F7F9;
+  --surface:  #FFFFFF;
+  --sunken:   #E8EBEF;
+
+  /* Tinta — #2A2E35 sobre #F6F7F9 da 12,4:1. Cómodo, no agresivo. */
+  --ink:      #2A2E35;
+  --ink-2:    #646C78;
+  --ink-3:    #5D6A7A;
+  --ink-rgb:  42, 46, 53;
+  --hair:     rgba(42, 46, 53, 0.065);
+
+  /* Estado — sin semántica verde-sube/rojo-baja: eso es lenguaje de bolsa */
+  --ok:       #17998C;
+  --ok-soft:  #DDF1EE;
+  --ok-rgb:   23, 153, 140;
+  --on-ok:    #FFFFFF;
+  --alert:    #B3453C;
+  --alert-soft: #FAE7E5;
+  --alert-rgb: 179, 69, 60;
+  --on-alert: #FFFFFF;
+
+  /* Acento por defecto (módulo Panel/Booking). Lo tiñe [data-modulo].
+     Azul eléctrico vivo — pedido explícito de Diego el 2026-09-20 tras
+     rechazar marrón, cobre Y verde esmeralda. Deliberadamente más
+     saturado y azul puro (hue~225°) que el azul apagado de Finanzas
+     (--acc #3C7EA8, hue~200°, mucho menos saturado) para que no se
+     confundan al cambiar de módulo. */
+  --acc:      #2563EB;
+  --acc-soft: #DBEAFE;
+  --acc-ink:  #1D4ED8;
+  --on-acc:   #FFFFFF;
+
+  /* Efectos — glows y sombras semi-transparentes para visualizaciones */
+  --ok-glow:    rgba(23, 153, 140, 0.1);   /* --ok con 10% opacidad */
+  --acc-glow:   rgba(37, 99, 235, 0.1);    /* --acc con 10% opacidad */
+  --shadow-dark: rgba(0, 0, 0, 0.5);       /* Sombra / divisor en patrones */
+  --shadow-soft: rgba(0, 0, 0, 0.15);      /* Sombra muy suave (playhead, etc.) */
+  --scrim:      #000000;                   /* Velo tras un modal — siempre oscuro, no cambia con el tema */
+
+  /* Categoría "posible" (bolo tentativo, no confirmado) — no es ok/alert/acc,
+     es su propio estado. NUNCA gatear en isStitchLight (roto: compara contra
+     hex de un tema legacy pre-Espectro que ya no existe, ver AGENTS.md). */
+  --tentative:      #7E22CE;
+  --tentative-soft: #F3E8FF;
+
+  /* Paleta de colores para bandas (8 colores distintos). Se aplica en Calendar
+     y cualquier vista que muestre múltiples bandas/equipos con identidad visual. */
+  --band-0:       #2563EB; --band-0-soft: #DBEAFE; --band-0-ink: #1D4ED8;
+  --band-1:       #0284C7; --band-1-soft: #CFF0FF; --band-1-ink: #0369A1;
+  --band-2:       #7C3AED; --band-2-soft: #EDE9FE; --band-2-ink: #6D28D9;
+  --band-3:       #17998C; --band-3-soft: #DDF1EE; --band-3-ink: #0E6B62;
+  --band-4:       #E0615C; --band-4-soft: #FDE9E7; --band-4-ink: #A83C37;
+  --band-5:       #9B5FB5; --band-5-soft: #F0E7F5; --band-5-ink: #6F3D87;
+  --band-6:       #F97316; --band-6-soft: #FFEDD5; --band-6-ink: #C2410C;
+  --band-7:       #D97706; --band-7-soft: #FEF3C7; --band-7-ink: #92400E;
+
+  /* Elevación — Espectro es plano. Separa el relleno, no la sombra. */
+  --sh-s: none;
+  --sh-m: none;
+
+  /* Radio — crece con el peso del objeto. Un radio único aplana la jerarquía. */
+  --r-pill: 999px;
+  --r-s:    12px;
+  --r-m:    18px;
+  --r-l:    24px;
+  --r-xl:   32px;
+
+  --font-ui: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  color-scheme: light;
+}
+
+/* ───────────────────────── OSCURO ─────────────────────────
+   Diseñado de primera, no invertido. Fondo #101216 en vez de negro puro y
+   tinta #E3E7EC en vez de blanco: el blanco puro sobre casi-negro produce
+   halación (las letras vibran y sangran), y con astigmatismo pasa factura
+   en veinte minutos. */
+[data-theme="dark"] {
+  --bg:       #101216;
+  --surface:  #191C21;
+  --sunken:   #0B0D10;
+
+  --ink:      #E3E7EC;
+  --ink-2:    #99A1AC;
+  --ink-3:    #6B7380;
+  --ink-rgb:  227, 231, 236;
+  --hair:     rgba(227, 231, 236, 0.08);
+
+  --ok:       #4FC7B8;
+  --ok-soft:  #122D29;
+  --ok-rgb:   79, 199, 184;
+  --on-ok:    #072220;
+  --alert:    #E27A70;
+  --alert-soft: #2E1815;
+  --alert-rgb: 226, 122, 112;
+  --on-alert: #2E100C;
+
+  --acc:      #60A5FA;
+  --acc-soft: #1E3A5F;
+  --acc-ink:  #60A5FA;
+  --on-acc:   #0A1F3D;
+
+  /* Efectos — glows con colores de dark theme */
+  --ok-glow:    rgba(79, 199, 184, 0.1);   /* --ok (dark) con 10% */
+  --acc-glow:   rgba(96, 165, 250, 0.1);   /* --acc (dark) con 10% */
+  --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
+  --scrim:      #000000;
+
+  --tentative:      #C084FC;
+  --tentative-soft: rgba(192, 132, 252, 0.2);
+
+  --band-0:       #60A5FA; --band-0-soft: #1E3A5F; --band-0-ink: #60A5FA;
+  --band-1:       #38BDF8; --band-1-soft: #164E63; --band-1-ink: #38BDF8;
+  --band-2:       #A78BFA; --band-2-soft: #3F2F56; --band-2-ink: #A78BFA;
+  --band-3:       #4FC7B8; --band-3-soft: #122D29; --band-3-ink: #4FC7B8;
+  --band-4:       #F08B84; --band-4-soft: #2D1A17; --band-4-ink: #F08B84;
+  --band-5:       #C08FD6; --band-5-soft: #241A2B; --band-5-ink: #C08FD6;
+  --band-6:       #FB923C; --band-6-soft: #3B2415; --band-6-ink: #FB923C;
+  --band-7:       #FBBF24; --band-7-soft: #402D13; --band-7-ink: #FBBF24;
+
+  color-scheme: dark;
+}
+
+/* ───────────────────────── CLÁSICO ─────────────────────────
+   El diseño anterior, conservado como un juego de tokens más. Es lo que
+   hace reversible todo el rediseño: quien no quiera Espectro elige esto y
+   sigue con lo de siempre. NO SE ELIMINA NUNCA. */
+[data-theme="classic"] {
+  --bg:       #121110;
+  --surface:  #18181B;
+  --sunken:   #0D0C0C;
+
+  --ink:      #F4F4F5;
+  --ink-2:    #A1A1AA;
+  --ink-3:    #71717A;
+  --ink-rgb:  244, 244, 245;
+  --hair:     rgba(244, 244, 245, 0.09);
+
+  --ok:       #10B981;
+  --ok-soft:  #062C22;
+  --ok-rgb:   16, 185, 129;
+  --on-ok:    #052016;
+  --alert:    #F43F5E;
+  --alert-soft: #2C0C14;
+  --alert-rgb: 244, 63, 94;
+  --on-alert: #2C0510;
+
+  --acc:      #F2CA50;
+  --acc-soft: #2C2310;
+  --acc-ink:  #F2CA50;
+  --on-acc:   #2C2200;
+
+  /* Efectos — glows clásicos */
+  --ok-glow:    rgba(16, 185, 129, 0.1);   /* --ok (classic) con 10% */
+  --acc-glow:   rgba(242, 202, 80, 0.1);   /* --acc (classic) con 10% */
+  --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
+  --scrim:      #000000;
+
+  --tentative:      #C084FC;
+  --tentative-soft: rgba(192, 132, 252, 0.2);
+
+  --band-0:       #3B82F6; --band-0-soft: #1F2937; --band-0-ink: #3B82F6;
+  --band-1:       #0EA5E9; --band-1-soft: #1F2937; --band-1-ink: #0EA5E9;
+  --band-2:       #A855F7; --band-2-soft: #2D1B4E; --band-2-ink: #A855F7;
+  --band-3:       #14B8A6; --band-3-soft: #1F3A35; --band-3-ink: #14B8A6;
+  --band-4:       #F43F5E; --band-4-soft: #3D1520; --band-4-ink: #F43F5E;
+  --band-5:       #D946EF; --band-5-soft: #3B1B47; --band-5-ink: #D946EF;
+  --band-6:       #F97316; --band-6-soft: #3E2415; --band-6-ink: #F97316;
+  --band-7:       #EAB308; --band-7-soft: #3D3415; --band-7-ink: #EAB308;
+
+  --r-pill: 999px;
+  --r-s:    8px;
+  --r-m:    12px;
+  --r-l:    14px;
+  --r-xl:   16px;
+
+  color-scheme: dark;
+}
+
+/* ═══════════ COLOR POR MÓDULO ═══════════
+   La segunda ley. Se sabe dónde se está sin leer el título.
+   Se aplica con data-modulo en el contenedor raíz de cada vista.
+
+   --acc  → rellenos y elementos gráficos
+   --acc-ink → texto (versión oscurecida que pasa AA sobre claro)
+   No son intercambiables: #D9A62B sobre blanco no llega a 4,5:1.       */
+
+[data-modulo="booking"],
+[data-modulo="panel"]      { --acc:#D86E31; --acc-soft:#F9EAE1; --acc-ink:#813F18; --on-acc:#FFFFFF; }
+[data-modulo="repertorio"] { --acc:#E0615C; --acc-soft:#FDE9E7; --acc-ink:#A83C37; --on-acc:#FFFFFF; }
+[data-modulo="gira"],
+[data-modulo="sala"]       { --acc:#17998C; --acc-soft:#DDF1EE; --acc-ink:#0E6B62; --on-acc:#FFFFFF; }
+[data-modulo="finanzas"]   { --acc:#3C7EA8; --acc-soft:#E2EDF4; --acc-ink:#24587A; --on-acc:#FFFFFF; }
+[data-modulo="fans"],
+[data-modulo="reels"]      { --acc:#9B5FB5; --acc-soft:#F0E7F5; --acc-ink:#6F3D87; --on-acc:#FFFFFF; }
+[data-modulo="epk"],
+[data-modulo="dossier"]    { --acc:#A01E6F; --acc-soft:#F5E7F2; --acc-ink:#7A1554; --on-acc:#FFFFFF; }
+[data-modulo="discografia"] { --acc:#1DB954; --acc-soft:#E8F9F1; --acc-ink:#1B9F41; --on-acc:#FFFFFF; }
+
+[data-theme="dark"] [data-modulo="booking"],
+[data-theme="dark"] [data-modulo="panel"]      { --acc:#E99463; --acc-soft:#3A2415; --acc-ink:#E99463; --on-acc:#2A1608; }
+[data-theme="dark"] [data-modulo="repertorio"] { --acc:#F08B84; --acc-soft:#2D1A17; --acc-ink:#F08B84; --on-acc:#1F1413; }
+[data-theme="dark"] [data-modulo="gira"],
+[data-theme="dark"] [data-modulo="sala"]       { --acc:#4FC7B8; --acc-soft:#122D29; --acc-ink:#4FC7B8; --on-acc:#08201C; }
+[data-theme="dark"] [data-modulo="finanzas"]   { --acc:#6FB0D9; --acc-soft:#14232E; --acc-ink:#6FB0D9; --on-acc:#0B1A24; }
+[data-theme="dark"] [data-modulo="fans"],
+[data-theme="dark"] [data-modulo="reels"]      { --acc:#C08FD6; --acc-soft:#241A2B; --acc-ink:#C08FD6; --on-acc:#1C1023; }
+[data-theme="dark"] [data-modulo="epk"],
+[data-theme="dark"] [data-modulo="dossier"]    { --acc:#E879D9; --acc-soft:#2D1F3A; --acc-ink:#E879D9; --on-acc:#1A0F1F; }
+[data-theme="dark"] [data-modulo="discografia"] { --acc:#31D966; --acc-soft:#0D4620; --acc-ink:#31D966; --on-acc:#051410; }
+
+/* Clásico ignora el color por módulo a propósito: es el diseño de antes,
+   y antes no había color por módulo. Cambiarlo sería no conservarlo. */
+[data-theme="classic"] [data-modulo] {
+  --acc:      #F2CA50;
+  --acc-soft: #2C2310;
+  --acc-ink:  #F2CA50;
+  --on-acc:   #2C2200;
+}
+
+/* ═══════════ PUENTE CON TAILWIND ═══════════
+   Tailwind v4 remaps colors to CSS tokens. Fixes the mess of 683 hardcoded
+   dark backgrounds inside light-themed containers. bg-slate-900 now means
+   "whatever --bg is", so it auto-themes everywhere.
+
+   This is safe: amber-400 and amber-500 both become --acc-ink (intentional —
+   lighter version of accent is used for text/borders). */
+
+@theme inline {
+  /* Remap Tailwind grays to tokens — fixes all hardcoded darks in light mode */
+  --color-slate-950: var(--sunken);
+  --color-slate-900: var(--bg);
+  --color-slate-800: var(--surface);
+  --color-slate-700: var(--ink-3);
+  --color-slate-600: var(--ink-2);
+  --color-slate-500: var(--ink);
+  --color-slate-400: var(--ink-2);
+  --color-slate-300: var(--hair);
+  --color-slate-200: var(--hair);
+  --color-slate-100: var(--sunken);
+
+  /* Remap black for theme-aware backgrounds (501 instances).
+     Light: bg-black → --sunken (#E8EBEF, light gray for dark UI in light mode)
+     Dark: bg-black → --bg (#101216, very dark)
+     text-white stays literal (1321 instances on dark backgrounds). */
+  --color-black: var(--sunken);
+
+  /* Remap zinc (31 files using it) */
+  --color-zinc-950: var(--sunken);
+  --color-zinc-900: var(--bg);
+  --color-zinc-800: var(--surface);
+  --color-zinc-700: var(--ink-3);
+  --color-zinc-600: var(--ink-2);
+  --color-zinc-500: var(--ink);
+  --color-zinc-400: var(--ink-2);
+  --color-zinc-300: var(--hair);
+  --color-zinc-200: var(--hair);
+  --color-zinc-100: var(--hair);
+
+  /* Remap accents */
+  --color-amber-600: var(--acc-ink);
+  --color-amber-500: var(--acc);
+  --color-amber-400: var(--acc-soft);
+
+  /* State colors */
+  --color-emerald-500: var(--ok);
+  --color-emerald-400: var(--ok-soft);
+  --color-rose-500: var(--alert);
+  --color-red-500: var(--alert);
+  --color-red-950: var(--alert);
+
+  /* Typography */
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-ui);
+}

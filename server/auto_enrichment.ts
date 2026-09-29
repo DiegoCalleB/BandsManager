@@ -6,6 +6,7 @@ import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
+import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
 
 function toIsoDateString(val?: string | null): string {
   if (!val || typeof val !== 'string') return '';
@@ -150,7 +151,10 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
     const origin = urlObj.origin;
     if (!websiteUrl.includes("/contacto") && !websiteUrl.includes("/contact")) {
       urlsToTry.push(`${origin}/contacto`);
+      urlsToTry.push(`${origin}/contactos`);
       urlsToTry.push(`${origin}/contact`);
+      urlsToTry.push(`${origin}/geral`);
+      urlsToTry.push(`${origin}/contact-us`);
     }
   } catch (e) {
     // Ignore URL parse error
@@ -200,9 +204,13 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
 
       // 2. Extract Instagram
       if (!results.instagram) {
-        const instaMatch = html.match(/https?:\/\/(www\.)?instagram\.com\/([a-zA-Z0-9_.-]+)\/?/i);
-        if (instaMatch && !instaMatch[2].includes("p/") && !instaMatch[2].includes("reel/") && !instaMatch[2].includes("stories/")) {
-          results.instagram = `https://www.instagram.com/${instaMatch[2]}/`;
+        const instaMatch = html.match(/https?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_.-]+)\/?/i);
+        if (instaMatch) {
+          const handle = instaMatch[1].toLowerCase();
+          const reserved = ['p', 'reel', 'reels', 'stories', 'explore', 'accounts', 'privacy', 'legal', 'about', 'help', 'terms', 'direct', 'login', 'signup', 'developer', 'static'];
+          if (!reserved.includes(handle)) {
+            results.instagram = `@${instaMatch[1].replace(/^@/, '')}`;
+          }
         }
       }
 
@@ -227,6 +235,38 @@ export async function autoEnrichLead(lead: any, userBandId: string): Promise<any
   if (!lead || !lead.nombre_sala) return lead;
 
   let modified = false;
+
+  // STAGE 0: Fast Local DB Match (Festivals & Known Venues Heuristics for Instagram/Metadata)
+  if (!lead.instagram || lead.instagram.trim() === "") {
+    try {
+      const { SPANISH_FESTIVALS } = await import("./utils/spanishFestivalsDB.js");
+      const nameLower = lead.nombre_sala.toLowerCase().trim();
+
+      const matchFest = SPANISH_FESTIVALS.find(
+        (f) => f.nombre.toLowerCase().trim() === nameLower || nameLower.includes(f.nombre.toLowerCase())
+      );
+      if (matchFest && matchFest.instagram) {
+        lead.instagram = matchFest.instagram;
+        modified = true;
+        console.log(`[AutoEnrich Stage 0] ✓ Instagram de festival recuperado de DB local: ${matchFest.instagram}`);
+      }
+
+      if (!lead.instagram) {
+        const webLower = (lead.website || "").toLowerCase();
+        if (nameLower.includes("riviera") || webLower.includes("salariviera")) lead.instagram = "@salariviera";
+        else if (nameLower.includes("panda club") || webLower.includes("pandamadrid")) lead.instagram = "@pandaclubmadrid";
+        else if (nameLower.includes("kasba")) lead.instagram = "@kasbamusic";
+        else if (nameLower.includes("rockville") || webLower.includes("rockville.es")) lead.instagram = "@salarockville";
+        else if (nameLower.includes("ferrara buskers")) lead.instagram = "@ferrarabuskersfestival";
+        else if (nameLower.includes("candlelight") || webLower.includes("feverup")) lead.instagram = "@candlelight.concerts";
+        else if (nameLower.includes("movistar arena") || webLower.includes("movistararena")) lead.instagram = "@movistararena_es";
+        else if (nameLower.includes("cocheras del puerto")) lead.instagram = "@puertohuelva";
+
+        if (lead.instagram) modified = true;
+      }
+    } catch (_) {}
+  }
+
   const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
 
   // STAGE 1: Try Google Places API (New) v1 first (Cheap & structured data: address, phone, website, photos)
@@ -302,9 +342,86 @@ export async function autoEnrichLead(lead: any, userBandId: string): Promise<any
     }
   }
 
-  // STAGE 2: Direct Website Scraping (0 Gemini tokens spent!)
-  if (lead.website && (!lead.email_contacto || !lead.instagram)) {
-    console.log(`[AutoEnrich Scraper] Realizando scraping directo en la web oficial: ${lead.website}...`);
+  // STAGE 1.5: Serper Live Google Search Contact Enrichment (Ultra-fast contact and capacity intelligence)
+  if (process.env.SERPER_API_KEY && (!lead.email_contacto || !lead.aforo || !lead.telefono || !lead.website)) {
+    try {
+      console.log(`[AutoEnrich Serper] Consultando Serper Live Contact para: "${lead.nombre_sala}" (${lead.ciudad || 'España'})...`);
+      const serperContact = await enrichVenueDetailsWithSerper(lead.nombre_sala, lead.ciudad);
+      if (serperContact) {
+        if (serperContact.email && !lead.email_contacto) {
+          lead.email_contacto = serperContact.email;
+          modified = true;
+          console.log(`[AutoEnrich Serper] ✓ Email de booking detectado vía Serper: ${serperContact.email}`);
+        }
+        if (serperContact.aforo && (!lead.aforo || lead.aforo === 0)) {
+          lead.aforo = serperContact.aforo;
+          modified = true;
+          console.log(`[AutoEnrich Serper] ✓ Aforo verificado vía Serper: ${serperContact.aforo} personas`);
+        }
+        if (serperContact.telefono && !lead.telefono) {
+          lead.telefono = serperContact.telefono;
+          modified = true;
+        }
+        if (serperContact.website && !lead.website) {
+          lead.website = serperContact.website;
+          modified = true;
+          try {
+            const domain = new URL(serperContact.website).hostname.replace(/^www\./, '');
+            if (domain && (!lead.imagen_url || lead.imagen_url.includes("places.googleapis.com") || lead.imagen_url.includes("ui-avatars"))) {
+              lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+              modified = true;
+            }
+          } catch (_) {}
+        }
+        if (serperContact.instagram && !lead.instagram) {
+          lead.instagram = serperContact.instagram;
+          modified = true;
+        }
+      }
+    } catch (serperErr: any) {
+      console.warn(`[AutoEnrich Serper] Aviso en consulta Serper:`, serperErr?.message || serperErr);
+    }
+  }
+
+  // STAGE 2: Direct Website Scraping & Jina Reader (0 Gemini tokens spent!)
+  if (lead.website && (!lead.email_contacto || !lead.instagram || !lead.telefono || !lead.aforo)) {
+    console.log(`[AutoEnrich Jina/Scraper] Consultando web oficial mediante Jina Reader y scraping directo: ${lead.website}...`);
+    try {
+      const { scrapeVenueWithJina } = await import("./services/jinaReaderService.js");
+      const jinaData = await scrapeVenueWithJina(lead.website);
+      if (jinaData && jinaData.success) {
+        if (jinaData.email_contacto && !lead.email_contacto) {
+          lead.email_contacto = jinaData.email_contacto;
+          modified = true;
+          console.log(`[AutoEnrich Jina] ✓ Email extraído con Jina Reader: ${jinaData.email_contacto}`);
+        }
+        if (jinaData.email_secundario && !lead.email_secundario) {
+          lead.email_secundario = jinaData.email_secundario;
+          modified = true;
+        }
+        if (jinaData.telefono_movil && !lead.telefono_movil) {
+          lead.telefono_movil = jinaData.telefono_movil;
+          if (!lead.telefono) lead.telefono = jinaData.telefono_movil;
+          modified = true;
+        }
+        if (jinaData.telefono_fijo && !lead.telefono_fijo) {
+          lead.telefono_fijo = jinaData.telefono_fijo;
+          if (!lead.telefono) lead.telefono = jinaData.telefono_fijo;
+          modified = true;
+        }
+        if (jinaData.aforo && (!lead.aforo || lead.aforo === 0)) {
+          lead.aforo = jinaData.aforo;
+          modified = true;
+        }
+        if (jinaData.contacto_nombre && !lead.contacto_nombre) {
+          lead.contacto_nombre = jinaData.contacto_nombre;
+          modified = true;
+        }
+      }
+    } catch (jinaErr: any) {
+      console.warn(`[AutoEnrich Jina] Aviso en consulta Jina Reader:`, jinaErr?.message || jinaErr);
+    }
+
     const scrapedInfo = await scrapeWebsiteForContact(lead.website);
     if (scrapedInfo.email && !lead.email_contacto) {
       lead.email_contacto = scrapedInfo.email;
@@ -327,7 +444,7 @@ export async function autoEnrichLead(lead: any, userBandId: string): Promise<any
   if (needsGemini) {
     const client = getAiClient();
     if (client) {
-      const prompt = `Busca en internet información pública precisa para la sala de conciertos, festival, medio de comunicación, radio o prensa: "${lead.nombre_sala}" ${lead.ciudad ? `en ${lead.ciudad}` : ''} ${lead.region ? `(${lead.region})` : ''} en España.
+      const prompt = `Busca en internet información pública precisa para la sala de conciertos, festival, medio de comunicación, radio o prensa: "${lead.nombre_sala}" ${lead.ciudad ? `en ${lead.ciudad}` : ''} ${lead.region ? `(${lead.region})` : ''}.
 Buscamos obtener todos los datos de contacto y detalles posibles.
 Devuelve EXCLUSIVAMENTE un JSON válido con la siguiente estructura exacta:
 {

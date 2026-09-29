@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { calcularCosteTransicion, costeTotalTransiciones, optimizarOrdenPorTransiciones, sugerirMejorPuntoParaChapa, HuecoCancion } from '../setlistCompatibility';
+import {
+  calcularCosteTransicion,
+  costeTotalTransiciones,
+  optimizarOrdenPorTransiciones,
+  sugerirMejorPuntoParaChapa,
+  HuecoCancion,
+} from '../setlistCompatibility';
 import { Song, SetlistItem } from '../../types';
 
 function song(id: string, overrides: Partial<Song> = {}): Song {
@@ -52,7 +58,7 @@ describe('optimizarOrdenPorTransiciones', () => {
       song('apertura', { tonalidad: 'C', bpm: 120, energia: 15 }),
       song('lejos1', { tonalidad: 'F#', bpm: 70, energia: 3 }),
       song('cerca', { tonalidad: 'C', bpm: 122, energia: 14 }),
-      song('lejos2', { tonalidad: 'B', bpm: 200, energia: 20 })
+      song('lejos2', { tonalidad: 'B', bpm: 200, energia: 20 }),
     ];
     const orden = optimizarOrdenPorTransiciones(songs.map(slot));
     expect(orden[0].song.id).toBe('apertura');
@@ -65,7 +71,7 @@ describe('optimizarOrdenPorTransiciones', () => {
       song('s3', { tonalidad: 'Am', bpm: 95, energia: 7 }),
       song('s4', { tonalidad: 'G', bpm: 130, energia: 14 }),
       song('s5', { tonalidad: 'B', bpm: 175, energia: 19 }),
-      song('s6', { tonalidad: 'Em', bpm: 100, energia: 8 })
+      song('s6', { tonalidad: 'Em', bpm: 100, energia: 8 }),
     ];
     const original = songs.map(slot);
     const optimizado = optimizarOrdenPorTransiciones(original);
@@ -101,7 +107,7 @@ describe('sugerirMejorPuntoParaChapa', () => {
     const items: SetlistItem[] = [
       { id: 'i1', tipoItem: 'cancion', songId: 's1' },
       { id: 'i2', tipoItem: 'cancion', songId: 's2' },
-      { id: 'i3', tipoItem: 'cancion', songId: 's3' }
+      { id: 'i3', tipoItem: 'cancion', songId: 's3' },
     ];
     const sugerencia = sugerirMejorPuntoParaChapa(items, [s1, s2, s3]);
     expect(sugerencia).not.toBeNull();
@@ -117,7 +123,7 @@ describe('sugerirMejorPuntoParaChapa', () => {
     const items: SetlistItem[] = [
       { id: 'i1', tipoItem: 'cancion', songId: 's1' },
       { id: 'i2', tipoItem: 'cancion', songId: 's2' },
-      { id: 'i3', tipoItem: 'cancion', songId: 's3' }
+      { id: 'i3', tipoItem: 'cancion', songId: 's3' },
     ];
     expect(sugerirMejorPuntoParaChapa(items, [s1, s2, s3])).toBeNull();
   });
@@ -128,7 +134,7 @@ describe('sugerirMejorPuntoParaChapa', () => {
     const items: SetlistItem[] = [
       { id: 'i1', tipoItem: 'cancion', songId: 's1' },
       { id: 'i-chapa', tipoItem: 'bloque', bloqueSubtipo: 'chapa' },
-      { id: 'i2', tipoItem: 'cancion', songId: 's2' }
+      { id: 'i2', tipoItem: 'cancion', songId: 's2' },
     ];
     expect(sugerirMejorPuntoParaChapa(items, [s1, s2])).toBeNull();
   });

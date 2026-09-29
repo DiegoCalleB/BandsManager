@@ -7,7 +7,7 @@ import {
   stringSimilarity,
   findDuplicateLeads,
   mergeTwoLeads,
-  checkSingleLeadDuplicate
+  checkSingleLeadDuplicate,
 } from '../duplicateLeads';
 import { Lead } from '../../types';
 
@@ -33,15 +33,15 @@ describe('duplicateLeads utility', () => {
         nombre_sala: 'Siroco',
         ciudad: 'Madrid',
         email_contacto: 'booking@siroco.es',
-        estado: 'nuevo'
+        estado: 'nuevo',
       },
       {
         id: '2',
         nombre_sala: 'Sala Siroco Club',
         ciudad: 'Madrid',
         email_contacto: 'booking@siroco.es',
-        estado: 'contactado'
-      }
+        estado: 'contactado',
+      },
     ];
 
     const groups = findDuplicateLeads(leads);
@@ -58,14 +58,14 @@ describe('duplicateLeads utility', () => {
         id: '1',
         nombre_sala: 'Sala Caracol',
         ciudad: 'Madrid',
-        estado: 'nuevo'
+        estado: 'nuevo',
       },
       {
         id: '2',
         nombre_sala: 'Caracol',
         ciudad: 'Madrid',
-        estado: 'nuevo'
-      }
+        estado: 'nuevo',
+      },
     ];
 
     const groups = findDuplicateLeads(leads);
@@ -81,7 +81,7 @@ describe('duplicateLeads utility', () => {
       email_contacto: 'contacto@siroco.es',
       telefono: '',
       estado: 'nuevo',
-      notas: 'Notas primarias'
+      notas: 'Notas primarias',
     };
 
     const secondary: Lead = {
@@ -92,7 +92,7 @@ describe('duplicateLeads utility', () => {
       telefono: '600112233',
       aforo: 300,
       estado: 'respondido',
-      notas: 'Notas secundarias'
+      notas: 'Notas secundarias',
     };
 
     const merged = mergeTwoLeads(primary, secondary);
@@ -111,14 +111,11 @@ describe('duplicateLeads utility', () => {
         nombre_sala: 'Sala Apolo',
         ciudad: 'Barcelona',
         email_contacto: 'info@sala-apolo.com',
-        estado: 'nuevo'
-      }
+        estado: 'nuevo',
+      },
     ];
 
-    const check1 = checkSingleLeadDuplicate(
-      { nombre_sala: 'Apolo', ciudad: 'Barcelona' },
-      existing
-    );
+    const check1 = checkSingleLeadDuplicate({ nombre_sala: 'Apolo', ciudad: 'Barcelona' }, existing);
     expect(check1.isDuplicate).toBe(true);
 
     const check2 = checkSingleLeadDuplicate(

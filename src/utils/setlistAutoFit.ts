@@ -3,38 +3,38 @@
 // "compacto"): el sistema ahora mide la altura real del contenido (inyectada como `measureFn`,
 // igual patrón que textFit.ts, para poder testear sin depender de un DOM real) y decide, en este
 // orden:
-//   1. El tamaño de título más grande de `candidateTitleFontPt` (probados de mayor a menor) tal
-//      que el repertorio COMPLETO quepa en una sola página.
-//   2. Si ni el tamaño más pequeño de la lista cabe en una página, se calcula el nº mínimo de
-//      páginas necesario AL TAMAÑO MÍNIMO — pero el tamaño final no se queda ahí sin más: se
-//      busca el candidato más grande que TODAVÍA quepa en ese mismo nº de páginas, para
-//      aprovechar el espacio de esas páginas con letra más grande en vez de dejarlas a medias.
-//      Sin este segundo paso, un repertorio que a 17pt ocupa, digamos, 1.2 páginas (se redondea a
-//      2) se quedaría en letra mínima con cada página medio vacía, cuando un tamaño mayor (que
-//      siga necesitando solo 2 páginas) aprovecharía mucho mejor el papel.
-//   3. Con el tamaño y el nº de páginas ya fijados, el reparto de canciones entre páginas es
-//      EQUILIBRADO por altura (no "llenar la primera al máximo y dejar el resto en la última") —
-//      cada corte busca, por bisección, el máximo de items que no exceda ni el objetivo de
-//      reparto (altura total / nº de páginas) ni el alto real disponible de una página.
+// 1. El tamaño de título más grande de `candidateTitleFontPt` (probados de mayor a menor) tal
+// que el repertorio COMPLETO quepa en una sola página.
+// 2. Si ni el tamaño más pequeño de la lista cabe en una página, se calcula el nº mínimo de
+// páginas necesario AL TAMAÑO MÍNIMO — pero el tamaño final no se queda ahí sin más: se
+// busca el candidato más grande que TODAVÍA quepa en ese mismo nº de páginas, para
+// aprovechar el espacio de esas páginas con letra más grande en vez de dejarlas a medias.
+// Sin este segundo paso, un repertorio que a 17pt ocupa, digamos, 1.2 páginas (se redondea a
+// 2) se quedaría en letra mínima con cada página medio vacía, cuando un tamaño mayor (que
+// siga necesitando solo 2 páginas) aprovecharía mucho mejor el papel.
+// 3. Con el tamaño y el nº de páginas ya fijados, el reparto de canciones entre páginas es
+// EQUILIBRADO por altura (no "llenar la primera al máximo y dejar el resto en la última") —
+// cada corte busca, por bisección, el máximo de items que no exceda ni el objetivo de
+// reparto (altura total / nº de páginas) ni el alto real disponible de una página.
 // Los sets suelen verse desde ~2 metros en un escenario: nunca se baja del tamaño mínimo de la
 // lista de candidatos solo para caber en menos páginas — se prefiere partir en más páginas.
 
 export interface AutoFitOptions {
   /** Tamaños de título candidatos en pt, de mayor a menor. El último es el mínimo "ideal",
-   *  pensado para leerse cómodamente a distancia de escenario (~2m). El reparto en VARIAS
-   *  páginas (paso 2 y siguientes) nunca baja de aquí. */
+   * pensado para leerse cómodamente a distancia de escenario (~2m). El reparto en VARIAS
+   * páginas (paso 2 y siguientes) nunca baja de aquí. */
   candidateTitleFontPt: number[];
   /** Alto disponible en px para el CUERPO de canciones de una página (ya descontados header,
-   *  footer, padding y márgenes). */
+   * footer, padding y márgenes). */
   pageAvailableHeightPx: number;
   /** Tamaño de ÚLTIMO RECURSO, más pequeño que el mínimo "ideal" de `candidateTitleFontPt` —
-   *  aceptado explícitamente por el usuario como trade-off (letra algo más pequeña a cambio de
-   *  ver el repertorio entero de un vistazo). Se prueba SOLO después de que ningún candidato
-   *  normal quepa en una sola página: si con este tamaño de emergencia SÍ cabe, se prefiere
-   *  sobre repartir en 2+ páginas al tamaño mínimo ideal. Si tampoco cabe con él, el algoritmo
-   *  sigue su curso normal (reparto en varias páginas, siempre al tamaño ideal — nunca usa este
-   *  tamaño para repartir en más de 1 página, solo como último intento de caber en 1 sola).
-   *  Opcional: si se omite, el comportamiento es idéntico al anterior. */
+   * aceptado explícitamente por el usuario como trade-off (letra algo más pequeña a cambio de
+   * ver el repertorio entero de un vistazo). Se prueba SOLO después de que ningún candidato
+   * normal quepa en una sola página: si con este tamaño de emergencia SÍ cabe, se prefiere
+   * sobre repartir en 2+ páginas al tamaño mínimo ideal. Si tampoco cabe con él, el algoritmo
+   * sigue su curso normal (reparto en varias páginas, siempre al tamaño ideal — nunca usa este
+   * tamaño para repartir en más de 1 página, solo como último intento de caber en 1 sola).
+   * Opcional: si se omite, el comportamiento es idéntico al anterior. */
   emergencyFontPt?: number;
 }
 
@@ -73,9 +73,9 @@ export type MeasureRangeFn = (titleFontPt: number, fromIndex: number, toIndexExc
 // Reparto equilibrado por altura + red de seguridad, a un tamaño de título FIJO ya decidido por
 // el llamador (nunca lo cambia). Es el núcleo común a los dos modos de "varias páginas":
 // - "sentado"/comprimido (computeMultiPagePlan): fija el tamaño en el MÍNIMO ideal antes de
-//   llamar aquí, para que el reparto por cantidad sea lo más parejo posible.
+// llamar aquí, para que el reparto por cantidad sea lo más parejo posible.
 // - "de pie"/expandido (computeExpandedPlan): fija el tamaño en el MÁS GRANDE que el usuario
-//   pida, para maximizar cuánto se lee desde lejos, aceptando más páginas si hace falta.
+// pida, para maximizar cuánto se lee desde lejos, aceptando más páginas si hace falta.
 // Extraído para no duplicar la bisección + rebalanceo entre ambos modos.
 function computeBalancedPagesAtFixedFont(
   totalItems: number,
@@ -164,7 +164,7 @@ function computeBalancedPagesAtFixedFont(
       const h1 = measureFn(titleFontPt, mergedStart, mergedStart + firstPageCount);
       if (h1 > mergeLimitPx) break; // la primera ya desborda; con más items ahí, peor todavía
       bestSplit = firstPageCount; // primer split (de menor a mayor) que cabe en ambas: el que
-      break;                      // deja más canciones posible en la última página
+      break; // deja más canciones posible en la última página
     }
 
     if (bestSplit === secondLastCount) break; // no se encontró un reparto mejor: parar
@@ -211,7 +211,7 @@ function computeMultiPagePlan(
   // el papel a lo alto" sin sacrificar el equilibrio del reparto por cantidad.
   const PAGE_FONT_TOLERANCE_PX = 3; // mismo espíritu que MIN_SIZE_OVERFLOW_TOLERANCE_PX del paso 1
   let pageStart = 0;
-  const pageFontSizes = pageItemCounts.map(count => {
+  const pageFontSizes = pageItemCounts.map((count) => {
     const start = pageStart;
     pageStart += count;
     for (const pt of candidateTitleFontPt) {
@@ -259,7 +259,7 @@ export function computeExpandedPlan(
   const pageItemCounts = computeBalancedPagesAtFixedFont(totalItems, measureFn, titleFontPt, pageAvailableHeightPx, 1);
 
   let pageStart = 0;
-  const pageFontSizes = pageItemCounts.map(count => {
+  const pageFontSizes = pageItemCounts.map((count) => {
     const start = pageStart;
     pageStart += count;
     // Búsqueda lineal descendente desde el techo: nº de páginas y de canciones por página son
@@ -274,11 +274,7 @@ export function computeExpandedPlan(
   return { titleFontPt, pageItemCounts, pageFontSizes };
 }
 
-export function computeAutoFitPlan(
-  totalItems: number,
-  measureFn: MeasureRangeFn,
-  opts: AutoFitOptions
-): AutoFitResult {
+export function computeAutoFitPlan(totalItems: number, measureFn: MeasureRangeFn, opts: AutoFitOptions): AutoFitResult {
   const { candidateTitleFontPt, pageAvailableHeightPx, emergencyFontPt } = opts;
   const minFontPt = candidateTitleFontPt[candidateTitleFontPt.length - 1];
 

@@ -20,7 +20,7 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
   es: {
     // Navigation
-    'nav.resumen': 'Resumen',
+    'nav.resumen': 'Dashboard',
     'nav.booking': 'Escenarios',
     'nav.medios': 'Medios',
     'nav.management': 'Management',
@@ -169,7 +169,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     'app.tuner': 'Afinador',
     'app.upgrade_plan': 'Millorar Pla',
     'app.settings': 'Configuració',
-    'app.profile': 'Perfil d\'Usuari',
+    'app.profile': "Perfil d'Usuari",
     'app.logout': 'Tancar Sessió',
     'app.language': 'Idioma',
     'app.theme': 'Tema Visual',
@@ -192,7 +192,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
 
     // Statuses
     'status.nuevo': 'Nou',
-    'status.pendiente_aprobacion': 'Pendent d\'Aprovació',
+    'status.pendiente_aprobacion': "Pendent d'Aprovació",
     'status.aprobado': 'Aprovat',
     'status.esperando_respuesta': 'Esperant Resposta',
     'status.interesado': 'Interessat',
@@ -439,7 +439,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['class']
+        attributeFilter: ['class'],
       });
     }
 
@@ -539,9 +539,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, isTranslating, refreshTranslation }}>
-      {children}
-    </LanguageContext.Provider>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isTranslating, refreshTranslation }}>{children}</LanguageContext.Provider>
   );
 }
 

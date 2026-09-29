@@ -1,4 +1,14 @@
-export type SubscriptionPlanId = 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | 'emergente' | 'profesional' | 'elite' | 'manager360';
+export type SubscriptionPlanId =
+  | 'promo'
+  | 'promo_plus'
+  | 'ensayo'
+  | 'local'
+  | 'de_gira'
+  | 'cabeza_de_cartel'
+  | 'emergente'
+  | 'profesional'
+  | 'elite'
+  | 'manager360';
 
 export interface PlanFeature {
   id: string;
@@ -70,7 +80,20 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     credits: '100 créditos / mes',
     creditsSub: 'Pitches básicos y consultas IA',
     description: 'Para proyectos noveles que están empezando a organizarse.',
-    allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'planes'],
+    allowedModules: [
+      'resumen',
+      'booking',
+      'medios',
+      'management',
+      'bandas',
+      'calendario',
+      'epk',
+      'repertorio',
+      'ensayos',
+      'catalogo',
+      'discografia',
+      'planes',
+    ],
     features: [
       '1 banda o proyecto activo',
       '10 salas en base de datos',
@@ -88,7 +111,22 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     credits: '300 créditos / mes',
     creditsSub: 'Booking guiado y generación de ideas',
     description: 'Bandas en activo que buscan arrancar su booking y difusión.',
-    allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'planes'],
+    allowedModules: [
+      'resumen',
+      'booking',
+      'medios',
+      'management',
+      'bandas',
+      'calendario',
+      'epk',
+      'fans',
+      'reels',
+      'repertorio',
+      'ensayos',
+      'catalogo',
+      'discografia',
+      'planes',
+    ],
     stickerGift: {
       qty: '250 pegatinas gratis',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
@@ -107,12 +145,29 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     id: 'de_gira',
     name: 'De Gira',
     badge: 'Más Popular',
-    color: '#f59e0b', // Amber / Gold
+    color: 'var(--acc)', // Amber / Gold
     price: '29€ / mes',
     credits: '800 créditos / mes',
     creditsSub: 'Flujos agénticos completos y auto-booking',
     description: 'Para bandas que tocan con frecuencia y automatizan su gestión.',
-    allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'chat', 'planes'],
+    allowedModules: [
+      'resumen',
+      'booking',
+      'medios',
+      'management',
+      'bandas',
+      'calendario',
+      'epk',
+      'giras',
+      'fans',
+      'reels',
+      'repertorio',
+      'ensayos',
+      'catalogo',
+      'discografia',
+      'chat',
+      'planes',
+    ],
     stickerGift: {
       qty: '500 pegatinas gratis',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
@@ -131,12 +186,31 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     id: 'cabeza_de_cartel',
     name: 'Cabeza de Cartel',
     badge: 'Pro & Multi-Banda',
-    color: '#10b981', // Emerald
+    color: 'var(--ok)', // Emerald
     price: '79€ / mes',
     credits: '2.500 créditos / mes',
     creditsSub: 'Capacidad multi-banda y agentes en paralelo',
     description: 'Control total para proyectos profesionales, agencias y mánagers.',
-    allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'chat', 'finanzas', 'merchan', 'planes'],
+    allowedModules: [
+      'resumen',
+      'booking',
+      'medios',
+      'management',
+      'bandas',
+      'calendario',
+      'epk',
+      'giras',
+      'fans',
+      'reels',
+      'repertorio',
+      'ensayos',
+      'catalogo',
+      'discografia',
+      'chat',
+      'finanzas',
+      'merchan',
+      'planes',
+    ],
     stickerGift: {
       qty: '1.000 pegatinas + entrega prioritaria',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
@@ -157,16 +231,43 @@ export function normalizePlan(rawPlan?: string): 'promo' | 'promo_plus' | 'ensay
   if (!rawPlan) return 'ensayo';
   const clean = rawPlan.toLowerCase().trim();
 
-  if (clean === 'cabeza_de_cartel' || clean === 'cabeza de cartel' || clean === 'elite' || clean === 'manager360' || clean === 'pro_plus' || clean === '360' || clean === 'manager 360' || clean === 'elite 360') {
+  if (
+    clean === 'cabeza_de_cartel' ||
+    clean === 'cabeza de cartel' ||
+    clean === 'elite' ||
+    clean === 'manager360' ||
+    clean === 'pro_plus' ||
+    clean === '360' ||
+    clean === 'manager 360' ||
+    clean === 'elite 360'
+  ) {
     return 'cabeza_de_cartel';
   }
-  if (clean === 'de_gira' || clean === 'de gira' || clean === 'profesional' || clean === 'pro' || clean === 'consolidada' || clean === 'gira profesional' || clean === 'gira') {
+  if (
+    clean === 'de_gira' ||
+    clean === 'de gira' ||
+    clean === 'profesional' ||
+    clean === 'pro' ||
+    clean === 'consolidada' ||
+    clean === 'gira profesional' ||
+    clean === 'gira'
+  ) {
     return 'de_gira';
   }
   if (clean === 'local') {
     return 'local';
   }
-  if (clean === 'promo_plus' || clean === 'promo+' || clean === 'promoplus' || clean === 'promo plus' || clean === 'festival_plus' || clean === 'festival+' || clean === 'promo_music' || clean === 'promomusic' || clean === 'promo music') {
+  if (
+    clean === 'promo_plus' ||
+    clean === 'promo+' ||
+    clean === 'promoplus' ||
+    clean === 'promo plus' ||
+    clean === 'festival_plus' ||
+    clean === 'festival+' ||
+    clean === 'promo_music' ||
+    clean === 'promomusic' ||
+    clean === 'promo music'
+  ) {
     return 'promo_plus';
   }
   if (clean === 'promo' || clean === 'buskers' || clean === 'festival') {
@@ -223,7 +324,7 @@ export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | '
     maxBands: 1,
     maxSongs: 25,
     maxFans: 250,
-    monthlyCredits: 0
+    monthlyCredits: 0,
   },
   promo_plus: {
     maxLeads: 0,
@@ -231,7 +332,7 @@ export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | '
     maxBands: 1,
     maxSongs: 25,
     maxFans: 250,
-    monthlyCredits: 0
+    monthlyCredits: 0,
   },
   ensayo: {
     maxLeads: 10,
@@ -239,7 +340,7 @@ export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | '
     maxBands: 1,
     maxSongs: 5,
     maxFans: 10,
-    monthlyCredits: 100
+    monthlyCredits: 100,
   },
   local: {
     maxLeads: 50,
@@ -247,7 +348,7 @@ export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | '
     maxBands: 1,
     maxSongs: 20,
     maxFans: 100,
-    monthlyCredits: 300
+    monthlyCredits: 300,
   },
   de_gira: {
     maxLeads: Infinity,
@@ -255,7 +356,7 @@ export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | '
     maxBands: 1,
     maxSongs: Infinity,
     maxFans: Infinity,
-    monthlyCredits: 800
+    monthlyCredits: 800,
   },
   cabeza_de_cartel: {
     maxLeads: Infinity,
@@ -263,8 +364,8 @@ export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | '
     maxBands: 5,
     maxSongs: Infinity,
     maxFans: Infinity,
-    monthlyCredits: 2500
-  }
+    monthlyCredits: 2500,
+  },
 };
 
 export function getPlanLimits(rawPlan?: string): PlanLimits {
@@ -303,7 +404,7 @@ export function checkRecordLimit(
       allowed: false,
       max,
       current: currentCount,
-      message: `Tienes ${currentCount} ${typeLabel} y el plan contratado (${getPlanDefinition(rawPlan).name}) permite un máximo de ${max}. Puedes seguir consultando y editando tus datos existentes, pero necesitas mejorar el plan para añadir nuevos registros.`
+      message: `Tienes ${currentCount} ${typeLabel} y el plan contratado (${getPlanDefinition(rawPlan).name}) permite un máximo de ${max}. Puedes seguir consultando y editando tus datos existentes, pero necesitas mejorar el plan para añadir nuevos registros.`,
     };
   }
 
@@ -324,5 +425,3 @@ export function getRequiredPlanForModule(moduleId: string): 'ensayo' | 'local' |
   if (PLANS.de_gira.allowedModules.includes(moduleId)) return 'de_gira';
   return 'cabeza_de_cartel';
 }
-
-

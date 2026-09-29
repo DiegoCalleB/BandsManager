@@ -1,7 +1,11 @@
-import { Song, SetlistItem } from '../types';
-import { parseTonalidad, evaluarTransicionArmonica, tonalidadesSonFiables } from './harmonicAnalysis';
+import { Song, SetlistItem } from "../types";
+import {
+  parseTonalidad,
+  evaluarTransicionArmonica,
+  tonalidadesSonFiables,
+} from "./harmonicAnalysis";
 
-export type SongEnergyCategory = 'balada' | 'media' | 'alta' | 'explosiva';
+export type SongEnergyCategory = "balada" | "media" | "alta" | "explosiva";
 
 export interface EnergyInfo {
   category: SongEnergyCategory;
@@ -11,7 +15,6 @@ export interface EnergyInfo {
   hexColor: string;
   bgClass: string;
   textClass: string;
-  borderClass: string;
 }
 
 export interface SetlistEnergyPoint {
@@ -26,10 +29,15 @@ export interface SetlistEnergyPoint {
   variance: number;
 }
 
-export type EnergyProfileType = 'in_crescendo' | 'equilibrada' | 'traca_directa' | 'acustico_calma' | 'irregular';
+export type EnergyProfileType =
+  | "in_crescendo"
+  | "equilibrada"
+  | "traca_directa"
+  | "acustico_calma"
+  | "irregular";
 
 export interface PacingWarning {
-  type: 'warning' | 'tip' | 'success';
+  type: "warning" | "tip" | "success";
   message: string;
   icon: string;
   /** Títulos exactos de las canciones a las que se refiere este aviso, para poder resaltarlas en el gráfico. */
@@ -37,7 +45,11 @@ export interface PacingWarning {
   /** Reordenamiento concreto que resolvería este aviso (índices absolutos dentro de items),
    * calculado con una regla determinista — solo se ofrece cuando hay un movimiento razonable
    * disponible en el propio setlist (nunca inventa canciones ni sugiere "añade algo nuevo"). */
-  suggestedReorder?: { fromIndex: number; toIndex: number; description: string };
+  suggestedReorder?: {
+    fromIndex: number;
+    toIndex: number;
+    description: string;
+  };
 }
 
 export interface SetlistEnergyAnalysis {
@@ -54,15 +66,18 @@ export interface SetlistEnergyAnalysis {
 }
 
 /**
-  * Devuelve la información de energía para un valor numérico o una canción dada.
-  */
+ * Devuelve la información de energía para un valor numérico o una canción dada.
+ */
 export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
   let score = 12; // Default to mid-tempo if undefined
 
-  if (typeof scoreOrSong === 'number') {
+  if (typeof scoreOrSong === "number") {
     score = scoreOrSong;
-  } else if (scoreOrSong && typeof scoreOrSong === 'object') {
-    if (typeof scoreOrSong.energia === 'number' && Number.isFinite(scoreOrSong.energia)) {
+  } else if (scoreOrSong && typeof scoreOrSong === "object") {
+    if (
+      typeof scoreOrSong.energia === "number" &&
+      Number.isFinite(scoreOrSong.energia)
+    ) {
       score = scoreOrSong.energia;
     } else {
       // Intento de deducir energía según BPM si no se especificó
@@ -73,61 +88,66 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     }
   }
 
+  // Normalización defensiva: si el valor viene en escala 0-100 (ej. 40, 75, 95), se convierte a escala 1-20
+  if (score > 20) {
+    score = Math.round(score / 5);
+  }
+  score = Math.max(1, Math.min(20, score));
+
   if (score <= 8) {
     return {
-      category: 'balada',
+      category: "balada",
       score: Math.max(1, score),
-      label: 'Balada / Acústica',
-      icon: '🌙',
-      hexColor: '#0284c7',
-      bgClass: 'bg-sky-500/15',
-      textClass: 'text-sky-400',
-      borderClass: 'border-sky-500/30'
+      label: "Balada / Acústica",
+      icon: "🌙",
+      hexColor: "#0284c7",
+      bgClass: "bg-[var(--acc)]/15",
+      textClass: "text-[var(--ink-2)]",
     };
   }
 
   if (score <= 14) {
     return {
-      category: 'media',
+      category: "media",
       score,
-      label: 'Media / Groove',
-      icon: '🎵',
-      hexColor: '#059669',
-      bgClass: 'bg-emerald-500/15',
-      textClass: 'text-emerald-400',
-      borderClass: 'border-emerald-500/30'
+      label: "Media / Groove",
+      icon: "🎵",
+      hexColor: "#059669",
+      bgClass: "bg-[var(--ok)]/15",
+      textClass: "text-[var(--ok)]",
     };
   }
 
   if (score <= 18) {
     return {
-      category: 'alta',
+      category: "alta",
       score,
-      label: 'Alta / Cañera',
-      icon: '🔥',
-      hexColor: '#a16207',
-      bgClass: 'bg-amber-500/15',
-      textClass: 'text-amber-400',
-      borderClass: 'border-amber-500/30'
+      label: "Alta / Cañera",
+      icon: "🔥",
+      hexColor: "#a16207",
+      bgClass: "bg-[var(--acc)]/15",
+      textClass: "text-[var(--acc)]/80",
     };
   }
 
   return {
-    category: 'explosiva',
+    category: "explosiva",
     score: Math.min(20, score),
-    label: 'Explosiva / Clímax',
-    icon: '💣',
-    hexColor: '#a21caf',
-    bgClass: 'bg-fuchsia-500/15',
-    textClass: 'text-fuchsia-400',
-    borderClass: 'border-fuchsia-500/30'
+    label: "Explosiva / Clímax",
+    icon: "💣",
+    hexColor: "#a21caf",
+    bgClass: "bg-[var(--tentative)]/15",
+    textClass: "text-[var(--tentative)]/80",
   };
 }
 
 /**
-  * Analiza el repertorio ítem a ítem y genera diagnósticos de dinámica y alertas de pacing.
-  */
-export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): SetlistEnergyAnalysis {
+ * Analiza el repertorio ítem a ítem y genera diagnósticos de dinámica y alertas de pacing.
+ */
+export function analyzeSetlistEnergy(
+  items: SetlistItem[],
+  songs: Song[],
+): SetlistEnergyAnalysis {
   const points: SetlistEnergyPoint[] = [];
 
   let totalScore = 0;
@@ -138,31 +158,33 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
   let explosiveCount = 0;
 
   items.forEach((item, index) => {
-    if (item.tipoItem === 'cancion' && item.songId) {
-      const song = songs.find(s => s.id === item.songId);
+    if (item.tipoItem === "cancion" && item.songId) {
+      const song = songs.find((s) => s.id === item.songId);
       const info = getEnergyInfo(song);
-      
+
       songCount++;
       totalScore += info.score;
 
-      if (info.category === 'balada') lowEnergyCount++;
-      else if (info.category === 'media') mediumEnergyCount++;
-      else if (info.category === 'alta') highEnergyCount++;
-      else if (info.category === 'explosiva') explosiveCount++;
+      if (info.category === "balada") lowEnergyCount++;
+      else if (info.category === "media") mediumEnergyCount++;
+      else if (info.category === "alta") highEnergyCount++;
+      else if (info.category === "explosiva") explosiveCount++;
 
-      const variance = typeof song?.energiaVariacion === 'number' && Number.isFinite(song.energiaVariacion)
-        ? Math.max(0, Math.min(10, song.energiaVariacion))
-        : 0;
+      const variance =
+        typeof song?.energiaVariacion === "number" &&
+        Number.isFinite(song.energiaVariacion)
+          ? Math.max(0, Math.min(10, song.energiaVariacion))
+          : 0;
 
       points.push({
         index,
         item,
         song,
         isSong: true,
-        title: song?.titulo || 'Canción',
+        title: song?.titulo || "Canción",
         score: info.score,
         info,
-        variance
+        variance,
       });
     } else {
       // Evento o bloque del show — el "bis" en sí es solo una marca de "aquí empieza el bis", no
@@ -173,71 +195,79 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       // isSpeechEvent en RepertorioSetlists.tsx), solo cambia el icono según el subtipo para
       // poder distinguir de un vistazo qué es cada marcador (mismos iconos que SHOW_ITEM_TYPES en
       // RepertorioSetlists.tsx — si se añade un subtipo nuevo ahí, añadirlo aquí también).
-      const subtipo = item.bloqueSubtipo || 'otro';
+      const subtipo = item.bloqueSubtipo || "otro";
       const ICONOS_BLOQUE: Record<string, string> = {
-        header: '⚡',
-        presentacion: '🎤',
-        intro_tema: '🗣️',
-        beatbox: '🥁',
-        solo_performance: '🎸',
-        cambio_instrumento: '🔧',
-        chapa: '💬',
-        descanso: '⏸️',
-        bis: '💣',
-        otro: '📌'
+        header: "⚡",
+        presentacion: "🎤",
+        intro_tema: "🗣️",
+        beatbox: "🥁",
+        solo_performance: "🎸",
+        cambio_instrumento: "🔧",
+        chapa: "💬",
+        descanso: "⏸️",
+        bis: "💣",
+        otro: "📌",
       };
-      const isBis = subtipo === 'bis';
+      const isBis = subtipo === "bis";
       const score = 4;
       points.push({
         index,
         item,
         isSong: false,
-        title: item.tituloCustom || item.tipoItem || 'Evento',
+        title: item.tituloCustom || item.tipoItem || "Evento",
         score,
         variance: 0,
         info: {
-          category: 'balada',
+          category: "balada",
           score,
-          label: item.tituloCustom || 'Evento Show',
-          icon: ICONOS_BLOQUE[subtipo] || '📌',
-          hexColor: isBis ? '#a21caf' : '#64748b',
-          bgClass: isBis ? 'bg-fuchsia-500/15' : 'bg-slate-700/30',
-          textClass: isBis ? 'text-fuchsia-400' : 'text-slate-400',
-          borderClass: isBis ? 'border-fuchsia-500/30' : 'border-slate-700/40'
-        }
+          label: item.tituloCustom || "Evento Show",
+          icon: ICONOS_BLOQUE[subtipo] || "📌",
+          hexColor: isBis ? "#a21caf" : "#64748b",
+          bgClass: isBis ? "bg-[var(--tentative)]/15" : "bg-[var(--ink-2)]/40",
+          textClass: isBis
+            ? "text-[var(--tentative)]/80"
+            : "text-[var(--ink-2)]",
+        },
       });
     }
   });
 
-  const averageEnergy = songCount > 0 ? Math.round((totalScore / songCount) * 10) / 10 : 0;
+  const averageEnergy =
+    songCount > 0 ? Math.round((totalScore / songCount) * 10) / 10 : 0;
 
   // Detección de perfil de show
-  let profileType: EnergyProfileType = 'equilibrada';
-  let profileLabel = '⚡ Dinámica Equilibrada';
-  let profileIcon = '⚡';
+  let profileType: EnergyProfileType = "equilibrada";
+  let profileLabel = "⚡ Dinámica Equilibrada";
+  let profileIcon = "⚡";
 
   if (songCount === 0) {
-    profileType = 'equilibrada';
-    profileLabel = 'Setlist Vacío';
-    profileIcon = '📝';
+    profileType = "equilibrada";
+    profileLabel = "Setlist Vacío";
+    profileIcon = "📝";
   } else if (lowEnergyCount >= songCount * 0.6) {
-    profileType = 'acustico_calma';
-    profileLabel = '🌙 Acústico / Intimista';
-    profileIcon = '🌙';
+    profileType = "acustico_calma";
+    profileLabel = "🌙 Acústico / Intimista";
+    profileIcon = "🌙";
   } else if (highEnergyCount + explosiveCount >= songCount * 0.7) {
-    profileType = 'traca_directa';
-    profileLabel = '💣 Traca Directa (Alta Energía)';
-    profileIcon = '💣';
+    profileType = "traca_directa";
+    profileLabel = "💣 Traca Directa (Alta Energía)";
+    profileIcon = "💣";
   } else {
-    const songPoints = points.filter(p => p.isSong);
+    const songPoints = points.filter((p) => p.isSong);
     if (songPoints.length >= 3) {
-      const firstHalfAvg = songPoints.slice(0, Math.floor(songPoints.length / 2)).reduce((a, b) => a + b.score, 0) / Math.floor(songPoints.length / 2);
-      const secondHalfAvg = songPoints.slice(Math.floor(songPoints.length / 2)).reduce((a, b) => a + b.score, 0) / Math.ceil(songPoints.length / 2);
+      const firstHalfAvg =
+        songPoints
+          .slice(0, Math.floor(songPoints.length / 2))
+          .reduce((a, b) => a + b.score, 0) / Math.floor(songPoints.length / 2);
+      const secondHalfAvg =
+        songPoints
+          .slice(Math.floor(songPoints.length / 2))
+          .reduce((a, b) => a + b.score, 0) / Math.ceil(songPoints.length / 2);
 
       if (secondHalfAvg - firstHalfAvg >= 3) {
-        profileType = 'in_crescendo';
-        profileLabel = '🔥 Show In Crescendo';
-        profileIcon = '🔥';
+        profileType = "in_crescendo";
+        profileLabel = "🔥 Show In Crescendo";
+        profileIcon = "🔥";
       }
     }
   }
@@ -246,16 +276,17 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
   const warnings: PacingWarning[] = [];
 
   if (songCount > 0) {
-    const songPoints = points.filter(p => p.isSong);
+    const songPoints = points.filter((p) => p.isSong);
 
     // 1. Valles de energía (3+ baladas seguidas) — se guarda el tramo concreto más largo,
     // no solo el conteo, para poder señalarlo en el gráfico.
     let consecutiveLow: SetlistEnergyPoint[] = [];
     let longestLowStreak: SetlistEnergyPoint[] = [];
-    songPoints.forEach(p => {
-      if (p.info.category === 'balada') {
+    songPoints.forEach((p) => {
+      if (p.info.category === "balada") {
         consecutiveLow.push(p);
-        if (consecutiveLow.length > longestLowStreak.length) longestLowStreak = [...consecutiveLow];
+        if (consecutiveLow.length > longestLowStreak.length)
+          longestLowStreak = [...consecutiveLow];
       } else {
         consecutiveLow = [];
       }
@@ -263,22 +294,27 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     if (longestLowStreak.length >= 3) {
       // Intercalar: la canción de mayor energía del resto del setlist (que no sea ya balada) va
       // al medio del valle, partiéndolo en dos tramos más cortos en vez de uno largo.
-      const streakIndices = new Set(longestLowStreak.map(p => p.index));
+      const streakIndices = new Set(longestLowStreak.map((p) => p.index));
       const candidate = songPoints
-        .filter(p => !streakIndices.has(p.index) && p.info.category !== 'balada')
+        .filter(
+          (p) => !streakIndices.has(p.index) && p.info.category !== "balada",
+        )
         .sort((a, b) => b.score - a.score)[0];
-      const midOfStreak = longestLowStreak[Math.floor(longestLowStreak.length / 2)];
+      const midOfStreak =
+        longestLowStreak[Math.floor(longestLowStreak.length / 2)];
 
       warnings.push({
-        type: 'warning',
-        icon: '⚠️',
+        type: "warning",
+        icon: "⚠️",
         message: `Valle detectado: ${longestLowStreak.length} baladas seguidas. Considera intercalar con algo más energético.`,
-        songTitles: longestLowStreak.map(p => p.title),
-        suggestedReorder: candidate ? {
-          fromIndex: candidate.index,
-          toIndex: midOfStreak.index,
-          description: `Intercalar "${candidate.title}" en medio del valle`
-        } : undefined
+        songTitles: longestLowStreak.map((p) => p.title),
+        suggestedReorder: candidate
+          ? {
+              fromIndex: candidate.index,
+              toIndex: midOfStreak.index,
+              description: `Intercalar "${candidate.title}" en medio del valle`,
+            }
+          : undefined,
       });
     }
 
@@ -289,54 +325,69 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       if (initialAvg <= 8) {
         // La canción de mayor energía del resto del repertorio (tras los 2 primeros) pasa a
         // ocupar la posición 2 — solo si realmente sube el promedio de apertura.
-        const candidate = songPoints.slice(2).sort((a, b) => b.score - a.score)[0];
+        const candidate = songPoints
+          .slice(2)
+          .sort((a, b) => b.score - a.score)[0];
         warnings.push({
-          type: 'warning',
-          icon: '💤',
-          message: 'Arranque suave: primeros 2 temas bajos. Considera mover algo más rápido a posición 2.',
-          songTitles: opener.map(p => p.title),
-          suggestedReorder: (candidate && candidate.score > opener[1].score) ? {
-            fromIndex: candidate.index,
-            toIndex: opener[1].index,
-            description: `Mover "${candidate.title}" a la posición 2`
-          } : undefined
+          type: "warning",
+          icon: "💤",
+          message:
+            "Arranque suave: primeros 2 temas bajos. Considera mover algo más rápido a posición 2.",
+          songTitles: opener.map((p) => p.title),
+          suggestedReorder:
+            candidate && candidate.score > opener[1].score
+              ? {
+                  fromIndex: candidate.index,
+                  toIndex: opener[1].index,
+                  description: `Mover "${candidate.title}" a la posición 2`,
+                }
+              : undefined,
         });
       } else if (initialAvg >= 16) {
         warnings.push({
-          type: 'success',
-          icon: '🔥',
-          message: '✓ Arranque potente: el show engancha desde el inicio.',
-          songTitles: opener.map(p => p.title)
+          type: "success",
+          icon: "🔥",
+          message: "✓ Arranque potente: el show engancha desde el inicio.",
+          songTitles: opener.map((p) => p.title),
         });
       }
     }
 
     // 3. Cierre del show (últimos 2 temas)
     if (songPoints.length >= 2) {
-      const closer = [songPoints[songPoints.length - 2], songPoints[songPoints.length - 1]];
+      const closer = [
+        songPoints[songPoints.length - 2],
+        songPoints[songPoints.length - 1],
+      ];
       const closingAvg = (closer[0].score + closer[1].score) / 2;
       if (closingAvg <= 8) {
         // La canción de mayor energía del setlist (que no sea ya parte del cierre) pasa al
         // final absoluto de items — no solo al final de songPoints, por si hay un bis/evento
         // después de la última canción.
-        const candidate = songPoints.slice(0, songPoints.length - 2).sort((a, b) => b.score - a.score)[0];
+        const candidate = songPoints
+          .slice(0, songPoints.length - 2)
+          .sort((a, b) => b.score - a.score)[0];
         warnings.push({
-          type: 'tip',
-          icon: '💡',
-          message: 'Cierre débil: últimos temas en balada. Termina en explosiva para que la gente se vaya energizada.',
-          songTitles: closer.map(p => p.title),
-          suggestedReorder: (candidate && candidate.score > closingAvg) ? {
-            fromIndex: candidate.index,
-            toIndex: items.length - 1,
-            description: `Mover "${candidate.title}" al cierre`
-          } : undefined
+          type: "tip",
+          icon: "💡",
+          message:
+            "Cierre débil: últimos temas en balada. Termina en explosiva para que la gente se vaya energizada.",
+          songTitles: closer.map((p) => p.title),
+          suggestedReorder:
+            candidate && candidate.score > closingAvg
+              ? {
+                  fromIndex: candidate.index,
+                  toIndex: items.length - 1,
+                  description: `Mover "${candidate.title}" al cierre`,
+                }
+              : undefined,
         });
       } else if (closingAvg >= 16) {
         warnings.push({
-          type: 'success',
-          icon: '💣',
-          message: '✓ Cierre potente: el show termina en fuego.',
-          songTitles: closer.map(p => p.title)
+          type: "success",
+          icon: "💣",
+          message: "✓ Cierre potente: el show termina en fuego.",
+          songTitles: closer.map((p) => p.title),
         });
       }
     }
@@ -344,10 +395,11 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     // 4. Demasiadas medias seguidas (>4)
     let consecutiveMedium: SetlistEnergyPoint[] = [];
     let longestMediumStreak: SetlistEnergyPoint[] = [];
-    songPoints.forEach(p => {
-      if (p.info.category === 'media') {
+    songPoints.forEach((p) => {
+      if (p.info.category === "media") {
         consecutiveMedium.push(p);
-        if (consecutiveMedium.length > longestMediumStreak.length) longestMediumStreak = [...consecutiveMedium];
+        if (consecutiveMedium.length > longestMediumStreak.length)
+          longestMediumStreak = [...consecutiveMedium];
       } else {
         consecutiveMedium = [];
       }
@@ -355,22 +407,29 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     if (longestMediumStreak.length >= 5) {
       // Una canción de contraste real (balada o explosiva, no otra media) del resto del
       // repertorio se intercala en medio de la racha plana.
-      const streakIndices = new Set(longestMediumStreak.map(p => p.index));
+      const streakIndices = new Set(longestMediumStreak.map((p) => p.index));
       const candidate = songPoints
-        .filter(p => !streakIndices.has(p.index) && (p.info.category === 'balada' || p.info.category === 'explosiva'))
+        .filter(
+          (p) =>
+            !streakIndices.has(p.index) &&
+            (p.info.category === "balada" || p.info.category === "explosiva"),
+        )
         .sort((a, b) => Math.abs(b.score - 11) - Math.abs(a.score - 11))[0]; // el de contraste más extremo primero
-      const midOfStreak = longestMediumStreak[Math.floor(longestMediumStreak.length / 2)];
+      const midOfStreak =
+        longestMediumStreak[Math.floor(longestMediumStreak.length / 2)];
 
       warnings.push({
-        type: 'warning',
-        icon: '📊',
+        type: "warning",
+        icon: "📊",
         message: `Zona plana: ${longestMediumStreak.length} canciones medias seguidas. Añade contraste (balada o explosiva).`,
-        songTitles: longestMediumStreak.map(p => p.title),
-        suggestedReorder: candidate ? {
-          fromIndex: candidate.index,
-          toIndex: midOfStreak.index,
-          description: `Intercalar "${candidate.title}" en la zona plana`
-        } : undefined
+        songTitles: longestMediumStreak.map((p) => p.title),
+        suggestedReorder: candidate
+          ? {
+              fromIndex: candidate.index,
+              toIndex: midOfStreak.index,
+              description: `Intercalar "${candidate.title}" en la zona plana`,
+            }
+          : undefined,
       });
     }
 
@@ -379,21 +438,28 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       if (songPoints[i].score >= 17 && songPoints[i + 1].score <= 9) {
         // Una canción de energía intermedia (la más cercana al punto medio entre pico y caída)
         // se coloca entre ambas para suavizar la transición.
-        const targetEnergy = (songPoints[i].score + songPoints[i + 1].score) / 2;
+        const targetEnergy =
+          (songPoints[i].score + songPoints[i + 1].score) / 2;
         const candidate = songPoints
           .filter((_, idx) => idx !== i && idx !== i + 1)
-          .sort((a, b) => Math.abs(a.score - targetEnergy) - Math.abs(b.score - targetEnergy))[0];
+          .sort(
+            (a, b) =>
+              Math.abs(a.score - targetEnergy) -
+              Math.abs(b.score - targetEnergy),
+          )[0];
 
         warnings.push({
-          type: 'tip',
-          icon: '⬇️',
+          type: "tip",
+          icon: "⬇️",
           message: `Post-pico: "${songPoints[i].title}" (explosiva) cae bruscamente a "${songPoints[i + 1].title}". Gradúa la bajada más suavemente.`,
           songTitles: [songPoints[i].title, songPoints[i + 1].title],
-          suggestedReorder: candidate ? {
-            fromIndex: candidate.index,
-            toIndex: songPoints[i + 1].index,
-            description: `Graduar la bajada con "${candidate.title}"`
-          } : undefined
+          suggestedReorder: candidate
+            ? {
+                fromIndex: candidate.index,
+                toIndex: songPoints[i + 1].index,
+                description: `Graduar la bajada con "${candidate.title}"`,
+              }
+            : undefined,
         });
         break; // Solo 1 warning de este tipo
       }
@@ -409,12 +475,12 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
         const keyA = parseTonalidad(songPoints[i].song?.tonalidad);
         const keyB = parseTonalidad(songPoints[i + 1].song?.tonalidad);
         if (!keyA || !keyB) continue;
-        if (evaluarTransicionArmonica(keyA, keyB) === 'choque') {
+        if (evaluarTransicionArmonica(keyA, keyB) === "choque") {
           warnings.push({
-            type: 'tip',
-            icon: '🎸',
+            type: "tip",
+            icon: "🎸",
             message: `Choque armónico: "${songPoints[i].title}" (${songPoints[i].song?.tonalidad}) a "${songPoints[i + 1].title}" (${songPoints[i + 1].song?.tonalidad}) es un salto de tonalidad brusco.`,
-            songTitles: [songPoints[i].title, songPoints[i + 1].title]
+            songTitles: [songPoints[i].title, songPoints[i + 1].title],
           });
           choquesReportados++;
         }
@@ -432,7 +498,7 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     highEnergyCount,
     mediumEnergyCount,
     lowEnergyCount,
-    explosiveCount
+    explosiveCount,
   };
 }
 
@@ -448,7 +514,7 @@ const IDEAL_CURVE_TEMPLATE: Array<[number, number]> = [
   [0.55, 0.7],
   [0.8, 0.95],
   [0.9, 1],
-  [1, 0.82]
+  [1, 0.82],
 ];
 
 function interpolarPlantillaIdeal(fraccion: number): number {
@@ -476,14 +542,16 @@ function interpolarPlantillaIdeal(fraccion: number): number {
  * también lleva un valor, interpolado por su posición real en el show, para que la línea sea
  * continua en el gráfico igual que la curva real.
  */
-export function calcularCurvaEnergiaIdeal(points: SetlistEnergyPoint[]): number[] {
-  const songPoints = points.filter(p => p.isSong);
+export function calcularCurvaEnergiaIdeal(
+  points: SetlistEnergyPoint[],
+): number[] {
+  const songPoints = points.filter((p) => p.isSong);
   if (songPoints.length < 2) {
     const flat = songPoints[0]?.score ?? 10;
     return points.map(() => flat);
   }
 
-  const scores = songPoints.map(p => p.score);
+  const scores = songPoints.map((p) => p.score);
   const min = Math.min(...scores);
   const max = Math.max(...scores);
 
@@ -496,13 +564,16 @@ export function calcularCurvaEnergiaIdeal(points: SetlistEnergyPoint[]): number[
   }
 
   const totalSongs = songPoints.length;
-  return points.map(p => {
+  return points.map((p) => {
     // La posición en el arco se calcula sobre el rango de CANCIONES (no eventos), para que un
     // bloque/pausa intercalado no desplace dónde "debería" caer el clímax del show.
-    const songRank = songPoints.findIndex(sp => sp.index === p.index);
-    const fraction = songRank === -1
-      ? p.index / Math.max(1, points.length - 1)
-      : (totalSongs <= 1 ? 0 : songRank / (totalSongs - 1));
+    const songRank = songPoints.findIndex((sp) => sp.index === p.index);
+    const fraction =
+      songRank === -1
+        ? p.index / Math.max(1, points.length - 1)
+        : totalSongs <= 1
+          ? 0
+          : songRank / (totalSongs - 1);
     const relative = interpolarPlantillaIdeal(fraction);
     return Math.round(min + relative * (max - min));
   });

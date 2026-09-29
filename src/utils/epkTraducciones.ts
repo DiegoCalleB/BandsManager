@@ -4,18 +4,18 @@ import { EPKConfig, BandMember, EPKVideo, EPKContenidoTraducido } from '../types
  * Utilidades compartidas (servidor y navegador) para el EPK multiidioma.
  *
  * Reglas que sostienen todo esto:
- *  - Solo se traduce PROSA. Nombres de personas, emails, teléfonos, URLs, números, la ciudad
- *    base y los títulos de las canciones se quedan como están en cualquier idioma.
- *  - Miembros y vídeos se indexan por su `id`, nunca por posición: reordenar o borrar un
- *    miembro no puede descolocar las traducciones de los demás.
- *  - El español es siempre el original; nunca se guarda una "traducción al español".
+ * - Solo se traduce PROSA. Nombres de personas, emails, teléfonos, URLs, números, la ciudad
+ * base y los títulos de las canciones se quedan como están en cualquier idioma.
+ * - Miembros y vídeos se indexan por su `id`, nunca por posición: reordenar o borrar un
+ * miembro no puede descolocar las traducciones de los demás.
+ * - El español es siempre el original; nunca se guarda una "traducción al español".
  */
 
 export const IDIOMA_ORIGEN = 'es';
 
 /** Los tres datos de contratación que son texto libre. El resto son números o nombres propios. */
 export const CLAVES_DATOS_TRADUCIBLES = ['duracionDirecto', 'formatos', 'necesidadesEscenario'] as const;
-export type ClaveDatoTraducible = typeof CLAVES_DATOS_TRADUCIBLES[number];
+export type ClaveDatoTraducible = (typeof CLAVES_DATOS_TRADUCIBLES)[number];
 
 export interface TextosTraducibles {
   biografia: string;
@@ -51,22 +51,22 @@ export function recopilarTextosTraducibles(config: Partial<EPKConfig> | null | u
     textoPie: config?.firmaEmail?.textoPie || '',
     riderTecnico: config?.riderTecnico || '',
     miembros: miembros
-      .filter(m => m?.id && ((m.rol || '').trim() || (m.bio || '').trim()))
-      .map(m => ({ id: m.id, rol: m.rol || '', bio: m.bio || '' }))
+      .filter((m) => m?.id && ((m.rol || '').trim() || (m.bio || '').trim()))
+      .map((m) => ({ id: m.id, rol: m.rol || '', bio: m.bio || '' }))
       .sort((a, b) => a.id.localeCompare(b.id)),
     videos: videos
-      .filter(v => v?.id && (v.titulo || '').trim())
-      .map(v => ({ id: v.id, titulo: v.titulo || '' }))
+      .filter((v) => v?.id && (v.titulo || '').trim())
+      .map((v) => ({ id: v.id, titulo: v.titulo || '' }))
       .sort((a, b) => a.id.localeCompare(b.id)),
     datosContratacion: datosTraducibles,
     cifras: cifras
-      .filter(c => c?.id && (c.etiqueta || '').trim())
-      .map(c => ({ id: c.id, etiqueta: c.etiqueta || '' }))
+      .filter((c) => c?.id && (c.etiqueta || '').trim())
+      .map((c) => ({ id: c.id, etiqueta: c.etiqueta || '' }))
       .sort((a, b) => a.id.localeCompare(b.id)),
     prensaSubtitulo: (config as any)?.prensaResenas?.subtitulo || '',
     resenas: resenas
-      .filter(r => r?.id && ((r.cita || '').trim() || (r.tipo || '').trim()))
-      .map(r => ({ id: r.id, cita: r.cita || '', tipo: r.tipo || '' }))
+      .filter((r) => r?.id && ((r.cita || '').trim() || (r.tipo || '').trim()))
+      .map((r) => ({ id: r.id, cita: r.cita || '', tipo: r.tipo || '' }))
       .sort((a, b) => a.id.localeCompare(b.id)),
   };
 }
@@ -74,10 +74,15 @@ export function recopilarTextosTraducibles(config: Partial<EPKConfig> | null | u
 /** true si no hay absolutamente nada que traducir (EPK recién creado, sin contenido). */
 export function hayAlgoQueTraducir(textos: TextosTraducibles): boolean {
   return Boolean(
-    textos.biografia.trim() || textos.textoPie.trim() || textos.riderTecnico.trim() ||
-    textos.miembros.length || textos.videos.length ||
-    CLAVES_DATOS_TRADUCIBLES.some(c => textos.datosContratacion[c].trim()) ||
-    textos.cifras.length || textos.prensaSubtitulo.trim() || textos.resenas.length
+    textos.biografia.trim() ||
+    textos.textoPie.trim() ||
+    textos.riderTecnico.trim() ||
+    textos.miembros.length ||
+    textos.videos.length ||
+    CLAVES_DATOS_TRADUCIBLES.some((c) => textos.datosContratacion[c].trim()) ||
+    textos.cifras.length ||
+    textos.prensaSubtitulo.trim() ||
+    textos.resenas.length
   );
 }
 
@@ -108,8 +113,11 @@ export function tieneTraduccion(config: Partial<EPKConfig> | null | undefined, i
   const t = config?.traducciones?.[idioma];
   if (!t) return false;
   return Boolean(
-    (t.biografia || '').trim() || (t.textoPie || '').trim() || (t.riderTecnico || '').trim() ||
-    Object.keys(t.miembros || {}).length || Object.keys(t.videos || {}).length ||
+    (t.biografia || '').trim() ||
+    (t.textoPie || '').trim() ||
+    (t.riderTecnico || '').trim() ||
+    Object.keys(t.miembros || {}).length ||
+    Object.keys(t.videos || {}).length ||
     Object.keys(t.datosContratacion || {}).length
   );
 }
@@ -135,15 +143,11 @@ export interface ResolutorEpk {
  * quien no lee español, una biografía inglesa algo antigua es mejor que una española — el
  * aviso de "está vieja" es cosa de la banda, en el gestor, no del visitante.
  */
-export function resolverContenidoEpk(
-  config: Partial<EPKConfig> | null | undefined,
-  idioma: string
-): ResolutorEpk {
-  const tr: EPKContenidoTraducido =
-    (idioma && idioma !== IDIOMA_ORIGEN && config?.traducciones?.[idioma]) || {};
+export function resolverContenidoEpk(config: Partial<EPKConfig> | null | undefined, idioma: string): ResolutorEpk {
+  const tr: EPKContenidoTraducido = (idioma && idioma !== IDIOMA_ORIGEN && config?.traducciones?.[idioma]) || {};
 
   const usar = (traducido: string | undefined, original: string | undefined): string =>
-    (traducido && traducido.trim()) ? traducido : (original || '');
+    traducido && traducido.trim() ? traducido : original || '';
 
   const datos: any = config?.datosContratacion || {};
 

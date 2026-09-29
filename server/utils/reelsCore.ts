@@ -29,12 +29,16 @@ export interface NormalizedHighlight {
   energyLevel: string;
   hookText: string;
   recommendedCopy: string;
+  copyViral?: string;
+  copyComunidad?: string;
+  copyConversion?: string;
   copyTikTok: string;
   copyYouTube: string;
   copyFacebook: string;
   hashtags: string[];
   cta: string;
   reason: string;
+  lengthCategory?: 'micro_hook' | 'hit_moment' | 'story_bts';
 }
 
 /* ------------------------------------------------------------------ tiempos */
@@ -244,23 +248,36 @@ export function normalizeHighlights(rawList: any, options: NormalizeOptions): No
       ? Math.max(1, Math.min(100, Math.round(confianzaBruta)))
       : 80;
 
+    const durClip = end - start;
+    const cat: 'micro_hook' | 'hit_moment' | 'story_bts' = 
+      item.lengthCategory || (durClip <= 16 ? 'micro_hook' : durClip <= 36 ? 'hit_moment' : 'story_bts');
+
+    const recommended = aTexto(item.recommendedCopy || item.copy || item.caption, "");
+    const viral = aTexto(item.copyViral || recommended, recommended);
+    const comunidad = aTexto(item.copyComunidad, "");
+    const conversion = aTexto(item.copyConversion, "");
+
     salida.push({
       id: aTexto(item.id, `hl-${idx + 1}`),
       title: aTexto(item.title || item.titulo, `Momento destacado ${idx + 1}`),
       range: `${formatMMSS(start)} - ${formatMMSS(end)}`,
       startSec: start,
       endSec: end,
-      duration: end - start,
+      duration: durClip,
       confidence,
       energyLevel: aTexto(item.energyLevel || item.energia, "Alta"),
       hookText: aTexto(item.hookText || item.hook, ""),
-      recommendedCopy: aTexto(item.recommendedCopy || item.copy || item.caption, ""),
-      copyTikTok: aTexto(item.copyTikTok || item.tiktokCopy, ""),
+      recommendedCopy: recommended,
+      copyViral: viral,
+      copyComunidad: comunidad || `Momentazo en directo con nosotros. ¿Qué os parece la vibra de este tema? ${defaults.join(" ")}`,
+      copyConversion: conversion || `¡Disponible en todas las plataformas! Escucha el tema completo en Spotify (link en bio) y nos vemos en las próximas fechas. ${defaults.join(" ")}`,
+      copyTikTok: aTexto(item.copyTikTok || item.tiktokCopy, viral || recommended),
       copyYouTube: aTexto(item.copyYouTube || item.youtubeCopy || item.shortsTitle, ""),
       copyFacebook: aTexto(item.copyFacebook || item.facebookCopy, ""),
       hashtags: aHashtags(item.hashtags, defaults),
       cta: aTexto(item.cta || item.callToAction, ""),
-      reason: aTexto(item.reason || item.razon, "")
+      reason: aTexto(item.reason || item.razon, ""),
+      lengthCategory: cat
     });
   });
 
@@ -303,23 +320,32 @@ export function buildFallbackHighlights(options: {
         const tituloCorte = capitulo?.title
           ? `${capitulo.title} (${formatMMSS(start)})`
           : `Pico de energía ${idx + 1} (${formatMMSS(start)}-${formatMMSS(end)})`;
+        const durClip = end - start;
+        const cat: 'micro_hook' | 'hit_moment' | 'story_bts' = 
+          durClip <= 16 ? 'micro_hook' : durClip <= 36 ? 'hit_moment' : 'story_bts';
+        const recCopy = `${banda} en directo. Fragmento de "${corto}" (${formatMMSS(start)}-${formatMMSS(end)}). ${options.hashtags.join(" ")}`;
+
         return {
           id: `hl-${idx + 1}`,
           title: tituloCorte,
           range: `${formatMMSS(start)} - ${formatMMSS(end)}`,
           startSec: start,
           endSec: end,
-          duration: end - start,
+          duration: durClip,
           confidence: Math.max(50, Math.min(95, v.score)),
           energyLevel: v.score >= 80 ? "Muy Alta" : v.score >= 50 ? "Alta" : "Media",
-          hookText: "",
-          recommendedCopy: `${banda} en directo. Fragmento de "${corto}" (${formatMMSS(start)}-${formatMMSS(end)}). ${options.hashtags.join(" ")}`,
-          copyTikTok: "",
-          copyYouTube: "",
-          copyFacebook: "",
+          hookText: "¡Sube el volumen para este momento!",
+          recommendedCopy: recCopy,
+          copyViral: `Cuando la energía explota en pleno bolo 💥 ${options.hashtags.join(" ")}`,
+          copyComunidad: `Uno de los mejores momentos tocando ${corto} juntos. ¿Estuvisteis allí? ${options.hashtags.join(" ")}`,
+          copyConversion: `Escucha ${corto} al completo en Spotify y píllate entradas en bio para la próxima fecha 🎟️ ${options.hashtags.join(" ")}`,
+          copyTikTok: `Momento de máxima energía en directo 🎸 ${options.hashtags.slice(0, 3).join(" ")}`,
+          copyYouTube: `${banda} - ${corto} (Directo)`,
+          copyFacebook: recCopy,
           hashtags: options.hashtags,
           cta: "¿Te lo llevas al próximo bolo? Cuéntanoslo en comentarios.",
-          reason: `Tramo con más volumen medido del vídeo (energía ${v.score}/100). Corte automático sin IA: revisa el rango antes de publicar.`
+          reason: `Tramo con más volumen medido del vídeo (energía ${v.score}/100). Corte automático sin IA: revisa el rango antes de publicar.`,
+          lengthCategory: cat
         };
       });
   }
@@ -354,23 +380,32 @@ export function buildFallbackHighlights(options: {
     const end = Math.min(total, start + dur);
     if (end - start < 5) return;
     if (salida.some((prev) => Math.abs(prev.startSec - start) < 2)) return;
+    const durClip = end - start;
+    const cat: 'micro_hook' | 'hit_moment' | 'story_bts' = 
+      durClip <= 16 ? 'micro_hook' : durClip <= 36 ? 'hit_moment' : 'story_bts';
+    const recCopy = `${banda} en directo. Fragmento de "${titulo}" (${formatMMSS(start)}-${formatMMSS(end)}). ${options.hashtags.join(" ")}`;
+
     salida.push({
       id: `hl-${idx + 1}`,
       title: `${p.etiqueta} (${corto})`,
       range: `${formatMMSS(start)} - ${formatMMSS(end)}`,
       startSec: start,
       endSec: end,
-      duration: end - start,
+      duration: durClip,
       confidence: p.confidence,
       energyLevel: p.energia,
-      hookText: "",
-      recommendedCopy: `${banda} en directo. Fragmento de "${titulo}" (${formatMMSS(start)}-${formatMMSS(end)}). ${options.hashtags.join(" ")}`,
-      copyTikTok: "",
-      copyYouTube: "",
-      copyFacebook: "",
+      hookText: "Escucha cómo suena esto...",
+      recommendedCopy: recCopy,
+      copyViral: `Este trozo de ${corto} no te va a dejar indiferente 🔥 ${options.hashtags.join(" ")}`,
+      copyComunidad: `Momentos mágicos de directo tocando ${corto} para vosotros. ${options.hashtags.join(" ")}`,
+      copyConversion: `Disponible en plataformas digitales (link en bio). ¡Nos vemos en el próximo concierto! ${options.hashtags.join(" ")}`,
+      copyTikTok: `${p.etiqueta} de ${corto} en directo 🎸`,
+      copyYouTube: `${banda} - ${corto}`,
+      copyFacebook: recCopy,
       hashtags: options.hashtags,
       cta: "¿Te lo llevas al próximo bolo? Cuéntanoslo en comentarios.",
-      reason: `${p.razon} (Corte automático: la IA no estaba disponible, ajusta el rango a mano si hace falta.)`
+      reason: `${p.razon} (Corte automático: la IA no estaba disponible, ajusta el rango a mano si hace falta.)`,
+      lengthCategory: cat
     });
   });
 
@@ -528,6 +563,44 @@ export function buildAssSubtitles(
   return `${cabecera}\n${eventos}\n`;
 }
 
+/** Mapa de palabras clave a emojis automáticos para subtítulos de alta retención */
+export function getContextualEmoji(word: string): string {
+  const clean = word.toLowerCase().replace(/[^a-záéíóúüñ]/g, "");
+  const emojiMap: Record<string, string> = {
+    solo: "🎸",
+    guitarra: "🎸",
+    riff: "🎸",
+    bajo: "🎸",
+    bateria: "🥁",
+    ritmo: "🥁",
+    cantar: "🎤",
+    voz: "🎤",
+    grito: "🎤",
+    fuego: "🔥",
+    ardiendo: "🔥",
+    explota: "🔥",
+    brutal: "🔥",
+    locura: "🤯",
+    increible: "🤯",
+    secreto: "🤫",
+    corazon: "❤️",
+    amor: "🖤",
+    concierto: "⚡",
+    directo: "⚡",
+    show: "⚡",
+    gira: "🚌",
+    escucha: "👀",
+    mira: "👀",
+    atento: "👀",
+    pico: "💥",
+    boom: "💥",
+    final: "🏁",
+    gracias: "🙌",
+    magia: "✨"
+  };
+  return emojiMap[clean] || "";
+}
+
 /**
  * Subtítulos ASS con resaltado palabra por palabra (el estilo "karaoke" que usan TikTok/CapCut),
  * usando las etiquetas nativas `\k` de Advanced SubStation Alpha: libass (el filtro `subtitles`
@@ -537,16 +610,25 @@ export function buildAssSubtitles(
  */
 export function buildKaraokeAssSubtitles(
   cues: SubtitleCue[],
-  options: { width?: number; height?: number; fontSize?: number; primaryColour?: string; secondaryColour?: string; maxChars?: number } = {}
+  options: { 
+    width?: number; 
+    height?: number; 
+    fontSize?: number; 
+    primaryColour?: string; 
+    secondaryColour?: string; 
+    maxChars?: number;
+    injectEmojis?: boolean;
+  } = {}
 ): string {
   const width = options.width || 1080;
   const height = options.height || 1920;
   const fontSize = options.fontSize || Math.round(height / 22);
   // La palabra ya "dicha" queda en PrimaryColour (blanco); la que todavía no le toca, en
-  // SecondaryColour (ámbar), que es como libass pinta el tramo pendiente de un \k.
+  // SecondaryColour (ámbar/oro &H0000D7FF), que es como libass pinta el tramo pendiente de un \k.
   const primary = options.primaryColour || "&H00FFFFFF";
   const secondary = options.secondaryColour || "&H0000D7FF";
   const maxChars = options.maxChars || 22;
+  const injectEmojis = options.injectEmojis !== false;
 
   const cabecera = [
     "[Script Info]",
@@ -575,14 +657,16 @@ export function buildKaraokeAssSubtitles(
       let lineaActual: string[] = [];
       let anchoLinea = 0;
       for (const p of palabras) {
-        const anchoPalabra = p.word.length + 1;
+        const emoji = injectEmojis ? getContextualEmoji(p.word) : "";
+        const formattedWord = emoji ? `${p.word} ${emoji}` : p.word;
+        const anchoPalabra = formattedWord.length + 1;
         if (anchoLinea > 0 && anchoLinea + anchoPalabra > maxChars && lineas.length < 2) {
           lineas.push(lineaActual.join(" "));
           lineaActual = [];
           anchoLinea = 0;
         }
         const centesimas = Math.max(1, Math.round((p.end - p.start) * 100));
-        lineaActual.push(`{\\k${centesimas}}${escapeAss(p.word)}`);
+        lineaActual.push(`{\\k${centesimas}}${escapeAss(formattedWord)}`);
         anchoLinea += anchoPalabra;
       }
       if (lineaActual.length) lineas.push(lineaActual.join(" "));
@@ -597,25 +681,69 @@ export function buildKaraokeAssSubtitles(
 
 /* ------------------------------------------------------------------ ffmpeg */
 
-export type CropMode = "crop" | "blur" | "none";
+export type CropMode = "crop" | "blur" | "none" | "smart_pan";
+
+export interface VerticalFilterOptions {
+  punchInZoom?: boolean;
+  beatDropFx?: boolean;
+  smartPan?: boolean;
+}
 
 /**
- * Cadena de filtros para llevar el vídeo a 9:16.
+ * Cadena de filtros para llevar el vídeo a 9:16 con soporte de Punch-in Zoom (0-3s),
+ * Smart-Pan (seguimiento dinámico horizontal de escenario) y Beat-Drop FX.
  * - `crop`: recorta los laterales (encuadre cerrado, se pierde parte de la escena).
- * - `blur`: mete el vídeo entero centrado sobre una copia ampliada y desenfocada, así no se
- *   pierde a nadie de la banda. Es lo que hace la mayoría de apps de Reels.
+ * - `blur`: mete el vídeo entero centrado sobre una copia ampliada y desenfocada.
+ * - `smart_pan`: barrido horizontal suave sinusoidal para encuadrar la acción del escenario.
+ * - `punchInZoom`: añade un zoom óptico suave en los primeros 3 segundos para capturar retención.
+ * - `beatDropFx`: micro-impacto rítmico luminoso en los drops para elevar la energía del directo.
  */
-export function buildVerticalFilter(mode: CropMode, width = 1080, height = 1920): string[] {
+export function buildVerticalFilter(
+  mode: CropMode, 
+  width = 1080, 
+  height = 1920,
+  options: VerticalFilterOptions = {}
+): string[] {
   if (mode === "none") return [];
-  // `setsar=1` no es opcional: scale deja un SAR como 4096:4095 y el clip sale
-  // mínimamente estirado, además de que algunas plataformas lo recodifican por ello.
+  
   if (mode === "blur") {
+    const dropFx = options.beatDropFx ? `,eq=brightness='if(lt(mod(t,4),0.12),0.07,0)':contrast='if(lt(mod(t,4),0.12),1.10,1.0)'` : "";
     return [
       `[0:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},boxblur=luma_radius=40:luma_power=2,setsar=1[bg]`,
-      `[0:v]scale=${width}:${height}:force_original_aspect_ratio=decrease,setsar=1[fg]`,
+      `[0:v]scale=${width}:${height}:force_original_aspect_ratio=decrease,setsar=1${dropFx}[fg]`,
       `[bg][fg]overlay=(W-w)/2:(H-h)/2[v]`
     ];
   }
+
+  // Smart-Pan: Suave seguimiento de escenario para no perder al vocalista/músicos
+  if (mode === "smart_pan" || options.smartPan) {
+    const panX = `(in_w-out_w)/2 + ((in_w-out_w)/2.8)*sin(2*PI*t/10)`;
+    const basePan = `[0:v]crop='min(iw,ih*9/16)':'min(ih,iw*16/9)':'${panX}':'(in_h-out_h)/2',scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1`;
+    let chain = basePan;
+    if (options.punchInZoom) {
+      chain += `,scale='if(lte(t,3),iw*(1+0.10*(1-t/3)),iw)':-1:eval=frame,crop=${width}:${height},setsar=1`;
+    }
+    if (options.beatDropFx) {
+      chain += `,eq=brightness='if(lt(mod(t,4),0.12),0.08,0)':contrast='if(lt(mod(t,4),0.12),1.12,1.0)'`;
+    }
+    return [`${chain}[v]`];
+  }
+
+  // Si se solicita Punch-in Zoom (0-3s), aplicamos un sutil zoom dinámico del 10%
+  if (options.punchInZoom) {
+    let chain = `[0:v]crop='min(iw,ih*9/16)':'min(ih,iw*16/9)',scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1,scale='if(lte(t,3),iw*(1+0.10*(1-t/3)),iw)':-1:eval=frame,crop=${width}:${height},setsar=1`;
+    if (options.beatDropFx) {
+      chain += `,eq=brightness='if(lt(mod(t,4),0.12),0.08,0)':contrast='if(lt(mod(t,4),0.12),1.12,1.0)'`;
+    }
+    return [`${chain}[v]`];
+  }
+
+  if (options.beatDropFx) {
+    return [
+      `[0:v]crop='min(iw,ih*9/16)':'min(ih,iw*16/9)',scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1,eq=brightness='if(lt(mod(t,4),0.12),0.08,0)':contrast='if(lt(mod(t,4),0.12),1.12,1.0)'[v]`
+    ];
+  }
+
   return [
     `[0:v]crop='min(iw,ih*9/16)':'min(ih,iw*16/9)',scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1[v]`
   ];

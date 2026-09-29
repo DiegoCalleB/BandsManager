@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  calculateFinancialSummary,
-  calculateConcertROI,
-  calculateConcertExpenses,
-  forecastConcertRevenue,
-} from '../financeUtils';
+import { calculateFinancialSummary, calculateConcertROI, calculateConcertExpenses, forecastConcertRevenue } from '../financeUtils';
 import { Payment, Concert } from '../../types';
 
 describe('financeUtils', () => {

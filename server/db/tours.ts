@@ -3,14 +3,16 @@ import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetTours(bandId: string) {
   const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
     .from("tours")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .eq("band_id", cleanId)
     .order("fecha_inicio", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (tours): ${error.message}`);
-  return (data || []).map(t => {
+  const validated = (data || []).filter(t => cleanBandId(t.band_id) === cleanId);
+  return validated.map(t => {
     let vehiculos: any[] = [];
     if (Array.isArray(t.vehiculos) && t.vehiculos.length > 0) {
       vehiculos = t.vehiculos;

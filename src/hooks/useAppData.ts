@@ -1,5 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, User, Fan, Tour, EPKConfig, BookingCampaign } from '../types';
+import {
+  Lead,
+  Rehearsal,
+  Concert,
+  SocialPost,
+  Payment,
+  Message,
+  SocialMetric,
+  User,
+  Fan,
+  Tour,
+  EPKConfig,
+  BookingCampaign,
+} from '../types';
 import { api, ApiError } from '../services/api';
 
 const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
@@ -13,7 +26,7 @@ const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
     targetDatesText: '4 y 5 de diciembre, 11 y 12 de diciembre',
     notes: 'Presentación del nuevo single y co-booking en salas de aforo medio.',
     isActive: true,
-    color: '#8b5cf6'
+    color: 'var(--acc)',
   },
   {
     id: 'camp-primavera-2027',
@@ -25,8 +38,8 @@ const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
     targetDatesText: '9 y 10 de abril, 23 y 24 de abril',
     notes: 'Gira de salas con intercambio de público con bandas aliadas de la zona.',
     isActive: false,
-    color: '#f59e0b'
-  }
+    color: 'var(--acc)',
+  },
 ];
 
 export function useAppData(isLoggedIn: boolean, bandId?: string) {
@@ -53,7 +66,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       const cached = localStorage.getItem('bandmanager_active_campaign');
       if (cached) return JSON.parse(cached);
     } catch (_) {}
-    return DEFAULT_CAMPAIGNS.find(c => c.isActive) || DEFAULT_CAMPAIGNS[0];
+    return DEFAULT_CAMPAIGNS.find((c) => c.isActive) || DEFAULT_CAMPAIGNS[0];
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +74,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   const dedupeById = <T extends { id?: string }>(arr: T[] = []): T[] => {
     const seen = new Set<string>();
-    return arr.filter(item => {
+    return arr.filter((item) => {
       if (!item) return false;
       const idStr = item.id ? String(item.id).trim() : null;
       if (!idStr) return true;
@@ -71,14 +84,53 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     });
   };
 
+  const parseSafeList = (val: any): string[] => {
+    if (!val) return [];
+    if (Array.isArray(val)) return val.map((x) => (typeof x === 'string' ? x : x?.name || x?.nombre || String(x))).filter(Boolean);
+    if (typeof val === 'string' && val.trim()) {
+      const trimmed = val.trim();
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed))
+            return parsed.map((x) => (typeof x === 'string' ? x : x?.name || x?.nombre || String(x))).filter(Boolean);
+        } catch {}
+      }
+      return trimmed
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+    return [];
+  };
+
+  const normalizeRehearsal = (r: any): Rehearsal => {
+    if (!r) return r;
+    return {
+      ...r,
+      asistentes: parseSafeList(r.asistentes),
+      convocados_nombres: r.convocados_nombres ? parseSafeList(r.convocados_nombres) : undefined,
+      convocados_ids: r.convocados_ids ? parseSafeList(r.convocados_ids) : undefined,
+    };
+  };
+
+  const normalizeConcert = (c: any): Concert => {
+    if (!c) return c;
+    return {
+      ...c,
+      convocados_nombres: c.convocados_nombres ? parseSafeList(c.convocados_nombres) : undefined,
+      convocados_ids: c.convocados_ids ? parseSafeList(c.convocados_ids) : undefined,
+    };
+  };
+
   const fetchState = useCallback(async (retryCount = 0) => {
     setSyncStatus('syncing');
     try {
       const data = await api.getState();
       setLeads(dedupeById(data.leads || []));
-      setRehearsals(dedupeById(data.rehearsals || []));
+      setRehearsals(dedupeById((data.rehearsals || []).map(normalizeRehearsal)));
       setTours(dedupeById(data.tours || []));
-      setConcerts(dedupeById(data.concerts || []));
+      setConcerts(dedupeById((data.concerts || []).map(normalizeConcert)));
       setPosts(dedupeById(data.posts || []));
       setPayments(dedupeById(data.payments || []));
       setMessages(dedupeById(data.messages || []));
@@ -111,7 +163,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
           fetchState(retryCount + 1);
         }, 1500);
       } else {
-        // Antes se marcaba como 'synced' tras agotar los reintentos, así que el usuario veía el
+        // Antes se marcaba como'synced' tras agotar los reintentos, así que el usuario veía el
         // indicador de "sincronizado" mientras en realidad no había datos reales cargados (solo
         // los arrays vacíos del useState inicial, no hay caché real que reutilizar). Mejor
         // mostrar el estado de error real.
@@ -149,7 +201,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   // REST API UPDATE OPERATIONS
   const handleUpdateEpkConfig = async (newConfig: any) => {
-    setEpkConfig(prev => ({ ...prev, ...newConfig }));
+    setEpkConfig((prev) => ({ ...prev, ...newConfig }));
     const resolvedBandId = newConfig?.bandId || bandId;
     if (!resolvedBandId) {
       console.error('Error updating EPK config: no hay banda activa.');
@@ -159,7 +211,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     try {
       const payload = {
         ...newConfig,
-        bandId: resolvedBandId
+        bandId: resolvedBandId,
       };
       await api.updateEpkConfig(payload);
     } catch (e: any) {
@@ -169,13 +221,15 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       // fallar, se avisa Y se recarga el estado real del servidor para no dejar la UI
       // enseñando un cambio que nunca llegó a guardarse.
       console.error('Error updating EPK config:', e);
-      alert(`No se pudo guardar el cambio en el EPK (logo, biografía, etc.): ${e?.message || 'error desconocido'}. Se ha revertido a lo último guardado.`);
+      alert(
+        `No se pudo guardar el cambio en el EPK (logo, biografía, etc.): ${e?.message || 'error desconocido'}. Se ha revertido a lo último guardado.`
+      );
       fetchState();
     }
   };
 
   const handleUpdateLead = async (id: string, updatedFields: Partial<Lead>, expectedStatus?: string) => {
-    setLeads(prev => prev.map(l => l.id === id ? { ...l, ...updatedFields } : l));
+    setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, ...updatedFields } : l)));
     try {
       await api.updateLead(id, updatedFields, expectedStatus);
     } catch (e: any) {
@@ -189,7 +243,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateRehearsal = async (id: string, updatedFields: Partial<Rehearsal>) => {
-    setRehearsals(prev => prev.map(r => r.id === id ? { ...r, ...updatedFields } : r));
+    setRehearsals((prev) => prev.map((r) => (r.id === id ? normalizeRehearsal({ ...r, ...updatedFields }) : r)));
     try {
       await api.updateRehearsal(id, updatedFields);
     } catch (e) {
@@ -199,7 +253,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateConcert = async (id: string, updatedFields: Partial<Concert>) => {
-    setConcerts(prev => prev.map(c => c.id === id ? { ...c, ...updatedFields } : c));
+    setConcerts((prev) => prev.map((c) => (c.id === id ? normalizeConcert({ ...c, ...updatedFields }) : c)));
     try {
       await api.updateConcert(id, updatedFields);
     } catch (e) {
@@ -210,7 +264,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   const handleDeleteRehearsal = async (id: string) => {
     const previous = rehearsals;
-    setRehearsals(prev => prev.filter(r => r.id !== id));
+    setRehearsals((prev) => prev.filter((r) => r.id !== id));
     try {
       await api.deleteRehearsal(id);
     } catch (e) {
@@ -221,7 +275,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   const handleDeleteConcert = async (id: string) => {
     const previous = concerts;
-    setConcerts(prev => prev.filter(c => c.id !== id));
+    setConcerts((prev) => prev.filter((c) => c.id !== id));
     try {
       await api.deleteConcert(id);
     } catch (e) {
@@ -231,12 +285,12 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddLead = async (newLead: Lead) => {
-    setLeads(prev => dedupeById([...prev.filter(l => l.id !== newLead.id), newLead]));
+    setLeads((prev) => dedupeById([...prev.filter((l) => l.id !== newLead.id), newLead]));
     try {
       const res: any = await api.createLead(newLead);
       const serverLead = res?.lead || (res?.id ? res : null);
       if (serverLead) {
-        setLeads(prev => dedupeById([...prev.filter(l => l.id !== newLead.id && l.id !== serverLead.id), serverLead]));
+        setLeads((prev) => dedupeById([...prev.filter((l) => l.id !== newLead.id && l.id !== serverLead.id), serverLead]));
       }
       if (res?.warning) {
         alert(res.warning);
@@ -248,7 +302,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleDeleteLead = async (id: string) => {
-    setLeads(prev => prev.filter(l => l.id !== id));
+    setLeads((prev) => prev.filter((l) => l.id !== id));
     try {
       await api.deleteLead(id);
     } catch (e) {
@@ -260,7 +314,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   const handleBulkDeleteLeads = async (ids: string[]) => {
     if (!ids || ids.length === 0) return;
     const idsSet = new Set(ids);
-    setLeads(prev => prev.filter(l => !idsSet.has(l.id)));
+    setLeads((prev) => prev.filter((l) => !idsSet.has(l.id)));
     try {
       await api.bulkDeleteLeads(ids);
     } catch (e) {
@@ -279,9 +333,10 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddRehearsal = async (reh: Rehearsal) => {
-    setRehearsals(prev => dedupeById([...prev.filter(r => r.id !== reh.id), reh]));
+    const normalized = normalizeRehearsal(reh);
+    setRehearsals((prev) => dedupeById([...prev.filter((r) => r.id !== normalized.id), normalized]));
     try {
-      await api.createRehearsal(reh);
+      await api.createRehearsal(normalized);
     } catch (e) {
       console.error('Error adding rehearsal:', e);
       fetchState();
@@ -289,9 +344,10 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddConcert = async (concert: Concert) => {
-    setConcerts(prev => dedupeById([...prev.filter(c => c.id !== concert.id), concert]));
+    const normalized = normalizeConcert(concert);
+    setConcerts((prev) => dedupeById([...prev.filter((c) => c.id !== normalized.id), normalized]));
     try {
-      await api.createConcert(concert);
+      await api.createConcert(normalized);
     } catch (e) {
       console.error('Error adding concert:', e);
       fetchState();
@@ -299,7 +355,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddPost = async (post: SocialPost) => {
-    setPosts(prev => dedupeById([...prev.filter(p => p.id !== post.id), post]));
+    setPosts((prev) => dedupeById([...prev.filter((p) => p.id !== post.id), post]));
     try {
       await api.createPost(post);
     } catch (e) {
@@ -309,7 +365,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdatePost = async (id: string, updatedFields: Partial<SocialPost>) => {
-    setPosts(prev => prev.map(p => p.id === id ? { ...p, ...updatedFields } : p));
+    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, ...updatedFields } : p)));
     try {
       await api.updatePost(id, updatedFields);
     } catch (e) {
@@ -319,7 +375,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddMetric = async (metric: SocialMetric) => {
-    setMetrics(prev => dedupeById([...prev.filter(m => m.id !== metric.id), metric]));
+    setMetrics((prev) => dedupeById([...prev.filter((m) => m.id !== metric.id), metric]));
     try {
       await api.createMetric(metric);
     } catch (e) {
@@ -329,7 +385,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateMetric = async (id: string, updatedFields: Partial<SocialMetric>) => {
-    setMetrics(prev => prev.map(m => m.id === id ? { ...m, ...updatedFields } : m));
+    setMetrics((prev) => prev.map((m) => (m.id === id ? { ...m, ...updatedFields } : m)));
     try {
       await api.updateMetric(id, updatedFields);
     } catch (e) {
@@ -339,7 +395,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleDeleteMetric = async (id: string) => {
-    setMetrics(prev => prev.filter(m => m.id !== id));
+    setMetrics((prev) => prev.filter((m) => m.id !== id));
     try {
       await api.deleteMetric(id);
     } catch (e) {
@@ -349,7 +405,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddPayment = async (pay: Payment) => {
-    setPayments(prev => dedupeById([...prev.filter(p => p.id !== pay.id), pay]));
+    setPayments((prev) => dedupeById([...prev.filter((p) => p.id !== pay.id), pay]));
     try {
       await api.createPayment(pay);
     } catch (e) {
@@ -359,7 +415,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdatePayment = async (id: string, updatedFields: Partial<Payment>) => {
-    setPayments(prev => prev.map(p => p.id === id ? { ...p, ...updatedFields } : p));
+    setPayments((prev) => prev.map((p) => (p.id === id ? { ...p, ...updatedFields } : p)));
     try {
       await api.updatePayment(id, updatedFields);
     } catch (e) {
@@ -369,8 +425,8 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleSaveTour = async (tourData: Tour) => {
-    const exists = tours.some(t => t.id === tourData.id);
-    setTours(prev => dedupeById([...prev.filter(t => t.id !== tourData.id), tourData]));
+    const exists = tours.some((t) => t.id === tourData.id);
+    setTours((prev) => dedupeById([...prev.filter((t) => t.id !== tourData.id), tourData]));
     try {
       if (exists) {
         await api.updateTour(tourData.id, tourData);
@@ -384,7 +440,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleDeleteTour = async (id: string) => {
-    setTours(prev => prev.filter(t => t.id !== id));
+    setTours((prev) => prev.filter((t) => t.id !== id));
     try {
       await api.deleteTour(id);
     } catch (e) {
@@ -394,7 +450,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddFan = async (fan: Fan) => {
-    setFans(prev => [fan, ...prev]);
+    setFans((prev) => [fan, ...prev]);
     try {
       await api.createFan(fan);
     } catch (e) {
@@ -404,7 +460,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateFan = async (id: string, updatedFields: Partial<Fan>) => {
-    setFans(prev => prev.map(f => f.id === id ? { ...f, ...updatedFields } : f));
+    setFans((prev) => prev.map((f) => (f.id === id ? { ...f, ...updatedFields } : f)));
     try {
       await api.updateFan(id, updatedFields);
     } catch (e) {
@@ -414,7 +470,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleDeleteFan = async (id: string) => {
-    setFans(prev => prev.filter(f => f.id !== id));
+    setFans((prev) => prev.filter((f) => f.id !== id));
     try {
       await api.deleteFan(id);
     } catch (e) {
@@ -424,7 +480,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateIncentive = async (newIncentive: NonNullable<EPKConfig['incentivoFans']>) => {
-    setEpkConfig(prev => ({ ...prev, incentivoFans: newIncentive }));
+    setEpkConfig((prev) => ({ ...prev, incentivoFans: newIncentive }));
     try {
       await api.updateIncentive(newIncentive);
     } catch (e) {
@@ -435,14 +491,20 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   const handleSaveCampaign = async (campaignData: Partial<BookingCampaign>) => {
     const dates = campaignData.targetDates || [];
-    const formattedDatesText = campaignData.targetDatesText || (dates.length > 0 ? dates.map(d => {
-      const parts = d.split('-');
-      if (parts.length === 3) {
-        const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-        return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-      }
-      return d;
-    }).join(', ') : 'Sin fechas');
+    const formattedDatesText =
+      campaignData.targetDatesText ||
+      (dates.length > 0
+        ? dates
+            .map((d) => {
+              const parts = d.split('-');
+              if (parts.length === 3) {
+                const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+                return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+              }
+              return d;
+            })
+            .join(', ')
+        : 'Sin fechas');
 
     const campaignId = campaignData.id || `camp-${Date.now()}`;
     const fullCampaign: BookingCampaign = {
@@ -457,17 +519,17 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       notes: campaignData.notes || '',
       customPitchTemplates: campaignData.customPitchTemplates || {},
       isActive: Boolean(campaignData.isActive),
-      color: campaignData.color || '#8b5cf6',
-      created_at: campaignData.created_at || new Date().toISOString()
+      color: campaignData.color || 'var(--acc)',
+      created_at: campaignData.created_at || new Date().toISOString(),
     };
 
-    setCampaigns(prev => {
-      const exists = prev.some(c => c.id === fullCampaign.id);
+    setCampaigns((prev) => {
+      const exists = prev.some((c) => c.id === fullCampaign.id);
       let next: BookingCampaign[];
       if (exists) {
-        next = prev.map(c => c.id === fullCampaign.id ? fullCampaign : (fullCampaign.isActive ? { ...c, isActive: false } : c));
+        next = prev.map((c) => (c.id === fullCampaign.id ? fullCampaign : fullCampaign.isActive ? { ...c, isActive: false } : c));
       } else {
-        next = [fullCampaign, ...(fullCampaign.isActive ? prev.map(c => ({ ...c, isActive: false })) : prev)];
+        next = [fullCampaign, ...(fullCampaign.isActive ? prev.map((c) => ({ ...c, isActive: false })) : prev)];
       }
       localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
       return next;
@@ -487,8 +549,8 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleDeleteCampaign = async (id: string) => {
-    setCampaigns(prev => {
-      const next = prev.filter(c => c.id !== id);
+    setCampaigns((prev) => {
+      const next = prev.filter((c) => c.id !== id);
       localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
       return next;
     });
@@ -506,7 +568,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   const handleSetActiveCampaign = async (idOrCampaign: string | BookingCampaign | null) => {
     let targetCampaign: BookingCampaign | null = null;
     if (typeof idOrCampaign === 'string') {
-      targetCampaign = campaigns.find(c => c.id === idOrCampaign) || null;
+      targetCampaign = campaigns.find((c) => c.id === idOrCampaign) || null;
     } else {
       targetCampaign = idOrCampaign;
     }
@@ -514,15 +576,15 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     setActiveCampaign(targetCampaign);
     if (targetCampaign) {
       localStorage.setItem('bandmanager_active_campaign', JSON.stringify(targetCampaign));
-      setCampaigns(prev => {
-        const next = prev.map(c => ({ ...c, isActive: c.id === targetCampaign!.id }));
+      setCampaigns((prev) => {
+        const next = prev.map((c) => ({ ...c, isActive: c.id === targetCampaign!.id }));
         localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
         return next;
       });
     } else {
       localStorage.removeItem('bandmanager_active_campaign');
-      setCampaigns(prev => {
-        const next = prev.map(c => ({ ...c, isActive: false }));
+      setCampaigns((prev) => {
+        const next = prev.map((c) => ({ ...c, isActive: false }));
         localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
         return next;
       });
@@ -579,6 +641,6 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     handleAddFan,
     handleUpdateFan,
     handleDeleteFan,
-    handleUpdateIncentive
+    handleUpdateIncentive,
   };
 }

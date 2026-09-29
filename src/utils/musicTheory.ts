@@ -17,7 +17,7 @@ const NOMBRES_MIDI = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#'
 
 /**
  * Devuelve null (no NaN) para lo que no es una nota. Esa distinción es el motivo de que exista
- * el validador: Tone.js convierte 'H4' en NaN sin lanzar, y una nota NaN se sintetiza como un
+ * el validador: Tone.js convierte'H4' en NaN sin lanzar, y una nota NaN se sintetiza como un
  * hueco mudo que parece un fallo de la app.
  */
 export function notaAMidi(nota: string): number | null {

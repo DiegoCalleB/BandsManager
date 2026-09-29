@@ -129,12 +129,13 @@ router.post("/songs", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El título del tema es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
+    const isAdmin = (req as any).user?.role === "admin";
     (newSong as any).band_id = userBandId;
     if (!newSong.id) {
       newSong.id = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     }
     
-    const saved = await dbUpsertSong(newSong, userBandId);
+    const saved = await dbUpsertSong(newSong, userBandId, isAdmin);
     res.json({ success: true, song: saved });
   } catch (err: any) {
     console.error("Error creating song:", err);
@@ -147,9 +148,10 @@ router.put("/songs/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const userBandId = getTargetBandId(req);
+    const isAdmin = (req as any).user?.role === "admin";
     const updatedFields: Partial<Song> = req.body;
     const merged = { ...updatedFields, id, band_id: userBandId };
-    const saved = await dbUpsertSong(merged, userBandId);
+    const saved = await dbUpsertSong(merged, userBandId, isAdmin);
 
     res.json({ success: true, song: saved });
   } catch (err: any) {

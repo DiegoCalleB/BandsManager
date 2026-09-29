@@ -34,11 +34,16 @@ export interface CosteTransicion {
 
 function costeArmonia(relation: CompatibilidadArmonica | null): number {
   switch (relation) {
-    case 'identica': return 0;
-    case 'compatible': return 0.15;
-    case 'neutra': return 0.5;
-    case 'choque': return 1;
-    default: return 0.35; // sin tonalidad fiable en alguna de las dos: coste neutro, ni premia ni castiga
+    case 'identica':
+      return 0;
+    case 'compatible':
+      return 0.15;
+    case 'neutra':
+      return 0.5;
+    case 'choque':
+      return 1;
+    default:
+      return 0.35; // sin tonalidad fiable en alguna de las dos: coste neutro, ni premia ni castiga
   }
 }
 
@@ -68,7 +73,7 @@ export function calcularCosteTransicion(a: Song, b: Song): CosteTransicion {
     energyCost,
     harmonyRelation: harmonyRelation ?? 'desconocida',
     bpmDiff,
-    energyDiff
+    energyDiff,
   };
 }
 
@@ -132,13 +137,11 @@ export function evaluarCalidadUnion(songA: Song, songB: Song): EvaluacionUnion {
     ? `Unión fluida y armónica (${scorePercent}%)`
     : `Revisar unión (${scorePercent}%${avisosCriticos.length > 0 ? ` · ${avisosCriticos[0]}` : ''})`;
 
-  const shortBadge = isOk
-    ? `✓ OK (${scorePercent}%)`
-    : `✕ Revisar (${scorePercent}%)`;
+  const shortBadge = isOk ? `✓ OK (${scorePercent}%)` : `✕ Revisar (${scorePercent}%)`;
 
-  const badgeBg = isOk ? 'bg-emerald-500/15' : 'bg-rose-500/15';
-  const badgeText = isOk ? 'text-emerald-300' : 'text-rose-300';
-  const badgeBorder = isOk ? 'border-emerald-500/35' : 'border-rose-500/40';
+  const badgeBg = isOk ? 'bg-[var(--ok)]/15' : 'bg-[var(--alert)]/15';
+  const badgeText = isOk ? 'text-[var(--ok)]/60' : 'text-[var(--alert)]/60';
+  const badgeBorder = isOk ? 'border-[var(--ok)]/35' : 'border-[var(--hair)]';
 
   return {
     status,
@@ -150,7 +153,7 @@ export function evaluarCalidadUnion(songA: Song, songB: Song): EvaluacionUnion {
     coste,
     badgeBg,
     badgeText,
-    badgeBorder
+    badgeBorder,
   };
 }
 
@@ -219,12 +222,12 @@ export function costeTotalTransiciones(orden: HuecoCancion[]): number {
  * Determinista y explicable a propósito, sin LLM ni caja negra de por medio — el mismo
  * repertorio con los mismos datos siempre da el mismo orden, y cada coste de transición se puede
  * mostrar y justificar en el propio gráfico:
- *  1. Construcción por vecino más cercano, siempre empezando por la apertura que ya eligió el
- *     usuario (nunca se mueve la primera canción — es una elección deliberada, no un dato más).
- *  2. Refinamiento 2-opt: prueba a invertir cada tramo posible: si eso reduce la suma de las dos
- *     transiciones que cambian, se queda con la inversión. Se repite hasta que ya no mejora nada
- *     o se agota el límite de iteraciones (con repertorios de banda, unas pocas decenas de temas,
- *     converge casi siempre en 1-2 pasadas).
+ * 1. Construcción por vecino más cercano, siempre empezando por la apertura que ya eligió el
+ * usuario (nunca se mueve la primera canción — es una elección deliberada, no un dato más).
+ * 2. Refinamiento 2-opt: prueba a invertir cada tramo posible: si eso reduce la suma de las dos
+ * transiciones que cambian, se queda con la inversión. Se repite hasta que ya no mejora nada
+ * o se agota el límite de iteraciones (con repertorios de banda, unas pocas decenas de temas,
+ * converge casi siempre en 1-2 pasadas).
  */
 export function optimizarOrdenPorTransiciones(slots: HuecoCancion[]): HuecoCancion[] {
   if (slots.length <= 2) return slots;
@@ -239,7 +242,10 @@ export function optimizarOrdenPorTransiciones(slots: HuecoCancion[]): HuecoCanci
     let mejorCoste = Infinity;
     for (let i = 0; i < restantes.length; i++) {
       const c = costeEntre(actual, restantes[i]);
-      if (c < mejorCoste) { mejorCoste = c; mejorIdx = i; }
+      if (c < mejorCoste) {
+        mejorCoste = c;
+        mejorIdx = i;
+      }
     }
     orden.push(restantes[mejorIdx]);
     restantes.splice(mejorIdx, 1);
@@ -258,10 +264,14 @@ export function optimizarOrdenPorTransiciones(slots: HuecoCancion[]): HuecoCanci
         const costeActual = costeEntre(orden[i - 1], orden[i]) + (hayDespues ? costeEntre(orden[j], orden[j + 1]) : 0);
         const costeNuevo = costeEntre(orden[i - 1], orden[j]) + (hayDespues ? costeEntre(orden[i], orden[j + 1]) : 0);
         if (costeNuevo < costeActual - 1e-9) {
-          let lo = i, hi = j;
+          let lo = i,
+            hi = j;
           while (lo < hi) {
-            const tmp = orden[lo]; orden[lo] = orden[hi]; orden[hi] = tmp;
-            lo++; hi--;
+            const tmp = orden[lo];
+            orden[lo] = orden[hi];
+            orden[hi] = tmp;
+            lo++;
+            hi--;
           }
           mejorado = true;
         }

@@ -3,14 +3,15 @@ import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetPayments(bandId: string) {
   const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
     .from("payments")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .eq("band_id", cleanId)
     .order("fecha", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (payments): ${error.message}`);
-  return data || [];
+  return (data || []).filter(p => cleanBandId(p.band_id) === cleanId);
 }
 
 export async function dbUpsertPayment(payment: any, bandId: string) {

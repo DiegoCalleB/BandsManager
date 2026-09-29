@@ -13,7 +13,7 @@ export function useStudioShareModal(song: Song) {
     isOpen: false,
     title: '',
     text: '',
-    itemType: 'song'
+    itemType: 'song',
   });
 
   const handleShareSong = () => {
@@ -22,7 +22,7 @@ export function useStudioShareModal(song: Song) {
       title: song.titulo,
       subtitle: 'Compartir canción por WhatsApp',
       text: formatSongShareText(song, { includeChords: true, includeGuide: true }),
-      itemType: 'song'
+      itemType: 'song',
     });
   };
 
@@ -32,12 +32,13 @@ export function useStudioShareModal(song: Song) {
       title: `${song.titulo} - Idea: ${idea.titulo}`,
       subtitle: `Idea de audio (${idea.seccion}) de ${idea.subidoPor}`,
       text: formatSongIdeaShareText(song, idea),
-      itemType: 'idea'
+      itemType: 'idea',
     });
   };
 
   return {
-    shareModalData, setShareModalData,
+    shareModalData,
+    setShareModalData,
     handleShareSong,
     handleShareIdea,
   };

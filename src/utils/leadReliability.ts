@@ -74,7 +74,7 @@ export function calculateLeadReliability(item: Lead | BandContact): { score: num
 
   return {
     score: Math.min(100, Math.max(10, score)),
-    details
+    details,
   };
 }
 
@@ -84,7 +84,7 @@ export function calculateLeadReliability(item: Lead | BandContact): { score: num
  */
 export function isLeadVerificado(item: Lead | BandContact): boolean {
   if (item.es_verificado) return true;
-  
+
   // For Lead
   if ('estado' in item) {
     if (item.estado === 'interesado' || item.estado === 'negociando') return true;
@@ -94,7 +94,11 @@ export function isLeadVerificado(item: Lead | BandContact): boolean {
 
   // For BandContact
   if ('estado_relacion' in item) {
-    if (item.estado_relacion === 'concierto_agendado' || item.estado_relacion === 'intercambio_propuesto' || item.estado_relacion === 'colegas_aliados') {
+    if (
+      item.estado_relacion === 'concierto_agendado' ||
+      item.estado_relacion === 'intercambio_propuesto' ||
+      item.estado_relacion === 'colegas_aliados'
+    ) {
       return true;
     }
   }

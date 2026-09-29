@@ -6,16 +6,65 @@
 // diseñe y se pruebe con cuidado (versionado de caché, network-first para HTML/API,
 // cache-first SOLO para assets con hash), este SW no cachea nada: solo existe para que Chrome
 // considere la app "instalable" desde el móvil. Cero riesgo, cero beneficio de offline todavía.
+const CACHE_NAME = "bandmanager-shell-v2";
+
 self.addEventListener("install", () => {
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+          return Promise.resolve(false);
+        })
+      )
+    ).then(() => self.clients.claim())
+  );
 });
 
+// Network-First con fallback a caché:
+// En vivo siempre se intenta la red para garantizar que los despliegues se actualicen al instante
+// sin servir bundles rotos. Si la conexión se pierde en camerinos o sótanos, la caché responde.
 self.addEventListener("fetch", (event) => {
-  event.respondWith(fetch(event.request));
+  if (event.request.method !== "GET") return;
+
+  const url = new URL(event.request.url);
+  // Las llamadas API nunca se cachean en el SW para garantizar consistencia en tiempo real
+  if (url.pathname.startsWith("/api/")) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && (networkResponse.type === "basic" || networkResponse.type === "cors")) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache).catch(() => {});
+          });
+        }
+        return networkResponse;
+      })
+      .catch(async () => {
+        const cache = await caches.open(CACHE_NAME);
+        const cached = await cache.match(event.request);
+        if (cached) return cached;
+        if (event.request.mode === "navigate") {
+          const cachedHome = await cache.match("/");
+          if (cachedHome) return cachedHome;
+        }
+        return new Response("Sin conexión (Modo Escenario Offline)", {
+          status: 503,
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
+      })
+  );
 });
 
 self.addEventListener("notificationclick", (event) => {

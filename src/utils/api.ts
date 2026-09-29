@@ -37,7 +37,7 @@ export function getActiveBandId(): string {
 function buildHeaders(options: RequestInit): Record<string, string> {
   const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
   const headers: Record<string, string> = {
-    ...(options.headers as Record<string, string> || {}),
+    ...((options.headers as Record<string, string>) || {}),
   };
 
   if (options.body && typeof options.body === 'string' && !headers['Content-Type'] && !headers['content-type']) {
@@ -71,22 +71,15 @@ export async function apiFetch<T = any>(url: string, options: RequestInit = {}):
   if (contentType && contentType.includes('application/json')) {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      const detailedMessage = data.message || data.error || data.detail || (typeof data === 'string' ? data : `Error ${res.status}: ${res.statusText}`);
-      throw new ApiRequestError(
-        typeof detailedMessage === 'string' ? detailedMessage : JSON.stringify(detailedMessage),
-        res.status,
-        data
-      );
+      const detailedMessage =
+        data.message || data.error || data.detail || (typeof data === 'string' ? data : `Error ${res.status}: ${res.statusText}`);
+      throw new ApiRequestError(typeof detailedMessage === 'string' ? detailedMessage : JSON.stringify(detailedMessage), res.status, data);
     }
     return data;
   } else {
     const text = await res.text().catch(() => '');
     if (!res.ok) {
-      throw new ApiRequestError(
-        `Error ${res.status}: ${text.slice(0, 100) || res.statusText}`,
-        res.status,
-        text
-      );
+      throw new ApiRequestError(`Error ${res.status}: ${text.slice(0, 100) || res.statusText}`, res.status, text);
     }
     return { success: true, text } as unknown as T;
   }

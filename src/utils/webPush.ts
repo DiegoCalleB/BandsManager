@@ -34,7 +34,7 @@ export async function triggerNativeMobileNotification(
             icon,
             badge: '/icon-192.png',
             tag,
-            vibrate: [200, 100, 200]
+            vibrate: [200, 100, 200],
           } as any);
           return { success: true, status: 'Notificación enviada al móvil / PWA' };
         }
@@ -47,7 +47,7 @@ export async function triggerNativeMobileNotification(
     new Notification(title, {
       body,
       icon,
-      tag
+      tag,
     });
 
     return { success: true, status: 'Notificación de sistema mostrada' };

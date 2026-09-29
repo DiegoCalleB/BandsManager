@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  calculateSetlistDurationSec,
-  findBestSetlistMatch,
-  generateAutoSetlistForConcert
-} from '../setlistOptimization';
+import { calculateSetlistDurationSec, findBestSetlistMatch, generateAutoSetlistForConcert } from '../setlistOptimization';
 import { Setlist, Song } from '../../types';
 
 describe('setlistOptimization: Cálculo y sugerencia inteligente de setlist para bolos', () => {
@@ -11,7 +7,7 @@ describe('setlistOptimization: Cálculo y sugerencia inteligente de setlist para
     { id: 's1', titulo: 'Tema Rápido', duracionSegundos: 180, energia: 20 },
     { id: 's2', titulo: 'Balada', duracionSegundos: 240, energia: 6 },
     { id: 's3', titulo: 'Tema Medio', duracionSegundos: 300, energia: 12 },
-    { id: 's4', titulo: 'Hit Festival', duracionSegundos: 210, energia: 18, favoritoGeneral: true }
+    { id: 's4', titulo: 'Hit Festival', duracionSegundos: 210, energia: 18, favoritoGeneral: true },
   ];
 
   const setlist45Min: Setlist = {
@@ -25,8 +21,8 @@ describe('setlistOptimization: Cálculo y sugerencia inteligente de setlist para
       { id: 'i2', tipoItem: 'cancion', songId: 's4' }, // 3.5m
       { id: 'i3', tipoItem: 'bloque', bloqueSubtipo: 'presentacion', duracionEstimadaMinutos: 2 }, // 2m
       { id: 'i4', tipoItem: 'cancion', songId: 's3' }, // 5m
-      { id: 'i5', tipoItem: 'cancion', songId: 's2' }  // 4m -> Total ~ 17.5 min
-    ]
+      { id: 'i5', tipoItem: 'cancion', songId: 's2' }, // 4m -> Total ~ 17.5 min
+    ],
   };
 
   const setlist75Min: Setlist = {
@@ -38,8 +34,8 @@ describe('setlistOptimization: Cálculo y sugerencia inteligente de setlist para
     items: new Array(15).fill(null).map((_, idx) => ({
       id: `it-${idx}`,
       tipoItem: 'cancion',
-      songId: 's3' // 5 min * 15 = 75 min
-    }))
+      songId: 's3', // 5 min * 15 = 75 min
+    })),
   };
 
   it('calcula la duración en segundos considerando canciones y bloques', () => {

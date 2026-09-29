@@ -52,20 +52,27 @@ describe('reelsUtils', () => {
     });
 
     it('avisa si el copy está vacío', () => {
-      const problemas = validateScheduleReadiness({ copy: '   ', scheduledDate: '2026-08-30', scheduledTime: '20:30', now: ahora });
+      const problemas = validateScheduleReadiness({ copy: '', scheduledDate: '2026-08-30', scheduledTime: '20:30', now: ahora });
       expect(problemas).toContain('Falta el texto del copy.');
     });
 
     it('avisa si no hay ningún hashtag en el copy', () => {
-      const problemas = validateScheduleReadiness({ copy: 'Sin hashtags por aquí', scheduledDate: '2026-08-30', scheduledTime: '20:30', now: ahora });
+      const problemas = validateScheduleReadiness({
+        copy: 'Sin hashtags por aquí',
+        scheduledDate: '2026-08-30',
+        scheduledTime: '20:30',
+        now: ahora,
+      });
       expect(problemas).toContain('El copy no lleva ningún hashtag: añade al menos uno.');
     });
 
     it('avisa si falta fecha u hora', () => {
-      expect(validateScheduleReadiness({ copy: '#ok', scheduledDate: '', scheduledTime: '20:30', now: ahora }))
-        .toContain('Elige fecha y hora de publicación.');
-      expect(validateScheduleReadiness({ copy: '#ok', scheduledDate: '2026-08-30', scheduledTime: '', now: ahora }))
-        .toContain('Elige fecha y hora de publicación.');
+      expect(validateScheduleReadiness({ copy: '#ok', scheduledDate: '', scheduledTime: '20:30', now: ahora })).toContain(
+        'Elige fecha y hora de publicación.'
+      );
+      expect(validateScheduleReadiness({ copy: '#ok', scheduledDate: '2026-08-30', scheduledTime: '', now: ahora })).toContain(
+        'Elige fecha y hora de publicación.'
+      );
     });
 
     it('avisa si la fecha/hora elegida ya pasó', () => {

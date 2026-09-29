@@ -7,11 +7,13 @@ export function normalizeSongTitle(title?: string | null): string {
 export function titlesMatch(haystackTitle: string, needles: string[]): boolean {
   const normalizedHaystack = normalizeSongTitle(haystackTitle);
   if (!normalizedHaystack) return false;
-  return needles.some(needle => {
+  return needles.some((needle) => {
     const normalizedNeedle = normalizeSongTitle(needle);
     if (!normalizedNeedle) return false;
-    return normalizedHaystack === normalizedNeedle ||
-           normalizedHaystack.includes(normalizedNeedle) ||
-           normalizedNeedle.includes(normalizedHaystack);
+    return (
+      normalizedHaystack === normalizedNeedle ||
+      normalizedHaystack.includes(normalizedNeedle) ||
+      normalizedNeedle.includes(normalizedHaystack)
+    );
   });
 }

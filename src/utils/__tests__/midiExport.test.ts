@@ -7,7 +7,10 @@ async function bytesDe(blob: Blob): Promise<number[]> {
 }
 
 function leerAscii(bytes: number[], desde: number, largo: number): string {
-  return bytes.slice(desde, desde + largo).map((b) => String.fromCharCode(b)).join('');
+  return bytes
+    .slice(desde, desde + largo)
+    .map((b) => String.fromCharCode(b))
+    .join('');
 }
 
 /** Localiza una secuencia de bytes; -1 si no está. */
@@ -20,7 +23,7 @@ function indiceDe(bytes: number[], patron: number[]): number {
 
 const dosNotas: MelodicNoteEvent[] = [
   { tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 },
-  { tiempo: 2, nota: 'G4', duracionBeats: 0.5, velocidad: 0.5 }
+  { tiempo: 2, nota: 'G4', duracionBeats: 0.5, velocidad: 0.5 },
 ];
 
 describe('eventosAMidiBlob', () => {
@@ -29,9 +32,9 @@ describe('eventosAMidiBlob', () => {
 
     expect(leerAscii(bytes, 0, 4)).toBe('MThd');
     expect(bytes.slice(4, 8)).toEqual([0, 0, 0, 6]); // longitud de cabecera
-    expect(bytes.slice(8, 10)).toEqual([0, 0]);      // formato 0
-    expect(bytes.slice(10, 12)).toEqual([0, 1]);     // una pista
-    expect((bytes[12] << 8) | bytes[13]).toBe(480);  // PPQ
+    expect(bytes.slice(8, 10)).toEqual([0, 0]); // formato 0
+    expect(bytes.slice(10, 12)).toEqual([0, 1]); // una pista
+    expect((bytes[12] << 8) | bytes[13]).toBe(480); // PPQ
     expect(leerAscii(bytes, 14, 4)).toBe('MTrk');
   });
 
@@ -63,11 +66,13 @@ describe('eventosAMidiBlob', () => {
   });
 
   it('manda la percusión al canal 10 de batería y sin cambio de programa', async () => {
-    const bytes = await bytesDe(eventosAMidiBlob({
-      eventos: [{ tiempo: 0, nota: 'C2', duracionBeats: 0.5, velocidad: 1 }],
-      bpm: 120,
-      instrument: 'percusion'
-    }));
+    const bytes = await bytesDe(
+      eventosAMidiBlob({
+        eventos: [{ tiempo: 0, nota: 'C2', duracionBeats: 0.5, velocidad: 1 }],
+        bpm: 120,
+        instrument: 'percusion',
+      })
+    );
 
     // Canal 10 = índice 9: note-on 0x99, note-off 0x89.
     expect(indiceDe(bytes, [0x99, 36])).toBeGreaterThan(-1);
@@ -77,11 +82,13 @@ describe('eventosAMidiBlob', () => {
   });
 
   it('traduce la duración en compases a pulsos y empareja cada nota con su note-off', async () => {
-    const bytes = await bytesDe(eventosAMidiBlob({
-      eventos: [{ tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 }],
-      bpm: 120,
-      instrument: 'guitarra'
-    }));
+    const bytes = await bytesDe(
+      eventosAMidiBlob({
+        eventos: [{ tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 }],
+        bpm: 120,
+        instrument: 'guitarra',
+      })
+    );
 
     // E4 = 64, a intensidad máxima = 127.
     const on = indiceDe(bytes, [0x90, 64, 127]);
@@ -93,25 +100,29 @@ describe('eventosAMidiBlob', () => {
   });
 
   it('convierte la intensidad de 0-1 al rango 0-127 de MIDI', async () => {
-    const bytes = await bytesDe(eventosAMidiBlob({
-      eventos: [{ tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 0.5 }],
-      bpm: 120,
-      instrument: 'guitarra'
-    }));
+    const bytes = await bytesDe(
+      eventosAMidiBlob({
+        eventos: [{ tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 0.5 }],
+        bpm: 120,
+        instrument: 'guitarra',
+      })
+    );
 
     expect(indiceDe(bytes, [0x90, 64, 64])).toBeGreaterThan(-1);
   });
 
   it('suelta la nota anterior antes de repicar la misma altura', async () => {
     // Sin ordenar los eventos, el note-off de la primera mataría a la segunda nada más empezar.
-    const bytes = await bytesDe(eventosAMidiBlob({
-      eventos: [
-        { tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 },
-        { tiempo: 1, nota: 'E4', duracionBeats: 1, velocidad: 1 }
-      ],
-      bpm: 120,
-      instrument: 'guitarra'
-    }));
+    const bytes = await bytesDe(
+      eventosAMidiBlob({
+        eventos: [
+          { tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 },
+          { tiempo: 1, nota: 'E4', duracionBeats: 1, velocidad: 1 },
+        ],
+        bpm: 120,
+        instrument: 'guitarra',
+      })
+    );
 
     const off = indiceDe(bytes, [0x80, 64, 0x40]);
     const segundoOn = bytes.indexOf(0x90, off);
@@ -120,14 +131,16 @@ describe('eventosAMidiBlob', () => {
   });
 
   it('ignora una nota que no se puede interpretar en vez de escribir basura', async () => {
-    const bytes = await bytesDe(eventosAMidiBlob({
-      eventos: [
-        { tiempo: 0, nota: 'H4', duracionBeats: 1, velocidad: 1 },
-        { tiempo: 1, nota: 'E4', duracionBeats: 1, velocidad: 1 }
-      ],
-      bpm: 120,
-      instrument: 'guitarra'
-    }));
+    const bytes = await bytesDe(
+      eventosAMidiBlob({
+        eventos: [
+          { tiempo: 0, nota: 'H4', duracionBeats: 1, velocidad: 1 },
+          { tiempo: 1, nota: 'E4', duracionBeats: 1, velocidad: 1 },
+        ],
+        bpm: 120,
+        instrument: 'guitarra',
+      })
+    );
 
     // Solo debe quedar un note-on, el de la nota válida.
     expect(bytes.filter((b, i) => b === 0x90 && bytes[i + 1] === 64).length).toBe(1);

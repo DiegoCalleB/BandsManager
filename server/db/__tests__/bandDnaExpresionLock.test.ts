@@ -20,6 +20,17 @@ function crearFromMock() {
   const builder: any = {
     select: () => { modo = 'select'; return builder; },
     update: (payload: any) => { modo = 'update'; updatePayload = payload; return builder; },
+    or: (expr: string) => {
+      for (const [k] of rows.entries()) {
+        if (expr.includes(k)) {
+          bandId = k;
+          break;
+        }
+      }
+      return builder;
+    },
+    limit: () => builder,
+    order: () => builder,
     upsert: async (payload: any) => {
       rows.set(payload.band_id, { ...(rows.get(payload.band_id) || {}), ...payload });
       return { data: payload, error: null };
@@ -33,7 +44,8 @@ function crearFromMock() {
       }
       return builder;
     },
-    maybeSingle: async () => ({ data: (bandId && rows.get(bandId)) || null, error: null })
+    maybeSingle: async () => ({ data: (bandId && rows.get(bandId)) || null, error: null }),
+    single: async () => ({ data: (bandId && rows.get(bandId)) || null, error: null })
   };
   return builder;
 }

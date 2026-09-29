@@ -14,7 +14,7 @@ export const FAN_FORM_LANGUAGES: { code: FanFormLanguage; label: string; flag: s
 ];
 
 export function isFanFormLanguage(value: string | null | undefined): value is FanFormLanguage {
-  return !!value && FAN_FORM_LANGUAGES.some(l => l.code === value);
+  return !!value && FAN_FORM_LANGUAGES.some((l) => l.code === value);
 }
 
 /**
@@ -25,7 +25,7 @@ export function isFanFormLanguage(value: string | null | undefined): value is Fa
  *
  * - Concierto en es/en: esos dos bastan, no hace falta añadir nada.
  * - Cualquier otro idioma (it, cs...): va primero el suyo, y detrás inglés y español, que son
- *   los dos que un músico o programador de fuera de España necesita para poder escribiros.
+ * los dos que un músico o programador de fuera de España necesita para poder escribiros.
  */
 export function idiomasDisponiblesParaConcierto(idiomaConcierto: FanFormLanguage): FanFormLanguage[] {
   if (idiomaConcierto === 'es' || idiomaConcierto === 'en') {
@@ -190,11 +190,11 @@ const es: FanFormDict = {
   placeholderInstagram: '@tu_usuario',
   labelMessage: 'Mensaje o saludo para la banda (Opcional)',
   placeholderMessage: 'Déjale un saludo o dedicatoria a la banda...',
-  consentPrefix: 'He leído y acepto la ',
+  consentPrefix: 'He leído y acepto la',
   consentPrivacyLink: 'política de privacidad',
-  consentMiddle: ', y doy mi ',
+  consentMiddle: ', y doy mi',
   consentExplicit: 'consentimiento explícito',
-  consentSuffix: ' para que la banda guarde mis datos y me envíe novedades.',
+  consentSuffix: 'para que la banda guarde mis datos y me envíe novedades.',
   submitJoin: 'Únete a {bandName}',
   submitting: 'Registrando...',
   followUsAlso: 'O síguenos en redes',
@@ -236,10 +236,14 @@ const es: FanFormDict = {
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Método de pago:',
   privacyModalTitle: 'Política de Privacidad y RGPD',
-  privacyPara1: '**1. Responsable del tratamiento:** {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu registro con {bandName} e informarte sobre próximos conciertos, lanzamientos y novedades musicales.',
-  privacyPara2: '**2. Legitimación:** El tratamiento de tus datos se basa en tu consentimiento explícito al marcar la casilla de aceptación y enviar el formulario.',
-  privacyPara3: '**3. Destinatarios:** Los datos se almacenan de forma segura para uso exclusivo de {bandName} en la gestión de su base de fans. No se cederán a terceros salvo obligación legal.',
-  privacyPara4: '**4. Derechos:** Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión y portabilidad escribiendo a nuestro correo de contacto o indicándolo en cualquiera de nuestros correos informativos.',
+  privacyPara1:
+    '**1. Responsable del tratamiento:** {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu registro con {bandName} e informarte sobre próximos conciertos, lanzamientos y novedades musicales.',
+  privacyPara2:
+    '**2. Legitimación:** El tratamiento de tus datos se basa en tu consentimiento explícito al marcar la casilla de aceptación y enviar el formulario.',
+  privacyPara3:
+    '**3. Destinatarios:** Los datos se almacenan de forma segura para uso exclusivo de {bandName} en la gestión de su base de fans. No se cederán a terceros salvo obligación legal.',
+  privacyPara4:
+    '**4. Derechos:** Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión y portabilidad escribiendo a nuestro correo de contacto o indicándolo en cualquiera de nuestros correos informativos.',
   understood: 'Entendido',
   interactiveSimulation: 'Simulación Interactiva',
   backToForm: 'Volver al Formulario',
@@ -272,7 +276,8 @@ const es: FanFormDict = {
   audioPreviewPlay: 'Reproducir audio',
   audioPreviewPause: 'Pausar audio',
   bizumCopiedNotification: '¡Teléfono de Bizum ({phone}) copiado! Abre tu banco para enviarlo.',
-  shareCardPrompt: '¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.',
+  shareCardPrompt:
+    '¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.',
   whatsappShareMessage: '¡Ey! Échale un ojo a {bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: {url}',
   upcomingShowsTitle: 'Próximos Conciertos',
   musicianBannerTitle: '¿Tienes una banda o eres músico?',
@@ -290,7 +295,7 @@ const en: FanFormDict = {
   tabFollow: '📱 Follow Us',
   tabJoin: '✉️ Get Updates',
   followHelpTitle: '⚡ Help us grow!',
-  followHelpBody: 'Pick your favorite platform and **follow us**. It\'s the best way to support independent music!',
+  followHelpBody: "Pick your favorite platform and **follow us**. It's the best way to support independent music!",
   followCTA: '✨ Want updates straight to your inbox? Sign up here →',
   errorRequiredFields: 'Please fill in the required fields and accept the privacy policy.',
   errorGenericSignup: 'Something went wrong while signing you up.',
@@ -312,11 +317,11 @@ const en: FanFormDict = {
   placeholderInstagram: '@your_username',
   labelMessage: 'Message or shout-out for the band (optional)',
   placeholderMessage: 'Leave a message or dedication for the band...',
-  consentPrefix: 'I have read and accept the ',
+  consentPrefix: 'I have read and accept the',
   consentPrivacyLink: 'privacy policy',
-  consentMiddle: ', and I give my ',
+  consentMiddle: ', and I give my',
   consentExplicit: 'explicit consent',
-  consentSuffix: ' for the band to store my data and send me updates.',
+  consentSuffix: 'for the band to store my data and send me updates.',
   submitJoin: 'Join {bandName}',
   submitting: 'Signing you up...',
   followUsAlso: 'Or follow us on social media',
@@ -324,10 +329,10 @@ const en: FanFormDict = {
   bookingBadgeLive: 'Live',
   bookingQuestion: 'Want to book **{bandName}** for your venue, festival or private event? Get in touch directly:',
   bookingEmailSubject: 'Booking Inquiry - {bandName}',
-  bookingWhatsappText: 'Hi, I\'d like info about booking {bandName}',
+  bookingWhatsappText: "Hi, I'd like info about booking {bandName}",
   backHome: 'Back home',
   welcomeTitle: 'Welcome to {bandName}!',
-  registeredDefaultMessage: 'Sign-up complete! We\'re glad you\'re part of the {bandName} family.',
+  registeredDefaultMessage: "Sign-up complete! We're glad you're part of the {bandName} family.",
   benefitsTitle: 'Your Perks',
   downloadExclusive: 'Download Exclusive Content',
   merchCode: 'Merch Promo Code',
@@ -358,10 +363,14 @@ const en: FanFormDict = {
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Payment method:',
   privacyModalTitle: 'Privacy Policy & GDPR',
-  privacyPara1: '**1. Data controller:** {bandName} (music band). The data provided through this QR code and form will be used solely to manage your sign-up with {bandName} and to inform you about upcoming concerts, releases and music news.',
-  privacyPara2: '**2. Legal basis:** The processing of your data is based on your explicit consent when checking the acceptance box and submitting the form.',
-  privacyPara3: '**3. Recipients:** Data is stored securely for the exclusive use of {bandName} in managing its fan base. It will not be shared with third parties except where legally required.',
-  privacyPara4: '**4. Your rights:** You can exercise your rights of access, rectification, erasure and portability at any time by writing to our contact email or by requesting it in any of our newsletters.',
+  privacyPara1:
+    '**1. Data controller:** {bandName} (music band). The data provided through this QR code and form will be used solely to manage your sign-up with {bandName} and to inform you about upcoming concerts, releases and music news.',
+  privacyPara2:
+    '**2. Legal basis:** The processing of your data is based on your explicit consent when checking the acceptance box and submitting the form.',
+  privacyPara3:
+    '**3. Recipients:** Data is stored securely for the exclusive use of {bandName} in managing its fan base. It will not be shared with third parties except where legally required.',
+  privacyPara4:
+    '**4. Your rights:** You can exercise your rights of access, rectification, erasure and portability at any time by writing to our contact email or by requesting it in any of our newsletters.',
   understood: 'Got it',
   interactiveSimulation: 'Interactive Simulation',
   backToForm: 'Back to Form',
@@ -414,7 +423,7 @@ const it: FanFormDict = {
   followHelpTitle: '⚡ Aiutaci a crescere!',
   followHelpBody: 'Scegli la tua piattaforma preferita e **seguici**. È il modo migliore per sostenere la musica indipendente!',
   followCTA: '✨ Vuoi ricevere le novità via email? Iscriviti qui →',
-  errorRequiredFields: 'Compila i campi obbligatori e accetta l\'informativa sulla privacy.',
+  errorRequiredFields: "Compila i campi obbligatori e accetta l'informativa sulla privacy.",
   errorGenericSignup: 'Si è verificato un errore durante la registrazione.',
   labelName: 'Nome *',
   placeholderName: 'Il tuo nome completo',
@@ -422,7 +431,7 @@ const it: FanFormDict = {
   labelCity: 'Città (facoltativo)',
   placeholderCity: 'Da dove ci ascolti?',
   labelHowFound: 'Come ci hai conosciuto? *',
-  optionSelect: 'Seleziona un\'opzione...',
+  optionSelect: "Seleziona un'opzione...",
   optionConcert: 'A un concerto',
   optionSocial: 'Instagram / TikTok / Social',
   optionFriend: 'Consigliato da un amico',
@@ -434,11 +443,11 @@ const it: FanFormDict = {
   placeholderInstagram: '@tuo_username',
   labelMessage: 'Messaggio o saluto per la band (facoltativo)',
   placeholderMessage: 'Lascia un saluto o una dedica alla band...',
-  consentPrefix: 'Ho letto e accetto la ',
+  consentPrefix: 'Ho letto e accetto la',
   consentPrivacyLink: 'informativa sulla privacy',
-  consentMiddle: ', e do il mio ',
+  consentMiddle: ', e do il mio',
   consentExplicit: 'consenso esplicito',
-  consentSuffix: ' affinché la band conservi i miei dati e mi invii aggiornamenti.',
+  consentSuffix: 'affinché la band conservi i miei dati e mi invii aggiornamenti.',
   submitJoin: 'Unisciti a {bandName}',
   submitting: 'Registrazione in corso...',
   followUsAlso: 'Oppure seguici sui social',
@@ -480,10 +489,14 @@ const it: FanFormDict = {
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Metodo di pagamento:',
   privacyModalTitle: 'Informativa Privacy e GDPR',
-  privacyPara1: '**1. Titolare del trattamento:** {bandName} (band musicale). I dati forniti tramite questo codice QR e il modulo saranno trattati esclusivamente per gestire la tua registrazione con {bandName} e per informarti su prossimi concerti, uscite e novità musicali.',
-  privacyPara2: '**2. Base jurídica:** Il trattamento dei tuoi dati si basa sul tuo consenso esplicito, espresso selezionando la casella di accettazione e inviando il modulo.',
-  privacyPara3: '**3. Destinatari:** I dati sono conservati in modo sicuro per uso esclusivo di {bandName} nella gestione della propria base fan. Non saranno condivisi con terzi salvo obbligo di legge.',
-  privacyPara4: '**4. Diritti:** Puoi esercitare in qualsiasi momento i tuoi diritti di accesso, rettifica, cancellazione e portabilità scrivendo alla nostra email di contatto o richiedendolo in una qualsiasi delle nostre email informative.',
+  privacyPara1:
+    '**1. Titolare del trattamento:** {bandName} (band musicale). I dati forniti tramite questo codice QR e il modulo saranno trattati esclusivamente per gestire la tua registrazione con {bandName} e per informarti su prossimi concerti, uscite e novità musicali.',
+  privacyPara2:
+    '**2. Base jurídica:** Il trattamento dei tuoi dati si basa sul tuo consenso esplicito, espresso selezionando la casella di accettazione e inviando il modulo.',
+  privacyPara3:
+    '**3. Destinatari:** I dati sono conservati in modo sicuro per uso esclusivo di {bandName} nella gestione della propria base fan. Non saranno condivisi con terzi salvo obbligo di legge.',
+  privacyPara4:
+    '**4. Diritti:** Puoi esercitare in qualsiasi momento i tuoi diritti di accesso, rettifica, cancellazione e portabilità scrivendo alla nostra email di contatto o richiedendolo in una qualsiasi delle nostre email informative.',
   understood: 'Capito',
   interactiveSimulation: 'Simulazione Interattiva',
   backToForm: 'Torna al Modulo',
@@ -498,7 +511,7 @@ const it: FanFormDict = {
   previewReset: 'Reimposta',
   previewClose: 'Chiudi',
   previewProductionSyncBadge: 'Sincronizzato con Dossier',
-  previewDisclaimer: 'Anteprima interattiva in tempo reale. Le modifiche nel Dossier si riflettono all\'istante.',
+  previewDisclaimer: "Anteprima interattiva in tempo reale. Le modifiche nel Dossier si riflettono all'istante.",
   incentiveBannerTitle: '🎁 Vantaggi Esclusivi della Community',
   incentiveItemTickets: '⚡ Accesso prioritario ai biglietti prima della vendita generale',
   incentiveItemTrack: '🎵 Download diretto di un brano inedito / acustico',
@@ -517,11 +530,11 @@ const it: FanFormDict = {
   audioPreviewPause: 'Metti in pausa anteprima',
   bizumCopiedNotification: 'Numero Bizum ({phone}) copiato! Apri la tua app bancaria per inviarlo.',
   shareCardPrompt: 'Conosci qualcuno che ama la buona musica? Condividi questo link diretto per fargli ascoltare i brani esclusivi.',
-  whatsappShareMessage: 'Ehi! Dai un\'occhiata a {bandName} e unisciti alla community per ottenere brani inediti e sconti: {url}',
+  whatsappShareMessage: "Ehi! Dai un'occhiata a {bandName} e unisciti alla community per ottenere brani inediti e sconti: {url}",
   upcomingShowsTitle: 'Prossimi Concerti',
   musicianBannerTitle: 'Sei un musicista o hai una band?',
   musicianBannerSubtitle: 'Gestisci il tuo Calendario, cattura i fan con i QR nei concerti e condividi il Dossier EPK e la Bio.',
-  musicianBannerCTA: 'Unisciti alla lista d\'attesa →',
+  musicianBannerCTA: "Unisciti alla lista d'attesa →",
 };
 
 const cs: FanFormDict = {
@@ -556,11 +569,11 @@ const cs: FanFormDict = {
   placeholderInstagram: '@tvuj_ucet',
   labelMessage: 'Vzkaz nebo pozdrav pro kapelu (volitelné)',
   placeholderMessage: 'Nech kapele vzkaz nebo věnování...',
-  consentPrefix: 'Přečetl/a jsem si a souhlasím se ',
+  consentPrefix: 'Přečetl/a jsem si a souhlasím se',
   consentPrivacyLink: 'zásadami ochrany osobních údajů',
-  consentMiddle: ' a dávám svůj ',
+  consentMiddle: 'a dávám svůj',
   consentExplicit: 'výslovný souhlas',
-  consentSuffix: ' s tím, aby kapela uchovávala moje údaje a posílala mi novinky.',
+  consentSuffix: 's tím, aby kapela uchovávala moje údaje a posílala mi novinky.',
   submitJoin: 'Připoj se k {bandName}',
   submitting: 'Registruji tě...',
   followUsAlso: 'Nebo nás sleduj na sociálních sítích',
@@ -602,10 +615,14 @@ const cs: FanFormDict = {
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Platební metoda:',
   privacyModalTitle: 'Zásady ochrany osobních údajů a GDPR',
-  privacyPara1: '**1. Správce údajů:** {bandName} (hudební kapela). Údaje poskytnuté prostřednictvím tohoto QR kódu a formuláře budou zpracovány výhradně za účelem správy tvé registrace u {bandName} a informování o nadcházejících koncertech, vydáních a hudebních novinkách.',
-  privacyPara2: '**2. Právní základ:** Zpracování tvých údajů je založeno na tvém výslovném souhlasu vyjádřeném zaškrtnutím políčka a odesláním formuláře.',
-  privacyPara3: '**3. Příjemci:** Údaje jsou bezpečně uloženy pro výhradní použití {bandName} při správě fanouškovské základny. Nebudou předány třetím stranám s výjimkou zákonné povinnosti.',
-  privacyPara4: '**4. Tvá práva:** Kdykoli můžeš uplatnit svá práva na přístup, opravu, výmaz a přenositelnost údajů, a to napsáním na náš kontaktní e-mail nebo uvedením v kterémkoli z našich informačních e-mailů.',
+  privacyPara1:
+    '**1. Správce údajů:** {bandName} (hudební kapela). Údaje poskytnuté prostřednictvím tohoto QR kódu a formuláře budou zpracovány výhradně za účelem správy tvé registrace u {bandName} a informování o nadcházejících koncertech, vydáních a hudebních novinkách.',
+  privacyPara2:
+    '**2. Právní základ:** Zpracování tvých údajů je založeno na tvém výslovném souhlasu vyjádřeném zaškrtnutím políčka a odesláním formuláře.',
+  privacyPara3:
+    '**3. Příjemci:** Údaje jsou bezpečně uloženy pro výhradní použití {bandName} při správě fanouškovské základny. Nebudou předány třetím stranám s výjimkou zákonné povinnosti.',
+  privacyPara4:
+    '**4. Tvá práva:** Kdykoli můžeš uplatnit svá práva na přístup, opravu, výmaz a přenositelnost údajů, a to napsáním na náš kontaktní e-mail nebo uvedením v kterémkoli z našich informačních e-mailů.',
   understood: 'Rozumím',
   interactiveSimulation: 'Interaktivní simulace',
   backToForm: 'Zpět na formulář',

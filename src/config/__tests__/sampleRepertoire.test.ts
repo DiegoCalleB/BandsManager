@@ -6,7 +6,7 @@ import path from 'path';
 describe('sampleRepertoire config and assets', () => {
   it('defines 5 royalty-free sample tracks', () => {
     expect(SAMPLER_SONGS).toHaveLength(5);
-    expect(SAMPLER_SONGS.map(s => s.ordenAlbum)).toEqual([1, 2, 3, 4, 5]);
+    expect(SAMPLER_SONGS.map((s) => s.ordenAlbum)).toEqual([1, 2, 3, 4, 5]);
   });
 
   it('all tracks belong to the Sampler EP album', () => {
@@ -21,7 +21,7 @@ describe('sampleRepertoire config and assets', () => {
 
   it('all referenced mp3 and cover assets physically exist in /public', () => {
     const publicDir = path.resolve(__dirname, '../../../public');
-    
+
     // Check cover SVG
     const coverPath = path.join(publicDir, SAMPLER_COVER_URL.replace(/^\//, ''));
     expect(fs.existsSync(coverPath)).toBe(true);
@@ -42,13 +42,13 @@ describe('sampleRepertoire config and assets', () => {
     expect(setlist.id).toBe('setlist-sample-1');
     expect(setlist.items.length).toBeGreaterThanOrEqual(5);
 
-    const songItems = setlist.items.filter(i => i.tipoItem === 'cancion');
-    expect(songItems.map(i => i.songId)).toEqual([
+    const songItems = setlist.items.filter((i) => i.tipoItem === 'cancion');
+    expect(songItems.map((i) => i.songId)).toEqual([
       'sample-track-1',
       'sample-track-2',
       'sample-track-3',
       'sample-track-4',
-      'sample-track-5'
+      'sample-track-5',
     ]);
   });
 });

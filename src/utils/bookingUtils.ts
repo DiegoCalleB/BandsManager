@@ -18,11 +18,18 @@ export const normalizeStatus = (s: any): LeadStatus => {
   if (str.includes('negocia') || str.includes('trato')) return 'negociando';
   if (str === 'respondido' || str.includes('convers') || str.includes('respond')) return 'respondido';
   if (str.includes('interesado') && !str.includes('no')) return 'negociando';
-  if (str.includes('enviado') || str.includes('contactad') || str === 'esperando_respuesta' || str.includes('esperando') || str === 'contactado') return 'esperando_respuesta';
+  if (
+    str.includes('enviado') ||
+    str.includes('contactad') ||
+    str === 'esperando_respuesta' ||
+    str.includes('esperando') ||
+    str === 'contactado'
+  )
+    return 'esperando_respuesta';
   if (str.includes('no') || str === 'no_interesado' || str.includes('rechaz') || str.includes('descart')) return 'no_interesado';
-  // Borrador ya creado en la bandeja de la banda por el Agente Enviador en modo 'draft': el
+  // Borrador ya creado en la bandeja de la banda por el Agente Enviador en modo'draft': el
   // pitch está aprobado y escrito, pero NO se ha enviado nada todavía. Distinto de
-  // 'pendiente_aprobacion' (pitch aún sin aprobar) y de 'aprobado' (en cola de envío).
+  //'pendiente_aprobacion' (pitch aún sin aprobar) y de'aprobado' (en cola de envío).
   if (str === 'borrador_creado' || str.includes('borrador_cre')) return 'borrador_creado';
   if (str === 'pendiente_aprobacion' || str.includes('por_aprobar') || str === 'pendiente') return 'pendiente_aprobacion';
   if (str === 'aprobado_propuesta' || str.includes('aprobado_pitch')) return 'aprobado_propuesta';
@@ -43,22 +50,35 @@ export const normalizeType = (t: any): LeadType => {
   if (s.includes('sello') || s.includes('discog') || s === 'sello') return 'sello';
   if (s.includes('grup') || s.includes('artist') || s.includes('banda') || s === 'grupo') return 'grupo';
   if (s.includes('product') || s === 'productora') return 'productora';
-  if (s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc') || s.includes('period') || s.includes('revista') || s.includes('blog') || s.includes('magazine') || s.includes('fanzine') || s === 'medio') return 'medio';
+  if (
+    s.includes('medio') ||
+    s.includes('radio') ||
+    s.includes('prensa') ||
+    s.includes('tv') ||
+    s.includes('podc') ||
+    s.includes('period') ||
+    s.includes('revista') ||
+    s.includes('blog') ||
+    s.includes('magazine') ||
+    s.includes('fanzine') ||
+    s === 'medio'
+  )
+    return 'medio';
   return 'sala';
 };
 
 // Known Spanish venues address database for intelligent address enrichment
 export const VENUE_ADDRESS_DATABASE: Record<string, string> = {
   'sala trinchera': 'Calle Parauta, 25, 29006 Málaga',
-  'trinchera': 'Calle Parauta, 25, 29006 Málaga',
+  trinchera: 'Calle Parauta, 25, 29006 Málaga',
   'sala apolo': 'Carrer de Nou de la Rambla, 113, 08004 Barcelona',
-  'apolo': 'Carrer de Nou de la Rambla, 113, 08004 Barcelona',
+  apolo: 'Carrer de Nou de la Rambla, 113, 08004 Barcelona',
   'ochoymedio club': 'Calle de Barceló, 11, 28004 Madrid',
-  'ochoymedio': 'Calle de Barceló, 11, 28004 Madrid',
+  ochoymedio: 'Calle de Barceló, 11, 28004 Madrid',
   'sala el tren': 'Carretera de Málaga, 136, 18015 Granada',
   'el tren': 'Carretera de Málaga, 136, 18015 Granada',
   'sala razzmatazz': 'Carrer dels Almogàvers, 122, 08018 Barcelona',
-  'razzmatazz': 'Carrer dels Almogàvers, 122, 08018 Barcelona',
+  razzmatazz: 'Carrer dels Almogàvers, 122, 08018 Barcelona',
   'kafe antzokia': 'San Vicente Kalea, 2, 48001 Bilbo, Bizkaia',
   'sala capitol': 'Rúa de Concepción Arenal, 5, 15702 Santiago de Compostela',
   'sala rem': 'Calle Puerta Nueva, 33, 30001 Murcia',
@@ -68,7 +88,7 @@ export const VENUE_ADDRESS_DATABASE: Record<string, string> = {
   'sala caracol': 'Calle Bernardino Obregón, 18, 28012 Madrid',
   'industrial copera': 'Calle Desmond Tutu, 18151 La Zulka, Granada',
   'garaje beat club': 'Avenida Miguel de Cervantes, 45, 30009 Murcia',
-  'dabadaba': 'Mundaiz Kalea, 8, 20012 Donostia, Gipuzkoa',
+  dabadaba: 'Mundaiz Kalea, 8, 20012 Donostia, Gipuzkoa',
   'sala moon': 'Carrer de San Vicente Mártir, 200, 46007 València',
   'paris 15': 'Calle Calle La Orotava, 27, 29006 Málaga',
   'joy eslava': 'Calle Arenal, 11, 28013 Madrid',
@@ -77,7 +97,7 @@ export const VENUE_ADDRESS_DATABASE: Record<string, string> = {
   'cabo de plata': 'Playa de la Hierbabuena, 11160 Barbate, Cádiz',
   'distrito 921': 'Plaza de San Martín, 4, 40001 Segovia',
   '921 distrito musical': 'Plaza de San Martín, 4, 40001 Segovia',
-  'fundación don juan de borbón': 'Plaza de San Martín, 4, 40001 Segovia'
+  'fundación don juan de borbón': 'Plaza de San Martín, 4, 40001 Segovia',
 };
 
 export function autoDetectVenueAddress(nombreSala: string, ciudad: string): string {
@@ -117,7 +137,7 @@ export function calculateBookingMetrics(leads: Lead[]): BookingMetrics {
     const norm = normalizeStatus(estado);
     leadsPorEstado[estado] = (leadsPorEstado[estado] || 0) + 1;
     // Solo sumar también bajo la clave normalizada si es distinta de la cruda;
-    // si no, un lead con estado exactamente 'aprobado' se contaba 2-3 veces
+    // si no, un lead con estado exactamente'aprobado' se contaba 2-3 veces
     // bajo la misma clave (raw + norm + el rollup de abajo), inflando la
     // tarjeta "Aprobados" del dashboard (BookingMetricsCards.tsx).
     if (norm !== estado) {
@@ -154,12 +174,7 @@ export function calculateBookingMetrics(leads: Lead[]): BookingMetrics {
 /**
  * Filters leads by text search query, status, and category type
  */
-export function filterLeads(
-  leads: Lead[],
-  searchQuery: string = '',
-  statusFilter: string = 'todos',
-  typeFilter: string = 'todos'
-): Lead[] {
+export function filterLeads(leads: Lead[], searchQuery: string = '', statusFilter: string = 'todos', typeFilter: string = 'todos'): Lead[] {
   const query = searchQuery.toLowerCase().trim();
 
   return leads.filter((lead) => {

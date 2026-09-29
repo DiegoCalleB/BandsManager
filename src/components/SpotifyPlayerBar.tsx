@@ -3,14 +3,30 @@ import React, { useState, useEffect, useRef } from 'react';
 const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, ThemeColors } from '../types';
 import {
-  Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX,
-  ExternalLink, Disc, Sliders, X, Flame, Music, Sparkles, FileText, ChevronUp, ChevronDown
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Repeat,
+  Volume2,
+  VolumeX,
+  ExternalLink,
+  Disc,
+  Sliders,
+  X,
+  Flame,
+  Music,
+  Sparkles,
+  FileText,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react';
 import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase64 } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
 import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
+import { usePlayer } from '../context/PlayerContext';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -18,6 +34,7 @@ interface SpotifyPlayerBarProps {
   colors: ThemeColors;
   onSelectSong: (song: Song, autoPlay?: boolean) => void;
   onOpenStudio: (song: Song) => void;
+  onOpenIris?: (song: Song) => void;
   onUpdateSong?: (song: Song) => void;
   onClosePlayer: () => void;
   autoPlay?: boolean;
@@ -51,13 +68,15 @@ export default function SpotifyPlayerBar({
   colors,
   onSelectSong,
   onOpenStudio,
+  onOpenIris,
   onUpdateSong,
   onClosePlayer,
   autoPlay = false,
   playSignal = 0,
   onIsPlayingChange,
-  transposeSemitones: propTransposeSemitones = 0
+  transposeSemitones: propTransposeSemitones = 0,
 }: SpotifyPlayerBarProps) {
+  const { setCurrentTime: setContextCurrentTime, setDuration: setContextDuration } = usePlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -65,7 +84,11 @@ export default function SpotifyPlayerBar({
   const [isMuted, setIsMuted] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
   const [playbackRate, setPlaybackRate] = useState<number>(1);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
+
+  // Historial de reproducción: rastrear canciones reproducidas para que atrás vuelva a la anterior
+  const playbackHistoryRef = useRef<string[]>(song?.id ? [song.id] : []);
+  const [, forceUpdateHistory] = useState<number>(0);
 
   // Cálculo automático de semitonos (prop explícita o diferencia entre tonalidad y tonalidadDeseada)
   const calculatedSemitones = React.useMemo(() => {
@@ -86,13 +109,13 @@ export default function SpotifyPlayerBar({
 
   // Fundido real (5s, curva de potencia constante) al pasar al siguiente tema de la cola —
   // desactivado por defecto, mismo interruptor tanto si la cola es el catálogo, un álbum de
-  // Discografía o un repertorio (ver `songs`, que decide qué es "el siguiente tema" en cada caso).
+  // Discografía o un repertorio (ver `songs`, que decide qué es"el siguiente tema" en cada caso).
   const [crossfadeEnabled, setCrossfadeEnabled] = useState(false);
   const [isCrossfading, setIsCrossfading] = useState(false);
 
   // Dos <audio> en vez de uno: durante un fundido, uno termina el tema actual mientras el otro ya
   // reproduce el siguiente desde cero (mismo patrón que useStagePlayer.ts). `activeSlotRef` dice
-  // cuál de los dos es "el de siempre" a efectos de play/pause/seek/volumen manuales — el otro
+  // cuál de los dos es"el de siempre" a efectos de play/pause/seek/volumen manuales — el otro
   // solo se usa como pista temporal de solape mientras dura el fundido.
   const audioRefA = useRef<HTMLAudioElement | null>(null);
   const audioRefB = useRef<HTMLAudioElement | null>(null);
@@ -111,7 +134,7 @@ export default function SpotifyPlayerBar({
   const crossfadeRafRef = useRef<number | null>(null);
   const isCrossfadingRef = useRef(false);
   // Id de la última canción que llegó aquí por un fundido recién completado — le dice al efecto
-  // de "cambió la canción" que ese tema ya está sonando de verdad (arrancó durante el fundido) y
+  // de"cambió la canción" que ese tema ya está sonando de verdad (arrancó durante el fundido) y
   // que NO debe recargar el audio ni relanzar la reproducción desde cero.
   const promotedSongIdRef = useRef<string | null>(null);
 
@@ -138,7 +161,7 @@ export default function SpotifyPlayerBar({
   // Trasposición nativa en tiempo real en el navegador (Tone.js / Web Audio API)
   useTonePitchShift({
     audioElement: getActiveAudioEl(),
-    semitones: transposeSemitones
+    semitones: transposeSemitones,
   });
 
   // Extract and resolve active audio URL asynchronously (supporting IndexedDB, Drive & Spotify Pedalboard DSP)
@@ -156,19 +179,21 @@ export default function SpotifyPlayerBar({
       return;
     }
 
-    resolveAudioUrl(rawUrl).then((resolved) => {
-      if (isMounted) {
-        setActiveAudioUrl(resolved || '');
-      }
-    }).catch(err => {
-      console.warn('Error resolving audio URL:', err);
-      if (isMounted) setActiveAudioUrl('');
-    });
+    resolveAudioUrl(rawUrl)
+      .then((resolved) => {
+        if (isMounted) {
+          setActiveAudioUrl(resolved || '');
+        }
+      })
+      .catch((err) => {
+        console.warn('Error resolving audio URL:', err);
+        if (isMounted) setActiveAudioUrl('');
+      });
 
     return () => {
       isMounted = false;
     };
-  }, [song, transposeSemitones]);
+  }, [song]);
 
   // Sync isPlaying state to parent if callback provided
   useEffect(() => {
@@ -186,6 +211,19 @@ export default function SpotifyPlayerBar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [song?.id]);
 
+  // Actualizar historial de reproducción cuando cambia la canción
+  useEffect(() => {
+    if (!song?.id) return;
+
+    const history = playbackHistoryRef.current;
+    const existingIdx = history.indexOf(song.id);
+    if (existingIdx >= 0) {
+      history.splice(existingIdx, 1);
+    }
+    history.push(song.id);
+    forceUpdateHistory((prev) => prev + 1);
+  }, [song?.id]);
+
   // When song, activeAudioUrl, autoPlay, or playSignal changes
   useEffect(() => {
     if (!song) {
@@ -201,7 +239,7 @@ export default function SpotifyPlayerBar({
       // Este tema llegó aquí por un fundido: ya está sonando de verdad desde antes
       const activeEl = getActiveAudioEl();
       const realDuration = activeEl?.duration;
-      setDuration(realDuration && isFinite(realDuration) ? realDuration : (song.duracionSegundos || 210));
+      setDuration(realDuration && isFinite(realDuration) ? realDuration : song.duracionSegundos || 210);
       return;
     }
 
@@ -240,12 +278,15 @@ export default function SpotifyPlayerBar({
         }
 
         if (shouldPlayNow) {
-          activeEl.play().then(() => {
-            setIsPlaying(true);
-          }).catch(err => {
-            console.warn('Playback deferred or blocked:', err);
-            setIsPlaying(false);
-          });
+          activeEl
+            .play()
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((err) => {
+              console.warn('Playback deferred or blocked:', err);
+              setIsPlaying(false);
+            });
         } else if (isNewSong) {
           activeEl.pause();
           activeEl.currentTime = 0;
@@ -272,23 +313,19 @@ export default function SpotifyPlayerBar({
   useEffect(() => {
     const el = getActiveAudioEl();
     if (el) el.playbackRate = playbackRate;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbackRate]);
-
 
   // Volume effect
   useEffect(() => {
     if (isCrossfadingRef.current) return; // el fundido lleva el volumen de las dos pistas mientras dura
     const el = getActiveAudioEl();
     if (el) el.volume = isMuted ? 0 : volume;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [volume, isMuted]);
 
   // Loop effect
   useEffect(() => {
     const el = getActiveAudioEl();
     if (el) el.loop = isLooping;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLooping]);
 
   // Synthetic practice beat generator when no audio URL exists
@@ -298,8 +335,8 @@ export default function SpotifyPlayerBar({
       const intervalMs = (60 / bpm) * 1000;
 
       synthIntervalRef.current = setInterval(() => {
-        setCurrentTime(prev => {
-          const next = prev + (60 / bpm);
+        setCurrentTime((prev) => {
+          const next = prev + 60 / bpm;
           if (next >= (song.duracionSegundos || 210)) {
             if (isLooping) return 0;
             setIsPlaying(false);
@@ -351,26 +388,43 @@ export default function SpotifyPlayerBar({
 
   if (!song) return null;
 
-  const currentIdx = songs.findIndex(s => s.id === song.id);
+  const currentIdx = songs.findIndex((s) => s.id === song.id);
   // Mismo cálculo que handleNext (con vuelta al principio de la cola) — se usa tanto para saltar
   // manualmente como para saber a qué tema fundir cuando se acerca el final del actual.
-  const nextQueueSong: Song | null = songs.length > 0
-    ? (currentIdx >= 0 && currentIdx < songs.length - 1 ? songs[currentIdx + 1] : songs[0])
-    : null;
+  const nextQueueSong: Song | null =
+    songs.length > 0 ? (currentIdx >= 0 && currentIdx < songs.length - 1 ? songs[currentIdx + 1] : songs[0]) : null;
 
   const handlePrev = () => {
     cancelCrossfade();
+    const history = playbackHistoryRef.current;
+    const currentIdx = history.lastIndexOf(song?.id || '');
+
     if (currentIdx > 0) {
-      onSelectSong(songs[currentIdx - 1]);
-    } else {
-      onSelectSong(songs[songs.length - 1]);
+      const prevSongId = history[currentIdx - 1];
+      const prevSong = songs.find((s) => s.id === prevSongId);
+      if (prevSong) {
+        onSelectSong(prevSong);
+      }
     }
   };
 
   const handleNext = (autoPlayNext: boolean = false) => {
     cancelCrossfade();
-    if (currentIdx >= 0 && currentIdx < songs.length - 1) {
-      onSelectSong(songs[currentIdx + 1], autoPlayNext);
+    const history = playbackHistoryRef.current;
+    const currentIdx = history.lastIndexOf(song?.id || '');
+
+    if (currentIdx >= 0 && currentIdx < history.length - 1) {
+      const nextSongId = history[currentIdx + 1];
+      const nextSong = songs.find((s) => s.id === nextSongId);
+      if (nextSong) {
+        onSelectSong(nextSong, autoPlayNext);
+        return;
+      }
+    }
+
+    const queueIdx = songs.findIndex((s) => s.id === song?.id);
+    if (queueIdx >= 0 && queueIdx < songs.length - 1) {
+      onSelectSong(songs[queueIdx + 1], autoPlayNext);
     } else {
       onSelectSong(songs[0], autoPlayNext);
     }
@@ -396,10 +450,12 @@ export default function SpotifyPlayerBar({
         el.pause();
         setIsPlaying(false);
       } else {
-        el.play().then(() => setIsPlaying(true)).catch(err => {
-          console.warn('Playback deferred or interrupted:', err);
-          setIsPlaying(false);
-        });
+        el.play()
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.warn('Playback deferred or interrupted:', err);
+            setIsPlaying(false);
+          });
       }
     } else {
       setIsPlaying(!isPlaying);
@@ -416,9 +472,10 @@ export default function SpotifyPlayerBar({
 
   // Arranca el fundido cruzado cuando quedan CROSSFADE_SECONDS o menos del tema actual — llamado
   // desde onTimeUpdate del <audio> activo en vez de un setInterval propio, así no hay dos relojes
-  // compitiendo por decidir "cuánto queda".
+  // compitiendo por decidir"cuánto queda".
   const handleActiveTimeUpdate = (currentTimeSec: number) => {
     setCurrentTime(currentTimeSec);
+    setContextCurrentTime(currentTimeSec);
 
     if (!crossfadeEnabled || isLooping || isCrossfadingRef.current) return;
     if (!nextQueueSong || nextQueueSong.id === song.id) return; // cola de un solo tema: nada que fundir
@@ -435,53 +492,55 @@ export default function SpotifyPlayerBar({
     setIsCrossfading(true);
     const baseVolume = isMuted ? 0 : volume;
 
-    resolveAudioUrl(nextRawUrl).then((resolved) => {
-      if (!resolved || !isCrossfadingRef.current) {
-        isCrossfadingRef.current = false;
-        setIsCrossfading(false);
-        return;
-      }
-      toEl.src = resolved;
-      toEl.currentTime = 0;
-      toEl.volume = 0;
-      toEl.playbackRate = playbackRate;
-      toEl.play().catch(() => {
+    resolveAudioUrl(nextRawUrl)
+      .then((resolved) => {
+        if (!resolved || !isCrossfadingRef.current) {
+          isCrossfadingRef.current = false;
+          setIsCrossfading(false);
+          return;
+        }
+        toEl.src = resolved;
+        toEl.currentTime = 0;
+        toEl.volume = 0;
+        toEl.playbackRate = playbackRate;
+        toEl.play().catch(() => {
+          isCrossfadingRef.current = false;
+          setIsCrossfading(false);
+        });
+
+        const fadeMs = CROSSFADE_SECONDS * 1000;
+        const startTs = performance.now();
+
+        const tick = () => {
+          if (!isCrossfadingRef.current) return; // cancelado a mitad de camino (cancelCrossfade)
+          const elapsed = performance.now() - startTs;
+          const { fromGain, toGain } = computeCrossfadeGains(elapsed, fadeMs);
+          fromEl.volume = fromGain * baseVolume;
+          toEl.volume = toGain * baseVolume;
+
+          if (elapsed < fadeMs) {
+            crossfadeRafRef.current = requestAnimationFrame(tick);
+            return;
+          }
+
+          // Fundido completo: A se pausa/limpia y B pasa a ser la pista"activa" de verdad.
+          fromEl.pause();
+          fromEl.src = SILENT_AUDIO_URI;
+          fromEl.volume = baseVolume;
+          toEl.volume = baseVolume;
+          activeSlotRef.current = activeSlotRef.current === 'A' ? 'B' : 'A';
+          promotedSongIdRef.current = nextQueueSong.id;
+          isCrossfadingRef.current = false;
+          setIsCrossfading(false);
+          crossfadeRafRef.current = null;
+          onSelectSong(nextQueueSong, false);
+        };
+        crossfadeRafRef.current = requestAnimationFrame(tick);
+      })
+      .catch(() => {
         isCrossfadingRef.current = false;
         setIsCrossfading(false);
       });
-
-      const fadeMs = CROSSFADE_SECONDS * 1000;
-      const startTs = performance.now();
-
-      const tick = () => {
-        if (!isCrossfadingRef.current) return; // cancelado a mitad de camino (cancelCrossfade)
-        const elapsed = performance.now() - startTs;
-        const { fromGain, toGain } = computeCrossfadeGains(elapsed, fadeMs);
-        fromEl.volume = fromGain * baseVolume;
-        toEl.volume = toGain * baseVolume;
-
-        if (elapsed < fadeMs) {
-          crossfadeRafRef.current = requestAnimationFrame(tick);
-          return;
-        }
-
-        // Fundido completo: A se pausa/limpia y B pasa a ser la pista "activa" de verdad.
-        fromEl.pause();
-        fromEl.src = SILENT_AUDIO_URI;
-        fromEl.volume = baseVolume;
-        toEl.volume = baseVolume;
-        activeSlotRef.current = activeSlotRef.current === 'A' ? 'B' : 'A';
-        promotedSongIdRef.current = nextQueueSong.id;
-        isCrossfadingRef.current = false;
-        setIsCrossfading(false);
-        crossfadeRafRef.current = null;
-        onSelectSong(nextQueueSong, false);
-      };
-      crossfadeRafRef.current = requestAnimationFrame(tick);
-    }).catch(() => {
-      isCrossfadingRef.current = false;
-      setIsCrossfading(false);
-    });
   };
 
   const formatSecs = (secs: number) => {
@@ -497,298 +556,449 @@ export default function SpotifyPlayerBar({
   // h-16) — con el mismo z-index, cuál tapa a cuál dependería del orden en el DOM y podría acabar
   // esta barra debajo de esa. Se renderiza vía portal a document.body (ver
   // RepertorioSetlists.tsx), así que z-50 la deja siempre por encima sin pelear por el orden.
-  // left-0 en móvil, md:left-[240px] en desktop para no tapar el sidebar (w-[240px]) de App.tsx.
-  // En móvil: bottom-[64px] para no tapar la barra de navegación inferior (h-16 = 64px).
-  // Cuando está minimizado, ajustar el bottom para que solo se vea la tira de ~2.5rem sin tapar el navbar.
+  // Móvil: left-0, bottom-[64px] (bajo el nav inferior h-16 = 64px).
+  // Desktop: md:left-[248px] (240px sidebar + 8px gap), md:bottom-5 (espacio al piso), md:right-5 (espacio al lado).
+  // Así el reproductor flota debajo del sidebar con margen, nunca sobre ella.
+  // z-50 en móvil y en desktop — ver el comentario de arriba: con z-40 quedaba al mismo nivel
+  // que el nav inferior (también z-40) y, según el orden del DOM, el nav podía tapar el botón de
+  // cerrar del reproductor y dejarlo inalcanzable ("no puedo cerrar el reproductor").
   return (
-    <div className={`fixed ${
-      isMinimized ? 'bottom-[104px] sm:bottom-0' : 'bottom-[64px] sm:bottom-0'
-    } left-0 md:left-[240px] right-0 z-50 transition-all duration-300 shadow-2xl ${
-      isMinimized ? 'translate-y-[calc(100%-2.5rem)]' : 'translate-y-0'
-    }`}>
+    <div className="fixed bottom-[64px] md:bottom-5 left-3 right-3 md:left-[248px] md:right-5 z-50 transition-all duration-300">
       {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
-          en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
+ en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
       <audio
         ref={audioRefA}
+        crossOrigin="anonymous"
         src={SILENT_AUDIO_URI}
         preload="metadata"
-        onError={(e) => { e.preventDefault(); }}
-        onTimeUpdate={() => { if (activeSlotRef.current === 'A' && audioRefA.current) handleActiveTimeUpdate(audioRefA.current.currentTime); }}
-        onLoadedMetadata={() => { if (activeSlotRef.current === 'A' && audioRefA.current?.duration) setDuration(audioRefA.current.duration); }}
-        onEnded={() => { if (activeSlotRef.current === 'A') handleEnded(); }}
+        onError={(e) => {
+          e.preventDefault();
+        }}
+        onTimeUpdate={() => {
+          if (activeSlotRef.current === 'A' && audioRefA.current) handleActiveTimeUpdate(audioRefA.current.currentTime);
+        }}
+        onLoadedMetadata={() => {
+          if (activeSlotRef.current === 'A' && audioRefA.current?.duration) {
+            setDuration(audioRefA.current.duration);
+            setContextDuration(audioRefA.current.duration);
+          }
+        }}
+        onEnded={() => {
+          if (activeSlotRef.current === 'A') handleEnded();
+        }}
       />
       <audio
         ref={audioRefB}
+        crossOrigin="anonymous"
         src={SILENT_AUDIO_URI}
         preload="metadata"
-        onError={(e) => { e.preventDefault(); }}
-        onTimeUpdate={() => { if (activeSlotRef.current === 'B' && audioRefB.current) handleActiveTimeUpdate(audioRefB.current.currentTime); }}
-        onLoadedMetadata={() => { if (activeSlotRef.current === 'B' && audioRefB.current?.duration) setDuration(audioRefB.current.duration); }}
-        onEnded={() => { if (activeSlotRef.current === 'B') handleEnded(); }}
+        onError={(e) => {
+          e.preventDefault();
+        }}
+        onTimeUpdate={() => {
+          if (activeSlotRef.current === 'B' && audioRefB.current) handleActiveTimeUpdate(audioRefB.current.currentTime);
+        }}
+        onLoadedMetadata={() => {
+          if (activeSlotRef.current === 'B' && audioRefB.current?.duration) {
+            setDuration(audioRefB.current.duration);
+            setContextDuration(audioRefB.current.duration);
+          }
+        }}
+        onEnded={() => {
+          if (activeSlotRef.current === 'B') handleEnded();
+        }}
       />
 
-      <div className="bg-[#121212]/98 backdrop-blur-2xl border-t border-[#282828] text-white px-4 py-3 max-w-full shadow-2xl">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-
-          {/* Left: Song Info */}
-          <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
-            <div className="flex items-center gap-3.5 min-w-0">
-              <div className="relative shrink-0 w-14 h-14 rounded-lg bg-[#282828] shadow-md overflow-hidden group border border-white/5">
+      <div className="bg-[var(--surface)]/98 text-[var(--ink)] px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3 rounded-[var(--r-m)]">
+        {isMinimized ? (
+          /* Minimized Compact Strip: una sola fila en escritorio (info a la izquierda, controles
+ a la derecha) — apilarla en dos filas en pantallas anchas la hacía más alta que el
+ reproductor completo, justo lo contrario de "minimizado". En móvil sigue apilada
+ porque ahí sí falta ancho para una sola fila. */
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-2 md:gap-4">
+            {/* Info de la canción (compacta en móvil) */}
+            <div
+              onClick={() => setIsMinimized(false)}
+              className="flex items-center gap-2 w-full md:w-auto md:flex-1 min-w-0 cursor-pointer group"
+              title="Haz clic para expandir el reproductor"
+            >
+              <div className="relative shrink-0 w-8 h-8 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden md:w-10 md:h-10">
                 {song.portadaUrl ? (
                   <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-zinc-800 to-black flex items-center justify-center">
-                    <Disc className={`w-7 h-7 ${isPlaying ? 'animate-spin-slow text-[#1db954]' : 'text-zinc-400'}`} />
+                  <div className="w-full h-full bg-[var(--sunken)] flex items-center justify-center">
+                    <Disc className={`w-4 h-4 md:w-5 md:h-5 ${isPlaying ? 'animate-spin text-[var(--ok)]' : 'text-[var(--ink-2)]'}`} />
                   </div>
                 )}
                 {isPlaying && (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-0.5">
-                    <span className="w-1 h-4 bg-[#1db954] rounded-full animate-pulse" />
-                    <span className="w-1 h-6 bg-[#1ed760] rounded-full animate-pulse delay-75" />
-                    <span className="w-1 h-3 bg-[#1db954] rounded-full animate-pulse delay-150" />
+                  <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
+                    <span className="w-0.5 h-2 md:h-3 bg-[var(--surface)] rounded-[var(--r-pill)]" />
+                    <span className="w-0.5 h-3 md:h-4 bg-[var(--surface)] rounded-[var(--r-pill)] delay-75" />
+                    <span className="w-0.5 h-2 bg-[var(--surface)] rounded-[var(--r-pill)] delay-150" />
                   </div>
                 )}
               </div>
 
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-white hover:underline cursor-pointer truncate">{song.titulo}</h4>
-                  {onUpdateSong && (
-                    <button
-                      type="button"
-                      onClick={() => onUpdateSong({ ...song, favoritoGeneral: !song.favoritoGeneral })}
-                      className="text-zinc-400 hover:text-[#1db954] transition cursor-pointer p-0.5"
-                      title={song.favoritoGeneral ? "Guardado en Favoritos" : "Guardar en Favoritos"}
-                    >
-                      <Sparkles className={`w-4 h-4 ${song.favoritoGeneral ? 'text-[#1db954] fill-[#1db954]' : ''}`} />
-                    </button>
-                  )}
-                  {isDrive && (
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">
-                      Drive
+              <div className="min-w-0 flex-1 text-center md:text-left">
+                <h4 className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition md:text-sm">
+                  {song.titulo}
+                </h4>
+                <div className="text-[9px] text-[var(--ink-2)] font-sans truncate md:text-[10px]">
+                  <span>{song.artista || 'Banda'}</span>
+                  <span className="mx-1">•</span>
+                  <span className="text-[var(--ok)] font-semibold">{song.tonalidad || 'Am'}</span>
+                  {transposeSemitones !== 0 && (
+                    <span className="text-[var(--alert)] ml-1 font-bold">
+                      {transposeChordToken(
+                        song.tonalidad || 'Am',
+                        transposeSemitones,
+                        /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad || 'Am').trim()) ? 'ES' : 'EN'
+                      )}{' '}
+                      ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones}
+                      st)
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-[11px] text-[#b3b3b3] font-mono mt-0.5 truncate">
-                  <span className="text-white font-medium">{song.artista || 'Banda'}</span>
-                  <span>•</span>
-                  <span className="text-[#1db954] font-semibold">
-                    {song.tonalidad || 'Am'}
-                    {transposeSemitones !== 0 && (
-                      <span className="text-[#ff6b9d] ml-1 font-bold">
-                        ➔ {transposeChordToken(song.tonalidad || 'Am', transposeSemitones, /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad || 'Am').trim()) ? 'ES' : 'EN')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
-                      </span>
-                    )}
-                    {isTransposingAudio && (
-                      <span className="ml-1 text-sky-400 font-bold animate-pulse text-[10px]" title="Procesando trasposición DSP con Pedalboard de Spotify">
-                        🎛️ Pedalboard...
-                      </span>
-                    )}
-                  </span>
-                  <span>•</span>
-                  <span>{song.bpm} BPM</span>
-                  {isCrossfading && nextQueueSong && (
-                    <>
-                      <span>•</span>
-                      <span className="text-sky-400 font-semibold animate-pulse">🔀 → {nextQueueSong.titulo}</span>
-                    </>
-                  )}
-                </div>
               </div>
             </div>
 
-            {/* Minimizar a una tira de ~2.5rem (ver el translate-y de más arriba) — antes solo
-                disponible en móvil (`md:hidden`); ahora también en escritorio, para poder dejar
-                la barra ocupando lo mínimo cuando no hace falta verla entera. */}
-            <div className="flex items-center gap-1">
+            {/* Center: Centered Controls (focal point) */}
+            <div className="flex items-center gap-2 justify-center shrink-0 md:gap-3">
               <button
-                onClick={() => setIsMinimized(!isMinimized)}
-                className="p-1.5 text-zinc-400 hover:text-white cursor-pointer"
-                title={isMinimized ? "Expandir Reproductor" : "Minimizar"}
+                type="button"
+                onClick={() => handlePrev()}
+                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-90"
+                title="Canción Anterior"
               >
-                {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                <SkipBack className="w-4 h-4 fill-current" />
+              </button>
+
+              <button
+                type="button"
+                onClick={togglePlayPause}
+                className="w-9 h-9 md:w-10 md:h-10 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition hover:scale-105 active:scale-95"
+                title={isPlaying ? 'Pausar' : 'Reproducir'}
+              >
+                {isPlaying ? (
+                  <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+                ) : (
+                  <Play className="w-4 h-4 md:w-5 md:h-5 fill-current ml-0.5" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleNext(false)}
+                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-90"
+                title="Siguiente Canción"
+              >
+                <SkipForward className="w-4 h-4 fill-current" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsMinimized(false)}
+                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer ml-2"
+                title="Expandir Reproductor"
+              >
+                <ChevronUp className="w-5 h-5 text-[var(--ok)]" />
+              </button>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClosePlayer();
+                }}
+                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
+                title="Cerrar Reproductor"
+              >
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
+        ) : (
+          /* Full Expanded Player */
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+            {/* Left: Song Info */}
+            <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden group">
+                  {song.portadaUrl ? (
+                    <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-[var(--ok)]/30  flex items-center justify-center">
+                      <Disc className={`w-7 h-7 ${isPlaying ? 'animate-spin-slow text-[var(--ok)]' : 'text-[var(--ink-2)]'}`} />
+                    </div>
+                  )}
+                  {isPlaying && (
+                    <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
+                      <span className="w-1 h-4 bg-[var(--surface)] rounded-[var(--r-pill)]" />
+                      <span className="w-1 h-6 bg-[var(--surface)] rounded-[var(--r-pill)] delay-75" />
+                      <span className="w-1 h-3 bg-[var(--surface)] rounded-[var(--r-pill)] delay-150" />
+                    </div>
+                  )}
+                </div>
 
-          {/* Center: Playback Controls & Timeline Scrubber */}
-          <div className="flex flex-col items-center gap-1.5 w-full md:w-2/4">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-[var(--ink)] hover:underline cursor-pointer truncate">{song.titulo}</h4>
+                    {onUpdateSong && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          onUpdateSong({
+                            ...song,
+                            favoritoGeneral: !song.favoritoGeneral,
+                          })
+                        }
+                        className="text-[var(--ink-2)] hover:text-[var(--ok)] transition cursor-pointer p-0.5"
+                        title={song.favoritoGeneral ? 'Guardado en Favoritos' : 'Guardar en Favoritos'}
+                      >
+                        <Sparkles className={`w-4 h-4 ${song.favoritoGeneral ? 'text-[var(--ok)] fill-[var(--ok)]' : ''}`} />
+                      </button>
+                    )}
+                    {isDrive && (
+                      <span className="text-[9px] font-sans px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)] text-[var(--ink-2)] shrink-0">
+                        Drive
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)] font-sans mt-0.5 truncate">
+                    <span className="text-[var(--ink)] font-medium">{song.artista || 'Banda'}</span>
+                    <span>•</span>
+                    <span className="text-[var(--ok)] font-semibold">
+                      {song.tonalidad || 'Am'}
+                      {transposeSemitones !== 0 && (
+                        <span className="text-[var(--alert)] ml-1 font-bold">
+                          ➔{' '}
+                          {transposeChordToken(
+                            song.tonalidad || 'Am',
+                            transposeSemitones,
+                            /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad || 'Am').trim()) ? 'ES' : 'EN'
+                          )}{' '}
+                          ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
+                        </span>
+                      )}
+                      {isTransposingAudio && (
+                        <span
+                          className="ml-1 text-[var(--ink-2)] font-bold text-[10px]"
+                          title="Procesando trasposición DSP con Pedalboard de Spotify"
+                        >
+                          🎛️ Pedalboard...
+                        </span>
+                      )}
+                    </span>
+                    <span>•</span>
+                    <span>{song.bpm} BPM</span>
+                    {isCrossfading && nextQueueSong && (
+                      <>
+                        <span>•</span>
+                        <span className="text-[var(--ink-2)] font-semibold">🔀 → {nextQueueSong.titulo}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-            {/* Control Buttons */}
-            <div className="flex items-center gap-4">
-              {/* Loop Practice Toggle */}
-              <button
-                onClick={() => setIsLooping(!isLooping)}
-                className={`p-1.5 rounded-full transition-all cursor-pointer ${
-                  isLooping
-                    ? 'text-[#1db954] bg-[#1db954]/10'
-                    : 'text-[#b3b3b3] hover:text-white'
-                }`}
-                title={isLooping ? "Repetir tema activado" : "Activar Bucle"}
-              >
-                <Repeat className="w-4 h-4" />
-              </button>
-
-              {/* Prev Song */}
-              <button
-                onClick={() => handlePrev()}
-                className="p-1 text-[#b3b3b3] hover:text-white transition-all cursor-pointer active:scale-90"
-                title="Canción Anterior"
-              >
-                <SkipBack className="w-5 h-5 fill-current" />
-              </button>
-
-              {/* Play / Pause - Authentic Spotify Green Circle */}
-              <button
-                onClick={togglePlayPause}
-                className="w-10 h-10 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-bold flex items-center justify-center shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
-                title={isPlaying ? "Pausar" : "Reproducir Canción"}
-              >
-                {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
-              </button>
-
-              {/* Next Song */}
-              <button
-                onClick={() => handleNext(false)}
-                className="p-1 text-[#b3b3b3] hover:text-white transition-all cursor-pointer active:scale-90"
-                title="Siguiente Canción"
-              >
-                <SkipForward className="w-5 h-5 fill-current" />
-              </button>
-
-              {/* Crossfade Toggle — fundido real de 5s al pasar al siguiente tema de la cola */}
-              <button
-                onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
-                className={`p-1.5 rounded-full transition-all cursor-pointer text-sm ${
-                  crossfadeEnabled
-                    ? 'text-sky-400 bg-sky-400/10'
-                    : 'text-[#b3b3b3] hover:text-white'
-                }`}
-                title={crossfadeEnabled ? "Fundido entre temas activado (5s)" : "Activar fundido entre temas (5s)"}
-              >
-                🔀
-              </button>
-
-              {/* Speed multiplier selector */}
-              <select
-                value={playbackRate}
-                onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-                className="bg-[#282828] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border border-white/5"
-                title="Velocidad de Reproducción"
-              >
-                <option value={0.5}>0.5x</option>
-                <option value={0.75}>0.75x</option>
-                <option value={1.0}>1.0x</option>
-                <option value={1.25}>1.25x</option>
-                <option value={1.5}>1.5x</option>
-              </select>
-
-              {/* Pitch Transpose selector (Spotify Pedalboard DSP) */}
-              <select
-                value={transposeSemitones}
-                onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
-                className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border border-white/5 ${
-                  transposeSemitones !== 0 ? 'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' : 'text-[#b3b3b3]'
-                }`}
-                title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
-              >
-                {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
-                  const origKey = song?.tonalidad?.trim();
-                  let label = st > 0 ? `+${st} st` : st < 0 ? `${st} st` : '0 (Original)';
-                  if (origKey) {
-                    const targetKey = transposeChordToken(origKey, st, 'EN');
-                    label = st === 0 ? `${origKey} (Original)` : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
-                  }
-                  return (
-                    <option key={st} value={st}>
-                      {label}
-                    </option>
-                  );
-                })}
-              </select>
+              {/* Minimizar a una tira de ~2.5rem (ver el translate-y de más arriba) — antes solo
+ disponible en móvil (`md:hidden`); ahora también en escritorio, para poder dejar
+ la barra ocupando lo mínimo cuando no hace falta verla entera. */}
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setIsMinimized(!isMinimized)}
+                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+                  title={isMinimized ? 'Expandir Reproductor' : 'Minimizar'}
+                >
+                  {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
-            {/* Timeline Slider */}
-            <div className="w-full flex items-center gap-2 text-[11px] font-mono text-[#b3b3b3]">
-              <span className="w-9 text-right shrink-0">{formatSecs(currentTime)}</span>
+            {/* Center: Playback Controls & Timeline Scrubber */}
+            <div className="flex flex-col items-center gap-1.5 w-full md:w-2/4">
+              {/* Control Buttons */}
+              <div className="flex items-center gap-4">
+                {/* Loop Practice Toggle */}
+                <button
+                  onClick={() => setIsLooping(!isLooping)}
+                  className={`p-1.5 rounded-[var(--r-pill)] transition-all cursor-pointer ${
+                    isLooping ? 'text-[var(--ok)] bg-[var(--surface)]/10' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  }`}
+                  title={isLooping ? 'Repetir tema activado' : 'Activar Bucle'}
+                >
+                  <Repeat className="w-4 h-4" />
+                </button>
 
-              <div className="relative flex-1 flex items-center">
+                {/* Prev Song */}
+                <button
+                  onClick={() => handlePrev()}
+                  className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer active:scale-90"
+                  title="Canción Anterior"
+                >
+                  <SkipBack className="w-5 h-5 fill-current" />
+                </button>
+
+                {/* Play / Pause - Authentic Spotify Green Circle */}
+                <button
+                  onClick={togglePlayPause}
+                  className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
+                  title={isPlaying ? 'Pausar' : 'Reproducir Canción'}
+                >
+                  {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
+                </button>
+
+                {/* Next Song */}
+                <button
+                  onClick={() => handleNext(false)}
+                  className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer active:scale-90"
+                  title="Siguiente Canción"
+                >
+                  <SkipForward className="w-5 h-5 fill-current" />
+                </button>
+
+                {/* Crossfade Toggle — fundido real de 5s al pasar al siguiente tema de la cola */}
+                <button
+                  onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
+                  className={`p-1.5 rounded-[var(--r-pill)] transition-all cursor-pointer text-sm ${
+                    crossfadeEnabled ? 'text-[var(--ok)] bg-[var(--ok)]/15' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  }`}
+                  title={crossfadeEnabled ? 'Fundido entre temas activado (5s)' : 'Activar fundido entre temas (5s)'}
+                >
+                  🔀
+                </button>
+
+                {/* Speed multiplier selector */}
+                <select
+                  value={playbackRate}
+                  onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
+                  className="bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-all"
+                  title="Velocidad de Reproducción"
+                >
+                  <option value={0.5}>0.5x</option>
+                  <option value={0.75}>0.75x</option>
+                  <option value={1.0}>1.0x</option>
+                  <option value={1.25}>1.25x</option>
+                  <option value={1.5}>1.5x</option>
+                </select>
+
+                {/* Pitch Transpose selector (Spotify Pedalboard DSP) */}
+                <select
+                  value={transposeSemitones}
+                  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
+                  className={`bg-[var(--sunken)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-all ${
+                    transposeSemitones !== 0 ? 'text-[var(--alert)]' : 'text-[var(--ink-2)]'
+                  }`}
+                  title="Trasposición de Tono"
+                >
+                  {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
+                    const origKey = song?.tonalidad?.trim();
+                    let label = st > 0 ? `+${st} st` : st < 0 ? `${st} st` : '0 (Original)';
+                    if (origKey) {
+                      const targetKey = transposeChordToken(origKey, st, 'EN');
+                      label = st === 0 ? `${origKey} (Original)` : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
+                    }
+                    return (
+                      <option key={st} value={st}>
+                        {label}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              {/* Timeline Slider */}
+              <div className="w-full flex items-center gap-2 text-[11px] font-sans text-[var(--ink-2)]">
+                <span className="w-9 text-right shrink-0">{formatSecs(currentTime)}</span>
+
+                <div className="relative flex-1 flex items-center">
+                  <input
+                    type="range"
+                    min={0}
+                    max={duration || 210}
+                    step={0.5}
+                    value={currentTime}
+                    onChange={(e) => handleSeek(parseFloat(e.target.value))}
+                    className="w-full h-1 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)] hover:accent-[var(--ok)] focus:outline-none"
+                  />
+                </div>
+
+                <span className="w-9 text-left shrink-0">{formatSecs(duration)}</span>
+              </div>
+            </div>
+
+            {/* Right: Actions & Volume */}
+            <div className="flex items-center justify-end gap-2.5 w-full md:w-1/4">
+              {/* Chords link if available */}
+              {song.enlaceAcordes && (
+                <a
+                  href={song.enlaceAcordes}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans flex items-center gap-1 transition-all cursor-pointer"
+                  title="Ver Acordes / Partitura"
+                >
+                  <FileText className="w-3.5 h-3.5 text-[var(--ok)]" />
+                  <span className="hidden lg:inline text-[11px]">Acordes</span>
+                </a>
+              )}
+
+              {/* Studio / Arreglos Button */}
+              <button
+                onClick={() => onOpenStudio(song)}
+                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/25 hover:bg-[var(--ok)]/35 text-[var(--ok)] font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                title="Abrir Estudio de Arreglos e Ideas"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Estudio</span>
+              </button>
+
+              {/* Iris Stem Separator Button */}
+              <button
+                onClick={() => (onOpenIris ? onOpenIris(song) : onOpenStudio(song))}
+                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/25 hover:bg-[var(--acc)]/35 text-[var(--acc)] font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
+                <span className="hidden sm:inline text-[11px]">Iris</span>
+              </button>
+
+              {/* Volume */}
+              <div className="hidden sm:flex items-center gap-1.5 pl-2">
+                <button onClick={() => setIsMuted(!isMuted)} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1">
+                  {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-[var(--alert)]" /> : <Volume2 className="w-4 h-4" />}
+                </button>
                 <input
                   type="range"
                   min={0}
-                  max={duration || 210}
-                  step={0.5}
-                  value={currentTime}
-                  onChange={(e) => handleSeek(parseFloat(e.target.value))}
-                  className="w-full h-1 bg-[#4d4d4d] rounded-lg appearance-none cursor-pointer accent-[#1db954] hover:accent-[#1ed760] focus:outline-none"
+                  max={1}
+                  step={0.05}
+                  value={isMuted ? 0 : volume}
+                  onChange={(e) => {
+                    setVolume(parseFloat(e.target.value));
+                    setIsMuted(false);
+                  }}
+                  className="w-16 h-1 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)]"
                 />
               </div>
 
-              <span className="w-9 text-left shrink-0">{formatSecs(duration)}</span>
-            </div>
-          </div>
-
-          {/* Right: Actions & Volume */}
-          <div className="flex items-center justify-end gap-2.5 w-full md:w-1/4">
-
-            {/* Chords link if available */}
-            {song.enlaceAcordes && (
-              <a
-                href={song.enlaceAcordes}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-[#282828] hover:bg-[#3e3e3e] text-[#b3b3b3] hover:text-white text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
-                title="Ver Acordes / Partitura"
-              >
-                <FileText className="w-3.5 h-3.5 text-[#1db954]" />
-                <span className="hidden lg:inline text-[11px]">Acordes</span>
-              </a>
-            )}
-
-            {/* Studio / Arreglos Button */}
-            <button
-              onClick={() => onOpenStudio(song)}
-              className="px-3 py-1.5 rounded-full bg-[#1db954]/15 hover:bg-[#1db954]/25 text-[#1ed760] border border-[#1db954]/30 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
-              title="Abrir Estudio de Arreglos e Ideas"
-            >
-              <Sliders className="w-3.5 h-3.5" />
-              <span className="text-[11px]">Estudio</span>
-            </button>
-
-            {/* Volume */}
-            <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-[#282828]">
+              {/* Close Player */}
               <button
-                onClick={() => setIsMuted(!isMuted)}
-                className="text-[#b3b3b3] hover:text-white p-1"
-              >
-                {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4" />}
-              </button>
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.05}
-                value={isMuted ? 0 : volume}
-                onChange={(e) => {
-                  setVolume(parseFloat(e.target.value));
-                  setIsMuted(false);
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClosePlayer();
                 }}
-                className="w-16 h-1 bg-[#4d4d4d] rounded-lg appearance-none cursor-pointer accent-[#1db954]"
-              />
+                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all ml-1"
+                title="Cerrar Reproductor"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-
-            {/* Close Player */}
-            <button
-              onClick={onClosePlayer}
-              className="p-1.5 text-zinc-500 hover:text-white transition-all ml-1"
-              title="Cerrar Reproductor"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
           </div>
-
-        </div>
+        )}
       </div>
     </div>
   );

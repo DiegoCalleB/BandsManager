@@ -12,7 +12,7 @@ export interface StudioAudioStreamOptions {
 
 export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOptions): Promise<MediaStream> => {
   if (!navigator?.mediaDevices?.getUserMedia) {
-    throw new Error("El entorno o navegador no dispone de soporte para captura de audio/micrófono.");
+    throw new Error('El entorno o navegador no dispone de soporte para captura de audio/micrófono.');
   }
 
   // Default to echo cancellation and noise suppression ON for multitrack overdubbing to prevent speaker bleed and room hiss
@@ -26,23 +26,25 @@ export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOption
       noiseSuppression: useNoiseSuppression,
       autoGainControl: useAutoGain,
       channelCount: { ideal: 2 },
-      sampleRate: { ideal: 48000 }
+      sampleRate: { ideal: 48000 },
     };
 
     return await navigator.mediaDevices.getUserMedia({
-      audio: audioConstraints
+      audio: audioConstraints,
     });
   } catch (err: any) {
-    const isPermissionError = 
-      err?.name === 'NotAllowedError' || 
-      err?.name === 'PermissionDeniedError' || 
-      String(err?.message || '').toLowerCase().includes('permission denied');
+    const isPermissionError =
+      err?.name === 'NotAllowedError' ||
+      err?.name === 'PermissionDeniedError' ||
+      String(err?.message || '')
+        .toLowerCase()
+        .includes('permission denied');
 
     if (isPermissionError) {
-      throw new Error("Permiso de micrófono denegado por el usuario o navegador.");
+      throw new Error('Permiso de micrófono denegado por el usuario o navegador.');
     }
 
-    console.warn("Audio constraints rejected, falling back to standard audio stream:", err);
+    console.warn('Audio constraints rejected, falling back to standard audio stream:', err);
     return await navigator.mediaDevices.getUserMedia({ audio: true });
   }
 };
@@ -58,10 +60,7 @@ export interface CleanPipelineResult {
   cleanup: () => void;
 }
 
-export const createCleanAudioRecordingPipeline = (
-  rawStream: MediaStream,
-  existingCtx?: AudioContext | null
-): CleanPipelineResult => {
+export const createCleanAudioRecordingPipeline = (rawStream: MediaStream, existingCtx?: AudioContext | null): CleanPipelineResult => {
   const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
   const audioCtx = existingCtx || new AudioCtxClass();
 
@@ -119,7 +118,7 @@ export const createCleanAudioRecordingPipeline = (
   return {
     cleanStream: destination.stream,
     audioCtx,
-    cleanup
+    cleanup,
   };
 };
 
@@ -145,17 +144,9 @@ export const trimAudioBlobLatency = async (audioBlob: Blob, latencyMs: number = 
     if (samplesToTrim <= 0) return audioBlob;
 
     const trimmedLength = decodedBuffer.length - samplesToTrim;
-    const offlineCtx = new OfflineAudioContext(
-      decodedBuffer.numberOfChannels,
-      trimmedLength,
-      sampleRate
-    );
+    const offlineCtx = new OfflineAudioContext(decodedBuffer.numberOfChannels, trimmedLength, sampleRate);
 
-    const newBuffer = offlineCtx.createBuffer(
-      decodedBuffer.numberOfChannels,
-      trimmedLength,
-      sampleRate
-    );
+    const newBuffer = offlineCtx.createBuffer(decodedBuffer.numberOfChannels, trimmedLength, sampleRate);
 
     for (let channel = 0; channel < decodedBuffer.numberOfChannels; channel++) {
       const srcData = decodedBuffer.getChannelData(channel);
@@ -166,7 +157,7 @@ export const trimAudioBlobLatency = async (audioBlob: Blob, latencyMs: number = 
     normalizeAudioBuffer(newBuffer, -1);
     return audioBufferToWavBlob(newBuffer);
   } catch (err) {
-    console.warn("Latency trimming failed, returning original blob:", err);
+    console.warn('Latency trimming failed, returning original blob:', err);
     return audioBlob;
   }
 };
@@ -200,7 +191,7 @@ export const normalizeAudioBuffer = (buffer: AudioBuffer, targetDb: number = -1)
       }
     }
   } catch (e) {
-    console.warn("Peak normalization error:", e);
+    console.warn('Peak normalization error:', e);
   }
   return buffer;
 };
@@ -221,11 +212,7 @@ export const cleanAudioBlobOffline = async (audioBlob: Blob, latencyTrimMs: numb
     const decodedBuffer = await tempCtx.decodeAudioData(arrayBuffer);
     tempCtx.close();
 
-    const offlineCtx = new OfflineAudioContext(
-      decodedBuffer.numberOfChannels,
-      decodedBuffer.length,
-      decodedBuffer.sampleRate
-    );
+    const offlineCtx = new OfflineAudioContext(decodedBuffer.numberOfChannels, decodedBuffer.length, decodedBuffer.sampleRate);
 
     const source = offlineCtx.createBufferSource();
     source.buffer = decodedBuffer;
@@ -250,7 +237,7 @@ export const cleanAudioBlobOffline = async (audioBlob: Blob, latencyTrimMs: numb
     // Convert AudioBuffer back to WAV Blob
     return audioBufferToWavBlob(renderedBuffer);
   } catch (err) {
-    console.warn("Offline audio cleaning failed, returning original blob:", err);
+    console.warn('Offline audio cleaning failed, returning original blob:', err);
     return audioBlob;
   }
 };
@@ -289,7 +276,7 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   /* RIFF type */
   writeString(view, 8, 'WAVE');
   /* format chunk identifier */
-  writeString(view, 12, 'fmt ');
+  writeString(view, 12, 'fmt');
   /* format chunk length */
   view.setUint32(16, 16, true);
   /* sample format (raw) */
@@ -313,7 +300,7 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   let offset = 44;
   for (let i = 0; i < result.length; i++) {
     const s = Math.max(-1, Math.min(1, result[i]));
-    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
     offset += 2;
   }
 
@@ -338,13 +325,10 @@ export const getSystemAudioLatencyMs = (audioContext?: AudioContext | null): num
  * between a master backing track and a newly recorded audio track.
  * Uses envelope cross-correlation and transient attack detection.
  */
-export const autoDetectAudioLatencyOffset = async (
-  masterAudioUrl: string,
-  recordedBlob: Blob
-): Promise<number> => {
+export const autoDetectAudioLatencyOffset = async (masterAudioUrl: string, recordedBlob: Blob): Promise<number> => {
   try {
     const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    
+
     // 1. Fetch & decode Master Audio
     const masterRes = await fetch(masterAudioUrl);
     const masterArrBuffer = await masterRes.arrayBuffer();
@@ -416,11 +400,17 @@ export const autoDetectAudioLatencyOffset = async (
     // Fallback: Check first transient onset (attack > 5% peak)
     let firstMasterOnsetMs = 0;
     for (let i = 0; i < masterEnv.length; i++) {
-      if (masterEnv[i] > 0.05) { firstMasterOnsetMs = i * frameMs; break; }
+      if (masterEnv[i] > 0.05) {
+        firstMasterOnsetMs = i * frameMs;
+        break;
+      }
     }
     let firstRecOnsetMs = 0;
     for (let i = 0; i < recEnv.length; i++) {
-      if (recEnv[i] > 0.05) { firstRecOnsetMs = i * frameMs; break; }
+      if (recEnv[i] > 0.05) {
+        firstRecOnsetMs = i * frameMs;
+        break;
+      }
     }
 
     const onsetDiff = firstRecOnsetMs - firstMasterOnsetMs;
@@ -431,9 +421,8 @@ export const autoDetectAudioLatencyOffset = async (
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const isMobile = isIOS || /Android/i.test(navigator.userAgent);
     return isIOS ? 320 : isMobile ? 240 : 110;
-
   } catch (err) {
-    console.warn("Auto latency detection fallback:", err);
+    console.warn('Auto latency detection fallback:', err);
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const isMobile = isIOS || /Android/i.test(navigator.userAgent);
     return isIOS ? 320 : isMobile ? 240 : 110;
@@ -460,9 +449,9 @@ export const exportMasterMixAudioBlob = async (
   tracks: MasterMixTrackInput[],
   resolveUrlFn?: (url: string) => Promise<string>
 ): Promise<Blob> => {
-  const activeTracks = tracks.filter(t => !t.muted && t.audioUrl);
+  const activeTracks = tracks.filter((t) => !t.muted && t.audioUrl);
   if (activeTracks.length === 0) {
-    throw new Error("No hay pistas activas para mezclar.");
+    throw new Error('No hay pistas activas para mezclar.');
   }
 
   const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -491,14 +480,14 @@ export const exportMasterMixAudioBlob = async (
       }
       decodedTrackBuffers.push({ buffer: audioBuf, input: tr });
     } catch (err) {
-      console.warn("Error decoding track for master mix:", tr.audioUrl, err);
+      console.warn('Error decoding track for master mix:', tr.audioUrl, err);
     }
   }
 
   tempCtx.close();
 
   if (decodedTrackBuffers.length === 0 || maxTotalDuration === 0) {
-    throw new Error("No se pudo decodificar el audio de ninguna de las pistas.");
+    throw new Error('No se pudo decodificar el audio de ninguna de las pistas.');
   }
 
   // 2. Setup OfflineAudioContext for rendering master mix
@@ -630,7 +619,7 @@ export const computeAutoBalanceVolumes = async (
   }
 
   const SILENCE_FLOOR = 0.0005;
-  const validRms = Object.values(rmsById).filter(v => v > SILENCE_FLOOR);
+  const validRms = Object.values(rmsById).filter((v) => v > SILENCE_FLOOR);
   if (validRms.length === 0) return {};
 
   const minRms = Math.min(...validRms);
@@ -642,4 +631,3 @@ export const computeAutoBalanceVolumes = async (
   }
   return volumes;
 };
-

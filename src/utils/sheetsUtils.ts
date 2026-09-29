@@ -9,20 +9,20 @@ export const VALID_LEAD_STATUSES: LeadStatus[] = [
   'esperando_respuesta',
   'interesado',
   'no_interesado',
-  'negociando'
+  'negociando',
 ];
 
 /**
  * Validates if a state transition is allowed in the approval / CRM pipeline.
- * Rule: 
- * From 'pendiente_aprobacion': can go to 'aprobado' or 'nuevo' (rejected with note)
+ * Rule:
+ * From'pendiente_aprobacion': can go to'aprobado' or'nuevo' (rejected with note)
  * Other manual CRM status corrections allowed: interested, negotiating, closed, etc.
  */
 export function isValidStatusTransition(currentStatus: LeadStatus, targetStatus: LeadStatus): boolean {
   if (currentStatus === targetStatus) return true;
 
   if (currentStatus === 'pendiente_aprobacion') {
-    // Only 'aprobado' or 'nuevo' are valid directly from pending approval panel
+    // Only'aprobado' or'nuevo' are valid directly from pending approval panel
     return targetStatus === 'aprobado' || targetStatus === 'nuevo';
   }
 
@@ -33,14 +33,11 @@ export function isValidStatusTransition(currentStatus: LeadStatus, targetStatus:
 /**
  * Concurrency check: returns error message if lead status in the database has changed in parallel
  */
-export function validateLeadConcurrency(
-  leadInDatabase: Lead,
-  expectedStatus?: string
-): { isConflict: boolean; message?: string } {
+export function validateLeadConcurrency(leadInDatabase: Lead, expectedStatus?: string): { isConflict: boolean; message?: string } {
   if (expectedStatus && leadInDatabase.estado !== expectedStatus) {
     return {
       isConflict: true,
-      message: `El lead "${leadInDatabase.nombre_sala}" cambió de estado (de '${expectedStatus}' a '${leadInDatabase.estado}') antes de tu guardado.`
+      message: `El lead "${leadInDatabase.nombre_sala}" cambió de estado (de'${expectedStatus}' a'${leadInDatabase.estado}') antes de tu guardado.`,
     };
   }
   return { isConflict: false };
@@ -58,7 +55,7 @@ export function filterLeads(
     fuente?: string;
   }
 ): Lead[] {
-  return leads.filter(lead => {
+  return leads.filter((lead) => {
     if (filter.status && filter.status !== 'todos' && lead.estado !== filter.status) {
       return false;
     }

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { Lead, LeadStatus } from '../../types';
-import { VenueDetailPanel } from './VenueDetailPanel';
-import { X, Building2 } from 'lucide-react';
+import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
+import { Lead, LeadStatus, Concert } from "../../types";
+import { VenueDetailPanel } from "./VenueDetailPanel";
+import { X, Building2 } from "lucide-react";
 
 interface MobileBottomSheetProps {
   selectedLead: Lead | null;
@@ -15,11 +15,13 @@ interface MobileBottomSheetProps {
   normalizeStatus: (status: string) => LeadStatus;
   normalizeType: (type?: string) => string;
   autoDetectVenueAddress: (venueName: string, city: string) => string;
-  sectionTab: 'salas' | 'medios' | 'grupos';
-  isStitchLight?: boolean;
+  sectionTab: "salas" | "medios" | "grupos";
   activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => void;
   isUploadingLeadLogo?: boolean;
+  onFilterByRouteCity?: (city: string) => void;
+  bandName?: string;
+  concerts?: Concert[];
 }
 
 export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
@@ -34,19 +36,21 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   normalizeType,
   autoDetectVenueAddress,
   sectionTab,
-  isStitchLight = false,
   activeCampaign,
   onLeadLogoUpload,
-  isUploadingLeadLogo = false
+  isUploadingLeadLogo = false,
+  onFilterByRouteCity,
+  bandName,
+  concerts = [],
 }) => {
   useEffect(() => {
     if (selectedLead) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [selectedLead]);
 
@@ -57,18 +61,16 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
       {/* Backdrop overlay */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity cursor-pointer z-[999998]"
+        className="fixed inset-0 bg-[var(--scrim)]/80 transition-opacity cursor-pointer z-[9999]"
       />
 
       {/* Sheet Drawer Container */}
-      <div
-        className="relative z-[999999] w-full sm:max-w-2xl max-h-[90vh] sm:max-h-[85vh] bg-[#121110] border-t-2 sm:border-2 border-[#f2ca50] rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col text-zinc-100 overflow-hidden"
-      >
+      <div className="relative z-[999999] w-full sm:max-w-2xl max-h-[90vh] sm:max-h-[85vh] bg-[var(--surface)] sm:border-2 rounded-t-[var(--r-xl)] sm:rounded-[var(--r-l)] p-4 sm:p-6 flex flex-col text-[var(--ink)] overflow-hidden">
         {/* Header Bar */}
-        <div className="w-full flex justify-between items-center pb-3 border-b border-zinc-800 mb-3 shrink-0">
+        <div className="w-full flex justify-between items-center pb-3800 mb-3 shrink-0">
           <div className="flex items-center gap-2 truncate pr-2">
-            <Building2 className="w-4 h-4 text-amber-400 shrink-0" />
-            <span className="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold truncate">
+            <Building2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
+            <span className="text-xs font-sans text-[var(--acc)] font-bold truncate">
               Ficha: {selectedLead.nombre_sala}
             </span>
           </div>
@@ -76,7 +78,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/50 transition-colors cursor-pointer shadow-md text-xs font-bold shrink-0 gap-1"
+            className="flex items-center justify-center px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors cursor-pointer text-xs font-bold shrink-0 gap-1"
             title="Cerrar ficha"
           >
             <X className="w-4 h-4" />
@@ -98,14 +100,16 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
             normalizeType={normalizeType}
             autoDetectVenueAddress={autoDetectVenueAddress}
             sectionTab={sectionTab}
-            isStitchLight={isStitchLight}
             activeCampaign={activeCampaign}
             onLeadLogoUpload={onLeadLogoUpload}
             isUploadingLeadLogo={isUploadingLeadLogo}
+            onFilterByRouteCity={onFilterByRouteCity}
+            bandName={bandName}
+            concerts={concerts}
           />
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

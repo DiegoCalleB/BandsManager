@@ -86,6 +86,8 @@ CREATE TABLE IF NOT EXISTS leads (
     email_contacto TEXT,
     email_secundario TEXT DEFAULT '',
     telefono TEXT,
+    telefono_movil TEXT DEFAULT '',
+    telefono_fijo TEXT DEFAULT '',
     website TEXT,
     instagram TEXT,
     contacto_nombre TEXT,
@@ -111,6 +113,23 @@ CREATE TABLE IF NOT EXISTS leads (
     -- donde escribe el Enviador/Lector); server/db/leads.ts la persiste para que ese lado del
     -- frontend deje de perderse en cada guardado, pero conceptualmente son dos cosas distintas.
     hilo_emails JSONB DEFAULT '[]'::jsonb,
+    roster TEXT,
+    festival_start_date TEXT,
+    festival_end_date TEXT,
+    fechas_ocupadas JSONB DEFAULT '[]'::jsonb,
+    fechas_libres_detectadas JSONB DEFAULT '[]'::jsonb,
+    temperatura_lead TEXT,
+    ultimo_sentimiento TEXT,
+    ultimo_sentimiento_score NUMERIC,
+    ultimo_sentimiento_label TEXT,
+    ultima_intencion TEXT,
+    ultima_intencion_etiqueta TEXT,
+    ultimas_objeciones JSONB DEFAULT '[]'::jsonb,
+    ultimo_analisis_resumen TEXT,
+    fechas_propuestas_sala JSONB DEFAULT '[]'::jsonb,
+    condiciones_economicas_detectadas JSONB DEFAULT '{}'::jsonb,
+    estrategia_playbook JSONB DEFAULT '{}'::jsonb,
+    ultimo_mensaje_recibido TEXT,
     -- ID del borrador creado por el Agente Enviador vía la API de Gmail (server/services/
     -- gmailApiClient.ts) cuando la banda usa OAuth sin contraseña. Permite comprobar en el
     -- siguiente tick del scheduler si el borrador sigue existiendo o si ya se envió a mano
@@ -434,6 +453,7 @@ CREATE TABLE IF NOT EXISTS autonomy_configs (
     -- aprobación humana en sí (server/services/agentEngine.ts) - y solo tiene efecto si además
     -- el servidor entero tiene AGENT_EMAIL_MODE=send (si no, siempre se queda en borrador).
     dispatch_mode TEXT DEFAULT 'draft_gmail',
+    mark_as_read_in_inbox BOOLEAN DEFAULT FALSE,
     agent_sender_email TEXT,
     agent_sender_name TEXT,
     agent_reply_to_email TEXT,
@@ -941,4 +961,288 @@ CREATE TABLE IF NOT EXISTS stem_prediction_jobs (
 CREATE INDEX IF NOT EXISTS idx_stem_prediction_jobs_status ON stem_prediction_jobs(status, created_at DESC);
 ALTER TABLE stem_prediction_jobs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON stem_prediction_jobs FOR ALL USING (true);
+
+-- ====================================================================
+-- 37. STRICT ROW LEVEL SECURITY (RLS) POLICIES & FUNCTIONS
+-- ====================================================================
+
+CREATE OR REPLACE FUNCTION public.is_service_role()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (
+    coalesce(current_setting('request.jwt.claim.role', true), '') = 'service_role' OR
+    coalesce((auth.jwt() ->> 'role'), '') = 'service_role'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION public.get_active_band_id()
+RETURNS TEXT AS $$
+BEGIN
+  RETURN coalesce(
+    nullif(current_setting('app.current_band_id', true), ''),
+    nullif(auth.jwt() ->> 'band_id', ''),
+    nullif(auth.jwt() -> 'user_metadata' ->> 'band_id', ''),
+    nullif(auth.jwt() -> 'app_metadata' ->> 'band_id', '')
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION public.get_user_authorized_band_ids()
+RETURNS TABLE(band_id TEXT) AS $$
+BEGIN
+  IF public.is_service_role() THEN
+    RETURN QUERY SELECT rb.band_id FROM public.registered_bands rb;
+    RETURN;
+  END IF;
+
+  IF public.get_active_band_id() IS NOT NULL THEN
+    RETURN QUERY SELECT public.get_active_band_id();
+  END IF;
+
+  IF auth.uid() IS NOT NULL THEN
+    RETURN QUERY
+      SELECT ub.band_id FROM public.user_bands ub WHERE ub.user_id = auth.uid()::text
+      UNION
+      SELECT u.band_id FROM public.users u WHERE u.id = auth.uid()::text AND u.band_id IS NOT NULL AND u.band_id != ''
+      UNION
+      SELECT u.main_band_id FROM public.users u WHERE u.id = auth.uid()::text AND u.main_band_id IS NOT NULL AND u.main_band_id != '';
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Calendar policies (Concerts & Rehearsals)
+CREATE POLICY "concerts_select_policy" ON public.concerts
+  FOR SELECT USING (
+    public.is_service_role() OR
+    band_id = public.get_active_band_id() OR
+    band_id IN (SELECT public.get_user_authorized_band_ids())
+  );
+
+CREATE POLICY "rehearsals_select_policy" ON public.rehearsals
+  FOR SELECT USING (
+    public.is_service_role() OR
+    band_id = public.get_active_band_id() OR
+    band_id IN (SELECT public.get_user_authorized_band_ids())
+  );
+
+-- Migraciones idempotentes para asegurar que la tabla leads tiene las últimas columnas
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS roster TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS festival_start_date TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS festival_end_date TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS fechas_ocupadas JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS fechas_libres_detectadas JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_sentimiento TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_sentimiento_score NUMERIC;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_sentimiento_label TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultima_intencion TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultima_intencion_etiqueta TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimas_objeciones JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_analisis_resumen TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS temperatura_lead TEXT;
+
+-- Migraciones idempotentes para columnas de sentimiento en lead_messages
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sentimiento TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sentimiento_score NUMERIC;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sentimiento_label TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS intencion TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS intencion_etiqueta TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS temperatura TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS objeciones JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS puntos_clave JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS resumen_ejecutivo TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sugerencia_estrategia TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS analisis_ia JSONB;
+
+-- 41. agent_jobs_queue (Cola de Tareas Distribuidas para Agentes de IA)
+CREATE TABLE IF NOT EXISTS agent_jobs_queue (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  agent_type TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  payload JSONB DEFAULT '{}'::jsonb,
+  attempts INTEGER DEFAULT 0,
+  max_attempts INTEGER DEFAULT 3,
+  error_message TEXT,
+  scheduled_at TIMESTAMPTZ DEFAULT NOW(),
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  locked_by TEXT,
+  locked_until TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_agent_queue_status_sched ON agent_jobs_queue(status, scheduled_at) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_agent_queue_band ON agent_jobs_queue(band_id, created_at DESC);
+ALTER TABLE agent_jobs_queue ENABLE ROW LEVEL SECURITY;
+
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'agent_jobs_queue' AND policyname = 'Permitir acceso total al backend'
+  ) THEN
+    CREATE POLICY "Permitir acceso total al backend" ON agent_jobs_queue FOR ALL USING (true);
+  END IF;
+END $$;
+
+
+
+
+
+
+-- ==============================================================================
+-- MIGRACIÓN PGVECTOR + RAG HÍBRIDO (METADATOS JSONB + HNSW) PARA BANDMANAGER.IO
+-- ==============================================================================
+
+-- 1. Habilitar la extensión de vectores si no está activa
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- 2. Tabla de almacenamiento vectorial multi-tenant
+CREATE TABLE IF NOT EXISTS pitch_vector_store (
+    id TEXT PRIMARY KEY,
+    band_id TEXT NOT NULL REFERENCES bands(id) ON DELETE CASCADE,
+    lead_id TEXT REFERENCES leads(id) ON DELETE SET NULL,
+    nombre_sala TEXT NOT NULL,
+    tipo_entidad TEXT NOT NULL DEFAULT 'sala',
+    ciudad TEXT,
+    genero_musical TEXT,
+    texto_pitch TEXT NOT NULL,
+    embedding vector(768),
+    resultado_respuesta TEXT DEFAULT 'pendiente',
+    conversion_score NUMERIC DEFAULT 0.5,
+    metadata JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Índices de alta velocidad: HNSW para distancia coseno + GIN para metadatos JSONB
+CREATE INDEX IF NOT EXISTS idx_pitch_vector_store_hnsw 
+ON pitch_vector_store USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+
+CREATE INDEX IF NOT EXISTS idx_pitch_vector_store_metadata_gin 
+ON pitch_vector_store USING gin (metadata);
+
+CREATE INDEX IF NOT EXISTS idx_pitch_vector_store_band_id 
+ON pitch_vector_store(band_id);
+
+-- 4. Función RPC de recuperación híbrida (Similitud Coseno + Filtro Multi-Tenant + Filtros JSONB)
+CREATE OR REPLACE FUNCTION match_pitch_embeddings(
+    query_embedding vector(768),
+    match_threshold float DEFAULT 0.55,
+    match_count int DEFAULT 3,
+    filter_band_id text DEFAULT NULL,
+    filter_category text DEFAULT NULL,
+    filter_stage text DEFAULT NULL,
+    filter_risk_category text DEFAULT NULL
+)
+RETURNS TABLE (
+    id text,
+    band_id text,
+    nombre_sala text,
+    tipo_entidad text,
+    ciudad text,
+    texto_pitch text,
+    resultado_respuesta text,
+    conversion_score numeric,
+    metadata jsonb,
+    similarity float
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        pvs.id,
+        pvs.band_id,
+        pvs.nombre_sala,
+        pvs.tipo_entidad,
+        pvs.ciudad,
+        pvs.texto_pitch,
+        pvs.resultado_respuesta,
+        pvs.conversion_score,
+        pvs.metadata,
+        1 - (pvs.embedding <=> query_embedding) AS similarity
+    FROM pitch_vector_store pvs
+    WHERE
+        (filter_band_id IS NULL OR pvs.band_id = filter_band_id)
+        AND (filter_category IS NULL OR pvs.tipo_entidad ILIKE % || filter_category || %)
+        AND (filter_stage IS NULL OR pvs.metadata->>stage = filter_stage)
+        AND (filter_risk_category IS NULL OR pvs.metadata->>risk_category = filter_risk_category)
+        AND (1 - (pvs.embedding <=> query_embedding)) >= match_threshold
+    ORDER BY pvs.embedding <=> query_embedding
+    LIMIT match_count;
+END;
+$$;
+
+-- 42. Inmutabilidad (Append-Only) en Tablas de Auditoría Crítica
+CREATE OR REPLACE FUNCTION prevent_audit_log_mutation()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RAISE EXCEPTION 'Tabla de auditoría protegida (Append-Only): % no permitido en %.', TG_OP, TG_TABLE_NAME;
+    RETURN NULL;
+END;
+$$;
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'ai_token_ledger') THEN
+    DROP TRIGGER IF EXISTS trg_prevent_delete_ai_token_ledger ON ai_token_ledger;
+    CREATE TRIGGER trg_prevent_delete_ai_token_ledger
+    BEFORE DELETE ON ai_token_ledger
+    FOR EACH ROW
+    EXECUTE FUNCTION prevent_audit_log_mutation();
+  END IF;
+END $$;
+
+CREATE TABLE IF NOT EXISTS agent_execution_logs (
+    id TEXT PRIMARY KEY,
+    band_id TEXT,
+    agente TEXT NOT NULL,
+    motor TEXT,
+    disparado_por_tipo TEXT DEFAULT 'usuario_manual',
+    usuario_id TEXT,
+    usuario_email TEXT,
+    estado TEXT NOT NULL,
+    mensaje TEXT,
+    leads_afectados JSONB DEFAULT '[]'::jsonb,
+    conteo_afectados INTEGER DEFAULT 0,
+    duracion_ms INTEGER DEFAULT 0,
+    detalles JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE agent_execution_logs ADD COLUMN IF NOT EXISTS agente TEXT;
+ALTER TABLE agent_execution_logs ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
+CREATE INDEX IF NOT EXISTS idx_agent_execution_logs_band ON agent_execution_logs(band_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'agent_execution_logs' AND column_name = 'agente'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_agent_execution_logs_agente ON agent_execution_logs(agente);
+  END IF;
+END $$;
+
+ALTER TABLE agent_execution_logs ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'agent_execution_logs' AND policyname = 'Permitir acceso total al backend'
+  ) THEN
+    CREATE POLICY "Permitir acceso total al backend" ON agent_execution_logs FOR ALL USING (true);
+  END IF;
+END $$;
+
+DROP TRIGGER IF EXISTS trg_append_only_agent_execution_logs ON agent_execution_logs;
+CREATE TRIGGER trg_append_only_agent_execution_logs
+BEFORE UPDATE OR DELETE ON agent_execution_logs
+FOR EACH ROW
+EXECUTE FUNCTION prevent_audit_log_mutation();
 

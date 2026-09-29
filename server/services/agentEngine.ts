@@ -6,11 +6,12 @@
 
 import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
-import { BAKANDEYA_BAND_ID } from "../state.js";
+import { loadState } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
+import { getBandDnaProfile, buildIndexableSubjectLine } from "../utils/bandDna.js";
 
 export async function logAgentExecution(logData: {
   band_id: string;
@@ -30,7 +31,7 @@ export async function logAgentExecution(logData: {
     const sb = getSupabase();
     await sb.from("agent_execution_logs").insert({
       id: `log-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      band_id: logData.band_id || BAKANDEYA_BAND_ID,
+      band_id: logData.band_id,
       agente: logData.agente,
       motor: logData.motor,
       disparado_por_tipo: logData.disparado_por_tipo || "usuario_manual",
@@ -158,9 +159,20 @@ export async function runEnviadorAgent(opts: {
     });
 
     const isRespuesta = lead.estado === "aprobado_respuesta";
-    const asunto = isRespuesta
+    let asunto = isRespuesta
       ? `Re: Concierto ${bandName} en ${lead.nombre_sala}`
       : `Propuesta de concierto: ${bandName} en ${lead.nombre_sala}`;
+    try {
+      const state = loadState();
+      const bandDna = getBandDnaProfile(state, opts.bandId, lead);
+      asunto = buildIndexableSubjectLine({
+        bandDna,
+        lead,
+        isRespuesta
+      });
+    } catch (e) {
+      // Fallback silencioso si falla la resolución de ADN
+    }
 
     // Última línea de defensa.
     if (rawEmails.length === 0) {

@@ -32,11 +32,7 @@ export interface TourSummary {
  * Calculates fuel cost based on distance in km, average consumption in L/100km, and price per liter in EUR.
  * If consumption or price is not passed, falls back to ratePerKm (default 0.18 €/km).
  */
-export function calculateFuelCost(
-  distanceKm: number,
-  rateOrConsumptionL100km: number = 0.18,
-  pricePerLiterEUR?: number
-): number {
+export function calculateFuelCost(distanceKm: number, rateOrConsumptionL100km: number = 0.18, pricePerLiterEUR?: number): number {
   if (distanceKm <= 0) return 0;
   if (pricePerLiterEUR !== undefined && pricePerLiterEUR > 0) {
     // Formula: (distance / 100) * L_per_100km * EUR_per_L
@@ -90,27 +86,22 @@ export function calculateTourSummary(stops: TourStop[]): TourSummary {
       totalGastos: 0,
       totalIngresos: 0,
       beneficioNeto: 0,
-      margenPorcentaje: 0
+      margenPorcentaje: 0,
     };
   }
 
   const totalKm = stops.reduce((sum, s) => sum + (s.distanciaAnteriorKm || 0), 0);
-  const totalGastos = stops.reduce(
-    (sum, s) => sum + (s.gastosAlojamiento || 0) + (s.gastosGasolina || 0) + (s.gastosDietas || 0),
-    0
-  );
+  const totalGastos = stops.reduce((sum, s) => sum + (s.gastosAlojamiento || 0) + (s.gastosGasolina || 0) + (s.gastosDietas || 0), 0);
   const totalIngresos = stops.reduce((sum, s) => sum + (s.ingresoCacheEstimated || 0), 0);
   const beneficioNeto = totalIngresos - totalGastos;
-  
-  const margenPorcentaje = totalIngresos > 0 
-    ? Math.round((beneficioNeto / totalIngresos) * 100 * 10) / 10 
-    : 0;
+
+  const margenPorcentaje = totalIngresos > 0 ? Math.round((beneficioNeto / totalIngresos) * 100 * 10) / 10 : 0;
 
   return {
     totalKm,
     totalGastos,
     totalIngresos,
     beneficioNeto,
-    margenPorcentaje
+    margenPorcentaje,
   };
 }

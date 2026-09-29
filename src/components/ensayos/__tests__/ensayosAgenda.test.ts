@@ -15,7 +15,7 @@ describe('Ensayos Agenda reordering and multi-selection logic', () => {
     const [moved] = newAgenda.splice(0, 1);
     newAgenda.splice(2, 0, moved);
 
-    expect(newAgenda.map(item => item.id)).toEqual(['2', '3', '1', '4']);
+    expect(newAgenda.map((item) => item.id)).toEqual(['2', '3', '1', '4']);
     expect(newAgenda[2].titulo).toBe('Canción 1');
   });
 
@@ -29,14 +29,14 @@ describe('Ensayos Agenda reordering and multi-selection logic', () => {
     // User selected in order: s-3 first, then s-1, then s-2
     const selectedSongIds = ['s-3', 's-1', 's-2'];
 
-    const newAgendaItems: RehearsalAgendaItem[] = selectedSongIds.map(sId => {
-      const s = catalog.find(item => item.id === sId);
+    const newAgendaItems: RehearsalAgendaItem[] = selectedSongIds.map((sId) => {
+      const s = catalog.find((item) => item.id === sId);
       return {
         id: `ag-${sId}`,
         tipo: 'cancion',
         titulo: s?.titulo || 'Canción',
         songId: sId,
-        duracionEstimadaMin: s?.duracionSegundos ? Math.ceil(s.duracionSegundos / 60) + 3 : 7
+        duracionEstimadaMin: s?.duracionSegundos ? Math.ceil(s.duracionSegundos / 60) + 3 : 7,
       };
     });
 

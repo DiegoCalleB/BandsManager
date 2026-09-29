@@ -36,11 +36,11 @@ describe('navGroups config', () => {
 
   it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus tools', () => {
     // Cuando hay agrupación (planes >7 módulos), mostramos:
-    // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye 'repertorio' y 'discografia')
+    // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye'repertorio' y'discografia')
     // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
     const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
     const toolIds: NavItemId[] = ['metronome', 'tuner'];
-    const groupedWithoutExtraItems = grouped.filter(id => !toolIds.includes(id));
+    const groupedWithoutExtraItems = grouped.filter((id) => !toolIds.includes(id));
     expect(new Set(groupedWithoutExtraItems)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
     expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + toolIds.length);
   });

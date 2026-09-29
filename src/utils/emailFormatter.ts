@@ -25,44 +25,44 @@ export interface SignatureDataParams {
 export const SOCIAL_ICONS_BADGES_MAP: Record<string, { badgeUrl: string; label: string }> = {
   instagram: {
     badgeUrl: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
-    label: 'Instagram'
+    label: 'Instagram',
   },
   facebook: {
     badgeUrl: 'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white',
-    label: 'Facebook'
+    label: 'Facebook',
   },
   tiktok: {
     badgeUrl: 'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white',
-    label: 'TikTok'
+    label: 'TikTok',
   },
   spotify: {
     badgeUrl: 'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white',
-    label: 'Spotify'
+    label: 'Spotify',
   },
   youtube: {
     badgeUrl: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
-    label: 'YouTube'
+    label: 'YouTube',
   },
   applemusic: {
     badgeUrl: 'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white',
-    label: 'Apple Music'
+    label: 'Apple Music',
   },
   bandcamp: {
     badgeUrl: 'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white',
-    label: 'Bandcamp'
+    label: 'Bandcamp',
   },
   website: {
     badgeUrl: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
-    label: 'Web Oficial'
+    label: 'Web Oficial',
   },
   whatsapp: {
     badgeUrl: 'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white',
-    label: 'WhatsApp'
+    label: 'WhatsApp',
   },
   twitter: {
     badgeUrl: 'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white',
-    label: 'X'
-  }
+    label: 'X',
+  },
 };
 
 /**
@@ -70,9 +70,9 @@ export const SOCIAL_ICONS_BADGES_MAP: Record<string, { badgeUrl: string; label: 
  */
 export function buildEmailSignatureData(params: SignatureDataParams) {
   const resolvedBandName = params.bandName || params.epkConfig?.contactoBooking?.nombre || 'la banda';
-  const isBakandeya = params.isBakandeya ?? resolvedBandName.toLowerCase().includes('bakandeya');
-  const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
-  const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';
+  const isBakandeya = params.isBakandeya ?? false;
+  const defaultEmail = `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'contacto'}@booking.com`;
+  const defaultPhone = '+34 600 000 000';
 
   const firma = params.epkConfig?.firmaEmail;
   const booking = params.epkConfig?.contactoBooking;
@@ -81,10 +81,10 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
     (params.senderName && params.senderName.toLowerCase() !== 'equipo' ? params.senderName : null) ||
     firma?.nombreRemitente ||
     booking?.nombre ||
-    (isBakandeya ? 'Bakandeya Management' : 'Equipo de Booking');
+    'Equipo de Booking';
 
   const cargo = firma?.cargo || `Booking & Management | ${resolvedBandName}`;
-  const textoPie = firma?.textoPie || (isBakandeya ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica' : '');
+  const textoPie = firma?.textoPie || '';
   const telefono = firma?.telefono || booking?.telefono || defaultPhone;
   const email = firma?.email || booking?.email || defaultEmail;
 
@@ -93,45 +93,47 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
   const fallbackOnlineEpk = params.bandId ? `${origin}/epk?band=${encodeURIComponent(params.bandId)}` : `${origin}/epk`;
   const dossierPdfUrl = params.epkConfig?.dossierPdfUrl || params.epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = params.epkConfig?.dossierPdfName || 'Dossier Oficial & Kit de Prensa';
-  const effectiveEpkLink = params.publicEpkUrl || dossierPdfUrl || (isBakandeya ? 'https://bakandeya.es/epk' : fallbackOnlineEpk);
+  const effectiveEpkLink = params.publicEpkUrl || dossierPdfUrl || fallbackOnlineEpk;
   const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
   const dossierLabel = dossierPdfName || 'Dossier Oficial & Kit de Prensa';
 
   // Absolute logo URL for external email clients
-  let logoUrl = (firma?.incluirLogo ?? true) ? (params.epkConfig?.logoUrl || (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '')) : '';
+  let logoUrl = (firma?.incluirLogo ?? true) ? params.epkConfig?.logoUrl || '' : '';
   if (logoUrl && !logoUrl.startsWith('http') && !logoUrl.startsWith('data:')) {
     logoUrl = `${origin}${logoUrl.startsWith('/') ? '' : '/'}${logoUrl}`;
   }
 
   const rawRedesCombined: Record<string, string> = {
-    ...(isBakandeya ? {
-      instagram: 'https://instagram.com/bakandeya_oficial',
-      youtube: 'https://youtube.com/@bakandeya_oficial',
-      tiktok: 'https://tiktok.com/@bakandeya_oficial',
-      spotify: 'https://open.spotify.com/artist/bakandeya'
-    } : {}),
     ...(params.epkConfig?.enlacesRedes || {}),
-    ...(params.epkConfig?.firmaEmail?.redesSociales || {})
+    ...(params.epkConfig?.firmaEmail?.redesSociales || {}),
   };
 
-  const socialLinksList: Array<{ net: string; label: string; url: string; badgeUrl: string }> = Object.entries(rawRedesCombined)
+  const socialLinksList: Array<{
+    net: string;
+    label: string;
+    url: string;
+    badgeUrl: string;
+  }> = Object.entries(rawRedesCombined)
     .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(net.toLowerCase()))
     .map(([net, url]) => {
       const cleanKey = net.toLowerCase();
       const map = SOCIAL_ICONS_BADGES_MAP[cleanKey] || {
         badgeUrl: `https://img.shields.io/badge/${encodeURIComponent(net)}-475569?style=for-the-badge`,
-        label: net
+        label: net,
       };
       const rawUrl = String(url).trim();
-      const finalUrl = rawUrl.startsWith('http') || rawUrl.startsWith('+')
-        ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g, '')}` : rawUrl)
-        : `https://${rawUrl}`;
+      const finalUrl =
+        rawUrl.startsWith('http') || rawUrl.startsWith('+')
+          ? rawUrl.startsWith('+')
+            ? `https://wa.me/${rawUrl.replace(/\+/g, '')}`
+            : rawUrl
+          : `https://${rawUrl}`;
 
       return {
         net,
         label: map.label,
         url: finalUrl,
-        badgeUrl: map.badgeUrl
+        badgeUrl: map.badgeUrl,
       };
     });
 
@@ -148,7 +150,7 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
     adjuntarDossier,
     dossierLabel,
     socialLinksList,
-    incluirIconosRedes: firma?.incluirIconosRedes ?? true
+    incluirIconosRedes: firma?.incluirIconosRedes ?? true,
   };
 }
 
@@ -158,64 +160,83 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
 export function buildEmailSignatureHtml(params: SignatureDataParams): string {
   const data = buildEmailSignatureData(params);
 
-  const activeSocialLinksHtml = (data.incluirIconosRedes && data.socialLinksList.length > 0)
-    ? `
-      <div style="margin-top: 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-        ${data.socialLinksList.map(b => {
-          const raw = String(b.url).trim();
-          const href = raw.startsWith('http') ? raw : `https://${raw}`;
-          return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
-            <img src="${b.badgeUrl}" alt="${b.label}" height="20" style="height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;" />
-          </a>`;
-        }).join('')}
-      </div>
-    `
-    : '';
+  const activeSocialLinksHtml =
+    data.incluirIconosRedes && data.socialLinksList.length > 0
+      ? `
+ <div style="margin-top: 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+ ${data.socialLinksList
+   .map((b) => {
+     const raw = String(b.url).trim();
+     const href = raw.startsWith('http') ? raw : `https://${raw}`;
+     return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
+ <img src="${b.badgeUrl}" alt="${b.label}" height="20" style="height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;" />
+ </a>`;
+   })
+   .join('')}
+ </div>
+ `
+      : '';
 
   return `
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #1e293b; line-height: 1.5;">
-  <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-    <tr>
-      ${data.logoUrl ? `
-      <td valign="top" style="padding-right: 14px; width: 50px;">
-        <img src="${data.logoUrl}" alt="${data.resolvedBandName}" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: contain; display: block;" />
-      </td>
-      ` : ''}
-      <td valign="top">
-        <div style="font-weight: 700; font-size: 15px; color: #0f172a; line-height: 1.3;">
-          ${data.remitenteNombre}
-        </div>
-        <div style="color: #475569; font-size: 12px; font-weight: 500; margin-top: 2px;">
-          ${data.cargo}
-        </div>
-        ${data.textoPie ? `
-        <div style="color: #64748b; font-size: 11px; margin-top: 3px; font-style: italic;">
-          ${data.textoPie}
-        </div>
-        ` : ''}
-        <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
-          ${data.telefono ? `<span><a href="tel:${data.telefono.replace(/\s+/g, '')}" style="color: #475569; text-decoration: none;">${data.telefono}</a></span>` : ''}
-          ${data.telefono && data.email ? ` &nbsp;•&nbsp; ` : ''}
-          ${data.email ? `<span><a href="mailto:${data.email}" style="color: #0284c7; text-decoration: none;">${data.email}</a></span>` : ''}
-        </div>
-      </td>
-    </tr>
-  </table>
+ <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+ <tr>
+ ${
+   data.logoUrl
+     ? `
+ <td valign="top" style="padding-right: 14px; width: 50px;">
+ <img src="${data.logoUrl}" alt="${data.resolvedBandName}" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: contain; display: block;" />
+ </td>
+ `
+     : ''
+ }
+ <td valign="top">
+ <div style="font-weight: 700; font-size: 15px; color: #0f172a; line-height: 1.3;">
+ ${data.remitenteNombre}
+ </div>
+ <div style="color: #475569; font-size: 12px; font-weight: 500; margin-top: 2px;">
+ ${data.cargo}
+ </div>
+ ${
+   data.textoPie
+     ? `
+ <div style="color: #64748b; font-size: 11px; margin-top: 3px; font-style: italic;">
+ ${data.textoPie}
+ </div>
+ `
+     : ''
+ }
+ <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
+ ${data.telefono ? `<span><a href="tel:${data.telefono.replace(/\s+/g, '')}" style="color: #475569; text-decoration: none;">${data.telefono}</a></span>` : ''}
+ ${data.telefono && data.email ? ` &nbsp;•&nbsp; ` : ''}
+ ${data.email ? `<span><a href="mailto:${data.email}" style="color: #0284c7; text-decoration: none;">${data.email}</a></span>` : ''}
+ </div>
+ </td>
+ </tr>
+ </table>
 
-  ${data.adjuntarDossier ? `
-  <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
-  <div style="margin-top: 12px; margin-bottom: 8px;">
-    <a href="${data.effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-      📄 Ver ${data.dossierLabel} ↗
-    </a>
-  </div>
-  ` : ''}
+ ${
+   data.adjuntarDossier
+     ? `
+ <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
+ <div style="margin-top: 12px; margin-bottom: 8px;">
+ <a href="${data.effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+ 📄 Ver ${data.dossierLabel} ↗
+ </a>
+ </div>
+ `
+     : ''
+ }
 
-  ${activeSocialLinksHtml ? `
-  <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted #e2e8f0; font-size: 12px; color: #64748b;">
-    ${activeSocialLinksHtml}
-  </div>
-  ` : ''}
+ ${
+   activeSocialLinksHtml
+     ? `
+ <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted #e2e8f0; font-size: 12px; color: #64748b;">
+ ${activeSocialLinksHtml}
+ </div>
+ `
+     : ''
+ }
 </div>
 `.trim();
 }
@@ -228,7 +249,7 @@ export function buildEmailSignaturePlainText(params: SignatureDataParams): strin
 
   const linksTextArray = [
     data.effectiveEpkLink ? `EPK / Dossier: ${data.effectiveEpkLink}` : '',
-    ...data.socialLinksList.map(s => `${s.label}: ${s.url}`)
+    ...data.socialLinksList.map((s) => `${s.label}: ${s.url}`),
   ].filter(Boolean);
 
   return `
@@ -236,7 +257,7 @@ export function buildEmailSignaturePlainText(params: SignatureDataParams): strin
 ${data.remitenteNombre}
 ${data.cargo}
 ${data.textoPie ? `${data.textoPie}\n` : ''}Tel: ${data.telefono} | Email: ${data.email}
-${linksTextArray.length > 0 ? linksTextArray.join(' | ') : ''}
+${linksTextArray.length > 0 ? linksTextArray.join('| ') : ''}
 `.trim();
 }
 
@@ -313,7 +334,7 @@ export function buildBakandeyaDossierPdfBase64(params?: {
   const email = params?.contactEmail || '';
   const phone = params?.phone || '';
   // Mismo criterio que en la firma del email: el enlace al EPK siempre lleva su band_id. Antes,
-  // sin bandId explícito, caía en 'band-bakandeya': el dossier PDF adjunto en el email de
+  // sin bandId explícito, caía en'band-bakandeya': el dossier PDF adjunto en el email de
   // CUALQUIER banda enlazaba al EPK público real de Bakandeya en vez del propio.
   const bandIdPdf = params?.bandId || '';
   // El idioma viaja con el enlace: el EPK abre directamente en la versión que le toca al
@@ -410,14 +431,17 @@ export function cleanTrailingPitchSignature(text: string): string {
   const signOffPatterns = [
     /\n+(?:(?:¡?Un saludo(?: cordial)?!?|Atentamente,?|Cordialmente,?|¡?Un (?:fuerte )?abrazo!?|Saludos cordiales,?|Quedamos a vuestra (?:entera )?disposici[oó]n\.?))\s*\n+([\s\S]*)$/i,
     /\n+(?:(?:Booking\s*&\s*Management|Management|Equipo de Booking|Booking Team)[\s\S]*)$/i,
-    /\n+(?:(?:📞|📱|✉️|Email:|Tel:|\+34|\b[\w.-]+@[\w.-]+\.\w+\b)[\s\S]*)$/i
+    /\n+(?:(?:📞|📱|✉️|Email:|Tel:|\+34|\b[\w.-]+@[\w.-]+\.\w+\b)[\s\S]*)$/i,
   ];
 
   for (const pat of signOffPatterns) {
     const match = cleaned.match(pat);
     if (match) {
       const idx = cleaned.lastIndexOf(match[0]);
-      const signOffWord = match[0].split('\n').map(s => s.trim()).filter(Boolean)[0];
+      const signOffWord = match[0]
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean)[0];
       const isPureSignOff = /^(¡?Un saludo|Atentamente|Cordialmente|¡?Un fuerte abrazo|Saludos)/i.test(signOffWord || '');
       cleaned = cleaned.substring(0, idx).trim() + (isPureSignOff ? `\n\n${signOffWord}` : '');
     }
@@ -441,9 +465,8 @@ export function formatEmailWithSignatureAndDossier(params: {
   // banda. Los llamantes actuales ya evitan pasar undefined (ver bandDisplayName en
   // Chatbot.tsx), pero la función no debe depender de eso para no filtrar datos reales.
   const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'la banda';
-  const isBakandeya = resolvedBandName.toLowerCase().includes('bakandeya');
-  const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
-  const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';
+  const defaultEmail = `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'contacto'}@booking.com`;
+  const defaultPhone = '+34 600 000 000';
   const salaName = lead?.nombre_sala || 'vuestra sala';
   const salaCiudad = lead?.ciudad ? ` (${lead.ciudad})` : '';
 
@@ -458,17 +481,14 @@ export function formatEmailWithSignatureAndDossier(params: {
 
   // Check if bodyContent already has HTML
   const isAlreadyHtml = bodyContent.startsWith('<') || bodyContent.startsWith('<!DOCTYPE');
-  
+
   // Format body text paragraphs cleanly.
   const htmlBodyParagraphs = isAlreadyHtml
     ? bodyContent
     : bodyContent
         .split('\n\n')
         .map((paragraph) => {
-          const escaped = paragraph
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+          const escaped = paragraph.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
           return `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #1e293b; font-size: 15px;">${escaped.replace(/\n/g, '<br>')}</p>`;
         })
         .join('');
@@ -481,108 +501,113 @@ export function formatEmailWithSignatureAndDossier(params: {
     (senderName && senderName.toLowerCase() !== 'equipo' ? senderName : null) ||
     firma?.nombreRemitente ||
     booking?.nombre ||
-    (isBakandeya ? 'Bakandeya Management' : 'Equipo de Booking');
-  
+    'Equipo de Booking';
+
   const cargo = firma?.cargo || `Booking & Management | ${resolvedBandName}`;
-  const textoPie = firma?.textoPie || (isBakandeya ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica' : '');
+  const textoPie = firma?.textoPie || '';
   const telefono = firma?.telefono || booking?.telefono || defaultPhone;
   const email = firma?.email || booking?.email || defaultEmail;
 
   const dossierPdfUrl = epkConfig?.dossierPdfUrl || epkConfig?.dossierDocumentUrl || '';
-  const dossierPdfName = epkConfig?.dossierPdfName || 'Dossier Bakandeya.pdf';
+  const dossierPdfName = epkConfig?.dossierPdfName || 'Dossier Oficial.pdf';
 
   const rawRedesCombined: Record<string, string> = {
-    ...(isBakandeya ? {
-      instagram: 'https://instagram.com/bakandeya_oficial',
-      youtube: 'https://youtube.com/@bakandeya_oficial',
-      tiktok: 'https://tiktok.com/@bakandeya_oficial',
-      spotify: 'https://open.spotify.com/artist/bakandeya'
-    } : {}),
     ...(epkConfig?.enlacesRedes || {}),
-    ...(epkConfig?.firmaEmail?.redesSociales || {})
+    ...(epkConfig?.firmaEmail?.redesSociales || {}),
   };
 
   const socialIconsMap: Record<string, { badgeUrl: string; label: string }> = {
     instagram: {
       badgeUrl: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
-      label: 'Instagram'
+      label: 'Instagram',
     },
     facebook: {
       badgeUrl: 'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white',
-      label: 'Facebook'
+      label: 'Facebook',
     },
     tiktok: {
       badgeUrl: 'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white',
-      label: 'TikTok'
+      label: 'TikTok',
     },
     spotify: {
       badgeUrl: 'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white',
-      label: 'Spotify'
+      label: 'Spotify',
     },
     youtube: {
       badgeUrl: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
-      label: 'YouTube'
+      label: 'YouTube',
     },
     applemusic: {
       badgeUrl: 'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white',
-      label: 'Apple Music'
+      label: 'Apple Music',
     },
     bandcamp: {
       badgeUrl: 'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white',
-      label: 'Bandcamp'
+      label: 'Bandcamp',
     },
     website: {
       badgeUrl: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
-      label: 'Web Oficial'
+      label: 'Web Oficial',
     },
     whatsapp: {
       badgeUrl: 'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white',
-      label: 'WhatsApp'
+      label: 'WhatsApp',
     },
     twitter: {
       badgeUrl: 'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white',
-      label: 'X'
-    }
+      label: 'X',
+    },
   };
 
-  const socialLinksList: Array<{ net: string; label: string; url: string; badgeUrl: string }> = Object.entries(rawRedesCombined)
+  const socialLinksList: Array<{
+    net: string;
+    label: string;
+    url: string;
+    badgeUrl: string;
+  }> = Object.entries(rawRedesCombined)
     .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(net.toLowerCase()))
     .map(([net, url]) => {
       const cleanKey = net.toLowerCase();
       const map = socialIconsMap[cleanKey] || {
         badgeUrl: `https://img.shields.io/badge/${encodeURIComponent(net)}-475569?style=for-the-badge`,
-        label: net
+        label: net,
       };
       const rawUrl = String(url).trim();
-      const finalUrl = rawUrl.startsWith('http') || rawUrl.startsWith('+')
-        ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g, '')}` : rawUrl)
-        : `https://${rawUrl}`;
+      const finalUrl =
+        rawUrl.startsWith('http') || rawUrl.startsWith('+')
+          ? rawUrl.startsWith('+')
+            ? `https://wa.me/${rawUrl.replace(/\+/g, '')}`
+            : rawUrl
+          : `https://${rawUrl}`;
 
       return {
         net,
         label: map.label,
         url: finalUrl,
-        badgeUrl: map.badgeUrl
+        badgeUrl: map.badgeUrl,
       };
     });
 
-  const activeSocialLinksHtml = ((firma?.incluirIconosRedes ?? true) && socialLinksList.length > 0)
-    ? `
-      <div style="margin-top: 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-        ${socialLinksList.map(b => {
-          const raw = String(b.url).trim();
-          const href = raw.startsWith('http') ? raw : `https://${raw}`;
-          return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
-            <img src="${b.badgeUrl}" alt="${b.label}" height="20" style="height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;" />
-          </a>`;
-        }).join('')}
-      </div>
-    `
-    : '';
+  const activeSocialLinksHtml =
+    (firma?.incluirIconosRedes ?? true) && socialLinksList.length > 0
+      ? `
+ <div style="margin-top: 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+ ${socialLinksList
+   .map((b) => {
+     const raw = String(b.url).trim();
+     const href = raw.startsWith('http') ? raw : `https://${raw}`;
+     return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
+ <img src="${b.badgeUrl}" alt="${b.label}" height="20" style="height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;" />
+ </a>`;
+   })
+   .join('')}
+ </div>
+ `
+      : '';
 
-  const logoUrl = (firma?.incluirLogo ?? true) ? (epkConfig?.logoUrl || (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '')) : '';
+  const logoUrl = (firma?.incluirLogo ?? true) ? epkConfig?.logoUrl || '' : '';
   const defaultOnlineEpk = bandId ? `${origin}/epk?band=${encodeURIComponent(bandId)}` : `${origin}/epk`;
-  const effectiveEpkLink = dossierPdfUrl || (isBakandeya ? 'https://bakandeya.es/epk' : defaultOnlineEpk);
+  const effectiveEpkLink = dossierPdfUrl || defaultOnlineEpk;
   const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
   const dossierLabel = dossierPdfName || 'Dossier Oficial & Kit de Prensa';
 
@@ -590,63 +615,79 @@ export function formatEmailWithSignatureAndDossier(params: {
   const html = `<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+ <meta charset="utf-8">
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; color: #1e293b; line-height: 1.6; background-color: #ffffff; margin: 0; padding: 12px;">
-  <div style="max-width: 620px; margin: 0 auto; background: #ffffff;">
-    
-    <!-- PITCH TEXT -->
-    <div style="font-size: 15px; color: #1e293b; line-height: 1.6;">
-      ${htmlBodyParagraphs}
-    </div>
+ <div style="max-width: 620px; margin: 0 auto; background: #ffffff;">
+ 
+ <!-- PITCH TEXT -->
+ <div style="font-size: 15px; color: #1e293b; line-height: 1.6;">
+ ${htmlBodyParagraphs}
+ </div>
 
-    <!-- NATURAL ORGANIC SIGNATURE -->
-    <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-      <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
-        <tr>
-          ${logoUrl ? `
-          <td valign="top" style="padding-right: 12px; width: 48px;">
-            <img src="${logoUrl}" alt="${resolvedBandName}" width="44" height="44" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain; display: block;" />
-          </td>
-          ` : ''}
-          <td valign="top">
-            <div style="font-weight: 700; font-size: 14px; color: #0f172a; line-height: 1.3;">
-              ${remitenteNombre}
-            </div>
-            <div style="color: #475569; font-size: 12px; font-weight: 500; margin-top: 2px;">
-              ${cargo}
-            </div>
-            ${textoPie ? `
-            <div style="color: #64748b; font-size: 11px; margin-top: 3px; font-style: italic;">
-              ${textoPie}
-            </div>
-            ` : ''}
-            <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
-              ${telefono ? `<span><a href="tel:${telefono.replace(/\s+/g, '')}" style="color: #475569; text-decoration: none;">${telefono}</a></span>` : ''}
-              ${telefono && email ? ` &nbsp;•&nbsp; ` : ''}
-              ${email ? `<span><a href="mailto:${email}" style="color: #0284c7; text-decoration: none;">${email}</a></span>` : ''}
-            </div>
-          </td>
-        </tr>
-      </table>
+ <!-- NATURAL ORGANIC SIGNATURE -->
+ <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+ <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+ <tr>
+ ${
+   logoUrl
+     ? `
+ <td valign="top" style="padding-right: 12px; width: 48px;">
+ <img src="${logoUrl}" alt="${resolvedBandName}" width="44" height="44" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain; display: block;" />
+ </td>
+ `
+     : ''
+ }
+ <td valign="top">
+ <div style="font-weight: 700; font-size: 14px; color: #0f172a; line-height: 1.3;">
+ ${remitenteNombre}
+ </div>
+ <div style="color: #475569; font-size: 12px; font-weight: 500; margin-top: 2px;">
+ ${cargo}
+ </div>
+ ${
+   textoPie
+     ? `
+ <div style="color: #64748b; font-size: 11px; margin-top: 3px; font-style: italic;">
+ ${textoPie}
+ </div>
+ `
+     : ''
+ }
+ <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
+ ${telefono ? `<span><a href="tel:${telefono.replace(/\s+/g, '')}" style="color: #475569; text-decoration: none;">${telefono}</a></span>` : ''}
+ ${telefono && email ? ` &nbsp;•&nbsp; ` : ''}
+ ${email ? `<span><a href="mailto:${email}" style="color: #0284c7; text-decoration: none;">${email}</a></span>` : ''}
+ </div>
+ </td>
+ </tr>
+ </table>
 
-      ${adjuntarDossier ? `
-      <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
-      <div style="margin-top: 12px; margin-bottom: 8px;">
-        <a href="${effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-          📄 Ver ${dossierLabel} ↗
-        </a>
-      </div>
-      ` : ''}
+ ${
+   adjuntarDossier
+     ? `
+ <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
+ <div style="margin-top: 12px; margin-bottom: 8px;">
+ <a href="${effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+ 📄 Ver ${dossierLabel} ↗
+ </a>
+ </div>
+ `
+     : ''
+ }
 
-      ${activeSocialLinksHtml ? `
-      <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted #e2e8f0; font-size: 12px; color: #64748b;">
-        ${activeSocialLinksHtml}
-      </div>
-      ` : ''}
-    </div>
+ ${
+   activeSocialLinksHtml
+     ? `
+ <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted #e2e8f0; font-size: 12px; color: #64748b;">
+ ${activeSocialLinksHtml}
+ </div>
+ `
+     : ''
+ }
+ </div>
 
-  </div>
+ </div>
 </body>
 </html>`.trim();
 
@@ -656,7 +697,7 @@ export function formatEmailWithSignatureAndDossier(params: {
     rawRedesCombined.website ? `Web: ${rawRedesCombined.website}` : '',
     rawRedesCombined.spotify ? `Spotify: ${rawRedesCombined.spotify}` : '',
     rawRedesCombined.instagram ? `Instagram: ${rawRedesCombined.instagram}` : '',
-    rawRedesCombined.youtube ? `YouTube: ${rawRedesCombined.youtube}` : ''
+    rawRedesCombined.youtube ? `YouTube: ${rawRedesCombined.youtube}` : '',
   ].filter(Boolean);
 
   const text = `
@@ -666,7 +707,7 @@ ${bodyContent}
 ${remitenteNombre}
 ${cargo}
 ${textoPie ? `${textoPie}\n` : ''}Tel: ${telefono} | Email: ${email}
-${linksTextArray.length > 0 ? linksTextArray.join(' | ') : ''}
+${linksTextArray.length > 0 ? linksTextArray.join('| ') : ''}
 `.trim();
 
   // 5. Generate REAL PDF attachment
@@ -687,4 +728,3 @@ ${linksTextArray.length > 0 ? linksTextArray.join(' | ') : ''}
 
   return { html, text, attachments };
 }
-

@@ -8,7 +8,7 @@ const baseOpts = {
   maxFontSizePx: 20,
   minFontSizePx: 10,
   fontFamily: 'Caveat',
-  measure: fakeMeasure
+  measure: fakeMeasure,
 };
 
 describe('fitStackedNoteSegments', () => {
@@ -20,7 +20,7 @@ describe('fitStackedNoteSegments', () => {
   it('apila cada nota en su propia línea, sin combinarlas', () => {
     const segments: NoteSegment[] = [
       { text: 'nota de fer', className: 'note-member' },
-      { text: 'cue de luces', className: 'note-cue' }
+      { text: 'cue de luces', className: 'note-cue' },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 1000 });
     expect(result.lines.length).toBe(2);
@@ -31,7 +31,7 @@ describe('fitStackedNoteSegments', () => {
   it('usa un tamaño de fuente común (el máximo) cuando todas las notas caben de sobra', () => {
     const segments: NoteSegment[] = [
       { text: 'hola', className: 'note-member' },
-      { text: 'adios', className: 'note-general' }
+      { text: 'adios', className: 'note-general' },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 1000 });
     expect(result.fontSizePx).toBe(20);
@@ -40,7 +40,7 @@ describe('fitStackedNoteSegments', () => {
   it('encoge el tamaño común antes de partir cualquier nota en dos líneas', () => {
     const segments: NoteSegment[] = [
       { text: 'una nota bastante larga aqui!', className: 'note-member' },
-      { text: 'corta', className: 'note-cue' }
+      { text: 'corta', className: 'note-cue' },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 220 });
     expect(result.fontSizePx).toBeLessThan(20);
@@ -52,15 +52,15 @@ describe('fitStackedNoteSegments', () => {
   it('encoge SOLO la nota que ni al tamaño mínimo común cabe, sin tocar las demás ni truncarla', () => {
     const segments: NoteSegment[] = [
       { text: 'entrada en el compas ocho con sordina y cambio de afinacion completo del instrumento', className: 'note-member' },
-      { text: 'corta', className: 'note-cue' }
+      { text: 'corta', className: 'note-cue' },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 150 });
     expect(result.fontSizePx).toBe(10);
     // La nota de miembro (larga) se encoge por debajo del tamaño común hasta el suelo absoluto,
     // pero conserva su texto completo — nunca se trunca ni se parte en dos líneas. La de cue
     // (corta) se queda en el tamaño común, sin verse afectada.
-    const memberLines = result.lines.filter(l => l.className === 'note-member');
-    const cueLines = result.lines.filter(l => l.className === 'note-cue');
+    const memberLines = result.lines.filter((l) => l.className === 'note-member');
+    const cueLines = result.lines.filter((l) => l.className === 'note-cue');
     expect(memberLines.length).toBe(1);
     expect(memberLines[0].text).toBe('entrada en el compas ocho con sordina y cambio de afinacion completo del instrumento');
     expect(memberLines[0].fontSizePx).toBe(NOTE_FONT_HARD_FLOOR_PX);
@@ -70,7 +70,10 @@ describe('fitStackedNoteSegments', () => {
 
   it('nunca trunca con "…": una nota que ni en el suelo absoluto cabe conserva su texto íntegro', () => {
     const segments: NoteSegment[] = [
-      { text: 'una nota de miembro absurdamente larga que jamas cabria en una sola linea de un repertorio impreso normal', className: 'note-member' }
+      {
+        text: 'una nota de miembro absurdamente larga que jamas cabria en una sola linea de un repertorio impreso normal',
+        className: 'note-member',
+      },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 60 });
     expect(result.lines.length).toBe(1);
@@ -84,17 +87,17 @@ describe('fitStackedNoteSegments', () => {
     const segments: NoteSegment[] = [
       { text: 'nota de miembro larga que ocupa bastante sitio en la fila del repertorio', className: 'note-member' },
       { text: 'una nota de bolo tambien bastante larga que ocupa mucho sitio', className: 'note-cue' },
-      { text: 'nota general tambien larga que antes se hubiera soltado por prioridad', className: 'note-general' }
+      { text: 'nota general tambien larga que antes se hubiera soltado por prioridad', className: 'note-general' },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 1 });
-    expect(result.lines.every(l => !l.text.includes('…'))).toBe(true);
-    expect(result.lines.every(l => l.fontSizePx === NOTE_FONT_HARD_FLOOR_PX)).toBe(true);
+    expect(result.lines.every((l) => !l.text.includes('…'))).toBe(true);
+    expect(result.lines.every((l) => l.fontSizePx === NOTE_FONT_HARD_FLOOR_PX)).toBe(true);
   });
 
   it('nunca genera más de una línea por nota, ni siquiera con notas larguísimas', () => {
     const segments: NoteSegment[] = [
       { text: 'esta nota es tan larga que en el diseño anterior se hubiera partido en dos lineas', className: 'note-member' },
-      { text: 'esta otra tambien es bastante larga y tampoco deberia partirse jamas', className: 'note-general' }
+      { text: 'esta otra tambien es bastante larga y tampoco deberia partirse jamas', className: 'note-general' },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 100 });
     expect(result.lines.length).toBe(2);
@@ -104,10 +107,10 @@ describe('fitStackedNoteSegments', () => {
     const segments: NoteSegment[] = [
       { text: 'nota de miembro larga que ocupa bastante sitio en la fila del repertorio', className: 'note-member' },
       { text: 'una nota de bolo tambien bastante larga que ocupa mucho sitio', className: 'note-cue' },
-      { text: 'nota general tambien larga que antes se hubiera soltado por prioridad', className: 'note-general' }
+      { text: 'nota general tambien larga que antes se hubiera soltado por prioridad', className: 'note-general' },
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 150 });
-    const classes = new Set(result.lines.map(l => l.className));
+    const classes = new Set(result.lines.map((l) => l.className));
     expect(classes.has('note-member')).toBe(true);
     expect(classes.has('note-cue')).toBe(true);
     expect(classes.has('note-general')).toBe(true);

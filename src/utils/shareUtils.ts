@@ -1,4 +1,5 @@
 import { Song, SongAudioIdea, Setlist, Rehearsal, Concert, Lead, EPKConfig } from '../types';
+import { openWhatsAppChat } from './whatsapp';
 
 export interface SharePayload {
   title: string;
@@ -16,7 +17,7 @@ export async function shareViaWebShare(payload: SharePayload): Promise<boolean> 
       await navigator.share({
         title: payload.title,
         text: payload.text,
-        url: payload.url || undefined
+        url: payload.url || undefined,
       });
       return true;
     } catch (err: any) {
@@ -32,15 +33,10 @@ export async function shareViaWebShare(payload: SharePayload): Promise<boolean> 
 
 /**
  * Direct WhatsApp sharing link generator
+ * Reutiliza la misma sesión y pestaña de WhatsApp Web si está abierta.
  */
 export function shareViaWhatsApp(text: string, phone?: string): void {
-  const cleanPhone = phone ? phone.replace(/[^0-9+]/g, '') : '';
-  const encodedText = encodeURIComponent(text);
-  const whatsappUrl = cleanPhone
-    ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`
-    : `https://api.whatsapp.com/send?text=${encodedText}`;
-
-  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  openWhatsAppChat(phone, text);
 }
 
 /**
@@ -87,20 +83,24 @@ export async function copyToClipboard(text: string): Promise<boolean> {
  */
 export function formatSongShareText(
   song: Song,
-  options: { includeChords?: boolean; includeGuide?: boolean; bandName?: string } = {}
+  options: {
+    includeChords?: boolean;
+    includeGuide?: boolean;
+    bandName?: string;
+  } = {}
 ): string {
   const parts: string[] = [];
 
   parts.push(`🎵 *${song.titulo.toUpperCase()}*${options.bandName ? ` - ${options.bandName}` : ''}`);
   if (song.albumDisco) parts.push(`💿 *Álbum/EP:* ${song.albumDisco}`);
-  
+
   const details: string[] = [];
   if (song.tonalidad) details.push(`🎹 Tonalidad: ${song.tonalidad}`);
   if (song.bpm) details.push(`⏱️ ${song.bpm} BPM`);
   if (song.duracion) details.push(`⏳ ${song.duracion}`);
   if (song.afinacion) details.push(`🎸 Afinación: ${song.afinacion}`);
   if (details.length > 0) {
-    parts.push(details.join(' | '));
+    parts.push(details.join('| '));
   }
 
   if (song.estadoTema) {
@@ -108,7 +108,7 @@ export function formatSongShareText(
       listo: '✅ Listo para directo',
       ensayando: '🔥 En ensayo',
       componiendo: '💡 En composición',
-      descartado: '📦 Archivado'
+      descartado: '📦 Archivado',
     };
     parts.push(`📌 *Estado:* ${estadoLabels[song.estadoTema] || song.estadoTema}`);
   }
@@ -143,11 +143,7 @@ export function formatSongShareText(
 /**
  * Format a Song Audio Idea for sharing
  */
-export function formatSongIdeaShareText(
-  song: Song,
-  idea: SongAudioIdea,
-  bandName?: string
-): string {
+export function formatSongIdeaShareText(song: Song, idea: SongAudioIdea, bandName?: string): string {
   const parts: string[] = [];
 
   const sectionLabel = idea.seccion ? idea.seccion.toUpperCase() : 'GENERAL';
@@ -168,7 +164,7 @@ export function formatSongIdeaShareText(
   if (idea.pistas && idea.pistas.length > 1) {
     parts.push(`\n🎛️ *Pistas multipista (${idea.pistas.length}):*`);
     idea.pistas.forEach((p, idx) => {
-      parts.push(`  ${idx + 1}. ${p.nombre}${p.instrumento ? ` (${p.instrumento})` : ''}`);
+      parts.push(` ${idx + 1}. ${p.nombre}${p.instrumento ? ` (${p.instrumento})` : ''}`);
     });
   }
 
@@ -180,11 +176,7 @@ export function formatSongIdeaShareText(
 /**
  * Format a Setlist for sharing
  */
-export function formatSetlistShareText(
-  setlist: Setlist,
-  songsMap: Record<string, Song> = {},
-  bandName?: string
-): string {
+export function formatSetlistShareText(setlist: Setlist, songsMap: Record<string, Song> = {}, bandName?: string): string {
   const parts: string[] = [];
 
   parts.push(`📋 *REPERTORIO / SETLIST: ${setlist.nombre.toUpperCase()}*`);
@@ -195,7 +187,7 @@ export function formatSetlistShareText(
       sala_larga: '🎸 Concierto Sala (Largo)',
       acustico: '🪕 Formato Acústico',
       ensayo: '🔊 Ensayo',
-      otro: '📌 Especial'
+      otro: '📌 Especial',
     };
     parts.push(`🎭 *Formato:* ${formatLabels[setlist.tipoFormato] || setlist.tipoFormato}`);
   }
@@ -225,7 +217,7 @@ export function formatSetlistShareText(
         if (s.duracion) info.push(s.duracion);
         if (s.afinacion && s.afinacion !== 'E Standard') info.push(`Af: ${s.afinacion}`);
 
-        const infoStr = info.length > 0 ? ` (${info.join(' | ')})` : '';
+        const infoStr = info.length > 0 ? ` (${info.join('| ')})` : '';
         const notesStr = item.notaTema ? ` ➔ _${item.notaTema}_` : '';
         parts.push(`${songNum}. *${s.titulo}*${infoStr}${notesStr}`);
         songNum++;
@@ -241,13 +233,13 @@ export function formatSetlistShareText(
           solo_performance: '🎸',
           cambio_instrumento: '🔧',
           interludio: '✨',
-          otro: '📌'
+          otro: '📌',
         };
         const icon = itemIcons[item.tipoItem] || '📌';
         const title = item.tituloCustom || item.tipoItem;
         const dur = item.duracionEstimadaMinutos ? ` (${item.duracionEstimadaMinutos} min)` : '';
         const note = item.notas ? ` - _${item.notas}_` : '';
-        parts.push(`  ${icon} _${title}${dur}_${note}`);
+        parts.push(` ${icon} _${title}${dur}_${note}`);
       }
     });
   }
@@ -261,11 +253,7 @@ export function formatSetlistShareText(
 /**
  * Format a Rehearsal convocatoria for sharing
  */
-export function formatRehearsalShareText(
-  rehearsal: Rehearsal,
-  setlistName?: string,
-  bandName?: string
-): string {
+export function formatRehearsalShareText(rehearsal: Rehearsal, setlistName?: string, bandName?: string): string {
   const parts: string[] = [];
 
   parts.push(`🔊 *CONVOCATORIA DE ENSAYO* ${bandName ? `- ${bandName}` : ''}`);
@@ -274,9 +262,13 @@ export function formatRehearsalShareText(
   parts.push(`📍 *Lugar:* ${rehearsal.lugar}`);
 
   if (rehearsal.convocados_nombres && rehearsal.convocados_nombres.length > 0) {
-    parts.push(`👥 *Convocados:* ${rehearsal.convocados_nombres.join(', ')}`);
+    const list = Array.isArray(rehearsal.convocados_nombres)
+      ? rehearsal.convocados_nombres.join(', ')
+      : String(rehearsal.convocados_nombres);
+    parts.push(`👥 *Convocados:* ${list}`);
   } else if (rehearsal.asistentes && rehearsal.asistentes.length > 0) {
-    parts.push(`👥 *Asistentes:* ${rehearsal.asistentes.join(', ')}`);
+    const list = Array.isArray(rehearsal.asistentes) ? rehearsal.asistentes.join(', ') : String(rehearsal.asistentes);
+    parts.push(`👥 *Asistentes:* ${list}`);
   }
 
   if (setlistName) {
@@ -295,11 +287,7 @@ export function formatRehearsalShareText(
 /**
  * Format a Concert convocatoria for sharing
  */
-export function formatConcertShareText(
-  concert: Concert,
-  setlistName?: string,
-  bandName?: string
-): string {
+export function formatConcertShareText(concert: Concert, setlistName?: string, bandName?: string): string {
   const parts: string[] = [];
 
   parts.push(`🎸 *CONVOCATORIA DE CONCIERTO* ${bandName ? `- ${bandName}` : ''}`);
@@ -309,7 +297,8 @@ export function formatConcertShareText(
   if (concert.cache > 0) parts.push(`💰 *Caché acordado:* ${concert.cache}€`);
 
   if (concert.convocados_nombres && concert.convocados_nombres.length > 0) {
-    parts.push(`👥 *Músicos convocados:* ${concert.convocados_nombres.join(', ')}`);
+    const list = Array.isArray(concert.convocados_nombres) ? concert.convocados_nombres.join(', ') : String(concert.convocados_nombres);
+    parts.push(`👥 *Músicos convocados:* ${list}`);
   }
 
   if (setlistName) {
@@ -328,10 +317,7 @@ export function formatConcertShareText(
 /**
  * Format a Lead Pitch for sharing
  */
-export function formatPitchShareText(
-  lead: Lead,
-  bandName?: string
-): string {
+export function formatPitchShareText(lead: Lead, bandName?: string): string {
   const parts: string[] = [];
 
   if (lead.pitch_generado) {
@@ -347,18 +333,13 @@ export function formatPitchShareText(
 /**
  * Format EPK for sharing
  */
-export function formatEPKShareText(
-  bandName: string,
-  epkConfig: EPKConfig
-): string {
+export function formatEPKShareText(bandName: string, epkConfig: EPKConfig): string {
   const parts: string[] = [];
 
   parts.push(`🔥 *DOSSIER Y EPK OFICIAL DE ${bandName.toUpperCase()}*`);
 
   if (epkConfig.biografia) {
-    const bioShort = epkConfig.biografia.length > 250 
-      ? epkConfig.biografia.substring(0, 250) + '...'
-      : epkConfig.biografia;
+    const bioShort = epkConfig.biografia.length > 250 ? epkConfig.biografia.substring(0, 250) + '...' : epkConfig.biografia;
     parts.push(`\n📖 *Biografía:*\n${bioShort}`);
   }
 

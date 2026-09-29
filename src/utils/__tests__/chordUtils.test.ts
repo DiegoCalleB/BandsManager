@@ -7,7 +7,7 @@ import {
   extractUniqueChords,
   keyToChromaticIndex,
   getSemitoneDifference,
-  splitIntoChordSections
+  splitIntoChordSections,
 } from '../chordUtils';
 
 describe('chordUtils', () => {
@@ -98,7 +98,7 @@ describe('chordUtils', () => {
     });
 
     it('transposes standalone chord lines', () => {
-      const text = 'Do      Sol     Lam\nEsta es la letra de la canción';
+      const text = 'Do Sol Lam\nEsta es la letra de la canción';
       const result = processChordText(text, 2, 'ES');
       expect(result).toContain('Re');
       expect(result).toContain('La');
@@ -117,12 +117,12 @@ describe('chordUtils', () => {
     it('does not mistake capitalized English lyrics for a chord line', () => {
       // Regression test: title-case English lyrics like this used to be flagged as a
       // 100% chord line because every word happened to start with a root note letter.
-      const text = 'Baby Come Back\nGet your motor runnin\'';
+      const text = "Baby Come Back\nGet your motor runnin'";
       expect(extractUniqueChords(text)).toEqual([]);
     });
 
     it('still extracts a real standalone chord line mixed with English lyrics', () => {
-      const text = 'Am F C G\nGet your motor runnin\'';
+      const text = "Am F C G\nGet your motor runnin'";
       expect(extractUniqueChords(text)).toEqual(['Am', 'F', 'C', 'G']);
     });
   });

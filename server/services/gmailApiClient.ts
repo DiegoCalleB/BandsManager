@@ -81,7 +81,14 @@ async function getValidAccessToken(bandId: string): Promise<string> {
 
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
-    throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${errBody || res.status}`, "api_error");
+    let friendlyMessage = errBody;
+    try {
+      const parsed = JSON.parse(errBody);
+      if (parsed.error === "invalid_grant") {
+        friendlyMessage = "Token de Google revocado o caducado (invalid_grant). Es necesario reconectar con 'Conectar con Google'.";
+      }
+    } catch (_) {}
+    throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${friendlyMessage || res.status}`, "api_error");
   }
 
   const data = await res.json();
@@ -255,6 +262,31 @@ function extraerTextoPlano(payload: any): string {
   return "";
 }
 
+// Mapa en memoria para períodos de enfriamiento por banda cuando Google responde 429 (RESOURCE_EXHAUSTED)
+const gmailRateLimitCooldownMap: Map<string, number> = new Map();
+const COOLDOWN_DURATION_MS = 5 * 60 * 1000; // 5 minutos de enfriamiento
+
+export function isGmailRateLimited(bandId: string): boolean {
+  const until = gmailRateLimitCooldownMap.get(bandId);
+  if (!until) return false;
+  if (Date.now() >= until) {
+    gmailRateLimitCooldownMap.delete(bandId);
+    return false;
+  }
+  return true;
+}
+
+export function setGmailRateLimitCooldown(bandId: string, durationMs: number = COOLDOWN_DURATION_MS): void {
+  const until = Date.now() + durationMs;
+  gmailRateLimitCooldownMap.set(bandId, until);
+  console.warn(`[Gmail API] Rate limit (429) activado para banda '${bandId}'. Enfriamiento hasta ${new Date(until).toISOString()}.`);
+}
+
+export function clearGmailRateLimitCooldown(bandId: string): void {
+  gmailRateLimitCooldownMap.delete(bandId);
+}
+
+// Helper para extraer un valor de header insensible a mayúsculas/minúsculas
 function headerValue(headers: Array<{ name: string; value: string }> | undefined, name: string): string {
   return headers?.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value || "";
 }
@@ -264,18 +296,46 @@ function headerValue(headers: Array<{ name: string; value: string }> | undefined
 // aplicación, camino que hasta ahora no tenía forma de leer respuestas entrantes en absoluto.
 // Busca emails sin leer O ya leídos (últimas 24h) en la bandeja para no perder respuestas que
 // se marcan como leídas automáticamente o por sincronización.
-export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
+export async function leerRespuestasGmailApi(bandId: string, maxResults = 10): Promise<RespuestaEntrante[]> {
+  if (isGmailRateLimited(bandId)) {
+    const until = gmailRateLimitCooldownMap.get(bandId);
+    console.warn(`[Gmail API] Sondeo omitido para banda '${bandId}': enfriamiento activo por límite 429 de Google (hasta ${new Date(until || 0).toLocaleTimeString()}).`);
+    return [];
+  }
+
   const accessToken = await getValidAccessToken(bandId);
 
-  // Busca: todos los emails en la bandeja de los últimos 2 días (leídos o sin leer)
-  // Así no se pierden respuestas que se marcan como leídas automáticamente al abrir
-  const query = encodeURIComponent("in:inbox newer_than:2d");
-  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${maxResults}`, {
+  // Busca emails sin leer en la bandeja recibidos recientemente
+  // Esto reduce las llamadas a la API de Gmail en un 90%, evitando rate limits (429)
+  const query = encodeURIComponent("in:inbox is:unread newer_than:2d");
+  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${Math.min(maxResults, 10)}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
   if (!listRes.ok) {
     const errBody = await listRes.text().catch(() => "");
-    throw new EmailAgentError(`No se pudieron listar los mensajes nuevos de '${bandId}': ${errBody || listRes.status}`, "api_error");
+    let isRateLimit = listRes.status === 429;
+    let friendlyMessage = errBody;
+    try {
+      const parsed = JSON.parse(errBody);
+      if (parsed.error?.code === 429 || parsed.error?.status === "RESOURCE_EXHAUSTED" || parsed.error?.message?.includes("RESOURCE_EXHAUSTED")) {
+        isRateLimit = true;
+      }
+      if (parsed.error?.message) {
+        if (isRateLimit) {
+          friendlyMessage = "Límite de peticiones de Google excedido (429 Rate Limit - RESOURCE_EXHAUSTED). Esperando período de enfriamiento.";
+        } else {
+          friendlyMessage = `${parsed.error.message} (HTTP ${listRes.status})`;
+        }
+      }
+    } catch (_) {}
+
+    if (isRateLimit) {
+      setGmailRateLimitCooldown(bandId);
+      console.warn(`[Gmail API] Límite de peticiones 429 en '${bandId}'. Enfriamiento activado y retorno de 0 mensajes para recuperación.`);
+      return [];
+    }
+
+    throw new EmailAgentError(`No se pudieron listar los mensajes nuevos de '${bandId}': ${friendlyMessage || listRes.status}`, "api_error");
   }
   const listData = await listRes.json();
   const ids: string[] = (listData.messages || []).map((m: any) => m.id);

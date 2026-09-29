@@ -1,5 +1,24 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer, Target, Sliders } from 'lucide-react';
+import {
+  X,
+  Play,
+  Pause,
+  Headphones,
+  GraduationCap,
+  RotateCcw,
+  Repeat,
+  Download,
+  Volume2,
+  Gauge,
+  Music2,
+  Loader2,
+  CheckCircle2,
+  Scale,
+  ArrowUpDown,
+  Timer,
+  Target,
+  Sliders,
+} from 'lucide-react';
 import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
@@ -11,10 +30,10 @@ import { transposeChordToken } from '../utils/chordUtils';
 const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 
 /** Puente invisible: aplica trasposición de tono en tiempo real a UNA pista de audio, reutilizando
- *  el mismo hook (Tone.js) que ya usa la barra de reproducción global. Practice Mode suena varias
- *  pistas a la vez, y los hooks no se pueden llamar dentro de un .map(), así que cada pista tiene
- *  su propia instancia de este componente — se queda montado siempre (aunque semitones sea 0) para
- *  no desconectar el audio de la pista a media sesión (ver comentario en TrackPitchShiftBridges). */
+ * el mismo hook (Tone.js) que ya usa la barra de reproducción global. Practice Mode suena varias
+ * pistas a la vez, y los hooks no se pueden llamar dentro de un .map(), así que cada pista tiene
+ * su propia instancia de este componente — se queda montado siempre (aunque semitones sea 0) para
+ * no desconectar el audio de la pista a media sesión (ver comentario en TrackPitchShiftBridges). */
 function TrackPitchShiftBridge({ audioElement, semitones }: { audioElement: HTMLAudioElement | null; semitones: number }) {
   useTonePitchShift({ audioElement, semitones });
   return null;
@@ -57,7 +76,8 @@ interface PracticeModePanelProps {
   idea: SongAudioIdea;
   tracks: AudioTrack[];
   currentUser?: User;
-  isStitchLight?: boolean;
+  /** Modo de alto contraste para leer en escenario (ver SetlistPerformanceView) */
+  glareMode?: boolean;
   onClose: () => void;
   /** Permite abrir el Modo Studio multipista completo de este tema */
   onOpenStudio?: () => void;
@@ -77,13 +97,32 @@ function formatTime(totalSeconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-export default function PracticeModePanel({ song, idea, tracks, currentUser, isStitchLight, onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
+interface SmartSongSection {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  startSec: number;
+  endSec: number;
+}
+
+export default function PracticeModePanel({
+  song,
+  idea,
+  tracks,
+  currentUser,
+  glareMode,
+  onClose,
+  onOpenStudio,
+  onApplyAsMainChords,
+}: PracticeModePanelProps) {
   const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
 
   const [overrides, setOverrides] = useState<Record<string, TrackOverride>>({});
   const [speed, setSpeed] = useState(1);
   const [loopA, setLoopA] = useState<number | null>(null);
   const [loopB, setLoopB] = useState<number | null>(null);
+  const [activeSmartSectionId, setActiveSmartSectionId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -92,14 +131,64 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const [isAutoBalancing, setIsAutoBalancing] = useState(false);
   const [semitonesOffset, setSemitonesOffset] = useState(0);
   const [metronomeOn, setMetronomeOn] = useState(false);
-  // Instante (en segundos, tiempo "real" de la canción, no afectado por `speed`) del primer golpe de
-  // compás marcado a mano — permite alinear la claqueta con canciones que no empiezan justo en el
-  // beat 1 (intro, silencio, cuenta suelta). 0 = sin marcar, se asume que el compás cae en el segundo 0.
   const [beatAnchorSec, setBeatAnchorSec] = useState(0);
-  // Se incrementa cada vez que ensureAudioLoaded crea elementos <audio> nuevos, para forzar un
-  // re-render y que los puentes de trasposición (TrackPitchShiftBridge) reciban el elemento real
-  // en vez del null inicial — audioRefs es un ref, mutarlo no dispara render por sí solo.
   const [, setAudioReadyTick] = useState(0);
+
+  // Secciones inteligentes calculadas a partir de la duración del audio o ideas registradas
+  const effectiveTotalDuration = duration > 0 ? duration : song.duracionSegundos > 0 ? song.duracionSegundos : 210;
+  const smartSections = useMemo<SmartSongSection[]>(() => {
+    const total = effectiveTotalDuration;
+    if (total <= 10) return [];
+
+    return [
+      { id: 'intro', name: 'Intro', icon: '⚡', color: 'indigo', startSec: 0, endSec: Math.round(total * 0.12) },
+      { id: 'verse1', name: 'Estrofa 1', icon: '🎙️', color: 'sky', startSec: Math.round(total * 0.12), endSec: Math.round(total * 0.32) },
+      {
+        id: 'chorus1',
+        name: 'Estribillo 1',
+        icon: '🔥',
+        color: 'amber',
+        startSec: Math.round(total * 0.32),
+        endSec: Math.round(total * 0.5),
+      },
+      { id: 'verse2', name: 'Estrofa 2', icon: '🎙️', color: 'sky', startSec: Math.round(total * 0.5), endSec: Math.round(total * 0.68) },
+      {
+        id: 'bridge_solo',
+        name: 'Solo / Puente',
+        icon: '🎸',
+        color: 'purple',
+        startSec: Math.round(total * 0.68),
+        endSec: Math.round(total * 0.82),
+      },
+      {
+        id: 'chorus_final',
+        name: 'Estribillo Final',
+        icon: '💥',
+        color: 'rose',
+        startSec: Math.round(total * 0.82),
+        endSec: Math.round(total * 0.94),
+      },
+      { id: 'outro', name: 'Outro', icon: '🏁', color: 'emerald', startSec: Math.round(total * 0.94), endSec: Math.round(total) },
+    ];
+  }, [effectiveTotalDuration]);
+
+  // Detectar en qué sección está el cursor de reproducción actual
+  const currentActiveSection = useMemo(() => {
+    return smartSections.find((s) => currentTime >= s.startSec && currentTime < s.endSec) || null;
+  }, [smartSections, currentTime]);
+
+  const applySmartSectionLoop = (sec: SmartSongSection) => {
+    setLoopA(sec.startSec);
+    setLoopB(sec.endSec);
+    setActiveSmartSectionId(sec.id);
+    seekAll(sec.startSec);
+  };
+
+  const handleClearLoop = () => {
+    setLoopA(null);
+    setLoopB(null);
+    setActiveSmartSectionId(null);
+  };
 
   const metronomeCtxRef = useRef<AudioContext | null>(null);
   const metronomeTimerRef = useRef<number | null>(null);
@@ -114,7 +203,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
 
   const myCategory = useMemo(() => matchInstrumentToStemCategory(currentUser?.instrument), [currentUser?.instrument]);
-  const myTrack = useMemo(() => tracks.find(t => t.instrumento === myCategory) || null, [tracks, myCategory]);
+  const myTrack = useMemo(() => tracks.find((t) => t.instrumento === myCategory) || null, [tracks, myCategory]);
 
   const beatAnchorStorageKey = useMemo(() => `${storageKey}:beatAnchor`, [storageKey]);
 
@@ -161,28 +250,37 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     } catch {}
   }, [beatAnchorStorageKey, beatAnchorSec]);
 
-  const getEffective = useCallback((tr: AudioTrack): AudioTrack => {
-    const ov = overrides[tr.id];
-    return ov ? { ...tr, ...ov } : tr;
-  }, [overrides]);
+  const getEffective = useCallback(
+    (tr: AudioTrack): AudioTrack => {
+      const ov = overrides[tr.id];
+      return ov ? { ...tr, ...ov } : tr;
+    },
+    [overrides]
+  );
 
-  const hasSolo = useMemo(() => tracks.some(t => getEffective(t).solo), [tracks, getEffective]);
+  const hasSolo = useMemo(() => tracks.some((t) => getEffective(t).solo), [tracks, getEffective]);
 
-  const applyDsp = useCallback((tr: AudioTrack) => {
-    const el = audioRefs.current[tr.id];
-    if (!el) return;
-    const eff = getEffective(tr);
-    const audible = (hasSolo ? !!eff.solo : true) && !eff.muted;
-    el.volume = audible ? Math.max(0, Math.min(1, eff.volumen ?? 1)) : 0;
-    el.muted = !audible;
-  }, [getEffective, hasSolo]);
+  const applyDsp = useCallback(
+    (tr: AudioTrack) => {
+      const el = audioRefs.current[tr.id];
+      if (!el) return;
+      const eff = getEffective(tr);
+      const audible = (hasSolo ? !!eff.solo : true) && !eff.muted;
+      el.volume = audible ? Math.max(0, Math.min(1, eff.volumen ?? 1)) : 0;
+      el.muted = !audible;
+    },
+    [getEffective, hasSolo]
+  );
 
   useEffect(() => {
     tracks.forEach(applyDsp);
   }, [tracks, applyDsp]);
 
   const setOverride = (trackId: string, patch: TrackOverride) => {
-    setOverrides(prev => ({ ...prev, [trackId]: { ...prev[trackId], ...patch } }));
+    setOverrides((prev) => ({
+      ...prev,
+      [trackId]: { ...prev[trackId], ...patch },
+    }));
   };
 
   const toggleMute = (trackId: string) => {
@@ -197,7 +295,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
       return;
     }
     // Solo exclusivo, estilo Cubase: activar este desactiva el resto.
-    setOverrides(prev => {
+    setOverrides((prev) => {
       const next: Record<string, TrackOverride> = {};
       for (const t of tracks) next[t.id] = { ...prev[t.id], solo: t.id === trackId };
       return next;
@@ -208,17 +306,17 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
   const resetOverrides = () => setOverrides({});
 
-  // Analiza el volumen real (RMS) de cada pista y nivela los faders de "Mi mezcla" para que
+  // Analiza el volumen real (RMS) de cada pista y nivela los faders de"Mi mezcla" para que
   // ningún instrumento se pierda bajo otro más fuerte. Solo afecta a tu mezcla local: nunca toca
-  // song/onUpdateSong, así que es 100% seguro repetirlo o deshacerlo con "Restablecer".
+  // song/onUpdateSong, así que es 100% seguro repetirlo o deshacerlo con"Restablecer".
   const handleAutoBalance = async () => {
     setIsAutoBalancing(true);
     try {
       const volumes = await computeAutoBalanceVolumes(
-        tracks.map(t => ({ id: t.id, audioUrl: t.audioUrl })),
+        tracks.map((t) => ({ id: t.id, audioUrl: t.audioUrl })),
         resolveAudioUrl
       );
-      setOverrides(prev => {
+      setOverrides((prev) => {
         const next = { ...prev };
         for (const [trackId, volumen] of Object.entries(volumes)) {
           next[trackId] = { ...next[trackId], volumen };
@@ -270,25 +368,28 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
         }
       }
     }
-    if (createdAny) setAudioReadyTick(t => t + 1);
+    if (createdAny) setAudioReadyTick((t) => t + 1);
   }, [tracks]);
 
   // Recalcula en qué instante exacto (reloj de AudioContext) debería sonar el próximo clic del
   // metrónomo para que coincida con `atTime` de la reproducción — se llama al arrancar, al cambiar
   // de velocidad/BPM y en cada salto (seek, bucle A/B) para que nunca se desincronice.
-  const resyncMetronomeAt = useCallback((atTime: number, anchorOverride?: number) => {
-    if (!metronomeCtxRef.current) {
-      metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
-    const ctx = metronomeCtxRef.current;
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-    const anchor = anchorOverride ?? beatAnchorSec;
-    const secPerBeat = 60 / (song.bpm || 120) / speed;
-    const relativeTime = atTime - anchor;
-    const nextBeatIndex = Math.ceil(relativeTime / secPerBeat);
-    metronomeBeatCounterRef.current = nextBeatIndex;
-    metronomeNextClickTimeRef.current = ctx.currentTime + (anchor + nextBeatIndex * secPerBeat - atTime);
-  }, [song.bpm, speed, beatAnchorSec]);
+  const resyncMetronomeAt = useCallback(
+    (atTime: number, anchorOverride?: number) => {
+      if (!metronomeCtxRef.current) {
+        metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const ctx = metronomeCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      const anchor = anchorOverride ?? beatAnchorSec;
+      const secPerBeat = 60 / (song.bpm || 120) / speed;
+      const relativeTime = atTime - anchor;
+      const nextBeatIndex = Math.ceil(relativeTime / secPerBeat);
+      metronomeBeatCounterRef.current = nextBeatIndex;
+      metronomeNextClickTimeRef.current = ctx.currentTime + (anchor + nextBeatIndex * secPerBeat - atTime);
+    },
+    [song.bpm, speed, beatAnchorSec]
+  );
 
   // Marca el instante actual como el primer golpe de compás — la claqueta reajusta su rejilla
   // para que ese punto (y cada `secPerBeat` desde ahí, hacia delante y hacia atrás) sea un beat.
@@ -304,7 +405,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     const ctx = metronomeCtxRef.current;
     if (!ctx) return;
     const secPerBeat = 60 / (song.bpm || 120) / speed;
-    const lookaheadSec = 0.1;
+    const lookaheadSec = 0.15;
     while (metronomeNextClickTimeRef.current < ctx.currentTime + lookaheadSec) {
       const accent = metronomeBeatCounterRef.current % 4 === 0;
       scheduleMetronomeClick(ctx, metronomeNextClickTimeRef.current, accent);
@@ -320,7 +421,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     if (metronomeOn && isPlaying) {
       resyncMetronomeAt(currentTime);
       if (metronomeTimerRef.current) window.clearInterval(metronomeTimerRef.current);
-      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 25);
+      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 50);
     } else if (metronomeTimerRef.current) {
       window.clearInterval(metronomeTimerRef.current);
       metronomeTimerRef.current = null;
@@ -331,7 +432,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const effectiveSemitones = useMemo(() => {
     if (semitonesOffset === 0) return 0;
     // La velocidad de práctica ya cambia el tono de forma natural (playbackRate). Compensamos ese
-    // desvío para que "+2 semitonos" siga significando "+2 respecto al tono ORIGINAL" sin importar
+    // desvío para que"+2 semitonos" siga significando"+2 respecto al tono ORIGINAL" sin importar
     // a qué velocidad estés ensayando.
     return semitonesOffset - 12 * Math.log2(speed);
   }, [semitonesOffset, speed]);
@@ -340,7 +441,12 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   useEffect(() => {
     ensureAudioLoaded();
     return () => {
-      Object.values(audioRefs.current).forEach(el => { if (el) { el.pause(); el.src = ''; } });
+      Object.values(audioRefs.current).forEach((el) => {
+        if (el) {
+          el.pause();
+          el.src = '';
+        }
+      });
       audioRefs.current = {};
       if (metronomeTimerRef.current) {
         window.clearInterval(metronomeTimerRef.current);
@@ -350,18 +456,25 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idea.id]);
 
-  const seekAll = useCallback((time: number) => {
-    const clamped = Math.max(0, time);
-    Object.values(audioRefs.current).forEach(el => {
-      if (el) { try { el.currentTime = clamped; } catch {} }
-    });
-    setCurrentTime(clamped);
-    if (metronomeOn && isPlaying) {
-      resyncMetronomeAt(clamped);
-    }
-  }, [metronomeOn, isPlaying, resyncMetronomeAt]);
+  const seekAll = useCallback(
+    (time: number) => {
+      const clamped = Math.max(0, time);
+      Object.values(audioRefs.current).forEach((el) => {
+        if (el) {
+          try {
+            el.currentTime = clamped;
+          } catch {}
+        }
+      });
+      setCurrentTime(clamped);
+      if (metronomeOn && isPlaying) {
+        resyncMetronomeAt(clamped);
+      }
+    },
+    [metronomeOn, isPlaying, resyncMetronomeAt]
+  );
 
-  // La primera pista actúa de "líder" de tiempo: de ahí sale el playhead y el chequeo de loop.
+  // La primera pista actúa de"líder" de tiempo: de ahí sale el playhead y el chequeo de loop.
   useEffect(() => {
     const leaderId = tracks[0]?.id;
     const el = leaderId ? audioRefs.current[leaderId] : null;
@@ -388,21 +501,25 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
   const togglePlay = async () => {
     await ensureAudioLoaded();
-    const players = tracks.map(t => audioRefs.current[t.id]).filter(Boolean) as HTMLAudioElement[];
+    const players = tracks.map((t) => audioRefs.current[t.id]).filter(Boolean) as HTMLAudioElement[];
     if (isPlaying) {
-      players.forEach(el => el.pause());
+      players.forEach((el) => el.pause());
       setIsPlaying(false);
       return;
     }
     tracks.forEach(applyDsp);
-    players.forEach(el => { el.playbackRate = speed; });
-    await Promise.all(players.map(el => el.play().catch(() => {})));
+    players.forEach((el) => {
+      el.playbackRate = speed;
+    });
+    await Promise.all(players.map((el) => el.play().catch(() => {})));
     setIsPlaying(true);
   };
 
   const changeSpeed = (val: number) => {
     setSpeed(val);
-    Object.values(audioRefs.current).forEach(el => { if (el) el.playbackRate = val; });
+    Object.values(audioRefs.current).forEach((el) => {
+      if (el) el.playbackRate = val;
+    });
   };
 
   // El BPM real de la canción (detectado por Iris o puesto a mano) como referencia — el ratio de
@@ -424,13 +541,16 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
   const markLoopA = () => setLoopA(currentTime);
   const markLoopB = () => setLoopB(currentTime);
-  const clearLoop = () => { setLoopA(null); setLoopB(null); };
+  const clearLoop = () => {
+    setLoopA(null);
+    setLoopB(null);
+  };
 
   const handleExport = async (mode: 'sin-mi-pista' | 'solo-mi-pista' | 'mezcla-actual') => {
     setExportError(null);
     setIsExporting(mode);
     try {
-      const inputs: MasterMixTrackInput[] = tracks.map(t => {
+      const inputs: MasterMixTrackInput[] = tracks.map((t) => {
         const eff = getEffective(t);
         let muted = hasSolo ? !eff.solo : !!eff.muted;
         if (mode === 'sin-mi-pista' && myTrack) muted = muted || t.id === myTrack.id;
@@ -443,7 +563,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
           desfaseMs: t.desfaseMs,
           eqLow: t.eqLow,
           eqMid: t.eqMid,
-          eqHigh: t.eqHigh
+          eqHigh: t.eqHigh,
         };
       });
       const blob = await exportMasterMixAudioBlob(inputs, resolveAudioUrl);
@@ -466,7 +586,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const handleAnalyzeTrackChords = async (tr: AudioTrack) => {
     if (loadingChordsTrackId) return;
     setLoadingChordsTrackId(tr.id);
-    setChordsErrorByTrack(prev => ({ ...prev, [tr.id]: '' }));
+    setChordsErrorByTrack((prev) => ({ ...prev, [tr.id]: '' }));
     setExpandedChordsTrackId(tr.id);
     try {
       // Sin songId a propósito: así el servidor NUNCA sobreescribe el cifrado principal de la
@@ -480,380 +600,525 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
           artista: undefined,
           tonalidad: song.tonalidad,
           bpm: song.bpm,
-          audioUrl: tr.audioUrl
-        })
+          audioUrl: tr.audioUrl,
+        }),
       });
-      setChordsByTrack(prev => ({
+      setChordsByTrack((prev) => ({
         ...prev,
         [tr.id]: {
           cifradoTexto: data.cifradoTexto,
           guiaSustituto: data.guiaSustituto,
           chordsSource: data.chordsSource,
-          esAproximado: !!data.esAproximado
-        }
+          esAproximado: !!data.esAproximado,
+        },
       }));
     } catch (err: any) {
-      setChordsErrorByTrack(prev => ({ ...prev, [tr.id]: err?.message || 'No se pudieron detectar los acordes de esta pista.' }));
+      setChordsErrorByTrack((prev) => ({
+        ...prev,
+        [tr.id]: err?.message || 'No se pudieron detectar los acordes de esta pista.',
+      }));
     } finally {
       setLoadingChordsTrackId(null);
     }
   };
 
   const chordsSourceLabel = (source: TrackChordsResult['chordsSource']) => {
-    if (source === 'audio_real') return { text: '🎧 Transcrito escuchando esta pista real', tone: 'text-emerald-400' };
-    if (source === 'ia_sin_audio') return { text: '🤖 Propuesta de IA sin poder escuchar el audio', tone: 'text-amber-400' };
-    return { text: '📐 Plantilla genérica (sin IA disponible)', tone: 'text-neutral-400' };
+    if (source === 'audio_real')
+      return {
+        text: '🎧 Transcrito escuchando esta pista real',
+        tone: 'text-[var(--ok)]',
+      };
+    if (source === 'ia_sin_audio')
+      return {
+        text: '🤖 Propuesta de IA sin poder escuchar el audio',
+        tone: 'text-[var(--acc)]',
+      };
+    return {
+      text: '📐 Plantilla genérica (sin IA disponible)',
+      tone: 'text-[var(--ink-2)]',
+    };
   };
 
-  const panelBg = isStitchLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-neutral-900 border-neutral-800 text-neutral-100';
-  const cardBg = isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-950/60 border-neutral-800/80';
+  const panelBg = 'bg-[var(--surface)] text-[var(--ink)]';
+  const cardBg = 'bg-[var(--bg)]';
 
   return (
     <>
       {/* Puentes de trasposición: uno por pista, siempre montados (ver comentario en
-          TrackPitchShiftBridge más arriba — desmontarlos a mitad de sesión dejaría esa pista muda). */}
-      {tracks.map(tr => (
-        <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={effectiveSemitones} />
+ TrackPitchShiftBridge más arriba — desmontarlos a mitad de sesión dejaría esa pista muda). */}
+      {tracks.map((tr) => (
+        <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={semitonesOffset} />
       ))}
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className={`w-full max-w-2xl rounded-2xl shadow-2xl border overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
-        {/* Header */}
-        <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ? 'border-slate-200 bg-slate-50' : 'border-neutral-800 bg-neutral-950/60'}`}>
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
-              <Headphones className="w-5 h-5" />
+      <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
+        <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
+          {/* Header */}
+          <div className={`px-5 py-4 flex items-center justify-between ${'bg-[var(--bg)]'}`}>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
+                <Headphones className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-bold font-display text-sm truncate">Sala de Ensayo Individual</h3>
+                <p className="text-[11px] text-[var(--ink-2)] truncate">
+                  {song.titulo} · {idea.titulo}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <h3 className="font-bold font-display uppercase tracking-wider text-sm truncate">Sala de Ensayo Individual</h3>
-              <p className="text-[11px] text-neutral-400 truncate">{song.titulo} · {idea.titulo}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            {onOpenStudio && (
+            <div className="flex items-center gap-2 shrink-0">
+              {onOpenStudio && (
+                <button
+                  type="button"
+                  onClick={onOpenStudio}
+                  className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                  title="Abrir Studio multipista completo de este tema"
+                >
+                  <Sliders className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Modo Studio</span>
+                </button>
+              )}
               <button
-                type="button"
-                onClick={onOpenStudio}
-                className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[#f2ca50]/15 hover:bg-[#f2ca50]/25 text-[#f2ca50] border border-[#f2ca50]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm"
-                title="Abrir Studio multipista completo de este tema"
+                onClick={onClose}
+                className="p-2 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] shrink-0 cursor-pointer"
               >
-                <Sliders className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Modo Studio</span>
+                <X className="w-5 h-5" />
               </button>
+            </div>
+          </div>
+
+          <div className="overflow-y-auto p-5 space-y-4">
+            {/* Aviso: qué instrumento detectó / instrucción si no hay ninguno */}
+            {myTrack ? (
+              <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)]">
+                Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
+              </div>
+            ) : (
+              <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70">
+                No hemos podido identificar tu pista. Pídele a quien administra la banda que te asigne un instrumento (Voz, Batería, Bajo,
+                Guitarras, Teclados o Arreglos) en Gestión de Miembros — mientras tanto puedes usar la mezcla manual de abajo.
+              </div>
             )}
-            <button onClick={onClose} className="p-2 rounded-lg hover:bg-neutral-800/60 text-neutral-400 hover:text-white shrink-0 cursor-pointer">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
 
-        <div className="overflow-y-auto p-5 space-y-4">
-          {/* Aviso: qué instrumento detectó / instrucción si no hay ninguno */}
-          {myTrack ? (
-            <div className="text-xs px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-300">
-              Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
-            </div>
-          ) : (
-            <div className="text-xs px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-300">
-              No hemos podido identificar tu pista. Pídele a quien administra la banda que te asigne un instrumento (Voz, Batería, Bajo, Guitarras, Teclados o Arreglos) en Gestión de Miembros — mientras tanto puedes usar la mezcla manual de abajo.
-            </div>
-          )}
-
-          {/* Presets */}
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={applyPresetPracticeWithBand}
-              disabled={!myTrack}
-              className="flex flex-col items-center gap-1 px-3 py-3 rounded-xl bg-sky-500/10 border border-sky-500/25 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <Headphones className="w-4 h-4" />
-              <span className="text-[11px] font-mono font-semibold text-center">Tocar con la banda<br />(silencia mi pista)</span>
-            </button>
-            <button
-              onClick={applyPresetLearnMyPart}
-              disabled={!myTrack}
-              className="flex flex-col items-center gap-1 px-3 py-3 rounded-xl bg-violet-500/10 border border-violet-500/25 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <GraduationCap className="w-4 h-4" />
-              <span className="text-[11px] font-mono font-semibold text-center">Aprender mi parte<br />(aísla mi pista)</span>
-            </button>
-          </div>
-
-          {/* Transporte + velocidad + loop */}
-          <div className={`rounded-xl border p-3 space-y-3 ${cardBg}`}>
-            <div className="flex items-center gap-3">
-              <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-emerald-500 text-black flex items-center justify-center shrink-0 hover:bg-emerald-400">
-                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-              </button>
-              <span className="text-[11px] font-mono text-neutral-400 w-10 text-right">{formatTime(currentTime)}</span>
-              <input
-                type="range"
-                min={0}
-                max={Math.max(duration, 0.1)}
-                step={0.1}
-                value={Math.min(currentTime, duration)}
-                onChange={(e) => handleSeekBarChange(Number(e.target.value))}
-                className="flex-1 accent-emerald-500"
-              />
-              <span className="text-[11px] font-mono text-neutral-400 w-10">{formatTime(duration)}</span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-1">
-                <Gauge className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-[10px] font-mono text-neutral-400 mr-0.5">Tempo</span>
-                <button
-                  onClick={() => nudgeBpm(-5)}
-                  title="-5 BPM"
-                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
-                >-5</button>
-                <button
-                  onClick={() => nudgeBpm(-1)}
-                  title="-1 BPM"
-                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
-                >-1</button>
-                <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-lg ${speed !== 1 ? 'text-amber-300' : 'text-neutral-200'}`}>
-                  {targetBpm} BPM
+            {/* Presets */}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={applyPresetPracticeWithBand}
+                disabled={!myTrack}
+                className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <Headphones className="w-4 h-4" />
+                <span className="text-[11px] font-sans font-semibold text-center">
+                  Tocar con la banda
+                  <br />
+                  (silencia mi pista)
                 </span>
-                <button
-                  onClick={() => nudgeBpm(1)}
-                  title="+1 BPM"
-                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
-                >+1</button>
-                <button
-                  onClick={() => nudgeBpm(5)}
-                  title="+5 BPM"
-                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
-                >+5</button>
-                {speed !== 1 && (
+              </button>
+              <button
+                onClick={applyPresetLearnMyPart}
+                disabled={!myTrack}
+                className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--hair)]/10 text-[var(--acc)]/50 hover:bg-[var(--hair)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <GraduationCap className="w-4 h-4" />
+                <span className="text-[11px] font-sans font-semibold text-center">
+                  Aprender mi parte
+                  <br />
+                  (aísla mi pista)
+                </span>
+              </button>
+            </div>
+
+            {/* Transporte + Looper de Secciones Inteligentes + Velocidad & Tono */}
+            <div className={`rounded-[var(--r-l)] p-4 space-y-4 ${cardBg}`}>
+              {/* Reproductor principal y barra de tiempo con zona de bucle visual */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
                   <button
-                    onClick={() => changeSpeed(1)}
-                    title={`Volver al tempo original (${baseBpm} BPM)`}
-                    className="text-[10px] font-mono px-2 py-1 rounded-lg text-neutral-400 hover:text-white"
+                    onClick={togglePlay}
+                    className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--ok)]  text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110/40 transition-all active:scale-95 cursor-pointer"
+                    title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
                   >
-                    ↺ {baseBpm}
+                    {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
                   </button>
-                )}
-              </div>
 
-              <div className="flex items-center gap-1.5">
-                <Repeat className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-[10px] font-mono text-neutral-400">Bucle</span>
-                <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200">
-                  A {loopA != null ? formatTime(loopA) : '--:--'}
-                </button>
-                <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200">
-                  B {loopB != null ? formatTime(loopB) : '--:--'}
-                </button>
-                {(loopA != null || loopB != null) && (
-                  <button onClick={clearLoop} className="text-[10px] font-mono px-2 py-1 rounded-lg text-neutral-400 hover:text-white">
-                    Quitar
-                  </button>
-                )}
-              </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center justify-between text-[11px] font-mono">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[var(--ink)] font-bold">{formatTime(currentTime)}</span>
+                        {currentActiveSection && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] ">
+                            {currentActiveSection.icon} {currentActiveSection.name}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[var(--ink-2)]">{formatTime(duration)}</span>
+                    </div>
 
-              <div className="flex items-center gap-1.5">
-                <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-[10px] font-mono text-neutral-400">Tono</span>
-                <select
-                  value={semitonesOffset}
-                  onChange={(e) => setSemitonesOffset(Number(e.target.value))}
-                  title="Trasposición de tono en tiempo real — útil para ensayar en el tono acordado para un bolo concreto"
-                  className={`text-xs font-mono rounded-lg px-2 py-1 outline-none ${isStitchLight ? 'bg-white border border-slate-200' : 'bg-neutral-900 border border-neutral-700'} ${semitonesOffset !== 0 ? 'text-sky-400 font-bold' : ''}`}
-                >
-                  {TRANSPOSE_SEMITONE_OPTIONS.map(st => {
-                    const origKey = song.tonalidad?.trim();
-                    let label = st > 0 ? `+${st} st` : st < 0 ? `${st} st` : '0 (Original)';
-                    if (origKey) {
-                      const notation = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(origKey) ? 'ES' : 'EN';
-                      const targetKey = transposeChordToken(origKey, st, notation);
-                      label = st === 0 ? `${origKey} (Original)` : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
-                    }
-                    return <option key={st} value={st}>{label}</option>;
-                  })}
-                </select>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={() => setMetronomeOn(v => !v)}
-                  title={`Metrónomo (claqueta) — sigue el tempo de arriba, sube y baja a la vez con la canción. Ahora mismo: ${targetBpm} BPM`}
-                  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-lg border ${
-                    metronomeOn
-                      ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-                      : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
-                  }`}
-                >
-                  <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
-                </button>
-                <button
-                  onClick={markBeatAnchor}
-                  title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
-                  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-lg border ${
-                    beatAnchorSec > 0
-                      ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-                      : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
-                  }`}
-                >
-                  <Target className="w-3.5 h-3.5" /> {beatAnchorSec > 0 ? `Compás ${formatTime(beatAnchorSec)}` : 'Marcar beat de compás'}
-                </button>
-                {beatAnchorSec > 0 && (
-                  <button
-                    onClick={() => {
-                      setBeatAnchorSec(0);
-                      if (metronomeOn && isPlaying) resyncMetronomeAt(currentTime, 0);
-                    }}
-                    title="Quitar el compás marcado (volver a asumir que empieza en 0:00)"
-                    className="text-[10px] font-mono px-1.5 py-1 rounded-lg text-neutral-400 hover:text-white"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 px-0.5">
-              <span className="text-[10px] font-mono text-neutral-500 w-10 text-right">{Math.round(baseBpm * 0.4)}</span>
-              <input
-                type="range"
-                min={Math.round(baseBpm * 0.4)}
-                max={Math.round(baseBpm * 1.6)}
-                step={1}
-                value={targetBpm}
-                onChange={(e) => changeSpeed(Number(e.target.value) / baseBpm)}
-                title="Ajuste fino de tempo — arrastra para cualquier BPM exacto"
-                className="flex-1 accent-amber-500"
-              />
-              <span className="text-[10px] font-mono text-neutral-500 w-10">{Math.round(baseBpm * 1.6)}</span>
-            </div>
-          </div>
-
-          {/* Mezcla manual por pista */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono font-semibold text-neutral-400 uppercase">Mi mezcla (solo la ves tú)</span>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleAutoBalance}
-                  disabled={isAutoBalancing}
-                  title="Analiza el volumen real de cada pista y nivela los faders automáticamente"
-                  className="flex items-center gap-1 text-[10px] font-mono text-sky-400 hover:text-sky-300 disabled:opacity-50"
-                >
-                  {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
-                  {isAutoBalancing ? 'Analizando...' : 'Auto-Balance'}
-                </button>
-                <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-neutral-400 hover:text-white">
-                  <RotateCcw className="w-3 h-3" /> Restablecer
-                </button>
-              </div>
-            </div>
-            {tracks.map(tr => {
-              const eff = getEffective(tr);
-              const isMine = myTrack?.id === tr.id;
-              const chords = chordsByTrack[tr.id];
-              const chordsErr = chordsErrorByTrack[tr.id];
-              const isLoadingThis = loadingChordsTrackId === tr.id;
-              const isExpanded = expandedChordsTrackId === tr.id;
-              return (
-                <div key={tr.id} className={`rounded-xl border ${cardBg} ${isMine ? 'border-emerald-500/40' : ''}`}>
-                  <div className="flex items-center gap-2 px-3 py-2">
-                    <span className="text-xs font-semibold truncate flex-1 min-w-0">
-                      {tr.nombre}
-                      {isMine && <span className="ml-1.5 text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">TÚ</span>}
-                    </span>
-                    <button
-                      onClick={() => toggleMute(tr.id)}
-                      title="Silenciar (solo en mi mezcla)"
-                      className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ? 'bg-red-500/80 text-white' : 'bg-neutral-800 text-neutral-400 hover:text-white'}`}
-                    >
-                      M
-                    </button>
-                    <button
-                      onClick={() => toggleSolo(tr.id)}
-                      title="Solo (aislar, solo en mi mezcla)"
-                      className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ? 'bg-amber-400 text-black' : 'bg-neutral-800 text-neutral-400 hover:text-white'}`}
-                    >
-                      S
-                    </button>
-                    <Volume2 className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-                    <input
-                      type="range"
-                      min={0}
-                      max={1}
-                      step={0.05}
-                      value={eff.volumen ?? 1}
-                      onChange={(e) => setTrackVolume(tr.id, Number(e.target.value))}
-                      className="w-20 accent-emerald-500"
-                    />
-                    <button
-                      onClick={() => (chords ? setExpandedChordsTrackId(isExpanded ? null : tr.id) : handleAnalyzeTrackChords(tr))}
-                      title="Detectar acordes escuchando solo esta pista aislada"
-                      disabled={isLoadingThis}
-                      className="w-6 h-6 rounded flex items-center justify-center bg-neutral-800 text-neutral-400 hover:text-indigo-300 disabled:opacity-50"
-                    >
-                      {isLoadingThis ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Music2 className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-
-                  {isExpanded && (chords || chordsErr) && (
-                    <div className="px-3 pb-3 space-y-2 border-t border-white/5 pt-2">
-                      {chordsErr && <p className="text-[11px] text-red-400">{chordsErr}</p>}
-                      {chords && (
-                        <>
-                          <p className={`text-[10px] font-mono ${chordsSourceLabel(chords.chordsSource).tone}`}>
-                            {chordsSourceLabel(chords.chordsSource).text}
-                            {chords.esAproximado && ' · ⚠️ aproximado, verifica de oído'}
-                          </p>
-                          <pre className="text-[11px] font-mono whitespace-pre-wrap text-neutral-200 max-h-40 overflow-y-auto bg-black/30 rounded-lg p-2">
-                            {chords.cifradoTexto}
-                          </pre>
-                          {onApplyAsMainChords && (
-                            <button
-                              onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
-                              className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/25"
-                            >
-                              <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
-                            </button>
-                          )}
-                        </>
+                    {/* Seek bar interactiva con indicador de bucle A/B */}
+                    <div className="relative flex items-center">
+                      <input
+                        type="range"
+                        min={0}
+                        max={Math.max(duration, 0.1)}
+                        step={0.1}
+                        value={Math.min(currentTime, duration)}
+                        onChange={(e) => handleSeekBarChange(Number(e.target.value))}
+                        className="w-full accent-emerald-400 cursor-pointer h-2 bg-[var(--sunken)] rounded-[var(--r-m)] appearance-none"
+                      />
+                      {/* Resaltado visual del bucle A-B */}
+                      {loopA != null && loopB != null && duration > 0 && (
+                        <div
+                          className="absolute h-2 bg-[var(--acc)]/40 border-x border-[var(--hair)] pointer-events-none rounded"
+                          style={{
+                            left: `${Math.max(0, Math.min(100, (loopA / duration) * 100))}%`,
+                            width: `${Math.max(0, Math.min(100, ((loopB - loopA) / duration) * 100))}%`,
+                          }}
+                        />
                       )}
                     </div>
-                  )}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
 
-          {/* Exportar */}
-          <div className={`rounded-xl border p-3 space-y-2 ${cardBg}`}>
-            <span className="text-[11px] font-mono font-semibold text-neutral-400 uppercase">Descargar para escuchar offline</span>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => handleExport('sin-mi-pista')}
-                disabled={!myTrack || isExporting !== null}
-                className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-lg bg-sky-500/10 border border-sky-500/25 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40"
-              >
-                <Download className="w-3.5 h-3.5" /> {isExporting === 'sin-mi-pista' ? 'Generando…' : 'Sin mi pista'}
-              </button>
-              <button
-                onClick={() => handleExport('solo-mi-pista')}
-                disabled={!myTrack || isExporting !== null}
-                className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-lg bg-violet-500/10 border border-violet-500/25 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40"
-              >
-                <Download className="w-3.5 h-3.5" /> {isExporting === 'solo-mi-pista' ? 'Generando…' : 'Solo mi pista'}
-              </button>
-              <button
-                onClick={() => handleExport('mezcla-actual')}
-                disabled={isExporting !== null}
-                className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-lg bg-neutral-800 text-neutral-200 hover:bg-neutral-700 disabled:opacity-40"
-              >
-                <Download className="w-3.5 h-3.5" /> {isExporting === 'mezcla-actual' ? 'Generando…' : 'Mi mezcla actual'}
-              </button>
+              {/* SECCIONES INTELIGENTES (SMART SECTION LOOPER) */}
+              {smartSections.length > 0 && (
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2 font-mono">
+                  <div className="flex items-center justify-between flex-wrap gap-1 text-[11px]">
+                    <span className="font-bold text-[var(--acc)] flex items-center gap-1.5">
+                      <Repeat className="w-3.5 h-3.5 text-[var(--acc)]" />
+                      Looper de Secciones Inteligentes:
+                    </span>
+                    {loopA != null && loopB != null ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-[var(--ok)] font-bold bg-[var(--ok)]/15 px-2 py-0.5 rounded-[var(--r-m)]">
+                          🔁 Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleClearLoop}
+                          className="text-[10px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 transition-all cursor-pointer"
+                        >
+                          ✕ Quitar
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-[10px] text-[var(--ink-2)]">Pulsa una sección para ensayarla en bucle infinito</span>
+                    )}
+                  </div>
+
+                  {/* Botones de Secciones */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 scrollbar-none">
+                    {smartSections.map((sec) => {
+                      const isLoopActive = loopA === sec.startSec && loopB === sec.endSec;
+                      const isPlayheadInside = currentTime >= sec.startSec && currentTime < sec.endSec;
+                      return (
+                        <button
+                          key={sec.id}
+                          type="button"
+                          onClick={() => applySmartSectionLoop(sec)}
+                          className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                            isLoopActive
+                              ? 'bg-[var(--acc)] text-[var(--ink)] /40 ring-1 ring-[var(--acc)]'
+                              : isPlayheadInside
+                                ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                                : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 '
+                          }`}
+                          title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
+                        >
+                          <span>{sec.icon}</span>
+                          <span>{sec.name}</span>
+                          <span className="text-[9px] opacity-75 font-normal">({formatTime(sec.startSec)})</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* CONTROLES DE TEMPO & TRASPOSICIÓN DE TONO */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {/* Bloque Tempo & Presets de Velocidad */}
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2 font-mono">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                      <Gauge className="w-3.5 h-3.5 text-[var(--acc)]" />
+                      Tempo & Velocidad
+                    </span>
+                    <span
+                      className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] ${
+                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc)] ' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
+                      }`}
+                    >
+                      {targetBpm} BPM ({speed.toFixed(2)}x)
+                    </span>
+                  </div>
+
+                  {/* Presets rápidos de velocidad */}
+                  <div className="grid grid-cols-5 gap-1 text-[10px]">
+                    {[0.5, 0.75, 0.9, 1.0, 1.1].map((spd) => {
+                      const isActive = Math.abs(speed - spd) < 0.01;
+                      return (
+                        <button
+                          key={spd}
+                          type="button"
+                          onClick={() => changeSpeed(spd)}
+                          className={`py-1 rounded-[var(--r-m)] text-center transition-all cursor-pointer font-bold ${
+                            isActive
+                              ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
+                              : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
+                          }`}
+                        >
+                          {spd === 1.0 ? '1x (Orig)' : `${spd}x`}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Slider y Nudge BPM */}
+                  <div className="flex items-center gap-1 pt-1">
+                    <button
+                      onClick={() => nudgeBpm(-5)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                    >
+                      -5
+                    </button>
+                    <button
+                      onClick={() => nudgeBpm(-1)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                    >
+                      -1
+                    </button>
+                    <input
+                      type="range"
+                      min={Math.round(baseBpm * 0.4)}
+                      max={Math.round(baseBpm * 1.6)}
+                      step={1}
+                      value={targetBpm}
+                      onChange={(e) => changeSpeed(Number(e.target.value) / baseBpm)}
+                      className="flex-1 accent-amber-500 h-1.5 cursor-pointer"
+                    />
+                    <button
+                      onClick={() => nudgeBpm(1)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                    >
+                      +1
+                    </button>
+                    <button
+                      onClick={() => nudgeBpm(5)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                    >
+                      +5
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bloque Tono (Pitch Transpose) & Metrónomo */}
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2 font-mono">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                      <ArrowUpDown className="w-3.5 h-3.5 text-[var(--acc)]" />
+                      Tono (Sin pitufo)
+                    </span>
+                    <span
+                      className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] ${
+                        semitonesOffset !== 0
+                          ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                          : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
+                      }`}
+                    >
+                      {(() => {
+                        const origKey = song.tonalidad?.trim();
+                        if (!origKey) return semitonesOffset === 0 ? 'Original' : `${semitonesOffset > 0 ? '+' : ''}${semitonesOffset} st`;
+                        const notation = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(origKey) ? 'ES' : 'EN';
+                        const targetKey = transposeChordToken(origKey, semitonesOffset, notation);
+                        return semitonesOffset === 0
+                          ? `${origKey}`
+                          : `${targetKey} (${semitonesOffset > 0 ? '+' : ''}${semitonesOffset} st)`;
+                      })()}
+                    </span>
+                  </div>
+
+                  {/* Presets rápidos de semitonos */}
+                  <div className="grid grid-cols-5 gap-1 text-[10px]">
+                    {[-2, -1, 0, 1, 2].map((st) => {
+                      const isActive = semitonesOffset === st;
+                      return (
+                        <button
+                          key={st}
+                          type="button"
+                          onClick={() => setSemitonesOffset(st)}
+                          className={`py-1 rounded-[var(--r-m)] text-center transition-all cursor-pointer font-bold ${
+                            isActive
+                              ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
+                              : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
+                          }`}
+                        >
+                          {st === 0 ? 'Original' : `${st > 0 ? '+' : ''}${st} st`}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Claqueta / Metrónomo */}
+                  <div className="flex items-center gap-1.5 pt-1">
+                    <button
+                      onClick={() => setMetronomeOn((v) => !v)}
+                      title={`Metrónomo sincronizado: ${targetBpm} BPM`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] transition-all cursor-pointer ${
+                        metronomeOn
+                          ? 'bg-[var(--acc)]/20 text-[var(--acc)]'
+                          : 'bg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
+                      }`}
+                    >
+                      <Timer className="w-3.5 h-3.5" />
+                      <span>Claqueta ({targetBpm} BPM)</span>
+                    </button>
+                    <button
+                      onClick={markBeatAnchor}
+                      title="Alinear claqueta con el primer beat"
+                      className={`text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] transition-all cursor-pointer ${
+                        beatAnchorSec > 0
+                          ? 'bg-[var(--ok)]/20 text-[var(--ok)]'
+                          : 'bg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
+                      }`}
+                    >
+                      <Target className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            {exportError && <p className="text-[11px] text-red-400">{exportError}</p>}
+
+            {/* Mezcla manual por pista */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">Mi mezcla (solo la ves tú)</span>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleAutoBalance}
+                    disabled={isAutoBalancing}
+                    title="Analiza el volumen real de cada pista y nivela los faders automáticamente"
+                    className="flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] disabled:opacity-50"
+                  >
+                    {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
+                    {isAutoBalancing ? 'Analizando...' : 'Auto-Balance'}
+                  </button>
+                  <button
+                    onClick={resetOverrides}
+                    className="flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink)]"
+                  >
+                    <RotateCcw className="w-3 h-3" /> Restablecer
+                  </button>
+                </div>
+              </div>
+              {tracks.map((tr) => {
+                const eff = getEffective(tr);
+                const isMine = myTrack?.id === tr.id;
+                const chords = chordsByTrack[tr.id];
+                const chordsErr = chordsErrorByTrack[tr.id];
+                const isLoadingThis = loadingChordsTrackId === tr.id;
+                const isExpanded = expandedChordsTrackId === tr.id;
+                return (
+                  <div key={tr.id} className={`rounded-[var(--r-m)] ${cardBg} ${isMine ? '' : ''}`}>
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <span className="text-xs font-semibold truncate flex-1 min-w-0">
+                        {tr.nombre}
+                        {isMine && (
+                          <span className="ml-1.5 text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)]">TÚ</span>
+                        )}
+                      </span>
+                      <button
+                        onClick={() => toggleMute(tr.id)}
+                        title="Silenciar (solo en mi mezcla)"
+                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.muted ? 'bg-[var(--alert)]/80 text-[var(--ink)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                      >
+                        M
+                      </button>
+                      <button
+                        onClick={() => toggleSolo(tr.id)}
+                        title="Solo (aislar, solo en mi mezcla)"
+                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ? 'bg-[var(--acc)]/60 text-[var(--on-acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                      >
+                        S
+                      </button>
+                      <Volume2 className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.05}
+                        value={eff.volumen ?? 1}
+                        onChange={(e) => setTrackVolume(tr.id, Number(e.target.value))}
+                        className="w-20 accent-emerald-500"
+                      />
+                      <button
+                        onClick={() => (chords ? setExpandedChordsTrackId(isExpanded ? null : tr.id) : handleAnalyzeTrackChords(tr))}
+                        title="Detectar acordes escuchando solo esta pista aislada"
+                        disabled={isLoadingThis}
+                        className="w-6 h-6 rounded flex items-center justify-center bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--hair)]/50 disabled:opacity-50"
+                      >
+                        {isLoadingThis ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Music2 className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+
+                    {isExpanded && (chords || chordsErr) && (
+                      <div className="px-3 pb-3 space-y-2 pt-2">
+                        {chordsErr && <p className="text-[11px] text-[var(--alert)]">{chordsErr}</p>}
+                        {chords && (
+                          <>
+                            <p className={`text-[10px] font-sans ${chordsSourceLabel(chords.chordsSource).tone}`}>
+                              {chordsSourceLabel(chords.chordsSource).text}
+                              {chords.esAproximado && '· ⚠️ aproximado, verifica de oído'}
+                            </p>
+                            <pre className="text-[11px] font-sans whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-[var(--sunken)] rounded-[var(--r-s)] p-2">
+                              {chords.cifradoTexto}
+                            </pre>
+                            {onApplyAsMainChords && (
+                              <button
+                                onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
+                                className="flex items-center gap-1.5 text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--hair)]/15 text-[var(--hair)]/50 hover:bg-[var(--hair)]/25"
+                              >
+                                <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Exportar */}
+            <div className={`rounded-[var(--r-m)] p-3 space-y-2 ${cardBg}`}>
+              <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">Descargar para escuchar offline</span>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleExport('sin-mi-pista')}
+                  disabled={!myTrack || isExporting !== null}
+                  className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
+                >
+                  <Download className="w-3.5 h-3.5" /> {isExporting === 'sin-mi-pista' ? 'Generando…' : 'Sin mi pista'}
+                </button>
+                <button
+                  onClick={() => handleExport('solo-mi-pista')}
+                  disabled={!myTrack || isExporting !== null}
+                  className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--hair)]/10 text-[var(--acc)]/50 hover:bg-[var(--hair)]/20 disabled:opacity-40"
+                >
+                  <Download className="w-3.5 h-3.5" /> {isExporting === 'solo-mi-pista' ? 'Generando…' : 'Solo mi pista'}
+                </button>
+                <button
+                  onClick={() => handleExport('mezcla-actual')}
+                  disabled={isExporting !== null}
+                  className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
+                >
+                  <Download className="w-3.5 h-3.5" /> {isExporting === 'mezcla-actual' ? 'Generando…' : 'Mi mezcla actual'}
+                </button>
+              </div>
+              {exportError && <p className="text-[11px] text-[var(--alert)]">{exportError}</p>}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 }

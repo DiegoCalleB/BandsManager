@@ -6,11 +6,7 @@ import { Song, SongAudioIdea, AudioTrack } from '../types';
  */
 export function getSongIrisStemIdea(song?: Song | null): SongAudioIdea | null {
   if (!song || !song.audioIdeas || song.audioIdeas.length === 0) return null;
-  return (
-    song.audioIdeas.find(
-      idea => (idea.pistas && idea.pistas.length > 1) || Boolean(idea.stemEngineUsed)
-    ) || null
-  );
+  return song.audioIdeas.find((idea) => (idea.pistas && idea.pistas.length > 1) || Boolean(idea.stemEngineUsed)) || null;
 }
 
 /**
@@ -34,7 +30,7 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
       nombre: idea.titulo || 'Pista Principal',
       audioUrl: idea.audioUrl,
       autor: idea.subidoPor,
-      instrumento: idea.instrumento
-    }
+      instrumento: idea.instrumento,
+    },
   ];
 }

@@ -4,7 +4,7 @@ import { EpkLanguage, DEFAULT_EPK_LANGUAGE, isEpkLanguage } from '../i18n/epkTra
 /**
  * Determina el idioma del EPK público:
  * 1. Parámetro ?lang= en la URL (lo pone el agente Redactor al meter el enlace en el pitch,
- *    según el país del lead — ver server/utils/leadLanguage.ts).
+ * según el país del lead — ver server/utils/leadLanguage.ts).
  * 2. Idioma del navegador de quien abre la página, si es uno de los soportados.
  * 3. Español por defecto.
  */

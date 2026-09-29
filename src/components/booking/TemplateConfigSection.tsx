@@ -1,9 +1,45 @@
 import React, { useState } from 'react';
-import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star, Landmark } from 'lucide-react';
+import {
+  Sparkles,
+  RefreshCw,
+  Building2,
+  Tent,
+  Disc3,
+  Radio,
+  Users,
+  Briefcase,
+  MessageSquare,
+  Landmark,
+  Wand2,
+  Lightbulb,
+  Save,
+  Copy,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  HelpCircle,
+  Eye,
+} from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { ExampleThreadsSection } from './ExampleThreadsSection';
+import { TemplateRecommendationsCard } from './TemplateRecommendationsCard';
+import { GenerateAllTemplatesModal } from './GenerateAllTemplatesModal';
+
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
+
+const CATEGORIES: { id: TemplateCategory; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { id: 'salas', label: '🏛️ Salas', icon: Building2 },
+  { id: 'festivales', label: '🎪 Festivales', icon: Tent },
+  { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
+  { id: 'medios', label: '📻 Medios', icon: Radio },
+  { id: 'grupos', label: '🎸 Grupos', icon: Users },
+  { id: 'managements', label: '💼 Managements', icon: Briefcase },
+  { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
+];
 
 export interface ActiveTemplateData {
   title: string;
@@ -17,8 +53,9 @@ export interface ActiveTemplateData {
 }
 
 interface TemplateConfigSectionProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
   colors: ThemeColors;
-  isStitchLight: boolean;
   textSub: string;
   textMuted: string;
   templateTab: TemplateCategory;
@@ -28,9 +65,12 @@ interface TemplateConfigSectionProps {
   testPromptResult: string;
   onTestPrompt: () => void;
   onSaveTemplates: () => void;
-  onOptimizeTemplate?: () => void;
+  onOptimizeTemplate?: (overrideInstruction?: string) => void;
   isOptimizingTemplate?: boolean;
+  onGenerateAllTemplates?: (baseProposal: string) => Promise<boolean>;
+  isGeneratingAllTemplates?: boolean;
   optimizationFeedbackMsg?: string | null;
+  onClearFeedbackMsg?: () => void;
   customInstruction?: string;
   onCustomInstructionChange?: (val: string) => void;
   toneRating?: number;
@@ -39,9 +79,16 @@ interface TemplateConfigSectionProps {
   onContentRatingChange?: (rating: number) => void;
 }
 
+const TEMPLATE_VARIABLES = [
+  { tag: '{{nombre_sala}}', label: 'Nombre sala/festival' },
+  { tag: '{{ciudad}}', label: 'Ciudad' },
+  { tag: '{{contacto_nombre}}', label: 'Nombre contacto' },
+  { tag: '{{aforo}}', label: 'Aforo' },
+  { tag: '{{nombre_banda}}', label: 'Nombre banda' },
+];
+
 export function TemplateConfigSection({
   colors,
-  isStitchLight,
   textSub,
   textMuted,
   templateTab,
@@ -53,62 +100,36 @@ export function TemplateConfigSection({
   onSaveTemplates,
   onOptimizeTemplate,
   isOptimizingTemplate,
+  onGenerateAllTemplates,
+  isGeneratingAllTemplates = false,
   optimizationFeedbackMsg,
-  customInstruction: customInstructionProp,
-  onCustomInstructionChange,
-  toneRating: toneRatingProp,
-  onToneRatingChange,
-  contentRating: contentRatingProp,
-  onContentRatingChange,
+  onClearFeedbackMsg,
 }: TemplateConfigSectionProps) {
-  const [internalInstruction, setInternalInstruction] = useState('');
-  const [internalToneRating, setInternalToneRating] = useState(0);
-  const [internalContentRating, setInternalContentRating] = useState(0);
+  const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [showExamples, setShowExamples] = useState(false);
+  const [copiedPreview, setCopiedPreview] = useState(false);
 
-  const customInstruction = customInstructionProp !== undefined ? customInstructionProp : internalInstruction;
-  const setCustomInstruction = onCustomInstructionChange || setInternalInstruction;
+  const handleInsertTag = (tag: string) => {
+    activeTemplate.setBody((activeTemplate.body || '') + (activeTemplate.body ? ' ' : '') + tag);
+  };
 
-  const toneRating = toneRatingProp !== undefined ? toneRatingProp : internalToneRating;
-  const setToneRating = onToneRatingChange || setInternalToneRating;
+  const handleCopyPreview = () => {
+    if (!testPromptResult) return;
+    navigator.clipboard.writeText(testPromptResult);
+    setCopiedPreview(true);
+    setTimeout(() => setCopiedPreview(false), 2000);
+  };
 
-  const contentRating = contentRatingProp !== undefined ? contentRatingProp : internalContentRating;
-  const setContentRating = onContentRatingChange || setInternalContentRating;
+  const currentCategory = CATEGORIES.find((c) => c.id === templateTab) || CATEGORIES[0];
+
   return (
-    <div className={`${colors.card} p-5 space-y-6`}>
-      <div
-        className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-b ${
-          isStitchLight ? 'border-slate-100' : 'border-[#99907c]/15'
-        }`}
-      >
-        <div>
-          <h3
-            className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${
-              isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'
-            }`}
-          >
-            <Settings className={`w-4 h-4 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`} />{' '}
-            Configuración de Plantillas y Pautas AI por Categoría (Redactor)
-          </h3>
-          <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
-            Personaliza el correo por defecto y las pautas de IA diferenciadas para Salas, Festivales, Discotecas, Medios, Grupos y Managements.
-          </p>
-        </div>
-
-        {/* Template Tab Selector (7 Categories) */}
-        <div
-          className={`flex flex-wrap items-center gap-1 p-1 rounded-xl shrink-0 ${
-            isStitchLight ? 'bg-slate-100' : 'bg-[#121215]'
-          }`}
-        >
-          {[
-            { id: 'salas', label: '🏛️ Salas', icon: Building2 },
-            { id: 'festivales', label: '🎪 Festivales', icon: Tent },
-            { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
-            { id: 'medios', label: '📻 Medios', icon: Radio },
-            { id: 'grupos', label: '🎸 Grupos', icon: Users },
-            { id: 'managements', label: '💼 Managements', icon: Briefcase },
-            { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
-          ].map((tab) => {
+    <div className={`${colors.card} p-5 space-y-4`}>
+      {/* Top Header: Category Tabs & Global Action Buttons */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]/10">
+        {/* Category Tabs */}
+        <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] ">
+          {CATEGORIES.map((tab) => {
             const isActive = templateTab === tab.id;
             const IconComp = tab.icon;
             return (
@@ -116,15 +137,12 @@ export function TemplateConfigSection({
                 key={tab.id}
                 type="button"
                 id={`template-tab-${tab.id}`}
-                onClick={() => onSelectTemplateTab(tab.id as TemplateCategory)}
-                className={`py-1.5 px-2.5 rounded-lg text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
-                  isActive
-                    ? isStitchLight
-                      ? 'bg-white text-sky-400 shadow-sm'
-                      : 'bg-[#f2ca50] text-[#3c2f00] font-extrabold shadow-md'
-                    : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                onClick={() => {
+                  onSelectTemplateTab(tab.id);
+                  setShowRecommendations(false);
+                }}
+                className={`py-1.5 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isActive ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
                 }`}
               >
                 <IconComp className="w-3.5 h-3.5" />
@@ -133,379 +151,264 @@ export function TemplateConfigSection({
             );
           })}
         </div>
-      </div>
 
-      {/* Category Notice Banner */}
-      <div
-        className={`p-3 rounded-xl text-[10px] font-sans flex items-center justify-between ${
-          templateTab === 'medios'
-            ? 'bg-rose-500/15 text-rose-400'
-            : templateTab === 'grupos'
-            ? isStitchLight
-              ? 'bg-emerald-100 text-emerald-700'
-              : 'bg-[#10b981]/15 text-[#10b981]'
-            : templateTab === 'discotecas'
-            ? isStitchLight
-              ? 'bg-purple-50 text-purple-900'
-              : 'bg-purple-500/10 text-purple-300'
-            : isStitchLight
-            ? 'bg-sky-500/15 text-sky-400'
-            : 'bg-sky-500/15 text-sky-400'
-        }`}
-      >
-        <div>
-          <strong>{activeTemplate.title}</strong>
-          <p className="text-[10px] opacity-80 mt-0.5">{activeTemplate.desc}</p>
+        {/* Global Toolbar Actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          {onGenerateAllTemplates && (
+            <button
+              type="button"
+              onClick={() => setIsMultiModalOpen(true)}
+              className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer hover:brightness-95"
+              title="Genera las 7 plantillas desde una propuesta base"
+            >
+              <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
+              <span>Generar las 7 con IA</span>
+            </button>
+          )}
+
+          <button
+            id="template-btn-save"
+            type="button"
+            onClick={onSaveTemplates}
+            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+          >
+            <Save className="w-3.5 h-3.5" />
+            <span>Guardar</span>
+          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Form Side */}
-        <div className="space-y-4">
-          {optimizationFeedbackMsg && (
-            <div className="p-3 bg-amber-500/15 border border-amber-500/30 text-amber-200 text-[11px] rounded-xl font-sans animate-in fade-in">
-              {optimizationFeedbackMsg}
-            </div>
-          )}
+      {/* 7-in-1 Modal */}
+      {onGenerateAllTemplates && (
+        <GenerateAllTemplatesModal
+          isOpen={isMultiModalOpen}
+          onClose={() => setIsMultiModalOpen(false)}
+          colors={colors}
+          isStitchLight={isStitchLight}
+          initialBaseText={activeTemplate.body || ''}
+          onGenerateAll={onGenerateAllTemplates}
+          isGenerating={isGeneratingAllTemplates}
+        />
+      )}
 
-          <div className="space-y-1.5">
-            <label
-              className={`block text-[10px] uppercase font-sans tracking-wider ${
-                isStitchLight ? 'text-slate-600' : 'text-neutral-300'
-              }`}
-            >
-              Asunto del Email por Defecto
-            </label>
+      {/* Sub-bar: Category helper controls */}
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div className="text-[var(--ink-2)] flex items-center gap-2">
+          <span className="font-bold text-[var(--acc)]">{currentCategory.label}:</span>
+          <span className="text-[var(--ink-2)] text-[11px]">{activeTemplate.desc}</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowRecommendations(!showRecommendations)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-bold transition-all cursor-pointer ${
+              showRecommendations
+                ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--acc)] '
+            } hover:brightness-95`}
+          >
+            <Lightbulb className="w-3.5 h-3.5 text-[var(--acc)]" />
+            <span>{showRecommendations ? 'Ocultar consejos' : 'Ver consejos de IA'}</span>
+            {showRecommendations ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowExamples(!showExamples)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-bold transition-all cursor-pointer ${
+              showExamples
+                ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] '
+            } hover:brightness-95`}
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>{showExamples ? 'Ocultar ejemplos' : 'Ejemplos reales'}</span>
+            {showExamples ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Optional Recommendations Card - ONLY shown when requested */}
+      {showRecommendations && (
+        <div className="animate-in fade-in duration-200">
+          <TemplateRecommendationsCard
+            category={templateTab}
+            isStitchLight={isStitchLight}
+            onApplyPromptImprovement={(promptText) => {
+              if (onOptimizeTemplate) {
+                onOptimizeTemplate(promptText);
+              }
+            }}
+            isOptimizing={isOptimizingTemplate}
+            onClose={() => setShowRecommendations(false)}
+          />
+        </div>
+      )}
+
+      {/* Optional Real Example Threads - ONLY shown when requested */}
+      {showExamples && (
+        <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
+              <MessageSquare className="w-4 h-4" /> Hilos de referencia para {currentCategory.label}
+            </span>
+            <button type="button" onClick={() => setShowExamples(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-bold">
+              ✕
+            </button>
+          </div>
+          <p className="text-[11px] text-[var(--ink-2)]">
+            Añade correos reales de éxito para que la IA aprenda tu tono natural en esta categoría.
+          </p>
+          <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
+        </div>
+      )}
+
+      {/* Optimization Feedback Message */}
+      {optimizationFeedbackMsg && (
+        <div className="p-3 bg-[var(--acc)]/15 text-[var(--acc)] text-xs rounded-[var(--r-m)] flex items-center justify-between animate-in fade-in">
+          <span>{optimizationFeedbackMsg}</span>
+          {onClearFeedbackMsg && (
+            <button type="button" onClick={onClearFeedbackMsg} className="text-[var(--acc)] font-bold ml-2 hover:text-[var(--ink)]">
+              ✕
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Main Workspace: 2-Column Grid (Editor Left, Live Preview Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Left Column: Form (7 cols) */}
+        <div className="lg:col-span-7 space-y-3.5">
+          {/* Subject */}
+          <div className="space-y-1">
+            <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)]">Asunto del Email</label>
             <input
               id="template-subject"
               type="text"
               value={activeTemplate.subject}
               onChange={(e) => activeTemplate.setSubject(e.target.value)}
-              className={`w-full rounded-lg px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
-                isStitchLight
-                  ? 'bg-white text-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
-                  : 'bg-[#131313] text-[#e5e2e1] focus:border-[#f2ca50]/50'
-              }`}
+              placeholder="Ej: Propuesta de directo: {{nombre_banda}} en {{nombre_sala}}"
+              className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none transition-colors"
             />
           </div>
 
+          {/* Body */}
           <div className="space-y-1.5">
-            <label
-              className={`block text-[10px] uppercase font-sans tracking-wider ${
-                isStitchLight ? 'text-slate-600' : 'text-neutral-300'
-              }`}
-            >
-              Cuerpo de la Plantilla de Correo de Presentación
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)]">Cuerpo del Correo</label>
+              {/* Insertable variables chips */}
+              <div className="flex items-center gap-1 flex-wrap">
+                <span className="text-[10px] text-[var(--ink-2)] mr-1">Insertar:</span>
+                {TEMPLATE_VARIABLES.map((v) => (
+                  <button
+                    key={v.tag}
+                    type="button"
+                    onClick={() => handleInsertTag(v.tag)}
+                    className="px-1.5 py-0.5 rounded bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--acc)] text-[10px] font-mono transition-colors cursor-pointer "
+                    title={`Insertar ${v.label}`}
+                  >
+                    {v.tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <textarea
               id="template-body"
               rows={8}
               value={activeTemplate.body}
               onChange={(e) => activeTemplate.setBody(e.target.value)}
-              className={`w-full rounded-lg p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
-                isStitchLight
-                  ? 'bg-white text-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
-                  : 'bg-[#131313] text-[#e5e2e1] focus:border-[#f2ca50]/50'
-              }`}
-              placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
+              className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none leading-relaxed transition-colors font-sans"
+              placeholder="Escribe el cuerpo base de la plantilla usando las etiquetas como {{nombre_sala}}, {{ciudad}}..."
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label
-              className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${
-                isStitchLight ? 'text-sky-400' : 'text-[#ffb596]'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
+          {/* AI Guidelines */}
+          <div className="space-y-1">
+            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
+              <span>Pautas de Redacción para la IA (Opcional)</span>
             </label>
             <textarea
               id="template-guidelines"
-              rows={3}
+              rows={2}
               value={activeTemplate.guidelines}
               onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
-              className={`w-full rounded-lg p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
-                isStitchLight
-                  ? 'bg-white text-slate-800 focus:border-indigo-500'
-                  : 'bg-[#131313] text-[#e5e2e1] focus:border-[#ffb596]/50'
-              }`}
-              placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
+              className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none transition-colors"
+              placeholder="Ej: Mantén el mensaje en menos de 100 palabras, tono cercano, destaca nuestra sección rítmica..."
             />
           </div>
 
-          {/* Evaluation & Training Box for Template */}
-          <div className="space-y-3 p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10">
-            <div className="flex items-center justify-between">
-              <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
-              </label>
-              {(toneRating > 0 || contentRating > 0 || customInstruction) && (
-                <button 
-                  type="button" 
-                  onClick={() => {
-                    setToneRating(0);
-                    setContentRating(0);
-                    setCustomInstruction('');
-                  }}
-                  className="text-[9px] text-amber-400 font-bold hover:underline cursor-pointer"
-                >
-                  Limpiar todo
-                </button>
-              )}
-            </div>
-
-            {/* Estrellitas de Tono y Contenido */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {/* Tono y Estilo */}
-              <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
-                  <span className="text-[10px] font-mono text-amber-400 font-bold">
-                    {toneRating > 0 ? `${toneRating}/5` : 'Sin calificar'}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={`template-tone-${star}`}
-                      type="button"
-                      onClick={() => setToneRating(toneRating === star ? 0 : star)}
-                      className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-                        toneRating >= star ? 'text-amber-400' : 'text-neutral-600'
-                      }`}
-                      title={`Calificar tono y estilo: ${star}/5`}
-                    >
-                      <Star className="w-4 h-4 fill-current" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Contenido y Estructura */}
-              <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
-                  <span className="text-[10px] font-mono text-amber-400 font-bold">
-                    {contentRating > 0 ? `${contentRating}/5` : 'Sin calificar'}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={`template-content-${star}`}
-                      type="button"
-                      onClick={() => setContentRating(contentRating === star ? 0 : star)}
-                      className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-                        contentRating >= star ? 'text-amber-400' : 'text-neutral-600'
-                      }`}
-                      title={`Calificar contenido y estructura: ${star}/5`}
-                    >
-                      <Star className="w-4 h-4 fill-current" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Comentario / Instrucción */}
-            <div className="space-y-1 pt-1">
-              <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-amber-400" /> Comentario o Corrección Directa
-              </label>
-              <textarea
-                id="template-custom-instruction-standalone"
-                rows={2}
-                value={customInstruction}
-                onChange={(e) => setCustomInstruction(e.target.value)}
-                className="w-full rounded-lg p-2.5 text-[10px] bg-[#131313] text-[#e5e2e1] border border-amber-500/30 focus:border-amber-400 focus:outline-none font-sans leading-relaxed"
-                placeholder="Ej: 'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
-              />
-            </div>
-
-            <div className="text-[9px] text-amber-300/80 font-sans leading-tight">
-              💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en <strong>Regenerar</strong>, la IA aplicará tus valoraciones para optimizar la plantilla.
-            </div>
-          </div>
-
-          <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
-
-          <div className="flex flex-wrap gap-2 pt-2">
+          {/* Form Actions (Only 2 clear buttons) */}
+          <div className="flex items-center gap-2 pt-1">
             {onOptimizeTemplate && (
               <button
                 type="button"
-                onClick={onOptimizeTemplate}
+                onClick={() => onOptimizeTemplate()}
                 disabled={isOptimizingTemplate}
-                className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
-                <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
-                <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
+                <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
+                <span>{isOptimizingTemplate ? 'Optimizando...' : 'Optimizar con IA'}</span>
               </button>
             )}
+
             <button
               id="template-btn-test"
+              type="button"
               onClick={onTestPrompt}
               disabled={isTestingPrompt}
-              className={`px-2 py-1 font-sans text-[10px] rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                isStitchLight
-                  ? 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
-                  : 'bg-neutral-900 hover:border-neutral-700 text-neutral-300 border border-neutral-800'
-              }`}
+              className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`} />
-              <span>Probar Prompt</span>
-            </button>
-            <button
-              id="template-btn-save"
-              onClick={onSaveTemplates}
-              className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-lg transition-all cursor-pointer text-center active:scale-95 ${
-                isStitchLight
-                  ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
-                  : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[#f2ca50]/10'
-              }`}
-            >
-              Guardar Plantillas y Directrices
+              <Eye className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`} />
+              <span>{isTestingPrompt ? 'Generando...' : 'Simular Vista Previa'}</span>
             </button>
           </div>
         </div>
 
-        {/* Test / Prompt Output side */}
-        <div
-          className={`border rounded-xl p-4 flex flex-col justify-between ${
-            isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-[#131313] border-neutral-800'
-          }`}
-        >
+        {/* Right Column: Live Preview Sandbox (5 cols) */}
+        <div className="lg:col-span-5 bg-[var(--surface)] rounded-[var(--r-l)] p-4 flex flex-col justify-between min-h-[360px]">
           <div className="space-y-3">
-            <div
-              className={`flex items-center gap-2 pb-2 border-b ${
-                isStitchLight ? 'border-slate-200' : 'border-neutral-900'
-              }`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-                  isStitchLight ? 'bg-sky-500/15' : 'bg-[#f2ca50]'
-                }`}
-              />
-              <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>
-                Sandbox de Simulación de Redacción AI
-              </h4>
-            </div>
-
-            <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
-              Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y
-              pautas, las mezcla con los detalles del contacto capturado por el{' '}
-              <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un borrador adaptado
-              para que lo revises en esta misma pantalla.
+            <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/5">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
+                <span className="text-xs font-mono font-bold text-[var(--ink-2)]">Vista Previa Simulada</span>
+              </div>
+              {testPromptResult && (
+                <button
+                  type="button"
+                  onClick={handleCopyPreview}
+                  className="text-[11px] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center gap-1 transition-colors"
+                >
+                  {copiedPreview ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
+                  <span>{copiedPreview ? 'Copiado' : 'Copiar'}</span>
+                </button>
+              )}
             </div>
 
             {testPromptResult ? (
-              <div className="space-y-3">
-                <div
-                  className={`border rounded-lg p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
-                    isStitchLight
-                      ? 'bg-white text-slate-700 border-slate-200'
-                      : 'bg-[#1c1b1b] text-neutral-300 border-neutral-800'
-                  }`}
-                >
-                  {testPromptResult}
-                </div>
-
-                {/* Valoración directa del resultado generado en la simulación */}
-                <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 font-sans">
-                      <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Valorar esta plantilla / resultado
-                    </span>
-                    {(toneRating > 0 || contentRating > 0) && (
-                      <span className="text-[9px] text-amber-400 font-mono">
-                        Tono: {toneRating || '-'}/5 | Contenido: {contentRating || '-'}/5
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {/* Tono */}
-                    <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
-                        <span className="text-[10px] font-mono text-amber-400 font-bold">
-                          {toneRating > 0 ? `${toneRating}/5` : '⭐'}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={`template-sandbox-tone-${star}`}
-                            type="button"
-                            onClick={() => setToneRating(toneRating === star ? 0 : star)}
-                            className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-                              toneRating >= star ? 'text-amber-400' : 'text-neutral-600'
-                            }`}
-                            title={`Calificar tono: ${star}/5`}
-                          >
-                            <Star className="w-4 h-4 fill-current" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Contenido */}
-                    <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
-                        <span className="text-[10px] font-mono text-amber-400 font-bold">
-                          {contentRating > 0 ? `${contentRating}/5` : '⭐'}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={`template-sandbox-content-${star}`}
-                            type="button"
-                            onClick={() => setContentRating(contentRating === star ? 0 : star)}
-                            className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-                              contentRating >= star ? 'text-amber-400' : 'text-neutral-600'
-                            }`}
-                            title={`Calificar contenido: ${star}/5`}
-                          >
-                            <Star className="w-4 h-4 fill-current" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {onOptimizeTemplate && (
-                    <button
-                      type="button"
-                      onClick={onOptimizeTemplate}
-                      disabled={isOptimizingTemplate}
-                      className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
-                    >
-                      <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
-                      <span>Re-generar plantilla usando estas valoraciones ✨</span>
-                    </button>
-                  )}
-                </div>
+              <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink-2)] leading-relaxed whitespace-pre-wrap max-h-[320px] overflow-y-auto select-text font-sans">
+                {testPromptResult}
               </div>
             ) : (
-              <div
-                className={`border border-dashed rounded-lg p-12 text-center text-[10px] font-sans ${
-                  isStitchLight
-                    ? 'border-slate-200 text-slate-400'
-                    : 'border-neutral-800 text-neutral-600'
-                }`}
-              >
-                Haz clic en "Probar Prompt" a la izquierda para simular el resultado de generación
-                del Redactor AI basado en tus directrices actuales.
+              <div className="py-16 px-4 text-center space-y-2 border-dashed rounded-[var(--r-m)]">
+                <Eye className="w-6 h-6 text-[var(--ink-2)] mx-auto" />
+                <p className="text-xs text-[var(--ink-2)] font-medium">Ninguna simulación activa</p>
+                <p className="text-[11px] text-[var(--ink-2)] max-w-xs mx-auto">
+                  Haz clic en <strong>"Simular Vista Previa"</strong> para ver cómo la IA adapta esta plantilla a un contacto real.
+                </p>
               </div>
             )}
           </div>
 
-          <div className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}>
-            Módulo de Modelado AI de Bakandeya Systems v2.4. Multi-Modelo: Gemini 3.7 Flash & DeepSeek V3.
+          <div className="pt-3 border-t border-[var(--hair)]/5 text-[10px] text-[var(--ink-2)] flex items-center justify-between">
+            <span>Redactor IA v2.4</span>
+            <span>Salas · Festivales · Medios</span>
           </div>
         </div>
       </div>
     </div>
   );
 }
+export default TemplateConfigSection;

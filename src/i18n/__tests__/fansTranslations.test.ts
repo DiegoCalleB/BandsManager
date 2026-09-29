@@ -1,16 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import {
-  FAN_FORM_LANGUAGES,
-  FAN_FORM_TRANSLATIONS,
-  idiomasDisponiblesParaConcierto,
-} from '../fansTranslations';
+import { FAN_FORM_LANGUAGES, FAN_FORM_TRANSLATIONS, idiomasDisponiblesParaConcierto } from '../fansTranslations';
 
 describe('fansTranslations', () => {
   it('todos los idiomas declarados tienen su diccionario', () => {
     for (const l of FAN_FORM_LANGUAGES) {
       expect(FAN_FORM_TRANSLATIONS[l.code], `falta el diccionario de ${l.code}`).toBeDefined();
     }
-    expect(Object.keys(FAN_FORM_TRANSLATIONS).sort()).toEqual(FAN_FORM_LANGUAGES.map(l => l.code).sort());
+    expect(Object.keys(FAN_FORM_TRANSLATIONS).sort()).toEqual(FAN_FORM_LANGUAGES.map((l) => l.code).sort());
   });
 });
 

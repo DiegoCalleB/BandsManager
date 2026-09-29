@@ -7,23 +7,43 @@ const NOTE_NAMES_ES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#
 const NOTE_NAMES_ES_FLATS = ['Do', 'Reb', 'Re', 'Mib', 'Mi', 'Fa', 'Solb', 'Sol', 'Lab', 'La', 'Sib', 'Si'];
 
 const ES_TO_EN_MAP: Record<string, string> = {
-  'Do': 'C', 'Do#': 'C#', 'Reb': 'Db',
-  'Re': 'D', 'Re#': 'D#', 'Mib': 'Eb',
-  'Mi': 'E',
-  'Fa': 'F', 'Fa#': 'F#', 'Solb': 'Gb',
-  'Sol': 'G', 'Sol#': 'G#', 'Lab': 'Ab',
-  'La': 'A', 'La#': 'A#', 'Sib': 'Bb',
-  'Si': 'B'
+  Do: 'C',
+  'Do#': 'C#',
+  Reb: 'Db',
+  Re: 'D',
+  'Re#': 'D#',
+  Mib: 'Eb',
+  Mi: 'E',
+  Fa: 'F',
+  'Fa#': 'F#',
+  Solb: 'Gb',
+  Sol: 'G',
+  'Sol#': 'G#',
+  Lab: 'Ab',
+  La: 'A',
+  'La#': 'A#',
+  Sib: 'Bb',
+  Si: 'B',
 };
 
 const EN_TO_ES_MAP: Record<string, string> = {
-  'C': 'Do', 'C#': 'Do#', 'Db': 'Reb',
-  'D': 'Re', 'D#': 'Re#', 'Eb': 'Mib',
-  'E': 'Mi',
-  'F': 'Fa', 'F#': 'Fa#', 'Gb': 'Solb',
-  'G': 'Sol', 'G#': 'Sol#', 'Ab': 'Lab',
-  'A': 'La', 'A#': 'La#', 'Bb': 'Sib',
-  'B': 'Si'
+  C: 'Do',
+  'C#': 'Do#',
+  Db: 'Reb',
+  D: 'Re',
+  'D#': 'Re#',
+  Eb: 'Mib',
+  E: 'Mi',
+  F: 'Fa',
+  'F#': 'Fa#',
+  Gb: 'Solb',
+  G: 'Sol',
+  'G#': 'Sol#',
+  Ab: 'Lab',
+  A: 'La',
+  'A#': 'La#',
+  Bb: 'Sib',
+  B: 'Si',
 };
 
 // Known chord shapes for guitar (fret numbers: string 6 to 1: low E to high E, -1 = muted, 0 = open)
@@ -36,60 +56,60 @@ export interface GuitarChordShape {
 
 export const GUITAR_CHORD_DATABASE: Record<string, GuitarChordShape> = {
   // C / Do
-  'C': { name: 'C', frets: [-1, 3, 2, 0, 1, 0] },
-  'Do': { name: 'Do', frets: [-1, 3, 2, 0, 1, 0] },
-  'Cm': { name: 'Cm', frets: [-1, 3, 5, 5, 4, 3], baseFret: 3 },
-  'Dom': { name: 'Dom', frets: [-1, 3, 5, 5, 4, 3], baseFret: 3 },
-  'C7': { name: 'C7', frets: [-1, 3, 2, 3, 1, 0] },
-  'Do7': { name: 'Do7', frets: [-1, 3, 2, 3, 1, 0] },
+  C: { name: 'C', frets: [-1, 3, 2, 0, 1, 0] },
+  Do: { name: 'Do', frets: [-1, 3, 2, 0, 1, 0] },
+  Cm: { name: 'Cm', frets: [-1, 3, 5, 5, 4, 3], baseFret: 3 },
+  Dom: { name: 'Dom', frets: [-1, 3, 5, 5, 4, 3], baseFret: 3 },
+  C7: { name: 'C7', frets: [-1, 3, 2, 3, 1, 0] },
+  Do7: { name: 'Do7', frets: [-1, 3, 2, 3, 1, 0] },
 
   // D / Re
-  'D': { name: 'D', frets: [-1, -1, 0, 2, 3, 2] },
-  'Re': { name: 'Re', frets: [-1, -1, 0, 2, 3, 2] },
-  'Dm': { name: 'Dm', frets: [-1, -1, 0, 2, 3, 1] },
-  'Rem': { name: 'Rem', frets: [-1, -1, 0, 2, 3, 1] },
-  'D7': { name: 'D7', frets: [-1, -1, 0, 2, 1, 2] },
-  'Re7': { name: 'Re7', frets: [-1, -1, 0, 2, 1, 2] },
+  D: { name: 'D', frets: [-1, -1, 0, 2, 3, 2] },
+  Re: { name: 'Re', frets: [-1, -1, 0, 2, 3, 2] },
+  Dm: { name: 'Dm', frets: [-1, -1, 0, 2, 3, 1] },
+  Rem: { name: 'Rem', frets: [-1, -1, 0, 2, 3, 1] },
+  D7: { name: 'D7', frets: [-1, -1, 0, 2, 1, 2] },
+  Re7: { name: 'Re7', frets: [-1, -1, 0, 2, 1, 2] },
 
   // E / Mi
-  'E': { name: 'E', frets: [0, 2, 2, 1, 0, 0] },
-  'Mi': { name: 'Mi', frets: [0, 2, 2, 1, 0, 0] },
-  'Em': { name: 'Em', frets: [0, 2, 2, 0, 0, 0] },
-  'Mim': { name: 'Mim', frets: [0, 2, 2, 0, 0, 0] },
-  'E7': { name: 'E7', frets: [0, 2, 0, 1, 0, 0] },
-  'Mi7': { name: 'Mi7', frets: [0, 2, 0, 1, 0, 0] },
+  E: { name: 'E', frets: [0, 2, 2, 1, 0, 0] },
+  Mi: { name: 'Mi', frets: [0, 2, 2, 1, 0, 0] },
+  Em: { name: 'Em', frets: [0, 2, 2, 0, 0, 0] },
+  Mim: { name: 'Mim', frets: [0, 2, 2, 0, 0, 0] },
+  E7: { name: 'E7', frets: [0, 2, 0, 1, 0, 0] },
+  Mi7: { name: 'Mi7', frets: [0, 2, 0, 1, 0, 0] },
 
   // F / Fa
-  'F': { name: 'F', frets: [1, 3, 3, 2, 1, 1], baseFret: 1 },
-  'Fa': { name: 'Fa', frets: [1, 3, 3, 2, 1, 1], baseFret: 1 },
-  'Fm': { name: 'Fm', frets: [1, 3, 3, 1, 1, 1], baseFret: 1 },
-  'Fam': { name: 'Fam', frets: [1, 3, 3, 1, 1, 1], baseFret: 1 },
+  F: { name: 'F', frets: [1, 3, 3, 2, 1, 1], baseFret: 1 },
+  Fa: { name: 'Fa', frets: [1, 3, 3, 2, 1, 1], baseFret: 1 },
+  Fm: { name: 'Fm', frets: [1, 3, 3, 1, 1, 1], baseFret: 1 },
+  Fam: { name: 'Fam', frets: [1, 3, 3, 1, 1, 1], baseFret: 1 },
   'F#m': { name: 'F#m', frets: [2, 4, 4, 2, 2, 2], baseFret: 2 },
   'Fa#m': { name: 'Fa#m', frets: [2, 4, 4, 2, 2, 2], baseFret: 2 },
 
   // G / Sol
-  'G': { name: 'G', frets: [3, 2, 0, 0, 0, 3] },
-  'Sol': { name: 'Sol', frets: [3, 2, 0, 0, 0, 3] },
-  'Gm': { name: 'Gm', frets: [3, 5, 5, 3, 3, 3], baseFret: 3 },
-  'Solm': { name: 'Solm', frets: [3, 5, 5, 3, 3, 3], baseFret: 3 },
-  'G7': { name: 'G7', frets: [3, 2, 0, 0, 0, 1] },
-  'Sol7': { name: 'Sol7', frets: [3, 2, 0, 0, 0, 1] },
+  G: { name: 'G', frets: [3, 2, 0, 0, 0, 3] },
+  Sol: { name: 'Sol', frets: [3, 2, 0, 0, 0, 3] },
+  Gm: { name: 'Gm', frets: [3, 5, 5, 3, 3, 3], baseFret: 3 },
+  Solm: { name: 'Solm', frets: [3, 5, 5, 3, 3, 3], baseFret: 3 },
+  G7: { name: 'G7', frets: [3, 2, 0, 0, 0, 1] },
+  Sol7: { name: 'Sol7', frets: [3, 2, 0, 0, 0, 1] },
 
   // A / La
-  'A': { name: 'A', frets: [-1, 0, 2, 2, 2, 0] },
-  'La': { name: 'La', frets: [-1, 0, 2, 2, 2, 0] },
-  'Am': { name: 'Am', frets: [-1, 0, 2, 2, 1, 0] },
-  'Lam': { name: 'Lam', frets: [-1, 0, 2, 2, 1, 0] },
-  'A7': { name: 'A7', frets: [-1, 0, 2, 0, 2, 0] },
-  'La7': { name: 'La7', frets: [-1, 0, 2, 0, 2, 0] },
+  A: { name: 'A', frets: [-1, 0, 2, 2, 2, 0] },
+  La: { name: 'La', frets: [-1, 0, 2, 2, 2, 0] },
+  Am: { name: 'Am', frets: [-1, 0, 2, 2, 1, 0] },
+  Lam: { name: 'Lam', frets: [-1, 0, 2, 2, 1, 0] },
+  A7: { name: 'A7', frets: [-1, 0, 2, 0, 2, 0] },
+  La7: { name: 'La7', frets: [-1, 0, 2, 0, 2, 0] },
 
   // B / Si
-  'B': { name: 'B', frets: [-1, 2, 4, 4, 4, 2], baseFret: 2 },
-  'Si': { name: 'Si', frets: [-1, 2, 4, 4, 4, 2], baseFret: 2 },
-  'Bm': { name: 'Bm', frets: [-1, 2, 4, 4, 3, 2], baseFret: 2 },
-  'Sim': { name: 'Sim', frets: [-1, 2, 4, 4, 3, 2], baseFret: 2 },
-  'Bb': { name: 'Bb', frets: [-1, 1, 3, 3, 3, 1], baseFret: 1 },
-  'Sib': { name: 'Sib', frets: [-1, 1, 3, 3, 3, 1], baseFret: 1 },
+  B: { name: 'B', frets: [-1, 2, 4, 4, 4, 2], baseFret: 2 },
+  Si: { name: 'Si', frets: [-1, 2, 4, 4, 4, 2], baseFret: 2 },
+  Bm: { name: 'Bm', frets: [-1, 2, 4, 4, 3, 2], baseFret: 2 },
+  Sim: { name: 'Sim', frets: [-1, 2, 4, 4, 3, 2], baseFret: 2 },
+  Bb: { name: 'Bb', frets: [-1, 1, 3, 3, 3, 1], baseFret: 1 },
+  Sib: { name: 'Sib', frets: [-1, 1, 3, 3, 3, 1], baseFret: 1 },
 };
 
 // Regex to identify root note at start of chord token
@@ -101,16 +121,56 @@ const ROOT_NOTE_REGEX = /^(Sol#|Solb|Sol|Do#|Dom|Do|Re#|Reb|Rem|Re|Fa#|Fam|Fa|La
 // "Baby", "Come"... todas arrancan por A-G y colaban como acordes en letras en inglés. Esta
 // lista es la frontera entre "esto es un acorde" y "esto es una palabra que empieza por Sol".
 const CHORD_SUFFIXES = [
-  'maj13', 'maj11', 'maj9', 'maj7', 'maj',
-  'mMaj7', 'madd9', 'madd11', 'madd2',
-  'm7b5', 'm7#5', 'm6/9', 'm6', 'm7', 'm9', 'm11', 'm13',
-  'min7', 'min9', 'min11', 'min13', 'min', 'm',
-  'dim7', 'dim',
-  'aug7', 'aug', '+',
-  'sus2', 'sus4', 'sus',
-  'add9', 'add11', 'add2',
-  '7sus4', '7sus2', '7b5', '7#5', '7b9', '7#9', '7',
-  '6/9', '6', '9', '11', '13', '5', '°', 'ø7', 'ø'
+  'maj13',
+  'maj11',
+  'maj9',
+  'maj7',
+  'maj',
+  'mMaj7',
+  'madd9',
+  'madd11',
+  'madd2',
+  'm7b5',
+  'm7#5',
+  'm6/9',
+  'm6',
+  'm7',
+  'm9',
+  'm11',
+  'm13',
+  'min7',
+  'min9',
+  'min11',
+  'min13',
+  'min',
+  'm',
+  'dim7',
+  'dim',
+  'aug7',
+  'aug',
+  '+',
+  'sus2',
+  'sus4',
+  'sus',
+  'add9',
+  'add11',
+  'add2',
+  '7sus4',
+  '7sus2',
+  '7b5',
+  '7#5',
+  '7b9',
+  '7#9',
+  '7',
+  '6/9',
+  '6',
+  '9',
+  '11',
+  '13',
+  '5',
+  '°',
+  'ø7',
+  'ø',
 ];
 
 function isValidChordSuffix(suffix: string): boolean {
@@ -184,7 +244,10 @@ export function getSemitoneDifference(fromKey: string, toKey: string): number | 
 }
 
 export function transposeSingleNote(rootNote: string, semitones: number, targetNotation: 'ES' | 'EN'): string {
-  if (semitones === 0 && ((targetNotation === 'ES' && ES_TO_EN_MAP[rootNote] === undefined) || (targetNotation === 'EN' && EN_TO_ES_MAP[rootNote] === undefined))) {
+  if (
+    semitones === 0 &&
+    ((targetNotation === 'ES' && ES_TO_EN_MAP[rootNote] === undefined) || (targetNotation === 'EN' && EN_TO_ES_MAP[rootNote] === undefined))
+  ) {
     // Check if notation change needed
     if (targetNotation === 'ES' && EN_TO_ES_MAP[rootNote]) return EN_TO_ES_MAP[rootNote];
     if (targetNotation === 'EN' && ES_TO_EN_MAP[rootNote]) return ES_TO_EN_MAP[rootNote];
@@ -214,7 +277,7 @@ export function transposeChordToken(chord: string, semitones: number, notation: 
   // Handle bass slash chords like C/G or Do/Sol
   if (chord.includes('/')) {
     const parts = chord.split('/');
-    return parts.map(p => transposeChordToken(p, semitones, notation)).join('/');
+    return parts.map((p) => transposeChordToken(p, semitones, notation)).join('/');
   }
 
   const parsed = parseRootNote(chord);
@@ -229,16 +292,12 @@ export function transposeChordToken(chord: string, semitones: number, notation: 
 // "Do" en mitad de una frase) contaría como acorde aunque el resto de la línea sea letra normal.
 function isChordLine(tokens: string[]): boolean {
   if (tokens.length === 0 || (tokens.length === 1 && tokens[0] === '')) return false;
-  const chordCount = tokens.filter(t => parseRootNote(t) !== null).length;
+  const chordCount = tokens.filter((t) => parseRootNote(t) !== null).length;
   return chordCount > 0 && chordCount / tokens.length >= 0.7;
 }
 
 // Replaces chords in a block of text
-export function processChordText(
-  text: string,
-  semitones: number,
-  notation: 'ES' | 'EN'
-): string {
+export function processChordText(text: string, semitones: number, notation: 'ES' | 'EN'): string {
   if (!text) return '';
 
   // Process inline bracket notation [Do] or [C#m]
@@ -247,13 +306,13 @@ export function processChordText(
     return `[${transposed}]`;
   });
 
-  // Also process standalone lines where tokens look like chords (e.g. "MI      DO     RE/DO")
+  // Also process standalone lines where tokens look like chords (e.g. "MI DO RE/DO")
   const lines = result.split('\n');
-  const processedLines = lines.map(line => {
+  const processedLines = lines.map((line) => {
     // If line contains bracketed chords, it's already handled
     if (line.includes('[')) return line;
 
-    // Check if line is purely a chord line (mostly uppercase chord tokens with spaces)
+    // Check if line is purely a chord line (mostly chord tokens with spaces)
     const tokens = line.trim().split(/\s+/);
     if (tokens.length === 0 || line.trim() === '') return line;
 
@@ -279,7 +338,7 @@ export function extractUniqueChords(text: string): string[] {
   // Bracketed chords
   const bracketMatches = text.match(/\[([A-Za-z0-9#\/]+)\]/g);
   if (bracketMatches) {
-    bracketMatches.forEach(m => {
+    bracketMatches.forEach((m) => {
       const clean = m.replace('[', '').replace(']', '').trim();
       if (clean) found.add(clean);
     });
@@ -289,11 +348,11 @@ export function extractUniqueChords(text: string): string[] {
   // isChordLine) — si no, una palabra suelta como "Do" en mitad de una frase normal se
   // colaba como acorde encontrado.
   const lines = text.split('\n');
-  lines.forEach(line => {
+  lines.forEach((line) => {
     if (line.includes('[')) return;
     const tokens = line.trim().split(/\s+/);
     if (!isChordLine(tokens)) return;
-    tokens.forEach(t => {
+    tokens.forEach((t) => {
       if (parseRootNote(t)) {
         found.add(t);
       }
@@ -305,7 +364,8 @@ export function extractUniqueChords(text: string): string[] {
 
 // Encabezados de sección reconocidos en un cifrado (mismo vocabulario que usa la IA al
 // extraer estructura y que ya resalta SongChordsViewerModal al renderizar).
-export const CHORD_SECTION_HEADER_REGEX = /^\[(Intro(?:\s*\d+)?|Verso(?:\s*\d+)?|Estribillo(?:\s*\d+)?|Coro(?:\s*\d+)?|Puente|Solo|Outro|Coda|Final)\]$/i;
+export const CHORD_SECTION_HEADER_REGEX =
+  /^\[(Intro(?:\s*\d+)?|Verso(?:\s*\d+)?|Estribillo(?:\s*\d+)?|Coro(?:\s*\d+)?|Puente|Solo|Outro|Coda|Final)\]$/i;
 
 export interface ChordSection {
   title: string; // p.ej. "[Estribillo]", o "" si no hay encabezado (texto suelto al principio)
@@ -333,5 +393,5 @@ export function splitIntoChordSections(text: string): ChordSection[] {
   }
   if (current) sections.push(current);
 
-  return sections.filter(s => s.title || s.body.trim());
+  return sections.filter((s) => s.title || s.body.trim());
 }

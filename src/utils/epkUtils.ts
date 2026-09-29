@@ -111,9 +111,11 @@ export function generateEPKPressKitSummary(epk: EPKConfig, featuredSongs: Song[]
     epk.enlacesRedes?.spotify && `Spotify: ${epk.enlacesRedes.spotify}`,
     epk.enlacesRedes?.youtube && `YouTube: ${epk.enlacesRedes.youtube}`,
     epk.enlacesRedes?.instagram && `Instagram: ${epk.enlacesRedes.instagram}`,
-  ].filter(Boolean).join('\n');
+  ]
+    .filter(Boolean)
+    .join('\n');
 
-  const songList = featuredSongs.map(s => `- ${s.titulo} (${s.duracion}) [Tonalidad: ${s.tonalidad}]`).join('\n');
+  const songList = featuredSongs.map((s) => `- ${s.titulo} (${s.duracion}) [Tonalidad: ${s.tonalidad}]`).join('\n');
 
   return `
 === PRESS KIT COMPACTO ===

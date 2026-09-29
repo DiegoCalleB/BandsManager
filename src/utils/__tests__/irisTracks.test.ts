@@ -10,7 +10,7 @@ describe('irisTracks helpers', () => {
       duracion: '3:00',
       duracionSegundos: 180,
       tonalidad: 'Am',
-      bpm: 120
+      bpm: 120,
     };
     expect(getSongIrisStemIdea(song)).toBeNull();
     expect(hasIrisStems(song)).toBe(false);
@@ -26,8 +26,8 @@ describe('irisTracks helpers', () => {
       fecha: '2026-09-15',
       pistas: [
         { id: 'track-1', nombre: 'Voz', audioUrl: 'https://example.com/vocal.mp3' },
-        { id: 'track-2', nombre: 'Batería', audioUrl: 'https://example.com/drums.mp3' }
-      ]
+        { id: 'track-2', nombre: 'Batería', audioUrl: 'https://example.com/drums.mp3' },
+      ],
     };
     const song: Song = {
       id: 'song-1',
@@ -36,7 +36,7 @@ describe('irisTracks helpers', () => {
       duracionSegundos: 180,
       tonalidad: 'Am',
       bpm: 120,
-      audioIdeas: [ideaWithStems]
+      audioIdeas: [ideaWithStems],
     };
     expect(hasIrisStems(song)).toBe(true);
     expect(getSongIrisStemIdea(song)?.id).toBe('idea-1');
@@ -51,7 +51,7 @@ describe('irisTracks helpers', () => {
       audioUrl: 'https://example.com/audio.mp3',
       subidoPor: 'diego',
       fecha: '2026-09-15',
-      stemEngineUsed: 'demucs-v4'
+      stemEngineUsed: 'demucs-v4',
     };
     const song: Song = {
       id: 'song-2',
@@ -60,7 +60,7 @@ describe('irisTracks helpers', () => {
       duracionSegundos: 240,
       tonalidad: 'C',
       bpm: 100,
-      audioIdeas: [ideaWithEngine]
+      audioIdeas: [ideaWithEngine],
     };
     expect(hasIrisStems(song)).toBe(true);
     expect(getSongIrisStemIdea(song)?.id).toBe('idea-engine');
@@ -73,7 +73,7 @@ describe('irisTracks helpers', () => {
       seccion: 'general',
       audioUrl: 'https://example.com/acoustic.mp3',
       subidoPor: 'diego',
-      fecha: '2026-09-15'
+      fecha: '2026-09-15',
     };
     const tracks = getIdeaTracks(singleIdea);
     expect(tracks).toHaveLength(1);

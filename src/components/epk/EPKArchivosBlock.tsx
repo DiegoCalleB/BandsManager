@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import {
   ImageIcon,
   FileDown,
@@ -6,11 +6,13 @@ import {
   Upload,
   Download,
   Trash2,
-  Loader2
-} from 'lucide-react';
-import { EPKConfig } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+  Loader2,
+  Sparkles,
+} from "lucide-react";
+import { EPKConfig } from "../../types";
+import { EPKBlockWrapper } from "./EPKBlockWrapper";
+import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { AILogoGeneratorModal } from "./AILogoGeneratorModal";
 
 interface EPKArchivosBlockProps {
   config: EPKConfig;
@@ -49,8 +51,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
   nextBlock,
   onNavigate,
   onSave,
-  isAllView = false
+  isAllView = false,
 }) => {
+  const [showAiLogoModal, setShowAiLogoModal] = useState(false);
+
   return (
     <EPKBlockWrapper
       meta={EPK_BLOCKS[1]}
@@ -62,38 +66,57 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LOGO DE LA BANDA */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-            <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
-          </h3>
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
+            <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
+              <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowAiLogoModal(true)}
+              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--acc)] rounded-[var(--r-m)] text-[11px] font-bold flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> Generar con IA
+            </button>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative shrink-0">
-              {config.logoUrl && config.logoUrl.trim() !== '' ? (
+              {config.logoUrl && config.logoUrl.trim() !== "" ? (
                 <img
                   src={config.logoUrl}
                   alt="Logo de la banda"
-                  className="w-28 h-28 rounded-2xl object-contain p-1 border-2 border-amber-500/60 shadow-lg bg-slate-950"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--sunken)]"
                 />
               ) : isBakandeya ? (
                 <img
                   src="/logo_bakandeya_bueno_sin_fondo.png"
                   alt="Bakandeya Logo"
-                  className="w-28 h-28 rounded-2xl object-contain p-1 border-2 border-amber-500/60 shadow-lg bg-slate-950"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--sunken)]"
                 />
               ) : (
-                <div className="w-28 h-28 rounded-2xl border-2 border-dashed border-slate-700 bg-slate-950 flex flex-col items-center justify-center text-slate-500 p-2 text-center">
-                  <ImageIcon className="w-8 h-8 text-slate-600 mb-1" />
-                  <span className="text-[10px] font-medium text-slate-400">Sin Logo</span>
+                <div className="w-28 h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
+                  <ImageIcon className="w-8 h-8 text-[var(--ink-2)] mb-1" />
+                  <span className="text-[10px] font-medium text-[var(--ink-2)]">
+                    Sin Logo
+                  </span>
                 </div>
               )}
             </div>
 
             <div className="space-y-3 flex-1 w-full">
               <div className="flex items-center gap-2">
-                <label className="flex-1 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
-                  {isUploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  <span>{isUploadingLogo ? 'Subiendo Logo...' : 'Subir Logo (PNG/JPG)'}</span>
+                <label className="flex-1 cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition">
+                  {isUploadingLogo ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  <span>
+                    {isUploadingLogo
+                      ? "Subiendo Logo..."
+                      : "Subir Logo (PNG/JPG)"}
+                  </span>
                   <input
                     type="file"
                     accept="image/*"
@@ -106,8 +129,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 {config.logoUrl && (
                   <button
                     type="button"
-                    onClick={() => setConfig({ ...config, logoUrl: '' })}
-                    className="p-2.5 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl border border-slate-700 transition cursor-pointer"
+                    onClick={() => setConfig({ ...config, logoUrl: "" })}
+                    className="p-2.5 bg-[var(--sunken)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-m)] transition cursor-pointer"
                     title="Eliminar logo"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -116,62 +139,83 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-400">O introduce URL de la imagen:</label>
+                <label className="text-[11px] font-semibold text-[var(--ink-2)]">
+                  O introduce URL de la imagen:
+                </label>
                 <input
                   type="text"
-                  value={config.logoUrl || ''}
-                  onChange={e => setConfig({ ...config, logoUrl: e.target.value })}
+                  value={config.logoUrl || ""}
+                  onChange={(e) =>
+                    setConfig({ ...config, logoUrl: e.target.value })
+                  }
                   placeholder="https://ejemplo.com/logo.jpg"
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
                 />
               </div>
             </div>
           </div>
         </div>
 
+        <AILogoGeneratorModal
+          isOpen={showAiLogoModal}
+          onClose={() => setShowAiLogoModal(false)}
+          onSelectLogo={(logoUrl) =>
+            setConfig((prev) => ({ ...prev, logoUrl }))
+          }
+          genre={config.genero}
+        />
+
         {/* DOSSIER EN PDF O DOCUMENTO OFICIAL */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
+          <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
             <FileDown className="w-5 h-5" /> Dossier en PDF o Documento Oficial
           </h3>
 
           {config.dossierPdfUrl ? (
-            <div className="p-4 bg-slate-950 border border-amber-500/40 rounded-xl space-y-3">
+            <div className="p-4 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                  <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="truncate">
-                    <p className="font-bold text-xs text-white truncate">
-                      {config.dossierPdfName || 'Dossier_Oficial.pdf'}
+                    <p className="font-bold text-xs text-[var(--ink)] truncate">
+                      {config.dossierPdfName || "Dossier_Oficial.pdf"}
                     </p>
-                    <p className="text-[10px] text-amber-400 font-medium">Documento adjunto almacenado</p>
+                    <p className="text-[10px] text-[var(--acc)] font-medium">
+                      Documento adjunto almacenado
+                    </p>
                   </div>
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => setConfig({ ...config, dossierPdfUrl: '', dossierPdfName: '' })}
-                  className="p-2 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-lg border border-slate-700 transition shrink-0 cursor-pointer"
+                  onClick={() =>
+                    setConfig({
+                      ...config,
+                      dossierPdfUrl: "",
+                      dossierPdfName: "",
+                    })
+                  }
+                  className="p-2 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
                   title="Eliminar dossier"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+              <div className="flex items-center gap-2 pt-1 ">
                 <a
                   href={config.dossierPdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition"
+                  className="flex-1 py-1.5 px-3 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                 >
                   <Download className="w-3.5 h-3.5" /> Descargar / Abrir Dossier
                 </a>
 
-                <label className="cursor-pointer py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
-                  <Upload className="w-3.5 h-3.5 text-amber-400" /> Cambiar
+                <label className="cursor-pointer py-1.5 px-3 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-semibold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition">
+                  <Upload className="w-3.5 h-3.5 text-[var(--acc)]" /> Cambiar
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx,.txt"
@@ -183,18 +227,31 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-5 bg-slate-950 border border-dashed border-slate-800 rounded-xl text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 mx-auto">
-                <FileDown className="w-6 h-6 text-amber-400" />
+            <div className="p-5 bg-[var(--sunken)] rounded-[var(--r-m)] text-center space-y-3">
+              <div className="w-12 h-12 rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)] mx-auto">
+                <FileDown className="w-6 h-6 text-[var(--acc)]" />
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-bold text-white">Sube aquí el Dossier Oficial (PDF o Word)</p>
-                <p className="text-[11px] text-slate-400">PDF, Word o TXT. Estará listo para el envío automático en correos.</p>
+                <p className="text-xs font-bold text-[var(--ink)]">
+                  Sube aquí el Dossier Oficial (PDF o Word)
+                </p>
+                <p className="text-[11px] text-[var(--ink-2)]">
+                  PDF, Word o TXT. Estará listo para el envío automático en
+                  correos.
+                </p>
               </div>
 
-              <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs items-center gap-2 transition shadow-md">
-                {isUploadingDossier ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                <span>{isUploadingDossier ? 'Subiendo Documento...' : 'Seleccionar PDF / Dossier'}</span>
+              <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
+                {isUploadingDossier ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                <span>
+                  {isUploadingDossier
+                    ? "Subiendo Documento..."
+                    : "Seleccionar PDF / Dossier"}
+                </span>
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx,.txt"
@@ -207,74 +264,91 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           )}
 
           <div className="space-y-1 pt-1">
-            <label className="text-[11px] font-semibold text-slate-400">
+            <label className="text-[11px] font-semibold text-[var(--ink-2)]">
               O enlace externo al Dossier (Google Drive, Dropbox, etc.):
             </label>
             <input
               type="text"
-              value={config.dossierPdfUrl || ''}
-              onChange={e =>
+              value={config.dossierPdfUrl || ""}
+              onChange={(e) =>
                 setConfig({
                   ...config,
                   dossierPdfUrl: e.target.value,
-                  dossierPdfName: e.target.value ? config.dossierPdfName || 'Enlace Dossier' : ''
+                  dossierPdfName: e.target.value
+                    ? config.dossierPdfName || "Enlace Dossier"
+                    : "",
                 })
               }
               placeholder="https://drive.google.com/file/d/..."
-              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
+              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
             />
           </div>
         </div>
 
         {/* RIDER TÉCNICO */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
-              <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca Interna)
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
+            <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
+              <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca
+              Interna)
             </h3>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Solo visible aquí
             </span>
           </div>
-          <p className="text-xs text-slate-400">
-            Este texto y documento no se muestra en el enlace público. Úsalo como biblioteca para guardarlo aquí y enviarlo a las salas cuando sea necesario.
+          <p className="text-xs text-[var(--ink-2)]">
+            Este texto y documento no se muestra en el enlace público. Úsalo
+            como biblioteca para guardarlo aquí y enviarlo a las salas cuando
+            sea necesario.
           </p>
 
           <div className="space-y-3">
-            <label className="text-xs font-bold text-white block">Archivo de Rider Técnico (PDF)</label>
+            <label className="text-xs font-bold text-[var(--ink)] block">
+              Archivo de Rider Técnico (PDF)
+            </label>
             {config.riderPdfUrl ? (
-              <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+              <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] flex items-center justify-center shrink-0">
                       <FileDown className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-white truncate">{config.riderPdfName || 'Archivo subido'}</p>
-                      <p className="text-[10px] text-slate-400 truncate mt-0.5">PDF guardado correctamente</p>
+                      <p className="text-xs font-bold text-[var(--ink)] truncate">
+                        {config.riderPdfName || "Archivo subido"}
+                      </p>
+                      <p className="text-[10px] text-[var(--ink-2)] truncate mt-0.5">
+                        PDF guardado correctamente
+                      </p>
                     </div>
                   </div>
                   <button
                     type="button"
-                    onClick={() => setConfig({ ...config, riderPdfUrl: '', riderPdfName: '' })}
-                    className="p-1.5 hover:bg-slate-800 text-slate-400 hover:text-red-400 rounded-lg transition shrink-0 cursor-pointer"
+                    onClick={() =>
+                      setConfig({
+                        ...config,
+                        riderPdfUrl: "",
+                        riderPdfName: "",
+                      })
+                    }
+                    className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
                     title="Eliminar PDF"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+                <div className="flex items-center gap-2 pt-1 ">
                   <a
                     href={config.riderPdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition"
+                    className="flex-1 py-1.5 px-3 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                   >
                     <Download className="w-3.5 h-3.5" /> Descargar / Abrir Rider
                   </a>
 
-                  <label className="cursor-pointer py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
-                    <Upload className="w-3.5 h-3.5 text-amber-400" /> Cambiar
+                  <label className="cursor-pointer py-1.5 px-3 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-semibold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition">
+                    <Upload className="w-3.5 h-3.5 text-[var(--acc)]" /> Cambiar
                     <input
                       type="file"
                       accept=".pdf,.doc,.docx"
@@ -286,17 +360,27 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="p-5 bg-slate-950 border border-dashed border-slate-800 rounded-xl text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 mx-auto">
-                  <FileDown className="w-6 h-6 text-amber-400" />
+              <div className="p-5 bg-[var(--sunken)] rounded-[var(--r-m)] text-center space-y-3">
+                <div className="w-12 h-12 rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)] mx-auto">
+                  <FileDown className="w-6 h-6 text-[var(--acc)]" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-white">Sube aquí el Rider Técnico (PDF)</p>
+                  <p className="text-xs font-bold text-[var(--ink)]">
+                    Sube aquí el Rider Técnico (PDF)
+                  </p>
                 </div>
 
-                <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs items-center gap-2 transition shadow-md">
-                  {isUploadingRider ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  <span>{isUploadingRider ? 'Subiendo Documento...' : 'Seleccionar PDF / Rider'}</span>
+                <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
+                  {isUploadingRider ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  <span>
+                    {isUploadingRider
+                      ? "Subiendo Documento..."
+                      : "Seleccionar PDF / Rider"}
+                  </span>
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx"
@@ -309,68 +393,248 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             )}
 
             <div className="pt-2 space-y-1">
-              <label className="text-[11px] font-semibold text-slate-400">Rider Técnico (Texto)</label>
+              <label className="text-[11px] font-semibold text-[var(--ink-2)]">
+                Rider Técnico (Texto)
+              </label>
               <textarea
-                value={config.riderTecnico || ''}
-                onChange={e => setConfig({ ...config, riderTecnico: e.target.value })}
+                value={config.riderTecnico || ""}
+                onChange={(e) =>
+                  setConfig({ ...config, riderTecnico: e.target.value })
+                }
                 placeholder="Canales, microfonía, DIs, etc..."
                 rows={4}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors font-mono leading-relaxed resize-none"
+                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
               />
+            </div>
+            {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
+            <div className="pt-3 border-t border-[var(--hair)]/80 space-y-3">
+              <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]"></span>
+                Parámetros Técnicos Clave para el Agente (Respuestas directas a
+                salas)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+                {/* Monitoreo */}
+                <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                    Sistema de Monitoreo
+                  </label>
+                  <select
+                    value={
+                      config.riderConfig?.tipoMonitoreo || "sin_preferencia"
+                    }
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        riderConfig: {
+                          ...(config.riderConfig || {}),
+                          tipoMonitoreo: e.target.value as any,
+                        },
+                      })
+                    }
+                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                  >
+                    <option value="sin_preferencia">
+                      Sin preferencia / Sala
+                    </option>
+                    <option value="cuñas_escenario">Cuñas de suelo</option>
+                    <option value="in_ear">In-Ears propios (IEM)</option>
+                    <option value="mixto">Mixto (In-Ears + Cuñas)</option>
+                  </select>
+                  <p className="text-[10px] text-[var(--ink-2)]">
+                    Evita pedir monitores extra si lleváis IEM.
+                  </p>
+                </div>
+                {/* Backline */}
+                <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                    Backline (Amplis / Batería)
+                  </label>
+                  <select
+                    value={config.riderConfig?.backlinePropio || "completo"}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        riderConfig: {
+                          ...(config.riderConfig || {}),
+                          backlinePropio: e.target.value as any,
+                        },
+                      })
+                    }
+                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                  >
+                    <option value="completo">Backline completo propio</option>
+                    <option value="parcial">
+                      Parcial (pedimos batería/amplis)
+                    </option>
+                    <option value="sin_backline">
+                      Necesitamos backline de sala
+                    </option>
+                  </select>
+                  <p className="text-[10px] text-[var(--ink-2)]">
+                    Crucial para pactar dobles carteles.
+                  </p>
+                </div>
+                {/* Microfonía */}
+                <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                    Microfonía / DIs
+                  </label>
+                  <div className="flex gap-1.5 pt-0.5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            microfoniaPropia: false,
+                          },
+                        })
+                      }
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                    >
+                      De la sala
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            microfoniaPropia: true,
+                          },
+                        })
+                      }
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                    >
+                      Propia
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-[var(--ink-2)]">
+                    Informa al técnico de la casa.
+                  </p>
+                </div>
+                {/* Tiempo de prueba y canales */}
+                <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                    Prueba / Canales Mínimos
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={config.riderConfig?.tiempoPruebaMinutos ?? ""}
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            tiempoPruebaMinutos: e.target.value
+                              ? Number(e.target.value)
+                              : undefined,
+                          },
+                        })
+                      }
+                      placeholder="30 min"
+                      className="w-1/2 bg-[var(--sunken)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                    />
+                    <input
+                      type="number"
+                      value={config.riderConfig?.canalesMinimos ?? ""}
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            canalesMinimos: e.target.value
+                              ? Number(e.target.value)
+                              : undefined,
+                          },
+                        })
+                      }
+                      placeholder="12 ch"
+                      className="w-1/2 bg-[var(--sunken)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                    />
+                  </div>
+                  <p className="text-[10px] text-[var(--ink-2)]">
+                    Minutos y canales de mesa.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* GALERÍA DE IMAGEN & PRENSA */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
             <ImageIcon className="w-5 h-5" /> Galería de Imagen &amp; Prensa
           </h3>
-          <p className="text-xs text-slate-400">
-            Fotos reales de directo o sesión de prensa. Es lo primero que ve alguien que nunca os ha visto tocar.
+          <p className="text-xs text-[var(--ink-2)]">
+            Fotos reales de directo o sesión de prensa. Es lo primero que ve
+            alguien que nunca os ha visto tocar.
           </p>
           <label
-            className={`cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs inline-flex items-center justify-center gap-2 transition shadow-md ${
-              subiendoGaleria ? 'opacity-70 pointer-events-none' : ''
+            className={`cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition ${
+              subiendoGaleria ? "opacity-70 pointer-events-none" : ""
             }`}
           >
-            {subiendoGaleria ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            <span>{subiendoGaleria ? 'Subiendo fotos...' : '+ Subir fotos (puedes elegir varias a la vez)'}</span>
+            {subiendoGaleria ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Upload className="w-4 h-4" />
+            )}
+            <span>
+              {subiendoGaleria
+                ? "Subiendo fotos..."
+                : "+ Subir fotos (puedes elegir varias a la vez)"}
+            </span>
             <input
               type="file"
               accept="image/*"
               multiple
               className="hidden"
               disabled={subiendoGaleria}
-              onChange={e => {
+              onChange={(e) => {
                 const files = e.target.files;
                 if (files && files.length > 0) subirFotosGaleria(files);
-                e.target.value = '';
+                e.target.value = "";
               }}
             />
           </label>
           {(config.bandPhotos || []).length === 0 ? (
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+            <div className="rounded-[var(--r-m)] bg-[var(--sunken)] p-4 text-xs text-[var(--ink-2)]">
               Todavía no hay fotos de directo o prensa.
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {(config.bandPhotos || []).filter(url => Boolean(url && url.trim() !== '')).map((url, idx) => (
-                <div
-                  key={url + idx}
-                  className="group relative aspect-video rounded-xl overflow-hidden border border-slate-800 bg-slate-950"
-                >
-                  <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                  <button
-                    type="button"
-                    onClick={() => quitarFotoGaleria(url)}
-                    className="absolute top-1.5 right-1.5 p-1.5 bg-slate-950/80 text-slate-300 hover:text-red-400 rounded-lg border border-slate-700 opacity-0 group-hover:opacity-100 transition cursor-pointer"
-                    title="Quitar foto"
+              {(config.bandPhotos || [])
+                .map((item) =>
+                  typeof item === "string" ? item : (item as any)?.url || "",
+                )
+                .filter((url) => typeof url === "string" && url.trim() !== "")
+                .map((url, idx) => (
+                  <div
+                    key={url + idx}
+                    className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-[var(--sunken)]"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ))}
+                    <img
+                      src={url}
+                      alt={`Foto ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => quitarFotoGaleria(url)}
+                      className="absolute top-1.5 right-1.5 p-1.5 bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] opacity-0 group-hover:opacity-100 transition cursor-pointer"
+                      title="Quitar foto"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
             </div>
           )}
         </div>

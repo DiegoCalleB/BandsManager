@@ -33,12 +33,12 @@ export function useCityChips(
 
   // Dynamically extract top cities present in active leads
   const activeLeadsForSection = useMemo(() => {
-    return leads.filter(l => sectionTab === 'medios' ? normalizeType(l.tipo) === 'medio' : normalizeType(l.tipo) !== 'medio');
+    return leads.filter((l) => (sectionTab === 'medios' ? normalizeType(l.tipo) === 'medio' : normalizeType(l.tipo) !== 'medio'));
   }, [leads, sectionTab]);
 
   const cityCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    activeLeadsForSection.forEach(l => {
+    activeLeadsForSection.forEach((l) => {
       const cityRaw = (l.ciudad || '').trim();
       if (cityRaw) {
         const mainCity = cityRaw.split(/[\(\-\/]/)[0].trim();
@@ -69,7 +69,9 @@ export function useCityChips(
     if (!customCityChips.includes(formatted)) {
       const updated = [...customCityChips, formatted];
       setCustomCityChips(updated);
-      try { localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated)); } catch {}
+      try {
+        localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated));
+      } catch {}
       if (onUpdateEpkConfig) {
         onUpdateEpkConfig({ ciudadesConfig: updated });
       }
@@ -81,9 +83,11 @@ export function useCityChips(
 
   const handleRemoveCustomCity = (cityToRemove: string, e: MouseEvent) => {
     e.stopPropagation();
-    const updated = customCityChips.filter(c => c !== cityToRemove);
+    const updated = customCityChips.filter((c) => c !== cityToRemove);
     setCustomCityChips(updated);
-    try { localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated)); } catch {}
+    try {
+      localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated));
+    } catch {}
     if (selectedCityFilter === cityToRemove) {
       setSelectedCityFilter('');
     }
@@ -94,8 +98,10 @@ export function useCityChips(
 
   return {
     customCityChips,
-    isAddingCityChip, setIsAddingCityChip,
-    newCityInput, setNewCityInput,
+    isAddingCityChip,
+    setIsAddingCityChip,
+    newCityInput,
+    setNewCityInput,
     activeLeadsForSection,
     cityCounts,
     displayCityChips,

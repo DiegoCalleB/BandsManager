@@ -3,7 +3,7 @@ import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 
-/** Feedback opcional que el usuario deja al pedir un plan (nuevo o "Regenerar"): valorar con
+/** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
  * pitches de booking. `alcance` decide si esto queda como memoria para futuros setlists o es solo
  * un ajuste puntual para este intento. */
@@ -48,11 +48,11 @@ interface PerfectSetlistModalProps {
   /** Pide un plan nuevo. La PRIMERA vez, generarlo con éxito duplica el setlist activo antes de
    * que se pueda aplicar ninguna acción (lo gestiona el padre) — el original nunca se toca. Las
    * siguientes veces ("Regenerar") reutilizan esa misma copia en vez de crear otra — pasar
-   * `true` (botón "Nueva copia") fuerza duplicar de nuevo aunque ya exista una. */
+   * `true` (botón"Nueva copia") fuerza duplicar de nuevo aunque ya exista una. */
   onGenerate: (forceNewCopy?: boolean, feedback?: SetlistFeedbackInput) => void;
   /** Ejecuta la acción concreta (reordena/quita/añade canción o bloque) contra el setlist activo
    * (la copia). `sourceKey` identifica esta acción para que su propio botón se convierta en
-   * "Deshacer" mientras siga siendo la más reciente, igual que en el Análisis IA. */
+   *"Deshacer" mientras siga siendo la más reciente, igual que en el Análisis IA. */
   onApplyAction: (action: PerfectSetlistAction, sourceKey: string) => void;
   canUndo?: boolean;
   onUndo?: () => void;
@@ -81,7 +81,7 @@ const BLOCK_TYPE_LABELS: Record<string, string> = {
   intro_tema: 'Intro / historia del tema',
   solo_performance: 'Solo instrumental',
   cambio_instrumento: 'Cambio de instrumento',
-  otro: 'Bloque'
+  otro: 'Bloque',
 };
 
 /** Qué desplazamiento sufre el resto del array de items al ejecutar esta acción — se usa para
@@ -89,9 +89,7 @@ const BLOCK_TYPE_LABELS: Record<string, string> = {
 function changeFromAction(a: PerfectSetlistAction): IndexChange | null {
   switch (a.type) {
     case 'reorder':
-      return a.from_position != null && a.to_position != null
-        ? { type: 'move', from: a.from_position - 1, to: a.to_position - 1 }
-        : null;
+      return a.from_position != null && a.to_position != null ? { type: 'move', from: a.from_position - 1, to: a.to_position - 1 } : null;
     case 'remove_song':
       return a.item_position != null ? { type: 'remove', at: a.item_position - 1 } : null;
     case 'add_song':
@@ -118,7 +116,7 @@ function adjustActionAfterChange(a: PerfectSetlistAction, change: IndexChange): 
     from_position: from_position ?? undefined,
     to_position: to_position ?? undefined,
     item_position: item_position ?? undefined,
-    insert_at_position: insert_at_position ?? undefined
+    insert_at_position: insert_at_position ?? undefined,
   };
 }
 
@@ -127,18 +125,38 @@ function describeAction(a: PerfectSetlistAction): { icon: string; label: string 
     case 'reorder':
       return { icon: '↕️', label: `Reordenar: mover la posición ${a.from_position} a la ${a.to_position}` };
     case 'remove_song':
-      return { icon: '➖', label: `Quitar del setlist: "${a.song_title || 'canción'}"` };
+      return { icon: '➖', label: `Quitar del setlist:"${a.song_title || 'canción'}"` };
     case 'add_song':
-      return { icon: '➕', label: `Añadir del catálogo: "${a.song_title || 'canción'}" en la posición ${a.insert_at_position}` };
+      return { icon: '➕', label: `Añadir del catálogo:"${a.song_title || 'canción'}" en la posición ${a.insert_at_position}` };
     case 'add_block':
-      return { icon: '📋', label: `Añadir bloque "${a.title}" (${BLOCK_TYPE_LABELS[a.block_type || ''] || a.block_type}) en la posición ${a.insert_at_position}` };
+      return {
+        icon: '📋',
+        label: `Añadir bloque"${a.title}" (${BLOCK_TYPE_LABELS[a.block_type || ''] || a.block_type}) en la posición ${a.insert_at_position}`,
+      };
     default:
       return { icon: '•', label: 'Acción' };
   }
 }
 
-export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null, chartData, yDomain, zonasEnergia, onReorder, onEnergyChange }: PerfectSetlistModalProps) {
-  // Copia local de las acciones del plan que SÍ se reajusta tras cada "Aplicar" — el plan en sí
+export function PerfectSetlistModal({
+  isOpen,
+  onClose,
+  setlistName,
+  loading,
+  plan,
+  error,
+  onGenerate,
+  onApplyAction,
+  canUndo = false,
+  onUndo,
+  undoSourceKey = null,
+  chartData,
+  yDomain,
+  zonasEnergia,
+  onReorder,
+  onEnergyChange,
+}: PerfectSetlistModalProps) {
+  // Copia local de las acciones del plan que SÍ se reajusta tras cada"Aplicar" — el plan en sí
   // (prop) se queda fijo con las posiciones de cuando se generó, pero aplicar una acción cambia el
   // array real del setlist, y las demás acciones pendientes seguían apuntando a la posición VIEJA.
   // Antes esto hacía que solo se pudiera aplicar una con confianza: la segunda podía mover/quitar
@@ -148,13 +166,16 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
   const [liveActions, setLiveActions] = useState<PerfectSetlistAction[] | null>(null);
   const [appliedActionIndices, setAppliedActionIndices] = useState<Set<number>>(new Set());
   const [invalidActionIndices, setInvalidActionIndices] = useState<Set<number>>(new Set());
-  // Foto de liveActions/invalidActionIndices justo ANTES de la última acción aplicada — "Deshacer"
+  // Foto de liveActions/invalidActionIndices justo ANTES de la última acción aplicada —"Deshacer"
   // no solo debe revertir el setlist real (eso ya lo hace onUndo), también debe devolver las
   // demás acciones pendientes a las posiciones que tenían antes de que ESTA las reajustara. Un
   // solo nivel, igual que el propio snapshot de undo del setlist (solo la más reciente es deshacible).
-  const [preApplySnapshot, setPreApplySnapshot] = useState<{ liveActions: PerfectSetlistAction[]; invalidActionIndices: Set<number> } | null>(null);
+  const [preApplySnapshot, setPreApplySnapshot] = useState<{
+    liveActions: PerfectSetlistAction[];
+    invalidActionIndices: Set<number>;
+  } | null>(null);
 
-  // Feedback opcional para la próxima generación (nueva o "Regenerar") — mismo patrón que ya usan
+  // Feedback opcional para la próxima generación (nueva o"Regenerar") — mismo patrón que ya usan
   // los Reels y los pitches de booking: valorar + comentar, y decidir si se recuerda para siempre
   // o es solo un ajuste puntual de este intento.
   const [intensidadRating, setIntensidadRating] = useState(0);
@@ -177,14 +198,14 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
       intensidad_rating: intensidadRating || undefined,
       contenido_rating: contenidoRating || undefined,
       comentario: comentarioFeedback.trim() || undefined,
-      alcance: feedbackScope
+      alcance: feedbackScope,
     };
   };
 
   const handleGenerateWithFeedback = (forceNewCopy?: boolean) => {
     onGenerate(forceNewCopy, currentFeedback());
     // Igual que en Reels/pitches: tras pedir el plan, se limpia el formulario de feedback —
-    // ya quedó aplicado a este intento y, si el alcance era "global", ya quedó guardado como memoria.
+    // ya quedó aplicado a este intento y, si el alcance era"global", ya quedó guardado como memoria.
     setIntensidadRating(0);
     setContenidoRating(0);
     setComentarioFeedback('');
@@ -197,7 +218,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
     setPreApplySnapshot({ liveActions, invalidActionIndices: new Set(invalidActionIndices) });
     onApplyAction(action, sourceKey);
-    setAppliedActionIndices(prev => new Set(prev).add(idx));
+    setAppliedActionIndices((prev) => new Set(prev).add(idx));
 
     const change = changeFromAction(action);
     if (!change) return;
@@ -215,7 +236,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
   const handleUndo = (idx: number) => {
     onUndo?.();
-    setAppliedActionIndices(prev => {
+    setAppliedActionIndices((prev) => {
       const next = new Set(prev);
       next.delete(idx);
       return next;
@@ -231,38 +252,38 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
-      <div className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto">
+      <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto pointer-events-auto">
         {/* Header + Mapa de Energía en un único bloque sticky, mismo patrón que el Análisis IA —
-            así el gráfico se ve siempre arriba mientras se hace scroll por las acciones del plan. */}
-        <div className="sticky top-0 z-10 bg-neutral-900">
-          <div className="border-b border-neutral-700 p-3 flex justify-between items-center">
+ así el gráfico se ve siempre arriba mientras se hace scroll por las acciones del plan. */}
+        <div className="sticky top-0 z-10 bg-[var(--surface)]">
+          <div className=" p-3 flex justify-between items-center">
             <div className="flex items-center gap-2.5">
-              <Wand2 className="w-5 h-5 text-emerald-400" />
+              <Wand2 className="w-5 h-5 text-[var(--ok)]" />
               <div>
                 <h2 className="text-base font-bold">Setlist Perfecto</h2>
-                {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
+                {setlistName && <p className="text-xs text-[var(--ink-2)]">{setlistName}</p>}
               </div>
             </div>
             <div className="flex items-center gap-1.5">
               {canUndo && (
                 <button
                   onClick={onUndo}
-                  className="px-2 py-1 rounded-lg bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+                  className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-[11px] font-sans font-medium flex items-center gap-1"
                   title="Deshacer el último cambio del setlist"
                 >
                   ↩️ Deshacer
                 </button>
               )}
-              <button onClick={onClose} className="p-2 hover:bg-neutral-800 rounded-lg transition">
+              <button onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition">
                 <X className="w-4 h-4" />
               </button>
             </div>
           </div>
 
           {/* Mapa de Energía integrado: arrastrar un punto reordena el setlist directamente, igual
-              que en el gráfico grande de fuera. */}
+ que en el gráfico grande de fuera. */}
           {hasChart && (
-            <div className="border-b border-neutral-700 p-3">
+            <div className=" p-3">
               <EnergyChart
                 setlistKey="perfect-setlist"
                 chartData={chartData!}
@@ -280,18 +301,17 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
         <div className="p-4 space-y-4">
           {!plan && !loading && !error && (
             <div className="text-center py-8">
-              <Wand2 className="w-12 h-12 text-emerald-400/50 mx-auto mb-4" />
-              <p className="text-neutral-300 mb-3">
-                Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan
-                de cambios: reordenar canciones, quitar las que no encajen, añadir otras del
-                repertorio que sí, y sugerir bloques (presentación, pausa, bis...) donde falten.
+              <Wand2 className="w-12 h-12 text-[var(--ok)]/50 mx-auto mb-4" />
+              <p className="text-[var(--ink-2)] mb-3">
+                Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan de cambios: reordenar canciones, quitar
+                las que no encajen, añadir otras del repertorio que sí, y sugerir bloques (presentación, pausa, bis...) donde falten.
               </p>
-              <p className="text-xs text-neutral-500 mb-6">
+              <p className="text-xs text-[var(--ink-2)] mb-6">
                 No se toca este setlist: en cuanto se genere el plan, se trabaja sobre una copia nueva.
               </p>
               <button
                 onClick={() => onGenerate()}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition font-medium"
+                className="bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
               >
                 Generar Plan
               </button>
@@ -300,18 +320,18 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
           {loading && (
             <div className="text-center py-12">
-              <Loader className="w-8 h-8 animate-spin text-emerald-400 mx-auto mb-4" />
-              <p className="text-neutral-400">Analizando setlist y catálogo...</p>
+              <Loader className="w-8 h-8 animate-spin text-[var(--ok)] mx-auto mb-4" />
+              <p className="text-[var(--ink-2)]">Analizando setlist y catálogo...</p>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-900/20 border border-red-700 rounded-lg p-4 flex gap-3">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+            <div className="bg-[var(--alert)]/20 rounded-[var(--r-s)] p-4 flex gap-3">
+              <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-red-200">Error</p>
-                <p className="text-sm text-red-300">{error}</p>
-                <button onClick={() => onGenerate()} className="mt-3 text-sm text-red-300 hover:text-red-200 underline">
+                <p className="font-medium text-[var(--alert)]">Error</p>
+                <p className="text-sm text-[var(--alert)]">{error}</p>
+                <button onClick={() => onGenerate()} className="mt-3 text-sm text-[var(--alert)] hover:text-[var(--alert)] underline">
                   Reintentar
                 </button>
               </div>
@@ -320,13 +340,13 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
           {plan && liveActions && (
             <div className="space-y-4">
-              <div className="bg-neutral-800 rounded-lg p-3 border border-neutral-700">
-                <p className="text-xs text-neutral-400 mb-1.5">🪄 Resumen del plan</p>
-                <p className="text-sm text-neutral-200">{plan.summary}</p>
+              <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
+                <p className="text-xs text-[var(--ink-2)] mb-1.5">🪄 Resumen del plan</p>
+                <p className="text-sm text-[var(--ink-2)]">{plan.summary}</p>
               </div>
 
               {liveActions.length === 0 && (
-                <p className="text-sm text-neutral-400 text-center py-4">
+                <p className="text-sm text-[var(--ink-2)] text-center py-4">
                   Este setlist ya está bien construido — no hay cambios que proponer ahora mismo.
                 </p>
               )}
@@ -340,32 +360,38 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                   const isInvalid = invalidActionIndices.has(idx);
 
                   return (
-                    <div key={idx} className={`rounded-lg p-3 border flex items-start gap-2.5 ${isInvalid ? 'bg-neutral-900 border-neutral-800 opacity-50' : 'bg-neutral-800 border-neutral-700'}`}>
+                    <div
+                      key={idx}
+                      className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ? 'bg-[var(--sunken)] opacity-50' : 'bg-[var(--surface)]/80'}`}
+                    >
                       <span className="text-sm mt-0.5">{icon}</span>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-neutral-100">{label}</p>
-                        <p className="text-xs text-neutral-400 mt-0.5">{action.reason}</p>
+                        <p className="text-sm font-medium text-[var(--ink-2)]">{label}</p>
+                        <p className="text-xs text-[var(--ink-2)] mt-0.5">{action.reason}</p>
                       </div>
                       {isInvalid ? (
-                        <span className="shrink-0 text-[10px] text-neutral-500 font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó al item que esta acción necesitaba">
+                        <span
+                          className="shrink-0 text-[10px] text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
+                          title="Un cambio anterior afectó al item que esta acción necesitaba"
+                        >
                           ⚠️ Ya no aplica
                         </span>
                       ) : isCurrentUndo ? (
                         <button
                           type="button"
                           onClick={() => handleUndo(idx)}
-                          className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-sans transition whitespace-nowrap"
                           title="Deshacer este cambio"
                         >
                           ↩️ Deshacer
                         </button>
                       ) : isApplied ? (
-                        <span className="shrink-0 text-[10px] text-emerald-400 font-mono font-medium whitespace-nowrap">✓ Aplicado</span>
+                        <span className="shrink-0 text-[10px] text-[var(--ok)] font-sans font-medium whitespace-nowrap">✓ Aplicado</span>
                       ) : (
                         <button
                           type="button"
                           onClick={() => handleApply(idx)}
-                          className="shrink-0 px-2 py-0.5 rounded bg-emerald-700/50 hover:bg-emerald-600 text-emerald-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)]/50 hover:bg-[var(--ok)] text-[var(--ok)] font-bold text-[10px] font-sans transition whitespace-nowrap"
                           title="Aplicar este cambio al setlist"
                         >
                           ✓ Aplicar
@@ -382,17 +408,17 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
         {plan && (
           <div className="px-4 pb-4 space-y-2.5">
             {/* Feedback para la próxima generación — mismo patrón que ya entrena los Reels y los
-                pitches de booking: valorar + comentar, y elegir si se recuerda para siempre. */}
-            <div className="p-2.5 rounded-xl border border-neutral-800 bg-neutral-900/60 space-y-2">
+ pitches de booking: valorar + comentar, y elegir si se recuerda para siempre. */}
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center gap-1">
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-500">Intensidad</span>
+                  <span className="text-[9px] font-sans text-[var(--ink-2)]">Intensidad</span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`intensidad-${star}`}
                       type="button"
                       onClick={() => setIntensidadRating(intensidadRating === star ? 0 : star)}
-                      className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ? 'text-amber-400' : 'text-neutral-700 hover:text-neutral-500'}`}
+                      className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
                       title={`Valorar la intensidad/energía: ${star}/5`}
                     >
                       <Star className="w-3 h-3 fill-current" />
@@ -400,13 +426,13 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                   ))}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-500">Contenido</span>
+                  <span className="text-[9px] font-sans text-[var(--ink-2)]">Contenido</span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`contenido-${star}`}
                       type="button"
                       onClick={() => setContenidoRating(contenidoRating === star ? 0 : star)}
-                      className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ? 'text-amber-400' : 'text-neutral-700 hover:text-neutral-500'}`}
+                      className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
                       title={`Valorar el contenido/selección de temas: ${star}/5`}
                     >
                       <Star className="w-3 h-3 fill-current" />
@@ -418,16 +444,18 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                 rows={2}
                 value={comentarioFeedback}
                 onChange={(e) => setComentarioFeedback(e.target.value)}
-                placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'..."
-                className="w-full p-2 bg-black/60 rounded-lg border border-neutral-700/80 text-[11px] text-neutral-200 placeholder-neutral-500 font-sans focus:outline-none focus:border-amber-400"
+                placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
+                className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[11px] text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
               />
-              <div className="flex items-center gap-1.5 text-[10px] font-mono">
-                <span className="text-neutral-500 uppercase tracking-wider">Alcance:</span>
+              <div className="flex items-center gap-1.5 text-[10px] font-sans">
+                <span className="text-[var(--ink-2)]">Alcance:</span>
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('este_setlist')}
-                  className={`px-2 py-1 rounded-lg cursor-pointer transition-all ${
-                    feedbackScope === 'este_setlist' ? 'bg-neutral-700 text-white font-bold' : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
+                    feedbackScope === 'este_setlist'
+                      ? 'bg-[var(--surface)]/70 text-[var(--ink)] font-bold'
+                      : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                   }`}
                 >
                   Solo este plan
@@ -435,8 +463,10 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('global')}
-                  className={`px-2 py-1 rounded-lg cursor-pointer transition-all flex items-center gap-1 ${
-                    feedbackScope === 'global' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
+                    feedbackScope === 'global'
+                      ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
+                      : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                   }`}
                   title="La IA recordará esta corrección también para futuros setlists de la banda"
                 >
@@ -449,20 +479,20 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
               <button
                 onClick={() => handleGenerateWithFeedback()}
                 title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+                className="flex-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
                 🔄 Regenerar
               </button>
               <button
                 onClick={() => handleGenerateWithFeedback(true)}
                 title="Crea una copia nueva desde cero en vez de reutilizar la actual"
-                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 px-4 py-2 rounded-lg transition font-medium text-sm"
+                className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
                 🆕 Nueva copia
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+                className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
                 Cerrar
               </button>

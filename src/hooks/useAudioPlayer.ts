@@ -42,10 +42,12 @@ export function useAudioPlayer() {
   };
 
   return {
-    activePlayerSong, setActivePlayerSong,
+    activePlayerSong,
+    setActivePlayerSong,
     playerAutoPlay,
     playSignal,
-    isPlayerPlaying, setIsPlayerPlaying,
+    isPlayerPlaying,
+    setIsPlayerPlaying,
     playerTransposeSemitones,
     handleSelectPlayerSong,
   };

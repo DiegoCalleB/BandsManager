@@ -14,12 +14,7 @@ function getChordMidiNotes(key: ParsedKey | null): number[] {
   const fifthInterval = 7;
   const octaveInterval = 12;
 
-  return [
-    rootMidi,
-    rootMidi + thirdInterval,
-    rootMidi + fifthInterval,
-    rootMidi + octaveInterval
-  ];
+  return [rootMidi, rootMidi + thirdInterval, rootMidi + fifthInterval, rootMidi + octaveInterval];
 }
 
 export interface SyntheticPlayerController {
@@ -68,12 +63,7 @@ export function playSyntheticTransition(
   const gainB = ctx.createGain();
   gainB.connect(masterGain);
 
-  const createHarmonicPad = (
-    notes: number[],
-    targetGain: GainNode,
-    padStartTime: number,
-    padDuration: number
-  ) => {
+  const createHarmonicPad = (notes: number[], targetGain: GainNode, padStartTime: number, padDuration: number) => {
     notes.forEach((midiNote, idx) => {
       const osc = ctx.createOscillator();
       const filter = ctx.createBiquadFilter();
@@ -100,12 +90,7 @@ export function playSyntheticTransition(
     });
   };
 
-  const createRhythmPulses = (
-    bpm: number,
-    targetGain: GainNode,
-    pulseStartTime: number,
-    duration: number
-  ) => {
+  const createRhythmPulses = (bpm: number, targetGain: GainNode, pulseStartTime: number, duration: number) => {
     const beatInterval = 60 / bpm;
     const numBeats = Math.floor(duration / beatInterval);
 
@@ -228,6 +213,6 @@ export function playSyntheticTransition(
     getCurrentTime: () => {
       if (isStopped) return 0;
       return Math.max(0, ctx.currentTime - startTime);
-    }
+    },
   };
 }

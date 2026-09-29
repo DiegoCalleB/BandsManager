@@ -5,7 +5,7 @@ import {
   asignarVoces,
   clasificarGolpePercusion,
   normalizarPico,
-  type BufferDeAudio
+  type BufferDeAudio,
 } from '../instrumentSynth';
 import { MelodicNoteEvent } from '../../types';
 
@@ -37,7 +37,7 @@ describe('crearGeneradorDeterminista', () => {
 describe('prepararEventos', () => {
   const base: MelodicNoteEvent[] = [
     { tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 0.9 },
-    { tiempo: 2, nota: 'G4', duracionBeats: 0.5, velocidad: 0.5 }
+    { tiempo: 2, nota: 'G4', duracionBeats: 0.5, velocidad: 0.5 },
   ];
 
   it('convierte beats a segundos absolutos según el bpm', () => {
@@ -62,7 +62,7 @@ describe('prepararEventos', () => {
   it('ordena los eventos por tiempo aunque lleguen desordenados', () => {
     const desordenados: MelodicNoteEvent[] = [
       { tiempo: 3, nota: 'G4', duracionBeats: 1 },
-      { tiempo: 0, nota: 'E4', duracionBeats: 1 }
+      { tiempo: 0, nota: 'E4', duracionBeats: 1 },
     ];
     const preparados = prepararEventos(desordenados, { instrument: 'guitarra', bpm: 120, totalLength: 20, semilla: 1 });
     expect(preparados[0].nota).toBe('E4');
@@ -72,10 +72,12 @@ describe('prepararEventos', () => {
   it('nunca desplaza una nota más allá del jitter máximo configurado del instrumento', () => {
     // La percusión tiene el jitter más ajustado (6ms): comprobamos el límite en muchas semillas.
     for (let semilla = 0; semilla < 50; semilla++) {
-      const preparados = prepararEventos(
-        [{ tiempo: 4, nota: 'C2', duracionBeats: 1 }],
-        { instrument: 'percusion', bpm: 120, totalLength: 20, semilla }
-      );
+      const preparados = prepararEventos([{ tiempo: 4, nota: 'C2', duracionBeats: 1 }], {
+        instrument: 'percusion',
+        bpm: 120,
+        totalLength: 20,
+        semilla,
+      });
       const tiempoBase = 4 * (60 / 120);
       expect(Math.abs(preparados[0].tiempo - tiempoBase)).toBeLessThanOrEqual(0.006 + 1e-9);
     }
@@ -93,7 +95,10 @@ describe('prepararEventos', () => {
   it('acota la intensidad humanizada al rango 0.15–1', () => {
     for (let semilla = 0; semilla < 50; semilla++) {
       const preparados = prepararEventos(
-        [{ tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 }, { tiempo: 1, nota: 'E4', duracionBeats: 1, velocidad: 0.16 }],
+        [
+          { tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 },
+          { tiempo: 1, nota: 'E4', duracionBeats: 1, velocidad: 0.16 },
+        ],
         { instrument: 'percusion', bpm: 120, totalLength: 20, semilla }
       );
       for (const ev of preparados) {
@@ -109,7 +114,7 @@ describe('asignarVoces', () => {
     const eventos = [
       { tiempo: 0, duracion: 1 },
       { tiempo: 1, duracion: 1 },
-      { tiempo: 2, duracion: 1 }
+      { tiempo: 2, duracion: 1 },
     ];
     const asignacion = asignarVoces(eventos, 6);
     expect(asignacion).toEqual([0, 0, 0]);
@@ -119,7 +124,7 @@ describe('asignarVoces', () => {
     const eventos = [
       { tiempo: 0, duracion: 2 },
       { tiempo: 0, duracion: 2 },
-      { tiempo: 0, duracion: 2 }
+      { tiempo: 0, duracion: 2 },
     ];
     const asignacion = asignarVoces(eventos, 6);
     expect(new Set(asignacion).size).toBe(3);
@@ -129,7 +134,7 @@ describe('asignarVoces', () => {
     const eventos = [
       { tiempo: 0, duracion: 5 },
       { tiempo: 0.1, duracion: 5 },
-      { tiempo: 0.2, duracion: 5 } // con solo 2 voces, esta tiene que robar una
+      { tiempo: 0.2, duracion: 5 }, // con solo 2 voces, esta tiene que robar una
     ];
     const asignacion = asignarVoces(eventos, 2);
     expect(asignacion).toHaveLength(3);
@@ -166,7 +171,7 @@ describe('normalizarPico', () => {
     const datos = canales.map((c) => Float32Array.from(c));
     return {
       numberOfChannels: datos.length,
-      getChannelData: (canal: number) => datos[canal]
+      getChannelData: (canal: number) => datos[canal],
     };
   }
 
@@ -188,7 +193,10 @@ describe('normalizarPico', () => {
   it('usa el pico de TODOS los canales, no solo el primero', () => {
     // El pico real está en el canal derecho (0.8); si solo mirara el izquierdo (0.2),
     // el resultado saturaría muy por encima del objetivo.
-    const buffer = crearBuffer([[0.2, -0.1], [0.8, -0.3]]);
+    const buffer = crearBuffer([
+      [0.2, -0.1],
+      [0.8, -0.3],
+    ]);
     normalizarPico(buffer, 0.9);
     const izq = buffer.getChannelData(0);
     const der = buffer.getChannelData(1);

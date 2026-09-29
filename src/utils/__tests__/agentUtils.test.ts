@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  sanitizeAIResponse,
-  buildPitchPrompt,
-  buildPressReleasePrompt,
-  buildReelScriptPrompt,
-} from '../agentUtils';
+import { sanitizeAIResponse, buildPitchPrompt, buildPressReleasePrompt, buildReelScriptPrompt } from '../agentUtils';
 
 describe('agentUtils', () => {
   it('sanitizes code blocks from AI markdown response', () => {

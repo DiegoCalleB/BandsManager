@@ -1,5 +1,5 @@
 # 🎸 Documentación Técnica de Arquitectura: AI Music & Stem Separation Engine
-> **Proyecto:** BandManager.ai (Bakandeya) — TFM sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica.  
+> **Proyecto:** BandManager.ai — TFM sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica.  
 > **Destinatario:** Claude Code / Equipo de Ingeniería.  
 > **Propósito:** Explicar exhaustivamente el diseño, implementación, seguridad, flujos de datos y testing del subsistema de audio e Inteligencia Artificial.
 

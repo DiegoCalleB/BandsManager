@@ -1,62 +1,66 @@
 ---
 name: fullstack-ux-design
-description: Guía de excelencia en diseño Frontend (React 19, Motion, Tailwind v4, UX B2C) y Backend (Express modular, Vitest) para BandManager.io. Usar al crear componentes UI o refinamientos API.
+description: Guía de ingeniería Frontend (React 19, Motion, Tailwind v4) y Backend (Express modular, Vitest) para BandManager.io. Usar al crear componentes UI o refinamientos API. Para TODA decisión estética —color, tipografía, sombras, temas— la autoridad es `visual-identity`, no este documento.
 ---
 
-# 🎨 Skill: Desarrollo Fullstack Premium & Diseño UX
+# ⚙️ Skill: Ingeniería Fullstack (Frontend + Backend)
 
-Esta skill establece los principios de desarrollo frontend y backend para lograr una experiencia de usuario de clase mundial (nivel B2C SaaS comercial) manteniendo código limpio, mantenible y robusto.
+Esta skill cubre **cómo se construye** el código: estructura de componentes, animación, consumo de API, resiliencia de handlers y tests.
+
+> ## ⚠️ Esta skill NO decide la estética
+> Color, tipografía, sombras, radios, temas y cualquier `className` visual se rigen por **[`visual-identity`](../visual-identity/SKILL.md)**. Cárgala antes de tocar UI.
+>
+> **Nota histórica, no la repitas:** hasta septiembre de 2026 este documento prescribía «Dark Mode Elegante» con fondos `#0f172a`/`#1e293b`, glassmorphism `backdrop-blur-md bg-slate-900/80`, degradados `from-purple-500 to-indigo-600` y semántica de color esmeralda-éxito / ámbar-aviso. Cada agente de IA que leyó el repo obedeció, y el resultado medible fue 2.711 `font-mono`, 154 `backdrop-blur`, 209 degradados, 138 `animate-pulse` y 5 escalas de gris conviviendo: una app que parecía un panel de trading de criptomonedas. Aquello se retiró a propósito. **Si ves ese patrón en el código, es deuda, no un ejemplo a seguir.**
 
 ---
 
-## 💎 1. Estándares de Diseño Frontend (UI/UX)
+## 💎 1. Frontend (React 19 + Tailwind v4)
 
-### Paleta de Colores & Estética
-- **Dark Mode Elegante:** Fondos oscuros profundos (`#0f172a`, `#1e293b`), paneles con glassmorphism (`backdrop-blur-md bg-slate-900/80 border border-slate-800`).
-- **Acentos Armónicos:** Evitar colores genéricos puros (rojo/verde chillón). Usar degradados sutiles (`bg-gradient-to-r from-purple-500 to-indigo-600`, esmeralda sutil para éxito `#10b981`, ámbar cálido para advertencias `#f59e0b`).
-- **Tipografía & Jerarquía:** Títulos claros en negrita, tamaños de fuente proporcionales y contraste WCAG adecuado.
-
-### Micro-Animaciones & Motion (React 19 + `motion`)
-Añadir vida a la interfaz con animaciones fluidas al cargar, sobrevolar o transicionar entre pestañas:
+### Componentes
+- **Todo color y toda fuente salen de tokens** (`src/styles/tokens.css`). Cero hexadecimales literales, cero `dark:` en el marcado.
+- **Variantes con `cva` + `tailwind-merge`**, no con cadenas ternarias de clases. Las primitivas viven en `src/components/ui/`.
+- **Estados de carga y vacíos obligatorios** en toda tabla o grid. El estado vacío tiene voz propia (ver §3 de `visual-identity`), nunca «No hay datos».
+- **Sin placeholders de relleno.** Datos reales o generados con sentido.
+- **Consumo de API centralizado:** siempre `src/services/api.ts` o `src/utils/api.ts`. Nunca `fetch()` directo desde un componente.
 
 ```tsx
 import { motion } from 'motion/react';
 
-export function CardMetrica({ titulo, valor, icono: Icon }: Props) {
+export function CardMetrica({ titulo, valor, serie }: Props) {
   return (
     <motion.div
-      whileHover={{ scale: 1.02, translateY: -2 }}
-      transition={{ duration: 0.2 }}
-      className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-xl backdrop-blur-sm"
+      whileHover={{ translateY: -1 }}
+      transition={{ duration: 0.15 }}
+      className="p-5 border border-[--line] bg-[--surface]"
     >
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-slate-400">{titulo}</span>
-        <Icon className="w-5 h-5 text-indigo-400" />
-      </div>
-      <p className="mt-2 text-2xl font-bold text-white">{valor}</p>
+      <h5 className="font-mono text-[10px] uppercase tracking-wide text-[--ink-3]">{titulo}</h5>
+      <p className="font-display text-3xl tabular-nums text-[--ink]">{valor}</p>
+      <Onda serie={serie} />
     </motion.div>
   );
 }
 ```
 
-### Componentes y Feedback al Usuario
-- **Estados de Carga y Vacío (Empty States):** Toda tabla o grid debe mostrar un spinner de carga o un *empty state* visualmente atractivo cuando no hay datos.
-- **Sin Placeholders:** Usar datos reales o generar imágenes de demostración si se requieren recursos visuales.
-- **Consumo de API Centralizado:** Utilizar siempre `src/services/api.ts` o `src/utils/api.ts` para llamadas HTTP. No hacer `fetch()` directo desde componentes.
+Fíjate en lo que **no** hay ahí: ni `backdrop-blur`, ni `shadow-xl`, ni `rounded-2xl`, ni un color literal, ni `slate`. Y la métrica termina en una `<Onda>`, que es la firma visual del producto.
 
-### Simplicidad en Pantalla (AGENTS.md §6 — regla transversal, léela completa antes de tocar UI)
-Lo de arriba (animaciones, glassmorphism) es la capa visual; esto manda sobre ella cuando entran en conflicto. Resumen de lo no negociable:
-- **Móvil primero de verdad**, ~390px, máximo 3 bloques antes de scroll en el primer viewport.
-- **Acciones secundarias detrás de un menú** (`⋯`/`⚙️`), nunca fila de botones siempre visible.
-- **Ningún componente decorativo sin trabajo que hacer** — un badge/animación bonita que no aporta información no entra solo porque "queda bien".
+### Animación (`motion`)
+- **Sobria y con función.** Entradas de ~150 ms, hover de 1-2 px, nada de rebotes ni escalados llamativos.
+- `animate-pulse` **solo** para carga real, nunca decorativo.
+- Toda animación respeta `@media (prefers-reduced-motion: reduce)`.
+
+### Simplicidad en pantalla (AGENTS.md §6 — regla transversal)
+Manda sobre cualquier consideración visual cuando entren en conflicto:
+- **Móvil primero de verdad**, ~390 px, máximo 3 bloques antes del primer scroll.
+- **Acciones secundarias detrás de un menú** (`⋯`/`⚙️`), nunca una fila de botones siempre visible.
+- **Ningún componente decorativo sin trabajo que hacer.**
 - **Simplificar nunca es borrar funcionalidad** — se reubica (menú, modal, vista secundaria), nunca desaparece en silencio.
 
 ---
 
-## ⚙️ 2. Estándares de Backend (Express + TypeScript)
+## 🔧 2. Backend (Express + TypeScript)
 
-### Resiliencia Asíncrona
-Todos los handlers asíncronos deben envolverse en bloques `try/catch` para capturar errores de forma limpia y retornar un JSON estructurado de error (`{ error: 'Mensaje descriptivo' }`):
+### Resiliencia asíncrona
+Todo handler asíncrono va envuelto en `try/catch` y devuelve un JSON de error estructurado (`{ error: 'Mensaje descriptivo' }`):
 
 ```typescript
 app.post('/api/songs', requireAuth, async (req, res) => {
@@ -71,36 +75,31 @@ app.post('/api/songs', requireAuth, async (req, res) => {
 });
 ```
 
-### Tipado y Calidad (`tsc --noEmit`)
-- **Cero Tolerancia a Errores TypeScript Nuevos:** La suite de compilación `npx tsc --noEmit` debe mantenerse en 0 errores nuevos.
-- **Prohibido el Uso Indiscriminado de `any`:** Definir interfaces en `src/types.ts` siempre que se cree un nuevo modelo o payload.
+El `bandId` **siempre** se resuelve con `getTargetBandId(req)` — ver `security-multitenancy`, es innegociable.
+
+### Tipado y calidad (`tsc --noEmit`)
+- **Cero errores TypeScript nuevos** sobre el baseline de CI. `npm run build` tipa antes de compilar: un fallo de tipos rompe el build, no solo el lint.
+- **Prohibido el `any` indiscriminado.** Interfaz en `src/types.ts` para todo modelo o payload nuevo.
 
 ---
 
-## 🧪 3. Pruebas Unitarias con Vitest
+## 🧪 3. Pruebas con Vitest
 
-- Colocar los archivos de test adyacentes al código que prueban en una carpeta `__tests__/` (ejemplo: `server/utils/__tests__/bandAccess.test.ts`).
-- Ejecutar tests con `npm test` o test específico con `npx vitest run ruta/al/test.test.ts`.
+- Tests adyacentes al código, en `__tests__/` (ej.: `server/utils/__tests__/bandAccess.test.ts`).
+- `npm test`, o `npx vitest run ruta/al/test.test.ts` para uno concreto.
 
-```typescript
-import { describe, it, expect } from 'vitest';
-import { getTargetBandId } from '../bandAccess.js';
-
-describe('bandAccess helper', () => {
-  it('debe resolver el band_id de la sesión del usuario autenticado', () => {
-    const req = { user: { band_id: 'banda_123' }, headers: {} } as any;
-    expect(getTargetBandId(req)).toBe('banda_123');
-  });
-});
-```
+**Regresión visual:** los cambios de UI se protegen con capturas de referencia de Playwright (`e2e/visual.spec.ts`). Los tests unitarios no comprueban `className`, así que no detectan una rotura de layout — esa red es la de imagen.
 
 ---
 
 ## ✅ Checklist UX & Backend
 
-- [ ] ¿El componente incluye micro-animaciones y estados de hover?
-- [ ] ¿Se gestionan adecuadamente los estados de carga y listas vacías?
-- [ ] ¿Todas las peticiones HTTP usan `src/services/api.ts`?
-- [ ] ¿El handler asíncrono tiene un bloque `try/catch` adecuado?
+- [ ] ¿Has cargado **`visual-identity`** antes de escribir un solo `className`?
+- [ ] ¿Todo color y fuente salen de tokens? ¿Cero hexadecimales literales nuevos?
+- [ ] ¿Se gestionan los estados de carga y de lista vacía, con voz propia?
+- [ ] ¿Toda petición HTTP pasa por `src/services/api.ts`?
+- [ ] ¿Las animaciones son sobrias y respetan `prefers-reduced-motion`?
+- [ ] ¿El handler asíncrono tiene `try/catch` y resuelve `bandId` con `getTargetBandId`?
 - [ ] ¿`npx tsc --noEmit` compila sin errores nuevos?
-- [ ] ¿Cabe en 3 bloques el primer viewport móvil (~390px)? ¿Las acciones secundarias están detrás de un menú?
+- [ ] ¿Cabe en 3 bloques el primer viewport móvil (~390 px)? ¿Acciones secundarias tras un menú?
+- [ ] ¿Probado en los tres temas (Carga, Directo, Escenario)?

@@ -211,7 +211,7 @@ describe('banderasAntiBot', () => {
   it('incluye los clientes alternativos y un user-agent de navegador', () => {
     const flags = banderasAntiBot();
     expect(flags).toContain('--extractor-args');
-    expect(flags.join(' ')).toContain('youtube:player_client=android');
+    expect(flags.join( '')).toContain('youtube:player_client=android');
     expect(flags).toContain('--user-agent');
   });
 });

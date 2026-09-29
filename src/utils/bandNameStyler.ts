@@ -57,100 +57,124 @@ const FLIPPED_MAP: Record<string, string> = {
 
 // Umlaut Heavy (Mötley Crüe style)
 const UMLAUT_MAP: Record<string, string> = {
-  A: 'Ä', a: 'ä',
-  E: 'Ë', e: 'ë',
-  I: 'Ï', i: 'ï',
-  O: 'Ö', o: 'ö',
-  U: 'Ü', u: 'ü',
-  Y: 'Ÿ', y: 'ÿ',
+  A: 'Ä',
+  a: 'ä',
+  E: 'Ë',
+  e: 'ë',
+  I: 'Ï',
+  i: 'ï',
+  O: 'Ö',
+  o: 'ö',
+  U: 'Ü',
+  u: 'ü',
+  Y: 'Ÿ',
+  y: 'ÿ',
 };
 
 // Unicode Gothic / Fraktur Bold
 function toGothicBold(text: string): string {
-  return text.split('').map(char => {
-    const code = char.charCodeAt(0);
-    // A-Z
-    if (code >= 65 && code <= 90) {
-      return String.fromCodePoint(0x1D56C + (code - 65));
-    }
-    // a-z
-    if (code >= 97 && code <= 122) {
-      return String.fromCodePoint(0x1D586 + (code - 97));
-    }
-    return char;
-  }).join('');
+  return text
+    .split('')
+    .map((char) => {
+      const code = char.charCodeAt(0);
+      // A-Z
+      if (code >= 65 && code <= 90) {
+        return String.fromCodePoint(0x1d56c + (code - 65));
+      }
+      // a-z
+      if (code >= 97 && code <= 122) {
+        return String.fromCodePoint(0x1d586 + (code - 97));
+      }
+      return char;
+    })
+    .join('');
 }
 
 // Unicode Gothic Regular
 function toGothicRegular(text: string): string {
-  return text.split('').map(char => {
-    const code = char.charCodeAt(0);
-    // Exceptions in Unicode Gothic standard
-    if (char === 'C') return 'ℭ';
-    if (char === 'H') return 'ℌ';
-    if (char === 'I') return 'ℑ';
-    if (char === 'R') return 'ℜ';
-    if (char === 'Z') return 'ℨ';
-    if (code >= 65 && code <= 90) {
-      return String.fromCodePoint(0x1D504 + (code - 65));
-    }
-    if (code >= 97 && code <= 122) {
-      return String.fromCodePoint(0x1D51E + (code - 97));
-    }
-    return char;
-  }).join('');
+  return text
+    .split('')
+    .map((char) => {
+      const code = char.charCodeAt(0);
+      // Exceptions in Unicode Gothic standard
+      if (char === 'C') return 'ℭ';
+      if (char === 'H') return 'ℌ';
+      if (char === 'I') return 'ℑ';
+      if (char === 'R') return 'ℜ';
+      if (char === 'Z') return 'ℨ';
+      if (code >= 65 && code <= 90) {
+        return String.fromCodePoint(0x1d504 + (code - 65));
+      }
+      if (code >= 97 && code <= 122) {
+        return String.fromCodePoint(0x1d51e + (code - 97));
+      }
+      return char;
+    })
+    .join('');
 }
 
 // Unicode Bold Sans
 function toBoldSans(text: string): string {
-  return text.split('').map(char => {
-    const code = char.charCodeAt(0);
-    if (code >= 65 && code <= 90) {
-      return String.fromCodePoint(0x1D5D4 + (code - 65));
-    }
-    if (code >= 97 && code <= 122) {
-      return String.fromCodePoint(0x1D5EE + (code - 97));
-    }
-    if (code >= 48 && code <= 57) {
-      return String.fromCodePoint(0x1D7EC + (code - 48));
-    }
-    return char;
-  }).join('');
+  return text
+    .split('')
+    .map((char) => {
+      const code = char.charCodeAt(0);
+      if (code >= 65 && code <= 90) {
+        return String.fromCodePoint(0x1d5d4 + (code - 65));
+      }
+      if (code >= 97 && code <= 122) {
+        return String.fromCodePoint(0x1d5ee + (code - 97));
+      }
+      if (code >= 48 && code <= 57) {
+        return String.fromCodePoint(0x1d7ec + (code - 48));
+      }
+      return char;
+    })
+    .join('');
 }
 
 // Korn Style: Selective R and N replacement with Cyrillic reverse (KoЯn, И)
 export function toKornStyle(text: string): string {
   if (!text) return 'KoЯn';
-  return text
-    .replace(/R/g, 'Я')
-    .replace(/r/g, 'я')
-    .replace(/N/g, 'И')
-    .replace(/n/g, 'и');
+  return text.replace(/R/g, 'Я').replace(/r/g, 'я').replace(/N/g, 'И').replace(/n/g, 'и');
 }
 
 // Full Reverse Letters
 export function toFlippedLetters(text: string): string {
   if (!text) return '';
-  return text.split('').map(c => FLIPPED_MAP[c] || c).join('');
+  return text
+    .split('')
+    .map((c) => FLIPPED_MAP[c] || c)
+    .join('');
 }
 
 // Heavy Metal Umlauts
 export function toMetalUmlauts(text: string): string {
   if (!text) return '';
-  return text.split('').map(c => UMLAUT_MAP[c] || c).join('');
+  return text
+    .split('')
+    .map((c) => UMLAUT_MAP[c] || c)
+    .join('');
 }
 
 // Clean Unicode back to normal Latin
 export function cleanToNormalText(text: string): string {
   if (!text) return '';
   return text
-    .replace(/Я/g, 'R').replace(/я/g, 'r')
-    .replace(/И/g, 'N').replace(/и/g, 'n')
-    .replace(/Ǝ/g, 'E').replace(/ǝ/g, 'e')
-    .replace(/∀/g, 'A').replace(/ɐ/g, 'a')
-    .replace(/Ɔ/g, 'C').replace(/ɔ/g, 'c')
-    .replace(/⊥/g, 'T').replace(/ʇ/g, 't')
-    .replace(/Λ/g, 'V').replace(/ʌ/g, 'v')
+    .replace(/Я/g, 'R')
+    .replace(/я/g, 'r')
+    .replace(/И/g, 'N')
+    .replace(/и/g, 'n')
+    .replace(/Ǝ/g, 'E')
+    .replace(/ǝ/g, 'e')
+    .replace(/∀/g, 'A')
+    .replace(/ɐ/g, 'a')
+    .replace(/Ɔ/g, 'C')
+    .replace(/ɔ/g, 'c')
+    .replace(/⊥/g, 'T')
+    .replace(/ʇ/g, 't')
+    .replace(/Λ/g, 'V')
+    .replace(/ʌ/g, 'v')
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '');
 }
@@ -208,6 +232,4 @@ export const BAND_STYLE_PRESETS: PresetStyle[] = [
   },
 ];
 
-export const ROCK_SYMBOLS = [
-  '⚡', 'Я', 'И', 'Ö', 'Ä', 'Ü', '☠️', '🤘', '🎸', '🥁', '🔥', '★', '✪', '⚔️', '♠', '𝄞', '𝄢', '✦', '☾', '♾️'
-];
+export const ROCK_SYMBOLS = ['⚡', 'Я', 'И', 'Ö', 'Ä', 'Ü', '☠️', '🤘', '🎸', '🥁', '🔥', '★', '✪', '⚔️', '♠', '𝄞', '𝄢', '✦', '☾', '♾️'];

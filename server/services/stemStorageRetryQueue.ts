@@ -24,8 +24,8 @@ class StemStorageRetryManager {
   private initialized = false;
 
   constructor() {
-    // Iniciar worker en segundo plano
-    this.timer = setInterval(() => this.processQueue(), 5000);
+    // Iniciar worker en segundo plano (revisar cada 60s si hay stems pendientes de reintento)
+    this.timer = setInterval(() => this.processQueue(), 60_000);
     if (this.timer.unref) this.timer.unref();
   }
 

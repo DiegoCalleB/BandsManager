@@ -52,11 +52,13 @@ export function calculateFinancialSummary(payments: Payment[]): FinancialSummary
   const margenBeneficioPorcentaje = totalIngresos > 0 ? (beneficioNeto / totalIngresos) * 100 : 0;
 
   const mapToBreakdown = (map: Map<string, number>, total: number): CategoryBreakdown[] => {
-    return Array.from(map.entries()).map(([categoria, subtotal]) => ({
-      categoria,
-      total: subtotal,
-      porcentaje: total > 0 ? Number(((subtotal / total) * 100).toFixed(1)) : 0,
-    })).sort((a, b) => b.total - a.total);
+    return Array.from(map.entries())
+      .map(([categoria, subtotal]) => ({
+        categoria,
+        total: subtotal,
+        porcentaje: total > 0 ? Number(((subtotal / total) * 100).toFixed(1)) : 0,
+      }))
+      .sort((a, b) => b.total - a.total);
   };
 
   return {
@@ -98,5 +100,5 @@ export function calculateConcertExpenses(concert: Concert): number {
  * Forecasts income based on sold tickets and cache
  */
 export function forecastConcertRevenue(cache: number, aforoVendido: number, precioEntradaAvg: number = 0): number {
-  return cache + (aforoVendido * precioEntradaAvg);
+  return cache + aforoVendido * precioEntradaAvg;
 }

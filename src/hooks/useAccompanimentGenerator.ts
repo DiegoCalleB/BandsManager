@@ -5,7 +5,13 @@ import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 
 export function useAccompanimentGenerator(
   song: Song,
-  saveNewTrackToIdea: (idea: SongAudioIdea, audioUrl: string, customTrackName?: string, customInstrument?: string, initialDesfaseMs?: number) => void
+  saveNewTrackToIdea: (
+    idea: SongAudioIdea,
+    audioUrl: string,
+    customTrackName?: string,
+    customInstrument?: string,
+    initialDesfaseMs?: number
+  ) => void
 ) {
   // --- ACCOMPANIMENT GENERATOR STATE ---
   const [showGenModalForIdea, setShowGenModalForIdea] = useState<SongAudioIdea | null>(null);
@@ -28,7 +34,7 @@ export function useAccompanimentGenerator(
         keyName: genKey,
         includeDrums,
         includeBass,
-        drumPattern: drumStyle
+        drumPattern: drumStyle,
       });
 
       const fileName = `sugerencia-${drumStyle}-${genKey}-${Date.now()}.wav`;
@@ -39,33 +45,37 @@ export function useAccompanimentGenerator(
       const parts = [];
       if (includeDrums) parts.push('Batería');
       if (includeBass) parts.push('Bajo');
-      const trackLabel = `Ref IA: ${parts.join(' + ') || 'Acompañamiento'} (${genKey})`;
+      const trackLabel = `Ref IA: ${parts.join('+') || 'Acompañamiento'} (${genKey})`;
 
-      saveNewTrackToIdea(
-        showGenModalForIdea, 
-        serverUrl, 
-        trackLabel, 
-        parts.join(' + ') || 'IA Synth'
-      );
+      saveNewTrackToIdea(showGenModalForIdea, serverUrl, trackLabel, parts.join('+') || 'IA Synth');
 
       setShowGenModalForIdea(null);
-      alert(`¡Acompañamiento sintetizado con éxito teniendo en cuenta la tonalidad (${genKey}) y tempo (${genBpm} BPM)! Se ha agregado al mezclador multipista como "${trackLabel}".`);
+      alert(
+        `¡Acompañamiento sintetizado con éxito teniendo en cuenta la tonalidad (${genKey}) y tempo (${genBpm} BPM)! Se ha agregado al mezclador multipista como "${trackLabel}".`
+      );
     } catch (err) {
-      console.error("Error al generar acompañamiento:", err);
-      alert("Error al sintetizar el acompañamiento de referencia.");
+      console.error('Error al generar acompañamiento:', err);
+      alert('Error al sintetizar el acompañamiento de referencia.');
     } finally {
       setIsGeneratingAccompaniment(false);
     }
   };
 
   return {
-    showGenModalForIdea, setShowGenModalForIdea,
-    genBpm, setGenBpm,
-    genKey, setGenKey,
-    genDuration, setGenDuration,
-    includeDrums, setIncludeDrums,
-    includeBass, setIncludeBass,
-    drumStyle, setDrumStyle,
+    showGenModalForIdea,
+    setShowGenModalForIdea,
+    genBpm,
+    setGenBpm,
+    genKey,
+    setGenKey,
+    genDuration,
+    setGenDuration,
+    includeDrums,
+    setIncludeDrums,
+    includeBass,
+    setIncludeBass,
+    drumStyle,
+    setDrumStyle,
     isGeneratingAccompaniment,
     handleGenerateAccompaniment,
   };

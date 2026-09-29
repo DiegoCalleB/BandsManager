@@ -39,7 +39,7 @@ export function crearGeneradorDeterminista(semilla: number): () => number {
 export interface ParametrosHumanizacion {
   /** Desplazamiento de tiempo máximo, en milisegundos, hacia adelante o atrás. */
   jitterMaxMs: number;
-  /** Variación máxima de intensidad, en la misma escala 0-1 que 'velocidad'. */
+  /** Variación máxima de intensidad, en la misma escala 0-1 que'velocidad'. */
   variacionVelocidad: number;
 }
 
@@ -48,7 +48,7 @@ const HUMANIZACION_POR_INSTRUMENTO: Record<MelodicInstrument, ParametrosHumaniza
   guitarra: { jitterMaxMs: 12, variacionVelocidad: 0.08 },
   violin: { jitterMaxMs: 18, variacionVelocidad: 0.06 },
   handpan: { jitterMaxMs: 10, variacionVelocidad: 0.07 },
-  percusion: { jitterMaxMs: 6, variacionVelocidad: 0.1 }
+  percusion: { jitterMaxMs: 6, variacionVelocidad: 0.1 },
 };
 
 export interface EventoPreparado {
@@ -108,10 +108,7 @@ export function prepararEventos(
  * esté libre en ese instante: si ninguna lo está, la que quede libre antes (voice stealing).
  * Función pura: solo necesita saber cuándo empieza y cuánto dura cada nota.
  */
-export function asignarVoces(
-  eventos: { tiempo: number; duracion: number }[],
-  numVoces: number
-): number[] {
+export function asignarVoces(eventos: { tiempo: number; duracion: number }[], numVoces: number): number[] {
   const libreEn = new Array(numVoces).fill(0);
   const asignacion: number[] = [];
 
@@ -146,7 +143,7 @@ export type GolpePercusion = 'grave' | 'medio' | 'agudo';
 const GOLPES_MIDI: { golpe: GolpePercusion; midi: number }[] = [
   { golpe: 'grave', midi: 36 }, // C2
   { golpe: 'medio', midi: 43 }, // G2
-  { golpe: 'agudo', midi: 48 }  // C3
+  { golpe: 'agudo', midi: 48 }, // C3
 ];
 
 export function clasificarGolpePercusion(midi: number): GolpePercusion {
@@ -173,7 +170,7 @@ export interface BufferDeAudio {
   getChannelData(canal: number): Float32Array;
 }
 
-/** Muta los canales in-place para que el pico absoluto quede en 'picoObjetivo' (por defecto -1 dBFS). */
+/** Muta los canales in-place para que el pico absoluto quede en'picoObjetivo' (por defecto -1 dBFS). */
 export function normalizarPico(buffer: BufferDeAudio, picoObjetivo = 0.891): void {
   let pico = 0;
   for (let canal = 0; canal < buffer.numberOfChannels; canal++) {
@@ -198,12 +195,7 @@ export function normalizarPico(buffer: BufferDeAudio, picoObjetivo = 0.891): voi
 // JCReverb (AudioWorkletNode) ni Tone.Reverb (genera su impulso con un Tone.Offline anidado) son
 // fiables dentro de nuestro propio render offline.
 // ---------------------------------------------------------------------------------------------
-function crearImpulsoReverb(
-  ctx: BaseAudioContext,
-  duracionSegundos: number,
-  caida: number,
-  rng: () => number
-): AudioBuffer {
+function crearImpulsoReverb(ctx: BaseAudioContext, duracionSegundos: number, caida: number, rng: () => number): AudioBuffer {
   const sampleRate = ctx.sampleRate;
   const longitud = Math.max(1, Math.floor(sampleRate * duracionSegundos));
   const impulso = ctx.createBuffer(2, longitud, sampleRate);
@@ -227,20 +219,15 @@ const ESPACIO_POR_INSTRUMENTO: Record<MelodicInstrument, EspacioAcustico> = {
   guitarra: { wet: 0.14, duracionSegundos: 1.1, caida: 3.5 },
   violin: { wet: 0.24, duracionSegundos: 1.8, caida: 3 },
   handpan: { wet: 0.3, duracionSegundos: 2.2, caida: 2.6 },
-  percusion: { wet: 0.12, duracionSegundos: 0.8, caida: 4 }
+  percusion: { wet: 0.12, duracionSegundos: 0.8, caida: 4 },
 };
 
 /**
- * Envía 'bus' (donde ya han sumado todas las voces del instrumento) al destino real, seco y con
+ * Envía'bus' (donde ya han sumado todas las voces del instrumento) al destino real, seco y con
  * un envío a reverb. El camino seco se queda a su nivel; el húmedo se SUMA encima, no se resta
  * del seco (mezcla aditiva, más simple que un crossfade equal-power y de sobra para esta cola).
  */
-function conectarConEspacio(
-  bus: GainNode,
-  ctxNativo: BaseAudioContext,
-  espacio: EspacioAcustico,
-  rng: () => number
-): void {
+function conectarConEspacio(bus: GainNode, ctxNativo: BaseAudioContext, espacio: EspacioAcustico, rng: () => number): void {
   bus.connect(ctxNativo.destination);
 
   const envio = ctxNativo.createGain();
@@ -288,7 +275,7 @@ function dispararEventosGuitarra(bus: GainNode, eventos: EventoPreparado[]): voi
 function crearVozViolin(bus: GainNode): VozInstrumento {
   const synth = new Tone.PolySynth(Tone.Synth, {
     oscillator: { type: 'sawtooth' },
-    envelope: { attack: 0.18, decay: 0.12, sustain: 0.75, release: 0.35 }
+    envelope: { attack: 0.18, decay: 0.12, sustain: 0.75, release: 0.35 },
   });
   const vibrato = new Tone.Vibrato({ frequency: 5.5, depth: 0.15 });
   const filtro = new Tone.Filter({ frequency: 3200, type: 'lowpass', rolloff: -12 });
@@ -297,7 +284,7 @@ function crearVozViolin(bus: GainNode): VozInstrumento {
   return {
     disparar(evento) {
       synth.triggerAttackRelease(evento.nota, evento.duracion, evento.tiempo, evento.velocidad);
-    }
+    },
   };
 }
 
@@ -306,14 +293,14 @@ function crearVozHandpan(bus: GainNode): VozInstrumento {
     harmonicity: 3.05,
     modulationIndex: 12,
     envelope: { attack: 0.004, decay: 1.1, sustain: 0.08, release: 1.6 },
-    modulationEnvelope: { attack: 0.002, decay: 0.25, sustain: 0, release: 0.3 }
+    modulationEnvelope: { attack: 0.002, decay: 0.25, sustain: 0, release: 0.3 },
   });
   synth.connect(bus);
 
   return {
     disparar(evento) {
       synth.triggerAttackRelease(evento.nota, evento.duracion, evento.tiempo, evento.velocidad);
-    }
+    },
   };
 }
 
@@ -324,7 +311,7 @@ function crearVozPercusion(ctxNativo: BaseAudioContext, bus: GainNode, rng: () =
   const TIMBRE: Record<GolpePercusion, { frecuenciaCuerpo: number; frecuenciaRuido: number }> = {
     grave: { frecuenciaCuerpo: 90, frecuenciaRuido: 900 },
     medio: { frecuenciaCuerpo: 160, frecuenciaRuido: 1800 },
-    agudo: { frecuenciaCuerpo: 260, frecuenciaRuido: 3200 }
+    agudo: { frecuenciaCuerpo: 260, frecuenciaRuido: 3200 },
   };
 
   return {
@@ -366,7 +353,7 @@ function crearVozPercusion(ctxNativo: BaseAudioContext, bus: GainNode, rng: () =
       gananciaRuido.connect(bus);
       ruido.start(evento.tiempo);
       ruido.stop(evento.tiempo + duracionRuido);
-    }
+    },
   };
 }
 
@@ -395,31 +382,38 @@ export async function renderMelodicIdeaAudioBlob(opts: {
     instrument: opts.instrument,
     bpm,
     totalLength,
-    semilla
+    semilla,
   });
   // Semilla derivada (no la misma instancia que la de prepararEventos, que ya se ha consumido
   // por completo antes de llegar aquí) para que el timbre del espacio y de la percusión también
-  // sean reproducibles: misma 'semilla' de entrada -> WAV bit a bit idéntico, no solo "las mismas
+  // sean reproducibles: misma'semilla' de entrada -> WAV bit a bit idéntico, no solo "las mismas
   // notas en los mismos instantes". Antes usaban Math.random() sin más.
   const rngSonido = crearGeneradorDeterminista(semilla + 1);
 
-  const rendered = await Tone.Offline((contexto) => {
-    const ctxNativo = contexto.rawContext as BaseAudioContext;
-    const bus = ctxNativo.createGain();
-    conectarConEspacio(bus, ctxNativo, ESPACIO_POR_INSTRUMENTO[opts.instrument], rngSonido);
+  const rendered = await Tone.Offline(
+    (contexto) => {
+      const ctxNativo = contexto.rawContext as BaseAudioContext;
+      const bus = ctxNativo.createGain();
+      conectarConEspacio(bus, ctxNativo, ESPACIO_POR_INSTRUMENTO[opts.instrument], rngSonido);
 
-    if (opts.instrument === 'guitarra') {
-      dispararEventosGuitarra(bus, eventosPreparados);
-      return;
-    }
+      if (opts.instrument === 'guitarra') {
+        dispararEventosGuitarra(bus, eventosPreparados);
+        return;
+      }
 
-    const voz =
-      opts.instrument === 'violin' ? crearVozViolin(bus) :
-      opts.instrument === 'handpan' ? crearVozHandpan(bus) :
-      crearVozPercusion(ctxNativo, bus, rngSonido);
+      const voz =
+        opts.instrument === 'violin'
+          ? crearVozViolin(bus)
+          : opts.instrument === 'handpan'
+            ? crearVozHandpan(bus)
+            : crearVozPercusion(ctxNativo, bus, rngSonido);
 
-    for (const evento of eventosPreparados) voz.disparar(evento);
-  }, totalLength, 2, 44100);
+      for (const evento of eventosPreparados) voz.disparar(evento);
+    },
+    totalLength,
+    2,
+    44100
+  );
 
   const audioBuffer = rendered.get();
   if (!audioBuffer) throw new Error('No se pudo renderizar el audio del instrumento.');

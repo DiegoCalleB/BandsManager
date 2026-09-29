@@ -4,7 +4,7 @@ import { esEmailValido, esEstadoDeEnvio, isValidEmail, ESTADOS_DE_ENVIO, puedeEn
 describe('esEmailValido', () => {
   it('acepta direcciones reales', () => {
     expect(esEmailValido('booking@salacaracol.es')).toBe(true);
-    expect(esEmailValido('  programacion@teatro-real.com  ')).toBe(true);
+    expect(esEmailValido( 'programacion@teatro-real.com  ')).toBe(true);
   });
 
   it('rechaza lo que llegaría a nodemailer y reventaría', () => {

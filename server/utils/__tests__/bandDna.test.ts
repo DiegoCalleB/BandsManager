@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, buildReplySystemPrompt, formatReplyFewShotForPrompt } from '../bandDna';
+import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, buildReplySystemPrompt, formatReplyFewShotForPrompt, buildIndexableSubjectLine, buildAdvancingSystemPrompt } from '../bandDna';
 
 function stateConBanda(dnaExpresion: any) {
   return {
@@ -314,6 +314,28 @@ describe('buildReplySystemPrompt - Contestador', () => {
     expect(prompt).not.toContain('configurada por el mánager');
   });
 
+  it('inyecta los cachés mínimos reales y de inicio de negociación de forma confidencial', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-test', lead);
+    const prompt = buildReplySystemPrompt(
+      dna,
+      lead,
+      '¿Cuánto cobráis para una fecha en abril?',
+      [],
+      '',
+      'price_negotiation',
+      undefined,
+      undefined,
+      { salas: 800 },
+      { salas: 1200 }
+    );
+
+    expect(prompt).toContain('CONDICIONES ECONÓMICAS Y GUÍA DE NEGOCIACIÓN (CONFIDENCIAL — PARA RESPUESTAS DE PRECIO)');
+    expect(prompt).toContain('1200€');
+    expect(prompt).toContain('800€');
+    expect(prompt).toContain('400€ para absorber costes o producción');
+    expect(prompt).toContain('NUNCA menciones que tu mínimo real es 800€');
+  });
+
   it('incluye las instrucciones puntuales de una regeneración con feedback', () => {
     const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
     const prompt = buildReplySystemPrompt(
@@ -434,3 +456,123 @@ describe('formatReplyFewShotForPrompt', () => {
     expect(formatReplyFewShotForPrompt([])).toBe('');
   });
 });
+
+describe('buildIndexableSubjectLine - Formato de asunto B2B indexable', () => {
+  it('genera formato estándar [FECHA/RANGO] - [CIUDAD] - [BANDA] ([GÉNERO / REF]) para cold outreach', () => {
+    const dna = {
+      bandName: 'Bakandeya',
+      genero: 'Balkan Ska Fusion',
+      artistasReferencia: 'Gogol Bordello, Emir Kusturica',
+    } as any;
+
+    const lead = {
+      nombre_sala: 'Sala Sol',
+      ciudad: 'Madrid',
+    };
+
+    const activeCampaign = {
+      targetDatesText: '14/11 o 21/11',
+    };
+
+    const asunto = buildIndexableSubjectLine({ bandDna: dna, lead, activeCampaign });
+    expect(asunto).toBe('[14/11 o 21/11] - Madrid - Bakandeya (Balkan Ska Fusion / ref: Gogol Bordello)');
+  });
+
+  it('genera formato de respuesta Re: cuando isRespuesta es true', () => {
+    const dna = {
+      bandName: 'Bakandeya',
+    } as any;
+
+    const lead = {
+      nombre_sala: 'Sala Capitol',
+      ciudad: 'Santiago',
+    };
+
+    const asunto = buildIndexableSubjectLine({ bandDna: dna, lead, isRespuesta: true });
+    expect(asunto).toBe('Re: Concierto Bakandeya en Sala Capitol');
+  });
+});
+
+describe('buildAdvancingSystemPrompt - Fase 4 Advancing y Producción', () => {
+  it('genera prompt estructurado de logística y producción con horarios y rider', () => {
+    const dna = {
+      bandName: 'Bakandeya',
+      numMusicos: 6,
+      instrumentacion: 'Violín, bajo, sintes, batería, voz',
+      montajeRapido: 'Montaje en 30 minutos',
+      epkUrl: 'https://bandmanager.io/epk/bakandeya',
+    } as any;
+
+    const lead = {
+      nombre_sala: 'Teatro Principal',
+      ciudad: 'Burgos',
+    };
+
+    const concertDetails = {
+      fechaConcierto: '12 de Diciembre 2026',
+      horarioLoadIn: '17:00h',
+      horarioSoundcheck: '18:00h',
+      horarioPuertas: '20:30h',
+      horarioShow: '21:30h',
+      contactoProduccion: 'Carlos Ruiz (Road Mánager)',
+      telefonoProduccion: '+34 600 000 000',
+    };
+
+    const prompt = buildAdvancingSystemPrompt({ bandDna: dna, lead, concertDetails });
+    expect(prompt).toContain('Teatro Principal');
+    expect(prompt).toContain('12 de Diciembre 2026');
+    expect(prompt).toContain('17:00h');
+    expect(prompt).toContain('Carlos Ruiz (Road Mánager)');
+    expect(prompt).toContain('PROHIBICIÓN ESTRICTA DE GUIONES LARGOS');
+  });
+});
+
+describe('buildEnhancedPitchSystemPrompt - Reglas Anti-Detección y Anti-AI Slop', () => {
+  it('incluye prohibición de guiones largos, burstiness y lista negra expandida', () => {
+    const dna = {
+      bandName: 'Bakandeya',
+      genero: 'Mestizaje Balkan',
+      artistasReferencia: 'La Pegatina, Gogol Bordello',
+    } as any;
+
+    const lead = {
+      nombre_sala: 'Sala Riviera',
+      ciudad: 'Madrid',
+      tipo: 'sala',
+    };
+
+    const prompt = buildEnhancedPitchSystemPrompt(dna, lead, '', 'es');
+    expect(prompt).toContain('PROHIBICIÓN ESTRICTA DE GUIONES LARGOS');
+    expect(prompt).toContain('BURSTINESS ORACIONAL OBLIGATORIA');
+    expect(prompt).toContain('REGLA ANTI-TRUNCAMIENTO DE GMAIL');
+    expect(prompt).toContain('MENTALIDAD DE SOCIO DE NEGOCIO');
+    expect(prompt).toContain('FIVE THINGS TO KILL');
+    expect(prompt).toContain('THE READ ALOUD TEST');
+    expect(prompt).toContain('ZERO PERSONNEL BIO');
+    expect(prompt).toContain('SLOT MIRRORING EN FESTIVALES');
+    expect(prompt).toContain('ANCHOR METRICS ÚNICAS');
+    expect(prompt).toContain('PROHIBICIÓN DE GERUNDIOS ENCADENADOS');
+    expect(prompt).toContain('PROHIBICIÓN DEL PATRÓN DE TRES ELEMENTOS (RULE OF THREE)');
+    expect(prompt).toContain('PROHIBICIÓN ABSOLUTA DE "THROAT-CLEARING"');
+    expect(prompt).toContain('INSERCIÓN DEL "DATO IMPOSIBLE DE AUTOMATIZAR"');
+    expect(prompt).toContain('PROPUESTA DE PROMOCIÓN GEOLOCALIZADA');
+    expect(prompt).toContain('FORMATO SINGLE-LINK');
+    expect(prompt).toContain('ANCLAJE DE VALOR EN SEGUIMIENTOS');
+    expect(prompt).toContain('crucial');
+    expect(prompt).toContain('paisaje');
+    expect(prompt).toContain('fundamental');
+    expect(prompt).toContain('explorar');
+    expect(prompt).toContain('REGLAS DE SUSTITUCIÓN DIRECTA');
+    expect(prompt).toContain('delve');
+    expect(prompt).toContain('tapestry');
+    expect(prompt).toContain('Artistas de referencia / Sonido afín: La Pegatina, Gogol Bordello');
+
+    const replyPrompt = buildReplySystemPrompt(dna, lead, '¿Qué condiciones tenéis?', [], '', 'es');
+    expect(replyPrompt).toContain('MODELOS FINANCIEROS Y CONDICIONES DE NEGOCIACIÓN');
+    expect(replyPrompt).toContain('Garantía Mínima vs % de puerta');
+    expect(replyPrompt).toContain('PROTECCIÓN DE MERCHANDISING');
+    expect(replyPrompt).toContain('PROTOCOLO DE PAGO 50/50');
+    expect(replyPrompt).toContain('Radius Clause');
+  });
+});
+

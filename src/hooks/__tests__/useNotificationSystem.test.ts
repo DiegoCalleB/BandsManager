@@ -22,4 +22,3 @@ describe('useNotificationSystem logic', () => {
     expect(typeof toast.timestamp).toBe('number');
   });
 });
-

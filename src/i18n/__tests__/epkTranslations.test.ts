@@ -15,7 +15,7 @@ describe('epkTranslations', () => {
       expect(EPK_TRANSLATIONS[l.code], `falta el diccionario de ${l.code}`).toBeDefined();
     }
     // Y al revés: ningún diccionario suelto sin entrada en el selector.
-    expect(Object.keys(EPK_TRANSLATIONS).sort()).toEqual(EPK_LANGUAGES.map(l => l.code).sort());
+    expect(Object.keys(EPK_TRANSLATIONS).sort()).toEqual(EPK_LANGUAGES.map((l) => l.code).sort());
   });
 
   it('ningún idioma se deja claves sin traducir', () => {
@@ -40,17 +40,14 @@ describe('epkTranslations', () => {
     const base = EPK_TRANSLATIONS[DEFAULT_EPK_LANGUAGE];
     for (const l of EPK_LANGUAGES) {
       for (const clave of Object.keys(base) as (keyof typeof base)[]) {
-        expect(variables(EPK_TRANSLATIONS[l.code][clave]), `${l.code}.${String(clave)}`)
-          .toEqual(variables(base[clave]));
+        expect(variables(EPK_TRANSLATIONS[l.code][clave]), `${l.code}.${String(clave)}`).toEqual(variables(base[clave]));
       }
     }
   });
 
   it('interpolate rellena las variables del diccionario del EPK', () => {
-    expect(interpolate(EPK_TRANSLATIONS.en.insigniaCabecera, { bandName: 'Bakandeya' }))
-      .toBe('Bakandeya — EPK / Press Kit');
-    expect(interpolate(EPK_TRANSLATIONS.es.fotoPromocional, { n: '3' }))
-      .toBe('Foto Promocional #3');
+    expect(interpolate(EPK_TRANSLATIONS.en.insigniaCabecera, { bandName: 'Bakandeya' })).toBe('Bakandeya — EPK / Press Kit');
+    expect(interpolate(EPK_TRANSLATIONS.es.fotoPromocional, { n: '3' })).toBe('Foto Promocional #3');
   });
 
   it('isEpkLanguage solo acepta idiomas soportados', () => {
