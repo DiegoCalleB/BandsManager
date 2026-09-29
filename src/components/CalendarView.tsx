@@ -2246,7 +2246,7 @@ export default function CalendarView({
             <div className="flex items-center gap-2">
               <div
                 className={`relative flex-1 flex items-center rounded-[var(--r-m)] border transition-all ${
-                  'bg-[var(--surface)] border-[var(--hair)] focus-within:border-[var(--acc)] shadow-xs'
+                  'bg-[var(--surface)] border-[var(--hair)] focus-within:border-[var(--ink-3)] shadow-xs'
                 }`}
               >
                 <Search className="w-4 h-4 ml-3 text-[var(--ink-2)] shrink-0" />
@@ -2271,7 +2271,7 @@ export default function CalendarView({
                 )}
               </div>
               {calendarSearchTerm && (
-                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
+                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)]">
                   {filteredConcerts.length + filteredRehearsals.length} resultados
                 </div>
               )}

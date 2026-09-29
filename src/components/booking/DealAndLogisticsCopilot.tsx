@@ -83,7 +83,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       return {
         tone: 'closed_schedule',
         label: 'Agenda de temporada cerrada ⏳',
-        color: 'text-[var(--acc)] bg-[var(--acc)]/10 border-[var(--acc)]/30',
+        color: 'text-[var(--acc)] bg-[var(--acc)]/10 border-[var(--hair)]',
         tactic:
           'No insistas para esta temporada. Agradece la respuesta y pide fecha exacta de apertura del próximo trimestre para entrar los primeros.',
         suggestedSubject: `Re: Concierto en ${lead.nombre_sala} - Fechas próxima temporada`,
@@ -102,7 +102,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       return {
         tone: 'budget_concern',
         label: 'Objeción económica / Caché 💰',
-        color: 'text-[var(--acc)] bg-[var(--acc)]/10 border-[var(--acc)]/30',
+        color: 'text-[var(--acc)] bg-[var(--acc)]/10 border-[var(--hair)]',
         tactic: 'Ofrece pasar a formato mixto (fijo mínimo + taquilla compartida) o proponer fecha doble con banda local amiga.',
         suggestedSubject: `Re: Adaptación de propuesta económica para ${lead.nombre_sala}`,
         suggestedDraft: `Entendemos perfectamente vuestra postura y valoramos mucho el esfuerzo que hacéis por mantener la música en vivo. Lo primordial para nosotros es tocar en vuestra sala.\n\n¿Os encajaría plantearlo a taquilla con un porcentaje del 80/20 a nuestro favor, o bien organizar una fecha compartida con una banda local que active la venta anticipada?\n\nEstamos abiertos a encontrar la fórmula que os sea cómoda.`,
@@ -120,7 +120,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       return {
         tone: 'hot_lead',
         label: 'Interés Alto / Caliente 🔥',
-        color: 'text-[var(--ok)] bg-[var(--ok)]/10 border-[var(--ok)]/30',
+        color: 'text-[var(--ok)] bg-[var(--ok)]/10 border-[var(--hair)]',
         tactic: 'Cierra fecha ya mismo: pide un hold de 48h, envía el rider y pacta el horario de prueba de sonido.',
         suggestedSubject: `Re: Confirmación de detalles y pre-reserva - ${lead.nombre_sala}`,
         suggestedDraft: `¡Qué gran noticia, nos hace muchísima ilusión tocar en ${lead.nombre_sala}!\n\nPara poder cerrar los billetes y la furgoneta del equipo, ¿podemos dejar la fecha en Pre-reserva (Hold 48h)? Os adjunto el rider con nuestro canal de violín y sintes. ¿A qué hora os viene mejor la prueba de sonido?`,
@@ -130,7 +130,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
     return {
       tone: 'open_reply',
       label: 'Conversación en curso 💬',
-      color: 'text-[var(--acc)] bg-[var(--acc)]/10 border-[var(--acc)]/30',
+      color: 'text-[var(--acc)] bg-[var(--acc)]/10 border-[var(--hair)]',
       tactic: 'Responde aclarando las dudas técnicas y manteniendo la iniciativa con una llamada a la acción clara.',
       suggestedSubject: `Re: Detalles concierto Bakandeya en ${lead.nombre_sala}`,
       suggestedDraft: `Hola de nuevo,\n\nMuchas gracias por las indicaciones. Por nuestra parte estamos totalmente alineados con la propuesta. ¿Queréis que os mandemos el cartel editable o preferís coordinar la comunicación vosotros?`,
@@ -179,9 +179,9 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
   return (
     <div className="space-y-4">
       {/* HEADER DE COPILOTO */}
-      <div className="p-3 bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--ok)]/10 border border-[var(--acc)]/30 rounded-[var(--r-l)] flex items-center justify-between gap-3">
+      <div className="p-3 bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--ok)]/10 border border-[var(--hair)] rounded-[var(--r-l)] flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 flex items-center justify-center shrink-0">
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />
           </div>
           <div>
@@ -212,8 +212,8 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <span
             className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] border ${
               isBreakEvenFeasible
-                ? 'bg-[var(--ok)]/15 border-[var(--ok)]/40 text-[var(--ok)]'
-                : 'bg-[var(--acc)]/15 border-[var(--acc)]/40 text-[var(--acc)]'
+                ? 'bg-[var(--ok)]/15 border-[var(--hair)] text-[var(--ok)]'
+                : 'bg-[var(--acc)]/15 border-[var(--acc)]/30 text-[var(--acc)]'
             }`}
           >
             {isBreakEvenFeasible ? '✅ Bolo Viable' : '⚠️ Requiere >60% Aforo'}
@@ -358,7 +358,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <button
               type="button"
               onClick={() => onOpenRoadbookModal(lead)}
-              className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 text-[10px] font-bold font-mono flex items-center gap-1 transition-all cursor-pointer"
+              className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--hair)] text-[10px] font-bold font-mono flex items-center gap-1 transition-all cursor-pointer"
             >
               <FileText className="w-3 h-3" />
               <span>Exportar PDF / Imprimir</span>

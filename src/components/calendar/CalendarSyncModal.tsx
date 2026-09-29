@@ -95,7 +95,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webCalFeed)}`}
               target="_blank"
               rel="noreferrer"
-              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--hair)] text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Calendar className="w-4 h-4 text-[var(--acc)]" />
               <span>Añadir a Google Calendar</span>
@@ -103,7 +103,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
             <a
               href={webCalFeed}
-              className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 border border-[var(--ok)]/30 text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 border border-[var(--hair)] text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Radio className="w-4 h-4 text-[var(--ok)]" />
               <span>Suscribir en iPhone / Mac</span>

@@ -1044,7 +1044,7 @@ export function ExcelImportModal({
                   </div>
 
                   {/* Teléfono Móvil (WhatsApp) */}
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--ok)]/40 space-y-1.5">
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <span>📱</span>
                       <span>Teléfono Móvil (WhatsApp)</span>
@@ -1057,7 +1057,7 @@ export function ExcelImportModal({
                           telefono_movil: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ink-3)]"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1069,7 +1069,7 @@ export function ExcelImportModal({
                   </div>
 
                   {/* Teléfono Fijo */}
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--acc)]/40 space-y-1.5">
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-1.5">
                     <label className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <span>☎️</span>
                       <span>Teléfono Fijo</span>
@@ -1082,7 +1082,7 @@ export function ExcelImportModal({
                           telefono_fijo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ink-3)]"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (

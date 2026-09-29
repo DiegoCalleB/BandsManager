@@ -105,7 +105,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 onChange={(e) => setDescripcion(e.target.value)}
                 placeholder="ej. Repertorio de ritmo alto pensado para festivales..."
                 className={`w-full p-3 rounded-[var(--r-m)] border font-medium text-xs focus:outline-none ${
-                  'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)] focus:border-[var(--acc)]'
+                  'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)] focus:border-[var(--ink-3)]'
                 }`}
               />
             </div>

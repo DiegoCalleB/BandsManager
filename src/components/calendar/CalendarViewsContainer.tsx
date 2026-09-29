@@ -188,24 +188,24 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             // Stylish border logic for non-selected vs event vs selected days
             let borderAndBgClass = '';
             if (isSelected) {
-              borderAndBgClass = 'bg-[var(--acc)] text-[var(--ink)] font-extrabold border-2 border-[var(--acc)] shadow-xl shadow-[var(--acc)]/20 scale-[1.05] z-20';
+              borderAndBgClass = 'bg-[var(--acc)] text-[var(--ink)] font-extrabold border border-[var(--hair)] shadow-xl shadow-[var(--acc)]/20 scale-[1.05] z-20';
             } else if (isToday) {
               borderAndBgClass =
-                'bg-[var(--acc)]/15 text-[var(--acc)] font-bold border-2 border-[var(--acc)]/80 shadow-md shadow-[var(--acc)]/10 hover:border-[var(--acc)] z-10';
+                'bg-[var(--acc)]/15 text-[var(--acc)] font-bold border-2 border-[var(--acc)]/30 shadow-md shadow-[var(--acc)]/10 hover:border-[var(--ink-3)] z-10';
             } else if (hasConcert && hasRehearsal) {
               borderAndBgClass =
-                'bg-gradient-to-br from-[var(--acc)]/40 to-[var(--ok)]/40 border border-[var(--acc)]/50 hover:border-[var(--acc)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--ink)]';
+                'bg-gradient-to-br from-[var(--acc)]/40 to-[var(--ok)]/40 border border-[var(--hair)] hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--ink)]';
             } else if (hasConcert) {
               borderAndBgClass =
-                'bg-[var(--acc)]/20 border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--acc)]';
+                'bg-[var(--acc)]/20 border border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--acc)]';
             } else if (hasRehearsal) {
               borderAndBgClass =
-                'bg-[var(--ok)]/20 border border-[var(--ok)]/40 hover:border-[var(--ok)] hover:shadow-md hover:shadow-[var(--ok)]/10 text-[var(--ok)]';
+                'bg-[var(--ok)]/20 border border-[var(--hair)] hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--ok)]/10 text-[var(--ok)]';
             } else if (hasCampaign) {
               borderAndBgClass =
-                'bg-[var(--acc)]/30 border border-[var(--acc)]/50 hover:border-[var(--acc)] hover:shadow-md hover:shadow-[var(--acc)]/20 text-[var(--acc)]';
+                'bg-[var(--acc)]/30 border border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--acc)]/20 text-[var(--acc)]';
             } else {
-              borderAndBgClass = 'bg-[var(--surface)] border border-[var(--hair)] hover:border-[var(--acc)] hover:bg-[var(--sunken)] text-[var(--ink)] shadow-xs';
+              borderAndBgClass = 'bg-[var(--surface)] border border-[var(--hair)] hover:border-[var(--ink-3)] hover:bg-[var(--sunken)] text-[var(--ink)] shadow-xs';
             }
 
             return (
@@ -248,8 +248,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           isSelected
                             ? 'bg-[var(--surface)]/25 text-[var(--ink)] font-black'
                             : isPosible
-                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
-                              : 'bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
+                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--hair)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
+                              : 'bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/30 hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
                         }`}
                         title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
                       >
@@ -281,8 +281,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           isSelected
                             ? 'bg-[var(--surface)]/25 text-[var(--ink)] font-black'
                             : isReu
-                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
-                              : 'bg-[var(--ok)]/25 text-[var(--ok)] border border-[var(--ok)]/40 hover:bg-[var(--ok)]/35 hover:text-[var(--ink)] shadow-xs'
+                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--hair)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
+                              : 'bg-[var(--ok)]/25 text-[var(--ok)] border border-[var(--ok)]/30 hover:bg-[var(--ok)]/35 hover:text-[var(--ink)] shadow-xs'
                         }`}
                         title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
                       >
@@ -325,10 +325,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setSelectedDate(d)}
                 className={`flex flex-col items-center justify-center p-2 rounded-[var(--r-m)] transition-all cursor-pointer border ${
                   isSelected
-                    ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] shadow-md font-bold'
+                    ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 shadow-md font-bold'
                     : isToday
-                      ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/60 font-bold'
-                      : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] hover:border-[var(--acc)]'
+                      ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 font-bold'
+                      : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] hover:border-[var(--ink-3)]'
                 }`}
               >
                 <span className="text-[10px] font-mono uppercase tracking-wider opacity-80">{fullWeekdays[idx].slice(0, 3)}</span>
@@ -363,9 +363,9 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   onClick={() => setSelectedDate(d)}
                   className={`flex flex-col rounded-[var(--r-m)] p-2 sm:p-2.5 transition-all border min-w-0 ${
                     isSelected
-                      ? 'bg-[var(--acc)]/50 border-[var(--acc)] ring-1 ring-[var(--acc)]'
+                      ? 'bg-[var(--acc)]/50 border-[var(--acc)]/30 ring-1 ring-[var(--acc)]'
                       : isToday
-                        ? 'bg-[var(--acc-soft)]/40 border-[var(--acc)]'
+                        ? 'bg-[var(--acc-soft)]/40 border-[var(--acc)]/30'
                         : 'bg-[var(--surface)] border-[var(--hair)]'
                   }`}
                 >
@@ -414,11 +414,11 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           className={`p-2 rounded-[var(--r-m)] cursor-pointer transition-all border text-left min-w-0 ${
                             isEvtSelected
                               ? isPosible
-                                ? 'bg-[var(--acc)]/25 border-[var(--acc)] ring-1 ring-[var(--acc)]/50 shadow-md'
-                                : 'bg-[var(--acc)]/25 border-[var(--acc)] ring-1 ring-[var(--acc)]/50 shadow-md'
+                                ? 'bg-[var(--acc)]/25 border-[var(--hair)] ring-1 ring-[var(--acc)]/50 shadow-md'
+                                : 'bg-[var(--acc)]/25 border-[var(--acc)]/30 ring-1 ring-[var(--acc)]/50 shadow-md'
                               : isPosible
-                                ? 'bg-[var(--acc)]/30 border-[var(--acc)]/40 hover:border-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--acc)]'
-                                : 'bg-[var(--acc)]/30 border-[var(--acc)]/40 hover:border-[var(--acc)] hover:bg-[var(--acc)]/30'
+                                ? 'bg-[var(--acc)]/30 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/30 text-[var(--acc)]'
+                                : 'bg-[var(--acc)]/30 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/30'
                           }`}
                         >
                           <div className="flex items-center gap-1.5 mb-1 min-w-0">
@@ -426,7 +426,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               <img
                                 src={bandInfo.logoUrl}
                                 alt={bandInfo.name}
-                                className={`w-4 h-4 rounded-[var(--r-pill)] object-contain bg-[var(--sunken)] p-0.5 shrink-0 border ${isPosible ? 'border-[var(--acc)]/60' : 'border-[var(--acc)]/60'}`}
+                                className={`w-4 h-4 rounded-[var(--r-pill)] object-contain bg-[var(--sunken)] p-0.5 shrink-0 border ${isPosible ? 'border-[var(--hair)]' : 'border-[var(--hair)]'}`}
                                 onError={(e) => {
                                   (e.currentTarget as HTMLElement).style.display = 'none';
                                   const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -446,7 +446,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               {bandInfo.name}
                             </span>
                             {isPosible && (
-                              <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40">
+                              <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--hair)]">
                                 Posible
                               </span>
                             )}
@@ -480,11 +480,11 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           className={`p-2 rounded-[var(--r-m)] cursor-pointer transition-all border text-left min-w-0 ${
                             isEvtSelected
                               ? isReu
-                                ? 'bg-[var(--acc)]/25 border-[var(--acc)] ring-1 ring-[var(--acc)]/50 shadow-md'
-                                : 'bg-[var(--ok)]/25 border-[var(--ok)] ring-1 ring-[var(--ok)]/50 shadow-md'
+                                ? 'bg-[var(--acc)]/25 border-[var(--hair)] ring-1 ring-[var(--acc)]/50 shadow-md'
+                                : 'bg-[var(--ok)]/25 border-[var(--ok)]/30 ring-1 ring-[var(--ok)]/50 shadow-md'
                               : isReu
-                                ? 'bg-[var(--acc)]/30 border-[var(--acc)]/40 hover:border-[var(--acc)] hover:bg-[var(--acc)]/30'
-                                : 'bg-[var(--ok)]/30 border-[var(--ok)]/40 hover:border-[var(--ok)] hover:bg-[var(--ok)]/30'
+                                ? 'bg-[var(--acc)]/30 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/30'
+                                : 'bg-[var(--ok)]/30 border-[var(--ok)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--ok)]/30'
                           }`}
                         >
                           <div className="flex items-center gap-1.5 mb-1 min-w-0">
@@ -492,7 +492,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               <img
                                 src={bandInfo.logoUrl}
                                 alt={bandInfo.name}
-                                className={`w-4 h-4 rounded-[var(--r-pill)] object-contain bg-[var(--sunken)] p-0.5 shrink-0 border ${isReu ? 'border-[var(--acc)]/60' : 'border-[var(--ok)]/60'}`}
+                                className={`w-4 h-4 rounded-[var(--r-pill)] object-contain bg-[var(--sunken)] p-0.5 shrink-0 border ${isReu ? 'border-[var(--hair)]' : 'border-[var(--hair)]'}`}
                                 onError={(e) => {
                                   (e.currentTarget as HTMLElement).style.display = 'none';
                                   const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -523,7 +523,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                     {campaigns.map((camp) => (
                       <div
                         key={camp.id}
-                        className="p-1.5 rounded-[var(--r-m)] border border-[var(--acc)]/40 bg-[var(--acc)]/25 text-[10px] text-[var(--acc)]"
+                        className="p-1.5 rounded-[var(--r-m)] border border-[var(--hair)] bg-[var(--acc)]/25 text-[10px] text-[var(--acc)]"
                       >
                         🎯 {camp.name}
                       </div>
@@ -619,7 +619,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
               Agenda Cronológica ({allEventsList.length} eventos)
             </span>
             {calendarSearchTerm.trim() && (
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
                 Filtrado por: "{calendarSearchTerm}"
               </span>
             )}
@@ -690,7 +690,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             {agendaFilterPast !== 'all' && (
               <button
                 onClick={() => setAgendaFilterPast('all')}
-                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-all border border-[var(--acc)]/30"
+                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-all border border-[var(--hair)]"
               >
                 Ver todos los eventos
               </button>
@@ -711,9 +711,9 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   key={dateStr}
                   className={`rounded-[var(--r-m)] border transition-all p-3 ${
                     isSelected
-                      ? 'bg-[var(--surface)]/90 border-[var(--acc)]/60 ring-1 ring-[var(--acc)]/30'
+                      ? 'bg-[var(--surface)]/90 border-[var(--acc)]/30 ring-1 ring-[var(--acc)]/30'
                       : isToday
-                        ? 'bg-[var(--surface)]/70 border-[var(--acc)]/40'
+                        ? 'bg-[var(--surface)]/70 border-[var(--acc)]/30'
                         : isDatePast
                           ? 'bg-[var(--surface)]/50 border-[var(--hair)]/50 opacity-95'
                           : 'bg-[var(--surface)]/40 border-[var(--hair)]/80 hover:border-[var(--hair)]'
@@ -739,7 +739,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         </span>
                       )}
                       {isDatePast && !isToday && (
-                        <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30 flex items-center gap-1">
+                        <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--hair)] flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
                           <span>Realizado</span>
                         </span>
@@ -772,14 +772,14 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           onClick={() => handleSelectEvent(evt)}
                           className={`flex items-center justify-between p-2.5 rounded-[var(--r-m)] cursor-pointer border transition-all ${
                             isEvtSelected
-                              ? 'bg-[var(--acc)]/20 border-[var(--acc)] shadow-md ring-1 ring-[var(--acc)]/50'
+                              ? 'bg-[var(--acc)]/20 border-[var(--hair)] shadow-md ring-1 ring-[var(--acc)]/50'
                               : isConcert
                                 ? isPast
-                                  ? 'bg-[var(--acc)]/15 border-[var(--acc)]/20 hover:border-[var(--acc)]/60 hover:bg-[var(--acc)]/20'
-                                  : 'bg-[var(--acc)]/20 border-[var(--acc)]/30 hover:border-[var(--acc)]/80 hover:bg-[var(--acc)]/20'
+                                  ? 'bg-[var(--acc)]/15 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/20'
+                                  : 'bg-[var(--acc)]/20 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/20'
                                 : isReu
-                                  ? 'bg-[var(--acc)]/20 border-[var(--acc)]/30 hover:border-[var(--acc)]/80 hover:bg-[var(--acc)]/20'
-                                  : 'bg-[var(--ok)]/20 border-[var(--ok)]/30 hover:border-[var(--ok)]/80 hover:bg-[var(--ok)]/20'
+                                  ? 'bg-[var(--acc)]/20 border-[var(--hair)] hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/20'
+                                  : 'bg-[var(--ok)]/20 border-[var(--ok)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--ok)]/20'
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
@@ -808,17 +808,17 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded border ${
                                     isConcert
                                       ? isPast
-                                        ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30'
-                                        : 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40'
+                                        ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--hair)]'
+                                        : 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
                                       : isReu
-                                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40'
-                                        : 'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40'
+                                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
+                                        : 'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/30'
                                   }`}
                                 >
                                   {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
                                 </span>
                                 {isPast && (
-                                  <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/40 flex items-center gap-1">
+                                  <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)] flex items-center gap-1">
                                     <CheckCircle2 className="w-2.5 h-2.5" />
                                     <span>Realizado</span>
                                   </span>
@@ -864,7 +864,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   setViewingRehearsal(r);
                                 }
                               }}
-                              className="px-2 py-1 text-[11px] font-mono font-bold rounded-[var(--r-s)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/30 flex items-center gap-1 transition-all cursor-pointer"
+                              className="px-2 py-1 text-[11px] font-mono font-bold rounded-[var(--r-s)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--hair)] flex items-center gap-1 transition-all cursor-pointer"
                               title={isPast ? 'Editar datos, notas o caché del bolo realizado' : 'Editar evento'}
                             >
                               <Edit className="w-3 h-3" />

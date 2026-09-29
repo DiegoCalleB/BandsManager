@@ -23,7 +23,7 @@ export function TemplateRecommendationsCard({
   return (
     <div
       className={`rounded-[var(--r-m)] border p-4 transition-all duration-200 ${
-        'bg-[var(--acc-soft)]/70 border-[var(--acc)] text-[var(--ink)] shadow-sm'
+        'bg-[var(--acc-soft)]/70 border-[var(--hair)] text-[var(--ink)] shadow-sm'
       }`}
     >
       {/* Header with category badge & toggle */}
@@ -82,11 +82,11 @@ export function TemplateRecommendationsCard({
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="mt-4 pt-3.5 border-t border-[var(--acc)]/20 space-y-3.5 animate-in fade-in duration-200">
+        <div className="mt-4 pt-3.5 border-t border-[var(--hair)] space-y-3.5 animate-in fade-in duration-200">
           {/* Quick AI Tip / Secret */}
           <div
             className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-2 text-[11px] leading-relaxed ${
-              'bg-[var(--surface)] text-[var(--ink)] border border-[var(--acc)]'
+              'bg-[var(--surface)] text-[var(--ink)] border border-[var(--acc)]/30'
             }`}
           >
             <Lightbulb className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
@@ -101,7 +101,7 @@ export function TemplateRecommendationsCard({
             {/* DOs */}
             <div
               className={`p-3 rounded-[var(--r-m)] border space-y-1.5 ${
-                'bg-[var(--ok-soft)]/70 border-[var(--ok)]'
+                'bg-[var(--ok-soft)]/70 border-[var(--hair)]'
               }`}
             >
               <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ok)]">
@@ -121,7 +121,7 @@ export function TemplateRecommendationsCard({
             {/* DON'Ts */}
             <div
               className={`p-3 rounded-[var(--r-m)] border space-y-1.5 ${
-                'bg-[var(--alert)]/12 border-[var(--alert)]'
+                'bg-[var(--alert)]/12 border-[var(--hair)]'
               }`}
             >
               <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--alert)]">
@@ -143,7 +143,7 @@ export function TemplateRecommendationsCard({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px]">
             <div
               className={`p-2.5 rounded-[var(--r-m)] border space-y-1 ${
-                'bg-[var(--surface)] border-[var(--acc)]'
+                'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
               <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">
@@ -154,7 +154,7 @@ export function TemplateRecommendationsCard({
 
             <div
               className={`p-2.5 rounded-[var(--r-m)] border space-y-1 ${
-                'bg-[var(--surface)] border-[var(--acc)]'
+                'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
               <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">⚡ Ganchos Clave</span>
@@ -170,7 +170,7 @@ export function TemplateRecommendationsCard({
 
             <div
               className={`p-2.5 rounded-[var(--r-m)] border space-y-1 ${
-                'bg-[var(--surface)] border-[var(--acc)]'
+                'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
               <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">

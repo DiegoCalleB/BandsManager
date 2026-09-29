@@ -294,15 +294,15 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 const cardBg = isRead
                   ? 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] opacity-80'
                   : isUrgent
-                    ? 'bg-[var(--alert)]/8 border-[var(--alert)] text-[var(--ink)]'
+                    ? 'bg-[var(--alert)]/8 border-[var(--alert)]/30 text-[var(--ink)]'
                     : isWarning
-                      ? 'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--ink)]'
+                      ? 'bg-[var(--acc-soft)] border-[var(--acc)]/30 text-[var(--ink)]'
                       : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]';
 
                 const badgeStyle = isUrgent
                   ? 'bg-[var(--alert)]/15 text-[var(--alert)] border-[var(--alert)]/30'
                   : isWarning
-                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] border-[var(--acc)]/30'
+                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] border-[var(--hair)]'
                     : 'bg-[var(--ok-soft)] text-[var(--ok)] border-[var(--ok)]/30';
 
                 const actionBtnStyle = isUrgent

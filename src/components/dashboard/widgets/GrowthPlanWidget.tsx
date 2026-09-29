@@ -35,7 +35,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
                 Guía de Crecimiento & Promoción
               </h3>
-              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
                 {growthPlan?.horizonDays || 30}D
               </span>
             </div>
@@ -66,7 +66,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
 
       {/* Action Recommendation Banner */}
       {todayBlueprint ? (
-        <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-transparent border border-[var(--acc)]/30 flex items-start justify-between gap-3">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-transparent border border-[var(--hair)] flex items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] font-mono text-[10px] font-bold uppercase">

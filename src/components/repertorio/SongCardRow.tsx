@@ -138,7 +138,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
         isDragging
           ? 'opacity-30 scale-[0.98]'
           : isDragOver
-            ? 'border-[var(--ok)] ring-2 ring-[var(--ok)]/50 bg-[var(--ok)]/10'
+            ? 'border-[var(--hair)] ring-2 ring-[var(--ok)]/50 bg-[var(--ok)]/10'
             : isPlayingCurrent
               ? 'bg-[var(--ok)]/10 text-[var(--ink)] ring-1 ring-[var(--ok)]/20'
               : isSelected
@@ -323,7 +323,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               type="button"
               onClick={onOpenChords}
               className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] border-[var(--ok)]'
+                'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] border-[var(--hair)]'
               }`}
               title="Ver cifrado de acordes, armonía y letra"
             >

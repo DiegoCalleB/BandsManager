@@ -74,7 +74,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <button
               type="button"
               onClick={() => setShowAiLogoModal(true)}
-              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--acc)] border border-[var(--acc)]/30 rounded-[var(--r-m)] text-[11px] font-bold flex items-center gap-1.5 transition cursor-pointer"
+              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--acc)] border border-[var(--hair)] rounded-[var(--r-m)] text-[11px] font-bold flex items-center gap-1.5 transition cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" /> Generar con IA
             </button>
@@ -432,7 +432,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         },
                       })
                     }
-                    className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
+                    className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:border-[var(--ink-3)]"
                   >
                     <option value="sin_preferencia">
                       Sin preferencia / Sala
@@ -461,7 +461,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         },
                       })
                     }
-                    className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
+                    className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:border-[var(--ink-3)]"
                   >
                     <option value="completo">Backline completo propio</option>
                     <option value="parcial">
@@ -492,7 +492,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40" : "bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]"}`}
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30" : "bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]"}`}
                     >
                       De la sala
                     </button>
@@ -507,7 +507,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40" : "bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]"}`}
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/30" : "bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]"}`}
                     >
                       Propia
                     </button>
@@ -537,7 +537,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         })
                       }
                       placeholder="30 min"
-                      className="w-1/2 bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
+                      className="w-1/2 bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:border-[var(--ink-3)]"
                     />
                     <input
                       type="number"
@@ -554,7 +554,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         })
                       }
                       placeholder="12 ch"
-                      className="w-1/2 bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
+                      className="w-1/2 bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:border-[var(--ink-3)]"
                     />
                   </div>
                   <p className="text-[10px] text-[var(--ink-2)]">

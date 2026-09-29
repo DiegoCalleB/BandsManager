@@ -260,7 +260,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 Identidad Sonora, Género & Bandas Afines (FFO - For Fans Of)
               </h3>
             </div>
-            <span className="text-[10px] font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30 font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-[10px] font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)] font-bold uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               Agentes IA & Radar de Booking
             </span>
@@ -280,7 +280,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   setConfig({ ...config, genero: e.target.value })
                 }
                 placeholder="Ej. Mestizaje, Indie Rock, Balkan-Ska, Pop-Rock, Flamenco Fusión..."
-                className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3.5 py-2.5 text-xs sm:text-sm text-[var(--ink-2)] outline-none"
+                className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--ink-3)] rounded-[var(--r-m)] px-3.5 py-2.5 text-xs sm:text-sm text-[var(--ink-2)] outline-none"
               />
               <p className="text-[11px] text-[var(--ink-2)]">
                 Estilo sonoro representativo de vuestro show en vivo.
@@ -354,7 +354,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 config.bandasSimilares.map((band, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)] shadow-sm"
                   >
                     <span>{band}</span>
                     <button
@@ -384,7 +384,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     }
                   }}
                   placeholder="Escribe el nombre de un grupo similar (ej. Vetusta Morla, Cala Vento, La Pegatina) y pulsa Enter..."
-                  className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3.5 py-2 text-xs sm:text-sm text-[var(--ink-2)] outline-none placeholder:text-[var(--ink-2)] font-sans"
+                  className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--ink-3)] rounded-[var(--r-m)] px-3.5 py-2 text-xs sm:text-sm text-[var(--ink-2)] outline-none placeholder:text-[var(--ink-2)] font-sans"
                 />
               </div>
               <button

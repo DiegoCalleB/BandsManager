@@ -152,7 +152,7 @@ export function SongModal({
               {/* Audio Upload Area (Compact & Clean) */}
               <div
                 className={`p-3 rounded-[var(--r-l)] border transition-all ${
-                  'bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ok)]'
+                  'bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ink-3)]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -184,7 +184,7 @@ export function SongModal({
                   className="hidden"
                 />
                 {audioFileName && (
-                  <div className="mt-2 text-xs text-[var(--ok)] flex items-center gap-1.5 font-medium bg-[var(--ok)]/10 p-2 rounded-[var(--r-m)] border border-[var(--ok)]/20">
+                  <div className="mt-2 text-xs text-[var(--ok)] flex items-center gap-1.5 font-medium bg-[var(--ok)]/10 p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
                     <span className="truncate">{audioFileName}</span>
                   </div>
@@ -246,7 +246,7 @@ export function SongModal({
                       value={customAlbumInput}
                       onChange={(e) => setCustomAlbumInput(e.target.value)}
                       placeholder="Nombre del nuevo disco..."
-                      className={`w-full mt-2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none border border-[var(--ok)]/50 ${
+                      className={`w-full mt-2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none border border-[var(--hair)] ${
                         'bg-[var(--surface)] text-[var(--ink)]'
                       }`}
                     />

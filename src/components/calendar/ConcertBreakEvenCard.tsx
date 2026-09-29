@@ -27,12 +27,12 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
         <span
           className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] ${
             analysis.estadoRentabilidad === 'beneficio'
-              ? 'bg-[var(--ok)]/10 text-[var(--ok)] border border-[var(--ok)]/20'
+              ? 'bg-[var(--ok)]/10 text-[var(--ok)] border border-[var(--hair)]'
               : analysis.estadoRentabilidad === 'cubierto'
-                ? 'bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20'
+                ? 'bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30'
                 : analysis.estadoRentabilidad === 'perdida_moderada'
-                  ? 'bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20'
-                  : 'bg-[var(--alert)]/10 text-[var(--alert)] border border-[var(--alert)]/20'
+                  ? 'bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30'
+                  : 'bg-[var(--alert)]/10 text-[var(--alert)] border border-[var(--hair)]'
           }`}
         >
           {analysis.estadoRentabilidad === 'beneficio'

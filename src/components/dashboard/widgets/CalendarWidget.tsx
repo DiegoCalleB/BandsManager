@@ -214,7 +214,7 @@ export function CalendarWidget({
   });
 
   const cardContainerBg = "bg-[var(--surface)] border border-[var(--hair)]";
-  const subCardBg = "bg-[var(--ink-3)] border border-[var(--hair)]/80 text-[var(--ink)] hover:border-[var(--acc)]";
+  const subCardBg = "bg-[var(--ink-3)] border border-[var(--hair)]/80 text-[var(--ink)] hover:border-[var(--ink-3)]";
   const textTitleColor = "text-[var(--ink)]";
   const textSubColor = "text-[var(--ink-2)]";
   const dividerColor = "border-[var(--hair)]";

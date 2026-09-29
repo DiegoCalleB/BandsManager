@@ -66,7 +66,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-[#141312]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
                 <BellRing className="w-5 h-5" />
               </div>
               <div>
@@ -86,7 +86,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
           <div className="p-4 sm:p-6 overflow-y-auto space-y-5 text-xs text-[var(--ink-2)]">
             {/* Permission Banner */}
             {permission === 'granted' ? (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--ok)]/40 flex items-start gap-3 text-[var(--ok)]">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--hair)] flex items-start gap-3 text-[var(--ok)]">
                 <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <span className="font-bold block text-sm">Permiso concedido en este navegador</span>
@@ -96,7 +96,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 </div>
               </div>
             ) : permission === 'denied' ? (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/40 border border-[var(--alert)]/40 flex items-start gap-3 text-[var(--alert)]">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/40 border border-[var(--hair)] flex items-start gap-3 text-[var(--alert)]">
                 <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0 mt-0.5" />
                 <div className="flex-1 space-y-1">
                   <span className="font-bold block text-sm">Permiso bloqueado en el navegador</span>
@@ -107,7 +107,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 </div>
               </div>
             ) : (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 border border-[var(--acc)]/40 flex items-start justify-between gap-3 text-[var(--acc)]">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 border border-[var(--hair)] flex items-start justify-between gap-3 text-[var(--acc)]">
                 <div className="flex items-start gap-3">
                   <Bell className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                   <div>

@@ -57,14 +57,14 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
   };
 
   return (
-    <div className="rounded-[var(--r-m)] border border-[var(--ok)]/30 bg-[var(--surface)] overflow-hidden transition-all shadow-md">
+    <div className="rounded-[var(--r-m)] border border-[var(--hair)] bg-[var(--surface)] overflow-hidden transition-all shadow-md">
       {/* Resumen Compacto (Siempre Visible) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
         className="p-3 bg-gradient-to-r from-[var(--ok)]/40 via-[var(--surface)] to-[var(--surface)]/60 hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--ok)]/20 border border-[var(--ok)]/40 flex items-center justify-center shrink-0">
+          <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--ok)]/20 border border-[var(--hair)] flex items-center justify-center shrink-0">
             <Calculator className="w-3.5 h-3.5 text-[var(--ok)]" />
           </div>
           <div>
@@ -73,10 +73,10 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               <span
                 className={`text-[10px] font-sans font-bold px-1.5 py-0.2 rounded ${
                   isViable
-                    ? 'bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/40'
+                    ? 'bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)]'
                     : isAjustado
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40'
-                      : 'bg-[var(--alert)]/20 text-[var(--alert)] border border-[var(--alert)]/40'
+                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30'
+                      : 'bg-[var(--alert)]/20 text-[var(--alert)] border border-[var(--alert)]/30'
                 }`}
               >
                 {isViable ? '🟢 Muy Viable' : isAjustado ? '🟡 Ajustado' : '🔴 Exigente'}
@@ -109,7 +109,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={anticipada}
                 onChange={(e) => setAnticipada(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -119,7 +119,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={taquilla}
                 onChange={(e) => setTaquilla(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -129,7 +129,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={alquiler}
                 onChange={(e) => setAlquiler(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -139,7 +139,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={pctSala}
                 onChange={(e) => setPctSala(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -149,7 +149,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={gastosViaje}
                 onChange={(e) => setGastosViaje(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -159,14 +159,14 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={numMusicos}
                 onChange={(e) => setNumMusicos(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
               />
             </div>
           </div>
 
           {/* Tarjetas de Resultado Rápido */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--ok)]/40 text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--hair)] text-center">
               <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Punto de Equilibrio</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">{liveBreakEven} tix</span>
               <span className="text-[9px] text-[var(--ink-2)] block">para cubrir costes</span>
@@ -184,7 +184,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               <span className="text-[9px] text-[var(--ink-2)] block">total banda</span>
             </div>
 
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--ok)]/50 text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--hair)] text-center">
               <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Por Músico (80%)</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">+{porMusico80Pct} €</span>
               <span className="text-[9px] text-[var(--ok)]/80 block">limpio cada uno</span>

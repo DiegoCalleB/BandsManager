@@ -107,25 +107,25 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
     switch (type) {
       case 'lector_inbox_check':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
             📥 Lector Inbox
           </span>
         );
       case 'redactor_pitch_dispatch':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)]">
             📤 Redactor Dispatch
           </span>
         );
       case 'scout_enrichment':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
             🔍 Scout Enrichment
           </span>
         );
       case 'campaign_radar_sync':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
             🛰️ Radar Sync
           </span>
         );
@@ -142,25 +142,25 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
     switch (status) {
       case 'completed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/40">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)]">
             ✓ Completado
           </span>
         );
       case 'processing':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 animate-pulse">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] animate-pulse">
             ● En Proceso
           </span>
         );
       case 'pending':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
             ⏳ En Cola
           </span>
         );
       case 'failed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--alert)]/20 text-[var(--alert)] border border-[var(--alert)]/40">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--alert)]/20 text-[var(--alert)] border border-[var(--hair)]">
             ✕ Fallido
           </span>
         );
@@ -182,7 +182,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-base font-bold text-[var(--ink)] tracking-wide">Monitor de Cola & Workers en Vivo</h2>
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-pill)] text-[11px] font-semibold bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-pill)] text-[11px] font-semibold bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--hair)]">
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping" />
                     Worker Online
                   </span>
@@ -218,7 +218,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           <div className="p-6 space-y-6 overflow-y-auto custom-scrollbar flex-1 bg-gradient-to-b from-[#161512] to-[#0f0e0c]">
             {/* KPI Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--acc)]/20 flex flex-col">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>En Cola</span>
                   <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -227,7 +227,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 <span className="text-[10px] text-[var(--ink-2)] mt-1">Trabajos esperando turno</span>
               </div>
 
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--acc)]/20 flex flex-col">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>En Proceso</span>
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)] animate-spin" />
@@ -236,7 +236,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 <span className="text-[10px] text-[var(--ink-2)] mt-1">Ejecutando en worker</span>
               </div>
 
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--ok)]/20 flex flex-col">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>Completados</span>
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -245,7 +245,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 <span className="text-[10px] text-[var(--ink-2)] mt-1">Procesados con éxito</span>
               </div>
 
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--alert)]/20 flex flex-col">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>Con Error / Backoff</span>
                   <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)]" />
@@ -257,7 +257,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
 
             {/* Notification / Alert messages */}
             {pruneSuccessMsg && (
-              <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 border border-[var(--ok)]/30 text-[var(--ok)] text-xs flex items-center gap-2 animate-in fade-in">
+              <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 border border-[var(--hair)] text-[var(--ok)] text-xs flex items-center gap-2 animate-in fade-in">
                 <Check className="w-4 h-4 text-[var(--ok)] shrink-0" />
                 <span>{pruneSuccessMsg}</span>
               </div>
@@ -324,7 +324,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                               <span className="font-mono text-[10px] text-[var(--ink-2)]">{job.id}</span>
                             </div>
                             {job.error_message && (
-                              <p className="text-[11px] text-[var(--alert)]/90 font-mono bg-[var(--alert)]/20 px-2 py-1 rounded border border-[var(--alert)]/30">
+                              <p className="text-[11px] text-[var(--alert)]/90 font-mono bg-[var(--alert)]/20 px-2 py-1 rounded border border-[var(--hair)]">
                                 {job.error_message}
                               </p>
                             )}

@@ -164,13 +164,13 @@ Firmado en conformidad por ambas partes.`;
           {/* HEADER DEL MODAL */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 flex items-center justify-center shrink-0">
                 <FileText className="w-5 h-5 text-[var(--acc)]" />
               </div>
               <div>
                 <h3 className="text-sm sm:text-base font-bold text-[var(--ink-2)] font-display flex items-center gap-2">
                   <span>Hoja de Ruta (Roadbook) & Contrato Pro</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] font-mono">
+                  <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 border border-[var(--hair)] text-[var(--acc)] font-mono">
                     Gira {bandName}
                   </span>
                 </h3>
@@ -197,7 +197,7 @@ Firmado en conformidad por ambas partes.`;
               <select
                 value={currentLead.id}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
-                className="bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 focus:outline-none focus:border-[var(--acc)]"
+                className="bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 focus:outline-none focus:border-[var(--ink-3)]"
               >
                 {leads.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -255,7 +255,7 @@ Firmado en conformidad por ambas partes.`;
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -264,7 +264,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -273,7 +273,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -282,7 +282,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
                     />
                   </div>
                 </div>
@@ -393,7 +393,7 @@ Firmado en conformidad por ambas partes.`;
                     <select
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:border-[var(--ink-3)]"
                     >
                       <option value="taquilla">Taquilla (%)</option>
                       <option value="cache">Caché Fijo (€)</option>
@@ -412,7 +412,7 @@ Firmado en conformidad por ambas partes.`;
                         if (dealType === 'cache') setCacheAmount(val);
                         else setTicketPrice(val);
                       }}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -421,7 +421,7 @@ Firmado en conformidad por ambas partes.`;
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -500,7 +500,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] border border-[var(--ok)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                   title="Copiar texto formateado listo para WhatsApp"
                 >
                   {copiedWhatsApp ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -512,7 +512,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--acc)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedContract ? '¡Contrato Copiado!' : 'Copiar Contrato'}</span>

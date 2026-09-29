@@ -183,9 +183,9 @@ export const PLATFORM_CONFIG: Record<
     colorClass: "text-[var(--alert)]",
     bgClass:
       "bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--acc)]/10",
-    borderClass: "border-[var(--alert)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]/60",
+      "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--alert)]/60",
   },
   youtube: {
     label: "YouTube",
@@ -219,33 +219,33 @@ export const PLATFORM_CONFIG: Record<
     label: "SoundCloud",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--acc)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
   },
   bandsintown: {
     label: "Bandsintown",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--acc)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
   },
   songkick: {
     label: "Songkick",
     colorClass: "text-[var(--alert)]",
     bgClass: "bg-[var(--alert)]/10",
-    borderClass: "border-[var(--alert)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]",
+      "hover:bg-[var(--alert)]/20 hover:border-[var(--ink-3)] hover:text-[var(--alert)]",
   },
   wegow: {
     label: "Wegow",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--acc)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
   },
   tidal: {
     label: "TIDAL",
@@ -258,25 +258,25 @@ export const PLATFORM_CONFIG: Record<
     label: "Deezer",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--acc)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
   },
   amazonMusic: {
     label: "Amazon Music",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--acc)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
   },
   twitch: {
     label: "Twitch",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--acc)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
   },
   threads: {
     label: "Threads",
@@ -289,9 +289,9 @@ export const PLATFORM_CONFIG: Record<
     label: "Facebook",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--tentative)]/50",
-    borderClass: "border-[var(--acc)]/30",
+    borderClass: "border-[var(--hair)]",
     hoverClass:
-      "hover:bg-[var(--tentative)]/50 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80",
+      "hover:bg-[var(--tentative)]/50 hover:border-[var(--ink-3)] hover:text-[var(--acc)]/80",
   },
   twitter: {
     label: "X / Twitter",

@@ -1589,7 +1589,7 @@ export default function BookingCRM({
                         setIsQueueMonitorOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--ok)]/80 to-[var(--surface)] hover:from-[var(--ok)]/90 hover:to-[var(--surface)] text-[var(--ok)] border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--ok)]/80 to-[var(--surface)] hover:from-[var(--ok)]/90 hover:to-[var(--surface)] text-[var(--ok)] border border-[var(--hair)] transition-all cursor-pointer active:scale-98 shadow-sm"
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
@@ -1611,7 +1611,7 @@ export default function BookingCRM({
                           document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 60);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--hair)] transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
                         <MessageSquareText className="w-4 h-4 text-[var(--acc)]" />
@@ -1627,7 +1627,7 @@ export default function BookingCRM({
                         setRoadbookModalLead(selectedLead || leads[0] || null);
                         setIsRoadbookModalOpen(true);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--hair)] transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-[var(--acc)]" />
@@ -2049,7 +2049,7 @@ export default function BookingCRM({
 
             {/* Route Anchor Active Filter Banner */}
             {routeAnchorCity && (
-              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/50 border border-[var(--acc)]/40 text-[var(--acc)] text-xs">
+              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/50 border border-[var(--hair)] text-[var(--acc)] text-xs">
                 <div className="flex items-center gap-2">
                   <Compass className="w-4 h-4 text-[var(--acc)] shrink-0" />
                   <span>
@@ -2060,7 +2060,7 @@ export default function BookingCRM({
                 <button
                   type="button"
                   onClick={() => setRouteAnchorCity(null)}
-                  className="text-[var(--acc)] hover:text-[var(--ink)] text-xs font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 border border-[var(--acc)]/30 cursor-pointer transition-colors"
+                  className="text-[var(--acc)] hover:text-[var(--ink)] text-xs font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 border border-[var(--hair)] cursor-pointer transition-colors"
                 >
                   ✕ Quitar filtro de ruta
                 </button>

@@ -2016,7 +2016,7 @@ export const LiveConcertToAlbumModal: React.FC<
                             ? "bg-[var(--acc)]/15 ring-1 ring-[var(--acc)]/50"
                             : track.type === "musica"
                               ? "bg-[var(--acc-soft)]  "
-                              : "bg-[var(--tentative)]/5 hover:border-[var(--acc)]/40"
+                              : "bg-[var(--tentative)]/5 hover:border-[var(--ink-3)]"
                         }`}
                       >
                         {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
@@ -3194,7 +3194,7 @@ export const LiveConcertToAlbumModal: React.FC<
                           className={`p-2.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center gap-2.5 ${
                             tr.type === "musica"
                               ? "bg-[var(--acc-soft)]  "
-                              : "bg-[var(--tentative)]/5 hover:border-[var(--acc)]/40"
+                              : "bg-[var(--tentative)]/5 hover:border-[var(--ink-3)]"
                           }`}
                         >
                           {/* Index + Type Toggle Button */}

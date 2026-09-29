@@ -100,7 +100,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         }}
         className={`relative p-2 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-center ${
           isOpen
-            ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 shadow-xs'
+            ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] shadow-xs'
             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
         }`}
         title="Centro de Notificaciones Push"
@@ -134,7 +134,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
               <BellRing className="w-4 h-4 text-[var(--acc)]" />
               <span className="font-bold text-xs text-[var(--ink-2)] font-display">Notificaciones</span>
               {unreadCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[10px] font-mono text-[var(--acc)] font-bold">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 border border-[var(--hair)] text-[10px] font-mono text-[var(--acc)] font-bold">
                   {unreadCount} nuevas
                 </span>
               )}
@@ -168,7 +168,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
           {/* Permission Prompt Banner if needed */}
           {permission !== 'granted' && (
-            <div className="p-2.5 bg-[var(--acc)]/40 border-b border-[var(--acc)]/30 flex items-center justify-between gap-2 text-xs">
+            <div className="p-2.5 bg-[var(--acc)]/40 border-b border-[var(--hair)] flex items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-1.5 text-[var(--acc)] min-w-0">
                 <AlertTriangle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
                 <span className="text-[11px] truncate">
@@ -227,7 +227,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     </div>
                     <p className="text-[11px] text-[var(--ink-2)] line-clamp-2 leading-tight">{item.body}</p>
                     {item.leadName && (
-                      <span className="inline-block text-[9px] font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded border border-[var(--acc)]/20 mt-1">
+                      <span className="inline-block text-[9px] font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded border border-[var(--hair)] mt-1">
                         📍 {item.leadName}
                       </span>
                     )}
@@ -267,7 +267,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 setIsOpen(false);
                 onOpenSettings();
               }}
-              className="text-[10px] font-bold text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--acc)]/30"
+              className="text-[10px] font-bold text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--hair)]"
             >
               <Settings className="w-3 h-3" />
               <span>Configurar avisos</span>

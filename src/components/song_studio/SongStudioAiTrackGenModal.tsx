@@ -34,8 +34,8 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
 
   return (
     <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
-      <div className="bg-gradient-to-b from-[var(--surface)] via-[var(--acc)]/80 to-[var(--surface)] border border-[var(--acc)]/40 rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
+      <div className="bg-gradient-to-b from-[var(--surface)] via-[var(--acc)]/80 to-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between border-b border-[var(--acc)]/30 pb-3">
           <div className="flex items-center gap-2.5 text-[var(--acc)] font-mono font-bold text-sm">
             <Sparkles className="w-5 h-5 text-[var(--acc)] animate-pulse" />
             <span>Generador de Pista de Acompañamiento IA</span>
@@ -54,7 +54,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
         </div>
 
         <div className="space-y-4 text-xs">
-          <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 border border-[var(--acc)]/30 text-[var(--acc)] space-y-1">
+          <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 border border-[var(--hair)] text-[var(--acc)] space-y-1">
             <p className="font-bold font-mono flex items-center gap-1.5 text-[var(--acc)]">
               <Music className="w-4 h-4 text-[var(--acc)]" /> Pista base: {idea.titulo}
             </p>
@@ -80,7 +80,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                   onClick={() => setAiTrackGenInstrument(item.id)}
                   className={`p-2.5 rounded-[var(--r-m)] border text-center transition-all cursor-pointer font-bold ${
                     aiTrackGenInstrument === item.id
-                      ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] shadow-md'
+                      ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 shadow-md'
                       : 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                   }`}
                 >
@@ -98,18 +98,18 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
               value={aiTrackGenPrompt}
               onChange={(e) => setAiTrackGenPrompt(e.target.value)}
               placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
-              className="w-full h-20 bg-[var(--sunken)] border border-[var(--acc)]/40 rounded-[var(--r-m)] p-2.5 text-[var(--ink)] placeholder:text-[var(--ink-2)] font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
+              className="w-full h-20 bg-[var(--sunken)] border border-[var(--hair)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] placeholder:text-[var(--ink-2)] font-sans text-xs focus:outline-none focus:border-[var(--ink-3)] resize-none"
             />
           </div>
 
           {aiTrackGenError && (
-            <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 border border-[var(--alert)]/40 text-[var(--alert)] text-[11px] font-mono">
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 border border-[var(--hair)] text-[var(--alert)] text-[11px] font-mono">
               ⚠️ {aiTrackGenError}
             </div>
           )}
 
           {aiTrackGenPreview && (
-            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--ok)]/40 space-y-2.5 animate-in fade-in duration-200">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--hair)] space-y-2.5 animate-in fade-in duration-200">
               <div className="flex items-center gap-1.5 text-[var(--ok)] font-mono font-bold text-[11px]">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {aiTrackGenPreview.trackName}
               </div>
@@ -122,7 +122,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--acc)]/20">
+        <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--hair)]">
           <button
             type="button"
             onClick={() => {

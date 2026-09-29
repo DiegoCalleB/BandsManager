@@ -744,7 +744,7 @@ export default function PracticeModePanel({
                       <div className="flex items-center gap-1.5">
                         <span className="text-[var(--ink)] font-bold">{formatTime(currentTime)}</span>
                         {currentActiveSection && (
-                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
                             {currentActiveSection.icon} {currentActiveSection.name}
                           </span>
                         )}
@@ -766,7 +766,7 @@ export default function PracticeModePanel({
                       {/* Resaltado visual del bucle A-B */}
                       {loopA != null && loopB != null && duration > 0 && (
                         <div
-                          className="absolute h-2 bg-[var(--acc)]/40 border-x border-[var(--acc)] pointer-events-none rounded"
+                          className="absolute h-2 bg-[var(--acc)]/40 border-x border-[var(--hair)] pointer-events-none rounded"
                           style={{
                             left: `${Math.max(0, Math.min(100, (loopA / duration) * 100))}%`,
                             width: `${Math.max(0, Math.min(100, ((loopB - loopA) / duration) * 100))}%`,
@@ -788,7 +788,7 @@ export default function PracticeModePanel({
                     </span>
                     {loopA != null && loopB != null ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-[var(--ok)] font-bold bg-[var(--ok)]/15 border border-[var(--ok)]/30 px-2 py-0.5 rounded-[var(--r-m)]">
+                        <span className="text-[10px] text-[var(--ok)] font-bold bg-[var(--ok)]/15 border border-[var(--hair)] px-2 py-0.5 rounded-[var(--r-m)]">
                           🔁 Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
                         </span>
                         <button
@@ -816,9 +816,9 @@ export default function PracticeModePanel({
                           onClick={() => applySmartSectionLoop(sec)}
                           className={`px-2.5 py-1.5 rounded-[var(--r-m)] border text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
-                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] shadow-md shadow-[var(--acc)]/40 ring-1 ring-[var(--acc)]'
+                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 shadow-md shadow-[var(--acc)]/40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
-                                ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40'
+                                ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
                                 : 'bg-[var(--ink)]/5 border-[var(--hair)]/10 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]/20'
                           }`}
                           title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
@@ -844,7 +844,7 @@ export default function PracticeModePanel({
                     </span>
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] border ${
-                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]/10'
+                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]/10'
                       }`}
                     >
                       {targetBpm} BPM ({speed.toFixed(2)}x)
@@ -862,7 +862,7 @@ export default function PracticeModePanel({
                           onClick={() => changeSpeed(spd)}
                           className={`py-1 rounded-[var(--r-m)] border text-center transition-all cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] font-black'
+                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 font-black'
                               : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >
@@ -920,7 +920,7 @@ export default function PracticeModePanel({
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] border ${
                         semitonesOffset !== 0
-                          ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40'
+                          ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
                           : 'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]/10'
                       }`}
                     >
@@ -947,7 +947,7 @@ export default function PracticeModePanel({
                           onClick={() => setSemitonesOffset(st)}
                           className={`py-1 rounded-[var(--r-m)] border text-center transition-all cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] font-black'
+                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 font-black'
                               : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >
@@ -964,7 +964,7 @@ export default function PracticeModePanel({
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}
                       className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] border transition-all cursor-pointer ${
                         metronomeOn
-                          ? 'bg-[var(--acc)]/20 border-[var(--acc)]/40 text-[var(--acc)]'
+                          ? 'bg-[var(--acc)]/20 border-[var(--acc)]/30 text-[var(--acc)]'
                           : 'bg-[var(--sunken)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
@@ -976,7 +976,7 @@ export default function PracticeModePanel({
                       title="Alinear claqueta con el primer beat"
                       className={`text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] border transition-all cursor-pointer ${
                         beatAnchorSec > 0
-                          ? 'bg-[var(--ok)]/20 border-[var(--ok)]/40 text-[var(--ok)]'
+                          ? 'bg-[var(--ok)]/20 border-[var(--ok)]/30 text-[var(--ok)]'
                           : 'bg-[var(--sunken)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
@@ -1017,7 +1017,7 @@ export default function PracticeModePanel({
                 const isLoadingThis = loadingChordsTrackId === tr.id;
                 const isExpanded = expandedChordsTrackId === tr.id;
                 return (
-                  <div key={tr.id} className={`rounded-[var(--r-m)] ${cardBg} ${isMine ? 'border-[var(--ok)]/40' : ''}`}>
+                  <div key={tr.id} className={`rounded-[var(--r-m)] ${cardBg} ${isMine ? 'border-[var(--hair)]' : ''}`}>
                     <div className="flex items-center gap-2 px-3 py-2">
                       <span className="text-xs font-semibold truncate flex-1 min-w-0">
                         {tr.nombre}

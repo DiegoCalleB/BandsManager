@@ -20,8 +20,8 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
     <div
       className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
         agentsEnabled
-          ? 'bg-[var(--acc)]/80 text-[var(--on-acc)] border-b border-[var(--acc)]/80'
-          : 'bg-[var(--ok)]/80 text-[var(--ok)] border-b border-[var(--ok)]/80'
+          ? 'bg-[var(--acc)]/80 text-[var(--on-acc)] border-b border-[var(--hair)]'
+          : 'bg-[var(--ok)]/80 text-[var(--ok)] border-b border-[var(--ok)]/30'
       }`}
     >
       <div className="flex items-center gap-2 min-w-0">
@@ -43,7 +43,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             type="button"
             onClick={onOpenAutonomyModal}
             className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
-              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border border-[var(--acc)]'
+              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border border-[var(--hair)]'
             }`}
             title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
           >
@@ -63,8 +63,8 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
           }}
           className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
             agentsEnabled
-              ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]'
-              : 'bg-[var(--ok)] hover:bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]'
+              ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)]'
+              : 'bg-[var(--ok)] hover:bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30'
           }`}
           title={agentsEnabled ? 'Desactivar motor de agentes de Supabase y usar solo Gemini' : 'Activar motor de agentes en Supabase'}
         >

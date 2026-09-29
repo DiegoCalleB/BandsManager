@@ -71,13 +71,13 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
 
         <div className="py-4 space-y-4 text-xs">
           {reminderSuccessMsg && (
-            <div className="p-3 bg-[var(--ok)]/10 border border-[var(--ok)]/30 text-[var(--ok)] rounded-[var(--r-m)] font-mono text-[11px]">
+            <div className="p-3 bg-[var(--ok)]/10 border border-[var(--hair)] text-[var(--ok)] rounded-[var(--r-m)] font-mono text-[11px]">
               {reminderSuccessMsg}
             </div>
           )}
 
           {reminderErrorMsg && (
-            <div className="p-3 bg-[var(--alert)]/10 border border-[var(--alert)]/30 text-[var(--alert)] rounded-[var(--r-m)] font-mono text-[11px]">
+            <div className="p-3 bg-[var(--alert)]/10 border border-[var(--hair)] text-[var(--alert)] rounded-[var(--r-m)] font-mono text-[11px]">
               {reminderErrorMsg}
             </div>
           )}
@@ -103,7 +103,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             </label>
             <div className="flex flex-wrap gap-1 font-mono text-[10px]">
               {effectiveBandMembers.map((m: any, idx: number) => (
-                <span key={idx} className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20">
+                <span key={idx} className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)]">
                   👤 {m.name} {m.email ? `(${m.email})` : ''}
                 </span>
               ))}

@@ -176,13 +176,13 @@ export function AddLeadModal({
 
             {/* Status Messages */}
             {isModalScraping && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-pulse bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20">
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-pulse bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)]">
                 <Loader2 className="w-4 h-4 animate-spin shrink-0 text-[var(--acc)]" />
                 <span className="font-medium">{modalScrapeStatus}</span>
               </div>
             )}
             {modalScrapeError && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--alert)] bg-[var(--alert)]/15 border border-[var(--alert)]/30">⚠️ {modalScrapeError}</div>
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--alert)] bg-[var(--alert)]/15 border border-[var(--hair)]">⚠️ {modalScrapeError}</div>
             )}
             {modalScrapeSuccessMsg && (
               <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--ok)] bg-[var(--ok)]/15 border border-[var(--ok)]/30">
@@ -321,7 +321,7 @@ export function AddLeadModal({
                           type="button"
                           onClick={handleAutoSearchLogo}
                           disabled={isSearchingLogo || !newLeadData.nombre_sala}
-                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all border border-[var(--acc)]/40 cursor-pointer disabled:opacity-50"
+                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all border border-[var(--hair)] cursor-pointer disabled:opacity-50"
                         >
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
@@ -353,7 +353,7 @@ export function AddLeadModal({
                         <img
                           src={newLeadData.imagen_url}
                           alt="Logo"
-                          className="w-8 h-8 rounded-[var(--r-m)] object-cover border border-[var(--acc)]/50 shrink-0"
+                          className="w-8 h-8 rounded-[var(--r-m)] object-cover border border-[var(--acc)]/30 shrink-0"
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-[10px] text-[var(--ink-2)] font-semibold truncate">{newLeadData.imagen_url}</p>

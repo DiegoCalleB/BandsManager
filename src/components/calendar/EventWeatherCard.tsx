@@ -519,7 +519,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                               transition={{ duration: 0.2 }}
                               className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${
                                 isDanger
-                                  ? "border-[var(--alert)]/20 text-[var(--ink)]/90"
+                                  ? "border-[var(--hair)] text-[var(--ink)]/90"
                                   : " text-[var(--ink)]/90"
                               }`}
                             >

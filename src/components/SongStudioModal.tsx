@@ -441,7 +441,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎤',
     tag: 'Acapella / Melodía',
     desc: 'Voz aislada en alta pureza espectral. Permite silenciar la voz original para ensayar cantando o directos.',
-    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--hair)]',
   },
   {
     id: 'Instrumental',
@@ -450,7 +450,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎵',
     tag: 'Karaoke / Backing Track',
     desc: 'Mezcla musical completa sin voz principal. La opción predilecta para directos con playback o práctica vocal.',
-    badgeBg: 'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]/40',
+    badgeBg: 'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--hair)]',
   },
   {
     id: 'Batería',
@@ -459,7 +459,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🥁',
     tag: 'Ritmo & Platos',
     desc: 'Aislamiento de bombo, caja, timbales y platos (>1800Hz) para practicar con metrónomo y batería real.',
-    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--hair)]',
   },
   {
     id: 'Bajo',
@@ -468,7 +468,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎸',
     tag: 'Sub-Bass & Graves',
     desc: 'Frecuencias fundamentales y transitorios de bajo (<180Hz) para estudiar la línea o tocar encima.',
-    badgeBg: 'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40',
+    badgeBg: 'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--hair)]',
   },
   {
     id: 'Guitarras',
@@ -477,7 +477,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎸',
     tag: 'Eléctricas & Acústicas',
     desc: 'Guitarras eléctricas, distorsiones y acústicas sin bleed de voz ni percusión.',
-    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--hair)]',
   },
   {
     id: 'Teclados',
@@ -486,7 +486,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎹',
     tag: 'Pianos & Sintes',
     desc: 'Pianos acústicos, sintetizadores polifónicos y teclados aislados para acompañamiento armónico.',
-    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--hair)]',
   },
   {
     id: 'Arreglos',
@@ -495,7 +495,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎺',
     tag: 'Metales & Efectos',
     desc: 'Secciones de viento metal, cuartetos de cuerda, solos y efectos secundarios de mezcla.',
-    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--hair)]',
   },
 ];
 
@@ -4181,7 +4181,7 @@ export default function SongStudioModal({
                         </button>
 
                         {/* Option 2: File Upload */}
-                        <label className="p-3 rounded-[var(--r-m)] hover:border-[var(--ok)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all">
+                        <label className="p-3 rounded-[var(--r-m)] hover:border-[var(--ink-3)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all">
                           <Upload className="w-5 h-5 text-[var(--ok)]" />
                           <span className="text-xs font-semibold text-[var(--ink)] text-center">
                             {selectedAudioFile ? selectedAudioFile.name : 'Subir Archivo'}
@@ -4261,8 +4261,8 @@ export default function SongStudioModal({
                           onClick={() => setGenAiOnNewIdea(!genAiOnNewIdea)}
                           className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-all text-left ${
                             genAiOnNewIdea
-                              ? 'border-[var(--acc)] bg-[var(--tentative)]/10/40 text-[var(--tentative)]/60'
-                              : 'border-[var(--acc)]/40 hover:border-[var(--acc)] bg-[var(--tentative)]/5/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/5/40'
+                              ? 'border-[var(--hair)] bg-[var(--tentative)]/10/40 text-[var(--tentative)]/60'
+                              : 'border-[var(--acc)]/30 hover:border-[var(--ink-3)] bg-[var(--tentative)]/5/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/5/40'
                           }`}
                         >
                           <Wand2 className="w-5 h-5 text-[var(--tentative)] animate-bounce" />
@@ -4601,7 +4601,7 @@ export default function SongStudioModal({
                             <button
                               type="button"
                               onClick={(e) => handleDeleteIdea(e, idea.id)}
-                              className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] border border-[var(--hair)]/10 hover:border-[var(--alert)]/30 transition-all cursor-pointer"
+                              className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] border border-[var(--hair)]/10 hover:border-[var(--ink-3)] transition-all cursor-pointer"
                               title="Eliminar idea"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -4963,11 +4963,11 @@ export default function SongStudioModal({
                                               isDraggingThisTrack
                                                 ? 'opacity-30 scale-[0.98]'
                                                 : isDragOverThisTrack
-                                                  ? 'border-[var(--acc)] ring-2 ring-[var(--acc)]/50 bg-[var(--tentative)]/10'
+                                                  ? 'border-[var(--hair)] ring-2 ring-[var(--acc)]/50 bg-[var(--tentative)]/10'
                                                   : isMuted
                                                     ? 'bg-[var(--alert)]/5/20/40 opacity-50 grayscale-[30%]'
                                                     : isSolo
-                                                      ? 'bg-[var(--acc)]/10 /80 ring-1 ring-[var(--acc)]/40 border-l-[var(--acc)]/10/30'
+                                                      ? 'bg-[var(--acc)]/10 /80 ring-1 ring-[var(--acc)]/40 border-l-[var(--acc)]/30/30'
                                                       : hasSoloInIdea
                                                         ? 'bg-[var(--sunken)] /80 opacity-40 grayscale-[50%]'
                                                         : 'bg-[var(--ink)]/5 hover:border-[var(--hair)]'
@@ -5599,7 +5599,7 @@ export default function SongStudioModal({
 
                                   {/* Option 2: Upload audio file */}
                                   <label
-                                    className={`p-3 rounded-[var(--r-m)] hover:border-[var(--acc)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                    className={`p-3 rounded-[var(--r-m)] hover:border-[var(--ink-3)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
                                   >
                                     <Upload className={`w-5 h-5 text-[var(--ink-2)] ${isUploading ? 'animate-bounce' : ''}`} />
                                     <span className="text-xs font-semibold text-[var(--ink)]">

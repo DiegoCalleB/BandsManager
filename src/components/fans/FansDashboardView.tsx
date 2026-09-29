@@ -87,7 +87,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
               </p>
               <p className="text-[11px] text-[var(--ink-2)] font-mono">Curva acumulativa de la comunidad {effectiveBandName}</p>
             </div>
-            <span className="text-xs font-mono font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-m)] border border-[var(--acc)]/20">
+            <span className="text-xs font-mono font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-m)] border border-[var(--hair)]">
               Total: {fans.length} fans
             </span>
           </div>

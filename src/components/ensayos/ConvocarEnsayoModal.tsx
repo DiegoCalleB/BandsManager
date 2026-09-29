@@ -163,7 +163,7 @@ export function ConvocarEnsayoModal({
                   required
                   value={hora}
                   onChange={(e) => setHora(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs focus:border-[var(--acc)] outline-none font-medium"
+                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs focus:border-[var(--ink-3)] outline-none font-medium"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ export function ConvocarEnsayoModal({
                   placeholder="Ej. Local 4 - Rock Palace, Madrid"
                   value={lugar}
                   onChange={(e) => setLugar(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs focus:border-[var(--acc)] outline-none font-medium"
+                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs focus:border-[var(--ink-3)] outline-none font-medium"
                 />
               </div>
             </div>
@@ -231,7 +231,7 @@ export function ConvocarEnsayoModal({
                         type="time"
                         value={horaFin}
                         onChange={(e) => setHoraFin(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--acc)]"
+                        className="w-full px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--ink-3)]"
                       />
                     </div>
                     <div>
@@ -243,7 +243,7 @@ export function ConvocarEnsayoModal({
                         step="15"
                         value={duracionEstimadaMin}
                         onChange={(e) => setDuracionEstimadaMin(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--acc)]"
+                        className="w-full px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--ink-3)]"
                       />
                     </div>
                   </div>
@@ -262,7 +262,7 @@ export function ConvocarEnsayoModal({
                               onClick={() => toggleConvocado(u.id)}
                               className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
                                 isSelected
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 font-bold'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30 font-bold'
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]'
                               }`}
                             >
@@ -315,7 +315,7 @@ export function ConvocarEnsayoModal({
                             handleAddObjetivo();
                           }
                         }}
-                        className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-xs text-[var(--ink-2)] outline-none focus:border-[var(--acc)]"
+                        className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-xs text-[var(--ink-2)] outline-none focus:border-[var(--ink-3)]"
                       />
                       <button
                         type="button"
@@ -335,7 +335,7 @@ export function ConvocarEnsayoModal({
                       placeholder="Ej. Traer juego nuevo de cuerdas..."
                       value={notas}
                       onChange={(e) => setNotas(e.target.value)}
-                      className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--acc)] resize-none"
+                      className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--ink-3)] resize-none"
                     />
                   </div>
                 </div>
