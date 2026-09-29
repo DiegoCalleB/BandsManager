@@ -272,7 +272,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
       </div>
 
       {/* 2. Navigation Tabs for Channels & Blueprint */}
-      <div className="flex items-center gap-2 pb-2 overflow-x-auto">
+      <div className="flex items-center gap-2 pb-2 overflow-x-auto shrink-0">
         <button
           onClick={() => setSelectedTab("overview")}
           className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${

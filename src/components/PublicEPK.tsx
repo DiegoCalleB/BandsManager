@@ -760,7 +760,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         <div className="relative group/carrusel">
           <div
             ref={galeriaScrollRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] print:hidden"
+            className="flex gap-4 overflow-x-auto shrink-0 snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] print:hidden"
           >
             {validPhotos.map((photoUrl, idx) => (
               <div

@@ -518,7 +518,7 @@ export default function Finanzas({
                 </div>
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto shrink-0">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-[var(--surface)]/80 text-[var(--acc)] font-bold font-sans text-[10px]">
                     <tr>

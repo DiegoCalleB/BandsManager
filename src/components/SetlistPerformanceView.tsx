@@ -1222,7 +1222,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           {/* Page dots: quick glance at where you are in the setlist. Los bloques se marcan
  distinto (cuadrado en vez de punto) para ver de un vistazo dónde hay una pausa/
  presentación entre canciones. */}
-          <div className="flex-1 flex items-center justify-center gap-1 overflow-x-auto px-2 max-w-full">
+          <div className="flex-1 flex items-center justify-center gap-1 overflow-x-auto shrink-0 px-2 max-w-full">
             {allItems.map((it, i) => (
               <button
                 key={it.id}

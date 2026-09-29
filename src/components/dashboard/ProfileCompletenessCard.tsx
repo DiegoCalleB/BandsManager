@@ -577,7 +577,7 @@ export const ProfileCompletenessCard: React.FC<
 
       {/* AUDIT MODAL */}
       {showAuditModal && (
-        <div className="fixed inset-0 bg-[var(--scrim)]/80 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4">
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">

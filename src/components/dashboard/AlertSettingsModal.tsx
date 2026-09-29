@@ -263,7 +263,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
   return (
     <div
       id="alert-settings-modal-backdrop"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim)]/80 backdrop-blur-sm p-4 overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/80 backdrop-blur-sm p-4 overflow-y-auto"
     >
       <div
         id="alert-settings-modal-card"

@@ -1377,7 +1377,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
           {/* Stepper Progress Bar */}
           {!isCelebrationStep && (
-            <div className="px-5 sm:px-6 py-2.5 bg-[var(--bg)]/60 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <div className="px-5 sm:px-6 py-2.5 bg-[var(--bg)]/60 flex items-center gap-1.5 overflow-x-auto shrink-0 no-scrollbar">
               {activeSteps.map((step, idx) => {
                 const isCurrent = idx === currentStepIndex;
                 const isPassed = idx < currentStepIndex;

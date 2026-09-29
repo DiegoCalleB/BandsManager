@@ -813,7 +813,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       {/* Top Filter Tabs & Selection Bar if applicable */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         {sectionTab === "medios" && setMediaTypeFilter && (
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <div className="flex gap-1.5 overflow-x-auto shrink-0 no-scrollbar py-0.5">
             {["todos", "televisión", "radio", "redes", "managements"].map(
               (type) => (
                 <button
@@ -1386,7 +1386,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="overflow-x-auto rounded-[var(--r-l)] bg-[var(--surface)] pb-10">
+        <div className="overflow-x-auto shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] pb-10">
           <table className="w-full text-left min-w-[980px]">
             <thead>
               <tr className="text-[10px] font-semibold tracking-wider text-[var(--ink-2)] bg-[var(--sunken)]">

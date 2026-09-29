@@ -31,7 +31,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
   const targetIdea = showMoisesStemsModal;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
       <div className="bg-[var(--surface)] border border-[var(--acc)]/40 rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-[var(--ink)] max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
           <div className="flex items-center gap-2 text-[var(--acc)] font-mono font-bold text-sm">

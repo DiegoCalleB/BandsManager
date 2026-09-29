@@ -2226,7 +2226,7 @@ export function ReelsMetricsView({
                 </p>
               </div>
 
-              <div className="overflow-x-auto flex-1 min-h-[300px]">
+              <div className="overflow-x-auto shrink-0 flex-1 min-h-[300px]">
                 <table className="w-full text-left text-[10px] font-sans">
                   <thead>
                     <tr

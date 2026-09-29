@@ -146,7 +146,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 : 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink)]'
       } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
-      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto">
+      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto shrink-0">
         {/* Drag Handle (when draggable) */}
         {draggable && (
           <div

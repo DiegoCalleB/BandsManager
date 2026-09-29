@@ -805,7 +805,7 @@ export default function PracticeModePanel({
                   </div>
 
                   {/* Botones de Secciones */}
-                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                  <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 scrollbar-none">
                     {smartSections.map((sec) => {
                       const isLoopActive = loopA === sec.startSec && loopB === sec.endSec;
                       const isPlayheadInside = currentTime >= sec.startSec && currentTime < sec.endSec;

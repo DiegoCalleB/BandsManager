@@ -280,7 +280,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
             className={`p-3 sm:px-5 flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${"bg-[var(--sunken)]/60"}`}
           >
             {/* Filter Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto py-1 max-w-full text-xs">
+            <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 py-1 max-w-full text-xs">
               <button
                 type="button"
                 onClick={() => setSelectedFilter("all")}

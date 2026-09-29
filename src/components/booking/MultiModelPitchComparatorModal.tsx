@@ -221,7 +221,7 @@ export const MultiModelPitchComparatorModal: React.FC<
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain">
         <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[94vh] my-auto">
           {/* HEADER */}
           <div className="px-5 py-3.5800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
@@ -638,7 +638,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 </span>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto shrink-0">
                 <table className="w-full text-left text-[11px]">
                   <thead>
                     <tr className="border-b800 text-[var(--ink-2)] font-sans">

@@ -388,7 +388,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 Horarios de carga, prueba de sonido, contacto técnico y ruta listos para compartir con los músicos en WhatsApp.
               </p>
             </div>
-            <pre className="text-[9px] font-mono text-[var(--ink-2)] bg-[var(--surface)] p-2 rounded border border-[var(--hair)]/80 overflow-x-auto max-h-24">
+            <pre className="text-[9px] font-mono text-[var(--ink-2)] bg-[var(--surface)] p-2 rounded border border-[var(--hair)]/80 overflow-x-auto shrink-0 max-h-24">
               {roadbookMarkdown}
             </pre>
           </div>
@@ -414,7 +414,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 Cláusulas clave de sonido (D.I., in-ears), liquidación y hospitalidad listas para formalizar con la sala.
               </p>
             </div>
-            <pre className="text-[9px] font-mono text-[var(--ink-2)] bg-[var(--surface)] p-2 rounded border border-[var(--hair)]/80 overflow-x-auto max-h-24">
+            <pre className="text-[9px] font-mono text-[var(--ink-2)] bg-[var(--surface)] p-2 rounded border border-[var(--hair)]/80 overflow-x-auto shrink-0 max-h-24">
               {miniContractSummary}
             </pre>
           </div>

@@ -453,7 +453,7 @@ export function ModoLocalEnVivoTab({
       <div
         className={`flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-[var(--r-l)] bg-[var(--surface)] ${isFullscreen ? "shrink-0 mb-1.5" : ""}`}
       >
-        <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 px-1 scrollbar-none flex-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 py-0.5 px-1 scrollbar-none flex-1">
           {agenda.map((item, idx) => {
             const isCurrent = idx === activeIndex;
             return (

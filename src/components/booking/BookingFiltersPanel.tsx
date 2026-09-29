@@ -309,7 +309,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {savedFilters.length > 0 && (
         <div className="space-y-1.5">
           <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Búsquedas guardadas</p>
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs">
             {savedFilters.map((sf) => {
               const isActive = activeSavedFilterId === sf.id;
               return (
@@ -404,7 +404,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             </button>
           )}
         </div>
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+        <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs">
           <button
             type="button"
             onClick={() => setSelectedCityFilter('')}

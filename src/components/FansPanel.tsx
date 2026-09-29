@@ -791,7 +791,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       </div>
 
       {/* Tabs (metrics tab hidden for Promo) */}
-      <div className="flex overflow-x-auto hide-scrollbar gap-1">
+      <div className="flex overflow-x-auto shrink-0 hide-scrollbar gap-1">
         {!isPromo && (
           <button
             id="tab-btn-fans-metrics"
@@ -1206,7 +1206,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           )}
 
           {viewMode === "table" && (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto shrink-0">
               <table className="w-full text-left text-xs text-[var(--ink-2)]">
                 <thead className="bg-[var(--surface)] text-[var(--acc)] font-bold font-sans">
                   <tr>

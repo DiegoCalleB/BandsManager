@@ -2519,7 +2519,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* Filtros por Agente */}
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] font-sans">
+                <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 text-[11px] font-sans">
                   <span className="text-[var(--ink-2)] text-[10px] font-bold mr-1">
                     Filtrar:
                   </span>

@@ -112,7 +112,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
   }
 
   return (
-    <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-md z-[9999] flex items-center justify-center p-4">
       <div className="bg-[var(--surface)] border border-[var(--acc)]/40 rounded-2xl max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
         {!terminado && (
           <div className="-mx-6">

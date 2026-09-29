@@ -1402,7 +1402,7 @@ export default function App() {
           <div className="md:hidden fixed inset-0 z-[9999] flex">
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-[var(--scrim)]/75 transition-opacity"
+              className="fixed inset-0 z-[9999] bg-[var(--scrim)]/75 transition-opacity"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             {/* Drawer panel */}

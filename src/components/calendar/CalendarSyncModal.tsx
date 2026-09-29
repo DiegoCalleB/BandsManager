@@ -31,7 +31,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-fade-in">
       <div
         className={`max-w-lg w-full rounded-2xl border p-5 shadow-2xl relative ${
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'

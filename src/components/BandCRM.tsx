@@ -1256,7 +1256,7 @@ Bakandeya Agent Manager IA & Músicos`;
             </div>
           </div>
 
-          <div className="overflow-x-auto rounded-[var(--r-m)]">
+          <div className="overflow-x-auto shrink-0 rounded-[var(--r-m)]">
             <table className="w-full text-left text-xs font-sans">
               <thead>
                 <tr className="bg-[var(--surface)] text-[var(--ink-2)] tracking-wider text-[10px]">
@@ -1769,7 +1769,7 @@ Bakandeya Agent Manager IA & Músicos`;
           ) : (
             /* TABLE LIST VIEW */
             <div
-              className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} overflow-x-auto`}
+              className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} overflow-x-auto shrink-0`}
             >
               <table className="w-full text-left text-[10px] font-sans min-w-[850px]">
                 <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] tracking-wider text-[10px]">

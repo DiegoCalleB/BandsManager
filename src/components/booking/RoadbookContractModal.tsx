@@ -156,7 +156,7 @@ Firmado en conformidad por ambas partes.`;
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto">
         <div
           id="roadbook-contract-modal"
           className="relative w-full max-w-4xl bg-[var(--surface)] border border-[var(--hair)]/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"

@@ -2117,7 +2117,7 @@ export default function CalendarView({
                 <h4 className={`text-[10px] font-sans tracking-widest ${'text-[var(--acc)]'}`}>
                   Calendario de Directos, Ensayos y Reuniones
                 </h4>
-                <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
+                <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold mt-1 overflow-x-auto shrink-0 no-scrollbar pb-0.5 max-w-full">
                   <span
                     className="shrink-0 px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1"
                     title="Eventos visibles vs Total"
@@ -2841,7 +2841,7 @@ export default function CalendarView({
             <div className="mt-3 space-y-2.5">
               {/* Selector de eventos si el día tiene más de uno */}
               {hasMultipleDayEvents && (
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 mb-2">
+                <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 mb-2">
                   <span className="text-[10px] font-sans text-[var(--ink-2)] shrink-0 mr-1">Ver evento:</span>
                   {dayEventsList.map((evt) => {
                     const isActive = evt.id === activeDayEventId;

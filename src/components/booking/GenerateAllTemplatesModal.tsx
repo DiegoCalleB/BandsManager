@@ -63,7 +63,7 @@ export function GenerateAllTemplatesModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div
         className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl border overflow-hidden ${
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'

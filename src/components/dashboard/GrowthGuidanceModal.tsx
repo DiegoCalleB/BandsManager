@@ -66,7 +66,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
   const channelData = growthPlan.channelPlaybooks?.find((c) => c.platform === selectedChannel) || growthPlan.channelPlaybooks?.[0];
 
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
+    <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
       <div className="bg-[var(--surface)] border borderbg-[var(--surface)] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
         {/* Modal Header */}
         <div className="p-5 border-b borderbg-[var(--surface)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-[var(--acc)]/10">
@@ -97,7 +97,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         </div>
 
         {/* Modal Navigation Tabs */}
-        <div className="px-5 py-2.5 bg-[var(--surface)] border-b borderbg-[var(--surface)]/80 flex items-center justify-between gap-2 overflow-x-auto">
+        <div className="px-5 py-2.5 bg-[var(--surface)] border-b borderbg-[var(--surface)]/80 flex items-center justify-between gap-2 overflow-x-auto shrink-0">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('blueprint')}
@@ -196,7 +196,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {activeTab === 'channels' && (
             <div className="space-y-5">
               {/* Channel Selector */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-1">
+              <div className="flex items-center gap-2 overflow-x-auto shrink-0 pb-1">
                 {(['instagram', 'tiktok', 'youtube', 'spotify'] as const).map((platform) => {
                   const isSelected = selectedChannel === platform;
                   return (

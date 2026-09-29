@@ -5862,7 +5862,7 @@ export default function SongStudioModal({
 
         {/* CUBASE KEYBOARD SHORTCUTS CHEAT SHEET MODAL */}
         {showCubaseHelp && (
-          <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/85 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4">
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] relative">
               <button
                 type="button"
@@ -5971,7 +5971,7 @@ export default function SongStudioModal({
 
         {/* CONFIRM DELETE MODAL DIALOG */}
         {confirmDeleteModal && (
-          <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95">
               <div className="flex items-start gap-3">
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--alert)] shrink-0">

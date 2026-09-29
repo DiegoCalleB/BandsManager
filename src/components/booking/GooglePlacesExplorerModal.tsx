@@ -1762,7 +1762,7 @@ export function GooglePlacesExplorerModal({
 
           {/* Discarded Suggestions Sub-Modal */}
           {showDiscardedModal && (
-            <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-[var(--scrim)]/80 animate-fadeIn">
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-[var(--scrim)]/80 animate-fadeIn">
               <div className="w-full max-w-lg bg-[var(--bg)]800 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
                 <div className="p-4800 flex items-center justify-between bg-[var(--bg)]/60">
                   <div className="flex items-center gap-2">

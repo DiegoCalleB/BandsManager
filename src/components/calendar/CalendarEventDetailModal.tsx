@@ -474,7 +474,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
             {/* Pestañas de Navegación de la Ficha */}
             <div
-              className={`flex items-center gap-1.5 border-b pb-2.5 overflow-x-auto ${'border-[var(--acc)]'}`}
+              className={`flex items-center gap-1.5 border-b pb-2.5 overflow-x-auto shrink-0 ${'border-[var(--acc)]'}`}
             >
               <button
                 type="button"

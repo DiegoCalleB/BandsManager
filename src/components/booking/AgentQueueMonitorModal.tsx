@@ -171,7 +171,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
 
   return (
     <ModalPortal>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md animate-in fade-in duration-200">
         <div className="bg-[var(--surface)] border border-[var(--hair)]/10 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden font-sans">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--hair)]/10 bg-[var(--surface)]">

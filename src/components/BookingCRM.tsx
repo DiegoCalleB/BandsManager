@@ -1915,7 +1915,7 @@ export default function BookingCRM({
 
             {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
             {activeFiltersCount > 0 && !isMobileFiltersOpen && (
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
+              <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
                 <span className="text-[10px] font-bold text-[var(--acc)] shrink-0">Filtros:</span>
                 {selectedCityFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
@@ -1997,7 +1997,7 @@ export default function BookingCRM({
             </div>
 
             {/* Main Status Tabs Bar (Clean, no-scrollbar, single row) */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar">
               {(
                 [
                   { key: 'todos', label: 'Todos' },

@@ -68,7 +68,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm">
       <div className={`w-full max-w-lg p-6 rounded-2xl space-y-4 shadow-2xl ${colors.card} border border-[var(--acc)]/30`}>
         <div className="flex justify-between items-center pb-3 border-b borderbg-[var(--surface)]">
           <div className="flex items-center gap-2">

@@ -4857,7 +4857,7 @@ export default function RepertorioSetlists({
                       }`}
                     >
                       {/* MAIN ROW - COMPACT */}
-                      <div className="flex items-center gap-2.5 px-3 py-2 overflow-x-auto">
+                      <div className="flex items-center gap-2.5 px-3 py-2 overflow-x-auto shrink-0">
                         {/* Drag Handle */}
                         <div
                           className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors shrink-0"

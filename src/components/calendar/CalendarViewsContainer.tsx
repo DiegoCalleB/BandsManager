@@ -348,7 +348,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
         </div>
 
         {/* 7 Columnas de la semana estilo Google Calendar */}
-        <div className="w-full overflow-x-auto pb-2">
+        <div className="w-full overflow-x-auto shrink-0 pb-2">
           <div className="grid grid-cols-7 gap-2 min-w-[700px] lg:min-w-0 min-h-[420px]">
             {weekDays.map((d, idx) => {
               const isToday = realToday.toDateString() === d.toDateString();

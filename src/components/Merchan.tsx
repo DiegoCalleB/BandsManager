@@ -561,7 +561,7 @@ export default function Merchan({
               >
                 Selecciona Álbum / EP
               </label>
-              <div className="flex overflow-x-auto gap-3 pb-2 snap-x">
+              <div className="flex overflow-x-auto shrink-0 gap-3 pb-2 snap-x">
                 {albums.map((album, idx) => (
                   <ResolvedBgImage
                     key={idx}

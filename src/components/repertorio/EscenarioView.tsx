@@ -775,7 +775,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  repetirla aquí sería la misma información dos veces en la misma pantalla. */}
       {!embedded && activeSetlist ? (
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden p-4 sm:p-6">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto shrink-0">
             <div className="min-w-[650px] space-y-2">
               <div className="grid grid-cols-12 text-[11px] font-sans font-extrabold text-[var(--ink-2)] pb-3800/80 px-3">
                 <div className="col-span-1">#</div>

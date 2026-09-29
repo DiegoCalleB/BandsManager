@@ -267,7 +267,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   {generatedIdea.tablaturaOAcordes && (
                     <div>
                       <strong className="text-[var(--acc)]/70 font-sans block text-[11px] mb-0.5">Tablatura / Acordes / Guía:</strong>
-                      <pre className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[11px] font-sans text-[var(--ink)] overflow-x-auto">
+                      <pre className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[11px] font-sans text-[var(--ink)] overflow-x-auto shrink-0">
                         {generatedIdea.tablaturaOAcordes}
                       </pre>
                     </div>
