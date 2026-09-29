@@ -2409,7 +2409,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           onClick={() => setActiveTab("intelligence")}
           className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
             activeTab === "intelligence"
-              ? "border-b-2 border-[var(--acc)] text-[var(--acc)]"
+              ? "border-b-2 border-[var(--acc)]/40 text-[var(--acc)]"
               : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
           }`}
         >
@@ -2426,7 +2426,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           onClick={() => setActiveTab("copilot")}
           className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
             activeTab === "copilot"
-              ? "border-b-2 border-[var(--ok)] text-[var(--ok)]"
+              ? "border-b-2 border-[var(--ok)]/40 text-[var(--ok)]"
               : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
           }`}
         >

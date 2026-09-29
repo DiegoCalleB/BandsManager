@@ -67,6 +67,16 @@ const CHECKS = {
     filter: (match) => !/shrink-0|flex-shrink-0/.test(match),
     severity: 'warning',
   },
+  bordeDeAcento: {
+    description: 'borde de color de acento (border-[var(--acc|ok|alert|tentative)] sin opacidad ≤40, o border-2/4) — Ley 1 de visual-identity: ningún borde; separa el escalón de luminancia (un borde hairline --hair es lo máximo tolerado; las barras border-l-4 intencionadas quedan fuera)',
+    pattern: /(?<![:\w-])border(?:-[tblrxy])?-\[var\(--(?:acc|acc-ink|ok|alert|tentative)\)\](?!\/(?:[0-3][0-9]|40|[0-9])\b)/g,
+    severity: 'error',
+  },
+  claseCorrupta: {
+    description: 'clase Tailwind inválida por concatenación (bgbg-, borderbg-, dividebg-): no hace nada — resto de un find-and-replace roto',
+    pattern: /(?<![\w-])(?:hover:)?(?:bgbg|borderbg|dividebg|ringbg|textbg)-\[/g,
+    severity: 'error',
+  },
   modalOverlayLowZIndex: {
     description: 'overlay fixed inset-0 con scrim en z-50/z-40 en vez de z-[9999] — puede quedar tapado por chrome persistente (barra del reproductor, nav inferior) que vive en su propio contexto de apilamiento (ver DashboardWidgetGrid.tsx)',
     pattern: /className=\{?[`"'][^`"']*fixed inset-0[^`"']*[`"']/g,
