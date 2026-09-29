@@ -140,7 +140,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="conf"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-rose-950/80 text-rose-300 font-bold border border-[var(--alert)]/40"
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-[var(--alert)]/80 text-[var(--alert)] font-bold border border-[var(--alert)]/40"
             title={conflict.mensaje}
           >
             🔴 Conflicto
@@ -150,7 +150,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="compat"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-emerald-950/80 text-emerald-300 font-bold border border-[var(--ok)]/40"
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-[var(--ok)]/80 text-[var(--ok)] font-bold border border-[var(--ok)]/40"
             title={conflict.mensaje}
           >
             🚗 Enlace 2x1
@@ -162,7 +162,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="camp"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-sky-950/80 text-sky-300 font-semibold border border-[var(--acc)]/40"
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-[var(--acc)]/80 text-[var(--acc)] font-semibold border border-[var(--acc)]/40"
             title={`Fechas campaña: ${campaignFreeDates.join(", ")}`}
           >
             🎯 {campaignFreeDates.length} d.
@@ -172,10 +172,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="free"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-sky-950/80 text-sky-300 font-semibold border border-[var(--acc)]/40"
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-[var(--acc)]/80 text-[var(--acc)] font-semibold border border-[var(--acc)]/40"
             title={`Fechas libres detectadas: ${freeDates.join(", ")}`}
           >
-            <CalendarCheck className="w-2.5 h-2.5 text-sky-400 shrink-0" />
+            <CalendarCheck className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
             <span>{freeDates.length} lib.</span>
           </span>,
         );
@@ -185,7 +185,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="hist"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-amber-950/60 text-amber-300 border border-[var(--acc)]/30"
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-[var(--acc)]/60 text-[var(--acc)] border border-[var(--acc)]/30"
             title={hist.resumenTexto}
           >
             🏛️ {hist.totalConciertos} prev.
@@ -262,10 +262,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             onClick={(e) => e.stopPropagation()}
             className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded border hover:opacity-80 transition-opacity cursor-pointer ${
               wegowStatus === "ok"
-                ? "bg-emerald-950/80 border-[var(--ok)]/50 text-emerald-300"
+                ? "bg-[var(--ok)]/80 border-[var(--ok)]/50 text-[var(--ok)]"
                 : wegowStatus === "error"
-                  ? "bg-rose-950/80 border-[var(--alert)]/50 text-rose-300"
-                  : "bg-zinc-800/80 border-[var(--hair)] text-zinc-400"
+                  ? "bg-[var(--alert)]/80 border-[var(--alert)]/50 text-[var(--alert)]"
+                  : "bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)]"
             }`}
             title={
               wegowStatus === "ok"
@@ -285,8 +285,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             onClick={(e) => e.stopPropagation()}
             className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded border hover:opacity-80 transition-opacity cursor-pointer ${
               bandsintownStatus === "ok"
-                ? "bg-sky-950/80 border-[var(--acc)]/50 text-sky-300"
-                : "bg-zinc-800/80 border-[var(--hair)] text-zinc-400"
+                ? "bg-[var(--acc)]/80 border-[var(--acc)]/50 text-[var(--acc)]"
+                : "bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)]"
             }`}
             title={
               bandsintownStatus === "ok"
@@ -300,14 +300,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
           </a>
 
           {contrastado && (
-            <span className="text-[8.5px] text-amber-300 font-bold bg-amber-950/70 border border-[var(--acc)]/40 px-1 py-0.2 rounded">
+            <span className="text-[8.5px] text-[var(--acc)] font-bold bg-[var(--acc)]/70 border border-[var(--acc)]/40 px-1 py-0.2 rounded">
               ⭐ Contrastado (Fiabilidad {fiabilidad})
             </span>
           )}
 
           {conflict.status === "conflicto_directo" && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-rose-950/90 text-rose-300 border border-[var(--alert)]/50 font-bold"
+              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--alert)]/90 text-[var(--alert)] border border-[var(--alert)]/50 font-bold"
               title={conflict.mensaje}
             >
               🔴 Conflicto agenda
@@ -316,7 +316,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
           {conflict.status === "cercano_compatible" && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-emerald-950/90 text-emerald-300 border border-[var(--ok)]/50 font-bold"
+              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--ok)]/90 text-[var(--ok)] border border-[var(--ok)]/50 font-bold"
               title={conflict.mensaje}
             >
               🚗 Enlace 2x1
@@ -325,7 +325,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
           {hist && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-amber-950/70 text-amber-300 border border-[var(--acc)]/40"
+              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--acc)]/70 text-[var(--acc)] border border-[var(--acc)]/40"
               title={hist.resumenTexto}
             >
               🏛️ {hist.totalConciertos}{" "}
@@ -377,11 +377,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Ver web u obtener programación de ${lead.nombre_sala}`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans font-medium text-amber-400/90 bg-amber-950/50 border border-[var(--acc)]/50 hover:bg-amber-900/60 transition-colors cursor-pointer group"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans font-medium text-[var(--acc)]/90 bg-[var(--acc)]/50 border border-[var(--acc)]/50 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer group"
             >
-              <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
+              <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
               <span>(no se han encontrado datos de fechas de esta sala)</span>
-              <ExternalLink className="w-2.5 h-2.5 text-amber-400/70 group-hover:text-amber-200 shrink-0 ml-0.5" />
+              <ExternalLink className="w-2.5 h-2.5 text-[var(--acc)]/70 group-hover:text-[var(--acc)] shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
           </div>
@@ -450,14 +450,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`La agenda publicada de esta sala solo llega hasta ${maxFechaFmt || "meses anteriores"}. Oportunidad para enviar propuesta antes de que cierren agenda.`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-indigo-950/90 border border-[var(--acc)]/80 text-indigo-300 hover:bg-indigo-900/90 hover:border-[var(--acc)] transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/90 border border-[var(--acc)]/80 text-[var(--acc)] hover:bg-[var(--acc)]/90 hover:border-[var(--acc)] transition-colors shadow-2xs group cursor-pointer"
             >
-              <Clock className="w-3 h-3 text-indigo-400 shrink-0" />
+              <Clock className="w-3 h-3 text-[var(--acc)] shrink-0" />
               <span>
                 📅 AGENDA AÚN NO PUBLICADA{" "}
                 {maxFechaFmt ? `(Publicado hasta ${maxFechaFmt})` : ""}
               </span>
-              <ExternalLink className="w-2.5 h-2.5 text-indigo-400/80 group-hover:text-indigo-100 shrink-0 ml-0.5" />
+              <ExternalLink className="w-2.5 h-2.5 text-[var(--acc)]/80 group-hover:text-[var(--acc)] shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
           </div>
@@ -474,11 +474,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Cierre temporal o fuera de temporada en la época de la campaña`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-orange-950/90 border border-[var(--acc)]/80 text-orange-300 hover:bg-orange-900/90 transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/90 border border-[var(--acc)]/80 text-[var(--acc)] hover:bg-[var(--acc)]/90 transition-colors shadow-2xs group cursor-pointer"
             >
-              <AlertCircle className="w-3 h-3 text-orange-400 shrink-0" />
+              <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
               <span>🏖️ FUERA DE TEMPORADA / VACACIONES</span>
-              <ExternalLink className="w-2.5 h-2.5 text-orange-400/80 group-hover:text-orange-100 shrink-0 ml-0.5" />
+              <ExternalLink className="w-2.5 h-2.5 text-[var(--acc)]/80 group-hover:text-[var(--acc)] shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
           </div>
@@ -495,13 +495,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || "Buscar en Google"})`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-emerald-950 border border-[var(--ok)]/80 text-emerald-300 hover:bg-emerald-900/90 hover:border-[var(--ok)] transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--ok)] border border-[var(--ok)]/80 text-[var(--ok)] hover:bg-[var(--ok)]/90 hover:border-[var(--ok)] transition-colors shadow-2xs group cursor-pointer"
             >
-              <CalendarCheck className="w-3 h-3 text-emerald-400 shrink-0" />
+              <CalendarCheck className="w-3 h-3 text-[var(--ok)] shrink-0" />
               <span>
                 🎯 Campaña: ✅ DISPONIBLE ({matchingDatesInCampaign.join(", ")})
               </span>
-              <ExternalLink className="w-2.5 h-2.5 text-emerald-400/80 group-hover:text-emerald-100 shrink-0 ml-0.5" />
+              <ExternalLink className="w-2.5 h-2.5 text-[var(--ok)]/80 group-hover:text-[var(--ok)] shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
           </div>
@@ -515,13 +515,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || "Buscar en Google"})`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-rose-950/90 border border-[var(--alert)]/80 text-rose-300 hover:bg-rose-900/90 hover:border-[var(--alert)] transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--alert)]/90 border border-[var(--alert)]/80 text-[var(--alert)] hover:bg-[var(--alert)]/90 hover:border-[var(--alert)] transition-colors shadow-2xs group cursor-pointer"
             >
-              <AlertCircle className="w-3 h-3 text-rose-400 shrink-0" />
+              <AlertCircle className="w-3 h-3 text-[var(--alert)] shrink-0" />
               <span>
                 🎯 Campaña: ❌ NO DISPONIBLE (Ocupada en fechas de campaña)
               </span>
-              <ExternalLink className="w-2.5 h-2.5 text-rose-400/80 group-hover:text-rose-100 shrink-0 ml-0.5" />
+              <ExternalLink className="w-2.5 h-2.5 text-[var(--alert)]/80 group-hover:text-[var(--alert)] shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
           </div>
@@ -538,8 +538,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     ) {
       return lead.nombre_sala ? (
         <div className="flex flex-col gap-0.5 mt-0.5">
-          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans font-medium text-amber-400/90 bg-amber-950/40 border border-[var(--acc)]/40">
-            <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans font-medium text-[var(--acc)]/90 bg-[var(--acc)]/40 border border-[var(--acc)]/40">
+            <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
             (no se han encontrado datos de fechas de esta sala)
           </span>
           {renderSourcePills()}
@@ -551,14 +551,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       return (
         <div className="flex flex-col gap-0.5 mt-0.5">
           <span
-            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-sky-950/90 border border-[var(--acc)]/80 text-sky-300 shadow-2xs cursor-pointer hover:bg-sky-900 transition-colors"
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-[var(--acc)]/90 border border-[var(--acc)]/80 text-[var(--acc)] shadow-2xs cursor-pointer hover:bg-[var(--acc)] transition-colors"
             title={`Fechas libres detectadas por radar: ${freeDates.join(", ")}`}
             onClick={(e) => {
               e.stopPropagation();
               onSelectLead(lead);
             }}
           >
-            <CalendarCheck className="w-3 h-3 text-sky-400 shrink-0" />
+            <CalendarCheck className="w-3 h-3 text-[var(--acc)] shrink-0" />
             <span>{freeDates.length} fecha(s) libre(s) detectadas</span>
           </span>
           {renderSourcePills()}
@@ -568,7 +568,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
     return (
       <div className="flex flex-col gap-0.5 mt-0.5">
-        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans text-amber-400/90 bg-amber-950/40 border border-[var(--acc)]/40">
+        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans text-[var(--acc)]/90 bg-[var(--acc)]/40 border border-[var(--acc)]/40">
           (no se han encontrado datos de fechas de esta sala)
         </span>
         {renderSourcePills()}
@@ -645,28 +645,28 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     const t = (tipoRaw || "sala").toLowerCase().trim();
     if (t === "festival") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-purple-950/80 text-purple-300 border border-[var(--acc)]/60 shrink-0">
+        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] border border-[var(--acc)]/60 shrink-0">
           🎪 Festival
         </span>
       );
     }
     if (t === "discoteca" || t === "club") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-pink-950/80 text-pink-300 border border-[var(--alert)]/60 shrink-0">
+        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] border border-[var(--alert)]/60 shrink-0">
           🪩 Club
         </span>
       );
     }
     if (t === "teatro" || t === "auditorio") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-amber-950/80 text-amber-300 border border-[var(--acc)]/60 shrink-0">
+        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] border border-[var(--acc)]/60 shrink-0">
           🎭 Teatro
         </span>
       );
     }
     if (t === "ayuntamiento") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-blue-950/80 text-blue-300 border border-[var(--acc)]/60 shrink-0">
+        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] border border-[var(--acc)]/60 shrink-0">
           🏛️ Ayto
         </span>
       );
@@ -678,7 +678,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       t === "televisión"
     ) {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-sky-950/80 text-sky-300 border border-[var(--acc)]/60 shrink-0">
+        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] border border-[var(--acc)]/60 shrink-0">
           📻 Medio
         </span>
       );
@@ -690,13 +690,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       t === "sello"
     ) {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-emerald-950/80 text-emerald-300 border border-[var(--ok)]/60 shrink-0">
+        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-[var(--ok)]/80 text-[var(--ok)] border border-[var(--ok)]/60 shrink-0">
           💼 Agencia
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-zinc-900 text-zinc-300 border border-[var(--hair)]/60 shrink-0">
+      <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)]/60 shrink-0">
         🏛️ Sala
       </span>
     );
@@ -707,10 +707,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (temp === "muy_caliente" || lead.ultimo_sentimiento === "muy_positivo") {
       return (
         <span
-          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-[var(--ok)]/40 shrink-0 animate-pulse shadow-xs"
+          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/40 shrink-0 animate-pulse shadow-xs"
           title="Lead muy receptivo / Cierre inminente"
         >
-          <Flame className="w-2.5 h-2.5 text-emerald-400 fill-emerald-400" />
+          <Flame className="w-2.5 h-2.5 text-[var(--ok)] fill-emerald-400" />
           <span>Muy Caliente</span>
         </span>
       );
@@ -721,10 +721,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     ) {
       return (
         <span
-          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-[var(--acc)]/40 shrink-0 shadow-xs"
+          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 shrink-0 shadow-xs"
           title="Interés alto"
         >
-          <Flame className="w-2.5 h-2.5 text-amber-400" />
+          <Flame className="w-2.5 h-2.5 text-[var(--acc)]" />
           <span>Caliente</span>
         </span>
       );
@@ -732,7 +732,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (temp === "tibio") {
       return (
         <span
-          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-sky-500/15 text-sky-300 border border-[var(--acc)]/30 shrink-0"
+          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 shrink-0"
           title="En evaluación / Interés templado"
         >
           <span>🌤️ Tibio</span>
@@ -742,7 +742,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (temp === "frio" || temp === "congelado") {
       return (
         <span
-          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-zinc-800 text-zinc-400 border border-[var(--hair)] shrink-0"
+          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)] shrink-0"
           title="Sin respuesta o baja tracción"
         >
           <span>❄️ Frío</span>
@@ -758,35 +758,35 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
     if (intent === "confirmar_fecha" || intent === "proponer_fechas") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-[var(--ok)]/30">
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30">
           📅 Pide Fechas
         </span>
       );
     }
     if (intent === "pedir_cache") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-[var(--acc)]/30">
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
           💰 Negociación Caché
         </span>
       );
     }
     if (intent === "pedir_info_tecnica") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-500/15 text-purple-300 border border-[var(--acc)]/30">
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
           🎛️ Pide Rider
         </span>
       );
     }
     if (intent === "rechazo_programacion_llena") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-[var(--acc)]/30">
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
           ⏳ Prog. Llena
         </span>
       );
     }
     if (intent === "derivar_contacto") {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-300 border border-[var(--acc)]/30">
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
           📋 Deriva Contacto
         </span>
       );
@@ -867,13 +867,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               type="button"
               onClick={handleBatchScanDates}
               disabled={isScanningBatchDates}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-sky-950/90 hover:bg-sky-900 border border-[var(--acc)]/60 text-sky-200 hover:text-white transition-all cursor-pointer shadow-xs disabled:opacity-50 text-xs font-sans font-semibold"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--acc)]/90 hover:bg-[var(--acc)] border border-[var(--acc)]/60 text-[var(--acc)] hover:text-[var(--ink)] transition-all cursor-pointer shadow-xs disabled:opacity-50 text-xs font-sans font-semibold"
               title="Escanea las carteleras de los recintos de la campaña para detectar sus fines de semana libres"
             >
               {isScanningBatchDates ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
               ) : (
-                <CalendarCheck className="w-3.5 h-3.5 text-sky-400" />
+                <CalendarCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
               )}
               <span>
                 {isScanningBatchDates
@@ -886,12 +886,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       </div>
 
       {batchScanResult && (
-        <div className="mb-3 p-2.5 rounded-xl bg-sky-950/60 border border-[var(--acc)]/50 text-sky-200 text-xs font-sans flex items-center justify-between gap-2 animate-fadeIn">
+        <div className="mb-3 p-2.5 rounded-xl bg-[var(--acc)]/60 border border-[var(--acc)]/50 text-[var(--acc)] text-xs font-sans flex items-center justify-between gap-2 animate-fadeIn">
           <span>{batchScanResult}</span>
           <button
             type="button"
             onClick={() => setBatchScanResult(null)}
-            className="text-sky-400 hover:text-white text-xs font-bold px-1.5 cursor-pointer"
+            className="text-[var(--acc)] hover:text-[var(--ink)] text-xs font-bold px-1.5 cursor-pointer"
           >
             ✕
           </button>
@@ -953,7 +953,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   isChecked
                     ? "bg-[var(--surface)] ring-2 ring-[var(--acc)]/25"
                     : isDetailOpen
-                      ? "bg-[var(--sunken)] ring-1 ring-purple-400/30"
+                      ? "bg-[var(--sunken)] ring-1 ring-[var(--acc)]/30"
                       : "bg-[var(--bg)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -1040,7 +1040,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             e.stopPropagation();
                             onFilterByRouteCity(lead.ciudad!);
                           }}
-                          className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-sky-300 transition-colors cursor-pointer shrink-0"
+                          className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer shrink-0"
                           title={`Filtrar salas para fin de semana doble desde ${lead.ciudad} (< 2.5h de ruta)`}
                         >
                           <Compass className="w-3 h-3" />
@@ -1073,12 +1073,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             lead.financial_break_even.entradas_break_even /
                               (lead.aforo || 250) <=
                             0.4
-                              ? "bg-emerald-950/60 text-emerald-300 border border-[var(--ok)]/30"
+                              ? "bg-[var(--ok)]/60 text-[var(--ok)] border border-[var(--ok)]/30"
                               : lead.financial_break_even.entradas_break_even /
                                     (lead.aforo || 250) <=
                                   0.7
-                                ? "bg-amber-950/60 text-amber-300 border border-[var(--acc)]/30"
-                                : "bg-rose-950/60 text-rose-300 border border-[var(--alert)]/30"
+                                ? "bg-[var(--acc)]/60 text-[var(--acc)] border border-[var(--acc)]/30"
+                                : "bg-[var(--alert)]/60 text-[var(--alert)] border border-[var(--alert)]/30"
                           }`}
                           title={`Break-Even: Cubre gastos vendiendo ${lead.financial_break_even.entradas_break_even} entradas (${Math.round((lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) * 100)}% del aforo)`}
                         >
@@ -1103,10 +1103,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <span
                             className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
                               lead.ultimo_sentimiento_score >= 0.4
-                                ? "text-emerald-400 bg-emerald-500/10 border-[var(--ok)]/30"
+                                ? "text-[var(--ok)] bg-[var(--ok)]/10 border-[var(--ok)]/30"
                                 : lead.ultimo_sentimiento_score <= -0.3
-                                  ? "text-rose-400 bg-rose-500/10 border-[var(--alert)]/30"
-                                  : "text-zinc-400 bg-zinc-800 border-[var(--hair)]"
+                                  ? "text-[var(--alert)] bg-[var(--alert)]/10 border-[var(--alert)]/30"
+                                  : "text-[var(--ink-2)] bg-[var(--surface)] border-[var(--hair)]"
                             }`}
                           >
                             {lead.ultimo_sentimiento_score > 0
@@ -1130,10 +1130,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         {lead.fechas_propuestas_sala &&
                           lead.fechas_propuestas_sala.length > 0 && (
                             <span
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-[var(--acc)]/30 text-[10px] font-mono font-semibold"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 text-[10px] font-mono font-semibold"
                               title={`Fechas propuestas por la sala: ${lead.fechas_propuestas_sala.join(", ")}`}
                             >
-                              <Calendar className="w-3 h-3 text-sky-400 shrink-0" />
+                              <Calendar className="w-3 h-3 text-[var(--acc)] shrink-0" />
                               <span>
                                 {lead.fechas_propuestas_sala
                                   .slice(0, 2)
@@ -1143,10 +1143,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           )}
                         {lead.condiciones_economicas_detectadas?.cifra && (
                           <span
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-[var(--ok)]/30 text-[10px] font-mono font-semibold"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30 text-[10px] font-mono font-semibold"
                             title={`Condiciones económicas: ${lead.condiciones_economicas_detectadas.tipo || ""} ${lead.condiciones_economicas_detectadas.detalles || ""}`}
                           >
-                            <Coins className="w-3 h-3 text-emerald-400 shrink-0" />
+                            <Coins className="w-3 h-3 text-[var(--ok)] shrink-0" />
                             <span>
                               {lead.condiciones_economicas_detectadas.cifra}
                             </span>
@@ -1158,7 +1158,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     {/* Resumen Ejecutivo / Último Mensaje */}
                     {(lead.ultimo_analisis_resumen ||
                       lead.ultimo_mensaje_recibido) && (
-                      <p className="text-[11px] text-zinc-300 line-clamp-2 leading-relaxed italic">
+                      <p className="text-[11px] text-[var(--ink-2)] line-clamp-2 leading-relaxed italic">
                         "
                         {lead.ultimo_analisis_resumen ||
                           lead.ultimo_mensaje_recibido}
@@ -1168,9 +1168,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
                     {/* Tactical Playbook Chip */}
                     {lead.estrategia_playbook && (
-                      <div className="p-1.5 rounded-lg bg-amber-500/10 border border-[var(--acc)]/20 text-[10px] text-amber-300 flex items-center justify-between gap-1">
+                      <div className="p-1.5 rounded-lg bg-[var(--acc)]/10 border border-[var(--acc)]/20 text-[10px] text-[var(--acc)] flex items-center justify-between gap-1">
                         <span className="truncate font-medium flex items-center gap-1">
-                          <Zap className="w-3 h-3 text-amber-400 shrink-0" />
+                          <Zap className="w-3 h-3 text-[var(--acc)] shrink-0" />
                           <span>{lead.estrategia_playbook.titulo}</span>
                         </span>
                         {lead.estrategia_playbook.propuesta_rapida && (
@@ -1180,7 +1180,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               onSelectLead(lead);
                             }}
-                            className="text-[9px] font-bold bg-amber-500 text-[var(--ink)] px-1.5 py-0.5 rounded shrink-0 hover:bg-amber-400 cursor-pointer shadow-xs"
+                            className="text-[9px] font-bold bg-[var(--acc)] text-[var(--ink)] px-1.5 py-0.5 rounded shrink-0 hover:bg-[var(--acc)] cursor-pointer shadow-xs"
                             title="Ver propuesta táctica en ficha"
                           >
                             Playbook ⚡
@@ -1204,10 +1204,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   {/* Icono de Teléfono Móvil disponible */}
                   {hasMovil ? (
                     <span
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-emerald-950/80 border border-[var(--ok)]/70 text-emerald-300 shadow-2xs"
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-[var(--ok)]/80 border border-[var(--ok)]/70 text-[var(--ok)] shadow-2xs"
                       title={`Teléfono móvil (WhatsApp disponible): ${rawMovil}`}
                     >
-                      <Smartphone className="w-3 h-3 text-emerald-400 shrink-0" />
+                      <Smartphone className="w-3 h-3 text-[var(--ok)] shrink-0" />
                       <span className="hidden xs:inline">Móvil</span>
                     </span>
                   ) : null}
@@ -1215,10 +1215,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   {/* Icono de Teléfono Fijo disponible */}
                   {hasFijo ? (
                     <span
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-sky-950/80 border border-[var(--acc)]/70 text-sky-300 shadow-2xs"
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-[var(--acc)]/80 border border-[var(--acc)]/70 text-[var(--acc)] shadow-2xs"
                       title={`Teléfono fijo de sala: ${rawFijo}`}
                     >
-                      <Phone className="w-3 h-3 text-sky-400 shrink-0" />
+                      <Phone className="w-3 h-3 text-[var(--acc)] shrink-0" />
                       <span className="hidden xs:inline">Fijo</span>
                     </span>
                   ) : null}
@@ -1234,10 +1234,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-pink-950/80 border border-[var(--alert)]/70 text-pink-300 shadow-2xs hover:bg-pink-900 transition-colors"
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-[var(--acc)]/80 border border-[var(--alert)]/70 text-[var(--acc)] shadow-2xs hover:bg-[var(--acc)] transition-colors"
                       title={`Instagram: ${lead.instagram}`}
                     >
-                      <Instagram className="w-3 h-3 text-pink-400 shrink-0" />
+                      <Instagram className="w-3 h-3 text-[var(--acc)] shrink-0" />
                       <span className="hidden xs:inline">
                         {lead.instagram.startsWith("@")
                           ? lead.instagram
@@ -1284,10 +1284,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="p-2 sm:px-2.5 sm:py-1.5 bg-pink-950/80 hover:bg-pink-900 border border-[var(--alert)]/60 text-pink-300 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
+                        className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--acc)]/80 hover:bg-[var(--acc)] border border-[var(--alert)]/60 text-[var(--acc)] rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
                         title={`Abrir Instagram (${lead.instagram})`}
                       >
-                        <Instagram className="w-4 h-4 text-pink-400" />
+                        <Instagram className="w-4 h-4 text-[var(--acc)]" />
                         <span className="hidden xs:inline text-[11px]">
                           Instagram
                         </span>
@@ -1338,10 +1338,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             pitchDraft: nudgeText,
                           });
                         }}
-                        className="px-2.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-[var(--acc)]/60 text-amber-300 rounded-xl font-bold text-xs flex items-center gap-1 transition-all cursor-pointer min-h-[38px] shadow-xs"
+                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 border border-[var(--acc)]/60 text-[var(--acc)] rounded-xl font-bold text-xs flex items-center gap-1 transition-all cursor-pointer min-h-[38px] shadow-xs"
                         title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                       >
-                        <Clock className="w-3.5 h-3.5 text-amber-400" />
+                        <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
                         <span className="text-[11px]">
                           Nudge ({getDaysSinceContact(lead)}d)
                         </span>
@@ -1577,9 +1577,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       </div>
                     </td>
 
-                    <td className="py-1.5 px-3 min-w-[100px] text-zinc-300 align-middle">
+                    <td className="py-1.5 px-3 min-w-[100px] text-[var(--ink-2)] align-middle">
                       <div className="flex items-center gap-1 leading-snug">
-                        <span className="font-semibold text-xs text-zinc-200 block truncate">
+                        <span className="font-semibold text-xs text-[var(--ink-2)] block truncate">
                           {lead.ciudad || "España"}
                         </span>
                         {lead.ciudad && onFilterByRouteCity && (
@@ -1589,7 +1589,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               onFilterByRouteCity(lead.ciudad!);
                             }}
-                            className="p-0.5 rounded hover:bg-zinc-800 text-zinc-500 hover:text-sky-300 transition-colors cursor-pointer shrink-0"
+                            className="p-0.5 rounded hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer shrink-0"
                             title={`Filtrar salas para fin de semana doble desde ${lead.ciudad} (< 2.5h de ruta)`}
                           >
                             <Compass className="w-3 h-3" />
@@ -1653,8 +1653,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                     onClick={(e) => e.stopPropagation()}
                                     className={`font-normal truncate max-w-[130px] text-xs inline-block ${
                                       broken
-                                        ? "text-red-400 hover:text-red-300 line-through"
-                                        : "text-sky-400 hover:text-sky-300"
+                                        ? "text-[var(--alert)] hover:text-[var(--alert)] line-through"
+                                        : "text-[var(--acc)] hover:text-[var(--acc)]"
                                     }`}
                                     title={lead.email_contacto}
                                   >
@@ -1668,7 +1668,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                           : "Email inválido"
                                       }
                                     >
-                                      <AlertCircle className="w-3 h-3 text-red-400 shrink-0" />
+                                      <AlertCircle className="w-3 h-3 text-[var(--alert)] shrink-0" />
                                     </div>
                                   )}
                                 </>
@@ -1676,7 +1676,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             })()}
                           </div>
                         ) : (
-                          <span className="text-zinc-600 italic text-[10px]">
+                          <span className="text-[var(--ink-2)] italic text-[10px]">
                             Sin email
                           </span>
                         )}
@@ -1684,7 +1684,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <div className="flex items-center gap-1.5 mt-0.5 text-[10px]">
                             {hasMovil ? (
                               <span
-                                className="inline-flex items-center gap-0.5 text-emerald-400"
+                                className="inline-flex items-center gap-0.5 text-[var(--ok)]"
                                 title={`Móvil: ${rawMovil}`}
                               >
                                 <Smartphone className="w-2.5 h-2.5 shrink-0" />
@@ -1694,7 +1694,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               </span>
                             ) : hasFijo ? (
                               <span
-                                className="inline-flex items-center gap-0.5 text-sky-400"
+                                className="inline-flex items-center gap-0.5 text-[var(--acc)]"
                                 title={`Fijo: ${rawFijo}`}
                               >
                                 <Phone className="w-2.5 h-2.5 shrink-0" />
@@ -1713,7 +1713,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-0.5 text-pink-400 hover:text-pink-300"
+                                className="inline-flex items-center gap-0.5 text-[var(--acc)] hover:text-[var(--acc)]"
                                 title={`Instagram: ${lead.instagram}`}
                               >
                                 <Instagram className="w-2.5 h-2.5 shrink-0" />
@@ -1740,7 +1740,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               openWhatsAppChat(rawMovil);
                             }}
-                            className="p-1 bg-emerald-950/80 hover:bg-emerald-900 border border-[var(--ok)]/60 text-emerald-300 rounded transition-colors inline-flex items-center"
+                            className="p-1 bg-[var(--ok)]/80 hover:bg-[var(--ok)] border border-[var(--ok)]/60 text-[var(--ok)] rounded transition-colors inline-flex items-center"
                             title={`WhatsApp directo al móvil (${rawMovil})`}
                           >
                             <MessageCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -1758,10 +1758,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1 bg-pink-950/80 hover:bg-pink-900 border border-[var(--alert)]/60 text-pink-300 rounded transition-colors inline-flex items-center"
+                            className="p-1 bg-[var(--acc)]/80 hover:bg-[var(--acc)] border border-[var(--alert)]/60 text-[var(--acc)] rounded transition-colors inline-flex items-center"
                             title={`Abrir perfil de Instagram (${lead.instagram})`}
                           >
-                            <Instagram className="w-3.5 h-3.5 text-pink-400" />
+                            <Instagram className="w-3.5 h-3.5 text-[var(--acc)]" />
                           </a>
                         ) : null}
 
@@ -1769,7 +1769,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <a
                             href={`tel:${phoneForCall}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1 bg-sky-950/80 hover:bg-sky-900 border border-[var(--acc)]/60 text-sky-300 rounded transition-colors inline-flex items-center"
+                            className="p-1 bg-[var(--acc)]/80 hover:bg-[var(--acc)] border border-[var(--acc)]/60 text-[var(--acc)] rounded transition-colors inline-flex items-center"
                             title={
                               hasMovil && hasFijo
                                 ? `Llamar (Móvil: ${rawMovil} / Fijo: ${rawFijo})`
@@ -1809,10 +1809,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                 pitchDraft: nudgeText,
                               });
                             }}
-                            className="px-1.5 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 border border-[var(--acc)]/60 text-amber-300 rounded text-[9px] font-bold transition-all cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
+                            className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 border border-[var(--acc)]/60 text-[var(--acc)] rounded text-[9px] font-bold transition-all cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
                             title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                           >
-                            <Clock className="w-3 h-3 text-amber-400" />
+                            <Clock className="w-3 h-3 text-[var(--acc)]" />
                             <span>Nudge</span>
                           </button>
                         )}

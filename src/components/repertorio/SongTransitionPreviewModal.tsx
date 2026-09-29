@@ -1111,7 +1111,7 @@ export function SongTransitionPreviewModal({
                       }}
                       className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
                         playbackMode === "synth"
-                          ? "bg-[var(--acc)]/60 text-[var(--acc-ink)]"
+                          ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                       }`}
                     >

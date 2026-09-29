@@ -955,7 +955,7 @@ export function ExcelImportModal({
                         onClick={() => setDefaultCategory(cat.id)}
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                           defaultCategory === cat.id
-                            ? "bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold"
+                            ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold"
                             : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800"
                         }`}
                       >

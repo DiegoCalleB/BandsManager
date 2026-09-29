@@ -733,7 +733,7 @@ export default function PracticeModePanel({
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-zinc-950 flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-emerald-950/40 transition-all active:scale-95 cursor-pointer"
+                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-[var(--ok)]/40 transition-all active:scale-95 cursor-pointer"
                     title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
                   >
                     {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -742,14 +742,14 @@ export default function PracticeModePanel({
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between text-[11px] font-mono">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-white font-bold">{formatTime(currentTime)}</span>
+                        <span className="text-[var(--ink)] font-bold">{formatTime(currentTime)}</span>
                         {currentActiveSection && (
-                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-[var(--acc)]/30">
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
                             {currentActiveSection.icon} {currentActiveSection.name}
                           </span>
                         )}
                       </div>
-                      <span className="text-neutral-400">{formatTime(duration)}</span>
+                      <span className="text-[var(--ink-2)]">{formatTime(duration)}</span>
                     </div>
 
                     {/* Seek bar interactiva con indicador de bucle A/B */}
@@ -766,7 +766,7 @@ export default function PracticeModePanel({
                       {/* Resaltado visual del bucle A-B */}
                       {loopA != null && loopB != null && duration > 0 && (
                         <div
-                          className="absolute h-2 bg-amber-400/40 border-x border-[var(--acc)] pointer-events-none rounded"
+                          className="absolute h-2 bg-[var(--acc)]/40 border-x border-[var(--acc)] pointer-events-none rounded"
                           style={{
                             left: `${Math.max(0, Math.min(100, (loopA / duration) * 100))}%`,
                             width: `${Math.max(0, Math.min(100, ((loopB - loopA) / duration) * 100))}%`,
@@ -782,25 +782,25 @@ export default function PracticeModePanel({
               {smartSections.length > 0 && (
                 <div className="p-3 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
                   <div className="flex items-center justify-between flex-wrap gap-1 text-[11px]">
-                    <span className="font-bold text-amber-300 flex items-center gap-1.5">
-                      <Repeat className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                    <span className="font-bold text-[var(--acc)] flex items-center gap-1.5">
+                      <Repeat className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
                       Looper de Secciones Inteligentes:
                     </span>
                     {loopA != null && loopB != null ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-emerald-300 font-bold bg-emerald-500/15 border border-[var(--ok)]/30 px-2 py-0.5 rounded-lg">
+                        <span className="text-[10px] text-[var(--ok)] font-bold bg-[var(--ok)]/15 border border-[var(--ok)]/30 px-2 py-0.5 rounded-lg">
                           🔁 Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
                         </span>
                         <button
                           type="button"
                           onClick={handleClearLoop}
-                          className="text-[10px] text-neutral-400 hover:text-white px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 transition-all cursor-pointer"
+                          className="text-[10px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 transition-all cursor-pointer"
                         >
                           ✕ Quitar
                         </button>
                       </div>
                     ) : (
-                      <span className="text-[10px] text-neutral-400">Pulsa una sección para ensayarla en bucle infinito</span>
+                      <span className="text-[10px] text-[var(--ink-2)]">Pulsa una sección para ensayarla en bucle infinito</span>
                     )}
                   </div>
 
@@ -816,10 +816,10 @@ export default function PracticeModePanel({
                           onClick={() => applySmartSectionLoop(sec)}
                           className={`px-2.5 py-1.5 rounded-xl border text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
-                              ? 'bg-amber-500 text-zinc-950 border-[var(--acc)] shadow-md shadow-amber-950/40 ring-1 ring-amber-300'
+                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] shadow-md shadow-[var(--acc)]/40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
-                                ? 'bg-indigo-500/20 text-indigo-200 border-[var(--acc)]/40'
-                                : 'bg-[var(--ink)]/5 border-[var(--hair)]/10 text-neutral-300 hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]/20'
+                                ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40'
+                                : 'bg-[var(--ink)]/5 border-[var(--hair)]/10 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]/20'
                           }`}
                           title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
                         >
@@ -838,13 +838,13 @@ export default function PracticeModePanel({
                 {/* Bloque Tempo & Presets de Velocidad */}
                 <div className="p-3 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-neutral-200 flex items-center gap-1.5">
-                      <Gauge className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                      <Gauge className="w-3.5 h-3.5 text-[var(--acc)]" />
                       Tempo & Velocidad
                     </span>
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
-                        speed !== 1 ? 'bg-amber-500/20 text-amber-300 border-[var(--acc)]/40' : 'bg-[var(--ink)]/5 text-neutral-300 border-[var(--hair)]/10'
+                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]/10'
                       }`}
                     >
                       {targetBpm} BPM ({speed.toFixed(2)}x)
@@ -862,8 +862,8 @@ export default function PracticeModePanel({
                           onClick={() => changeSpeed(spd)}
                           className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-amber-500 text-zinc-950 border-[var(--acc)] font-black'
-                              : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-neutral-400 hover:text-white hover:bg-[var(--ink)]/10'
+                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] font-black'
+                              : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >
                           {spd === 1.0 ? '1x (Orig)' : `${spd}x`}
@@ -876,13 +876,13 @@ export default function PracticeModePanel({
                   <div className="flex items-center gap-1 pt-1">
                     <button
                       onClick={() => nudgeBpm(-5)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-200"
+                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       -5
                     </button>
                     <button
                       onClick={() => nudgeBpm(-1)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-200"
+                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       -1
                     </button>
@@ -897,13 +897,13 @@ export default function PracticeModePanel({
                     />
                     <button
                       onClick={() => nudgeBpm(1)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-200"
+                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       +1
                     </button>
                     <button
                       onClick={() => nudgeBpm(5)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-200"
+                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       +5
                     </button>
@@ -913,15 +913,15 @@ export default function PracticeModePanel({
                 {/* Bloque Tono (Pitch Transpose) & Metrónomo */}
                 <div className="p-3 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-neutral-200 flex items-center gap-1.5">
-                      <ArrowUpDown className="w-3.5 h-3.5 text-sky-400" />
+                    <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                      <ArrowUpDown className="w-3.5 h-3.5 text-[var(--acc)]" />
                       Tono (Sin pitufo)
                     </span>
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
                         semitonesOffset !== 0
-                          ? 'bg-sky-500/20 text-sky-300 border-[var(--acc)]/40'
-                          : 'bg-[var(--ink)]/5 text-neutral-300 border-[var(--hair)]/10'
+                          ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40'
+                          : 'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]/10'
                       }`}
                     >
                       {(() => {
@@ -947,8 +947,8 @@ export default function PracticeModePanel({
                           onClick={() => setSemitonesOffset(st)}
                           className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-sky-500 text-zinc-950 border-[var(--acc)] font-black'
-                              : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-neutral-400 hover:text-white hover:bg-[var(--ink)]/10'
+                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] font-black'
+                              : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >
                           {st === 0 ? 'Original' : `${st > 0 ? '+' : ''}${st} st`}
@@ -964,8 +964,8 @@ export default function PracticeModePanel({
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}
                       className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
                         metronomeOn
-                          ? 'bg-amber-500/20 border-[var(--acc)]/40 text-amber-300'
-                          : 'bgbg-[var(--surface)] border-transparent text-neutral-400 hover:text-white'
+                          ? 'bg-[var(--acc)]/20 border-[var(--acc)]/40 text-[var(--acc)]'
+                          : 'bgbg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
                       <Timer className="w-3.5 h-3.5" />
@@ -976,8 +976,8 @@ export default function PracticeModePanel({
                       title="Alinear claqueta con el primer beat"
                       className={`text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
                         beatAnchorSec > 0
-                          ? 'bg-emerald-500/20 border-[var(--ok)]/40 text-emerald-300'
-                          : 'bgbg-[var(--surface)] border-transparent text-neutral-400 hover:text-white'
+                          ? 'bg-[var(--ok)]/20 border-[var(--ok)]/40 text-[var(--ok)]'
+                          : 'bgbg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
                       <Target className="w-3.5 h-3.5" />
@@ -1035,7 +1035,7 @@ export default function PracticeModePanel({
                       <button
                         onClick={() => toggleSolo(tr.id)}
                         title="Solo (aislar, solo en mi mezcla)"
-                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ? 'bg-[var(--acc)]/60 text-[var(--acc-ink)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ? 'bg-[var(--acc)]/60 text-[var(--on-acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                       >
                         S
                       </button>

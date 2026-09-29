@@ -61,39 +61,39 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
       {/* Resumen Compacto (Siempre Visible) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="p-3 bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-900/60 hover:bg-emerald-950/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
+        className="p-3 bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-900/60 hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-[var(--ok)]/40 flex items-center justify-center shrink-0">
-            <Calculator className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="w-7 h-7 rounded-lg bg-[var(--ok)]/20 border border-[var(--ok)]/40 flex items-center justify-center shrink-0">
+            <Calculator className="w-3.5 h-3.5 text-[var(--ok)]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-zinc-100 font-sans">Condiciones del Bolo & Rentabilidad</span>
+              <span className="text-xs font-bold text-[var(--ink-2)] font-sans">Condiciones del Bolo & Rentabilidad</span>
               <span
                 className={`text-[10px] font-sans font-bold px-1.5 py-0.2 rounded ${
                   isViable
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-[var(--ok)]/40'
+                    ? 'bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/40'
                     : isAjustado
-                      ? 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/40'
-                      : 'bg-rose-500/20 text-rose-300 border border-[var(--alert)]/40'
+                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40'
+                      : 'bg-[var(--alert)]/20 text-[var(--alert)] border border-[var(--alert)]/40'
                 }`}
               >
                 {isViable ? '🟢 Muy Viable' : isAjustado ? '🟡 Ajustado' : '🔴 Exigente'}
               </span>
             </div>
-            <p className="text-[11px] text-zinc-400 font-sans mt-0.5">
-              Break-Even: <strong className="text-emerald-300 font-mono">{liveBreakEven} entradas</strong> ({liveBreakEvenPct}% de {aforo}{' '}
+            <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
+              Break-Even: <strong className="text-[var(--ok)] font-mono">{liveBreakEven} entradas</strong> ({liveBreakEvenPct}% de {aforo}{' '}
               aforo) · Alquiler: {alquiler}€ · Gastos: {gastosViaje}€
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold text-emerald-400 hidden sm:inline">
+          <span className="text-[11px] font-bold text-[var(--ok)] hidden sm:inline">
             {isExpanded ? 'Ocultar simulador' : 'Ajustar números'}
           </span>
-          <div className="p-1 rounded bg-zinc-800 text-zinc-300">
+          <div className="p-1 rounded bg-[var(--surface)] text-[var(--ink-2)]">
             {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </div>
         </div>
@@ -103,97 +103,97 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
       {isExpanded && (
         <div className="p-3.5 border-t border-[var(--hair)] space-y-3 bg-[var(--sunken)] text-xs">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            <div className="p-2 rounded-lg bg-zinc-900 border border-[var(--hair)] space-y-1">
-              <label className="text-[10px] text-zinc-400 block font-medium">🎟️ Anticipada (€)</label>
+            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+              <label className="text-[10px] text-[var(--ink-2)] block font-medium">🎟️ Anticipada (€)</label>
               <input
                 type="number"
                 value={anticipada}
                 onChange={(e) => setAnticipada(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-zinc-100 font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-zinc-900 border border-[var(--hair)] space-y-1">
-              <label className="text-[10px] text-zinc-400 block font-medium">🚪 Puerta (€)</label>
+            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+              <label className="text-[10px] text-[var(--ink-2)] block font-medium">🚪 Puerta (€)</label>
               <input
                 type="number"
                 value={taquilla}
                 onChange={(e) => setTaquilla(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-zinc-100 font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-zinc-900 border border-[var(--hair)] space-y-1">
-              <label className="text-[10px] text-zinc-400 block font-medium">🏢 Alquiler Sala (€)</label>
+            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+              <label className="text-[10px] text-[var(--ink-2)] block font-medium">🏢 Alquiler Sala (€)</label>
               <input
                 type="number"
                 value={alquiler}
                 onChange={(e) => setAlquiler(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-zinc-100 font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-zinc-900 border border-[var(--hair)] space-y-1">
-              <label className="text-[10px] text-zinc-400 block font-medium">% Comisión Sala</label>
+            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+              <label className="text-[10px] text-[var(--ink-2)] block font-medium">% Comisión Sala</label>
               <input
                 type="number"
                 value={pctSala}
                 onChange={(e) => setPctSala(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-zinc-100 font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-zinc-900 border border-[var(--hair)] space-y-1">
-              <label className="text-[10px] text-zinc-400 block font-medium">🚐 Gastos Viaje (€)</label>
+            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+              <label className="text-[10px] text-[var(--ink-2)] block font-medium">🚐 Gastos Viaje (€)</label>
               <input
                 type="number"
                 value={gastosViaje}
                 onChange={(e) => setGastosViaje(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-zinc-100 font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-zinc-900 border border-[var(--hair)] space-y-1">
-              <label className="text-[10px] text-zinc-400 block font-medium">🎸 Nº Músicos</label>
+            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+              <label className="text-[10px] text-[var(--ink-2)] block font-medium">🎸 Nº Músicos</label>
               <input
                 type="number"
                 value={numMusicos}
                 onChange={(e) => setNumMusicos(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-zinc-100 font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
+                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ok)] outline-none"
               />
             </div>
           </div>
 
           {/* Tarjetas de Resultado Rápido */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-            <div className="p-2.5 rounded-xl bg-emerald-950/30 border border-[var(--ok)]/40 text-center">
-              <span className="text-[10px] text-emerald-300 font-bold uppercase block">Punto de Equilibrio</span>
-              <span className="text-lg font-extrabold text-emerald-400 font-mono block">{liveBreakEven} tix</span>
-              <span className="text-[9px] text-zinc-400 block">para cubrir costes</span>
+            <div className="p-2.5 rounded-xl bg-[var(--ok)]/30 border border-[var(--ok)]/40 text-center">
+              <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Punto de Equilibrio</span>
+              <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">{liveBreakEven} tix</span>
+              <span className="text-[9px] text-[var(--ink-2)] block">para cubrir costes</span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-[var(--hair)] text-center">
-              <span className="text-[10px] text-zinc-400 font-bold uppercase block">% Aforo Sala</span>
-              <span className="text-lg font-bold text-zinc-100 font-mono block">{liveBreakEvenPct}%</span>
-              <span className="text-[9px] text-zinc-500 block">de {aforo} personas</span>
+            <div className="p-2.5 rounded-xl bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
+              <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">% Aforo Sala</span>
+              <span className="text-lg font-bold text-[var(--ink-2)] font-mono block">{liveBreakEvenPct}%</span>
+              <span className="text-[9px] text-[var(--ink-2)] block">de {aforo} personas</span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-[var(--hair)] text-center">
-              <span className="text-[10px] text-zinc-400 font-bold uppercase block">Margen (80% aforo)</span>
-              <span className="text-lg font-bold text-emerald-300 font-mono block">+{beneficio80Pct} €</span>
-              <span className="text-[9px] text-zinc-500 block">total banda</span>
+            <div className="p-2.5 rounded-xl bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
+              <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">Margen (80% aforo)</span>
+              <span className="text-lg font-bold text-[var(--ok)] font-mono block">+{beneficio80Pct} €</span>
+              <span className="text-[9px] text-[var(--ink-2)] block">total banda</span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-[var(--ok)]/50 text-center">
-              <span className="text-[10px] text-emerald-300 font-bold uppercase block">Por Músico (80%)</span>
-              <span className="text-lg font-extrabold text-emerald-300 font-mono block">+{porMusico80Pct} €</span>
-              <span className="text-[9px] text-emerald-400/80 block">limpio cada uno</span>
+            <div className="p-2.5 rounded-xl bg-[var(--ok)]/40 border border-[var(--ok)]/50 text-center">
+              <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Por Músico (80%)</span>
+              <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">+{porMusico80Pct} €</span>
+              <span className="text-[9px] text-[var(--ok)]/80 block">limpio cada uno</span>
             </div>
           </div>
 
           {/* Botones de acción */}
           <div className="flex items-center justify-between pt-1">
-            <span className="text-[11px] text-zinc-400">
+            <span className="text-[11px] text-[var(--ink-2)]">
               {isViable
                 ? `✓ Excelente: Sólo necesitas el ${liveBreakEvenPct}% del aforo para cubrir furgoneta y sala.`
                 : isAjustado
@@ -204,7 +204,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               <button
                 type="button"
                 onClick={() => setIsExpanded(false)}
-                className="px-3 py-1 rounded bg-zinc-800 text-zinc-300 text-xs font-semibold hover:bg-zinc-700 cursor-pointer"
+                className="px-3 py-1 rounded bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold hover:bg-[var(--surface)] cursor-pointer"
               >
                 Cerrar
               </button>
@@ -212,7 +212,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="button"
                 onClick={handleSave}
                 disabled={isSaving}
-                className="px-3.5 py-1 rounded bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                className="px-3.5 py-1 rounded bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
               >
                 {isSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                 <span>Guardar Deal</span>

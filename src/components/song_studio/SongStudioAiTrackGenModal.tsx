@@ -36,8 +36,8 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
     <div className="fixed inset-0 z-[120] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
       <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 border border-[var(--acc)]/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
-          <div className="flex items-center gap-2.5 text-purple-300 font-mono font-bold text-sm">
-            <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
+          <div className="flex items-center gap-2.5 text-[var(--acc)] font-mono font-bold text-sm">
+            <Sparkles className="w-5 h-5 text-[var(--acc)] animate-pulse" />
             <span>Generador de Pista de Acompañamiento IA</span>
           </div>
           <button
@@ -47,24 +47,24 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
               setAiTrackGenPreview(null);
               setAiTrackGenError(null);
             }}
-            className="text-neutral-400 hover:text-white p-1 cursor-pointer"
+            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="space-y-4 text-xs">
-          <div className="p-3.5 rounded-xl bg-purple-950/40 border border-[var(--acc)]/30 text-purple-200 space-y-1">
-            <p className="font-bold font-mono flex items-center gap-1.5 text-purple-300">
-              <Music className="w-4 h-4 text-purple-400" /> Pista base: {idea.titulo}
+          <div className="p-3.5 rounded-xl bg-[var(--acc)]/40 border border-[var(--acc)]/30 text-[var(--acc)] space-y-1">
+            <p className="font-bold font-mono flex items-center gap-1.5 text-[var(--acc)]">
+              <Music className="w-4 h-4 text-[var(--acc)]" /> Pista base: {idea.titulo}
             </p>
-            <p className="text-[11px] text-purple-300/80 leading-relaxed font-sans">
+            <p className="text-[11px] text-[var(--acc)]/80 leading-relaxed font-sans">
               La IA escuchará esta idea y creará un arreglo instrumental complementario sincronizado en tempo y armonía.
             </p>
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono font-bold text-purple-300 mb-1.5 uppercase tracking-wider">
+            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] mb-1.5 uppercase tracking-wider">
               1. Instrumento que quieres generar
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[11px]">
@@ -80,8 +80,8 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                   onClick={() => setAiTrackGenInstrument(item.id)}
                   className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer font-bold ${
                     aiTrackGenInstrument === item.id
-                      ? 'bg-purple-600 text-white border-[var(--acc)] shadow-md'
-                      : 'bg-[var(--sunken)] borderbg-[var(--surface)] text-neutral-300 hover:bg-[var(--sunken)]'
+                      ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] shadow-md'
+                      : 'bg-[var(--sunken)] borderbg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                   }`}
                 >
                   {item.label}
@@ -91,31 +91,31 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono font-bold text-purple-300 mb-1.5 uppercase tracking-wider">
+            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] mb-1.5 uppercase tracking-wider">
               2. Indicaciones de estilo / Prompt (Opcional)
             </label>
             <textarea
               value={aiTrackGenPrompt}
               onChange={(e) => setAiTrackGenPrompt(e.target.value)}
               placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
-              className="w-full h-20 bg-[var(--sunken)] border border-[var(--acc)]/40 rounded-xl p-2.5 text-white placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
+              className="w-full h-20 bg-[var(--sunken)] border border-[var(--acc)]/40 rounded-xl p-2.5 text-[var(--ink)] placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
             />
           </div>
 
           {aiTrackGenError && (
-            <div className="p-3 rounded-xl bg-red-950/40 border border-[var(--alert)]/40 text-red-300 text-[11px] font-mono">
+            <div className="p-3 rounded-xl bg-[var(--alert)]/40 border border-[var(--alert)]/40 text-[var(--alert)] text-[11px] font-mono">
               ⚠️ {aiTrackGenError}
             </div>
           )}
 
           {aiTrackGenPreview && (
-            <div className="p-3.5 rounded-xl bg-emerald-950/30 border border-[var(--ok)]/40 space-y-2.5 animate-in fade-in duration-200">
-              <div className="flex items-center gap-1.5 text-emerald-300 font-mono font-bold text-[11px]">
+            <div className="p-3.5 rounded-xl bg-[var(--ok)]/30 border border-[var(--ok)]/40 space-y-2.5 animate-in fade-in duration-200">
+              <div className="flex items-center gap-1.5 text-[var(--ok)] font-mono font-bold text-[11px]">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {aiTrackGenPreview.trackName}
               </div>
               <audio controls src={aiTrackGenPreview.audioUrl} className="w-full h-9" onError={(e) => e.preventDefault()} />
-              <p className="text-[10px] text-neutral-300 font-sans italic leading-relaxed">{aiTrackGenPreview.arrangementNotes}</p>
-              <p className="text-[10px] text-emerald-400/80 font-mono">
+              <p className="text-[10px] text-[var(--ink-2)] font-sans italic leading-relaxed">{aiTrackGenPreview.arrangementNotes}</p>
+              <p className="text-[10px] text-[var(--ok)]/80 font-mono">
                 Escúchala antes de decidir — si no te convence, regenera o prueba otro preset.
               </p>
             </div>
@@ -130,14 +130,14 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
               setAiTrackGenPreview(null);
               setAiTrackGenError(null);
             }}
-            className="px-4 py-2 rounded-xl bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-neutral-300 font-mono text-xs font-bold cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
           >
             Cancelar
           </button>
           {aiTrackGenPreview && (
             <button
               type="button"
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95"
+              className="px-4 py-2.5 rounded-xl bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95"
             >
               <Check className="w-4 h-4" /> Añadir a la mezcla
             </button>
@@ -146,7 +146,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             type="button"
             disabled={isGeneratingAiTrack}
             onClick={handleSubmit}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
           >
             {isGeneratingAiTrack ? (
               <>

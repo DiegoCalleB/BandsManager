@@ -332,17 +332,17 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
       {selectedEventDetails.type === 'free' ? (
         <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
           {getCampaignsForDate(selectedDateKey).length > 0 ? (
-            <div className="w-full text-left rounded-2xl bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-neutral-900 border border-[var(--acc)]/50 p-4 shadow-xl shadow-purple-950/20">
+            <div className="w-full text-left rounded-2xl bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-neutral-900 border border-[var(--acc)]/50 p-4 shadow-xl shadow-[var(--acc)]/20">
               <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[var(--acc)]/30">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-purple-500/20 border border-[var(--acc)]/40 text-purple-300 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] flex items-center justify-center">
                     <Target className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-full border border-[var(--acc)]/30">
+                    <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-full border border-[var(--acc)]/30">
                       🎯 Fecha Objetivo de Campaña
                     </span>
-                    <p className="text-[11px] font-mono text-zinc-300 font-bold mt-0.5">
+                    <p className="text-[11px] font-mono text-[var(--ink-2)] font-bold mt-0.5">
                       {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                     </p>
                   </div>
@@ -352,30 +352,30 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               {getCampaignsForDate(selectedDateKey).map((camp) => (
                 <div key={camp.id} className="pt-3 space-y-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-bold font-display text-zinc-100 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold font-display text-[var(--ink-2)] flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: camp.color || '#8b5cf6' }} />
                       {camp.name}
                     </h4>
                     {camp.isActive && (
-                      <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-purple-500 text-white">
+                      <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--ink)]">
                         ACTIVA
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap gap-2 text-xs text-neutral-300">
-                    <span className="inline-flex items-center gap-1 text-sky-300 text-[11px]">
-                      <MapPin className="w-3 h-3 text-sky-400" />
+                  <div className="flex flex-wrap gap-2 text-xs text-[var(--ink-2)]">
+                    <span className="inline-flex items-center gap-1 text-[var(--acc)] text-[11px]">
+                      <MapPin className="w-3 h-3 text-[var(--acc)]" />
                       {camp.targetCities?.join(', ') || 'Cualquier ciudad'}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-amber-300 text-[11px]">
-                      <Users className="w-3 h-3 text-amber-400" />
+                    <span className="inline-flex items-center gap-1 text-[var(--acc)] text-[11px]">
+                      <Users className="w-3 h-3 text-[var(--acc)]" />
                       {camp.minCapacity} - {camp.maxCapacity} pax
                     </span>
                   </div>
 
                   {camp.notes && (
-                    <p className="text-[11px] text-neutral-400 italic bg-[var(--sunken)] p-2 rounded-xl border borderbg-[var(--surface)]">
+                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-xl border borderbg-[var(--surface)]">
                       &ldquo;{camp.notes}&rdquo;
                     </p>
                   )}
@@ -385,9 +385,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <button
                         type="button"
                         onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
-                        className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-[var(--acc)]/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                        className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--acc)]/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                       >
-                        <Building2 className="w-3 h-3 text-purple-300" />
+                        <Building2 className="w-3 h-3 text-[var(--acc)]" />
                         <span>Salas CRM</span>
                       </button>
                     )}
@@ -400,7 +400,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setConcNotas(`Concierto agendado para la campaña "${camp.name}".`);
                         setShowCreateModal('concert');
                       }}
-                      className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-purple-600 hover:bg-purple-500 text-white shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                      className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Confirmar Concierto</span>
@@ -430,7 +430,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
                   className={`py-1.5 px-3 rounded-xl text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    'bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/25'
+                    'bg-[var(--ok)]/15 text-[var(--ok)] hover:bg-[var(--ok)]/25'
                   }`}
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -441,7 +441,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setShowCreateModal('concert')}
                   className={`py-1.5 px-3 rounded-xl text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    'bg-amber-500/15 text-amber-600 hover:bg-amber-500/25'
+                    'bg-[var(--acc)]/15 text-[var(--acc)] hover:bg-[var(--acc)]/25'
                   }`}
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -475,8 +475,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     onClick={() => setUpcomingFilter(f.id as any)}
                     className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer ${
                       upcomingFilter === f.id
-                        ? 'bg-amber-400/20 text-amber-300 border border-[var(--acc)]/40'
-                        : 'text-neutral-500 hover:text-neutral-300'
+                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40'
+                        : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
                     {f.label}
@@ -515,7 +515,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       }}
                       className={`p-2.5 rounded-xl flex items-start gap-3 transition-all cursor-pointer ${
                         evt.type === 'campaña'
-                          ? 'bg-purple-950/20 hover:border-[var(--acc)]/50 border border-[var(--acc)]/30'
+                          ? 'bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 border border-[var(--acc)]/30'
                           : 'bg-[var(--surface)] hover:border-[var(--acc)] hover:shadow-sm border border-[var(--hair)]'
                       }`}
                     >
@@ -523,20 +523,20 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <div
                         className={`w-11 h-11 rounded-xl flex flex-col items-center justify-center shrink-0 shadow-sm border ${
                           evt.type === 'campaña'
-                            ? 'bg-purple-900/30 border-[var(--acc)]/40 text-purple-200'
+                            ? 'bg-[var(--acc)]/30 border-[var(--acc)]/40 text-[var(--acc)]'
                             : 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       >
                         <span
                           className={`text-base font-mono font-black leading-none ${
-                            evt.type === 'campaña' ? 'text-purple-300' : 'text-[var(--acc)]'
+                            evt.type === 'campaña' ? 'text-[var(--acc)]' : 'text-[var(--acc)]'
                           }`}
                         >
                           {evt.day}
                         </span>
                         <span
                           className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${
-                            evt.type === 'campaña' ? 'text-purple-200' : 'text-[var(--ink-2)]'
+                            evt.type === 'campaña' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                           }`}
                         >
                           {evt.month}
@@ -548,24 +548,24 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           <span
                             className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
                               evt.type === 'concierto'
-                                ? 'bg-sky-500/15 text-[var(--acc)]'
+                                ? 'bg-[var(--acc)]/15 text-[var(--acc)]'
                                 : evt.type === 'campaña'
-                                  ? 'bg-purple-500/20 text-purple-300 border border-[var(--acc)]/40'
-                                  : 'bg-emerald-100 text-emerald-700'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40'
+                                  : 'bg-[var(--ok-soft)] text-[var(--ok)]'
                             }`}
                           >
                             {evt.type === 'campaña' ? '🎯 Posible Bolo' : evt.type}
                           </span>
                           {evt.bandName && (
                             <span
-                              className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-zinc-800/80 text-amber-200 border border-[var(--acc)]/30 truncate max-w-[100px]"
+                              className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--surface)]/80 text-[var(--acc)] border border-[var(--acc)]/30 truncate max-w-[100px]"
                               title={evt.bandName}
                             >
                               {evt.bandName}
                             </span>
                           )}
                         </div>
-                        <div className="text-xs sm:text-sm font-bold font-display text-zinc-100 mt-1 truncate">{evt.title}</div>
+                        <div className="text-xs sm:text-sm font-bold font-display text-[var(--ink-2)] mt-1 truncate">{evt.title}</div>
                         {evt.direccion && <p className={`text-[10px] font-sans ${textSub} mt-0.5`}>📍 {evt.direccion}</p>}
                         {evt.type !== 'campaña' ? (
                           <div className="mt-1 flex justify-center">
@@ -577,7 +577,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             />
                           </div>
                         ) : (
-                          <p className="text-[10px] font-mono text-purple-300/80 mt-0.5">{evt.salaOrLugar}</p>
+                          <p className="text-[10px] font-mono text-[var(--acc)]/80 mt-0.5">{evt.salaOrLugar}</p>
                         )}
                       </div>
                     </div>
@@ -612,7 +612,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   Logística de Ensayos y Conciertos
                 </div>
                 {(selectedConcert || selectedRehearsal) && (
-                  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-[var(--acc)]/40 shadow-xs flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 shadow-xs flex items-center gap-1">
                     🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
                   </span>
                 )}
@@ -628,7 +628,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
                   className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer items-center gap-1 ${
-                    'bg-[var(--acc-soft)] border-[var(--acc)] text-amber-800 hover:bg-amber-100'
+                    'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Ampliar esta ficha en un modal centrado"
                 >
@@ -646,7 +646,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     setShowReminderModal(true);
                   }}
                   className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-sky-50 border-[var(--acc)] text-sky-800 hover:bg-sky-100'
+                    'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Enviar un recordatorio por correo/notificación a los convocados"
                 >
@@ -658,7 +658,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
                   className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--acc-soft)] border-[var(--acc)] text-amber-800 hover:bg-amber-100'
+                    'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Editar ficha completa del concierto"
                 >
@@ -670,7 +670,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}
                   className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--ok-soft)] border-[var(--ok)] text-emerald-800 hover:bg-emerald-100'
+                    'bg-[var(--ok-soft)] border-[var(--ok)] text-[var(--ok)] hover:bg-[var(--ok-soft)]'
                   }`}
                   title="Editar ficha completa del ensayo"
                 >
@@ -686,7 +686,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteConcert(selectedConcert.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-red-950/40 border-[var(--alert)]/40 text-red-300 hover:bg-red-900/50"
+                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -700,7 +700,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteRehearsal(selectedRehearsal.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-red-950/40 border-[var(--alert)]/40 text-red-300 hover:bg-red-900/50"
+                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -722,8 +722,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     className={`px-2 py-1 rounded-full text-[9px] font-mono font-bold border transition-colors cursor-pointer ${
                       isActive
                         ? evt.kind === 'concert'
-                          ? 'bg-amber-500/30 border-[var(--acc)] text-amber-200'
-                          : 'bg-emerald-500/30 border-[var(--ok)] text-emerald-200'
+                          ? 'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--acc)]'
+                          : 'bg-[var(--ok)]/30 border-[var(--ok)] text-[var(--ok)]'
                         : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                     }`}
                   >
@@ -797,14 +797,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     href={selectedEventDetails.entradasUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-emerald-500 text-stone-950 hover:bg-emerald-400 transition-colors w-fit"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
                   >
                     <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                   </a>
                 )}
                 {selectedEventDetails.entradasLugarFisico && (
                   <div className="flex items-center gap-2 text-[10px]">
-                    <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
                     <span className={`font-mono ${textSub}`}>También en:</span>
                     <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
                   </div>
@@ -824,17 +824,17 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
             {selectedConcert?.giraNombre && (
               <div className="flex items-center gap-2 text-[10px] pt-2 border-t borderbg-[var(--surface)]/60 mt-2">
-                <Navigation className="w-4 h-4 text-amber-400 shrink-0" />
+                <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Gira:</span>
-                <span className="font-bold font-mono text-amber-400">🚐 {selectedConcert.giraNombre}</span>
+                <span className="font-bold font-mono text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
               </div>
             )}
 
             {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
               <div className="flex items-center gap-2 text-[10px] pt-2 border-t borderbg-[var(--surface)]/60 mt-2">
-                <Users className="w-4 h-4 text-sky-400 shrink-0" />
+                <Users className="w-4 h-4 text-[var(--acc)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Convocatoria:</span>
-                <span className="font-bold font-mono text-sky-400">
+                <span className="font-bold font-mono text-[var(--acc)]">
                   {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
                     ? 'Banda Completa'
                     : `Parcial (${(() => {
@@ -863,18 +863,18 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className={`mt-3 pt-3 border-t ${'border-[var(--hair)]'}`}>
                     <div className="flex items-center justify-between gap-1 mb-2">
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400">
-                        <QrCode className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
+                        <QrCode className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
                         <span>QR Bolo & Captación Fans:</span>
                       </div>
                       {onNavigate && (
                         <button
                           type="button"
                           onClick={() => onNavigate('fans', { concertId: selectedConcert.id })}
-                          className="text-[9px] font-mono text-amber-400/90 hover:text-amber-300 hover:underline flex items-center gap-1 cursor-pointer font-bold"
+                          className="text-[9px] font-mono text-[var(--acc)]/90 hover:text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer font-bold"
                           title="Configurar el QR y la experiencia del fan para este concierto"
                         >
-                          <Settings className="w-3 h-3 text-amber-400" />
+                          <Settings className="w-3 h-3 text-[var(--acc)]" />
                           <span>Configurar</span>
                         </button>
                       )}
@@ -895,7 +895,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                       <div className="flex-1 min-w-0 space-y-1.5">
                         <p
-                          className="text-[9px] font-mono text-slate-400 truncate break-all bg-slate-900/60 p-1 rounded border border-[var(--hair)]/60 text-amber-300 font-semibold"
+                          className="text-[9px] font-mono text-[var(--ink-2)] truncate break-all bg-[var(--surface)]/60 p-1 rounded border border-[var(--hair)]/60 text-[var(--acc)] font-semibold"
                           title={targetQrUrl}
                         >
                           {targetQrUrl}
@@ -905,7 +905,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             href={targetQrUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-[var(--acc)]/30 transition-colors"
+                            className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-[var(--acc)]/30 transition-colors"
                           >
                             <ExternalLink className="w-2.5 h-2.5" /> Abrir
                           </a>
@@ -916,16 +916,16 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                               setCopiedQrId(selectedConcert.id);
                               setTimeout(() => setCopiedQrId(null), 2000);
                             }}
-                            className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-[var(--hair)] transition-colors cursor-pointer"
+                            className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-[var(--hair)] transition-colors cursor-pointer"
                           >
                             {copiedQrId === selectedConcert.id ? (
                               <>
-                                <Check className="w-2.5 h-2.5 text-emerald-400" />
-                                <span className="text-emerald-400">¡Copiado!</span>
+                                <Check className="w-2.5 h-2.5 text-[var(--ok)]" />
+                                <span className="text-[var(--ok)]">¡Copiado!</span>
                               </>
                             ) : (
                               <>
-                                <Copy className="w-2.5 h-2.5 text-slate-400" />
+                                <Copy className="w-2.5 h-2.5 text-[var(--ink-2)]" />
                                 <span>Copiar</span>
                               </>
                             )}
@@ -940,11 +940,11 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             {selectedRehearsal?.tipo_evento === 'reunion' && (
               <div className={`mt-3 pt-3 border-t ${'border-[var(--hair)]'}`}>
                 <div className="flex items-center justify-between gap-1 mb-2">
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-indigo-400">
-                    <Video className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
+                    <Video className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
                     <span>Detalles de la Reunión:</span>
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-[var(--acc)]/30">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
                     🤝 Coordinación
                   </span>
                 </div>
@@ -955,9 +955,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   }`}
                 >
                   {selectedRehearsal.asunto && (
-                    <div className="text-[11px] font-semibold text-indigo-300">📌 {selectedRehearsal.asunto}</div>
+                    <div className="text-[11px] font-semibold text-[var(--acc)]">📌 {selectedRehearsal.asunto}</div>
                   )}
-                  <div className="text-[10px] text-neutral-300 flex items-center gap-1.5">
+                  <div className="text-[10px] text-[var(--ink-2)] flex items-center gap-1.5">
                     <span>📍 {selectedRehearsal.lugar}</span>
                   </div>
 
@@ -971,7 +971,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20 transition-all cursor-pointer"
+                        className="flex-1 px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 shadow-md shadow-[var(--acc)]/20 transition-all cursor-pointer"
                       >
                         <Video className="w-3.5 h-3.5" />
                         <span>Unirse a Videollamada</span>
@@ -1029,7 +1029,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
                         setActiveStageSetlist(assignedSetlist);
                       }}
-                      className="flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+                      className="flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-[var(--acc)]/20 transition-all cursor-pointer"
                       title="Lanzar Modo Escenario / Vista de Directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--ink)]" />
@@ -1048,8 +1048,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('runofshow')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
                 activeTab === 'runofshow'
-                  ? 'bg-amber-100 text-[var(--acc-ink)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-slate-800'
+                  ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               Timing
@@ -1059,8 +1059,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('tecnica')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'tecnica'
-                  ? 'bg-sky-100 text-sky-900 font-bold'
-                  : 'text-[var(--ink-2)] hover:text-slate-800'
+                  ? 'bg-[var(--acc-soft)] text-[var(--acc)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <Wrench className="w-2.5 h-2.5" />
@@ -1071,8 +1071,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('contactos')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'contactos'
-                  ? 'bg-emerald-100 text-emerald-900 font-bold'
-                  : 'text-[var(--ink-2)] hover:text-slate-800'
+                  ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <Users className="w-2.5 h-2.5" />
@@ -1083,8 +1083,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('merchan')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'merchan'
-                  ? 'bg-amber-100 text-[var(--acc-ink)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-slate-800'
+                  ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <Shirt className="w-2.5 h-2.5" />
@@ -1095,8 +1095,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('cierre')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'cierre'
-                  ? 'bg-purple-100 text-purple-900 font-bold'
-                  : 'text-[var(--ink-2)] hover:text-slate-800'
+                  ? 'bg-[var(--acc-soft)] text-[var(--acc)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <ShieldCheck className="w-2.5 h-2.5" />
@@ -1107,8 +1107,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('roadbook')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
                 activeTab === 'roadbook'
-                  ? 'bg-teal-100 text-teal-900 font-bold'
-                  : 'text-[var(--ink-2)] hover:text-slate-800'
+                  ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               Ruta
@@ -1118,8 +1118,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('gear')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
                 activeTab === 'gear'
-                  ? 'bg-orange-100 text-orange-900 font-bold'
-                  : 'text-[var(--ink-2)] hover:text-slate-800'
+                  ? 'bg-[var(--acc-soft)] text-[var(--acc)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               Cacharros
@@ -1330,7 +1330,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       className={`p-2.5 rounded-lg border ${'bg-[var(--acc-soft)]/70 border-[var(--acc)]'}`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold flex items-center gap-1 text-sky-400 font-mono uppercase text-[10px]">
+                        <span className="font-bold flex items-center gap-1 text-[var(--acc)] font-mono uppercase text-[10px]">
                           <Wrench className="w-3 h-3" /> 1. Logística Técnica
                         </span>
                         <button
@@ -1339,33 +1339,33 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             setModalActiveTab('tecnica');
                             setShowEventFichaModal(true);
                           }}
-                          className="text-[9px] underline text-sky-400 hover:text-sky-300 font-mono cursor-pointer"
+                          className="text-[9px] underline text-[var(--acc)] hover:text-[var(--acc)] font-mono cursor-pointer"
                         >
                           Editar Completo →
                         </button>
                       </div>
                       <div className="grid grid-cols-2 gap-1.5 text-[9px]">
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-neutral-400 font-mono uppercase text-[8px]">Prueba de Sonido</span>
-                          <span className="font-bold text-amber-400">{currentRb.horaPruebaSonido || '18:00'}</span>
+                          <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Prueba de Sonido</span>
+                          <span className="font-bold text-[var(--acc)]">{currentRb.horaPruebaSonido || '18:00'}</span>
                         </div>
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-neutral-400 font-mono uppercase text-[8px]">Horario Show</span>
-                          <span className="font-bold text-emerald-400">{currentRb.horaShow || '21:30'}</span>
+                          <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Horario Show</span>
+                          <span className="font-bold text-[var(--ok)]">{currentRb.horaShow || '21:30'}</span>
                         </div>
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-neutral-400 font-mono uppercase text-[8px]">Técnico Sonido FOH</span>
+                          <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Técnico Sonido FOH</span>
                           <span className="font-medium truncate">{currentRb.tecnicoSonido || 'Propio / Sala'}</span>
                         </div>
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-neutral-400 font-mono uppercase text-[8px]">Sistema P.A.</span>
+                          <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Sistema P.A.</span>
                           <span className="font-medium truncate">{currentRb.paEspecificaciones ? 'Especificado' : 'Estándar Sala'}</span>
                         </div>
                       </div>
                       {currentRb.backlineInfo && (
                         <div className={`mt-2 p-1.5 rounded text-[9px] ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-neutral-400 font-mono uppercase text-[8px]">Backline & Rider</span>
-                          <p className="line-clamp-2 text-neutral-300">{currentRb.backlineInfo}</p>
+                          <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Backline & Rider</span>
+                          <p className="line-clamp-2 text-[var(--ink-2)]">{currentRb.backlineInfo}</p>
                         </div>
                       )}
                     </div>
@@ -1375,7 +1375,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('tecnica');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Wrench className="w-3 h-3" />
                       <span>Abrir Logística Técnica Completa</span>
@@ -1392,7 +1392,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono uppercase font-bold text-emerald-400 text-[10px] flex items-center gap-1">
+                      <span className="font-mono uppercase font-bold text-[var(--ok)] text-[10px] flex items-center gap-1">
                         <Users className="w-3 h-3" /> 2. Contactos Clave ({contacts.length})
                       </span>
                       <button
@@ -1401,7 +1401,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           setModalActiveTab('contactos');
                           setShowEventFichaModal(true);
                         }}
-                        className="text-[9px] underline text-emerald-400 hover:text-emerald-300 font-mono cursor-pointer"
+                        className="text-[9px] underline text-[var(--ok)] hover:text-[var(--ok)] font-mono cursor-pointer"
                       >
                         + Gestionar →
                       </button>
@@ -1417,8 +1417,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           >
                             <div className="min-w-0">
                               <div className="font-bold truncate text-[10px]">{c.nombre}</div>
-                              <div className="text-[9px] text-neutral-400 font-mono flex items-center gap-1">
-                                <span className="px-1 py-0.2 rounded bg-emerald-500/10 text-emerald-400 text-[8px] uppercase">{c.rol}</span>
+                              <div className="text-[9px] text-[var(--ink-2)] font-mono flex items-center gap-1">
+                                <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[8px] uppercase">{c.rol}</span>
                                 <span>{c.telefono}</span>
                               </div>
                             </div>
@@ -1432,14 +1432,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                                       e.preventDefault();
                                       openWhatsAppChat(c.telefono);
                                     }}
-                                    className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
+                                    className="p-1 rounded bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30"
                                     title="WhatsApp"
                                   >
                                     <MessageCircle className="w-3 h-3" />
                                   </a>
                                   <a
                                     href={`tel:${c.telefono}`}
-                                    className="p-1 rounded bg-sky-500/20 text-sky-400 hover:bg-sky-500/30"
+                                    className="p-1 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30"
                                     title="Llamar"
                                   >
                                     <Phone className="w-3 h-3" />
@@ -1457,7 +1457,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('contactos');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Añadir Contactos Clave</span>
@@ -1485,36 +1485,36 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono uppercase font-bold text-amber-400 text-[10px] flex items-center gap-1">
+                      <span className="font-mono uppercase font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
                         <Shirt className="w-3 h-3" /> 3. Merch ({totalVendidas}/{totalInicial} uds)
                       </span>
-                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
                         {totalTeorico.toFixed(0)}€ ventas
                       </span>
                     </div>
 
                     {/* Arqueo Rápido */}
                     <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono">
-                      <div className="p-1.5 rounded bg-emerald-500/10 border border-[var(--ok)]/20 flex flex-col">
-                        <span className="text-emerald-400/80 text-[8px] flex items-center gap-0.5">
+                      <div className="p-1.5 rounded bg-[var(--ok)]/10 border border-[var(--ok)]/20 flex flex-col">
+                        <span className="text-[var(--ok)]/80 text-[8px] flex items-center gap-0.5">
                           <Banknote className="w-2.5 h-2.5" /> Efectivo
                         </span>
-                        <span className="font-bold text-emerald-300 text-[11px]">{(merch.ingresosEfectivo || 0).toFixed(0)}€</span>
+                        <span className="font-bold text-[var(--ok)] text-[11px]">{(merch.ingresosEfectivo || 0).toFixed(0)}€</span>
                       </div>
-                      <div className="p-1.5 rounded bg-sky-500/10 border border-[var(--acc)]/20 flex flex-col">
-                        <span className="text-sky-400/80 text-[8px] flex items-center gap-0.5">
+                      <div className="p-1.5 rounded bg-[var(--acc)]/10 border border-[var(--acc)]/20 flex flex-col">
+                        <span className="text-[var(--acc)]/80 text-[8px] flex items-center gap-0.5">
                           <Smartphone className="w-2.5 h-2.5" /> Bizum / TPV
                         </span>
-                        <span className="font-bold text-sky-300 text-[11px]">{(merch.ingresosBizum || 0).toFixed(0)}€</span>
+                        <span className="font-bold text-[var(--acc)] text-[11px]">{(merch.ingresosBizum || 0).toFixed(0)}€</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-neutral-900/60 border borderbg-[var(--surface)]">
-                      <span className="text-neutral-400">
-                        Total cobrado: <strong className="text-white">{totalCobrado.toFixed(0)}€</strong>
+                    <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-[var(--surface)]/60 border borderbg-[var(--surface)]">
+                      <span className="text-[var(--ink-2)]">
+                        Total cobrado: <strong className="text-[var(--ink)]">{totalCobrado.toFixed(0)}€</strong>
                       </span>
                       <span
-                        className={`font-bold ${cuadreDiff === 0 ? 'text-emerald-400' : cuadreDiff > 0 ? 'text-sky-400' : 'text-amber-400'}`}
+                        className={`font-bold ${cuadreDiff === 0 ? 'text-[var(--ok)]' : cuadreDiff > 0 ? 'text-[var(--acc)]' : 'text-[var(--acc)]'}`}
                       >
                         {cuadreDiff === 0
                           ? '✓ Cuadrada'
@@ -1539,13 +1539,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                               <p className="font-medium truncate text-[9.5px]">
                                 {item.nombre} {item.talla ? `(${item.talla})` : ''}
                               </p>
-                              <p className="text-[8px] text-neutral-400 font-mono">
+                              <p className="text-[8px] text-[var(--ink-2)] font-mono">
                                 {item.stockInicial} furgón ➔ {item.stockFinal} quedan
                               </p>
                             </div>
                             <div className="text-right shrink-0">
-                              <span className="text-[9px] font-mono font-bold text-amber-400">{vendidas} vend.</span>
-                              <p className="text-[8px] font-mono text-neutral-400">{(vendidas * item.precioUnitario).toFixed(0)}€</p>
+                              <span className="text-[9px] font-mono font-bold text-[var(--acc)]">{vendidas} vend.</span>
+                              <p className="text-[8px] font-mono text-[var(--ink-2)]">{(vendidas * item.precioUnitario).toFixed(0)}€</p>
                             </div>
                           </div>
                         );
@@ -1553,7 +1553,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     </div>
 
                     {items.length > 4 && (
-                      <p className="text-[8px] text-center font-mono text-neutral-400">+{items.length - 4} productos más en inventario</p>
+                      <p className="text-[8px] text-center font-mono text-[var(--ink-2)]">+{items.length - 4} productos más en inventario</p>
                     )}
 
                     <button
@@ -1562,7 +1562,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('merchan');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Shirt className="w-3 h-3" />
                       <span>Control Merchandising Completo</span>
@@ -1581,18 +1581,18 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono uppercase font-bold text-purple-400 text-[10px] flex items-center gap-1">
+                      <span className="font-mono uppercase font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
                         <ShieldCheck className="w-3 h-3" /> 5. Cierre Material ({checkedCount}/{items.length})
                       </span>
                       <span
-                        className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${progress === 100 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-purple-500/20 text-purple-300'}`}
+                        className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${progress === 100 ? 'bg-[var(--ok)]/20 text-[var(--ok)]' : 'bg-[var(--acc)]/20 text-[var(--acc)]'}`}
                       >
                         {progress}%
                       </span>
                     </div>
                     <div className="w-full bgbg-[var(--surface)] rounded-full h-1.5 overflow-hidden">
                       <div
-                        className={`h-full transition-all duration-300 ${progress === 100 ? 'bg-emerald-500' : 'bg-purple-500'}`}
+                        className={`h-full transition-all duration-300 ${progress === 100 ? 'bg-[var(--ok)]' : 'bg-[var(--acc)]'}`}
                         style={{ width: `${progress}%` }}
                       />
                     </div>
@@ -1611,10 +1611,10 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             type="checkbox"
                             checked={item.checked}
                             onChange={() => {}}
-                            className="rounded text-purple-500 h-3 w-3 cursor-pointer"
+                            className="rounded text-[var(--acc)] h-3 w-3 cursor-pointer"
                           />
                           <span className="flex-1 truncate text-[9.5px]">{item.item}</span>
-                          <span className="text-[8px] font-mono uppercase px-1 rounded bgbg-[var(--surface)] text-neutral-400 shrink-0">
+                          <span className="text-[8px] font-mono uppercase px-1 rounded bgbg-[var(--surface)] text-[var(--ink-2)] shrink-0">
                             {item.categoria}
                           </span>
                         </div>
@@ -1626,7 +1626,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('cierre');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <ShieldCheck className="w-3 h-3" />
                       <span>Checklist Cierre Completo</span>
@@ -1662,7 +1662,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <button
                       type="submit"
                       className={`p-1.5 rounded transition-colors cursor-pointer ${
-                        'bg-sky-500/15 text-[var(--ink)] hover:bg-sky-500/15'
+                        'bg-[var(--acc)]/15 text-[var(--ink)] hover:bg-[var(--acc)]/15'
                       }`}
                       title="Añadir horario"
                     >
@@ -1683,7 +1683,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <button
                       type="submit"
                       className={`p-1.5 rounded transition-colors cursor-pointer ${
-                        'bg-sky-500/15 text-[var(--ink)] hover:bg-sky-500/15'
+                        'bg-[var(--acc)]/15 text-[var(--ink)] hover:bg-[var(--acc)]/15'
                       }`}
                       title="Añadir material"
                     >
@@ -1708,7 +1708,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
                             isItemDone
                               ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
-                              : 'bg-[var(--surface)] text-slate-700 hover:-indigo-300'
+                              : 'bg-[var(--surface)] text-[var(--ink)] hover:-indigo-300'
                           }`}
                         >
                           <span
@@ -1724,7 +1724,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           <button
                             type="button"
                             onClick={(e) => handleDeleteRunOfShow(item.id, e)}
-                            className="opacity-0 group-hover:opacity-100 p-1 text-neutral-500 hover:text-rose-400 transition-opacity"
+                            className="opacity-0 group-hover:opacity-100 p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity"
                             title="Eliminar"
                           >
                             <Trash2 className="w-3 h-3" />
@@ -1745,7 +1745,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
                           isChecked
                             ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
-                            : 'bg-[var(--surface)] text-slate-700 hover:-indigo-300'
+                            : 'bg-[var(--surface)] text-[var(--ink)] hover:-indigo-300'
                         }`}
                       >
                         <input
@@ -1760,7 +1760,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         <button
                           type="button"
                           onClick={(e) => handleDeleteGear(item.id, e)}
-                          className="opacity-0 group-hover:opacity-100 p-1 text-neutral-500 hover:text-rose-400 transition-opacity"
+                          className="opacity-0 group-hover:opacity-100 p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity"
                           title="Eliminar"
                         >
                           <Trash2 className="w-3 h-3" />

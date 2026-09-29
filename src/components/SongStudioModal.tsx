@@ -222,7 +222,7 @@ const LiveMicWaveformCanvas: React.FC<{
 const IRIS_PRISM_RAY_COLORS = ['#ff6b6b', '#ffab4a', '#ffe066', '#6fe89a', '#5b9dff', '#c084fc'];
 const IrisPrismBanner: React.FC = () => {
   return (
-    <div className="w-full aspect-video flex items-center justify-center overflow-hidden rounded-[var(--r-m)] bg-black">
+    <div className="w-full aspect-video flex items-center justify-center overflow-hidden rounded-[var(--r-m)] bg-[var(--surface)]">
       <video
         className="w-full h-full object-cover pointer-events-none"
         src="/videos/iris-prism-banner.mp4"
@@ -441,7 +441,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎤',
     tag: 'Acapella / Melodía',
     desc: 'Voz aislada en alta pureza espectral. Permite silenciar la voz original para ensayar cantando o directos.',
-    badgeBg: 'bg-indigo-500/20 text-indigo-300 border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
   },
   {
     id: 'Instrumental',
@@ -450,7 +450,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎵',
     tag: 'Karaoke / Backing Track',
     desc: 'Mezcla musical completa sin voz principal. La opción predilecta para directos con playback o práctica vocal.',
-    badgeBg: 'bg-rose-500/20 text-rose-300 border-[var(--alert)]/40',
+    badgeBg: 'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]/40',
   },
   {
     id: 'Batería',
@@ -459,7 +459,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🥁',
     tag: 'Ritmo & Platos',
     desc: 'Aislamiento de bombo, caja, timbales y platos (>1800Hz) para practicar con metrónomo y batería real.',
-    badgeBg: 'bg-amber-500/20 text-amber-300 border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
   },
   {
     id: 'Bajo',
@@ -468,7 +468,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎸',
     tag: 'Sub-Bass & Graves',
     desc: 'Frecuencias fundamentales y transitorios de bajo (<180Hz) para estudiar la línea o tocar encima.',
-    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-[var(--ok)]/40',
+    badgeBg: 'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40',
   },
   {
     id: 'Guitarras',
@@ -477,7 +477,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎸',
     tag: 'Eléctricas & Acústicas',
     desc: 'Guitarras eléctricas, distorsiones y acústicas sin bleed de voz ni percusión.',
-    badgeBg: 'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
   },
   {
     id: 'Teclados',
@@ -486,7 +486,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎹',
     tag: 'Pianos & Sintes',
     desc: 'Pianos acústicos, sintetizadores polifónicos y teclados aislados para acompañamiento armónico.',
-    badgeBg: 'bg-cyan-500/20 text-cyan-300 border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
   },
   {
     id: 'Arreglos',
@@ -495,7 +495,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎺',
     tag: 'Metales & Efectos',
     desc: 'Secciones de viento metal, cuartetos de cuerda, solos y efectos secundarios de mezcla.',
-    badgeBg: 'bg-orange-500/20 text-orange-300 border-[var(--acc)]/40',
+    badgeBg: 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40',
   },
 ];
 
@@ -4513,7 +4513,7 @@ export default function SongStudioModal({
                         transition={{ duration: 0.25 }}
                         className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all space-y-4 ${
                           isPlaying
-                            ? 'bg-[var(--tentative)]/5/30/50 ring-1 ring-indigo-500/30'
+                            ? 'bg-[var(--tentative)]/5/30/50 ring-1 ring-[var(--acc)]/30'
                             : 'bg-[var(--ink)]/5 hover:border-[var(--hair)]'
                         }`}
                       >
@@ -4601,7 +4601,7 @@ export default function SongStudioModal({
                             <button
                               type="button"
                               onClick={(e) => handleDeleteIdea(e, idea.id)}
-                              className="p-2 rounded-xl bg-[var(--ink)]/5 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 border border-[var(--hair)]/10 hover:border-[var(--alert)]/30 transition-all cursor-pointer"
+                              className="p-2 rounded-xl bg-[var(--ink)]/5 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] border border-[var(--hair)]/10 hover:border-[var(--alert)]/30 transition-all cursor-pointer"
                               title="Eliminar idea"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -4793,7 +4793,7 @@ export default function SongStudioModal({
                                         onClick={() => toggleIdeaLoop(idea)}
                                         className={`px-2.5 py-1.5 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                                           isLoopEnabled
-                                            ? 'bg-[var(--tentative)]/80 text-[var(--ink)] ring-1 ring-purple-400/50'
+                                            ? 'bg-[var(--tentative)]/80 text-[var(--ink)] ring-1 ring-[var(--acc)]/50'
                                             : 'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
                                         }`}
                                         title="Bucle ON/OFF (Atajo: L)"
@@ -4928,7 +4928,7 @@ export default function SongStudioModal({
                                           <span className="hidden sm:inline">Comparar Motor</span>
                                         </button>
                                         {hasSoloInIdea && (
-                                          <span className="px-2 py-0.5 rounded text-[10px] font-sans font-black bg-[var(--acc)]/60 text-[var(--acc-ink)] flex items-center gap-1/20/40">
+                                          <span className="px-2 py-0.5 rounded text-[10px] font-sans font-black bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-1/20/40">
                                             <Volume2 className="w-3 h-3" /> SOLO (S) ACTIVO
                                           </span>
                                         )}
@@ -4963,11 +4963,11 @@ export default function SongStudioModal({
                                               isDraggingThisTrack
                                                 ? 'opacity-30 scale-[0.98]'
                                                 : isDragOverThisTrack
-                                                  ? 'border-[var(--acc)] ring-2 ring-indigo-400/50 bg-[var(--tentative)]/10'
+                                                  ? 'border-[var(--acc)] ring-2 ring-[var(--acc)]/50 bg-[var(--tentative)]/10'
                                                   : isMuted
                                                     ? 'bg-[var(--alert)]/5/20/40 opacity-50 grayscale-[30%]'
                                                     : isSolo
-                                                      ? 'bg-[var(--acc)]/10 /80 ring-1 ring-amber-400/40 border-l-[var(--acc)]/10/30'
+                                                      ? 'bg-[var(--acc)]/10 /80 ring-1 ring-[var(--acc)]/40 border-l-[var(--acc)]/10/30'
                                                       : hasSoloInIdea
                                                         ? 'bg-[var(--sunken)] /80 opacity-40 grayscale-[50%]'
                                                         : 'bg-[var(--ink)]/5 hover:border-[var(--hair)]'
@@ -5063,7 +5063,7 @@ export default function SongStudioModal({
                                                       onClick={() => handleToggleMuteTrack(idea, tr.id)}
                                                       className={`px-1.5 py-0.5 rounded text-[9px] font-sans font-black cursor-pointer transition-all shrink-0 ${
                                                         isMuted
-                                                          ? 'bg-[var(--alert)]/80 text-[var(--ink)] ring-1 ring-red-400/50'
+                                                          ? 'bg-[var(--alert)]/80 text-[var(--ink)] ring-1 ring-[var(--alert)]/50'
                                                           : 'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
                                                       }`}
                                                       title="Mute (M) - Silenciar pista"
@@ -5075,7 +5075,7 @@ export default function SongStudioModal({
                                                       onClick={() => handleToggleSoloTrack(idea, tr.id)}
                                                       className={`px-1.5 py-0.5 rounded text-[9px] font-sans font-black cursor-pointer transition-all shrink-0 ${
                                                         isSolo
-                                                          ? 'bg-[var(--acc)]/60 text-[var(--acc-ink)] ring-1 ring-amber-300/60'
+                                                          ? 'bg-[var(--acc)]/60 text-[var(--on-acc)] ring-1 ring-[var(--acc)]/60'
                                                           : 'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
                                                       }`}
                                                       title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"
@@ -5114,7 +5114,7 @@ export default function SongStudioModal({
                                                     >
                                                       <Sliders className="w-2.5 h-2.5 text-[var(--tentative)]/80" />
                                                       {(tr.desfaseMs || 0) !== 0 && (
-                                                        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 ring-1 ring-black" />
+                                                        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 ring-1 ring-[var(--ink)]" />
                                                       )}
                                                     </button>
                                                   </div>
@@ -5387,7 +5387,7 @@ export default function SongStudioModal({
 
                                       {/* CUBASE LIVE RECORDING TRACK ROW */}
                                       {isRecordingTrack && recordingTrackIdeaId === idea.id && (
-                                        <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/5/40 flex flex-col gap-2.5/10/60 ring-2 ring-red-500/50">
+                                        <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/5/40 flex flex-col gap-2.5/10/60 ring-2 ring-[var(--alert)]/50">
                                           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                                             <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
                                               <span className="w-6 h-6 rounded bg-[var(--alert)]/80 text-[var(--ink)] font-sans text-xs font-black flex items-center justify-center shrink-0 shadow">

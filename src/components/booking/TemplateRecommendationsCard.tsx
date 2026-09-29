@@ -23,7 +23,7 @@ export function TemplateRecommendationsCard({
   return (
     <div
       className={`rounded-xl border p-4 transition-all duration-200 ${
-        'bg-[var(--acc-soft)]/70 border-[var(--acc)] text-stone-900 shadow-sm'
+        'bg-[var(--acc-soft)]/70 border-[var(--acc)] text-[var(--ink)] shadow-sm'
       }`}
     >
       {/* Header with category badge & toggle */}
@@ -38,7 +38,7 @@ export function TemplateRecommendationsCard({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-extrabold uppercase tracking-wide text-amber-400">Recomendaciones del Agente</span>
+              <span className="text-xs font-extrabold uppercase tracking-wide text-[var(--acc)]">Recomendaciones del Agente</span>
               <span
                 className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                   'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
@@ -89,9 +89,9 @@ export function TemplateRecommendationsCard({
               'bg-[var(--surface)] text-[var(--ink)] border border-[var(--acc)]'
             }`}
           >
-            <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <Lightbulb className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
             <div>
-              <strong className="text-amber-400 mr-1">Regla clave del Agente:</strong>
+              <strong className="text-[var(--acc)] mr-1">Regla clave del Agente:</strong>
               <span>{rec.aiSecretTip}</span>
             </div>
           </div>
@@ -104,14 +104,14 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--ok-soft)]/70 border-[var(--ok)]'
               }`}
             >
-              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ok)]">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>Buenas prácticas para {category}</span>
               </div>
-              <ul className="space-y-1 text-[10px] leading-normal text-emerald-200/90 list-disc list-inside">
+              <ul className="space-y-1 text-[10px] leading-normal text-[var(--ok)]/90 list-disc list-inside">
                 {rec.dos.map((item, idx) => (
                   <li key={`do-${idx}`} className="list-none flex items-start gap-1.5">
-                    <span className="text-emerald-400 font-bold shrink-0">✓</span>
+                    <span className="text-[var(--ok)] font-bold shrink-0">✓</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -124,14 +124,14 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--alert)]/12 border-[var(--alert)]'
               }`}
             >
-              <div className="flex items-center gap-1.5 text-xs font-bold text-rose-400">
-                <XCircle className="w-3.5 h-3.5 text-rose-400" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--alert)]">
+                <XCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
                 <span>Qué evitar obligatoriamente</span>
               </div>
-              <ul className="space-y-1 text-[10px] leading-normal text-rose-200/90 list-disc list-inside">
+              <ul className="space-y-1 text-[10px] leading-normal text-[var(--alert)]/90 list-disc list-inside">
                 {rec.donts.map((item, idx) => (
                   <li key={`dont-${idx}`} className="list-none flex items-start gap-1.5">
-                    <span className="text-rose-400 font-bold shrink-0">✕</span>
+                    <span className="text-[var(--alert)] font-bold shrink-0">✕</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -146,7 +146,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
-              <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">
                 🎯 Apertura Recomendada
               </span>
               <p className="italic text-[10px] opacity-90">{rec.bestOpening}</p>
@@ -157,11 +157,11 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
-              <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">⚡ Ganchos Clave</span>
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">⚡ Ganchos Clave</span>
               <ul className="space-y-0.5">
                 {rec.keyHooks.map((hook, i) => (
                   <li key={i} className="flex items-center gap-1">
-                    <span className="text-amber-400">•</span>
+                    <span className="text-[var(--acc)]">•</span>
                     <span>{hook}</span>
                   </li>
                 ))}
@@ -173,7 +173,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
-              <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">
                 📬 Cierre & Llamada a la Acción (CTA)
               </span>
               <p className="italic text-[10px] opacity-90">{rec.ctaSuggestion}</p>
@@ -182,10 +182,10 @@ export function TemplateRecommendationsCard({
 
           {/* Quick Action Prompt Footer */}
           <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-            <div className="flex items-center gap-1.5 text-[10px] text-amber-300/80">
-              <MessageSquarePlus className="w-3.5 h-3.5 text-amber-400" />
+            <div className="flex items-center gap-1.5 text-[10px] text-[var(--acc)]/80">
+              <MessageSquarePlus className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Instrucción sugerida:</span>
-              <span className="italic truncate max-w-md text-[10px] text-amber-100">"{rec.quickImprovePrompt}"</span>
+              <span className="italic truncate max-w-md text-[10px] text-[var(--acc)]">"{rec.quickImprovePrompt}"</span>
             </div>
 
             <button

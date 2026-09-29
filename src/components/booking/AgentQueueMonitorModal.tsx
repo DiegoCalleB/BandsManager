@@ -107,31 +107,31 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
     switch (type) {
       case 'lector_inbox_check':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-[var(--acc)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
             📥 Lector Inbox
           </span>
         );
       case 'redactor_pitch_dispatch':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-[var(--ok)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/30">
             📤 Redactor Dispatch
           </span>
         );
       case 'scout_enrichment':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
             🔍 Scout Enrichment
           </span>
         );
       case 'campaign_radar_sync':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-[var(--acc)]/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
             🛰️ Radar Sync
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-zinc-700/50 text-zinc-300 border border-[var(--hair)]">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--surface)]/50 text-[var(--ink-2)] border border-[var(--hair)]">
             {type}
           </span>
         );
@@ -142,30 +142,30 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
     switch (status) {
       case 'completed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-[var(--ok)]/40">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/40">
             ✓ Completado
           </span>
         );
       case 'processing':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-500/20 text-sky-400 border border-[var(--acc)]/40 animate-pulse">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 animate-pulse">
             ● En Proceso
           </span>
         );
       case 'pending':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-[var(--acc)]/40">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40">
             ⏳ En Cola
           </span>
         );
       case 'failed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500/20 text-rose-300 border border-[var(--alert)]/40">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--alert)]/20 text-[var(--alert)] border border-[var(--alert)]/40">
             ✕ Fallido
           </span>
         );
       default:
-        return <span className="text-zinc-400 text-xs">{status}</span>;
+        return <span className="text-[var(--ink-2)] text-xs">{status}</span>;
     }
   };
 
@@ -176,20 +176,20 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--hair)]/10 bg-[#1a1916]">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-amber-500/10 border border-[var(--acc)]/30 text-amber-400">
+              <div className="p-2 rounded-xl bg-[var(--acc)]/10 border border-[var(--acc)]/30 text-[var(--acc)]">
                 <Cpu className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-white tracking-wide">Monitor de Cola & Workers en Vivo</h2>
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-[var(--ok)]/30">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <h2 className="text-base font-bold text-[var(--ink)] tracking-wide">Monitor de Cola & Workers en Vivo</h2>
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30">
+                    <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-ping" />
                     Worker Online
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-[var(--ink-2)]">
                   Arquitectura distribuida de agentes de IA con persistencia en Supabase (
-                  <code className="text-zinc-300 text-[10px] font-mono">agent_jobs_queue</code>)
+                  <code className="text-[var(--ink-2)] text-[10px] font-mono">agent_jobs_queue</code>)
                 </p>
               </div>
             </div>
@@ -199,15 +199,15 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 type="button"
                 onClick={() => fetchMetrics(true)}
                 disabled={refreshing}
-                className="p-2 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all border border-[var(--hair)]/5 cursor-pointer disabled:opacity-50"
+                className="p-2 rounded-lg bg-[var(--surface)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-all border border-[var(--hair)]/5 cursor-pointer disabled:opacity-50"
                 title="Refrescar métricas"
               >
-                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-amber-400' : ''}`} />
+                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-[var(--acc)]' : ''}`} />
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all border border-[var(--hair)]/5 cursor-pointer"
+                className="p-2 rounded-lg bg-[var(--surface)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-all border border-[var(--hair)]/5 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -219,58 +219,58 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
             {/* KPI Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--acc)]/20 flex flex-col">
-                <div className="flex items-center justify-between text-zinc-400 text-xs font-semibold mb-1">
+                <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>En Cola</span>
-                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                  <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
                 </div>
-                <span className="text-2xl font-black text-amber-300 font-mono">{stats.pending}</span>
-                <span className="text-[10px] text-zinc-500 mt-1">Trabajos esperando turno</span>
+                <span className="text-2xl font-black text-[var(--acc)] font-mono">{stats.pending}</span>
+                <span className="text-[10px] text-[var(--ink-2)] mt-1">Trabajos esperando turno</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--acc)]/20 flex flex-col">
-                <div className="flex items-center justify-between text-zinc-400 text-xs font-semibold mb-1">
+                <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>En Proceso</span>
-                  <Activity className="w-3.5 h-3.5 text-sky-400 animate-spin" />
+                  <Activity className="w-3.5 h-3.5 text-[var(--acc)] animate-spin" />
                 </div>
-                <span className="text-2xl font-black text-sky-300 font-mono">{stats.processing}</span>
-                <span className="text-[10px] text-zinc-500 mt-1">Ejecutando en worker</span>
+                <span className="text-2xl font-black text-[var(--acc)] font-mono">{stats.processing}</span>
+                <span className="text-[10px] text-[var(--ink-2)] mt-1">Ejecutando en worker</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--ok)]/20 flex flex-col">
-                <div className="flex items-center justify-between text-zinc-400 text-xs font-semibold mb-1">
+                <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>Completados</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 </div>
-                <span className="text-2xl font-black text-emerald-300 font-mono">{stats.completed}</span>
-                <span className="text-[10px] text-zinc-500 mt-1">Procesados con éxito</span>
+                <span className="text-2xl font-black text-[var(--ok)] font-mono">{stats.completed}</span>
+                <span className="text-[10px] text-[var(--ink-2)] mt-1">Procesados con éxito</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--alert)]/20 flex flex-col">
-                <div className="flex items-center justify-between text-zinc-400 text-xs font-semibold mb-1">
+                <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>Con Error / Backoff</span>
-                  <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)]" />
                 </div>
-                <span className="text-2xl font-black text-rose-300 font-mono">{stats.failed}</span>
-                <span className="text-[10px] text-zinc-500 mt-1">Reintentos exponenciales</span>
+                <span className="text-2xl font-black text-[var(--alert)] font-mono">{stats.failed}</span>
+                <span className="text-[10px] text-[var(--ink-2)] mt-1">Reintentos exponenciales</span>
               </div>
             </div>
 
             {/* Notification / Alert messages */}
             {pruneSuccessMsg && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-[var(--ok)]/30 text-emerald-300 text-xs flex items-center gap-2 animate-in fade-in">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div className="p-3 rounded-xl bg-[var(--ok)]/10 border border-[var(--ok)]/30 text-[var(--ok)] text-xs flex items-center gap-2 animate-in fade-in">
+                <Check className="w-4 h-4 text-[var(--ok)] shrink-0" />
                 <span>{pruneSuccessMsg}</span>
               </div>
             )}
 
             {/* Architecture Details Banner */}
-            <div className="p-4 rounded-xl bg-zinc-900/60 border border-[var(--hair)]/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-zinc-300">
+            <div className="p-4 rounded-xl bg-[var(--surface)]/60 border border-[var(--hair)]/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[var(--ink-2)]">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 font-bold text-white">
-                  <Server className="w-4 h-4 text-amber-400" />
+                <div className="flex items-center gap-2 font-bold text-[var(--ink)]">
+                  <Server className="w-4 h-4 text-[var(--acc)]" />
                   <span>Mantenimiento & Retención Automática (Auto-Vacuum)</span>
                 </div>
-                <p className="text-[11px] text-zinc-400 leading-relaxed">
+                <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
                   Las tareas completadas se archivan automáticamente tras 7 días para preservar la máxima velocidad de lectura en
                   PostgreSQL.
                 </p>
@@ -279,9 +279,9 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 type="button"
                 onClick={handlePruneCompleted}
                 disabled={isPruning}
-                className="px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-[var(--hair)]/10 font-bold transition-all text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+                className="px-3 py-2 rounded-lg bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border border-[var(--hair)]/10 font-bold transition-all text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
               >
-                <Trash2 className="w-3.5 h-3.5 text-amber-400" />
+                <Trash2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span>{isPruning ? 'Podando...' : 'Podar Completados'}</span>
               </button>
             </div>
@@ -289,20 +289,20 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
             {/* Recent Jobs Feed */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Activity className="w-3.5 h-3.5 text-amber-400" />
+                <h3 className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider flex items-center gap-2">
+                  <Activity className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>Historial de Trabajos en la Cola (Últimos 10 eventos)</span>
                 </h3>
-                <span className="text-[11px] text-zinc-500 font-mono">Sondeo worker: 3s</span>
+                <span className="text-[11px] text-[var(--ink-2)] font-mono">Sondeo worker: 3s</span>
               </div>
 
               {loading ? (
-                <div className="py-12 text-center text-zinc-500 text-xs flex items-center justify-center gap-2">
-                  <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
+                <div className="py-12 text-center text-[var(--ink-2)] text-xs flex items-center justify-center gap-2">
+                  <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
                   <span>Cargando telemetría de Supabase...</span>
                 </div>
               ) : recentJobs.length === 0 ? (
-                <div className="py-10 text-center text-zinc-500 text-xs bg-[#161512] rounded-xl border border-[var(--hair)]/5">
+                <div className="py-10 text-center text-[var(--ink-2)] text-xs bg-[#161512] rounded-xl border border-[var(--hair)]/5">
                   No hay trabajos recientes en cola. El sistema está en reposo.
                 </div>
               ) : (
@@ -311,29 +311,29 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                     {recentJobs.map((job) => (
                       <div
                         key={job.id}
-                        className="p-3.5 hover:bg-white/[0.02] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                        className="p-3.5 hover:bg-[var(--surface)]/[0.02] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                       >
                         <div className="flex items-start sm:items-center gap-3">
-                          <div className="p-2 rounded-lg bg-zinc-800/80 border border-[var(--hair)]/5 shrink-0">
-                            <Bot className="w-4 h-4 text-zinc-400" />
+                          <div className="p-2 rounded-lg bg-[var(--surface)]/80 border border-[var(--hair)]/5 shrink-0">
+                            <Bot className="w-4 h-4 text-[var(--ink-2)]" />
                           </div>
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               {getAgentBadge(job.agent_type)}
                               {getStatusBadge(job.status)}
-                              <span className="font-mono text-[10px] text-zinc-500">{job.id}</span>
+                              <span className="font-mono text-[10px] text-[var(--ink-2)]">{job.id}</span>
                             </div>
                             {job.error_message && (
-                              <p className="text-[11px] text-rose-400/90 font-mono bg-rose-950/20 px-2 py-1 rounded border border-[var(--alert)]/30">
+                              <p className="text-[11px] text-[var(--alert)]/90 font-mono bg-[var(--alert)]/20 px-2 py-1 rounded border border-[var(--alert)]/30">
                                 {job.error_message}
                               </p>
                             )}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-4 text-[11px] text-zinc-400 shrink-0 self-end sm:self-center font-mono">
-                          {job.duration_ms !== undefined && <span className="text-zinc-300 font-semibold">{job.duration_ms}ms</span>}
-                          <span className="text-zinc-500">
+                        <div className="flex items-center gap-4 text-[11px] text-[var(--ink-2)] shrink-0 self-end sm:self-center font-mono">
+                          {job.duration_ms !== undefined && <span className="text-[var(--ink-2)] font-semibold">{job.duration_ms}ms</span>}
+                          <span className="text-[var(--ink-2)]">
                             {new Date(job.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                           </span>
                         </div>
@@ -346,15 +346,15 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3.5 border-t border-[var(--hair)]/10 bg-[#161512] flex items-center justify-between text-xs text-zinc-400">
-            <span className="flex items-center gap-1.5 text-zinc-500">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="px-6 py-3.5 border-t border-[var(--hair)]/10 bg-[#161512] flex items-center justify-between text-xs text-[var(--ink-2)]">
+            <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" />
               <span>Concurrencia atómica garantizada con Exponential Backoff</span>
             </span>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-bold transition-all cursor-pointer"
+              className="px-4 py-1.5 rounded-lg bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold transition-all cursor-pointer"
             >
               Cerrar
             </button>

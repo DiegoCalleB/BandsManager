@@ -1589,14 +1589,14 @@ export default function BookingCRM({
                         setIsQueueMonitorOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950/80 to-zinc-900 hover:from-emerald-900/90 hover:to-zinc-800 text-emerald-300 border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950/80 to-zinc-900 hover:from-emerald-900/90 hover:to-zinc-800 text-[var(--ok)] border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--ok)] opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--ok)]"></span>
                         </span>
-                        <Activity className="w-4 h-4 text-emerald-400" />
+                        <Activity className="w-4 h-4 text-[var(--ok)]" />
                         <span>Monitor de Cola & Workers en Vivo</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1611,10 +1611,10 @@ export default function BookingCRM({
                           document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 60);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
-                        <MessageSquareText className="w-4 h-4 text-amber-400" />
+                        <MessageSquareText className="w-4 h-4 text-[var(--acc)]" />
                         <span>Plantillas & Hilos de Ejemplo (Redactor AI)</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1627,10 +1627,10 @@ export default function BookingCRM({
                         setRoadbookModalLead(selectedLead || leads[0] || null);
                         setIsRoadbookModalOpen(true);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-amber-400" />
+                        <FileText className="w-4 h-4 text-[var(--acc)]" />
                         <span>Hoja de Ruta (Roadbook) & Contratos</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1801,7 +1801,7 @@ export default function BookingCRM({
                         <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
                         <span>{filterByCampaign ? 'Campaña' : 'Campaña'}</span>
                         {filterByCampaign && (
-                          <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-[10px] font-semibold tabular-nums">
+                          <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] text-[10px] font-semibold tabular-nums">
                             {filteredLeads.length}
                           </span>
                         )}
@@ -2037,7 +2037,7 @@ export default function BookingCRM({
                     <span>{tab.label}</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
-                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                       }`}
                     >
                       {count}
@@ -2049,9 +2049,9 @@ export default function BookingCRM({
 
             {/* Route Anchor Active Filter Banner */}
             {routeAnchorCity && (
-              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-sky-950/50 border border-[var(--acc)]/40 text-sky-200 text-xs">
+              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-[var(--acc)]/50 border border-[var(--acc)]/40 text-[var(--acc)] text-xs">
                 <div className="flex items-center gap-2">
-                  <Compass className="w-4 h-4 text-sky-400 shrink-0" />
+                  <Compass className="w-4 h-4 text-[var(--acc)] shrink-0" />
                   <span>
                     🚗 <strong>Enlace de Fin de Semana desde {routeAnchorCity}:</strong> Mostrando {filteredLeads.length} salas compatibles
                     en ruta (&lt; 2.5h)
@@ -2060,7 +2060,7 @@ export default function BookingCRM({
                 <button
                   type="button"
                   onClick={() => setRouteAnchorCity(null)}
-                  className="text-sky-300 hover:text-white text-xs font-bold px-2 py-0.5 rounded bg-sky-900/60 border border-[var(--acc)]/30 cursor-pointer transition-colors"
+                  className="text-[var(--acc)] hover:text-[var(--ink)] text-xs font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 border border-[var(--acc)]/30 cursor-pointer transition-colors"
                 >
                   ✕ Quitar filtro de ruta
                 </button>

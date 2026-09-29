@@ -159,22 +159,22 @@ Firmado en conformidad por ambas partes.`;
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto">
         <div
           id="roadbook-contract-modal"
-          className="relative w-full max-w-4xl bg-[#141414] border border-[var(--hair)]/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-zinc-100"
+          className="relative w-full max-w-4xl bg-[#141414] border border-[var(--hair)]/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
         >
           {/* HEADER DEL MODAL */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[#1A1918] flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
-                <FileText className="w-5 h-5 text-amber-400" />
+              <div className="w-9 h-9 rounded-xl bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
+                <FileText className="w-5 h-5 text-[var(--acc)]" />
               </div>
               <div>
-                <h3 className="text-sm sm:text-base font-bold text-zinc-100 font-display flex items-center gap-2">
+                <h3 className="text-sm sm:text-base font-bold text-[var(--ink-2)] font-display flex items-center gap-2">
                   <span>Hoja de Ruta (Roadbook) & Contrato Pro</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 border border-[var(--acc)]/40 text-amber-300 font-mono">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] font-mono">
                     Gira {bandName}
                   </span>
                 </h3>
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-[var(--ink-2)]">
                   Exporta run of show para WhatsApp, acuerdo para la sala o imprime en PDF para la furgoneta
                 </p>
               </div>
@@ -183,21 +183,21 @@ Firmado en conformidad por ambas partes.`;
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+              className="p-2 rounded-xl text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* BARRA DE SELECTOR DE SALA Y PESTAÑAS */}
-          <div className="p-3 sm:px-5 bg-zinc-950/80 border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
+          <div className="p-3 sm:px-5 bg-[var(--surface)]/80 border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
             {/* Selector de sala activa */}
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-zinc-400 font-mono uppercase text-[10px]">Evento / Sala:</span>
+              <span className="text-[var(--ink-2)] font-mono uppercase text-[10px]">Evento / Sala:</span>
               <select
                 value={currentLead.id}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
-                className="bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-[var(--acc)]"
+                className="bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-[var(--acc)]"
               >
                 {leads.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -208,12 +208,12 @@ Firmado en conformidad por ambas partes.`;
             </div>
 
             {/* Pestañas */}
-            <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-xl border border-[var(--hair)]">
+            <div className="flex items-center gap-1 bg-[var(--surface)]/90 p-1 rounded-xl border border-[var(--hair)]">
               <button
                 type="button"
                 onClick={() => setActiveTab('roadbook')}
                 className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'roadbook' ? 'bg-amber-500 text-zinc-950 font-bold shadow' : 'text-zinc-400 hover:text-zinc-200'
+                  activeTab === 'roadbook' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
                 <Clock className="w-3.5 h-3.5" />
@@ -223,7 +223,7 @@ Firmado en conformidad por ambas partes.`;
                 type="button"
                 onClick={() => setActiveTab('contract')}
                 className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'contract' ? 'bg-amber-500 text-zinc-950 font-bold shadow' : 'text-zinc-400 hover:text-zinc-200'
+                  activeTab === 'contract' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
@@ -233,7 +233,7 @@ Firmado en conformidad por ambas partes.`;
                 type="button"
                 onClick={() => setActiveTab('weblink')}
                 className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'weblink' ? 'bg-amber-500 text-zinc-950 font-bold shadow' : 'text-zinc-400 hover:text-zinc-200'
+                  activeTab === 'weblink' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
                 <Share2 className="w-3.5 h-3.5" />
@@ -250,52 +250,52 @@ Firmado en conformidad por ambas partes.`;
                 {/* Controles rápidos de edición de horarios */}
                 <div className="p-3.5 bg-[#1A1918] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Fecha Evento</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Fecha Evento</label>
                     <input
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Salida Furgoneta</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Salida Furgoneta</label>
                     <input
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Prueba Sonido</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Prueba Sonido</label>
                     <input
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Inicio Show</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Inicio Show</label>
                     <input
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización de la Hoja de Ruta Pro */}
-                <div className="bg-zinc-950 p-5 rounded-2xl border border-[var(--hair)] space-y-4 font-sans print:bg-white print:text-[var(--ink)] print:border-none">
+                <div className="bg-[var(--surface)] p-5 rounded-2xl border border-[var(--hair)] space-y-4 font-sans print:bg-[var(--surface)] print:text-[var(--ink)] print:border-none">
                   {/* Cabecera del documento */}
                   <div className="flex items-start justify-between border-b border-[var(--hair)] pb-3">
                     <div>
-                      <span className="text-[10px] font-mono uppercase text-amber-400 block font-bold">DOCUMENTO OPERATIVO DE GIRA</span>
-                      <h2 className="text-xl font-black text-white tracking-tight">{venueName}</h2>
-                      <p className="text-xs text-zinc-400 flex items-center gap-1.5 mt-0.5">
-                        <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                      <span className="text-[10px] font-mono uppercase text-[var(--acc)] block font-bold">DOCUMENTO OPERATIVO DE GIRA</span>
+                      <h2 className="text-xl font-black text-[var(--ink)] tracking-tight">{venueName}</h2>
+                      <p className="text-xs text-[var(--ink-2)] flex items-center gap-1.5 mt-0.5">
+                        <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
                         <span>
                           {venueAddress} ({venueCity})
                         </span>
@@ -303,7 +303,7 @@ Firmado en conformidad por ambas partes.`;
                     </div>
 
                     <div className="text-right">
-                      <span className="text-xs font-mono font-bold text-zinc-300 block">
+                      <span className="text-xs font-mono font-bold text-[var(--ink-2)] block">
                         {new Date(eventDate).toLocaleDateString('es-ES', {
                           weekday: 'long',
                           day: 'numeric',
@@ -311,59 +311,59 @@ Firmado en conformidad por ambas partes.`;
                           year: 'numeric',
                         })}
                       </span>
-                      <span className="text-[10px] text-zinc-500 font-mono">Aforo: {venueCapacity} pax</span>
+                      <span className="text-[10px] text-[var(--ink-2)] font-mono">Aforo: {venueCapacity} pax</span>
                     </div>
                   </div>
 
                   {/* Cronograma visual en dos columnas */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-2.5">
-                      <span className="text-[10px] font-mono uppercase font-bold text-zinc-400 block border-b border-[var(--hair)]/80 pb-1">
+                      <span className="text-[10px] font-mono uppercase font-bold text-[var(--ink-2)] block border-b border-[var(--hair)]/80 pb-1">
                         Timeline de Operaciones
                       </span>
                       <div className="space-y-2">
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
-                          <span className="text-xs font-mono font-bold text-amber-400 w-12">{departureTime}</span>
-                          <span className="text-zinc-300">Salida furgoneta desde {originCity}</span>
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--surface)]/60 border border-[var(--hair)]">
+                          <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{departureTime}</span>
+                          <span className="text-[var(--ink-2)]">Salida furgoneta desde {originCity}</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
-                          <span className="text-xs font-mono font-bold text-amber-400 w-12">{arrivalTime}</span>
-                          <span className="text-zinc-300">Llegada, descarga y carga en camerino</span>
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--surface)]/60 border border-[var(--hair)]">
+                          <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{arrivalTime}</span>
+                          <span className="text-[var(--ink-2)]">Llegada, descarga y carga en camerino</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-amber-500/10 border border-[var(--acc)]/30">
-                          <span className="text-xs font-mono font-bold text-amber-300 w-12">{soundcheckTime}</span>
-                          <span className="text-zinc-200 font-medium">Prueba sonido (D.I.s violín acústico, sintes, voces & IEMs)</span>
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--acc)]/10 border border-[var(--acc)]/30">
+                          <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{soundcheckTime}</span>
+                          <span className="text-[var(--ink-2)] font-medium">Prueba sonido (D.I.s violín acústico, sintes, voces & IEMs)</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
-                          <span className="text-xs font-mono font-bold text-amber-400 w-12">{dinnerTime}</span>
-                          <span className="text-zinc-300">Cena de banda / descanso previo</span>
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--surface)]/60 border border-[var(--hair)]">
+                          <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{dinnerTime}</span>
+                          <span className="text-[var(--ink-2)]">Cena de banda / descanso previo</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-emerald-500/10 border border-[var(--ok)]/30">
-                          <span className="text-xs font-mono font-bold text-emerald-400 w-12">{showTime}</span>
-                          <span className="text-zinc-100 font-bold">⚡ INICIO CONCIERTO (Show 75 min)</span>
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--ok)]/10 border border-[var(--ok)]/30">
+                          <span className="text-xs font-mono font-bold text-[var(--ok)] w-12">{showTime}</span>
+                          <span className="text-[var(--ink-2)] font-bold">⚡ INICIO CONCIERTO (Show 75 min)</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
-                          <span className="text-xs font-mono font-bold text-amber-400 w-12">{curfewTime}</span>
-                          <span className="text-zinc-300">Cierre, recogida, firmas y salida</span>
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--surface)]/60 border border-[var(--hair)]">
+                          <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{curfewTime}</span>
+                          <span className="text-[var(--ink-2)]">Cierre, recogida, firmas y salida</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-2.5">
-                      <span className="text-[10px] font-mono uppercase font-bold text-zinc-400 block border-b border-[var(--hair)]/80 pb-1">
+                      <span className="text-[10px] font-mono uppercase font-bold text-[var(--ink-2)] block border-b border-[var(--hair)]/80 pb-1">
                         Contactos y Especificaciones
                       </span>
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[var(--hair)] space-y-2">
+                      <div className="p-3 rounded-xl bg-[var(--surface)]/60 border border-[var(--hair)] space-y-2">
                         <div>
-                          <span className="text-[10px] text-zinc-400 block">Responsable de Sala / Programador:</span>
-                          <span className="font-medium text-zinc-200">{contactPerson}</span>
-                          <span className="text-zinc-400 block font-mono text-[11px]">
+                          <span className="text-[10px] text-[var(--ink-2)] block">Responsable de Sala / Programador:</span>
+                          <span className="font-medium text-[var(--ink-2)]">{contactPerson}</span>
+                          <span className="text-[var(--ink-2)] block font-mono text-[11px]">
                             {contactPhone} • {contactEmail}
                           </span>
                         </div>
                         <div className="pt-2 border-t border-[var(--hair)]">
-                          <span className="text-[10px] text-zinc-400 block">Rider Rápido en Escenario:</span>
-                          <ul className="list-disc list-inside text-zinc-300 space-y-0.5 text-[11px]">
+                          <span className="text-[10px] text-[var(--ink-2)] block">Rider Rápido en Escenario:</span>
+                          <ul className="list-disc list-inside text-[var(--ink-2)] space-y-0.5 text-[11px]">
                             <li>2x D.I. activas para violín acústico (Canales 1-2)</li>
                             <li>1x D.I. estéreo para sintetizador analógico / percusión</li>
                             <li>2x Envíos auxiliares balanceados para transmisor In-Ear (IEM)</li>
@@ -371,8 +371,8 @@ Firmado en conformidad por ambas partes.`;
                           </ul>
                         </div>
                         <div className="pt-2 border-t border-[var(--hair)]">
-                          <span className="text-[10px] text-zinc-400 block">Hospitalidad & Parking:</span>
-                          <span className="text-zinc-300 text-[11px]">
+                          <span className="text-[10px] text-[var(--ink-2)] block">Hospitalidad & Parking:</span>
+                          <span className="text-[var(--ink-2)] text-[11px]">
                             Agua sin gas en escenario, camerino con llave y espacio reservado para estacionamiento de furgoneta.
                           </span>
                         </div>
@@ -389,11 +389,11 @@ Firmado en conformidad por ambas partes.`;
                 {/* Parámetros de negociación del contrato */}
                 <div className="p-3.5 bg-[#1A1918] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Régimen Económico</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Régimen Económico</label>
                     <select
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:border-[var(--acc)]"
                     >
                       <option value="taquilla">Taquilla (%)</option>
                       <option value="cache">Caché Fijo (€)</option>
@@ -401,7 +401,7 @@ Firmado en conformidad por ambas partes.`;
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">
                       {dealType === 'cache' ? 'Caché Neto (€)' : 'Precio Entrada (€)'}
                     </label>
                     <input
@@ -412,31 +412,31 @@ Firmado en conformidad por ambas partes.`;
                         if (dealType === 'cache') setCacheAmount(val);
                         else setTicketPrice(val);
                       }}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Reparto Banda (%)</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Reparto Banda (%)</label>
                     <input
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Aforo Sala</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Aforo Sala</label>
                     <input
                       type="number"
                       value={venueCapacity}
                       disabled
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-400 text-xs rounded p-1 font-mono"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización del Contrato */}
-                <div className="bg-zinc-950 p-5 rounded-2xl border border-[var(--hair)] space-y-3 font-mono text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
+                <div className="bg-[var(--surface)] p-5 rounded-2xl border border-[var(--hair)] space-y-3 font-mono text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
                   {contractText}
                 </div>
               </div>
@@ -451,8 +451,8 @@ Firmado en conformidad por ambas partes.`;
                       <Share2 className="w-7 h-7 text-[var(--ink)]" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-white font-display">Hoja de Ruta Digital para Móvil (Sin Login)</h4>
-                      <p className="text-xs text-zinc-400 mt-0.5">
+                      <h4 className="text-sm font-bold text-[var(--ink)] font-display">Hoja de Ruta Digital para Móvil (Sin Login)</h4>
+                      <p className="text-xs text-[var(--ink-2)] mt-0.5">
                         Comparte este enlace directo con tus músicos, chófer y técnico de sonido para que tengan los horarios, ubicación y
                         teléfonos actualizados en vivo.
                       </p>
@@ -464,12 +464,12 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       readOnly
                       value={`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`}
-                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-300 text-xs rounded-xl px-3 py-2 font-mono"
+                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded-xl px-3 py-2 font-mono"
                     />
                     <button
                       type="button"
                       onClick={() => handleCopy(`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`, setCopiedLink)}
-                      className="w-full sm:w-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-[var(--ink)] font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition-all cursor-pointer"
+                      className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition-all cursor-pointer"
                     >
                       {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedLink ? '¡Enlace Copiado!' : 'Copiar Enlace'}</span>
@@ -477,8 +477,8 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                 </div>
 
-                <div className="p-3 bg-[var(--sunken)] rounded-xl border border-[var(--hair)]/80 flex items-center gap-2 text-xs text-zinc-400">
-                  <Info className="w-4 h-4 text-sky-400 shrink-0" />
+                <div className="p-3 bg-[var(--sunken)] rounded-xl border border-[var(--hair)]/80 flex items-center gap-2 text-xs text-[var(--ink-2)]">
+                  <Info className="w-4 h-4 text-[var(--acc)] shrink-0" />
                   <span>
                     El enlace web no expone datos sensibles ni contraseñas; solo los datos operacionales de este concierto específico.
                   </span>
@@ -489,8 +489,8 @@ Firmado en conformidad por ambas partes.`;
 
           {/* FOOTER DE ACCIONES */}
           <div className="p-4 border-t border-[var(--hair)] bg-[#1A1918] flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-zinc-400">
-              <span className="font-mono text-[11px] text-amber-400 font-bold">
+            <div className="flex items-center gap-2 text-xs text-[var(--ink-2)]">
+              <span className="font-mono text-[11px] text-[var(--acc)] font-bold">
                 {currentLead.nombre_sala} • {currentLead.ciudad}
               </span>
             </div>
@@ -500,7 +500,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-[var(--ok)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] border border-[var(--ok)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                   title="Copiar texto formateado listo para WhatsApp"
                 >
                   {copiedWhatsApp ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -512,7 +512,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}
-                  className="px-3 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-[var(--acc)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--acc)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedContract ? '¡Contrato Copiado!' : 'Copiar Contrato'}</span>
@@ -522,17 +522,17 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 title="Imprimir documento o guardar como PDF"
               >
-                <Printer className="w-3.5 h-3.5 text-zinc-400" />
+                <Printer className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                 <span>Imprimir / PDF</span>
               </button>
 
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium transition-colors cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
               >
                 Cerrar
               </button>

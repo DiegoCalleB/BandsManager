@@ -622,7 +622,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
                   modeArchetype === "directo"
                     ? glareMode
-                      ? "bg-[var(--acc)]/60 text-[var(--acc-ink)]"
+                      ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                       : "bg-[var(--acc)] text-[var(--on-acc)]"
                     : glareMode
                       ? "text-[var(--ink-2)] hover:text-[var(--ink)]"

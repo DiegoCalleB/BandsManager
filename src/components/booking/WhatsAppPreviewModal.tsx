@@ -140,28 +140,28 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
           }`}
         >
           {/* Header */}
-          <div className="px-5 py-4 bg-emerald-950/40 border-b border-[var(--ok)]/20 flex items-center justify-between">
+          <div className="px-5 py-4 bg-[var(--ok)]/40 border-b border-[var(--ok)]/20 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-[var(--ok)]/40 flex items-center justify-center text-emerald-400">
+              <div className="w-10 h-10 rounded-xl bg-[var(--ok)]/20 border border-[var(--ok)]/40 flex items-center justify-center text-[var(--ok)]">
                 <MessageCircle className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm sm:text-base font-bold font-display tracking-tight text-white flex items-center gap-1.5">
+                  <h3 className="text-sm sm:text-base font-bold font-display tracking-tight text-[var(--ink)] flex items-center gap-1.5">
                     <span>Mensaje Directo por WhatsApp</span>
                   </h3>
-                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-[var(--ok)]/30">
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/30">
                     wa.me 1-Clic
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-[var(--ink-2)]">
                   {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` : ''} · {lead.contacto_nombre || 'Programación'}
                 </p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-zinc-400 hover:text-white p-1.5 rounded-lg hover:bg-zinc-800/60 transition-colors cursor-pointer"
+              className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1.5 rounded-lg hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -170,22 +170,22 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
           {/* Body */}
           <div className="p-5 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
             {/* Teléfono Destinatario */}
-            <div className="p-3.5 rounded-xl bg-zinc-900/70 border border-[var(--hair)] space-y-2">
+            <div className="p-3.5 rounded-xl bg-[var(--surface)]/70 border border-[var(--hair)] space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-                  <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+                  <Smartphone className="w-3.5 h-3.5 text-[var(--ok)]" />
                   <span>Destinatario WhatsApp:</span>
                 </span>
 
                 <div className="flex items-center gap-2">
                   {isMobile && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-[var(--ok)]/30 flex items-center gap-1">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30 flex items-center gap-1">
                       <Check className="w-3 h-3" /> Móvil Detectado
                     </span>
                   )}
                   {isLandline && (
                     <span
-                      className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-[var(--acc)]/30 flex items-center gap-1"
+                      className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 flex items-center gap-1"
                       title="Parece un teléfono fijo; puede no tener WhatsApp habilitado"
                     >
                       <AlertTriangle className="w-3 h-3" /> Posible Fijo
@@ -194,7 +194,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsEditingPhone(!isEditingPhone)}
-                    className="text-[10px] font-bold text-emerald-400 hover:underline cursor-pointer"
+                    className="text-[10px] font-bold text-[var(--ok)] hover:underline cursor-pointer"
                   >
                     {isEditingPhone ? 'Cancelar edición' : 'Cambiar número'}
                   </button>
@@ -209,21 +209,21 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                     value={targetPhone}
                     onChange={(e) => setTargetPhone(e.target.value)}
                     placeholder="Ej. +34 612 345 678"
-                    className="flex-1 bg-[var(--sunken)] border border-[var(--ok)]/50 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-400 font-mono"
+                    className="flex-1 bg-[var(--sunken)] border border-[var(--ok)]/50 rounded-lg px-3 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--ok)] font-mono"
                   />
                   <button
                     type="button"
                     onClick={handleSavePhone}
-                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs cursor-pointer"
+                    className="px-3 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] rounded-lg font-bold text-xs cursor-pointer"
                   >
                     Guardar
                   </button>
                 </div>
               ) : (
                 <div className="flex items-center justify-between bg-[var(--sunken)] px-3 py-2 rounded-lg border border-[var(--hair)]">
-                  <div className="flex items-center gap-2 font-mono text-zinc-100 font-bold">
-                    <span className="text-emerald-400">{targetPhone || 'Sin teléfono asignado'}</span>
-                    {hasValidPhone && <span className="text-[10px] font-normal text-zinc-400">(wa.me/{cleanPhone})</span>}
+                  <div className="flex items-center gap-2 font-mono text-[var(--ink-2)] font-bold">
+                    <span className="text-[var(--ok)]">{targetPhone || 'Sin teléfono asignado'}</span>
+                    {hasValidPhone && <span className="text-[10px] font-normal text-[var(--ink-2)]">(wa.me/{cleanPhone})</span>}
                   </div>
                   {/* Selector rápido si tiene ambos teléfonos guardados */}
                   <div className="flex items-center gap-1.5">
@@ -231,7 +231,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setTargetPhone(lead.telefono_movil!)}
-                        className="text-[10px] px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 cursor-pointer"
+                        className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] cursor-pointer"
                       >
                         Usar Móvil ({lead.telefono_movil})
                       </button>
@@ -240,7 +240,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setTargetPhone(lead.telefono_fijo!)}
-                        className="text-[10px] px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 cursor-pointer"
+                        className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] cursor-pointer"
                       >
                         Usar Fijo ({lead.telefono_fijo})
                       </button>
@@ -250,7 +250,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               )}
 
               {!hasValidPhone && (
-                <p className="text-[11px] text-rose-400 flex items-center gap-1 pt-1">
+                <p className="text-[11px] text-[var(--alert)] flex items-center gap-1 pt-1">
                   <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                   <span>Introduce un teléfono con formato válido (mínimo 9 dígitos) para abrir WhatsApp.</span>
                 </p>
@@ -259,8 +259,8 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
 
             {/* Chips de fechas libres detectadas por el radar de Wegow / Salas */}
             {detectedDates.length > 0 && (
-              <div className="p-3 rounded-xl bg-amber-500/10 border border-[var(--acc)]/20 space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
+              <div className="p-3 rounded-xl bg-[var(--acc)]/10 border border-[var(--acc)]/20 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>Fechas libres detectadas por el Radar (haz clic para insertar):</span>
                 </span>
@@ -270,7 +270,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                       key={dateStr}
                       type="button"
                       onClick={() => insertDateInMessage(dateStr)}
-                      className="px-2 py-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] font-mono font-bold transition-all border border-[var(--acc)]/30 cursor-pointer flex items-center gap-1"
+                      className="px-2 py-1 rounded-md bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] font-mono font-bold transition-all border border-[var(--acc)]/30 cursor-pointer flex items-center gap-1"
                     >
                       <span>+ {dateStr}</span>
                     </button>
@@ -281,21 +281,21 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
 
             {/* Editor de Mensaje */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-zinc-400">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex items-center justify-between text-[var(--ink-2)]">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-[var(--ok)]" />
                   <span>Mensaje redactado para WhatsApp:</span>
                 </label>
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
                     onClick={resetMessage}
-                    className="text-[10px] text-zinc-400 hover:text-white flex items-center gap-1 cursor-pointer"
+                    className="text-[10px] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center gap-1 cursor-pointer"
                     title="Restaurar propuesta inicial"
                   >
                     <RotateCcw className="w-3 h-3" /> Restaurar
                   </button>
-                  <span className="text-[10px] text-zinc-500 font-mono">
+                  <span className="text-[10px] text-[var(--ink-2)] font-mono">
                     {message.length} caracteres · {message.split(/\s+/).filter(Boolean).length} palabras
                   </span>
                 </div>
@@ -307,18 +307,18 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Redacta el mensaje para el programador..."
-                  className="w-full bg-zinc-950 p-3.5 rounded-xl border border-[var(--hair)] text-zinc-100 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-400 resize-y font-sans selection:bg-emerald-500/30"
+                  className="w-full bg-[var(--surface)] p-3.5 rounded-xl border border-[var(--hair)] text-[var(--ink-2)] text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-[var(--ok)] resize-y font-sans selection:bg-[var(--ok)]/30"
                 />
               </div>
             </div>
 
             {/* Ventajas & Info de Privacidad */}
-            <div className="p-3 rounded-lg bg-zinc-900/40 border border-[var(--hair)]/80 text-[11px] text-zinc-400 space-y-1">
-              <p className="flex items-center gap-1.5 text-zinc-300 font-semibold">
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="p-3 rounded-lg bg-[var(--surface)]/40 border border-[var(--hair)]/80 text-[11px] text-[var(--ink-2)] space-y-1">
+              <p className="flex items-center gap-1.5 text-[var(--ink-2)] font-semibold">
+                <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>100% gratuito y seguro: No requiere APIs ni suscripciones de Meta.</span>
               </p>
-              <p className="pl-5 text-zinc-400">
+              <p className="pl-5 text-[var(--ink-2)]">
                 Al pulsar en <strong>Abrir en WhatsApp</strong>, se abrirá tu WhatsApp Web o la App oficial con el chat del programador y el
                 texto listo para enviar.
               </p>
@@ -326,17 +326,17 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
           </div>
 
           {/* Footer Actions */}
-          <div className="px-5 py-3.5 bg-zinc-900/80 border-t border-[var(--hair)] flex flex-wrap items-center justify-between gap-3">
+          <div className="px-5 py-3.5 bg-[var(--surface)]/80 border-t border-[var(--hair)] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleCopy}
-                className="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border border-[var(--hair)]"
+                className="px-3 py-2 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border border-[var(--hair)]"
               >
                 {copied ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">¡Copiado!</span>
+                    <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
+                    <span className="text-[var(--ok)]">¡Copiado!</span>
                   </>
                 ) : (
                   <>
@@ -360,12 +360,12 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   disabled={interactionLogged}
                   className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all border cursor-pointer ${
                     interactionLogged
-                      ? 'bg-emerald-950/60 text-emerald-400 border-[var(--ok)]/40 opacity-80'
-                      : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border-[var(--hair)]'
+                      ? 'bg-[var(--ok)]/60 text-[var(--ok)] border-[var(--ok)]/40 opacity-80'
+                      : 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]'
                   }`}
                   title="Guarda la interacción en la bitácora del lead"
                 >
-                  <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                  <BookOpen className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>{interactionLogged ? 'En Bitácora ✓' : 'Anotar en Bitácora'}</span>
                 </button>
               )}
@@ -375,7 +375,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold cursor-pointer"
               >
                 Cerrar
               </button>
@@ -386,8 +386,8 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 disabled={!hasValidPhone}
                 className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all shadow-md cursor-pointer ${
                   hasValidPhone
-                    ? 'bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-extrabold shadow-emerald-500/20'
-                    : 'bg-zinc-800 text-zinc-500 border border-[var(--hair)] cursor-not-allowed'
+                    ? 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-extrabold shadow-[var(--ok)]/20'
+                    : 'bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)] cursor-not-allowed'
                 }`}
               >
                 <MessageCircle className="w-4 h-4 fill-current" />

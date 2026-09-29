@@ -199,7 +199,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
         >
           <button
             onClick={() => setShowCreateModal(null)}
-            className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-1 rounded-full text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
           >
             ✕
           </button>
@@ -214,8 +214,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               }}
               className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'concert' && !concIsPosible
-                  ? 'bg-amber-500 text-stone-950 shadow-md font-black'
-                  : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <span>🎸</span>
@@ -226,8 +226,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               onClick={() => setShowCreateModal('rehearsal')}
               className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'rehearsal'
-                  ? 'bg-emerald-500 text-stone-950 shadow-md font-black'
-                  : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-[var(--ok)] text-[var(--ink)] shadow-md font-black'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <span>🎙️</span>
@@ -237,7 +237,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               type="button"
               onClick={() => setShowCreateModal('reunion')}
               className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                showCreateModal === 'reunion' ? 'bg-purple-500 text-white shadow-md font-black' : 'text-neutral-400 hover:text-neutral-200'
+                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <span>💬</span>
@@ -251,8 +251,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               }}
               className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'concert' && concIsPosible
-                  ? 'bg-orange-500 text-stone-950 shadow-md font-black'
-                  : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black'
+                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <span>❓</span>
@@ -261,20 +261,20 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
           </div>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
-            {showCreateModal === 'rehearsal' && <span className="text-emerald-400">🎙️ Convocar Ensayo</span>}
-            {showCreateModal === 'reunion' && <span className="text-purple-400">💬 Convocatoria de Reunión</span>}
-            {showCreateModal === 'concert' && concIsPosible && <span className="text-orange-400">❓ Fecha Posible / Pre-reserva</span>}
-            {showCreateModal === 'concert' && !concIsPosible && <span className="text-amber-400">🎸 Agendar Concierto Confirmado</span>}
+            {showCreateModal === 'rehearsal' && <span className="text-[var(--ok)]">🎙️ Convocar Ensayo</span>}
+            {showCreateModal === 'reunion' && <span className="text-[var(--acc)]">💬 Convocatoria de Reunión</span>}
+            {showCreateModal === 'concert' && concIsPosible && <span className="text-[var(--acc)]">❓ Fecha Posible / Pre-reserva</span>}
+            {showCreateModal === 'concert' && !concIsPosible && <span className="text-[var(--acc)]">🎸 Agendar Concierto Confirmado</span>}
           </h3>
-          <p className="text-[11px] font-mono text-neutral-400 mb-4">
-            Fecha: <strong className="text-white">{formattedDateStr}</strong>
+          <p className="text-[11px] font-mono text-[var(--ink-2)] mb-4">
+            Fecha: <strong className="text-[var(--ink)]">{formattedDateStr}</strong>
           </p>
 
           {/* Form for REUNION */}
           {showCreateModal === 'reunion' && (
             <form onSubmit={handleSaveNewReunion} className="space-y-4">
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">Proyecto / Banda</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / Banda</label>
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
@@ -291,7 +291,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">Asunto de la Reunión</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Asunto de la Reunión</label>
                 <input
                   type="text"
                   value={reuAsunto}
@@ -306,7 +306,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Horario</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Horario</label>
                   <input
                     type="text"
                     value={reuHora}
@@ -317,7 +317,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Lugar / Plataforma</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Lugar / Plataforma</label>
                   <input
                     type="text"
                     value={reuLugar}
@@ -331,7 +331,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">Enlace de Videollamada (Opcional)</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Enlace de Videollamada (Opcional)</label>
                 <input
                   type="text"
                   value={reuEnlace}
@@ -344,7 +344,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">Orden del Día / Notas</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Orden del Día / Notas</label>
                 <textarea
                   value={reuNotas}
                   onChange={(e) => setReuNotas(e.target.value)}
@@ -359,13 +359,13 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
-                  className="px-3 py-1.5 text-[11px] font-mono text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl bg-purple-600 hover:bg-purple-500 text-white transition-all cursor-pointer shadow-md"
+                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer shadow-md"
                 >
                   Convocar Reunión
                 </button>
@@ -377,7 +377,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
           {showCreateModal === 'rehearsal' && (
             <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">Proyecto / Banda</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / Banda</label>
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
@@ -395,7 +395,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Horario</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Horario</label>
                   <input
                     type="text"
                     value={rehTime}
@@ -406,7 +406,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Local / Ubicación</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Local / Ubicación</label>
                   <input
                     type="text"
                     value={rehLugar}
@@ -420,7 +420,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               {availableSetlists.length > 0 && (
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Repertorio Asociado</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Repertorio Asociado</label>
                   <select
                     value={rehSetlistId}
                     onChange={(e) => setRehSetlistId(e.target.value)}
@@ -439,7 +439,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               )}
 
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">Objetivos del Ensayo / Notas</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Objetivos del Ensayo / Notas</label>
                 <textarea
                   value={rehNotas}
                   onChange={(e) => setRehNotas(e.target.value)}
@@ -454,13 +454,13 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
-                  className="px-3 py-1.5 text-[11px] font-mono text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition-all cursor-pointer shadow-md font-bold"
+                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
                 >
                   Guardar Ensayo
                 </button>
@@ -472,7 +472,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
           {showCreateModal === 'concert' && (
             <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">Proyecto / Banda</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / Banda</label>
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
@@ -490,7 +490,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Ciudad / Municipio</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Ciudad / Municipio</label>
                   <input
                     type="text"
                     value={concCiudad}
@@ -503,7 +503,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Sala / Espacio</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Sala / Espacio</label>
                   <input
                     type="text"
                     value={concSala}
@@ -519,7 +519,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Caché Acordado (€)</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Caché Acordado (€)</label>
                   <input
                     type="number"
                     value={concCache}
@@ -530,7 +530,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Aforo del Espacio</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Aforo del Espacio</label>
                   <input
                     type="number"
                     value={concAforo}
@@ -544,7 +544,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               {availableSetlists.length > 0 && (
                 <div>
-                  <label className="block text-xs font-mono text-neutral-400 mb-1">Setlist Programado</label>
+                  <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Setlist Programado</label>
                   <select
                     value={concSetlistId}
                     onChange={(e) => setConcSetlistId(e.target.value)}
@@ -566,7 +566,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
-                  className="px-3 py-1.5 text-[11px] font-mono text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -574,8 +574,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   type="submit"
                   className={`px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl transition-all cursor-pointer shadow-md ${
                     concIsPosible
-                      ? 'bg-orange-500 hover:bg-orange-400 text-stone-950 font-black'
-                      : 'bg-amber-500 hover:bg-amber-400 text-stone-950 font-black'
+                      ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'
+                      : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'
                   }`}
                 >
                   {concIsPosible ? 'Guardar Pre-reserva' : 'Guardar Concierto'}
