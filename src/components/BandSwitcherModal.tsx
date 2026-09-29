@@ -936,11 +936,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         {/* Band Minimal Settings & Logo Modal (Gear Icon) */}
         {selectedBandForSettings && (
           <div className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 animate-in fade-in duration-150 overflow-y-auto">
-            <div className="w-full max-w-md rounded-3xl bg-[var(--sunken)] text-[var(--ink)] p-6 sm:p-7 space-y-5 my-auto bg-[var(--acc)]/10">
+            <div className="w-full max-w-md rounded-[var(--r-xl)] bg-[var(--surface)] text-[var(--ink)] p-6 sm:p-7 space-y-5 my-auto">
               {/* Header */}
               <div className="flex items-center justify-between border-b border-[var(--hair)] pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+                  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
                     <Settings className="w-5 h-5" />
                   </div>
                   <div>
@@ -958,14 +958,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedBandForSettings(null)}
-                  className="p-1.5 rounded-xl text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+                  className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Logo Upload Section */}
-              <div className="space-y-3 bg-[var(--surface)] p-4 rounded-2xl">
+              <div className="space-y-3 bg-[var(--sunken)] p-4 rounded-[var(--r-l)]">
                 <label className="text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                   <Camera className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                   <span>Logotipo Oficial de la Banda</span>
@@ -973,7 +973,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                 <div className="flex items-center gap-4 pt-1">
                   {/* Logo Preview */}
-                  <div className="relative w-20 h-20 rounded-2xl bg-[var(--scrim)]/80 overflow-hidden flex items-center justify-center shrink-0 p-2 ">
+                  <div className="relative w-20 h-20 rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden flex items-center justify-center shrink-0 p-2 ">
                     {(() => {
                       const clean = cleanBandId(
                         selectedBandForSettings.band_id,
@@ -1024,7 +1024,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                   {/* Upload Button */}
                   <div className="flex-1 space-y-2">
-                    <label className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-[var(--ink)] text-xs font-bold transition-all cursor-pointer active:scale-95">
+                    <label className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold transition-all cursor-pointer active:scale-95">
                       <Upload className="w-3.5 h-3.5" />
                       <span>
                         {uploadingBandId === selectedBandForSettings.band_id
@@ -1057,7 +1057,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               </div>
 
               {/* Quick Band Info */}
-              <div className="bg-[var(--surface)] p-4 rounded-2xl text-xs space-y-2.5">
+              <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-l)] text-xs space-y-2.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[var(--ink-2)] font-mono">
                     Nombre del Proyecto:
@@ -1070,8 +1070,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   <span className="text-[var(--ink-2)] font-mono">
                     Plan Actual:
                   </span>
-                  <span className="font-mono font-semibold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc-ink)] text-[10px] ">
-                    {selectedBandForSettings.plan || "Emergente"}
+                  <span className="font-sans font-semibold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-[10px]">
+                    {selectedBandForSettings.plan
+                      ? selectedBandForSettings.plan.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase())
+                      : "Emergente"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -1101,7 +1103,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       onClose();
                       onOpenBandManagement(bId);
                     }}
-                    className="w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)] text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    className="w-full sm:flex-1 py-2.5 px-3 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
                   >
                     <Users className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                     <span>Gestionar Músicos</span>
@@ -1111,7 +1113,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedBandForSettings(null)}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
                 >
                   Listo
                 </button>

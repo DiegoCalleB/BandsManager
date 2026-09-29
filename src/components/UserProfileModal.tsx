@@ -520,8 +520,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <div
               className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${"bg-[var(--sunken)]"}`}
             >
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 flex-1 min-w-[12rem]">
                   <div className="w-9 h-9 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0">
                     <Crown className="w-5 h-5 text-[var(--acc)]" />
                   </div>
@@ -540,7 +540,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2">
                   {!isHighestPlan && !isPromoUser && (
                     <button
                       type="button"
