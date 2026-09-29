@@ -53,6 +53,11 @@ function tieneConexionMala(): boolean {
   }
 }
 
+// ⚠️ NO SE RENDERIZA EN PRODUCCIÓN AHORA MISMO. App.tsx:USE_SIMPLE_LOGIN = true hace que la
+// pantalla de login real sea SimplePromoLoginModal.tsx. Este componente (registro con parrilla
+// de 4 planes) se conserva intacto para cuando se reabra el registro público — antes de tocar
+// un color, texto o bug aquí, confirma en App.tsx cuál de los dos está activo: es fácil editar
+// este por error pensando que es el que se ve (ya ha pasado).
 export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   const [view, setView] = useState<ViewState>("login");
   const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
