@@ -168,6 +168,7 @@ const NotificationSettingsModal = safeLazy(() =>
   })),
 );
 import { isOnboardingCompleted } from "./utils/userPreferences";
+import { aplicarModuloDeVista } from "./utils/moduloGlobal";
 import { useLanguage } from "./context/LanguageContext";
 import {
   Menu,
@@ -578,6 +579,10 @@ export default function App() {
       refreshTranslation();
     }
   }, [currentView, language]);
+
+  useEffect(() => {
+    aplicarModuloDeVista(isLoggedIn ? currentView : null);
+  }, [isLoggedIn, currentView]);
 
   // Si la vista actual no está permitida para el plan de la banda activa (ej. plan Promo), redirigir inmediatamente a'resumen'
   useEffect(() => {

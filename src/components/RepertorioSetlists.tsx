@@ -164,6 +164,7 @@ import {
   EvaluacionUnion,
 } from "../utils/setlistCompatibility";
 import { getSemitoneDifference } from "../utils/chordUtils";
+import { sobrescribirModulo } from "../utils/moduloGlobal";
 import { EnergyChart, EnergyChartPoint } from "./repertorio/EnergyChart";
 import { SongTransitionPreviewModal } from "./repertorio/SongTransitionPreviewModal";
 import { titlesMatch } from "../utils/songTitleMatch";
@@ -823,6 +824,12 @@ export default function RepertorioSetlists({
   const [catalogoViewMode, setCatalogoViewMode] = useState<
     "albumes" | "canciones"
   >("albumes");
+
+  // El acento global (sidebar, modales) sigue a la subpestaña: Discografía tiene su propio verde.
+  useEffect(() => {
+    sobrescribirModulo(activeTab === "catalogo" ? "discografia" : null);
+    return () => sobrescribirModulo(null);
+  }, [activeTab]);
 
   // Sync activeTab with the view prop (when navigating from sidebar)
   useEffect(() => {
