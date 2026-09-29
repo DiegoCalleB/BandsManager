@@ -59,7 +59,6 @@
     "react-dom": "^19.0.1",
     "react-is": "^19.3.0",
     "react-qr-code": "^2.2.0",
-    "recharts": "^3.9.2",
     "resend": "^6.27.0",
     "soundtouchjs": "^0.3.0",
     "stripe": "^22.5.0",

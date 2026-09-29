@@ -1,16 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import {
-  ResponsiveContainer,
-  ComposedChart,
-  Area,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip as RechartsTooltip,
-  CartesianGrid,
-  ReferenceArea,
-  ReferenceLine,
-} from "recharts";
+import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 import { titlesMatch } from "../../utils/songTitleMatch";
 import { getEnergyInfo } from "../../utils/energyPacingUtils";
 import { EvaluacionUnion } from "../../utils/setlistCompatibility";
@@ -145,16 +134,7 @@ export function EnergyChart({
   expandedWidthPx,
   belowChartSlot,
 }: EnergyChartProps) {
-  const gradientSuffix = compact ? "-compact" : "";
   const fontSize = compact ? 8 : 9;
-  const dotDefault = compact ? 3.5 : 5.5;
-  const dotSelected = compact ? 6 : 8;
-  // Highlighted apenas un poco más grande que selected — antes saltaba mucho más (7/10) y el
-  // efecto resultaba chillón al pasar el ratón por varias sugerencias seguidas.
-  const dotHighlighted = compact ? 5 : 7;
-  // Canción que se está reproduciendo: mucho más grande para destacar
-  const dotPlaying = compact ? 7.5 : 10;
-
   // Tres velocidades de animación según el motivo del cambio — nunca la misma para las tres,
   // porque cada una pide algo distinto:
   // -'entrance': la PRIMERÍSIMA vez que este gráfico se pinta en esta visita a Repertorio (el
@@ -168,9 +148,8 @@ export function EnergyChart({
   // `setlistKey` es lo único que fuerza un remount real (ver key en ComposedChart más abajo), así
   // que es la señal correcta de"esto es una apertura, no una edición". El ref (no state) recuerda
   // si la entrada ya se reprodujo en este montaje del componente, sin resetearse entre setlists.
-  const GRAND_ENTRANCE_MS = 2800;
-  const SETLIST_SWITCH_MS = 1200;
-  const FAST_EDIT_MS = 180;
+  const GRAND_ENTRANCE_MS = 1000;
+  const SETLIST_SWITCH_MS = 600;
   const hasPlayedGrandEntranceRef = useRef(false);
   const [animMode, setAnimMode] = useState<"entrance" | "switch" | "fast">(
     "entrance",
@@ -185,18 +164,8 @@ export function EnergyChart({
     );
     return () => clearTimeout(t);
   }, [setlistKey]);
-  const curveAnimationDuration =
-    animMode === "entrance"
-      ? GRAND_ENTRANCE_MS
-      : animMode === "switch"
-        ? SETLIST_SWITCH_MS
-        : FAST_EDIT_MS;
-  const curveAnimationEasing =
-    animMode === "entrance" ? "ease-in-out" : "ease-out";
-
-  // Arrastrar un punto horizontalmente reordena el setlist — la posición se calcula sobre el
-  // ancho real del contenedor (ratio 0-1 mapeado a índice), no sobre coordenadas internas de
-  // recharts, así que no depende de sus internals de layout/escala.
+  // Arrastrar una barra horizontalmente reordena el setlist — la columna destino se calcula midiendo
+  // las columnas reales del DOM, no una escala interna.
   //
   // Se usa Pointer Events (no mouse+touch por separado): unifica ratón/dedo/lápiz en un solo
   // modelo, evita que un handler React de touchstart/touchmove sea `passive` por defecto (ahí
@@ -273,29 +242,25 @@ export function EnergyChart({
   // índice de canción distinto al de partida y reordenar solo sin querer, con"ningún control".
   const MIN_DRAG_PX = 10;
 
-  // La curva solo se dibuja con las canciones — los bloques (chapa, pausa, bis...) no tienen
-  // energía real y, si ocupasen su propio hueco en el eje X, separarían visualmente las
-  // canciones de antes y de después más de lo normal. Se marcan aparte con su propia línea
-  // vertical (ver más abajo), intercalados en `xPos` sin consumir espacio propio.
-  const songsOnlyData = useMemo(
-    () => chartData.filter((d) => d.isSong),
-    [chartData],
-  );
+  // Geometría fija del lienzo: arriba un hueco para insignias de unión / iconos de bloque, abajo
+  // la fila de etiquetas (#n, tonalidad, BPM). Lo demás es área de barras.
+  const TOP_PAD = compact ? 12 : 18;
+  const LABEL_H = compact && !showTonalidad && !showBpmLine ? 0 : compact ? 12 : 26;
+  const plotHeight = Math.max(1, height - TOP_PAD - LABEL_H);
+  const yRange = Math.max(1, yDomain[1] - yDomain[0]);
+  const fracOf = (score: number) =>
+    Math.max(0.05, Math.min(1, (score - yDomain[0]) / yRange));
 
+  // Una columna por elemento de `chartData` (canción o bloque). Se localiza la columna bajo el
+  // puntero midiendo las columnas reales del DOM — no depende de ninguna escala interna.
+  const colRefs = useRef<(HTMLDivElement | null)[]>([]);
   const getIndexFromClientX = (clientX: number): number => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect || chartData.length === 0 || songsOnlyData.length === 0) return 0;
-    const ratio = (clientX - rect.left) / rect.width;
-    const targetXPos = Math.max(
-      0,
-      Math.min(songsOnlyData.length - 1, ratio * (songsOnlyData.length - 1)),
-    );
-    // Busca en el array COMPLETO (con bloques) el punto más cercano a esa posición visual, para
-    // que soltar cerca de un bloque también sea un objetivo válido al reordenar.
     let closest = 0;
     let closestDist = Infinity;
-    chartData.forEach((d, i) => {
-      const dist = Math.abs(d.xPos - targetXPos);
+    colRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const dist = Math.abs(clientX - (r.left + r.width / 2));
       if (dist < closestDist) {
         closestDist = dist;
         closest = i;
@@ -304,17 +269,29 @@ export function EnergyChart({
     return closest;
   };
 
-  // Conversión aproximada de píxeles verticales a unidades de energía, a partir del alto real del
-  // área de trazado (contenedor menos márgenes del ComposedChart y el alto reservado por el eje X
-  // cuando es visible). No es una réplica exacta de la escala interna de recharts, pero el usuario
-  // ve el número en vivo en la burbuja mientras arrastra — la sensación de arrastre es lo que
-  // importa, no un mapeo píxel-perfecto.
-  const pxPerEnergyUnit = useMemo(() => {
-    const marginTop = compact ? 8 : 14;
-    const xAxisReserve = compact ? 0 : 20;
-    const plotHeight = Math.max(1, height - marginTop - xAxisReserve);
-    return plotHeight / Math.max(1, yDomain[1] - yDomain[0]);
-  }, [height, compact, yDomain]);
+  // Píxeles verticales → unidades de energía (escala interna 1-20).
+  const pxPerEnergyUnit = plotHeight / yRange;
+
+  const bpmRange = useMemo(() => {
+    const v = chartData
+      .map((d) => d.bpm)
+      .filter((x): x is number => typeof x === "number");
+    return v.length ? { min: Math.min(...v), max: Math.max(...v) } : null;
+  }, [chartData]);
+
+  // Cambios con teclado / botones — mismo camino que el arrastre (onEnergyChange / onReorder).
+  const bumpEnergy = (i: number, delta: number) => {
+    const pt = chartData[i];
+    if (!onEnergyChange || !pt || pt.songId == null || typeof pt.score !== "number") return;
+    const next = Math.max(1, Math.min(20, pt.score + delta));
+    if (next !== pt.score) onEnergyChange(pt, next);
+  };
+  const moveItem = (i: number, delta: number) => {
+    const to = i + delta;
+    if (!onReorder || to < 0 || to >= chartData.length) return;
+    onReorder(i, to);
+  };
+  const [tip, setTip] = useState<{ i: number; left: number } | null>(null);
 
   const startDrag = (
     fromIndex: number,
@@ -572,512 +549,233 @@ export function EnergyChart({
               )}
             </div>
           )}
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            key={setlistKey}
-            data={songsOnlyData}
-            margin={
-              compact
-                ? { top: 8, right: 8, left: -22, bottom: 0 }
-                : { top: 14, right: 14, left: -18, bottom: 0 }
-            }
-          >
-            <defs>
-              <linearGradient
-                id={`energyStrokeGradient${gradientSuffix}`}
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-                {songsOnlyData.map((d, i) => (
-                  <stop
-                    key={d.id}
-                    offset={`${songsOnlyData.length > 1 ? (i / (songsOnlyData.length - 1)) * 100 : 0}%`}
-                    stopColor={d.color}
-                  />
-                ))}
-              </linearGradient>
-              {/* El relleno bajo la curva usa los mismos colores por canción que el trazo (a opacidad
- baja) en vez de un dorado plano fijo — así el"aura" bajo la curva también cambia
- de color según la categoría de energía. */}
-              <linearGradient
-                id={`energyFillGradient${gradientSuffix}`}
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-                {songsOnlyData.map((d, i) => (
-                  <stop
-                    key={d.id}
-                    offset={`${songsOnlyData.length > 1 ? (i / (songsOnlyData.length - 1)) * 100 : 0}%`}
-                    stopColor={d.color}
-                    stopOpacity={0.22}
-                  />
-                ))}
-              </linearGradient>
-            </defs>
-
-            {zonasEnergia.map((z) => (
-              <ReferenceArea
-                key={z.min}
-                y1={z.y1}
-                y2={z.y2}
-                fill={z.color}
-                fillOpacity={0.07}
-                stroke="none"
-                ifOverflow="hidden"
-              />
-            ))}
-
-            <CartesianGrid
-              horizontal
-              vertical={false}
-              stroke="var(--ink-3)"
-              strokeDasharray="0"
+        {/* Zonas de energía: bandas horizontales de fondo (luminancia, sin líneas). */}
+        <div
+          className="absolute inset-x-0 pointer-events-none"
+          style={{ top: TOP_PAD, height: plotHeight }}
+        >
+          {zonasEnergia.map((z) => (
+            <div
+              key={z.min}
+              className="absolute inset-x-0"
+              style={{
+                bottom: `${((Math.max(z.y1, yDomain[0]) - yDomain[0]) / yRange) * 100}%`,
+                height: `${((Math.min(z.y2, yDomain[1]) - Math.max(z.y1, yDomain[0])) / yRange) * 100}%`,
+                background: z.color,
+                opacity: 0.07,
+              }}
             />
+          ))}
+        </div>
 
-            {/* Mientras se arrastra un punto en horizontal, esta línea marca dónde caería la canción
- al soltar. En vertical, marca la altura (energía) a la que quedaría en su lugar. */}
-            {draggingFromIndex !== null &&
+        {/* La Onda: una barra por canción, punta redondeada; los bloques (chapa, pausa, bis…) son
+ una columna estrecha con su icono. `key={setlistKey}` remonta y re-anima al cambiar de setlist. */}
+        <div
+          key={setlistKey}
+          className="absolute inset-x-1 bottom-0 flex items-stretch gap-1"
+          style={{ top: 0 }}
+          role="list"
+          aria-label="Mapa de energía del setlist"
+        >
+          {chartData.map((d, i) => {
+            const isSelected = d.id === selectedSetlistItemId;
+            const isHighlighted =
+              highlightedSongIds.length > 0 && titlesMatch(d.name, highlightedSongIds);
+            const isDraggingThis = draggingFromIndex === i;
+            const isDropTarget =
+              draggingFromIndex !== null &&
               dragAxis !== "y" &&
-              hoverIndex !== null && (
-                <ReferenceLine
-                  yAxisId="energy"
-                  x={hoverIndex}
-                  stroke="var(--acc-soft)"
-                  strokeWidth={2}
-                  strokeDasharray="4 3"
-                  ifOverflow="extendDomain"
-                />
-              )}
-            {draggingFromIndex !== null &&
-              dragAxis === "y" &&
-              liveEnergyScore !== null && (
-                <ReferenceLine
-                  yAxisId="energy"
-                  y={liveEnergyScore}
-                  stroke="var(--acc-soft)"
-                  strokeWidth={2}
-                  strokeDasharray="4 3"
-                  ifOverflow="extendDomain"
-                />
-              )}
+              hoverIndex === i &&
+              hoverIndex !== draggingFromIndex;
+            const isPlaying = !!currentPlayingSongId && d.songId === currentPlayingSongId;
+            const canEditThisEnergy = !!onEnergyChange && d.songId != null;
+            const canDragThis = !!onReorder || canEditThisEnergy;
+            const liveScore =
+              isDraggingThis && dragAxis === "y" && liveEnergyScore !== null
+                ? liveEnergyScore
+                : d.score;
+            const info = typeof liveScore === "number" ? getEnergyInfo(liveScore) : null;
+            const tr = d.transitionToNext;
 
-            {/* Choque de tonalidad con la SIGUIENTE canción (círculo de quintas) — se marca a medio
- camino entre ambos puntos, mismo patrón que los eventos de"speech" de arriba. */}
-            {!showTransitionBadges &&
-              chartData
-                .filter((d) => d.harmonyClash)
-                .map((d) => (
-                  <ReferenceLine
-                    key={`clash-${d.id}`}
-                    yAxisId="energy"
-                    x={d.xPos + 0.5}
-                    stroke="var(--alert)"
-                    strokeDasharray="3 3"
-                    strokeOpacity={0.8}
-                    ifOverflow="extendDomain"
-                    label={{
-                      value: "⚡",
-                      position: "insideTop",
-                      fontSize: compact ? 10 : 13,
+            if (d.isSpeechEvent) {
+              return (
+                <div
+                  key={d.id}
+                  role="listitem"
+                  ref={(el) => { colRefs.current[i] = el; }}
+                  className={`relative shrink-0 flex flex-col items-center cursor-pointer ${compact ? "w-4" : "w-6"} ${isSelected ? "bg-[var(--surface)] rounded-[var(--r-s)]" : ""}`}
+                  style={{ paddingTop: 0, paddingBottom: LABEL_H }}
+                  title={d.name}
+                  onClick={(e) => { e.stopPropagation(); selectPoint(d.id); }}
+                >
+                  <span className="leading-none" style={{ fontSize: compact ? 12 : 16, marginTop: 2 }}>{d.icon}</span>
+                  <span className="flex-1 w-0.5 mt-1 rounded-[var(--r-pill)]" style={{ background: d.color, opacity: 0.5 }} />
+                </div>
+              );
+            }
+
+            const frac = fracOf(typeof liveScore === "number" ? liveScore : yDomain[0]);
+            const idealFrac = typeof d.idealScore === "number" ? fracOf(d.idealScore) : null;
+            const bpmFrac =
+              showBpmLine && bpmRange && typeof d.bpm === "number"
+                ? 0.12 + (bpmRange.max === bpmRange.min ? 0.4 : ((d.bpm - bpmRange.min) / (bpmRange.max - bpmRange.min)) * 0.76)
+                : null;
+            const barOpacity = isDraggingThis ? 0.45 : isSelected || isHighlighted || isPlaying ? 1 : 0.6;
+            const entrance = animMode === "entrance" ? 900 : animMode === "switch" ? 500 : 180;
+
+            return (
+              <div
+                key={d.id}
+                role="listitem"
+                ref={(el) => { colRefs.current[i] = el; }}
+                className={`relative flex-1 min-w-0 flex flex-col cursor-pointer transition-colors ${isSelected ? "bg-[var(--surface)] rounded-[var(--r-s)]" : ""} ${isDropTarget ? "bg-[var(--acc-soft)] rounded-[var(--r-s)]" : ""}`}
+                style={{ paddingTop: TOP_PAD }}
+                onPointerEnter={(e) => {
+                  if (!isPointerFine) return;
+                  const el = e.currentTarget;
+                  const w = containerRef.current?.clientWidth ?? 300;
+                  setTip({ i, left: Math.max(70, Math.min(w - 70, el.offsetLeft + el.offsetWidth / 2 + 4)) });
+                }}
+                onPointerLeave={() => setTip((t) => (t?.i === i ? null : t))}
+                onClick={(e) => { e.stopPropagation(); if (draggingFromIndex === null) selectPoint(d.id); }}
+              >
+                {/* Insignia de unión con la siguiente canción (✓ fluida / ✕ revisar) */}
+                {showTransitionBadges && tr && (
+                  <span
+                    className="absolute z-10 font-black leading-none pointer-events-none"
+                    style={{
+                      right: -6, top: 2, fontSize: compact ? 9 : 11,
+                      color: tr.status === "ok" ? "var(--ok)" : "var(--alert)",
+                    }}
+                  >
+                    {tr.status === "ok" ? "✓" : tr.coste.harmonyRelation === "choque" ? "✕⚡" : "✕"}
+                  </span>
+                )}
+                {!showTransitionBadges && d.harmonyClash && (
+                  <span className="absolute z-10 leading-none pointer-events-none text-[var(--alert)]" style={{ right: -6, top: 2, fontSize: compact ? 10 : 13 }}>⚡</span>
+                )}
+
+                <div className="relative flex-1">
+                  {/* Curva ideal: marca discontinua a la altura ideal de esta canción */}
+                  {showIdealCurve && idealFrac !== null && (
+                    <span
+                      className="absolute left-[15%] right-[15%] pointer-events-none"
+                      style={{ bottom: `calc(${idealFrac * 100}% - 1px)`, height: 0, borderTop: "2px dashed var(--ink-2)", opacity: 0.6 }}
+                    />
+                  )}
+                  {isPlaying && (
+                    <span className="absolute left-1/2 -translate-x-1/2 text-[var(--ok)] leading-none pointer-events-none" style={{ bottom: `calc(${frac * 100}% + 4px)`, fontSize: compact ? 9 : 12 }}>▶</span>
+                  )}
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`#${d.idx + 1} ${d.name}${typeof d.score === "number" ? `, energía ${Math.round(d.score / 2)} de 10` : ""}`}
+                    aria-pressed={isSelected}
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowUp") { e.preventDefault(); bumpEnergy(i, 1); }
+                      else if (e.key === "ArrowDown") { e.preventDefault(); bumpEnergy(i, -1); }
+                      else if (e.key === "ArrowLeft" && e.altKey) { e.preventDefault(); moveItem(i, -1); }
+                      else if (e.key === "ArrowRight" && e.altKey) { e.preventDefault(); moveItem(i, 1); }
+                      else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectPoint(d.id); }
+                    }}
+                    onPointerDown={(e) => {
+                      if (!canDragThis) return;
+                      e.stopPropagation();
+                      (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
+                      startDrag(i, e.clientX, e.clientY, e.pointerId, e.pointerType);
+                    }}
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] motion-reduce:transition-none"
+                    style={{
+                      width: "min(72%, 30px)",
+                      minWidth: compact ? 4 : 8,
+                      height: `${frac * 100}%`,
+                      minHeight: canDragThis && !compact ? 24 : 0,
+                      background: d.color,
+                      opacity: barOpacity,
+                      borderRadius: "var(--r-pill) var(--r-pill) 0 0",
+                      touchAction: canDragThis ? "none" : undefined,
+                      cursor: canDragThis ? (onReorder && canEditThisEnergy ? "move" : canEditThisEnergy ? "ns-resize" : "ew-resize") : "pointer",
+                      transition: isDraggingThis ? "none" : `height ${entrance}ms ease-out, opacity 150ms`,
                     }}
                   />
-                ))}
-
-            {/* Indicadores de unión (✓ o ✕) entre temas consecutivos calculados por armonía, BPM y energía */}
-            {showTransitionBadges &&
-              chartData
-                .filter((d) => d.transitionToNext)
-                .map((d) => {
-                  const tr = d.transitionToNext!;
-                  const isOk = tr.status === "ok";
-                  return (
-                    <ReferenceLine
-                      key={`trans-${d.id}`}
-                      yAxisId="energy"
-                      x={d.xPos + 0.5}
-                      stroke={isOk ? "var(--ok)" : "var(--alert)"}
-                      strokeWidth={isOk ? 1 : 1.5}
-                      strokeDasharray={isOk ? "2 3" : "3 2"}
-                      strokeOpacity={isOk ? 0.45 : 0.85}
-                      ifOverflow="extendDomain"
-                      label={{
-                        value: isOk
-                          ? "✓"
-                          : tr.coste.harmonyRelation === "choque"
-                            ? "✕ ⚡"
-                            : "✕",
-                        position: "insideTop",
-                        fill: isOk ? "var(--ok)" : "var(--alert)",
-                        fontSize: compact ? (isOk ? 9 : 10) : isOk ? 11 : 12,
-                        fontWeight: 900,
-                      }}
+                  {bpmFrac !== null && (
+                    <span
+                      className="absolute left-1/2 -translate-x-1/2 rounded-[var(--r-pill)] bg-[var(--ink)] pointer-events-none"
+                      style={{ bottom: `calc(${bpmFrac * 100}% - 3px)`, width: compact ? 5 : 7, height: compact ? 5 : 7 }}
+                      title={`${d.bpm} BPM`}
                     />
-                  );
-                })}
+                  )}
+                </div>
 
-            <XAxis
-              dataKey="xPos"
-              type="number"
-              domain={["dataMin", "dataMax"]}
-              ticks={songsOnlyData.map((d) => d.xPos)}
-              tickFormatter={(v: number) => `#${v + 1}`}
-              stroke="var(--ink-2)"
-              fontSize={fontSize}
-              tickLine={false}
-              axisLine={false}
-              hide={compact}
-            />
-            {/* tickFormatter a propósito: los datos y el dominio siguen en la escala interna 1-20
- (energia se guarda así en toda la app — ver getEnergyInfo/handleSetEnergiaManual),
- pero de cara al usuario el gráfico debe leerse en 1-10, igual que el popover de
- energía del grid. Es una transformación puramente de presentación (÷2 en la
- etiqueta), no cambia la posición real de la curva. */}
-            <YAxis
-              yAxisId="energy"
-              domain={yDomain}
-              tickFormatter={(v: number) => `${Math.round(v / 2)}`}
-              stroke="var(--ink-2)"
-              fontSize={fontSize}
-              tickLine={false}
-              axisLine={false}
-              width={compact ? 0 : 22}
-              hide={compact}
-            />
-            {/* Eje secundario de BPM, a la derecha — misma curva temporal, escala independiente
- (60-200 vs 1-20 de energía no tienen nada que ver, superponerlas en el mismo eje
- sería ilegible). Dominio con margen para que la línea no toque los bordes. */}
-            {showBpmLine && (
-              <YAxis
-                yAxisId="bpm"
-                orientation="right"
-                domain={["dataMin - 15", "dataMax + 15"]}
-                stroke="var(--acc)"
-                fontSize={fontSize}
-                tickLine={false}
-                axisLine={false}
-                width={compact ? 0 : 26}
-                hide={compact}
-              />
-            )}
-
-            {/* Tooltip compacto — SOLO con ratón real (isPointerFine); en táctil vuelve a devolver
- null, exactamente el comportamiento de antes: el detalle completo del punto YA NO se
- pinta aquí como tooltip flotante en móvil (ver panel fijo debajo del
- ResponsiveContainer) porque sin"salir con el ratón" para cerrarlo, se quedaba pegado
- encima de la curva tapando el gráfico entero. En escritorio ese problema no existe —
- el tooltip desaparece solo en cuanto el ratón se mueve fuera del punto — así que ahí sí
- vale la pena un vistazo rápido (nombre, energía, tono) sin tener que hacer clic. */}
-            <RechartsTooltip
-              cursor={{ stroke: "var(--ink-2)", strokeDasharray: "3 3" }}
-              content={({ active, payload }: any) => {
-                if (
-                  !isPointerFine ||
-                  !active ||
-                  !payload ||
-                  payload.length === 0
-                )
-                  return null;
-                const d: EnergyChartPoint | undefined = payload[0]?.payload;
-                if (!d) return null;
-                return (
-                  <div className="bg-[var(--surface)] text-[var(--ink)] text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] max-w-[180px]">
-                    <p className="font-bold text-[var(--acc)] truncate">
-                      {d.name}
-                    </p>
-                    {d.isSpeechEvent ? (
-                      <p className="text-[var(--ink-2)]">
-                        {d.icon} Interludio / Pausa
-                      </p>
-                    ) : (
-                      <p className="text-[var(--ink-2)] truncate">
-                        {d.icon} {d.label} ({Math.round(d.score / 2)}/10)
-                        {d.tonalidad ? ` · ${d.tonalidad}` : ""}
-                        {typeof d.bpm === "number" ? ` · ${d.bpm} BPM` : ""}
-                      </p>
+                {/* Fila de etiquetas: posición, tonalidad, BPM */}
+                {LABEL_H > 0 && (
+                  <div className="flex flex-col items-center justify-start text-center leading-tight pointer-events-none" style={{ height: LABEL_H, fontSize }}>
+                    {!compact && <span className="text-[var(--ink-2)]">#{d.xPos + 1}</span>}
+                    {showTonalidad && d.tonalidad && (
+                      <span className="font-mono font-semibold text-[var(--ink)]">{d.tonalidad}</span>
+                    )}
+                    {showBpmLine && typeof d.bpm === "number" && !showTonalidad && (
+                      <span className="font-mono text-[var(--ink-2)]">{d.bpm}</span>
                     )}
                   </div>
-                );
-              }}
-            />
+                )}
+                {info && isDraggingThis && dragAxis === "y" && (
+                  <span className="sr-only">{info.label}</span>
+                )}
+              </div>
+            );
+          })}
+        </div>
 
-            {/* Curva"ideal" de referencia — dibujada ANTES (por debajo, en capas) que la curva real
- para poder comparar de un vistazo dónde se aleja más, sin depender del texto del
- análisis. Discontinua y en gris neutro para no competir con los colores reales. */}
-            {showIdealCurve && (
-              <Line
-                yAxisId="energy"
-                type="monotone"
-                dataKey="idealScore"
-                stroke="var(--ink-2)"
-                strokeWidth={compact ? 1.5 : 2}
-                strokeDasharray="5 4"
-                strokeOpacity={0.6}
-                dot={false}
-                activeDot={false}
-                isAnimationActive={!compact}
-                animationDuration={curveAnimationDuration}
-                animationEasing={curveAnimationEasing}
-                legendType="none"
-                connectNulls
-              />
-            )}
-
-            {/* Curva principal de energía tema a tema — connectNulls hace que la curva pase por
- encima de los eventos de"speech" (score null) sin dibujar un bajón ahí, uniendo
- directamente las canciones real de antes y de después. */}
-            <Area
-              yAxisId="energy"
-              type="monotone"
-              dataKey="score"
-              stroke={`url(#energyStrokeGradient${gradientSuffix})`}
-              strokeWidth={compact ? 2 : 3}
-              fill={`url(#energyFillGradient${gradientSuffix})`}
-              fillOpacity={1}
-              connectNulls
-              isAnimationActive={!compact}
-              animationDuration={curveAnimationDuration}
-              animationEasing={curveAnimationEasing}
-              // Recharts dibuja su propio"activeDot" ENCIMA del dot personalizado al pasar el
-              // ratón cerca — con onReorder eso tapa el <circle> real y se traga el mousedown
-              // antes de que llegue a nuestro handler de arrastre, así que se desactiva aquí.
-              activeDot={
-                onReorder || onEnergyChange
-                  ? false
-                  : (activeDotProps: any) => {
-                      if (activeDotProps?.payload?.isSpeechEvent)
-                        return <React.Fragment key="speech-act-dot" />;
-                      return (
-                        <circle
-                          cx={activeDotProps.cx}
-                          cy={activeDotProps.cy}
-                          r={dotSelected}
-                          strokeWidth={2}
-                          stroke="var(--surface)"
-                          fill={
-                            activeDotProps.payload?.color || "var(--acc-soft)"
-                          }
-                        />
-                      );
-                    }
-              }
-              dot={(dotProps: any) => {
-                const { cx, cy, payload, index } = dotProps;
-                // payload.score null (eventos de"speech") no tiene una posición real que dibujar —
-                // Number.isNaN cubre el caso de que recharts calcule cy como NaN en vez de null/undefined.
-                if (
-                  cx == null ||
-                  cy == null ||
-                  Number.isNaN(cx) ||
-                  Number.isNaN(cy) ||
-                  payload?.isSpeechEvent
-                ) {
-                  return <React.Fragment key={`dot-${index}`} />;
-                }
-                const isSelected = payload.id === selectedSetlistItemId;
-                const isHighlighted =
-                  highlightedSongIds.length > 0 &&
-                  titlesMatch(payload.name, highlightedSongIds);
-                const isDraggingThis = draggingFromIndex === payload.idx;
-                const isPlaying =
-                  currentPlayingSongId &&
-                  payload.songId === currentPlayingSongId;
-                const canEditThisEnergy =
-                  !!onEnergyChange && payload.songId != null;
-                const canDragThis = !!onReorder || canEditThisEnergy;
-                const dotRadius = isPlaying
-                  ? dotPlaying
-                  : isDraggingThis
-                    ? dotHighlighted
-                    : isHighlighted
-                      ? dotHighlighted
-                      : isSelected
-                        ? dotSelected
-                        : dotDefault;
-                return (
-                  <React.Fragment key={`dot-${payload.id}`}>
-                    {/* Diana táctil invisible: el punto visible (r=3.5-8px) es demasiado pequeño
- para tocarlo con el dedo con precisión — este círculo transparente más
- grande (r=18) capta el toque/clic sin cambiar el tamaño visual del punto.
- onPointerDown cubre ratón y dedo con el mismo handler; setPointerCapture
- le dice al navegador que este puntero ya lo gestionamos nosotros, en vez de
- depender de preventDefault (que en un handler de touch de React es passive
- y no tiene efecto). */}
-                    {canDragThis && (
-                      <circle
-                        cx={cx}
-                        cy={cy}
-                        r={18}
-                        fill="transparent"
-                        style={{
-                          cursor:
-                            onReorder && canEditThisEnergy
-                              ? "move"
-                              : canEditThisEnergy
-                                ? "ns-resize"
-                                : "ew-resize",
-                          touchAction: "none",
-                        }}
-                        onPointerDown={(e) => {
-                          e.stopPropagation();
-                          (e.target as Element).setPointerCapture?.(
-                            e.pointerId,
-                          );
-                          startDrag(
-                            payload.idx,
-                            e.clientX,
-                            e.clientY,
-                            e.pointerId,
-                            e.pointerType,
-                          );
-                        }}
-                      />
-                    )}
-                    <circle
-                      cx={cx}
-                      cy={cy}
-                      r={dotRadius}
-                      fill={payload.color}
-                      stroke={
-                        isPlaying
-                          ? "var(--ok)"
-                          : isHighlighted
-                            ? payload.color
-                            : isSelected
-                              ? "var(--surface)"
-                              : "var(--bg)"
-                      }
-                      strokeWidth={
-                        isPlaying ? 3 : isHighlighted ? 2 : isSelected ? 2 : 1.5
-                      }
-                      style={{
-                        // move (cuatro flechas) cuando el punto admite ambos gestos (reordenar +
-                        // cambiar energía); ew-resize/ns-resize cuando solo admite uno de los dos.
-                        cursor: canDragThis
-                          ? onReorder && canEditThisEnergy
-                            ? "move"
-                            : canEditThisEnergy
-                              ? "ns-resize"
-                              : "ew-resize"
-                          : onSelectItem
-                            ? "pointer"
-                            : "default",
-                        opacity: isDraggingThis ? 0.5 : isHighlighted ? 1 : 0.6,
-                        // Espectro: zero/drop-shadow. Highlight via opacity change instead.
-                        filter: "none",
-                        transition: isDraggingThis ? "none" : "all 0.2s ease",
-                        pointerEvents: canDragThis ? "none" : "auto",
-                      }}
-                      onClick={() => {
-                        if (draggingFromIndex === null) selectPoint(payload.id);
-                      }}
-                    />
-                    {/* Etiqueta de tonalidad — puramente informativa, nunca captura el puntero (si
- no, taparía la diana táctil del punto justo debajo). Los picos de energía
- más alta caen cerca del borde superior del gráfico (que recorta con
- overflow-hidden) — por debajo de este margen, la etiqueta se pinta DEBAJO
- del punto en vez de encima para que nunca se corte. */}
-                    {showTonalidad &&
-                      payload.tonalidad &&
-                      (() => {
-                        const labelFontSize = compact ? 7.5 : 9;
-                        const espacioArriba =
-                          cy - dotRadius - 6 - labelFontSize;
-                        const margenSuperior = compact ? 8 : 14; // mismo valor que el margin.top del ComposedChart
-                        const pintarAbajo = espacioArriba < margenSuperior;
-                        const textoY = pintarAbajo
-                          ? cy + dotRadius + labelFontSize + 4
-                          : cy - dotRadius - 6;
-                        // Monoespaciada: el ancho de cada carácter es constante, así que el pill de
-                        // fondo se calcula sin medir texto (evita el efecto "manchado" de un
-                        // stroke SVG desproporcionado al tamaño de fuente, ver AGENTS.md).
-                        const anchoTexto =
-                          payload.tonalidad.length * labelFontSize * 0.62 + 6;
-                        return (
-                          <g pointerEvents="none">
-                            <rect
-                              x={cx - anchoTexto / 2}
-                              y={textoY - labelFontSize}
-                              width={anchoTexto}
-                              height={labelFontSize + 4}
-                              rx={labelFontSize / 2}
-                              fill="var(--surface)"
-                              opacity={0.92}
-                            />
-                            <text
-                              x={cx}
-                              y={textoY}
-                              textAnchor="middle"
-                              fontSize={labelFontSize}
-                              fontFamily="monospace"
-                              fontWeight={600}
-                              fill="var(--ink)"
-                            >
-                              {payload.tonalidad}
-                            </text>
-                          </g>
-                        );
-                      })()}
-                  </React.Fragment>
-                );
-              }}
-            />
-
-            {/* Línea de BPM, en el eje secundario — puramente informativa (no arrastrable, no
- afecta al reordenamiento): deja ver de un vistazo si el orden actual tiene saltos
- de tempo bruscos entre temas consecutivos. connectNulls salta los eventos de"speech" igual que la curva de energía. */}
-            {showBpmLine && (
-              <Line
-                yAxisId="bpm"
-                type="monotone"
-                dataKey="bpm"
-                stroke="var(--acc)"
-                strokeWidth={compact ? 1.5 : 2}
-                strokeOpacity={0.85}
-                dot={{ r: compact ? 2 : 3, fill: "var(--acc)", strokeWidth: 0 }}
-                activeDot={{ r: compact ? 3 : 4.5, fill: "var(--acc)" }}
-                isAnimationActive={!compact}
-                animationDuration={curveAnimationDuration}
-                animationEasing={curveAnimationEasing}
-                legendType="none"
-                connectNulls
-              />
-            )}
-
-            {/* Eventos de"speech" (chapa, presentación, interludio...): no cuentan como un bajón de
- energía (score null + connectNulls en la curva de arriba), pero se marcan con su propia
- línea vertical + el icono de su subtipo (💬 chapa, 🎤 presentación, 💣 bis...) para que se
- lea de un vistazo qué es cada marcador, sin confundirlo con la curva. yAxisId es
- obligatorio aquí: el YAxis de este gráfico usa yAxisId="energy" (no el 0 por defecto de
- Recharts), y sin especificarlo ReferenceLine no encuentra su eje y NO SE PINTA — sin
- error en consola, sin avisar, directamente desaparece. Mismo motivo en el resto de
- ReferenceLine de este componente (arrastre, choque de tonalidad, transiciones). */}
-            {chartData
-              .filter((d) => d.isSpeechEvent)
-              .map((d) => (
-                <ReferenceLine
-                  key={`speech-${d.id}`}
-                  yAxisId="energy"
-                  x={d.xPos}
-                  stroke={d.color}
-                  strokeWidth={2}
-                  strokeDasharray="4 3"
-                  ifOverflow="extendDomain"
-                  label={{
-                    value: d.icon,
-                    position: "insideTop",
-                    fontSize: compact ? 13 : 20,
-                    fill: "var(--ink)",
-                  }}
-                />
-              ))}
-          </ComposedChart>
-        </ResponsiveContainer>
+        {/* Tooltip con ratón real; en táctil el detalle vive en el panel de debajo. */}
+        {isPointerFine && tip && draggingFromIndex === null && chartData[tip.i] && (
+          <div className="absolute z-30 top-1 -translate-x-1/2 bg-[var(--surface)] text-[var(--ink)] text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] max-w-[180px] pointer-events-none" style={{ left: tip.left }}>
+            <p className="font-bold text-[var(--acc-ink)] truncate">{chartData[tip.i].name}</p>
+            <p className="text-[var(--ink-2)] truncate">
+              {chartData[tip.i].icon} {chartData[tip.i].label} ({typeof chartData[tip.i].score === "number" ? Math.round((chartData[tip.i].score as number) / 2) : "–"}/10)
+              {chartData[tip.i].tonalidad ? ` · ${chartData[tip.i].tonalidad}` : ""}
+              {typeof chartData[tip.i].bpm === "number" ? ` · ${chartData[tip.i].bpm} BPM` : ""}
+            </p>
+          </div>
+        )}
       </div>
-      {belowChartSlot}
+      {belowChartSlot ??
+        (() => {
+          if (!onEnergyChange && !onReorder) return null;
+          const i = chartData.findIndex((d) => d.id === selectedSetlistItemId);
+          const pt = i >= 0 ? chartData[i] : null;
+          if (!pt) return null;
+          const canEnergy = !!onEnergyChange && pt.songId != null && typeof pt.score === "number";
+          const btn =
+            "w-8 h-8 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink)] flex items-center justify-center hover:brightness-95 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shrink-0";
+          return (
+            <div className="mt-2 flex items-center justify-center gap-2" role="group" aria-label="Editar canción seleccionada">
+              {onReorder && (
+                <button type="button" className={btn} disabled={i <= 0} onClick={() => moveItem(i, -1)} title="Mover antes" aria-label="Mover antes">
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+              )}
+              {canEnergy && (
+                <>
+                  <button type="button" className={btn} disabled={(pt.score as number) <= 1} onClick={() => bumpEnergy(i, -1)} title="Bajar energía" aria-label="Bajar energía">
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="min-w-[4.5rem] text-center text-xs font-sans text-[var(--ink)] tabular-nums">
+                    {Math.round((pt.score as number) / 2)}/10
+                  </span>
+                  <button type="button" className={btn} disabled={(pt.score as number) >= 20} onClick={() => bumpEnergy(i, 1)} title="Subir energía" aria-label="Subir energía">
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </>
+              )}
+              {onReorder && (
+                <button type="button" className={btn} disabled={i >= chartData.length - 1} onClick={() => moveItem(i, 1)} title="Mover después" aria-label="Mover después">
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          );
+        })()}
       {/* Panel de detalle del punto activo — FUERA del contenedor del gráfico (que tiene
  overflow-hidden y alto fijo), debajo de él, nunca flotando encima de la curva. Ver
  comentario en RechartsTooltip más arriba sobre por qué se sacó de ahí. */}
