@@ -5756,7 +5756,7 @@ export default function RepertorioSetlists({
 
                 {/* Content */}
                 <div className="flex-1 pb-1">
-                  <div className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider mb-2">
+                  <div className="text-xs font-semibold text-[var(--ink-2)] mb-2">
                     Repertorio
                   </div>
                   <h1 className="text-2xl sm:text-4xl font-bold leading-tight truncate">

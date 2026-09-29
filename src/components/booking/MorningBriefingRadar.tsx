@@ -243,7 +243,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-[var(--ink)] uppercase tracking-wider font-display flex items-center gap-1.5">
+              <h3 className="text-sm font-black text-[var(--ink)] font-display flex items-center gap-1.5">
                 Morning Briefing • Radar del Mánager
               </h3>
               {totalActionCount > 0 && (
@@ -465,7 +465,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                       <div key={idx} className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border border-[var(--hair)] space-y-3 shadow-md">
                         <div className="flex items-start justify-between">
                           <div>
-                            <span className="text-[10px] font-mono text-[var(--acc)] font-bold uppercase block">
+                            <span className="text-[10px] font-mono text-[var(--acc)] font-bold block">
                               EJE LOGÍSTICO: {opp.corridorName}
                             </span>
                             <h4 className="text-sm font-bold text-[var(--ink)] mt-0.5">
@@ -479,7 +479,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         </div>
 
                         <div className="space-y-2 pt-2 border-t border-[var(--hair)]">
-                          <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] block">
+                          <span className="text-[10px] font-mono text-[var(--ink-2)] block">
                             Salas candidatas para el fin de semana:
                           </span>
                           <div className="space-y-1.5">
@@ -520,7 +520,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                     <div className="flex items-center gap-2.5">
                       <Compass className="w-5 h-5 text-[var(--acc)] shrink-0" />
                       <div>
-                        <h4 className="text-xs font-bold text-[var(--ink-2)] uppercase font-sans">Simulador de Clúster de Gira y Corredor</h4>
+                        <h4 className="text-xs font-bold text-[var(--ink-2)] font-sans">Simulador de Clúster de Gira y Corredor</h4>
                         <p className="text-[11px] text-[var(--ink-2)]">
                           Elige una ciudad ancla para proyectar un fin de semana doble o triple en ruta:
                         </p>

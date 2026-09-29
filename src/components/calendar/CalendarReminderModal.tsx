@@ -85,7 +85,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           <div
             className={`p-3 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
           >
-            <div className="font-mono text-[10px] text-[var(--acc)] font-bold mb-1 uppercase tracking-wider">Detalles del Evento</div>
+            <div className="font-mono text-[10px] text-[var(--acc)] font-bold mb-1">Detalles del Evento</div>
             <p className="font-semibold">
               {selectedConcert
                 ? `Concierto en ${selectedConcert.sala} (${selectedConcert.ciudad})`
@@ -98,7 +98,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] mb-1">
+            <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
               Destinatarios ({effectiveBandMembers.length} miembros)
             </label>
             <div className="flex flex-wrap gap-1 font-mono text-[10px]">
@@ -111,7 +111,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] mb-1">
+            <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
               Nota adicional / Indicaciones (Opcional)
             </label>
             <textarea

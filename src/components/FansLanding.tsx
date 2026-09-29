@@ -152,7 +152,7 @@ const FanFormLanguageSwitcher: React.FC<{
         }`}
       >
         <FlagIcon code={l.code} className="w-4 h-3 shrink-0" />
-        <span className="uppercase">
+        <span className="">
           {l.code === "en" ? "GB" : l.code.toUpperCase()}
         </span>
       </button>

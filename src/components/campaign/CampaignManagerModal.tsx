@@ -552,7 +552,7 @@ export function CampaignManagerModal({
               {/* Campaign-specific pitch templates, one per lead use case */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-2">
+                  <label className="text-[11px] font-mono font-bold text-[var(--ink-2)] flex items-center gap-2">
                     Plantillas de Pitch de Campaña por Caso de Uso
                     {filledPitchCategoriesCount > 0 && (
                       <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--hair)]/20 text-[var(--hair)]/80">

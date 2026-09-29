@@ -260,7 +260,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 Identidad Sonora, Género & Bandas Afines (FFO - For Fans Of)
               </h3>
             </div>
-            <span className="text-[10px] font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)] font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-[10px] font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)] font-bold flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               Agentes IA & Radar de Booking
             </span>

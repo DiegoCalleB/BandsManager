@@ -185,7 +185,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5 font-display">
+            <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5 font-display">
               Copiloto de Cierre, Logística & Rentabilidad
             </h4>
             <p className="text-[10px] text-[var(--ink-2)] font-sans">Inteligencia financiera y táctica para no perder dinero en carretera</p>
@@ -205,7 +205,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calculator className="w-4 h-4 text-[var(--ok)]" />
-            <span className="text-xs font-bold font-sans uppercase text-[var(--ok)] tracking-wider">
+            <span className="text-xs font-bold font-sans text-[var(--ok)]">
               1. Rentabilidad de Gira & Punto de Equilibrio (Cubrir Gastos)
             </span>
           </div>
@@ -223,7 +223,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         {/* Inputs de simulación */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
           <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
-            <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
+            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
             <select
               value={dealType}
               onChange={(e: any) => setDealType(e.target.value)}
@@ -236,7 +236,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
-            <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">
+            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">
               {dealType === 'cache' ? 'Caché Fijo (€)' : 'Precio Entrada (€)'}
             </label>
             <input
@@ -252,7 +252,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
-            <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
+            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
             <input
               type="number"
               value={vanKmEstimated}
@@ -262,7 +262,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
-            <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
+            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
             <input
               type="number"
               value={hotelCost + dietsCost}
@@ -305,7 +305,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
-            <span className="text-xs font-bold font-sans uppercase text-[var(--acc)] tracking-wider">
+            <span className="text-xs font-bold font-sans text-[var(--acc)]">
               2. Asistente Táctico de Cierre (Objeciones & Negociación)
             </span>
           </div>
@@ -327,7 +327,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           {/* Plantilla de réplica táctica pre-redactada */}
           <div className="pt-2 border-t border-[var(--hair)]/80">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase">Plantilla de Réplica Sugerida:</span>
+              <span className="text-[10px] font-mono text-[var(--ink-2)]">Plantilla de Réplica Sugerida:</span>
               <button
                 type="button"
                 onClick={() => copyToClipboard(sentimentAnalysis.suggestedDraft, () => {})}
@@ -349,7 +349,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-[var(--acc)]" />
-            <span className="text-xs font-bold font-sans uppercase text-[var(--acc)] tracking-wider">
+            <span className="text-xs font-bold font-sans text-[var(--acc)]">
               3. Generador de Hoja de Ruta (Roadbook) & Resumen de Acuerdo
             </span>
           </div>

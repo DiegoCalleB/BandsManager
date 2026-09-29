@@ -514,7 +514,7 @@ export const Planes: React.FC<PlanesProps> = ({
             <div>
               <p className="text-sm sm:text-base font-bold text-[var(--acc)] flex items-center gap-2">
                 <span>Cambio de plan programado:</span>
-                <span className="uppercase text-[var(--acc)] font-sans underline decoration-[var(--acc)]/60">
+                <span className=" text-[var(--acc)] font-sans underline decoration-[var(--acc)]/60">
                   {currentUser.plan_pendiente.replace("_", "")}
                 </span>
               </p>

@@ -1475,7 +1475,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <Calendar className="w-4 h-4 text-[var(--acc)] shrink-0" />
                       <span>
                         Cambio programado a{" "}
-                        <strong className="uppercase font-sans text-[var(--acc)]/70">
+                        <strong className=" font-sans text-[var(--acc)]/70">
                           {currentUser.plan_pendiente.replace("_", "")}
                         </strong>{" "}
                         al finalizar el ciclo.

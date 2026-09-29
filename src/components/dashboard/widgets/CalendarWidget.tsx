@@ -614,7 +614,7 @@ export function CalendarWidget({
                   }`}
                 >
                   <div className="flex items-center justify-between pb-1">
-                    <span className="uppercase text-[10px] text-[var(--ink-2)] font-bold">
+                    <span className=" text-[10px] text-[var(--ink-2)] font-bold">
                       {dayName}
                     </span>
                     <span className="font-bold text-[var(--acc)]">

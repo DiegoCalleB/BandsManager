@@ -89,7 +89,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             </div>
 
             <div>
-              <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)] mb-2 uppercase tracking-wider">
+              <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)] mb-2">
                 Selecciona tipo de separación:
               </label>
               <div className="grid grid-cols-2 gap-2 font-mono">

@@ -143,7 +143,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
       <div key={`month-grid-${year}-${month}`} className="flex-1 min-w-[280px]">
         {showMonthHeader && (
           <div
-            className={`text-center font-bold font-display uppercase tracking-wider text-[10px] mb-3 pb-1 ${
+            className={`text-center font-bold font-display text-[10px] mb-3 pb-1 ${
               'text-[var(--acc)]'
             }`}
           >
@@ -153,7 +153,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
         {/* Weekday Labels */}
         <div
-          className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold uppercase ${textSub} bg-[var(--surface)]/60 p-2 rounded-[var(--r-m)] border border-[var(--hair)]/80`}
+          className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold ${textSub} bg-[var(--surface)]/60 p-2 rounded-[var(--r-m)] border border-[var(--hair)]/80`}
         >
           {weekdays.map((day) => (
             <div key={day} className="py-0.5 tracking-wider">
@@ -331,7 +331,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                       : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] hover:border-[var(--ink-3)]'
                 }`}
               >
-                <span className="text-[10px] font-mono uppercase tracking-wider opacity-80">{fullWeekdays[idx].slice(0, 3)}</span>
+                <span className="text-[10px] font-mono opacity-80">{fullWeekdays[idx].slice(0, 3)}</span>
                 <span className="text-sm sm:text-base font-bold font-mono my-0.5">{d.getDate()}</span>
                 {totalEvents > 0 && (
                   <span
@@ -446,7 +446,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               {bandInfo.name}
                             </span>
                             {isPosible && (
-                              <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--hair)]">
+                              <span className="ml-auto text-[8px] font-mono font-black px-1.5 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--hair)]">
                                 Posible
                               </span>
                             )}
@@ -615,7 +615,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]/80">
           <div className="flex items-center gap-2 flex-wrap">
             <List className="w-4 h-4 text-[var(--acc)]" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
+            <span className="text-xs font-mono font-bold text-[var(--ink-2)]">
               Agenda Cronológica ({allEventsList.length} eventos)
             </span>
             {calendarSearchTerm.trim() && (
@@ -733,13 +733,13 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         {dayName}, {d.getDate()} de {monthNames[d.getMonth()]} {d.getFullYear() !== currentYear ? d.getFullYear() : ''}
                       </span>
                       {isToday && (
-                        <span className="text-[10px] font-mono font-bold uppercase text-[var(--acc)] flex items-center gap-1">
+                        <span className="text-[10px] font-mono font-bold text-[var(--acc)] flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] animate-ping" />
                           Hoy
                         </span>
                       )}
                       {isDatePast && !isToday && (
-                        <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--hair)] flex items-center gap-1">
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--hair)] flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
                           <span>Realizado</span>
                         </span>
@@ -818,7 +818,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
                                 </span>
                                 {isPast && (
-                                  <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)] flex items-center gap-1">
+                                  <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)] flex items-center gap-1">
                                     <CheckCircle2 className="w-2.5 h-2.5" />
                                     <span>Realizado</span>
                                   </span>

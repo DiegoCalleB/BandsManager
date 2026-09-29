@@ -72,6 +72,11 @@ const CHECKS = {
     pattern: /(?<![:\w-])border(?:-[tblrxy])?-\[var\(--(?:acc|acc-ink|ok|alert|tentative)\)\](?!\/(?:[0-3][0-9]|40|[0-9])\b)/g,
     severity: 'error',
   },
+  mayusculasDecorativas: {
+    description: 'uppercase de Tailwind — visual-identity §1/§6: caja de frase siempre; las versalitas eliminan la silueta de la palabra y cansan en sesiones largas (un literal ya escrito en mayúsculas en el JSX no lo detecta esta regla)',
+    pattern: /(?<![\w-])uppercase(?![\w-])/g,
+    severity: 'error',
+  },
   claseCorrupta: {
     description: 'clase Tailwind inválida por concatenación (bgbg-, borderbg-, dividebg-): no hace nada — resto de un find-and-replace roto',
     pattern: /(?<![\w-])(?:hover:)?(?:bgbg|borderbg|dividebg|ringbg|textbg)-\[/g,

@@ -149,7 +149,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-transparent border border-[var(--hair)] flex items-start gap-3">
                 <Lightbulb className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-[var(--acc)] uppercase tracking-wider font-mono">
+                  <h4 className="text-xs font-bold text-[var(--acc)] font-mono">
                     Cómo ejecutar esta semana sin agobios
                   </h4>
                   <p className="text-xs text-[var(--ink-2)] mt-1 leading-relaxed">
@@ -172,7 +172,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs font-bold text-[var(--ink-2)]">{item.focus}</span>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)] uppercase">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)]">
                             {item.recommendedPlatform}
                           </span>
                         </div>
@@ -237,7 +237,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
                   {/* Action Checklist */}
                   <div className="space-y-2">
-                    <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
+                    <h5 className="text-xs font-mono font-bold text-[var(--ink-2)]">
                       Acciones Recomendadas (Marca al completarlas)
                     </h5>
                     <div className="space-y-2">
@@ -262,7 +262,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                                   <span className={`text-xs font-bold ${isDone ? 'line-through text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>
                                     {action.title}
                                   </span>
-                                  <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-[var(--surface)] border border-[var(--hair)] text-[var(--acc)] font-bold">
+                                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[var(--surface)] border border-[var(--hair)] text-[var(--acc)] font-bold">
                                     {action.impact}
                                   </span>
                                 </div>
@@ -278,7 +278,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   {/* Hook Formulas */}
                   {channelData.hookFormulas && channelData.hookFormulas.length > 0 && (
                     <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-2">
-                      <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                      <h5 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" /> Fórmulas de Gancho Probadas
                       </h5>
                       <ul className="space-y-1.5">
@@ -304,7 +304,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               </div>
 
               <div className="space-y-2">
-                <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
+                <h5 className="text-xs font-mono font-bold text-[var(--ink-2)]">
                   Pilares de Crecimiento & Reparto de Esfuerzo
                 </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

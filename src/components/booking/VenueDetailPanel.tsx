@@ -1643,7 +1643,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         {/* Intelligence Scout Tools Toolbar (Jina Reader, Radar Wegow, Instagram Apify) */}
         <div className="bg-[var(--surface)] p-2.5 rounded-[var(--r-m)] border border-[var(--hair)] space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold text-[var(--acc)] uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-[10px] font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
               Herramientas Agente Scout & Inteligencia Externa:
             </span>
@@ -2407,7 +2407,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("intelligence")}
-          className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
+          className={`pb-2 text-xs font-sans font-bold transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
             activeTab === "intelligence"
               ? "border-b-2 border-[var(--acc)]/40 text-[var(--acc)]"
               : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -2424,7 +2424,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("copilot")}
-          className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
+          className={`pb-2 text-xs font-sans font-bold transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
             activeTab === "copilot"
               ? "border-b-2 border-[var(--ok)]/40 text-[var(--ok)]"
               : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -2767,7 +2767,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] uppercase font-mono text-[var(--ok)] font-bold mb-1 flex items-center gap-1">
+                    <label className="block text-[10px] font-mono text-[var(--ok)] font-bold mb-1 flex items-center gap-1">
                       <span>📱 Teléfono Móvil (WhatsApp)</span>
                     </label>
                     <input
@@ -2790,7 +2790,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] uppercase font-mono text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
+                    <label className="block text-[10px] font-mono text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
                       <span>☎️ Teléfono Fijo (Sala / Oficina)</span>
                     </label>
                     <input
@@ -2833,7 +2833,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+                    <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
                       Contacto / Programador
                     </label>
                     <input
@@ -3025,7 +3025,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="flex items-center gap-2">
                     <span className="text-base">⚡</span>
                     <div>
-                      <h4 className="text-xs font-bold text-[var(--acc)] uppercase tracking-wider font-mono">
+                      <h4 className="text-xs font-bold text-[var(--acc)] font-mono">
                         Playbook Táctico & Extracción de Condiciones
                       </h4>
                       <p className="text-[11px] text-[var(--ink-2)] font-medium">
@@ -3127,7 +3127,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {selectedLead.estrategia_playbook?.pasos &&
                   selectedLead.estrategia_playbook.pasos.length > 0 && (
                     <div className="space-y-1 pt-1 border-t border-[var(--hair)]">
-                      <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold block">
+                      <span className="text-[10px] font-mono text-[var(--ink-2)] font-bold block">
                         Pasos Recomendados para Cerrar:
                       </span>
                       <ul className="space-y-0.5">
@@ -3273,7 +3273,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               return (
                 <div className="bg-[var(--acc)]/40 p-2.5 rounded-[var(--r-m)] border border-[var(--hair)] space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-[var(--acc)] uppercase tracking-wider flex items-center gap-1">
+                    <span className="text-[10px] font-mono font-bold text-[var(--acc)] flex items-center gap-1">
                       <CalendarCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
                       Fechas Libres Detectadas por Radar (Insertar en 1 clic):
                     </span>
@@ -3310,7 +3310,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             {/* 💰 Commercial Deal Snippets (Punto 2: Taquilla 100%, Garantía Mínima + %, Caché Fijo) */}
             <div className="bg-[var(--surface)]/90 p-2.5 rounded-[var(--r-m)] border border-[var(--hair)] space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold text-[var(--ok)] uppercase tracking-wider flex items-center gap-1.5">
+                <span className="text-[10px] font-mono font-bold text-[var(--ok)] flex items-center gap-1.5">
                   <Handshake className="w-3.5 h-3.5 text-[var(--ok)]" />
                   Condiciones Comerciales (Insertar propuesta con 1 clic):
                 </span>
@@ -3364,7 +3364,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             {/* Quick Manager Safeguard Pills */}
             <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] border border-[var(--hair)] space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold text-[var(--acc)] uppercase tracking-wider flex items-center gap-1">
+                <span className="text-[10px] font-mono font-bold text-[var(--acc)] flex items-center gap-1">
                   <ShieldAlert className="w-3.5 h-3.5 text-[var(--acc)]" />
                   Salvaguardas de Mánager (Insertar cláusula con 1 clic):
                 </span>
@@ -3968,7 +3968,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                     {msg.objeciones && msg.objeciones.length > 0 && (
                       <div className="p-2 rounded-[var(--r-m)] bg-[var(--alert)]/30 border border-[var(--hair)] text-[11px] text-[var(--alert)] space-y-1">
-                        <span className="font-bold text-[var(--alert)] text-[10px] uppercase font-mono block">
+                        <span className="font-bold text-[var(--alert)] text-[10px] font-mono block">
                           Objeciones / Reticencias Detectadas:
                         </span>
                         <ul className="list-disc list-inside space-y-0.5 text-[var(--ink-2)]">
@@ -4012,7 +4012,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           {/* Quick Manager Reply Actions with Deal Snippets */}
           <div className="p-3 bg-[var(--surface)]/90 rounded-[var(--r-m)] border border-[var(--hair)] space-y-2 mt-2">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold text-[var(--ok)] uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-[10px] font-mono font-bold text-[var(--ok)] flex items-center gap-1.5">
                 <Handshake className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>
                   ¿La sala pide condiciones económicas? Inserta propuesta:
@@ -4076,7 +4076,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wide flex items-center gap-2">
+                <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-2">
                   <span>Inteligencia Multi-Fuente Conectada</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] font-mono font-bold border border-[var(--hair)]">
                     11 Herramientas Activas
@@ -4285,7 +4285,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               {selectedLead.setlist_history ? (
                 <div className="space-y-2 text-xs">
                   <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)] space-y-1.5">
-                    <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">
+                    <span className="text-[10px] text-[var(--ink-2)] font-bold block">
                       Bandas Similares que han tocado:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
@@ -4304,7 +4304,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                   {selectedLead.setlist_history.referencia_pitch_sugerida && (
                     <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 border border-[var(--hair)] space-y-1.5">
-                      <span className="text-[10px] text-[var(--acc)] font-bold uppercase flex items-center gap-1">
+                      <span className="text-[10px] text-[var(--acc)] font-bold flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                         Gancho Recomendado para el Pitch:
                       </span>
@@ -4754,7 +4754,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {selectedLead.local_events_clash_info
                     .fechas_favorables_sugeridas?.length > 0 && (
                     <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)] space-y-1.5">
-                      <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">
+                      <span className="text-[10px] text-[var(--ink-2)] font-bold block">
                         Ventanas Recomendadas en{" "}
                         {selectedLead.ciudad || "la ciudad"}:
                       </span>
@@ -4776,7 +4776,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {selectedLead.local_events_clash_info.eventos_detectados
                     ?.length > 0 && (
                     <div className="space-y-1.5">
-                      <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">
+                      <span className="text-[10px] text-[var(--ink-2)] font-bold block">
                         Eventos masivos detectados en la zona:
                       </span>
                       <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
@@ -4880,7 +4880,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {selectedLead.local_press_media_info
                     .plantilla_nota_prensa_hook && (
                     <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 border border-[var(--hair)] space-y-1.5">
-                      <span className="text-[10px] text-[var(--acc)] font-bold uppercase flex items-center gap-1">
+                      <span className="text-[10px] text-[var(--acc)] font-bold flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                         Gancho Titular para Medios / Radio:
                       </span>
@@ -4993,7 +4993,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {selectedLead.local_band_partners_info
                     .gancho_propuesta_sala && (
                     <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 border border-[var(--hair)] space-y-1.5">
-                      <span className="text-[10px] text-[var(--acc)] font-bold uppercase flex items-center gap-1">
+                      <span className="text-[10px] text-[var(--acc)] font-bold flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                         Propuesta Co-Booking para el Programador:
                       </span>
@@ -5162,7 +5162,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="space-y-3">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--hair)] text-center">
-                    <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">
+                    <span className="text-[10px] text-[var(--ok)] font-bold block">
                       Punto de Equilibrio
                     </span>
                     <span className="text-xl font-extrabold text-[var(--ok)] font-mono block">
@@ -5174,7 +5174,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)] text-center">
-                    <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">
+                    <span className="text-[10px] text-[var(--ink-2)] font-bold block">
                       % Aforo Requerido
                     </span>
                     <span className="text-xl font-bold text-[var(--ink-2)] font-mono block">
@@ -5192,7 +5192,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)] text-center">
-                    <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">
+                    <span className="text-[10px] text-[var(--ink-2)] font-bold block">
                       Beneficio Banda (80% lleno)
                     </span>
                     <span className="text-xl font-bold text-[var(--ok)] font-mono block">
@@ -5208,7 +5208,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--hair)] text-center">
-                    <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">
+                    <span className="text-[10px] text-[var(--ok)] font-bold block">
                       Limpio por Músico
                     </span>
                     <span className="text-xl font-extrabold text-[var(--ok)] font-mono block">

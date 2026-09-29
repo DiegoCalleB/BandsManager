@@ -38,7 +38,7 @@ export function TemplateRecommendationsCard({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-extrabold uppercase tracking-wide text-[var(--acc)]">Recomendaciones del Agente</span>
+              <span className="text-xs font-extrabold text-[var(--acc)]">Recomendaciones del Agente</span>
               <span
                 className={`text-[10px] font-semibold px-2 py-0.5 rounded-[var(--r-pill)] ${
                   'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
@@ -146,7 +146,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">
                 🎯 Apertura Recomendada
               </span>
               <p className="italic text-[10px] opacity-90">{rec.bestOpening}</p>
@@ -157,7 +157,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">⚡ Ganchos Clave</span>
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">⚡ Ganchos Clave</span>
               <ul className="space-y-0.5">
                 {rec.keyHooks.map((hook, i) => (
                   <li key={i} className="flex items-center gap-1">
@@ -173,7 +173,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 uppercase tracking-wider text-[9px]">
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">
                 📬 Cierre & Llamada a la Acción (CTA)
               </span>
               <p className="italic text-[10px] opacity-90">{rec.ctaSuggestion}</p>

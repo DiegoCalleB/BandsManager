@@ -826,7 +826,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         title="Haz clic para cambiar el logotipo de esta banda"
                       >
                         <Upload className="w-4 h-4 text-[var(--acc)] animate-bounce" />
-                        <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]">
+                        <span className="text-[8px] font-mono font-bold text-[var(--acc)]">
                           {uploadingBandId === band.band_id
                             ? "Subiendo..."
                             : "Logo"}

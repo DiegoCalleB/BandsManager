@@ -324,7 +324,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           {!isRead && <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0" title="Sin leer" />}
 
                           <span
-                            className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider border ${badgeStyle}`}
+                            className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold border ${badgeStyle}`}
                           >
                             {alert.category}
                           </span>

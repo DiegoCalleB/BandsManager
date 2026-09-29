@@ -58,7 +58,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           <div
             className={`p-3 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
           >
-            <label className="block text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] mb-1 font-bold">
+            <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold">
               URL de Suscripción iCal (Privada)
             </label>
             <div className="flex items-center gap-2">

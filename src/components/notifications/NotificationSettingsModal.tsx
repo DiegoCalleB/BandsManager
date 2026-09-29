@@ -182,7 +182,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
 
             {/* Event Specific Config */}
             <div className="space-y-2">
-              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] block px-1">
+              <span className="text-[11px] font-mono font-bold text-[var(--ink-2)] block px-1">
                 Eventos a Notificar
               </span>
 

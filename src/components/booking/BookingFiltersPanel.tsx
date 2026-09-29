@@ -88,7 +88,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {/* 0. Filter drawer Category and View Mode Selectors */}
       <div className="space-y-3 pb-3 border-b border-[var(--hair)]/10">
         <div>
-          <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider mb-1.5">Categoría de Contactos</p>
+          <p className="text-[10px] font-bold text-[var(--ink-2)] mb-1.5">Categoría de Contactos</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)]">
             <button
               type="button"
@@ -124,7 +124,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         </div>
 
         <div className="sm:hidden">
-          <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider mb-1.5">Modo de Vista</p>
+          <p className="text-[10px] font-bold text-[var(--ink-2)] mb-1.5">Modo de Vista</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)]">
             <button
               type="button"
@@ -169,7 +169,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         </div>
 
         <div>
-          <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider mb-1.5">Tipo de Espacio</p>
+          <p className="text-[10px] font-bold text-[var(--ink-2)] mb-1.5">Tipo de Espacio</p>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as any)}
@@ -222,7 +222,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
 
       {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
       <div className="space-y-1.5">
-        <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Opciones rápidas</p>
+        <p className="text-[10px] font-bold text-[var(--ink-2)]">Opciones rápidas</p>
         <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
@@ -308,7 +308,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {/* Saved Filters List */}
       {savedFilters.length > 0 && (
         <div className="space-y-1.5">
-          <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Búsquedas guardadas</p>
+          <p className="text-[10px] font-bold text-[var(--ink-2)]">Búsquedas guardadas</p>
           <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs">
             {savedFilters.map((sf) => {
               const isActive = activeSavedFilterId === sf.id;
@@ -348,7 +348,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
 
       {/* 2. Tipo Filter */}
       <div className="space-y-1.5">
-        <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Tipo de espacio / contacto</p>
+        <p className="text-[10px] font-bold text-[var(--ink-2)]">Tipo de espacio / contacto</p>
         <div className="flex items-center gap-1.5 flex-wrap">
           {(sectionTab === 'medios'
             ? ([
@@ -393,7 +393,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {/* 3. Ciudad Filter */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Ciudad / Localidad</p>
+          <p className="text-[10px] font-bold text-[var(--ink-2)]">Ciudad / Localidad</p>
           {selectedCityFilter && (
             <button
               type="button"

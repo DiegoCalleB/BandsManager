@@ -282,7 +282,7 @@ export function TemplateConfigSection({
         <div className="lg:col-span-7 space-y-3.5">
           {/* Subject */}
           <div className="space-y-1">
-            <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">Asunto del Email</label>
+            <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)]">Asunto del Email</label>
             <input
               id="template-subject"
               type="text"
@@ -296,7 +296,7 @@ export function TemplateConfigSection({
           {/* Body */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">Cuerpo del Correo</label>
+              <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)]">Cuerpo del Correo</label>
               {/* Insertable variables chips */}
               <div className="flex items-center gap-1 flex-wrap">
                 <span className="text-[10px] text-[var(--ink-2)] mr-1">Insertar:</span>
@@ -326,7 +326,7 @@ export function TemplateConfigSection({
 
           {/* AI Guidelines */}
           <div className="space-y-1">
-            <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Pautas de Redacción para la IA (Opcional)</span>
             </label>
@@ -373,7 +373,7 @@ export function TemplateConfigSection({
             <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/5">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] animate-pulse" />
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">Vista Previa Simulada</span>
+                <span className="text-xs font-mono font-bold text-[var(--ink-2)]">Vista Previa Simulada</span>
               </div>
               {testPromptResult && (
                 <button

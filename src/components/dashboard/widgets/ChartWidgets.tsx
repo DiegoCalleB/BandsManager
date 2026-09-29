@@ -217,7 +217,7 @@ export function RepertorioEnergyChartWidget({
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       {/* Repertorio/Setlist Selector - Above the chart */}
       <div className="flex flex-col gap-2 pb-3">
-        <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wide">
+        <label className="text-[10px] font-semibold text-[var(--ink-2)]">
           Repertorio
         </label>
         <div className="relative">

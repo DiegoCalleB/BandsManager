@@ -150,7 +150,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   <h3 className="text-sm sm:text-base font-bold font-display tracking-tight text-[var(--ink)] flex items-center gap-1.5">
                     <span>Mensaje Directo por WhatsApp</span>
                   </h3>
-                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)]">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)]">
                     wa.me 1-Clic
                   </span>
                 </div>
@@ -172,7 +172,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
             {/* Teléfono Destinatario */}
             <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/70 border border-[var(--hair)] space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                   <Smartphone className="w-3.5 h-3.5 text-[var(--ok)]" />
                   <span>Destinatario WhatsApp:</span>
                 </span>
@@ -260,7 +260,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
             {/* Chips de fechas libres detectadas por el radar de Wegow / Salas */}
             {detectedDates.length > 0 && (
               <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 border border-[var(--hair)] space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1">
+                <span className="text-[10px] font-bold text-[var(--acc)] flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>Fechas libres detectadas por el Radar (haz clic para insertar):</span>
                 </span>
@@ -282,7 +282,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
             {/* Editor de Mensaje */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-[var(--ink-2)]">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1">
+                <label className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1">
                   <Sparkles className="w-3.5 h-3.5 text-[var(--ok)]" />
                   <span>Mensaje redactado para WhatsApp:</span>
                 </label>

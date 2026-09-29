@@ -69,7 +69,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
         </div>
         <div>
           <h4
-            className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 uppercase ${
+            className={`text-xs font-display font-medium flex items-center gap-1.5 ${
               'text-[var(--ink)]'
             }`}
           >
@@ -117,7 +117,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
         <button
           id="clear-chat-btn"
           onClick={handleClearChat}
-          className={`text-[9px] font-mono tracking-wider uppercase transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${
+          className={`text-[9px] font-mono transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${
             'text-[var(--ink-2)] hover:text-[var(--acc)]'
           }`}
         >

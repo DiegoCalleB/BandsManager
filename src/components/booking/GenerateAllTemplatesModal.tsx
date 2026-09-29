@@ -177,7 +177,7 @@ export function GenerateAllTemplatesModal({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label
-                className={`text-xs font-bold font-sans uppercase tracking-wider flex items-center gap-1.5 ${
+                className={`text-xs font-bold font-sans flex items-center gap-1.5 ${
                   isCampaign ? 'text-[var(--acc)]' : 'text-[var(--acc)]'
                 }`}
               >
@@ -206,7 +206,7 @@ export function GenerateAllTemplatesModal({
           {/* Targets Grid Preview */}
           <div className="space-y-2">
             <span
-              className={`text-[11px] font-bold uppercase tracking-wider block ${'text-[var(--ink-2)]'}`}
+              className={`text-[11px] font-bold block ${'text-[var(--ink-2)]'}`}
             >
               Las 7 adaptaciones que se generarán:
             </span>

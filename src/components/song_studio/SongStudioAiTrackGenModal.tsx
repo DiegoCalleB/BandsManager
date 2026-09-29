@@ -64,7 +64,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] mb-1.5 uppercase tracking-wider">
+            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] mb-1.5">
               1. Instrumento que quieres generar
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[11px]">
@@ -91,7 +91,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] mb-1.5 uppercase tracking-wider">
+            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] mb-1.5">
               2. Indicaciones de estilo / Prompt (Opcional)
             </label>
             <textarea

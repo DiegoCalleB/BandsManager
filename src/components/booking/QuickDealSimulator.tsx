@@ -167,25 +167,25 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
           {/* Tarjetas de Resultado Rápido */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--hair)] text-center">
-              <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Punto de Equilibrio</span>
+              <span className="text-[10px] text-[var(--ok)] font-bold block">Punto de Equilibrio</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">{liveBreakEven} tix</span>
               <span className="text-[9px] text-[var(--ink-2)] block">para cubrir costes</span>
             </div>
 
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
-              <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">% Aforo Sala</span>
+              <span className="text-[10px] text-[var(--ink-2)] font-bold block">% Aforo Sala</span>
               <span className="text-lg font-bold text-[var(--ink-2)] font-mono block">{liveBreakEvenPct}%</span>
               <span className="text-[9px] text-[var(--ink-2)] block">de {aforo} personas</span>
             </div>
 
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
-              <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">Margen (80% aforo)</span>
+              <span className="text-[10px] text-[var(--ink-2)] font-bold block">Margen (80% aforo)</span>
               <span className="text-lg font-bold text-[var(--ok)] font-mono block">+{beneficio80Pct} €</span>
               <span className="text-[9px] text-[var(--ink-2)] block">total banda</span>
             </div>
 
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--hair)] text-center">
-              <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Por Músico (80%)</span>
+              <span className="text-[10px] text-[var(--ok)] font-bold block">Por Músico (80%)</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">+{porMusico80Pct} €</span>
               <span className="text-[9px] text-[var(--ok)]/80 block">limpio cada uno</span>
             </div>

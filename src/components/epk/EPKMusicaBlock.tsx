@@ -427,7 +427,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
           </div>
           {/* PARÁMETROS OPERATIVOS PARA EL AGENTE DE BOOKING (ANTI-ALUCINACIONES) */}
           <div className="pt-4 border-t border-[var(--hair)]/80">
-            <h4 className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wider mb-3 flex items-center gap-2">
+            <h4 className="text-xs font-bold text-[var(--ink-2)] mb-3 flex items-center gap-2">
               <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]"></span>
               Operativa Real para el Agente de IA (Anti-Alucinaciones)
             </h4>

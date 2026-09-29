@@ -74,7 +74,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
           <div className="flex items-center gap-2">
             <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)]">⚡</span>
             <div>
-              <h3 className={`text-sm font-extrabold font-mono uppercase ${colors.text}`}>
+              <h3 className={`text-sm font-extrabold font-mono ${colors.text}`}>
                 {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
               </h3>
               <p className="text-[10px] text-[var(--ink-2)] font-sans">
@@ -95,7 +95,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
           <div>
-            <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Nombre / Título del Momento</label>
+            <label className="block text-[10px] font-bold text-[var(--ink-2)] mb-1">Nombre / Título del Momento</label>
             <input
               type="text"
               required
@@ -108,7 +108,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Tipo de Elemento</label>
+              <label className="block text-[10px] font-bold text-[var(--ink-2)] mb-1">Tipo de Elemento</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
@@ -123,7 +123,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Duración Est. (minutos)</label>
+              <label className="block text-[10px] font-bold text-[var(--ink-2)] mb-1">Duración Est. (minutos)</label>
               <input
                 type="number"
                 min="0"
@@ -138,7 +138,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Tono / Key</label>
+              <label className="block text-[10px] font-bold text-[var(--ink-2)] mb-1">Tono / Key</label>
               <input
                 type="text"
                 value={key}
@@ -148,7 +148,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">BPM / Tempo</label>
+              <label className="block text-[10px] font-bold text-[var(--ink-2)] mb-1">BPM / Tempo</label>
               <input
                 type="number"
                 value={tempo}
@@ -158,7 +158,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Afinación</label>
+              <label className="block text-[10px] font-bold text-[var(--ink-2)] mb-1">Afinación</label>
               <input
                 type="text"
                 value={tuning}
@@ -170,7 +170,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Notas para los Músicos / Atril</label>
+            <label className="block text-[10px] font-bold text-[var(--ink-2)] mb-1">Notas para los Músicos / Atril</label>
             <textarea
               rows={2}
               value={notes}

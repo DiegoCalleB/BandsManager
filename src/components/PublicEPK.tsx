@@ -546,7 +546,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <div className="pt-4 border-t border-[var(--hair)]/10 space-y-2.5">
                 <div className="flex items-center gap-2">
                   <Music2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                  <span className="text-xs font-bold uppercase tracking-wider font-mono opacity-80">
+                  <span className="text-xs font-bold font-mono opacity-80">
                     {language === "en"
                       ? "For Fans Of (FFO):"
                       : "Para fans de (FFO) / Sonido afín:"}

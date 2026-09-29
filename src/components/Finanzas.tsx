@@ -1147,7 +1147,7 @@ export default function Finanzas({
                 return (
                   <div key={item.cat} className="space-y-1">
                     <div className="flex justify-between text-[11px] font-sans">
-                      <span className={`uppercase font-bold ${textTitle}`}>
+                      <span className={` font-bold ${textTitle}`}>
                         {item.cat}
                       </span>
                       <span className={`${textSub}`}>

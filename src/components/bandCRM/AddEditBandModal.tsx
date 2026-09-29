@@ -103,7 +103,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
         <div className="flex items-center justify-between pb-3">
           <div className="flex items-center gap-2">
             <Music className="w-5 h-5 text-[var(--acc)]" />
-            <h3 className="text-base font-bold font-display uppercase tracking-wider">
+            <h3 className="text-base font-bold font-display">
               {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
             </h3>
           </div>
@@ -117,7 +117,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {/* Nombre de la Banda */}
             <div className="space-y-1 md:col-span-2">
               <div className="flex items-center justify-between">
-                <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Nombre de la Banda / Artista *</label>
+                <label className="block text-[10px] font-mono text-[var(--ink-2)]">Nombre de la Banda / Artista *</label>
                 <button
                   type="button"
                   onClick={handleAiLookup}
@@ -320,7 +320,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Icono o Imagen / Logo de la Banda */}
             <div className="space-y-2 sm:col-span-2 p-3 bg-[var(--surface)]/60 rounded-[var(--r-m)] border border-[var(--hair)]">
-              <label className="block text-[10px] font-mono uppercase text-[var(--acc)] font-bold">Icono o Logo / Foto de la Banda</label>
+              <label className="block text-[10px] font-mono text-[var(--acc)] font-bold">Icono o Logo / Foto de la Banda</label>
 
               <div className="flex flex-wrap items-center gap-3">
                 {/* Preview current avatar */}
@@ -390,7 +390,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Estilo Musical */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Estilo Musical *</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Estilo Musical *</label>
               <input
                 type="text"
                 required
@@ -403,7 +403,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Localización / Ciudad */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Localización / Ciudad Principal *</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Localización / Ciudad Principal *</label>
               <input
                 type="text"
                 required
@@ -416,7 +416,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Estado de la Relación */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Estado de la Relación</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Estado de la Relación</label>
               <select
                 value={formStatus}
                 onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
@@ -433,7 +433,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Persona de Contacto */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Persona de Contacto / Rol</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Persona de Contacto / Rol</label>
               <input
                 type="text"
                 value={formContactName}
@@ -445,7 +445,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Último Contacto */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Fecha de Último Contacto</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Fecha de Último Contacto</label>
               <input
                 type="date"
                 value={formLastContact}
@@ -456,7 +456,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Email */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Email de Contacto / Booking</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Email de Contacto / Booking</label>
               <input
                 type="email"
                 value={formEmail}
@@ -468,7 +468,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Teléfono */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Teléfono / WhatsApp</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Teléfono / WhatsApp</label>
               <input
                 type="text"
                 value={formPhone}
@@ -480,7 +480,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Instagram */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Instagram</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Instagram</label>
               <input
                 type="text"
                 value={formInstagram}
@@ -492,7 +492,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Aforo habitual */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
               <input
                 type="number"
                 value={formAforo}
@@ -505,7 +505,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
           {/* Enlace Spotify / YouTube */}
           <div className="space-y-1">
-            <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">Enlace Spotify / YouTube / Dossier</label>
+            <label className="block text-[10px] font-mono text-[var(--ink-2)]">Enlace Spotify / YouTube / Dossier</label>
             <input
               type="url"
               value={formSpotifyYoutube}
@@ -517,7 +517,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
           {/* Notas de Colaboración */}
           <div className="space-y-1">
-            <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)]">
+            <label className="block text-[10px] font-mono text-[var(--ink-2)]">
               Notas de Colaboración / Salas propuestas / Intercambios
             </label>
             <textarea
@@ -540,7 +540,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-m)] transition-all cursor-pointer shadow-md"
+              className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer shadow-md"
             >
               {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
             </button>

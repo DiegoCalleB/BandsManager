@@ -289,7 +289,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
             {/* Recent Jobs Feed */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-xs font-bold text-[var(--ink)] flex items-center gap-2">
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>Historial de Trabajos en la Cola (Últimos 10 eventos)</span>
                 </h3>

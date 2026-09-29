@@ -1651,7 +1651,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                 {/* 4. Control de Estado de Lectura en Bandeja (Agente Lector) */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-3">
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                  <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Mail className="w-4 h-4" /> 4. Control de Estado en Bandeja
                     de Entrada (Agente Lector)
                   </h4>

@@ -1404,7 +1404,7 @@ export function GooglePlacesExplorerModal({
               {/* Quick Similar Bands / FFO Mirror Chips from Dossier */}
               {similarBands && similarBands.length > 0 && (
                 <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[var(--hair)]/60">
-                  <span className="text-[10px] text-[var(--acc)] font-bold uppercase tracking-wider mr-1 flex items-center gap-1">
+                  <span className="text-[10px] text-[var(--acc)] font-bold mr-1 flex items-center gap-1">
                     <Music2 className="w-3 h-3 text-[var(--acc)]" />
                     Efecto Espejo (Dossier):
                   </span>

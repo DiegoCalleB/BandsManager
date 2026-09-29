@@ -71,7 +71,7 @@ const CardKpi: React.FC<CardKpiProps> = ({
       </div>
       {onClick && <ArrowRight className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
     </div>
-    <p className="text-[10px] font-sans font-semibold text-[var(--ink-2)] uppercase tracking-wide">
+    <p className="text-[10px] font-sans font-semibold text-[var(--ink-2)]">
       {label}
     </p>
     {vacio ? (

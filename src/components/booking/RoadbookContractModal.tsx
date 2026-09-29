@@ -193,7 +193,7 @@ Firmado en conformidad por ambas partes.`;
           <div className="p-3 sm:px-5 bg-[var(--surface)]/80 border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
             {/* Selector de sala activa */}
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-[var(--ink-2)] font-mono uppercase text-[10px]">Evento / Sala:</span>
+              <span className="text-[var(--ink-2)] font-mono text-[10px]">Evento / Sala:</span>
               <select
                 value={currentLead.id}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
@@ -250,7 +250,7 @@ Firmado en conformidad por ambas partes.`;
                 {/* Controles rápidos de edición de horarios */}
                 <div className="p-3.5 bg-[var(--surface)] rounded-[var(--r-m)] border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Fecha Evento</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Fecha Evento</label>
                     <input
                       type="date"
                       value={eventDate}
@@ -259,7 +259,7 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Salida Furgoneta</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Salida Furgoneta</label>
                     <input
                       type="text"
                       value={departureTime}
@@ -268,7 +268,7 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Prueba Sonido</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Prueba Sonido</label>
                     <input
                       type="text"
                       value={soundcheckTime}
@@ -277,7 +277,7 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Inicio Show</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Inicio Show</label>
                     <input
                       type="text"
                       value={showTime}
@@ -292,7 +292,7 @@ Firmado en conformidad por ambas partes.`;
                   {/* Cabecera del documento */}
                   <div className="flex items-start justify-between border-b border-[var(--hair)] pb-3">
                     <div>
-                      <span className="text-[10px] font-mono uppercase text-[var(--acc)] block font-bold">DOCUMENTO OPERATIVO DE GIRA</span>
+                      <span className="text-[10px] font-mono text-[var(--acc)] block font-bold">DOCUMENTO OPERATIVO DE GIRA</span>
                       <h2 className="text-xl font-black text-[var(--ink)] tracking-tight">{venueName}</h2>
                       <p className="text-xs text-[var(--ink-2)] flex items-center gap-1.5 mt-0.5">
                         <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -318,7 +318,7 @@ Firmado en conformidad por ambas partes.`;
                   {/* Cronograma visual en dos columnas */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-2.5">
-                      <span className="text-[10px] font-mono uppercase font-bold text-[var(--ink-2)] block border-b border-[var(--hair)]/80 pb-1">
+                      <span className="text-[10px] font-mono font-bold text-[var(--ink-2)] block border-b border-[var(--hair)]/80 pb-1">
                         Timeline de Operaciones
                       </span>
                       <div className="space-y-2">
@@ -350,7 +350,7 @@ Firmado en conformidad por ambas partes.`;
                     </div>
 
                     <div className="space-y-2.5">
-                      <span className="text-[10px] font-mono uppercase font-bold text-[var(--ink-2)] block border-b border-[var(--hair)]/80 pb-1">
+                      <span className="text-[10px] font-mono font-bold text-[var(--ink-2)] block border-b border-[var(--hair)]/80 pb-1">
                         Contactos y Especificaciones
                       </span>
                       <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-2">
@@ -389,7 +389,7 @@ Firmado en conformidad por ambas partes.`;
                 {/* Parámetros de negociación del contrato */}
                 <div className="p-3.5 bg-[var(--surface)] rounded-[var(--r-m)] border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Régimen Económico</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Régimen Económico</label>
                     <select
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
@@ -401,7 +401,7 @@ Firmado en conformidad por ambas partes.`;
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">
                       {dealType === 'cache' ? 'Caché Neto (€)' : 'Precio Entrada (€)'}
                     </label>
                     <input
@@ -416,7 +416,7 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Reparto Banda (%)</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Reparto Banda (%)</label>
                     <input
                       type="number"
                       value={splitPercent}
@@ -425,7 +425,7 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Aforo Sala</label>
+                    <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Aforo Sala</label>
                     <input
                       type="number"
                       value={venueCapacity}

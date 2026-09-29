@@ -77,7 +77,7 @@ export const NeedsAttentionBanner: React.FC<NeedsAttentionBannerProps> = ({
     <div className="p-4 rounded-[var(--r-l)] bg-[var(--alert)]/10 space-y-2.5">
       <div className="flex items-center gap-2 text-[var(--alert)]">
         <AlertCircle className="w-4 h-4 shrink-0" />
-        <span className="text-xs font-sans font-bold uppercase tracking-wide">
+        <span className="text-xs font-sans font-bold">
           Mira esto primero
         </span>
       </div>

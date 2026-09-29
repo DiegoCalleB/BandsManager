@@ -408,7 +408,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             </div>
             {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
             <div className="pt-3 border-t border-[var(--hair)]/80 space-y-3">
-              <h4 className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-2">
+              <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-2">
                 <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]"></span>
                 Parámetros Técnicos Clave para el Agente (Respuestas directas a
                 salas)
