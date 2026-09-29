@@ -138,7 +138,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
       <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto flex flex-col animate-in zoom-in-95 duration-200">
           {/* Modal Header */}
-          <div className="p-5 bg-[var(--surface)] flex items-center justify-between">
+          <div className="p-5 bg-[var(--sunken)] flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
                 <FileText className="w-5 h-5" />
@@ -196,7 +196,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
             </div>
 
             {/* Selected Template Display Box */}
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-4">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3">
                 <div>
                   <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
@@ -262,7 +262,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
           </div>
 
           {/* Modal Footer */}
-          <div className="p-4 bg-[var(--surface)] flex justify-end">
+          <div className="p-4 bg-[var(--sunken)] flex justify-end">
             <button
               onClick={onClose}
               className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink)] font-sans text-xs font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"

@@ -604,7 +604,7 @@ export const ProfileCompletenessCard: React.FC<
             </div>
 
             <div className="space-y-3 text-xs text-[var(--ink-2)] font-sans leading-relaxed">
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
                   <Bot className="w-4 h-4" /> 1. Agente Scout (Prospección de
                   Salas & Recintos)
@@ -616,7 +616,7 @@ export const ProfileCompletenessCard: React.FC<
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
                   <FileText className="w-4 h-4" /> 2. Agente Redactor (Pitches
                   Personalizados & ADN de Tono)
@@ -631,7 +631,7 @@ export const ProfileCompletenessCard: React.FC<
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
                   <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI
                   (Negociación de Fechas & Caché)
@@ -646,7 +646,7 @@ export const ProfileCompletenessCard: React.FC<
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
                   <Mail className="w-4 h-4" /> 4. Agente Lector & Enviador
                   (Smart Gate)

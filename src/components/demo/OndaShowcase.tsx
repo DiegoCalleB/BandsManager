@@ -40,7 +40,7 @@ export const OndaShowcase: React.FC = () => {
       </div>
 
       {/* Chart */}
-      <div className="bg-[var(--bg)] rounded-[var(--r-m)] p-8 h-64 flex items-end justify-center">
+      <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-8 h-64 flex items-end justify-center">
         <Onda data={weeklyShowsData} height={160} barWidth={20} gap={12} animated={true} className="w-full" />
       </div>
 

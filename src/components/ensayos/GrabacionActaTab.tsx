@@ -290,7 +290,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
           </div>
 
           {/* Big Recording Button & Wave */}
-          <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] flex flex-col items-center justify-center space-y-3">
+          <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col items-center justify-center space-y-3">
             {isRecording ? (
               <div className="w-full space-y-3 text-center">
                 {/* Simulated Audio Waveform Bars */}
@@ -382,7 +382,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
           </div>
 
           {/* Upload Audio File Option */}
-          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--sunken)]">
             <span className="text-xs text-[var(--ink-2)]">
               ¿Grabaste con Zoom H4n o grabadora externa?
             </span>
@@ -425,7 +425,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               {recordings.map((rec) => (
                 <div
                   key={rec.id}
-                  className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2 hover:transition-colors"
+                  className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2 hover:transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
@@ -525,7 +525,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Executive Summary */}
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
               <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                 📝 Resumen Ejecutivo
               </h4>
@@ -535,7 +535,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             </div>
 
             {/* Temas Bordados vs A Pulir */}
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
               <div>
                 <h4 className="text-xs font-sans font-bold text-[var(--ok)] mb-1.5">
                   🟢 Temas Bordados
@@ -568,7 +568,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             </div>
 
             {/* Deberes para casa */}
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2.5">
               <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                 🎯 Deberes para Casa
               </h4>

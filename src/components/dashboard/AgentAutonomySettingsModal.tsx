@@ -789,7 +789,7 @@ export const AgentAutonomySettingsModal: React.FC<
         >
           {/* Modal Header */}
           <div
-            className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${"bg-[var(--surface)]"}`}
+            className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${"bg-[var(--sunken)]"}`}
           >
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20  text-[var(--acc)]">
@@ -921,7 +921,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
           {/* Read-Only Banner for Non-Admins */}
           {!isAdmin && (
-            <div className="p-3 bg-[var(--surface)] text-[var(--acc)]/70 text-xs flex items-center gap-2 px-5">
+            <div className="p-3 bg-[var(--sunken)] text-[var(--acc)]/70 text-xs flex items-center gap-2 px-5">
               <Lock className="w-4 h-4 text-[var(--acc)] shrink-0" />
               <span>
                 Estás en modo <strong>Solo Lectura</strong>. Solo los miembros
@@ -1299,7 +1299,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* 3. PARÁMETROS ECONÓMICOS */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-4">
                   <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Euro className="w-4 h-4" /> 3. Caché Mínimo por Tipo de
                     Recinto para {bandName}
@@ -1486,7 +1486,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* 1. Remitente e Identidad del Agente */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-4">
                   <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <AtSign className="w-4 h-4" /> 1. Remitente Oficial de la
                     Banda para los Agentes
@@ -1570,7 +1570,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 <EmailAccountConfig bandId={bandId || currentUser?.band_id} />
 
                 {/* 3. Modo de Despacho de Correo */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-4">
                   <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Send className="w-4 h-4" /> 3. Modo de Despacho del Agente
                     Enviador
@@ -1656,7 +1656,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     de Entrada (Agente Lector)
                   </h4>
 
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
+                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"
@@ -1707,7 +1707,7 @@ export const AgentAutonomySettingsModal: React.FC<
             {activeTab === "schedules" && (
               <div className="space-y-6">
                 {/* Presets & Actions */}
-                <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]">
+                <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-[var(--acc)]" />
                     <span className="text-xs font-sans font-bold text-[var(--ink)]">
@@ -1802,7 +1802,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     disabled={!isAdmin}
                     value={timezone}
                     onChange={(e) => setTimezone(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60 cursor-pointer"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60 cursor-pointer"
                   >
                     {TIMEZONES.map((tz) => (
                       <option key={tz.value} value={tz.value}>
@@ -1813,7 +1813,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* DÍAS Y HORAS ENVIADOR */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-4">
                   {/* Header Enviador */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -1995,7 +1995,7 @@ export const AgentAutonomySettingsModal: React.FC<
  scheduler (cada ~60s), porque a diferencia del Enviador (que sí debe respetar
  una ventana comercial para no escribir de madrugada) leer la bandeja y detectar
  respuestas/borradores enviados no tiene ninguna razón para esperar. */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-[var(--ink-2)]" />
                     <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
@@ -2016,7 +2016,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* Monitor de Estado de Agentes de Supabase (GitHub Actions) */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-sans font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <Activity className="w-4 h-4" /> Estado en Tiempo Real de
@@ -2337,7 +2337,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   return (
                     <div
                       key={type.key}
-                      className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3"
+                      className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3"
                     >
                       <div className="flex items-center gap-2">
                         <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/80">
@@ -2508,7 +2508,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       type="button"
                       onClick={loadAuditLogs}
                       disabled={loadingAuditLogs}
-                      className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer"
+                      className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer"
                     >
                       <RefreshCw
                         className={`w-3.5 h-3.5 ${loadingAuditLogs ? "animate-spin" : ""}`}
@@ -2715,7 +2715,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
           {/* Modal Footer */}
           <div
-            className={`p-4 flex flex-wrap items-center justify-between gap-3 shrink-0 ${"bg-[var(--surface)]"}`}
+            className={`p-4 flex flex-wrap items-center justify-between gap-3 shrink-0 ${"bg-[var(--sunken)]"}`}
           >
             <div className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)]">
               <ShieldCheck className="w-4 h-4 text-[var(--ok)]" />

@@ -418,14 +418,14 @@ export function OrdenDelDiaTab({
             exactos del ensayo.
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-1 font-sans text-xs">
-            <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--acc)]/70 font-bold">
+            <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--acc)]/70 font-bold">
               ⏱ {totalMinutosEstimados} min estimados
             </span>
-            <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">
+            <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)]">
               🎵 {cancionesCount} canciones
             </span>
             {pausasCount > 0 && (
-              <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">
+              <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)]">
                 ☕ {pausasCount} descansos
               </span>
             )}
@@ -496,7 +496,7 @@ export function OrdenDelDiaTab({
                     className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
                       obj.completado
                         ? "bg-[var(--ok)]/10 text-[var(--ink-2)]"
-                        : "bg-[var(--surface)] text-[var(--ink)] hover:"
+                        : "bg-[var(--sunken)] text-[var(--ink)] hover:"
                     }`}
                   >
                     <button
@@ -540,7 +540,7 @@ export function OrdenDelDiaTab({
                     handleAddObjetivo();
                   }
                 }}
-                className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
+                className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none focus:"
               />
               <button
                 type="button"
@@ -705,7 +705,7 @@ export function OrdenDelDiaTab({
                         </div>
 
                         {/* Number / Index */}
-                        <div className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--surface)] flex items-center justify-center font-sans font-bold text-xs text-[var(--ink-2)] shrink-0">
+                        <div className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--sunken)] flex items-center justify-center font-sans font-bold text-xs text-[var(--ink-2)] shrink-0">
                           {idx + 1}
                         </div>
 
@@ -770,7 +770,7 @@ export function OrdenDelDiaTab({
                       {/* Right: Duration, Controls & Move */}
                       <div className="flex items-center gap-2 shrink-0">
                         <div
-                          className="flex items-center gap-1 bg-[var(--surface)] px-2 py-1 rounded-[var(--r-s)]"
+                          className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-s)]"
                           title="Duración estimada en minutos"
                         >
                           <Clock className="w-3 h-3 text-[var(--ink-2)]" />
@@ -873,7 +873,7 @@ export function OrdenDelDiaTab({
                     value={searchSongQuery}
                     onChange={(e) => setSearchSongQuery(e.target.value)}
                     placeholder="Buscar por título, tonalidad, género..."
-                    className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] focus:outline-none focus:"
+                    className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] focus:outline-none focus:"
                   />
                 </div>
 
@@ -881,7 +881,7 @@ export function OrdenDelDiaTab({
                   <select
                     value={selectedAlbumFilter}
                     onChange={(e) => setSelectedAlbumFilter(e.target.value)}
-                    className="text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer bg-[var(--surface)] text-[var(--acc)]/70 font-bold"
+                    className="text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer bg-[var(--sunken)] text-[var(--acc)]/70 font-bold"
                   >
                     {albumsList.map((alb) => (
                       <option key={alb} value={alb}>
@@ -896,7 +896,7 @@ export function OrdenDelDiaTab({
                     className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer transition-colors ${
                       onlyFavorites
                         ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
-                        : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                        : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
                     <Star
@@ -908,7 +908,7 @@ export function OrdenDelDiaTab({
                   <button
                     type="button"
                     onClick={selectAllFiltered}
-                    className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                    className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
                   >
                     Seleccionar todo ({filteredSongs.length})
                   </button>
@@ -917,7 +917,7 @@ export function OrdenDelDiaTab({
                     <button
                       type="button"
                       onClick={clearSelection}
-                      className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                      className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
                     >
                       Vaciar selección
                     </button>
@@ -950,7 +950,7 @@ export function OrdenDelDiaTab({
                         className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
                           isSelected
                             ? "bg-[var(--acc)]/60  text-[var(--acc)]/70"
-                            : "bg-[var(--surface)] hover:bg-[var(--surface)] hover:"
+                            : "bg-[var(--sunken)] hover:bg-[var(--surface)] hover:"
                         }`}
                       >
                         {/* Number in selection order */}
@@ -1071,7 +1071,7 @@ export function OrdenDelDiaTab({
                     return (
                       <div
                         key={st.id}
-                        className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between gap-3 hover:transition-all"
+                        className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between gap-3 hover:transition-all"
                       >
                         <div>
                           <p className="text-xs font-bold text-[var(--ink)]">
@@ -1165,7 +1165,7 @@ export function OrdenDelDiaTab({
                           className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-sans transition-all cursor-pointer ${
                             blockTipo === key
                               ? "bg-[var(--acc)]/60  text-[var(--acc)]/70 font-bold"
-                              : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
+                              : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
                           }`}
                         >
                           <span>{def.icon}</span>
@@ -1186,7 +1186,7 @@ export function OrdenDelDiaTab({
                     placeholder="Ej: Calentamiento & Sonido, Pausa café..."
                     value={blockTitulo}
                     onChange={(e) => setBlockTitulo(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none focus:"
                   />
                 </div>
 
@@ -1200,7 +1200,7 @@ export function OrdenDelDiaTab({
                     max="120"
                     value={blockDuracion}
                     onChange={(e) => setBlockDuracion(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] outline-none focus:"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink)] outline-none focus:"
                   />
                 </div>
 
@@ -1213,12 +1213,12 @@ export function OrdenDelDiaTab({
                     placeholder="Ej: Ajustar retorno de monitores y afinación..."
                     value={blockEnfoque}
                     onChange={(e) => setBlockEnfoque(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none focus:"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 p-4 bg-[var(--surface)]">
+              <div className="flex items-center justify-end gap-2 p-4 bg-[var(--sunken)]">
                 <button
                   type="button"
                   onClick={() => setShowAddBlockModal(false)}

@@ -296,7 +296,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setIsSavingFilterOpen(false)}
-                className="p-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-m)] cursor-pointer"
+                className="p-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-m)] cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -381,7 +381,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               type="button"
               onClick={() => setTypeFilter(t.key)}
               className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
-                typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
               }`}
             >
               {t.label}

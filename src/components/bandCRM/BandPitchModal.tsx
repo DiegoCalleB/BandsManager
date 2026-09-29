@@ -59,13 +59,13 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
 
           {/* Config Fields */}
           {!activeCampaign?.isActive && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[10px] font-sans">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[10px] font-sans">
               <div>
                 <label className="block text-[10px] text-[var(--ink-2)] mb-1">Ciudad de Bakandeya</label>
                 <select
                   value={proposedBakandeyaCity}
                   onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
-                  className="w-full bg-[var(--surface)]/80 text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
                 >
                   <option value="Madrid">Madrid</option>
                   <option value="Sevilla">Sevilla</option>
@@ -79,7 +79,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                   type="text"
                   value={proposedVenueBakandeya}
                   onChange={(e) => setProposedVenueBakandeya(e.target.value)}
-                  className="w-full bg-[var(--surface)]/80 text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
                 />
               </div>
 
@@ -89,7 +89,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                   type="text"
                   value={proposedMonth}
                   onChange={(e) => setProposedMonth(e.target.value)}
-                  className="w-full bg-[var(--surface)]/80 text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
                 />
               </div>
             </div>
@@ -102,7 +102,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               <span className="text-[10px] text-[var(--ink-2)] lowercase">editable & listo para enviar</span>
             </label>
 
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] text-[10px] font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] text-[10px] font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
               {pitchText}
             </div>
           </div>

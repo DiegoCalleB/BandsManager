@@ -518,7 +518,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
             {/* Plan Suscrito & Upgrade Section */}
             <div
-              className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${"bg-[var(--bg)]"}`}
+              className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${"bg-[var(--sunken)]"}`}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
@@ -545,7 +545,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowUpgradeModal(true)}
-                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--acc-ink)] text-xs font-bold font-sans transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold font-sans transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
                     >
                       <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
                       <span>Upgrade</span>
@@ -577,7 +577,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Tu nombre..."
-                className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--bg)]"}`}
+                className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                 required
               />
             </div>
@@ -592,7 +592,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 value={instrument}
                 onChange={(e) => setInstrument(e.target.value)}
                 placeholder="Ej: Violín, Percusión, Batería, Técnico de Sonido"
-                className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--bg)]"}`}
+                className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
               />
             </div>
 
@@ -631,7 +631,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </label>
 
               <div
-                className={`p-3 rounded-[var(--r-m)] flex items-center justify-between gap-3 ${"bg-[var(--surface)]"}`}
+                className={`p-3 rounded-[var(--r-m)] flex items-center justify-between gap-3 ${"bg-[var(--sunken)]"}`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden flex items-center justify-center p-1 shrink-0 relative group">
@@ -779,7 +779,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         value={createBandName}
                         onChange={(e) => setCreateBandName(e.target.value)}
                         placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                       />
                     </div>
 
@@ -793,7 +793,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           value={createBandStyle}
                           onChange={(e) => setCreateBandStyle(e.target.value)}
                           placeholder="Ej. Indie Rock, Pop..."
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                         />
                       </div>
                       <div>
@@ -807,7 +807,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                             setCreateBandLocation(e.target.value)
                           }
                           placeholder="Ej. Madrid, Barcelona..."
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                         />
                       </div>
                     </div>
@@ -930,7 +930,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               )}
 
               <div
-                className={`p-3 rounded-[var(--r-m)] space-y-2 ${"bg-[var(--surface)]"}`}
+                className={`p-3 rounded-[var(--r-m)] space-y-2 ${"bg-[var(--sunken)]"}`}
               >
                 <p className="text-[11px] text-[var(--ink-2)]">
                   Selecciona tu proyecto principal por defecto o gestiona tus
@@ -1079,7 +1079,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAppearance(!showAppearance)}
-                  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${"bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
                 >
                   <div className="flex items-center gap-2">
                     <Palette className="w-4 h-4 text-[var(--acc)]" />
@@ -1238,7 +1238,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAgentConfig(true)}
-                  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${"bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
                 >
                   <div className="flex items-center gap-2">
                     <Bot className="w-4 h-4 text-[var(--acc)]" />
@@ -1295,7 +1295,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Dejar en blanco para mantener la actual..."
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--bg)]"}`}
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                 />
               </div>
 
@@ -1309,7 +1309,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repite la nueva contraseña..."
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--bg)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                   />
                 </div>
               )}
@@ -1652,7 +1652,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                     );
                                   }
                                 }}
-                                className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+                                className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
                               >
                                 <Sparkles className="w-3 h-3 fill-neutral-950" />
                                 <span>Seleccionar {plan.name}</span>
@@ -1665,7 +1665,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                 </div>
 
-                <div className="px-6 py-3 bg-[var(--surface)] flex items-center justify-between">
+                <div className="px-6 py-3 bg-[var(--sunken)] flex items-center justify-between">
                   {onNavigateToPlanes ? (
                     <button
                       type="button"

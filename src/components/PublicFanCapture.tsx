@@ -139,7 +139,7 @@ export const PublicFanCapture: React.FC = () => {
                 className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover"
               />
             ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)]  flex items-center justify-center text-[var(--acc)]">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--sunken)]  flex items-center justify-center text-[var(--acc)]">
                 <Music className="w-10 h-10" />
               </div>
             )}
@@ -192,7 +192,7 @@ export const PublicFanCapture: React.FC = () => {
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="Ej: Laura García"
-                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
               />
             </div>
 
@@ -206,7 +206,7 @@ export const PublicFanCapture: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tuemail@ejemplo.com"
-                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
               />
             </div>
 
@@ -220,7 +220,7 @@ export const PublicFanCapture: React.FC = () => {
                   value={ciudad}
                   onChange={(e) => setCiudad(e.target.value)}
                   placeholder="Ej: Madrid"
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
                 />
               </div>
 
@@ -233,7 +233,7 @@ export const PublicFanCapture: React.FC = () => {
                   value={comoConocio}
                   onChange={(e) => setComoConocio(e.target.value)}
                   placeholder="Ej: Directo / Instagram"
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
                 />
               </div>
             </div>
@@ -246,7 +246,7 @@ export const PublicFanCapture: React.FC = () => {
                   required
                   checked={consentimientoRGPD}
                   onChange={(e) => setConsentimientoRGPD(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-[var(--acc)] focus:ring-offset-neutral-900"
+                  className="mt-0.5 w-4 h-4 rounded bg-[var(--sunken)] text-[var(--acc)] focus:ring-[var(--acc)] focus:ring-offset-neutral-900"
                 />
                 <span>
                   Acepto recibir novedades, lanzamientos y fechas de conciertos

@@ -49,7 +49,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
           {videos.map((vid) => (
             <div
               key={vid.id}
-              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--sunken)] transition-colors"
+              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--alert)]/10 text-[var(--alert)] flex items-center justify-center flex-shrink-0">

@@ -495,7 +495,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || "Buscar en Google"})`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)] text-[var(--ok)] hover:bg-[var(--ok)]/90 transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)]/90 transition-colors shadow-2xs group cursor-pointer"
             >
               <CalendarCheck className="w-3 h-3 text-[var(--ok)] shrink-0" />
               <span>

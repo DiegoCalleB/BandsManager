@@ -50,7 +50,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
 
       {/* Cifras Clave de Impacto */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
             <TrendingUp className="w-3.5 h-3.5 text-[var(--ok)]" /> Oyentes Mensuales Spotify
           </label>
@@ -63,7 +63,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           />
         </div>
 
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
             <Radio className="w-3.5 h-3.5 text-[var(--acc)]" /> Conciertos Realizados
           </label>
@@ -76,7 +76,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           />
         </div>
 
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
             <Users className="w-3.5 h-3.5 text-[var(--alert)]" /> Comunidad / Seguidores
           </label>
@@ -98,7 +98,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           value={festivalesDestacados}
           onChange={(e) => setFestivalesDestacados(e.target.value)}
           placeholder="Ej. Sonorama Ribera 2024, Sala Sol (Madrid), Finalistas Villa de Madrid, Monkey Week..."
-          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
         />
       </div>
 
@@ -109,7 +109,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
         {pressQuotes.length > 0 && (
           <div className="space-y-2">
             {pressQuotes.map((q) => (
-              <div key={q.id} className="flex items-start justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] text-xs">
+              <div key={q.id} className="flex items-start justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-xs">
                 <div>
                   <p className="text-[var(--ink)] italic mb-1">"{q.texto}"</p>
                   <span className="text-[var(--acc)] font-semibold">— {q.medio}</span>

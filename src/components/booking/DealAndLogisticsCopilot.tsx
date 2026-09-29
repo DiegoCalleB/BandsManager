@@ -222,7 +222,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
         {/* Inputs de simulación */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] ">
+          <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
             <select
               value={dealType}
@@ -235,7 +235,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             </select>
           </div>
 
-          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] ">
+          <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">
               {dealType === 'cache' ? 'Caché Fijo (€)' : 'Precio Entrada (€)'}
             </label>
@@ -251,7 +251,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             />
           </div>
 
-          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] ">
+          <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
             <input
               type="number"
@@ -261,7 +261,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             />
           </div>
 
-          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] ">
+          <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
             <input
               type="number"
@@ -315,7 +315,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         </div>
 
         {/* Diagnóstico Táctico */}
-        <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
+        <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-2">
           <div className="flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
             <div>
@@ -368,7 +368,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Tarjeta Roadbook */}
-          <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2 flex flex-col justify-between">
+          <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-2 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
@@ -394,7 +394,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           {/* Tarjeta Contrato */}
-          <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2 flex flex-col justify-between">
+          <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-2 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">

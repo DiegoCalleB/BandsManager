@@ -145,9 +145,9 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
           )}
 
           <div className="flex flex-col gap-2.5">
-            <label className="w-full p-3 bg-[var(--bg)] hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer">
+            <label className="w-full p-3 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-[var(--sunken)] text-[var(--acc)] rounded-[var(--r-s)]">
+                <div className="p-2 bg-[var(--surface)] text-[var(--acc)] rounded-[var(--r-s)]">
                   {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
                 </div>
                 <div>

@@ -170,7 +170,7 @@ export function AddLeadModal({
                     nombre_sala: e.target.value,
                   }))
                 }
-                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
               />
             </div>
 
@@ -204,7 +204,7 @@ export function AddLeadModal({
                       ciudad: e.target.value,
                     }))
                   }
-                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
                 />
               </div>
 
@@ -264,7 +264,7 @@ export function AddLeadModal({
                       email_contacto: e.target.value,
                     }))
                   }
-                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
                 />
               </div>
 
@@ -292,7 +292,7 @@ export function AddLeadModal({
             {/* Collapsible Advanced Section */}
             <div
               className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
-                'bg-[var(--surface)] '
+                'bg-[var(--sunken)] '
               }`}
             >
               <button
@@ -326,7 +326,7 @@ export function AddLeadModal({
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
                         </button>
-                        <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all ">
+                        <label className="cursor-pointer px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all ">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
                           <input
@@ -349,7 +349,7 @@ export function AddLeadModal({
                     </div>
 
                     {newLeadData.imagen_url ? (
-                      <div className="flex items-center gap-3 p-2 bg-[var(--sunken)] rounded-[var(--r-m)] ">
+                      <div className="flex items-center gap-3 p-2 bg-[var(--surface)] rounded-[var(--r-m)] ">
                         <img
                           src={newLeadData.imagen_url}
                           alt="Logo"
@@ -376,7 +376,7 @@ export function AddLeadModal({
                             className={`w-7 h-7 rounded-[var(--r-m)] text-xs flex items-center justify-center transition-all cursor-pointer ${
                               newLeadData.icono === emoji
                                 ? 'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105 shadow-xs'
-                                : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                                : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
                             }`}
                           >
                             {emoji}
@@ -396,7 +396,7 @@ export function AddLeadModal({
                         value={newLeadData.direccion || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, direccion: e.target.value }))}
                         className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--sunken)] text-[var(--ink)] '
+                          'bg-[var(--surface)] text-[var(--ink)] '
                         }`}
                       />
                     </div>
@@ -408,7 +408,7 @@ export function AddLeadModal({
                         value={newLeadData.region}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, region: e.target.value }))}
                         className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--sunken)] text-[var(--ink)] '
+                          'bg-[var(--surface)] text-[var(--ink)] '
                         }`}
                       />
                     </div>
@@ -424,7 +424,7 @@ export function AddLeadModal({
                         value={newLeadData.email_secundario || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, email_secundario: e.target.value }))}
                         className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--sunken)] text-[var(--ink)] '
+                          'bg-[var(--surface)] text-[var(--ink)] '
                         }`}
                       />
                     </div>
@@ -443,7 +443,7 @@ export function AddLeadModal({
                           }));
                         }}
                         className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--sunken)] text-[var(--ink)] '
+                          'bg-[var(--surface)] text-[var(--ink)] '
                         }`}
                       />
                     </div>
@@ -458,7 +458,7 @@ export function AddLeadModal({
                       value={newLeadData.pitch_generado}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, pitch_generado: e.target.value }))}
                       className={`w-full rounded-[var(--r-m)] p-2.5 text-xs focus:outline-none ${
-                        'bg-[var(--sunken)] text-[var(--ink)] '
+                        'bg-[var(--surface)] text-[var(--ink)] '
                       }`}
                     />
                   </div>
@@ -472,7 +472,7 @@ export function AddLeadModal({
                       value={newLeadData.notas}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, notas: e.target.value }))}
                       className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                        'bg-[var(--sunken)] text-[var(--ink)] '
+                        'bg-[var(--surface)] text-[var(--ink)] '
                       }`}
                     />
                   </div>
@@ -485,7 +485,7 @@ export function AddLeadModal({
               <button
                 type="button"
                 onClick={onClose}
-                className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] transition-colors cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
+                className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
               >
                 Cancelar
               </button>

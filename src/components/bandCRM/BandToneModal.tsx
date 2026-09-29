@@ -1076,7 +1076,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       }}
                                       placeholder="🔒 + añadir regla manual (protegida)..."
                                       disabled={savingManual}
-                                      className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
+                                      className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                     />
                                     <button
                                       onClick={() =>
@@ -1256,7 +1256,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                     }}
                                     placeholder="🔒 + añadir regla manual (protegida)..."
                                     disabled={savingManual}
-                                    className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
+                                    className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                   />
                                   <button
                                     onClick={() =>

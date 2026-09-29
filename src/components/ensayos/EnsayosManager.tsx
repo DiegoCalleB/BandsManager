@@ -232,7 +232,7 @@ export function EnsayosManager({
                 <select
                   value={currentRehearsal?.id || ""}
                   onChange={(e) => setSelectedRehearsalId(e.target.value)}
-                  className="appearance-none bg-[var(--surface)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover:focus:outline-none cursor-pointer"
+                  className="appearance-none bg-[var(--sunken)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover:focus:outline-none cursor-pointer"
                 >
                   {sortedRehearsals.map((r) => (
                     <option key={r.id} value={r.id}>
@@ -325,7 +325,7 @@ export function EnsayosManager({
         </div>
 
         {/* Master Navigation Tabs - 100% Mobile Responsive */}
-        <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--surface)] rounded-[var(--r-l)]">
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--sunken)] rounded-[var(--r-l)]">
           <button
             onClick={() => setActiveTab("orden_del_dia")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${

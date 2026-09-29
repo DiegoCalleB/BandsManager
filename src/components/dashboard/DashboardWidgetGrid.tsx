@@ -799,7 +799,7 @@ export function DashboardWidgetGrid({
  así que el flex la aplastaba a ~15px y la píldora "Todos" salía cortada. shrink-0
  saca la fila del cálculo de encogimiento por completo, sin depender de qué eje se
  compute como auto. */}
-            <div className="p-4 bg-[var(--surface)] flex gap-2 overflow-x-auto no-scrollbar shrink-0">
+            <div className="p-4 bg-[var(--sunken)] flex gap-2 overflow-x-auto no-scrollbar shrink-0">
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -826,7 +826,7 @@ export function DashboardWidgetGrid({
                 return (
                   <div
                     key={item.type}
-                    className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  transition-all flex items-center justify-between gap-4"
+                    className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  transition-all flex items-center justify-between gap-4"
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -848,7 +848,7 @@ export function DashboardWidgetGrid({
                       disabled={isAlreadyAdded}
                       className={`px-3.5 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold transition-all shrink-0 flex items-center gap-1 ${
                         isAlreadyAdded
-                          ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-default"
+                          ? "bg-[var(--surface)] text-[var(--ink-2)] cursor-default"
                           : "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-95"
                       }`}
                     >
@@ -867,7 +867,7 @@ export function DashboardWidgetGrid({
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-[var(--surface)] text-right">
+            <div className="p-4 bg-[var(--sunken)] text-right">
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}

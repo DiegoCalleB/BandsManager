@@ -2038,7 +2038,7 @@ export default function Chatbot({
                                                     [audioKey]: { ...prev[audioKey], selectedId: e.target.value },
                                                   }))
                                                 }
-                                                className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                                                className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                                               >
                                                 <option value="">— Selecciona una canción —</option>
                                                 {songPicker[audioKey].songs.map((s) => (
@@ -2158,7 +2158,7 @@ export default function Chatbot({
                                                     [audioKey]: { ...prev[audioKey], selectedId: e.target.value },
                                                   }))
                                                 }
-                                                className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                                                className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                                               >
                                                 <option value="">— Selecciona una canción —</option>
                                                 {songPicker[audioKey].songs.map((s) => (
@@ -2296,7 +2296,7 @@ export default function Chatbot({
               </button>
             </div>
 
-            <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--bg)] -neutral-200/60'}`}>
+            <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)] -neutral-200/60'}`}>
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-sans text-[var(--ink-2)]">Estado</span>
                 {activeRun.status === 'queued' && (
@@ -2633,7 +2633,7 @@ export default function Chatbot({
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
-          className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-all font-sans resize-none max-h-28 min-h-[38px] ${'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]'}`}
+          className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-all font-sans resize-none max-h-28 min-h-[38px] ${'bg-[var(--sunken)] text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]'}`}
         />
         <button
           id="chatbot-mic-btn"

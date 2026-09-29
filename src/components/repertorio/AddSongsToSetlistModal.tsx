@@ -120,7 +120,7 @@ export function AddSongsToSetlistModal({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar por título o tonalidad..."
-                className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
               />
             </div>
 
@@ -128,7 +128,7 @@ export function AddSongsToSetlistModal({
               <select
                 value={albumFilter}
                 onChange={(e) => setAlbumFilter(e.target.value)}
-                className={`text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${"bg-[var(--surface)] text-[var(--acc)]"}`}
+                className={`text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${"bg-[var(--sunken)] text-[var(--acc)]"}`}
               >
                 {albumsList.map((alb) => (
                   <option key={alb} value={alb}>
@@ -202,7 +202,7 @@ export function AddSongsToSetlistModal({
                     <div
                       className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
                         isSelected
-                          ? "bg-[var(--surface)] text-[var(--ink)] scale-105"
+                          ? "bg-[var(--sunken)] text-[var(--ink)] scale-105"
                           : "text-[var(--ink-2)]"
                       }`}
                     >

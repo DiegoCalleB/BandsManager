@@ -222,14 +222,14 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 id="btn-add-cancel"
                 type="button"
                 onClick={onClose}
-                className="px-2 py-1 bg-[var(--surface)] text-[var(--ink-2)] font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer"
+                className="px-2 py-1 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 id="btn-add-submit"
                 type="submit"
-                className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-sans font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer"
+                className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] font-sans font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer"
               >
                 Confirmar Registro
               </button>

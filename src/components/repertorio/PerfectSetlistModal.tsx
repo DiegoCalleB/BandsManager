@@ -362,7 +362,7 @@ export function PerfectSetlistModal({
                   return (
                     <div
                       key={idx}
-                      className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ? 'bg-[var(--surface)] opacity-50' : 'bg-[var(--surface)]/80'}`}
+                      className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ? 'bg-[var(--sunken)] opacity-50' : 'bg-[var(--surface)]/80'}`}
                     >
                       <span className="text-sm mt-0.5">{icon}</span>
                       <div className="flex-1">

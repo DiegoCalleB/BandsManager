@@ -752,7 +752,7 @@ export default function Finanzas({
                         type="number"
                         value={editingGasolina}
                         onChange={(e) => setEditingGasolina(e.target.value)}
-                        className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
                       />
                     </div>
                     <div>
@@ -763,7 +763,7 @@ export default function Finanzas({
                         type="number"
                         value={editingDietas}
                         onChange={(e) => setEditingDietas(e.target.value)}
-                        className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
                       />
                     </div>
                   </div>
@@ -777,7 +777,7 @@ export default function Finanzas({
                         type="number"
                         value={editingAlquiler}
                         onChange={(e) => setEditingAlquiler(e.target.value)}
-                        className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
                       />
                     </div>
                     <div>
@@ -788,7 +788,7 @@ export default function Finanzas({
                         type="number"
                         value={editingAlojamiento}
                         onChange={(e) => setEditingAlojamiento(e.target.value)}
-                        className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
                       />
                     </div>
                   </div>
@@ -801,7 +801,7 @@ export default function Finanzas({
                       type="number"
                       value={editingOtros}
                       onChange={(e) => setEditingOtros(e.target.value)}
-                      className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                      className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
                     />
                   </div>
 
@@ -814,12 +814,12 @@ export default function Finanzas({
                       value={editingNotasGastos}
                       onChange={(e) => setEditingNotasGastos(e.target.value)}
                       placeholder="Detalles de facturas, tickets guardados..."
-                      className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)]"
+                      className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)]"
                     />
                   </div>
 
                   {/* Total calculation preview */}
-                  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between font-sans">
+                  <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] flex items-center justify-between font-sans">
                     <span className="text-[var(--ink-2)] font-bold">
                       TOTAL GASTOS CALCULADOS:
                     </span>
@@ -838,7 +838,7 @@ export default function Finanzas({
                 <div className="pt-2 flex justify-end gap-2">
                   <button
                     onClick={() => setEditingConcertId(null)}
-                    className="px-4 py-2 bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold rounded-[var(--r-m)]"
+                    className="px-4 py-2 bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-bold rounded-[var(--r-m)]"
                   >
                     Cancelar
                   </button>
@@ -887,7 +887,7 @@ export default function Finanzas({
                   placeholder="Buscar transacciones por concepto..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ? "pr-8" : "pr-3"} py-1.5 text-xs focus:outline-none font-sans transition-all ${"bg-[var(--surface)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50 placeholder:text-[var(--ink-2)]"}`}
+                  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ? "pr-8" : "pr-3"} py-1.5 text-xs focus:outline-none font-sans transition-all ${"bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50 placeholder:text-[var(--ink-2)]"}`}
                 />
                 {searchTerm && (
                   <button
@@ -907,7 +907,7 @@ export default function Finanzas({
                 <select
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value as any)}
-                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                 >
                   <option value="todos">Tipo: Todos</option>
                   <option value="ingreso">Ingreso (+)</option>
@@ -918,7 +918,7 @@ export default function Finanzas({
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                 >
                   <option value="todos">Categoría: Todas</option>
                   {categories.map((cat) => (
@@ -932,7 +932,7 @@ export default function Finanzas({
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as any)}
-                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                 >
                   <option value="todos">Estado: Todos</option>
                   <option value="pendiente">Pendiente</option>
@@ -1172,7 +1172,7 @@ export default function Finanzas({
 
             <div className="space-y-4">
               <div
-                className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--bg)]"} space-y-3 text-xs leading-relaxed`}
+                className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--surface)]"} space-y-3 text-xs leading-relaxed`}
               >
                 <h4
                   className={`font-sans font-bold ${textTitle}`}

@@ -787,7 +787,7 @@ export function ExcelImportModal({
           <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 text-xs">
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 {step > 1 ? <Check className="w-3 h-3" /> : "1"}
               </div>
@@ -804,7 +804,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 {step > 2 ? <Check className="w-3 h-3" /> : "2"}
               </div>
@@ -1543,7 +1543,7 @@ export function ExcelImportModal({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Cambiar archivo</span>
@@ -1555,7 +1555,7 @@ export function ExcelImportModal({
                   type="button"
                   disabled={isImporting}
                   onClick={() => setStep(2)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer disabled:opacity-50"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Revisar mapeo</span>

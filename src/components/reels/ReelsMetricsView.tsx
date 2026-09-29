@@ -1818,7 +1818,7 @@ export function ReelsMetricsView({
                           className="w-full h-full object-cover"
                           referrerPolicy="no-referrer"
                         />
-                        <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[8px] font-sans text-[var(--ink)] flex items-center gap-1">
+                        <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-[var(--surface)] text-[8px] font-sans text-[var(--ink)] flex items-center gap-1">
                           <Eye className="w-2.5 h-2.5 text-[var(--ok)]" />{" "}
                           {item.views ? item.views.toLocaleString() : "0"}
                         </span>
@@ -1897,7 +1897,7 @@ export function ReelsMetricsView({
                     required
                     value={metricDate}
                     onChange={(e) => setMetricDate(e.target.value)}
-                    className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
+                    className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
                   />
                 </div>
 
@@ -1912,7 +1912,7 @@ export function ReelsMetricsView({
                       placeholder="1385"
                       value={metricInsta}
                       onChange={(e) => setMetricInsta(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
+                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
                     />
                   </div>
 
@@ -1926,7 +1926,7 @@ export function ReelsMetricsView({
                       placeholder="253"
                       value={metricTiktok}
                       onChange={(e) => setMetricTiktok(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
+                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
                     />
                   </div>
 
@@ -1940,7 +1940,7 @@ export function ReelsMetricsView({
                       placeholder="42"
                       value={metricYoutube}
                       onChange={(e) => setMetricYoutube(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
+                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
                     />
                   </div>
 
@@ -1954,7 +1954,7 @@ export function ReelsMetricsView({
                       placeholder="150"
                       value={metricSpotify}
                       onChange={(e) => setMetricSpotify(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
+                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
                     />
                   </div>
                 </div>
@@ -1984,7 +1984,7 @@ export function ReelsMetricsView({
                           onChange={(e) =>
                             setMetricSpotifyFollowers(e.target.value)
                           }
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--sunken)] text-[var(--ink)]"
+                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
                         />
                       </div>
                       <div>
@@ -1998,7 +1998,7 @@ export function ReelsMetricsView({
                           onChange={(e) =>
                             setMetricSpotifyPopularity(e.target.value)
                           }
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--sunken)] text-[var(--ink)]"
+                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
                         />
                       </div>
                       <div>
@@ -2010,7 +2010,7 @@ export function ReelsMetricsView({
                           placeholder="14500"
                           value={metricYtViews}
                           onChange={(e) => setMetricYtViews(e.target.value)}
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--sunken)] text-[var(--ink)]"
+                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
                         />
                       </div>
                       <div>
@@ -2022,7 +2022,7 @@ export function ReelsMetricsView({
                           placeholder="1200"
                           value={metricTkLikes}
                           onChange={(e) => setMetricTkLikes(e.target.value)}
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--sunken)] text-[var(--ink)]"
+                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
                         />
                       </div>
                     </div>
@@ -2038,7 +2038,7 @@ export function ReelsMetricsView({
                     placeholder="Ej. Lanzamiento single / Concierto Apolo"
                     value={metricNotes}
                     onChange={(e) => setMetricNotes(e.target.value)}
-                    className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
+                    className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
                   />
                 </div>
 
@@ -2541,7 +2541,7 @@ export function ReelsMetricsView({
 
               {/* Step by step guide according to Meta Insights Documentation */}
               <div
-                className={`p-4 rounded-[var(--r-m)] space-y-2 text-xs ${"bg-[var(--bg)] text-[var(--ink-2)]"}`}
+                className={`p-4 rounded-[var(--r-m)] space-y-2 text-xs ${"bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 <div className="font-bold font-sans text-[11px] text-[var(--ink-2)] flex items-center gap-1.5">
                   <span>📘</span> Pasos según la documentación oficial de Meta

@@ -73,7 +73,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             value={fanCallToAction}
             onChange={(e) => setFanCallToAction(e.target.value)}
             placeholder="Ej. ¡Únete al club y descarga nuestra maqueta inédita!"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
           />
         </div>
 
@@ -84,7 +84,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             value={fanWelcomeMessage}
             onChange={(e) => setFanWelcomeMessage(e.target.value)}
             placeholder="Ej. ¡Gracias por apoyarnos en directo! Aquí tienes tu regalo."
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
           />
         </div>
       </div>
@@ -171,7 +171,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 value={fanRewardLink}
                 onChange={(e) => setFanRewardLink(e.target.value)}
                 placeholder="O pega un enlace de descarga externo (Dropbox, Drive, Mega...)"
-                className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+                className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
               />
             </div>
           )}

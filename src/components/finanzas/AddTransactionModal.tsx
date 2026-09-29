@@ -106,7 +106,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
               <select
                 value={categoria}
                 onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
-                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none"
+                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
               >
                 <option value="concierto">Concierto / Caché</option>
                 <option value="merchandising">Merchandising</option>
@@ -127,7 +127,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 value={concepto}
                 onChange={(e) => setConcepto(e.target.value)}
                 placeholder="Ej. Caché Concierto Wurlitzer"
-                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none"
+                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
               />
             </div>
 
@@ -141,7 +141,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                   value={importe}
                   onChange={(e) => setImporte(e.target.value)}
                   placeholder="0.00"
-                  className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none"
+                  className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
                 />
               </div>
               <div>
@@ -151,7 +151,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                   required
                   value={fecha}
                   onChange={(e) => setFecha(e.target.value)}
-                  className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none"
+                  className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
                 />
               </div>
             </div>

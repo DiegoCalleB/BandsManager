@@ -397,7 +397,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   return (
                     <div
                       key={u.id}
-                      className={`p-4 rounded-[var(--r-m)] transition-all ${"bg-[var(--bg)]  hover:-neutral-300"}`}
+                      className={`p-4 rounded-[var(--r-m)] transition-all ${"bg-[var(--sunken)]  hover:-neutral-300"}`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
@@ -521,7 +521,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                               setChangePasswordValue(e.target.value)
                             }
                             placeholder="Nueva contraseña secreta..."
-                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${"bg-[var(--surface)]"}`}
+                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${"bg-[var(--sunken)]"}`}
                           />
                           <button
                             type="button"
@@ -551,7 +551,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newUsername}
                       onChange={(e) => setNewUsername(e.target.value)}
                       placeholder="Ej: pablo, carlos, ana"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                       required
                     />
                   </div>
@@ -565,7 +565,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
                       placeholder="Ej: pablo@gmail.com"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                       required
                     />
                   </div>
@@ -581,7 +581,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="Ej: Pablo (Violín / Sintetizador)"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                       required
                     />
                   </div>
@@ -595,7 +595,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Contraseña del usuario"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                       required
                     />
                   </div>
@@ -608,7 +608,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <select
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                   >
                     <option value="member">Miembro de Banda (Músico)</option>
                     <option value="leader">Admin / Dirección de Banda</option>
@@ -625,7 +625,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     value={newInstrument}
                     onChange={(e) => setNewInstrument(e.target.value)}
                     placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                   />
                   <p className="text-[10px] text-[var(--ink-2)]">
                     Usa uno de los nombres sugeridos (Voz, Batería, Bajo,
@@ -695,7 +695,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     value={assocEmail}
                     onChange={(e) => setAssocEmail(e.target.value)}
                     placeholder="Introduce su email exacto..."
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                     required
                   />
                 </div>
@@ -707,7 +707,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <select
                     value={assocRole}
                     onChange={(e) => setAssocRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                   >
                     <option value="member">Miembro de Banda (Músico)</option>
                     <option value="leader">Admin / Dirección de Banda</option>
@@ -724,7 +724,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     value={assocInstrument}
                     onChange={(e) => setAssocInstrument(e.target.value)}
                     placeholder="Ej: Guitarra, Bajista, Manager, Coros"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                   />
                 </div>
 

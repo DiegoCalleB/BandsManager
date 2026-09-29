@@ -269,7 +269,7 @@ export function MemberNotesModal({
           <div className="flex-1 overflow-y-auto pr-1 space-y-4 py-1">
             {/* General Repertoire Note */}
             <div
-              className={`p-3.5 rounded-[var(--r-m)] ${"bg-[var(--surface)]"}`}
+              className={`p-3.5 rounded-[var(--r-m)] ${"bg-[var(--sunken)]"}`}
             >
               <label
                 className={`block text-xs font-bold font-sans mb-1.5 ${"text-[var(--ink-2)]"}`}
@@ -311,14 +311,14 @@ export function MemberNotesModal({
                     placeholder="Nombre (ej. Músico Invitado)"
                     value={newMemberName}
                     onChange={(e) => setNewMemberName(e.target.value)}
-                    className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${"bg-[var(--surface)]"}`}
+                    className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${"bg-[var(--sunken)]"}`}
                   />
                   <input
                     type="text"
                     placeholder="Instrumento (ej. Teclados)"
                     value={newMemberInstrument}
                     onChange={(e) => setNewMemberInstrument(e.target.value)}
-                    className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${"bg-[var(--surface)]"}`}
+                    className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${"bg-[var(--sunken)]"}`}
                   />
                   <div className="flex items-center gap-1.5">
                     <button
@@ -409,7 +409,7 @@ export function MemberNotesModal({
                         handleNoteChange(member.name, e.target.value)
                       }
                       placeholder={`Notas específicas para ${member.name} (${member.instrument})... ej. Entrada en compás 8, solo con sordina, cambio de afinación...`}
-                      className="w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors bg-[var(--surface)] text-[var(--ink)]"
+                      className="w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors bg-[var(--sunken)] text-[var(--ink)]"
                     />
                   </div>
                 );
@@ -432,7 +432,7 @@ export function MemberNotesModal({
               className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer ${
                 savedSuccess
                   ? "bg-[var(--ok)] text-[var(--ink)]"
-                  : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)]"
+                  : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"
               }`}
             >
               {savedSuccess ? (

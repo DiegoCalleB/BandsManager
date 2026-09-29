@@ -686,7 +686,7 @@ export function BulkAlbumAudioUploaderModal({
                   value={currentAlbumName}
                   onChange={(e) => setCurrentAlbumName(e.target.value)}
                   placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
-                  className="w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition bg-[var(--surface)] text-[var(--ink)]"
+                  className="w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition bg-[var(--sunken)] text-[var(--ink)]"
                 />
               </div>
 
@@ -866,7 +866,7 @@ export function BulkAlbumAudioUploaderModal({
                                 onChange={(e) =>
                                   handleTitleChange(idx, e.target.value)
                                 }
-                                className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full bg-[var(--surface)] text-[var(--ink)]`}
+                                className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full bg-[var(--sunken)] text-[var(--ink)]`}
                                 placeholder="Título de la canción"
                               />
                             </div>
@@ -894,7 +894,7 @@ export function BulkAlbumAudioUploaderModal({
                             }
                             className={`w-full text-xs font-sans rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
                               item.matchedSongId
-                                ? "bg-[var(--surface)] text-[var(--ink)] font-bold"
+                                ? "bg-[var(--sunken)] text-[var(--ink)] font-bold"
                                 : "bg-[var(--sunken)] text-[var(--ink-2)]"
                             }`}
                           >

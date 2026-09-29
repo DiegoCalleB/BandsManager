@@ -50,19 +50,22 @@ async function cajasFantasma(page: Page) {
       }
       return base;
     };
+    const campos: Element[] = Array.from(document.body.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=hidden]), select, textarea'));
     const fuera: { tag: string; clase: string; texto: string; caja: string; fondoPadre: string }[] = [];
     for (const el of Array.from(document.body.querySelectorAll('*'))) {
+      const esCampo = campos.includes(el);
       const cs = getComputedStyle(el);
       const bg = parse(cs.backgroundColor);
-      if (!bg || bg[3] < 0.5) continue;
+      if (!bg || bg[3] < 0.5) continue; // un campo transparente se apoya en su envoltorio: no es fantasma
       const r = el.getBoundingClientRect();
-      if (r.width < 64 || r.height < 28 || r.bottom < 0 || r.top > innerHeight) continue;
+      if (r.width < (esCampo ? 40 : 64) || r.height < (esCampo ? 20 : 28) || r.bottom < 0 || r.top > innerHeight) continue;
       if (cs.visibility === 'hidden' || cs.display === 'none') continue;
       const radio = parseFloat(cs.borderTopLeftRadius);
-      if (!(radio >= 8)) continue;
+      if (!esCampo && !(radio >= 8)) continue;
       const borde = parseFloat(cs.borderTopWidth) > 0 && parse(cs.borderTopColor)?.[3];
       if (borde || cs.boxShadow !== 'none') continue;
-      if (!((el as HTMLElement).innerText || '').trim()) continue;
+      if (!esCampo && !((el as HTMLElement).innerText || '').trim()) continue;
+      if (esCampo && (cs.opacity === '0' || r.width === 0)) continue;
       const propio = fondoEfectivo(el);
       const padre = fondoEfectivo(el.parentElement);
       const dif = Math.max(...propio.map((v, i) => Math.abs(v - padre[i])));
@@ -70,7 +73,7 @@ async function cajasFantasma(page: Page) {
         fuera.push({
           tag: el.tagName.toLowerCase(),
           clase: (el.getAttribute('class') || '').slice(0, 110),
-          texto: ((el as HTMLElement).innerText || '').trim().slice(0, 40),
+          texto: esCampo ? `[campo] ${(el as HTMLInputElement).placeholder || (el as HTMLInputElement).value || ''}` : ((el as HTMLElement).innerText || '').trim().slice(0, 40),
           fondoPadre: (() => { for (let e = el.parentElement; e; e = e.parentElement) { const c = getComputedStyle(e).backgroundColor; if (parse(c)?.[3]) return `${e.tagName.toLowerCase()}.${(e.getAttribute('class') || '').slice(0, 60)} ${c}`; } return 'ninguno'; })(),
           caja: `${Math.round(r.width)}x${Math.round(r.height)}@${Math.round(r.left)},${Math.round(r.top)}`,
         });
@@ -123,3 +126,56 @@ for (const tema of TEMAS) {
   });
 }
 
+
+/**
+ * MODALES — las superficies donde más se rompió el apilado de luminancia al
+ * quitar los bordes (modal → tarjeta → campo son tres escalones seguidos).
+ * Cada opener llega hasta el modal por la interfaz, como lo haría un usuario.
+ */
+const MODALES: Record<string, (p: Page) => Promise<void>> = {
+  'evento-concierto': async (p) => {
+    await irAEscritorio(p, 'calendario');
+    await p.getByRole('button', { name: /\+ Evento/ }).first().click();
+    await p.getByRole('button', { name: /\+ Concierto/ }).first().click();
+  },
+  'evento-ensayo': async (p) => {
+    await irAEscritorio(p, 'calendario');
+    await p.getByRole('button', { name: /\+ Evento/ }).first().click();
+    await p.getByRole('button', { name: /\+ Ensayo/ }).first().click();
+  },
+  'ficha-evento': async (p) => {
+    await irAEscritorio(p, 'calendario');
+    await p.getByText(/Posible Concierto/).first().click();
+  },
+  'escenario-nuevo': async (p) => {
+    await irAEscritorio(p, 'booking');
+    await p.getByRole('button', { name: /Escenario/ }).first().click();
+  },
+  'cancion-nueva': async (p) => {
+    await irAEscritorio(p, 'discografia');
+    await p.locator('#btn-add-song').click();
+  },
+  perfil: async (p) => {
+    await p.getByText('Diego', { exact: true }).first().click();
+  },
+  'guia-rapida': async (p) => {
+    await irAEscritorio(p, 'calendario');
+    await p.getByRole('button', { name: /Guía rápida/ }).first().click();
+  },
+};
+
+for (const tema of TEMAS) {
+  test.describe(`modales — ${tema}`, () => {
+    test.use({ viewport: ESCRITORIO });
+    for (const [nombre, abrir] of Object.entries(MODALES)) {
+      test(nombre, async ({ page }) => {
+        await abrirApp(page, false);
+        await aplicarTema(page, tema);
+        await abrir(page);
+        await page.waitForTimeout(700);
+        if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m-${tema}-${nombre}.png` });
+        comprobar(tema, `modal-${nombre}`, await cajasFantasma(page));
+      });
+    }
+  });
+}

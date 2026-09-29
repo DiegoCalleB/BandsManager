@@ -162,7 +162,7 @@ Firmado en conformidad por ambas partes.`;
           className="relative w-full max-w-4xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
         >
           {/* HEADER DEL MODAL */}
-          <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3">
+          <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[var(--sunken)] flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0">
                 <FileText className="w-5 h-5 text-[var(--acc)]" />
@@ -255,7 +255,7 @@ Firmado en conformidad por ambas partes.`;
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -264,7 +264,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -273,7 +273,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -282,13 +282,13 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización de la Hoja de Ruta Pro */}
-                <div className="bg-[var(--surface)] p-5 rounded-[var(--r-l)] space-y-4 font-sans print:bg-[var(--surface)] print:text-[var(--ink)] print:border-none">
+                <div className="bg-[var(--sunken)] p-5 rounded-[var(--r-l)] space-y-4 font-sans print:bg-[var(--surface)] print:text-[var(--ink)] print:border-none">
                   {/* Cabecera del documento */}
                   <div className="flex items-start justify-between border-b border-[var(--hair)] pb-3">
                     <div>
@@ -393,7 +393,7 @@ Firmado en conformidad por ambas partes.`;
                     <select
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     >
                       <option value="taquilla">Taquilla (%)</option>
                       <option value="cache">Caché Fijo (€)</option>
@@ -412,7 +412,7 @@ Firmado en conformidad por ambas partes.`;
                         if (dealType === 'cache') setCacheAmount(val);
                         else setTicketPrice(val);
                       }}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -421,7 +421,7 @@ Firmado en conformidad por ambas partes.`;
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -430,13 +430,13 @@ Firmado en conformidad por ambas partes.`;
                       type="number"
                       value={venueCapacity}
                       disabled
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización del Contrato */}
-                <div className="bg-[var(--surface)] p-5 rounded-[var(--r-l)] space-y-3 font-mono text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
+                <div className="bg-[var(--sunken)] p-5 rounded-[var(--r-l)] space-y-3 font-mono text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
                   {contractText}
                 </div>
               </div>
@@ -445,7 +445,7 @@ Firmado en conformidad por ambas partes.`;
             {/* PESTAÑA 3: ENLACE WEB DIGITAL */}
             {activeTab === 'weblink' && (
               <div className="space-y-4">
-                <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] space-y-3 text-center sm:text-left">
+                <div className="p-4 bg-[var(--sunken)] rounded-[var(--r-l)] space-y-3 text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row items-center gap-4">
                     <div className="w-14 h-14 rounded-[var(--r-l)] bg-[var(--acc)]  flex items-center justify-center shrink-0">
                       <Share2 className="w-7 h-7 text-[var(--ink)]" />
@@ -464,7 +464,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       readOnly
                       value={`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`}
-                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-3 py-2 font-mono"
+                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-3 py-2 font-mono"
                     />
                     <button
                       type="button"
@@ -488,7 +488,7 @@ Firmado en conformidad por ambas partes.`;
           </div>
 
           {/* FOOTER DE ACCIONES */}
-          <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)] flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 border-t border-[var(--hair)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs text-[var(--ink-2)]">
               <span className="font-mono text-[11px] text-[var(--acc)] font-bold">
                 {currentLead.nombre_sala} • {currentLead.ciudad}
@@ -522,7 +522,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 title="Imprimir documento o guardar como PDF"
               >
                 <Printer className="w-3.5 h-3.5 text-[var(--ink-2)]" />

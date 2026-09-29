@@ -190,7 +190,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-fadeIn">
-        <div className="w-full max-w-lg bg-[var(--bg)] rounded-[var(--r-l)] p-5 sm:p-6 text-[var(--ink)] space-y-5 my-auto max-h-[92vh] overflow-y-auto">
+        <div className="w-full max-w-lg bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 text-[var(--ink)] space-y-5 my-auto max-h-[92vh] overflow-y-auto">
           {/* Header */}
           <div className="flex justify-between items-start800/80 pb-3">
             <div>
@@ -224,7 +224,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 type="date"
                 value={concertDate}
                 onChange={(e) => setConcertDate(e.target.value)}
-                className="w-full bg-[var(--bg)] rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:outline-none"
+                className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:outline-none"
               />
             </div>
 
@@ -238,7 +238,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 placeholder="Ej. 600"
                 value={cacheAmount}
                 onChange={(e) => setCacheAmount(e.target.value)}
-                className="w-full bg-[var(--bg)] rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:focus:outline-none"
+                className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:focus:outline-none"
               />
             </div>
           </div>
@@ -293,7 +293,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
             </div>
 
             {isLoadingData ? (
-              <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] text-center text-xs font-sans text-[var(--ink-2)]">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] text-center text-xs font-sans text-[var(--ink-2)]">
                 Calculando duraciones y repertorios óptimos...
               </div>
             ) : generateNewSetlist ? (
@@ -309,7 +309,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 </p>
               </div>
             ) : setlists.length === 0 ? (
-              <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] text-center space-y-2 text-xs font-sans text-[var(--ink-2)]">
+              <div className="p-4 rounded-[var(--r-l)] bg-[var(--sunken)] text-center space-y-2 text-xs font-sans text-[var(--ink-2)]">
                 <p>No tienes ningún setlist guardado aún.</p>
                 <button
                   type="button"

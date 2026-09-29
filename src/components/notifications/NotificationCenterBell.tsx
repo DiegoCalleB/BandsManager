@@ -247,7 +247,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="p-2.5 border-t border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between text-[11px]">
+          <div className="p-2.5 border-t border-[var(--hair)] bg-[var(--sunken)] flex items-center justify-between text-[11px]">
             {history.length > 0 ? (
               <button
                 type="button"

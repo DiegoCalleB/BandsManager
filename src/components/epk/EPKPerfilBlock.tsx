@@ -160,7 +160,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               placeholder={
                 "Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica]."
               }
-              className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
+              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
             />
             <div className="flex justify-between items-center text-[11px] font-sans text-[var(--ink-2)]">
               <span>Mínimo 80 caracteres para completar el perfil</span>
@@ -232,7 +232,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 setConfig({ ...config, dossierTextoExtra: e.target.value })
               }
               placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
-              className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed font-sans"
+              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed font-sans"
             />
             <div className="flex justify-between items-center text-[11px] font-sans text-[var(--ink-2)]">
               <span>
@@ -425,7 +425,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </p>
           </div>
           {miembros.length === 0 && (
-            <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-2)]">
+            <div className="rounded-[var(--r-m)] bg-[var(--sunken)] p-4 text-xs text-[var(--ink-2)]">
               Todavía no has añadido a nadie. Añade a los integrantes con su
               foto y descripción para que el dossier tenga cercanía.
             </div>
@@ -434,7 +434,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             {miembros.map((m, idx) => (
               <div
                 key={m.id || `miembro-${idx}-${m.nombre || ""}`}
-                className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2.5"
+                className="rounded-[var(--r-m)] bg-[var(--sunken)] p-3.5 space-y-2.5"
               >
                 <div className="flex items-start gap-3">
                   <label
@@ -560,7 +560,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       },
                     })
                   }
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
                 />
               </div>
 
@@ -580,7 +580,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       },
                     })
                   }
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
                 />
               </div>
 
@@ -600,13 +600,13 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       },
                     })
                   }
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
                 />
               </div>
             </div>
 
             {/* SITIO WEB OFICIAL PROPIO DE LA BANDA */}
-            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
                   <Globe className="w-4 h-4 text-[var(--acc)]" /> Sitio Web
@@ -694,7 +694,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                             };
                           });
                         }}
-                        className="w-full bg-[var(--surface)] focus:rounded-[var(--r-s)] px-2.5 py-1.5 text-[var(--ink)] outline-none font-sans text-[11px]"
+                        className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-s)] px-2.5 py-1.5 text-[var(--ink)] outline-none font-sans text-[11px]"
                       />
                     </div>
                   ))}

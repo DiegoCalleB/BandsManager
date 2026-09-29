@@ -339,7 +339,7 @@ export const MultiModelPitchComparatorModal: React.FC<
           </div>
 
           {/* COMPARATIVA DE COSTES ECONÓMICOS / PROYECCIÓN DE GASTO */}
-          <div className="px-4 py-3 bg-[var(--surface)] 800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="px-4 py-3 bg-[var(--sunken)] 800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Coins className="w-4 h-4 text-[var(--ok)] shrink-0" />
               <div>
@@ -358,7 +358,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               </div>
             </div>
 
-            <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-m)] self-start sm:self-auto">
+            <div className="flex items-center gap-1 bg-[var(--surface)] p-1 rounded-[var(--r-m)] self-start sm:self-auto">
               <span className="text-[10px] text-[var(--ink-2)] px-2 font-sans">
                 Escala:
               </span>
@@ -465,11 +465,11 @@ export const MultiModelPitchComparatorModal: React.FC<
                       className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
                         isSelected
                           ? "bg-[var(--surface)]/80 ring-1 ring-[var(--ok)]/40"
-                          : "bg-[var(--surface)] hover:bg-[var(--sunken)]"
+                          : "bg-[var(--sunken)] hover:bg-[var(--sunken)]"
                       }`}
                     >
                       {/* Model Header */}
-                      <div className="p-3.5800/80 flex items-center justify-between bg-[var(--sunken)] rounded-t-[var(--r-m)]">
+                      <div className="p-3.5800/80 flex items-center justify-between bg-[var(--surface)] rounded-t-[var(--r-m)]">
                         <div className="flex items-center gap-2">
                           <span className="text-lg">
                             {getProviderIcon(prop.provider)}
@@ -563,14 +563,14 @@ export const MultiModelPitchComparatorModal: React.FC<
                                     Local):
                                   </span>
                                 </div>
-                                <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
+                                <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
                                   {prop.fallbackText}
                                 </div>
                               </div>
                             )}
                           </div>
                         ) : (
-                          <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
+                          <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
                             {prop.text}
                           </div>
                         )}
@@ -702,7 +702,7 @@ export const MultiModelPitchComparatorModal: React.FC<
           </div>
 
           {/* FOOTER INFO BAR */}
-          <div className="px-5 py-3800 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
+          <div className="px-5 py-3800 bg-[var(--sunken)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
               <span>
@@ -715,7 +715,7 @@ export const MultiModelPitchComparatorModal: React.FC<
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] rounded-[var(--r-s)] text-xs cursor-pointer font-sans"
+              className="px-3 py-1 bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] rounded-[var(--r-s)] text-xs cursor-pointer font-sans"
             >
               Cerrar
             </button>

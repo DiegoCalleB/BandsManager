@@ -178,7 +178,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-[var(--r-pill)] flex items-center justify-center transition-all cursor-pointer ${
               isPlaying
                 ? 'bg-[var(--ok)] text-[var(--ink)] scale-105'
-                : 'bg-[var(--sunken)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                : 'bg-[var(--surface)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
             title={isPlaying ? 'Pausar canción' : `Reproducir ${displayTitle}`}
           >
@@ -308,7 +308,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                 ideasCount > 0
                   ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--ink)]'
-                  : 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
+                  : 'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]'
               }`}
               title="Abrir Studio de Grabación Multipista & Pistas"
             >

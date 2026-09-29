@@ -267,7 +267,7 @@ export function ExampleThreadsSection({
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
             placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
-            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
           />
 
           {mensajes.map((m, idx) => (
@@ -277,7 +277,7 @@ export function ExampleThreadsSection({
                 onChange={(e) =>
                   handleMessageChange(idx, "rol", e.target.value)
                 }
-                className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--surface)] text-[var(--ink)] shrink-0"
+                className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--sunken)] text-[var(--ink)] shrink-0"
               >
                 <option value="banda">Banda</option>
                 <option value="sala">Sala</option>
@@ -293,7 +293,7 @@ export function ExampleThreadsSection({
                     ? "Lo que escribimos nosotros..."
                     : "Lo que respondió la sala..."
                 }
-                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
               />
               {mensajes.length > 1 && (
                 <button

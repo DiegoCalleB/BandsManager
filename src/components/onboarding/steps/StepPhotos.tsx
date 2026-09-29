@@ -49,7 +49,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
         {photos.map((url, idx) => (
           <div
             key={idx}
-            className="aspect-video rounded-[var(--r-m)] bg-[var(--bg)] overflow-hidden relative group"
+            className="aspect-video rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden relative group"
           >
             <img
               src={url}
@@ -102,7 +102,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
           value={newPhotoUrl}
           onChange={(e) => setNewPhotoUrl(e.target.value)}
           placeholder="O añade una URL de imagen directa (https://...)"
-          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
         />
         <button
           type="button"

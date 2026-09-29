@@ -235,7 +235,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
         >
           {/* Header */}
           <div
-            className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${"bg-[var(--surface)]"}`}
+            className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${"bg-[var(--sunken)]"}`}
           >
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">

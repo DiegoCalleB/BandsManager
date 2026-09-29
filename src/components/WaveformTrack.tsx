@@ -396,7 +396,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
         {/* Empty DAW Track Grid Region if track audio duration is shorter than master */}
         {trackWidthPercent < 98 && (
           <div
-            className="absolute top-0 bottom-0 right-0 bg-[var(--sunken)] flex items-center justify-end px-3 pointer-events-none z-10"
+            className="absolute top-0 bottom-0 right-0 bg-[var(--surface)] flex items-center justify-end px-3 pointer-events-none z-10"
             style={{ left: `${trackWidthPercent}%` }}
           >
             <span className="text-[9px] font-sans text-[var(--ink-2)] font-semibold">

@@ -417,7 +417,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
         {fans.length === 0 ? (
           <div className="p-12 text-center bg-[var(--surface)] rounded-[var(--r-l)] space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
+            <div className="w-12 h-12 mx-auto rounded-[var(--r-pill)] bg-[var(--sunken)] flex items-center justify-center text-[var(--ink-2)]">
               <MessageCircle className="w-6 h-6" />
             </div>
             <h4 className="text-[var(--ink)] font-bold text-sm">
@@ -518,7 +518,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   <div className="flex items-center gap-1.5 shrink-0">
                     <a
                       href={`mailto:${fan.email}?subject=¡Un abrazo de ${encodeURIComponent(effectiveBandName)}!`}
-                      className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition"
+                      className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition"
                       title="Enviar Email de agradecimiento"
                     >
                       <Mail className="w-3.5 h-3.5" />
@@ -532,7 +532,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                             onDeleteFan(fan.id);
                           }
                         }}
-                        className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--surface)] hover:bg-[var(--alert)]/10 rounded-[var(--r-s)] transition opacity-60 group-hover:opacity-100"
+                        className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--sunken)] hover:bg-[var(--alert)]/10 rounded-[var(--r-s)] transition opacity-60 group-hover:opacity-100"
                         title="Eliminar Fan"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -585,7 +585,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.likes
                           ? "bg-[var(--alert)]/20 text-[var(--ink-2)] font-bold"
-                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                          : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Me gusta"
                     >
@@ -599,7 +599,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.fire
                           ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold"
-                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                          : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Fuego / Brutal"
                     >
@@ -613,7 +613,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.guitars
                           ? "bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-bold"
-                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                          : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Púa de Oro / Rock On"
                     >
@@ -627,7 +627,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.applause
                           ? "bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold"
-                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                          : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Aplausos"
                     >
@@ -651,7 +651,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                           });
                         }
                       }}
-                      className="bg-[var(--surface)] rounded-[var(--r-s)] px-2 py-0.5 text-[10px] text-[var(--acc)] font-sans outline-none cursor-pointer"
+                      className="bg-[var(--sunken)] rounded-[var(--r-s)] px-2 py-0.5 text-[10px] text-[var(--acc)] font-sans outline-none cursor-pointer"
                     >
                       <option value="fiel">Oyente Fiel</option>
                       <option value="superfan">Superfan</option>
@@ -694,7 +694,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   placeholder="Ej: ¡Nuevo single este viernes! / Concierto en Sevilla"
                   value={newPostTitle}
                   onChange={(e) => setNewPostTitle(e.target.value)}
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                 />
               </div>
 
@@ -708,7 +708,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   placeholder="Escribe las novedades, agradecimiento o anuncio exclusivo para tus seguidores..."
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
                 />
               </div>
 
@@ -716,7 +716,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowNewPostModal(false)}
-                  className="px-4 py-2 bg-[var(--surface)] text-[var(--ink-2)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--surface)] cursor-pointer"
+                  className="px-4 py-2 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--surface)] cursor-pointer"
                 >
                   Cancelar
                 </button>

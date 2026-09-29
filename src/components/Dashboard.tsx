@@ -810,7 +810,7 @@ export default function Dashboard({
                   className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
                 >
                   <div className="flex items-start gap-3.5">
-                    <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0">
+                    <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0">
                       <span className="text-lg font-sans font-black leading-none text-[var(--acc)]">
                         {item.day}
                       </span>

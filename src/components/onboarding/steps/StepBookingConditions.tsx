@@ -64,7 +64,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
       {/* Caché estimado por formato */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-[11px] font-medium text-[var(--ink-2)]">
             Caché Acústico / Showcase (€)
           </label>
@@ -81,7 +81,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
           </div>
         </div>
 
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-[11px] font-medium text-[var(--ink-2)]">
             Caché Sala / Concierto Estándar (€)
           </label>
@@ -98,7 +98,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
           </div>
         </div>
 
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-[11px] font-medium text-[var(--ink-2)]">
             Caché Festival / Fiesta Mayor (€)
           </label>
@@ -128,7 +128,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             value={condicionesKm}
             onChange={(e) => setCondicionesKm(e.target.value)}
             placeholder="Ej. 0,25 €/km a partir de 100 km desde Madrid"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
           />
         </div>
 

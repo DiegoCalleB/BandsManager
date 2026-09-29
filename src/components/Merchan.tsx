@@ -508,7 +508,7 @@ export default function Merchan({
           {/* Custom Upload Preview / Selector */}
           {assetType === "custom" && (
             <div
-              className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--surface)]"}`}
+              className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--sunken)]"}`}
             >
               <div className="flex items-center justify-between">
                 <label
@@ -528,7 +528,7 @@ export default function Merchan({
 
               {customImageUrl ? (
                 <div
-                  className="relative w-full h-28 rounded-[var(--r-s)] overflow-hidden bg-center bg-contain bg-no-repeat bg-[var(--sunken)]"
+                  className="relative w-full h-28 rounded-[var(--r-s)] overflow-hidden bg-center bg-contain bg-no-repeat bg-[var(--surface)]"
                   style={{ backgroundImage: `url(${customImageUrl})` }}
                 />
               ) : (
@@ -554,7 +554,7 @@ export default function Merchan({
 
           {assetType === "portada" && (
             <div
-              className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--surface)]"}`}
+              className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--sunken)]"}`}
             >
               <label
                 className={`block text-[10px] font-sans font-bold mb-2 ${"text-[var(--ink-2)]"}`}
@@ -648,7 +648,7 @@ export default function Merchan({
                 value={qrUrl}
                 onChange={(e) => setQrUrl(e.target.value)}
                 placeholder="https://instagram.com/tu_banda"
-                className="w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-sans focus:outline-none bg-[var(--surface)]/30 text-[var(--ink-2)]"
+                className="w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]"
               />
             </div>
           )}
@@ -719,7 +719,7 @@ export default function Merchan({
                   return (
                     <div
                       key={design.id}
-                      className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square  transition-all flex flex-col items-center justify-center p-6 ${design.type === "camiseta" ? "bg-[var(--surface)]" : "bg-[var(--surface)]"}`}
+                      className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square  transition-all flex flex-col items-center justify-center p-6 ${design.type === "camiseta" ? "bg-[var(--sunken)]" : "bg-[var(--sunken)]"}`}
                     >
                       {design.type === "pegatina" ? (
                         <div className="w-52 h-52 bg-[var(--surface)] flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 rounded-[var(--r-s)] overflow-hidden">
@@ -740,7 +740,7 @@ export default function Merchan({
                               />
                             </div>
                           )}
-                          <div className="h-16 w-full bg-[var(--surface)] flex items-center justify-between px-3">
+                          <div className="h-16 w-full bg-[var(--sunken)] flex items-center justify-between px-3">
                             <div className="font-sans text-[10px] text-[var(--ink)] font-black leading-tight">
                               {displayBandName.toUpperCase()}
                               <br />
@@ -879,7 +879,7 @@ export default function Merchan({
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
           <div className="relative w-full max-w-2xl rounded-[var(--r-xl)] bg-[var(--surface)]  overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="p-5 bg-[var(--surface)]  flex items-center justify-between">
+            <div className="p-5 bg-[var(--sunken)]  flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center font-bold">
                   <Gift className="w-5 h-5 stroke-[2.5]" />
@@ -918,7 +918,7 @@ export default function Merchan({
                       <span>1. Previsualización del Diseño Elegido</span>
                     </label>
 
-                    <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] flex flex-col sm:flex-row items-center gap-5">
+                    <div className="p-4 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col sm:flex-row items-center gap-5">
                       {/* Sticker Preview visual */}
                       <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] p-2 flex flex-col items-center justify-center transform -rotate-3">
                         <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--on-acc)] font-black flex items-center justify-center text-lg font-display mb-1">
@@ -960,7 +960,7 @@ export default function Merchan({
                       <span>2. Dirección de Envío (España)</span>
                     </label>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--bg)]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--sunken)]">
                       <div className="sm:col-span-2 space-y-1">
                         <label className="text-[10px] font-sans text-[var(--ink-2)]">
                           Nombre del Destinatario / Banda
@@ -1084,7 +1084,7 @@ export default function Merchan({
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] text-left w-full max-w-md space-y-2 text-xs font-sans">
+                  <div className="p-4 rounded-[var(--r-l)] bg-[var(--sunken)] text-left w-full max-w-md space-y-2 text-xs font-sans">
                     <div className="flex items-center justify-between pb-2">
                       <span className="text-[var(--ink-2)]">Destinatario:</span>
                       <span className="text-[var(--ink)] font-bold">

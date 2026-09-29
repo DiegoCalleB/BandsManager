@@ -795,7 +795,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             return (
               <div
                 key={album}
-                className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 ${"bg-[var(--bg)]"}`}
+                className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 ${"bg-[var(--surface)]"}`}
               >
                 {/* Compact Album Header Bar */}
                 <div
@@ -885,7 +885,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       <button
                         type="button"
                         onClick={() => onEditAlbum(album)}
-                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${"bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
                         title="Gestionar las canciones de este álbum"
                       >
                         <Edit3 className="w-3.5 h-3.5 text-[var(--acc)]" />

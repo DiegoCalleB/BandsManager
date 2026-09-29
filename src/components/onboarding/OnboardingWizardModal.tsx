@@ -1714,7 +1714,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                   <button
                     type="button"
                     onClick={handlePrevStep}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" /> Anterior
                   </button>

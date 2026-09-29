@@ -857,7 +857,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               aria-hidden="true"
             />
             <div
-              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}
+              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}
             >
               <svg
                 className="w-full h-full fill-[var(--ink)]"
@@ -890,14 +890,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick("paypal", paypalUrl, contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--sunken)] transition-all duration-200 ease-out text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow-delayed" : ""}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-all duration-200 ease-out text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow-delayed" : ""}`}
           >
             <span
               className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
               aria-hidden="true"
             />
             <div
-              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--surface)] text-[#003087] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}
+              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[#003087] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}
             >
               <PayPalLogo className="w-full h-full" />
             </div>
@@ -1188,7 +1188,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           </div>
 
           {tieneBeneficios && (
-            <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-6 mt-6 space-y-4">
+            <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-6 mt-6 space-y-4">
               <h3 className="text-[var(--acc)] font-black text-xs font-sans">
                 {t("benefitsTitle")}
               </h3>
@@ -1224,7 +1224,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           )}
 
           {/* COMPARTIR CON UN AMIGO */}
-          <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-left space-y-3">
+          <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 text-left space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                 <Share2 className="w-3.5 h-3.5" />{" "}
@@ -1324,7 +1324,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {contactoBooking &&
             (contactoBooking.email || contactoBooking.telefono) && (
               <div className="pt-4 text-left">
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
                       <Briefcase className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
@@ -1389,7 +1389,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Banner para músicos y bandas */}
           <div className="pt-4 text-left">
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  space-y-2.5">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  space-y-2.5">
               <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
                 <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                 <span>{t("musicianBannerTitle")}</span>
@@ -1440,11 +1440,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 src={logoUrl}
                 alt={bandName}
                 onError={() => setImgError(true)}
-                className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)]  bg-[var(--surface)]"
+                className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)]  bg-[var(--sunken)]"
               />
             </div>
           ) : (
-            <div className="w-24 h-24 mx-auto rounded-[var(--r-l)]  bg-[var(--surface)]  flex flex-col items-center justify-center p-2">
+            <div className="w-24 h-24 mx-auto rounded-[var(--r-l)]  bg-[var(--sunken)]  flex flex-col items-center justify-center p-2">
               <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5" />
               <span className="text-[10px] font-black text-[var(--acc)]/70 font-display line-clamp-1">
                 {bandName}
@@ -1493,7 +1493,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {/* REPRODUCTOR AUDIO PREVIEW DIRECTO (Single / Adelanto) */}
         {audioPreviewConfig?.habilitado !== false &&
           Boolean(audioPreviewConfig?.audioUrl?.trim()) && (
-            <div className="p-3 rounded-[var(--r-l)] bg-[var(--surface)]  flex items-center justify-between gap-3 text-left">
+            <div className="p-3 rounded-[var(--r-l)] bg-[var(--sunken)]  flex items-center justify-between gap-3 text-left">
               <button
                 type="button"
                 onClick={toggleAudioPreview}
@@ -1547,7 +1547,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           )}
 
         {/* Dual Tab Mode Switcher */}
-        <div className="flex bg-[var(--surface)] p-1.5 rounded-[var(--r-l)] text-xs font-sans">
+        <div className="flex bg-[var(--sunken)] p-1.5 rounded-[var(--r-l)] text-xs font-sans">
           <button
             type="button"
             onClick={() => setActiveTab("redes")}
@@ -1600,7 +1600,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick("epk", epkUrl, "redes")}
-              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)]  transition-all duration-300  text-left cursor-pointer overflow-hidden active:scale-[0.99]"
+              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--sunken)]  transition-all duration-300  text-left cursor-pointer overflow-hidden active:scale-[0.99]"
             >
               {logoUrl && !imgError && (
                 <img
@@ -1678,7 +1678,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
             {/* PRÓXIMOS CONCIERTOS / GIRA - debajo de Colaborar y encima de Booking y Contratación */}
             {upcomingConcerts && upcomingConcerts.length > 0 && (
-              <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2.5 text-left">
+              <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--sunken)] space-y-2.5 text-left">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />{" "}
@@ -1793,7 +1793,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, nombre: e.target.value })
                 }
-                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                 placeholder={t("placeholderName")}
               />
             </div>
@@ -1808,7 +1808,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                 placeholder="tu@email.com"
               />
             </div>
@@ -1818,7 +1818,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <button
                 type="button"
                 onClick={() => setShowOptionalFields(!showOptionalFields)}
-                className="w-full py-2 px-3 rounded-[var(--r-m)] bg-[var(--surface)]  text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-xs font-sans flex items-center justify-between transition-colors"
+                className="w-full py-2 px-3 rounded-[var(--r-m)] bg-[var(--sunken)]  text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-xs font-sans flex items-center justify-between transition-colors"
               >
                 <span>
                   {showOptionalFields
@@ -1846,7 +1846,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, ciudad: e.target.value })
                     }
-                    className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                     placeholder={t("placeholderCity")}
                   />
                 </div>
@@ -1859,7 +1859,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, comoConocio: e.target.value })
                     }
-                    className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors appearance-none"
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors appearance-none"
                   >
                     <option value="">{t("optionSelect")}</option>
                     <option value="Concierto">{t("optionConcert")}</option>
@@ -1883,7 +1883,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         cancionFavorita: e.target.value,
                       })
                     }
-                    className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                     placeholder={t("placeholderFavSong")}
                   />
                 </div>
@@ -1898,7 +1898,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, instagram: e.target.value })
                     }
-                    className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                     placeholder={t("placeholderInstagram")}
                   />
                 </div>
@@ -1913,7 +1913,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, mensaje: e.target.value })
                     }
-                    className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors resize-none"
+                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors resize-none"
                     placeholder={t("placeholderMessage")}
                   />
                 </div>
@@ -1933,7 +1933,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         consentimiento: e.target.checked,
                       })
                     }
-                    className="peer appearance-none w-5 h-5 rounded bg-[var(--surface)] checked:bg-[var(--acc)] checked: transition-colors shrink-0 cursor-pointer"
+                    className="peer appearance-none w-5 h-5 rounded bg-[var(--sunken)] checked:bg-[var(--acc)] checked: transition-colors shrink-0 cursor-pointer"
                   />
                   <Check
                     className="w-3.5 h-3.5 text-[var(--ink)] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"
@@ -2000,7 +2000,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {contactoBooking &&
           (contactoBooking.email || contactoBooking.telefono) && (
             <div className="pt-5 space-y-3">
-              <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  space-y-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[var(--acc)]">
                     <Briefcase className="w-4 h-4 text-[var(--acc)]" />
@@ -2073,7 +2073,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* Banner para músicos y bandas al final del formulario */}
         <div className="pt-4 text-left">
-          <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  space-y-2.5">
+          <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  space-y-2.5">
             <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
               <Sparkles className="w-4 h-4 text-[var(--acc)]" />
               <span>{t("musicianBannerTitle")}</span>

@@ -152,7 +152,7 @@ export function SongModal({
               {/* Audio Upload Area (Compact & Clean) */}
               <div
                 className={`p-3 rounded-[var(--r-l)] transition-all ${
-                  'bg-[var(--surface)] '
+                  'bg-[var(--sunken)] '
                 } hover:brightness-95`}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -212,7 +212,7 @@ export function SongModal({
                       e.target.value = formatSongTitle(e.target.value);
                     }
                   }}
-                  className={`w-full p-2.5 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                  className={`w-full p-2.5 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                   placeholder="ej. Brisa y Cacharros"
                 />
               </div>
@@ -227,7 +227,7 @@ export function SongModal({
                   <select
                     value={selectedAlbum}
                     onChange={(e) => setSelectedAlbum(e.target.value)}
-                    className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${'bg-[var(--surface)] text-[var(--ok)]'}`}
+                    className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${'bg-[var(--sunken)] text-[var(--ok)]'}`}
                   >
                     <option value="">Single (Sin disco)</option>
                     {albumsList
@@ -317,7 +317,7 @@ export function SongModal({
                   <select
                     name="energia"
                     defaultValue={energiaDefault}
-                    className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                   >
                     <option value="20">💣 Explosiva</option>
                     <option value="18">🔥 Alta</option>
@@ -330,7 +330,7 @@ export function SongModal({
               {/* Collapsible Accordion: Advanced Options & Notes */}
               <div
                 className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
-                  'bg-[var(--surface)] '
+                  'bg-[var(--sunken)] '
                 }`}
               >
                 <button
@@ -363,7 +363,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.genero || ''}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--sunken)] text-[var(--ink)] '
+                            'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                           placeholder="ej. Rock, Rumba"
                         />
@@ -375,7 +375,7 @@ export function SongModal({
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
-                            'bg-[var(--sunken)] text-[var(--ink)] '
+                            'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                         >
                           <option value="propio">Propio / Original</option>
@@ -393,7 +393,7 @@ export function SongModal({
                           name="estadoTema"
                           defaultValue={editingSong?.estadoTema || 'listo'}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
-                            'bg-[var(--sunken)] text-[var(--ink)] '
+                            'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                         >
                           <option value="listo">⚡ Listo para Directo</option>
@@ -410,7 +410,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.cantantePrincipal || ''}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--sunken)] text-[var(--ink)] '
+                            'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                           placeholder="Cantante"
                         />
@@ -426,7 +426,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.afinacion || 'E Standard'}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--sunken)] text-[var(--ink)] '
+                            'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                           placeholder="E Standard"
                         />
@@ -439,7 +439,7 @@ export function SongModal({
                           type="url"
                           defaultValue={editingSong?.enlaceAcordes || ''}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--sunken)] text-[var(--ink)] '
+                            'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                           placeholder="https://drive.google.com/..."
                         />
@@ -454,7 +454,7 @@ export function SongModal({
                         rows={2}
                         defaultValue={editingSong?.notasInternas || ''}
                         className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none text-xs ${
-                          'bg-[var(--sunken)] text-[var(--ink)] '
+                          'bg-[var(--surface)] text-[var(--ink)] '
                         }`}
                         placeholder="ej. Entrar directos tras el solo de batería..."
                       />
@@ -488,7 +488,7 @@ export function SongModal({
                               defaultValue={editingSong?.notasRepertorio || ''}
                               placeholder="ej. Parón en seco antes del último coro"
                               className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none text-xs ${
-                                'bg-[var(--sunken)] text-[var(--ink)]'
+                                'bg-[var(--surface)] text-[var(--ink)]'
                               }`}
                             />
                           </div>
@@ -510,7 +510,7 @@ export function SongModal({
                                   onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
                                   placeholder={`Notas para ${member.name}...`}
                                   className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none text-xs ${
-                                    'bg-[var(--sunken)] text-[var(--ink)]'
+                                    'bg-[var(--surface)] text-[var(--ink)]'
                                   }`}
                                 />
                               </div>
@@ -535,7 +535,7 @@ export function SongModal({
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer"
               >
                 Guardar Canción
               </button>

@@ -387,7 +387,7 @@ export function BookingFunnelChartWidget({
         )}
       </div>
 
-      <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans">
+      <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-sans">
         <span className="text-[var(--ink-2)]">
           Tasa de Conversión a Conciertos:
         </span>
@@ -503,7 +503,7 @@ export function FinancesChartWidget({
       </div>
 
       <div className="grid grid-cols-2 gap-2 font-sans text-xs text-center">
-        <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
+        <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]">
           <span className="text-[10px] text-[var(--ink-2)] block">
             Ingresos Totales
           </span>
@@ -511,7 +511,7 @@ export function FinancesChartWidget({
             {eur(totalIngresos)}
           </span>
         </div>
-        <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
+        <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]">
           <span className="text-[10px] text-[var(--ink-2)] block">
             Neto / Beneficio
           </span>
@@ -601,7 +601,7 @@ export function SocialFansGrowthWidget({
         )}
       </div>
 
-      <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans">
+      <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-sans">
         <span className="text-[var(--ink-2)]">Fans Registrados:</span>
         <span className="font-bold text-[var(--acc)] text-sm">
           {fansCount} seguidores

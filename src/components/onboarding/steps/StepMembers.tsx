@@ -51,7 +51,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
         {members.map((m, idx) => (
           <div
             key={m.id || idx}
-            className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--sunken)] transition-colors"
+            className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-colors"
           >
             <div className="flex items-center gap-3">
               <div

@@ -78,7 +78,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="ej. Festival Rumba & Rock 2026"
-                className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
               />
             </div>
 
@@ -87,7 +87,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
               <select
                 value={tipoFormato}
                 onChange={(e) => setTipoFormato(e.target.value as any)}
-                className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
               >
                 <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
                 <option value="sala_larga">🎸 Sala / Show Largo (90-120m)</option>

@@ -377,7 +377,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 {originInfo.fromBand && (
                   <button
                     onClick={handleBackToOrigin}
-                    className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink)] font-sans text-xs font-bold transition"
+                    className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink)] font-sans text-xs font-bold transition"
                   >
                     {t.successBackToBand.replace(
                       "{bandName}",
@@ -439,7 +439,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           })
                         }
                         placeholder={t.placeholderBandName}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                       />
                     </div>
 
@@ -459,7 +459,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           setFormData({ ...formData, email: e.target.value })
                         }
                         placeholder={t.placeholderEmail}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                       />
                     </div>
                   </div>
@@ -483,7 +483,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           })
                         }
                         placeholder={t.placeholderInstagram}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                       />
                     </div>
 
@@ -505,7 +505,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           })
                         }
                         placeholder={t.placeholderContactName}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                       />
                     </div>
                   </div>
@@ -554,7 +554,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             setFormData({ ...formData, genero: e.target.value })
                           }
                           placeholder={t.placeholderGenre}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                         />
                       </div>
 
@@ -570,7 +570,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             setFormData({ ...formData, ciudad: e.target.value })
                           }
                           placeholder={t.placeholderCity}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                         />
                       </div>
                     </div>
@@ -591,7 +591,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             })
                           }
                           placeholder={t.placeholderPhone}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                         />
                       </div>
 
@@ -610,7 +610,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             })
                           }
                           placeholder={t.placeholderMusicLink}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
                         />
                       </div>
                     </div>
@@ -628,7 +628,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             interesPrincipal: e.target.value,
                           })
                         }
-                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-sm text-[var(--ink)] outline-none transition font-sans"
+                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] outline-none transition font-sans"
                       >
                         <option value="">{t.optionSelectInterest}</option>
                         <option value="fans">{t.optionInterestFans}</option>
@@ -652,7 +652,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           setFormData({ ...formData, notas: e.target.value })
                         }
                         placeholder={t.placeholderNotes}
-                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans resize-none"
+                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans resize-none"
                       />
                     </div>
                   </div>
@@ -671,7 +671,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           consentimiento: e.target.checked,
                         })
                       }
-                      className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-[var(--acc)]"
+                      className="mt-0.5 w-4 h-4 rounded bg-[var(--sunken)] text-[var(--acc)] focus:ring-[var(--acc)]"
                     />
                     <span className="text-xs font-sans text-[var(--ink-2)] group-hover:text-[var(--ink-2)] leading-relaxed">
                       {t.consentCheckbox}

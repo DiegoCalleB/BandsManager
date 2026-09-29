@@ -104,7 +104,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, ciudad: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -116,7 +116,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, sala: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -130,7 +130,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
                 required
                 className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none font-mono ${
-                  'bg-[var(--surface)] text-[var(--ink)]'
+                  'bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               />
             </div>
@@ -143,7 +143,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, direccion: e.target.value } : prev))}
                 placeholder="ej. Calle Jardines 3, Madrid"
                 className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--surface)] text-[var(--ink)]'
+                  'bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               />
             </div>
@@ -158,7 +158,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   value={editDraft.cache}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, cache: Number(e.target.value) } : prev))}
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none font-mono ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -168,7 +168,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   value={editDraft.estado_pago}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 >
                   <option value="pendiente">Pendiente</option>
@@ -224,7 +224,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                 rows={2}
                 className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--surface)] text-[var(--ink)]'
+                  'bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               />
             </div>

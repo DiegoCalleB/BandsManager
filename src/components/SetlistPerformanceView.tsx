@@ -1577,7 +1577,7 @@ const ScannedSheetPage: React.FC<{ song: Song }> = ({ song }) => {
         <iframe
           src={song.estructuraDocumentoUrl}
           title={`Partitura de ${song.titulo}`}
-          className="w-full h-full bg-[var(--surface)] rounded"
+          className="w-full h-full bg-[var(--sunken)] rounded"
         />
       )}
     </div>

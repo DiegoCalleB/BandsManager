@@ -640,7 +640,7 @@ export function SongTransitionPreviewModal({
           className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col text-[var(--ink)]"
         >
           {/* Compact Header */}
-          <div className="flex items-center justify-between px-3.5 py-2 bg-[var(--surface)] shrink-0">
+          <div className="flex items-center justify-between px-3.5 py-2 bg-[var(--sunken)] shrink-0">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] shrink-0">
                 <Headphones className="w-3.5 h-3.5" />
@@ -869,7 +869,7 @@ export function SongTransitionPreviewModal({
                               setSelectedSampleA(s);
                             }
                           }}
-                          className="bg-[var(--surface)] text-[10px] rounded p-0.5 text-[var(--acc)]/70 focus:outline-none max-w-[160px] cursor-pointer"
+                          className="bg-[var(--sunken)] text-[10px] rounded p-0.5 text-[var(--acc)]/70 focus:outline-none max-w-[160px] cursor-pointer"
                         >
                           {STUDIO_SAMPLE_TRACKS.map((st) => (
                             <option key={st.id} value={st.id}>
@@ -911,7 +911,7 @@ export function SongTransitionPreviewModal({
                   className={`w-7 h-7 rounded-[var(--r-pill)] flex items-center justify-center transition ${
                     currentGains.isCrossfading
                       ? "bg-[var(--acc)] text-[var(--on-acc)] scale-110"
-                      : "bg-[var(--surface)] text-[var(--ink-2)]"
+                      : "bg-[var(--sunken)] text-[var(--ink-2)]"
                   }`}
                 >
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1044,7 +1044,7 @@ export function SongTransitionPreviewModal({
                               setSelectedSampleB(s);
                             }
                           }}
-                          className="bg-[var(--surface)] text-[10px] rounded p-0.5 text-[var(--ink-2)] focus:outline-none max-w-[160px] cursor-pointer"
+                          className="bg-[var(--sunken)] text-[10px] rounded p-0.5 text-[var(--ink-2)] focus:outline-none max-w-[160px] cursor-pointer"
                         >
                           {STUDIO_SAMPLE_TRACKS.map((st) => (
                             <option key={st.id} value={st.id}>
@@ -1082,7 +1082,7 @@ export function SongTransitionPreviewModal({
             </div>
 
             {/* Compact Unified Player & Waveform Timeline */}
-            <div className="p-2 sm:p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
+            <div className="p-2 sm:p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
               {/* Controls & Mode Ribbon Header */}
               <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
                 {/* Mode Selector & Auto-CUE toggle */}
@@ -1211,7 +1211,7 @@ export function SongTransitionPreviewModal({
 
               {/* Visual Multi-Track Waveform Timeline with Scrubbing */}
               <div
-                className="relative h-7 bg-[var(--sunken)] rounded-[var(--r-s)] cursor-pointer overflow-hidden p-0.5 select-none"
+                className="relative h-7 bg-[var(--surface)] rounded-[var(--r-s)] cursor-pointer overflow-hidden p-0.5 select-none"
                 onClick={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const ratio = (e.clientX - rect.left) / rect.width;
@@ -1268,7 +1268,7 @@ export function SongTransitionPreviewModal({
                     left: `${(currentTime / timeline.totalDurationSec) * 100}%`,
                   }}
                 >
-                  <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[var(--surface)] rounded-[var(--r-pill)] shadow" />
+                  <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[var(--sunken)] rounded-[var(--r-pill)] shadow" />
                 </div>
               </div>
 
@@ -1348,7 +1348,7 @@ export function SongTransitionPreviewModal({
             </div>
 
             {/* Smart Tabbed Musical Intelligence Panel */}
-            <div className="rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden">
+            <div className="rounded-[var(--r-m)] bg-[var(--sunken)] overflow-hidden">
               {/* Tab Navigation Ribbon & Verdict Summary */}
               <div className="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5800 bg-[var(--surface)]">
                 {/* Tabs */}
@@ -1363,7 +1363,7 @@ export function SongTransitionPreviewModal({
                     }`}
                   >
                     <span>Pros y Contras</span>
-                    <span className="text-[9px] font-sans px-1 rounded bg-[var(--sunken)] text-[var(--ink-2)]">
+                    <span className="text-[9px] font-sans px-1 rounded bg-[var(--surface)] text-[var(--ink-2)]">
                       +{diagnosis.porQueSi.length} / -
                       {diagnosis.porQueNo.length}
                     </span>
@@ -1540,7 +1540,7 @@ export function SongTransitionPreviewModal({
                     {diagnosis.stageRecommendations.map((rec, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-1.5 bg-[var(--sunken)] p-1.5 rounded-[var(--r-s)] text-[10px]"
+                        className="flex items-start gap-1.5 bg-[var(--surface)] p-1.5 rounded-[var(--r-s)] text-[10px]"
                       >
                         <Compass className="w-3 h-3 text-[var(--acc)] shrink-0 mt-0.5" />
                         <p className="text-[10px] leading-tight text-[var(--ink-2)]">
@@ -1561,7 +1561,7 @@ export function SongTransitionPreviewModal({
           </div>
 
           {/* Fixed Smart Actions Footer */}
-          <div className="flex flex-wrap items-center justify-between gap-1.5 px-3.5 py-2 bg-[var(--surface)] shrink-0">
+          <div className="flex flex-wrap items-center justify-between gap-1.5 px-3.5 py-2 bg-[var(--sunken)] shrink-0">
             <div className="flex flex-wrap items-center gap-1.5">
               {onInsertInterludio && itemA && (
                 <button
@@ -1586,7 +1586,7 @@ export function SongTransitionPreviewModal({
                     onSwapSongs(indexA, indexB);
                     onClose();
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
                 >
                   <ArrowLeftRight className="w-3 h-3" />
                   <span>Invertir (A ⇄ B)</span>
@@ -1597,7 +1597,7 @@ export function SongTransitionPreviewModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[11px] font-bold transition cursor-pointer"
+              className="px-3.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[11px] font-bold transition cursor-pointer"
             >
               Cerrar
             </button>

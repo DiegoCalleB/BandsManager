@@ -193,7 +193,7 @@ export function EnsayoCronometro({
 
       {/* Progress Bar */}
       <div className="mt-3">
-        <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
+        <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-hidden">
           <div
             className={`h-full rounded-[var(--r-pill)] transition-all duration-300 ${
               isOvertime

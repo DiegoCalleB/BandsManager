@@ -81,7 +81,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
           {events.map((ev) => (
             <div
               key={ev.id}
-              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--sunken)] transition-colors"
+              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div

@@ -46,7 +46,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
   return (
     <ModalPortal isOpen={!!showGenModalForIdea} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="w-full max-w-lg rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
+        <div className="w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">

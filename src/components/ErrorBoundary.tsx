@@ -50,7 +50,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             <AlertTriangle className="w-8 h-8 shrink-0 text-[var(--acc)]" />
             <h3 className="text-lg font-bold">{this.props.fallbackTitle || 'Ha ocurrido un error al cargar este módulo'}</h3>
           </div>
-          <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans bg-[var(--surface)] p-3 rounded-[var(--r-m)] overflow-x-auto shrink-0">
+          <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans bg-[var(--sunken)] p-3 rounded-[var(--r-m)] overflow-x-auto shrink-0">
             {this.state.error?.message || 'Error no especificado en la renderización.'}
           </p>
           <div className="flex items-center gap-3 pt-2">
@@ -62,7 +62,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             </button>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold rounded-[var(--r-m)] transition"
+              className="px-4 py-2 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold rounded-[var(--r-m)] transition"
             >
               Recargar Aplicación
             </button>

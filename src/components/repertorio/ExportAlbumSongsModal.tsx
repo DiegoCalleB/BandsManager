@@ -532,7 +532,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
               <select
                 value={selectedAlbum}
                 onChange={(e) => setSelectedAlbum(e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-all bg-[var(--surface)] text-[var(--ink)]`}
+                className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-all bg-[var(--sunken)] text-[var(--ink)]`}
               >
                 <option value="all">
                   💿 Discografía Completa (Todas las Canciones)

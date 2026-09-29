@@ -143,7 +143,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
                 placeholder="Ej: Pardiez, La Señora Tomasa, Tarraco Ska..."
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
               />
             </div>
 
@@ -397,7 +397,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formStyle}
                 onChange={(e) => setFormStyle(e.target.value)}
                 placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje..."
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
@@ -410,7 +410,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formLocation}
                 onChange={(e) => setFormLocation(e.target.value)}
                 placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla..."
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
@@ -420,7 +420,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               <select
                 value={formStatus}
                 onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
               >
                 <option value="sin_contactar">📡 Sin Contactar</option>
                 <option value="intercambio_propuesto">🔄 Intercambio Propuesto (Date Swap)</option>
@@ -439,7 +439,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formContactName}
                 onChange={(e) => setFormContactName(e.target.value)}
                 placeholder="Ej: Carlos (Mánager / Teclista)"
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
@@ -450,7 +450,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 type="date"
                 value={formLastContact}
                 onChange={(e) => setFormLastContact(e.target.value)}
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
@@ -462,7 +462,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formEmail}
                 onChange={(e) => setFormEmail(e.target.value)}
                 placeholder="ejemplo@banda.com"
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
@@ -474,7 +474,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formPhone}
                 onChange={(e) => setFormPhone(e.target.value)}
                 placeholder="+34 600 000 000"
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
@@ -486,7 +486,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formInstagram}
                 onChange={(e) => setFormInstagram(e.target.value)}
                 placeholder="@nombrebanda"
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
@@ -498,7 +498,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 value={formAforo}
                 onChange={(e) => setFormAforo(Number(e.target.value))}
                 placeholder="300"
-                className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
           </div>
@@ -511,7 +511,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               value={formSpotifyYoutube}
               onChange={(e) => setFormSpotifyYoutube(e.target.value)}
               placeholder="https://open.spotify.com/artist/..."
-              className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+              className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
             />
           </div>
 
@@ -525,7 +525,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               value={formNotes}
               onChange={(e) => setFormNotes(e.target.value)}
               placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)..."
-              className="w-full bg-[var(--surface)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-[10px] font-sans leading-relaxed focus:outline-none focus:-[#f2ca50]/50"
+              className="w-full bg-[var(--sunken)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-[10px] font-sans leading-relaxed focus:outline-none focus:-[#f2ca50]/50"
             />
           </div>
 
@@ -540,7 +540,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer"
+              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer"
             >
               {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
             </button>

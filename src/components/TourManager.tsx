@@ -1246,7 +1246,7 @@ export default function TourManager({
                             onChange={(e) =>
                               setDietaPerPersona(Number(e.target.value))
                             }
-                            className="w-16 p-1 rounded bg-[var(--sunken)] text-xs font-sans text-center font-bold text-[var(--acc)]/70"
+                            className="w-16 p-1 rounded bg-[var(--surface)] text-xs font-sans text-center font-bold text-[var(--acc)]/70"
                           />
                           <span className="text-[var(--ink-2)] text-xs font-sans">
                             €
@@ -1345,7 +1345,7 @@ export default function TourManager({
                                     )
                                   }
                                   defaultValue=""
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] cursor-pointer"
+                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs text-[var(--ink)] cursor-pointer"
                                 >
                                   <option value="" disabled>
                                     -- Seleccionar Modelo --
@@ -1375,7 +1375,7 @@ export default function TourManager({
                                     )
                                   }
                                   placeholder="Ej. Furgoneta Principal (Banda)"
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)]"
+                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs text-[var(--ink)]"
                                 />
                               </div>
 
@@ -1399,7 +1399,7 @@ export default function TourManager({
                                       Number(e.target.value),
                                     )
                                   }
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--acc)]/70 focus:"
+                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-bold text-[var(--acc)]/70 focus:"
                                 />
                               </div>
 
@@ -1424,7 +1424,7 @@ export default function TourManager({
                                         Number(e.target.value),
                                       )
                                     }
-                                    className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--ink-2)]"
+                                    className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-bold text-[var(--ink-2)]"
                                   />
                                   <select
                                     value={veh.tipoCombustible || "diesel"}
@@ -1435,7 +1435,7 @@ export default function TourManager({
                                         e.target.value,
                                       )
                                     }
-                                    className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[10px] text-[var(--ink)] cursor-pointer"
+                                    className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[10px] text-[var(--ink)] cursor-pointer"
                                   >
                                     <option value="diesel">Diésel</option>
                                     <option value="gasolina95">G95</option>

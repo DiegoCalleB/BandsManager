@@ -108,7 +108,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                     value={customAlbumName}
                     onChange={(e) => setCustomAlbumName(e.target.value)}
                     placeholder="ej. Lanzamiento Verano 2026"
-                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                   />
                 </div>
 
@@ -119,7 +119,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                     value={albumYear}
                     onChange={(e) => setAlbumYear(e.target.value)}
                     placeholder="ej. 2026"
-                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                   />
                 </div>
               </div>
@@ -130,7 +130,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                   <select
                     value={albumType}
                     onChange={(e) => setAlbumType(e.target.value)}
-                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                   >
                     <option value="Álbum Estudio">Álbum Estudio</option>
                     <option value="EP">EP (Extended Play)</option>
@@ -148,7 +148,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                       value={coverUrl}
                       onChange={(e) => setCoverUrl(e.target.value)}
                       placeholder="https://... o sube imagen"
-                      className={`flex-1 p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                      className={`flex-1 p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                     />
                     <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 flex items-center gap-1 text-xs">
                       <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -165,7 +165,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Notas sobre la producción, estudio de grabación, concepto..."
-                  className={`w-full p-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                  className={`w-full p-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                 />
               </div>
             </div>
@@ -185,7 +185,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar canción en el catálogo para incluir..."
-                  className={`w-full pl-9 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                  className={`w-full pl-9 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                 />
               </div>
 

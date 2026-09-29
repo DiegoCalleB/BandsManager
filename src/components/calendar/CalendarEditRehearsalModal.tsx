@@ -88,7 +88,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, asunto: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -103,7 +103,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none font-mono ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -115,7 +115,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, hora: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -131,7 +131,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, lugar: e.target.value } : prev))}
                 required
                 className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--surface)] text-[var(--ink)]'
+                  'bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               />
             </div>
@@ -145,7 +145,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, enlace_reunion: e.target.value } : prev))}
                   placeholder="https://meet.google.com/xyz"
                   className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -182,7 +182,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 value={editRehearsalDraft.estado}
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
                 className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--surface)] text-[var(--ink)]'
+                  'bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               >
                 <option value="programado">Programado</option>
@@ -200,7 +200,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                 rows={2}
                 className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--surface)] text-[var(--ink)]'
+                  'bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               />
             </div>

@@ -128,7 +128,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             id="close-floating-chat-btn"
             onClick={onClose}
             className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center active:scale-95 ${
-              'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+              'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
             title="Cerrar Chat"
           >

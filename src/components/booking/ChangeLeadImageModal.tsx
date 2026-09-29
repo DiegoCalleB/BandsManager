@@ -207,9 +207,9 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
           {/* Options Stack */}
           <div className="flex flex-col gap-2.5">
             {/* Option 1: File Upload */}
-            <label className="w-full p-3 bg-[var(--bg)] hover:bg-[var(--surface)]  rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
+            <label className="w-full p-3 bg-[var(--sunken)] hover:bg-[var(--surface)]  rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-[var(--sunken)] group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
+                <div className="p-2 bg-[var(--surface)] group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
                   {isUploading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
@@ -275,7 +275,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                 <span>Pegar URL directa de imagen</span>
               </button>
             ) : (
-              <div className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] space-y-2">
+              <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
                 <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Pegar enlace de imagen (URL)
                 </label>

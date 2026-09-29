@@ -148,7 +148,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => handleInsertSymbol(sym)}
-                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover:hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
+                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--sunken)] hover:hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
                     title={`Insertar ${sym}`}
                   >
                     {sym}

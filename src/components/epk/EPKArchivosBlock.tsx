@@ -86,16 +86,16 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 <img
                   src={config.logoUrl}
                   alt="Logo de la banda"
-                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--surface)]"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--sunken)]"
                 />
               ) : isBakandeya ? (
                 <img
                   src="/logo_bakandeya_bueno_sin_fondo.png"
                   alt="Bakandeya Logo"
-                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--surface)]"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--sunken)]"
                 />
               ) : (
-                <div className="w-28 h-28 rounded-[var(--r-l)] bg-[var(--surface)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
+                <div className="w-28 h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
                   <ImageIcon className="w-8 h-8 text-[var(--ink-2)] mb-1" />
                   <span className="text-[10px] font-medium text-[var(--ink-2)]">
                     Sin Logo
@@ -130,7 +130,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <button
                     type="button"
                     onClick={() => setConfig({ ...config, logoUrl: "" })}
-                    className="p-2.5 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-m)] transition cursor-pointer"
+                    className="p-2.5 bg-[var(--sunken)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-m)] transition cursor-pointer"
                     title="Eliminar logo"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -149,7 +149,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     setConfig({ ...config, logoUrl: e.target.value })
                   }
                   placeholder="https://ejemplo.com/logo.jpg"
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
                 />
               </div>
             </div>
@@ -172,7 +172,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           </h3>
 
           {config.dossierPdfUrl ? (
-            <div className="p-4 bg-[var(--surface)] rounded-[var(--r-m)] space-y-3">
+            <div className="p-4 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 overflow-hidden">
                   <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] shrink-0">
@@ -227,7 +227,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-5 bg-[var(--surface)] rounded-[var(--r-m)] text-center space-y-3">
+            <div className="p-5 bg-[var(--sunken)] rounded-[var(--r-m)] text-center space-y-3">
               <div className="w-12 h-12 rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)] mx-auto">
                 <FileDown className="w-6 h-6 text-[var(--acc)]" />
               </div>
@@ -280,7 +280,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 })
               }
               placeholder="https://drive.google.com/file/d/..."
-              className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
+              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
             />
           </div>
         </div>
@@ -307,7 +307,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               Archivo de Rider Técnico (PDF)
             </label>
             {config.riderPdfUrl ? (
-              <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-3">
+              <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3 overflow-hidden">
                     <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] flex items-center justify-center shrink-0">
@@ -360,7 +360,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="p-5 bg-[var(--surface)] rounded-[var(--r-m)] text-center space-y-3">
+              <div className="p-5 bg-[var(--sunken)] rounded-[var(--r-m)] text-center space-y-3">
                 <div className="w-12 h-12 rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)] mx-auto">
                   <FileDown className="w-6 h-6 text-[var(--acc)]" />
                 </div>
@@ -403,7 +403,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 }
                 placeholder="Canales, microfonía, DIs, etc..."
                 rows={4}
-                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
+                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
               />
             </div>
             {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
@@ -604,7 +604,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             />
           </label>
           {(config.bandPhotos || []).length === 0 ? (
-            <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-2)]">
+            <div className="rounded-[var(--r-m)] bg-[var(--sunken)] p-4 text-xs text-[var(--ink-2)]">
               Todavía no hay fotos de directo o prensa.
             </div>
           ) : (
@@ -617,7 +617,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 .map((url, idx) => (
                   <div
                     key={url + idx}
-                    className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)]"
+                    className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-[var(--sunken)]"
                   >
                     <img
                       src={url}

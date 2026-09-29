@@ -122,7 +122,7 @@ export const MusicianOnboardingModal: React.FC<
           {/* Misión 1: Bolo / Concierto */}
           <div
             onClick={() => handleChooseMission("calendario")}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]  transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 "
+            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)]  transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 "
           >
             <div className="flex items-start gap-3.5">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 group-hover:scale-105 transition-transform">
@@ -157,7 +157,7 @@ export const MusicianOnboardingModal: React.FC<
           {/* Misión 2: Dossier / EPK */}
           <div
             onClick={() => handleChooseMission("epk")}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
           >
             <div className="flex items-start gap-3.5">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 group-hover:scale-105 transition-transform">
@@ -192,7 +192,7 @@ export const MusicianOnboardingModal: React.FC<
           {/* Misión 3: Repertorio / Setlist */}
           <div
             onClick={() => handleChooseMission("repertorio")}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--ok-soft)] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--ok-soft)] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
           >
             <div className="flex items-start gap-3.5">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)] shrink-0 group-hover:scale-105 transition-transform">
@@ -223,7 +223,7 @@ export const MusicianOnboardingModal: React.FC<
         </div>
 
         {/* Footer */}
-        <div className="p-4 sm:p-5 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        <div className="p-4 sm:p-5 bg-[var(--sunken)] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)]">
             <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0" />
             <span>

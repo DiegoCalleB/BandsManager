@@ -338,7 +338,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                                       ? 'text-[var(--ok)] bg-[var(--ok)]/10 '
                                       : lead.ultimo_sentimiento_score <= -0.3
                                         ? 'text-[var(--alert)] bg-[var(--alert)]/10 '
-                                        : 'text-[var(--ink-2)] bg-[var(--sunken)] '
+                                        : 'text-[var(--ink-2)] bg-[var(--surface)] '
                                   }`}
                                 >
                                   {lead.ultimo_sentimiento_score > 0
@@ -386,7 +386,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         )}
 
                         {/* Mensaje / Extracto */}
-                        <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-[11px] text-[var(--ink-2)] line-clamp-2 leading-relaxed">
+                        <div className="bg-[var(--surface)] p-2.5 rounded-[var(--r-m)] text-[11px] text-[var(--ink-2)] line-clamp-2 leading-relaxed">
                           {lead.ultimo_analisis_resumen ||
                             lead.ultimo_mensaje_recibido ||
                             lead.pitch_generado ||
@@ -426,7 +426,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                             <button
                               type="button"
                               onClick={() => onOpenRoadbookModal(lead)}
-                              className="p-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs transition-colors cursor-pointer"
+                              className="p-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs transition-colors cursor-pointer"
                               title="Ver / Imprimir Roadbook & Contrato"
                             >
                               <FileText className="w-3.5 h-3.5" />
@@ -436,7 +436,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                           <button
                             type="button"
                             onClick={() => onSelectLead(lead, { tab: 'emails' })}
-                            className="px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer"
+                            className="px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer"
                           >
                             <span>Atender</span>
                             <ChevronRight className="w-3.5 h-3.5" />
@@ -486,7 +486,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                             {opp.candidateLeads.map((candidate) => (
                               <div
                                 key={candidate.id}
-                                className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between gap-2"
+                                className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between gap-2"
                               >
                                 <div>
                                   <span className="text-xs font-bold text-[var(--ink-2)] block">
@@ -532,7 +532,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                       <select
                         value={simulatorCity}
                         onChange={(e) => setSimulatorCity(e.target.value)}
-                        className="bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                        className="bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                       >
                         <option value="Valencia">Valencia (Eje Mediterráneo)</option>
                         <option value="Barcelona">Barcelona (Eje Mediterráneo)</option>

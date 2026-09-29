@@ -636,7 +636,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 type="checkbox"
                 checked={dontShowAgain}
                 onChange={(e) => setDontShowAgain(e.target.checked)}
-                className="rounded bg-[var(--surface)]/80 text-[var(--acc)] focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
+                className="rounded bg-[var(--sunken)] text-[var(--acc)] focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
               />
               <span className="truncate">
                 No volver a abrir automáticamente

@@ -105,7 +105,7 @@ export function NegotiationSimulationModal({
                   className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     simulationRole === 'sala'
                       ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]'
-                      : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
+                      : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
                   }`}
                 >
                   <Building className="w-4 h-4" /> Sala o Festival (Entrante)
@@ -116,7 +116,7 @@ export function NegotiationSimulationModal({
                   className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     simulationRole === 'banda'
                       ? 'bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]'
-                      : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
+                      : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
                   }`}
                 >
                   <Users className="w-4 h-4" /> Banda Bakandeya (Saliente)
@@ -130,7 +130,7 @@ export function NegotiationSimulationModal({
               <select
                 value={simulationScenario}
                 onChange={(e) => onScenarioChange(e.target.value)}
-                className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans bg-[var(--surface)] text-[var(--ink)]`}
+                className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}
               >
                 {(simulationRole === 'sala' ? predefinedScenarios.sala : predefinedScenarios.banda).map((sc) => (
                   <option key={sc.key} value={sc.key}>
@@ -149,7 +149,7 @@ export function NegotiationSimulationModal({
                   value={simulationSenderName}
                   onChange={(e) => onSenderNameChange(e.target.value)}
                   placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
-                  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans bg-[var(--surface)] text-[var(--ink)]`}
+                  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}
                 />
               </div>
               <div className="space-y-1.5">
@@ -159,7 +159,7 @@ export function NegotiationSimulationModal({
                   value={simulationSubject}
                   onChange={(e) => onSubjectChange(e.target.value)}
                   placeholder="Ej. Re: Propuesta..."
-                  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans bg-[var(--surface)] text-[var(--ink)]`}
+                  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}
                 />
               </div>
             </div>
@@ -177,7 +177,7 @@ export function NegotiationSimulationModal({
                 value={simulationCustomInstruction}
                 onChange={(e) => onCustomInstructionChange(e.target.value)}
                 placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)..."
-                className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed bg-[var(--surface)] text-[var(--ink)]`}
+                className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink)]`}
               />
             </div>
 
@@ -216,7 +216,7 @@ export function NegotiationSimulationModal({
                   rows={6}
                   value={simulationMessage}
                   onChange={(e) => onMessageChange(e.target.value)}
-                  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed bg-[var(--surface)] text-[var(--ink-2)]`}
+                  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink-2)]`}
                 />
                 <p className={`text-[10px] font-sans ${textMuted} leading-tight`}>
                   💡 Tip: Puedes retocar el texto directamente para añadir detalles personalizados específicos antes de confirmarlo.
@@ -230,7 +230,7 @@ export function NegotiationSimulationModal({
             <button
               type="button"
               onClick={onClose}
-              className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] transition-colors cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
+              className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
             >
               Cancelar
             </button>

@@ -67,7 +67,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
                 readOnly
                 value={rutaFeed}
                 className={`flex-1 p-2 text-xs rounded-[var(--r-m)] outline-none font-mono ${
-                  'bg-[var(--sunken)] text-[var(--ink)]'
+                  'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
               <button

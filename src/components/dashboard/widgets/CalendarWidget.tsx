@@ -439,7 +439,7 @@ export function CalendarWidget({
       {viewMode === "mini_month" && (
         <div className="space-y-3">
           {/* Calendar Controls */}
-          <div className="flex items-center justify-between bg-[var(--surface)] p-2.5 rounded-[var(--r-m)]">
+          <div className="flex items-center justify-between bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)]">
             <button
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
@@ -531,7 +531,7 @@ export function CalendarWidget({
 
           {/* Details for selected day if clicked */}
           {selectedDayStr && (
-            <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-sans space-y-2">
+            <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs font-sans space-y-2">
               <div className="flex items-center justify-between text-[var(--ink-2)] pb-1.5">
                 <span className="font-bold text-[var(--acc)]/70">
                   Eventos para {selectedDayStr}:
@@ -555,7 +555,7 @@ export function CalendarWidget({
                         selectedDate: evt.dateStr,
                       })
                     }
-                    className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--surface)] flex items-center justify-between cursor-pointer transition-colors"
+                    className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] flex items-center justify-between cursor-pointer transition-colors"
                   >
                     <div>
                       <span
@@ -609,7 +609,7 @@ export function CalendarWidget({
                   key={dateStr}
                   className={`p-2.5 rounded-[var(--r-m)] text-xs flex flex-col justify-between min-h-[90px] transition-all ${
                     dayEvts.length > 0
-                      ? "bg-[var(--surface)]"
+                      ? "bg-[var(--sunken)]"
                       : "bg-[var(--sunken)]/50"
                   }`}
                 >

@@ -373,13 +373,13 @@ export const SpotifyDiscographyModal: React.FC<
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/...)"
-                className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-all bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]"
+                className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-all bg-[var(--sunken)] text-[var(--ink)] placeholder:text-[var(--ink-2)]"
               />
             </div>
             <button
               type="submit"
               disabled={isFetchingDiscography}
-              className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold font-sans text-sm flex items-center justify-center gap-2 cursor-pointer/20 transition-all disabled:opacity-50 shrink-0"
+              className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold font-sans text-sm flex items-center justify-center gap-2 cursor-pointer/20 transition-all disabled:opacity-50 shrink-0"
             >
               {isFetchingDiscography ? (
                 <>
@@ -490,7 +490,7 @@ export const SpotifyDiscographyModal: React.FC<
                 <div className="flex items-center gap-2 flex-wrap">
                   {/* Category Filter */}
                   <div
-                    className={`p-1 rounded-[var(--r-pill)] flex items-center gap-1 ${"bg-[var(--surface)]"}`}
+                    className={`p-1 rounded-[var(--r-pill)] flex items-center gap-1 ${"bg-[var(--sunken)]"}`}
                   >
                     <button
                       type="button"
@@ -568,7 +568,7 @@ export const SpotifyDiscographyModal: React.FC<
                       key={album.id}
                       className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
                         isSelected
-                          ? "bg-[var(--surface)] ring-1 ring-[var(--acc)]/30"
+                          ? "bg-[var(--sunken)] ring-1 ring-[var(--acc)]/30"
                           : "bg-[var(--surface)]/90"
                       }`}
                     >
@@ -660,7 +660,7 @@ export const SpotifyDiscographyModal: React.FC<
 
                       {/* Expanded Tracklist */}
                       {isExpanded && (
-                        <div className=" bg-[var(--sunken)] p-3 sm:p-4 space-y-1.5">
+                        <div className=" bg-[var(--surface)] p-3 sm:p-4 space-y-1.5">
                           <div className="text-[11px] font-sans font-bold text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
                             <span>
                               Tracklist Oficial de Spotify (

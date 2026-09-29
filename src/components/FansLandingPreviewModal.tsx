@@ -85,7 +85,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
         {/* Centro (en pantallas medianas y grandes): Controles Principales */}
         <div className="hidden lg:flex items-center gap-2">
           {/* Selector de Pantalla / Estado */}
-          <div className="flex bg-[var(--surface)] rounded-[var(--r-m)] p-1">
+          <div className="flex bg-[var(--sunken)] rounded-[var(--r-m)] p-1">
             <button
               type="button"
               onClick={() => setPreviewScreen('form')}
@@ -113,7 +113,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           </div>
 
           {/* Selector de Dispositivo */}
-          <div className="flex bg-[var(--surface)] rounded-[var(--r-m)] p-1">
+          <div className="flex bg-[var(--sunken)] rounded-[var(--r-m)] p-1">
             <button
               type="button"
               onClick={() => setDeviceMode('mobile')}
@@ -139,7 +139,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           </div>
 
           {/* Selector de Idioma */}
-          <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] p-1 gap-1">
+          <div className="flex items-center bg-[var(--sunken)] rounded-[var(--r-m)] p-1 gap-1">
             <Globe2 className="w-3 h-3 text-[var(--ink-2)] ml-1 mr-0.5" />
             {FAN_FORM_LANGUAGES.map((l) => (
               <button
@@ -161,7 +161,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
 
           {/* Selector de Concierto */}
           {concerts.length > 0 && (
-            <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] px-2.5 py-1">
+            <div className="flex items-center bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1">
               <Calendar className="w-3.5 h-3.5 text-[var(--acc)] mr-1.5 shrink-0" />
               <select
                 value={selectedConcertId}
@@ -186,7 +186,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer text-xs font-sans"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer text-xs font-sans"
             title={t('previewReset')}
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -208,7 +208,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       {/* BARRA SECUNDARIA DE CONTROLES COMPACTA PARA MÓVIL / TABLET */}
       <div className="lg:hidden w-full bg-[var(--surface)] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0 overflow-x-auto z-20">
         {/* Selector de Pantalla */}
-        <div className="flex bg-[var(--surface)] rounded-[var(--r-s)] p-0.5 shrink-0">
+        <div className="flex bg-[var(--sunken)] rounded-[var(--r-s)] p-0.5 shrink-0">
           <button
             type="button"
             onClick={() => setPreviewScreen('form')}
@@ -230,7 +230,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
         </div>
 
         {/* Selector de Dispositivo */}
-        <div className="flex bg-[var(--surface)] rounded-[var(--r-s)] p-0.5 shrink-0">
+        <div className="flex bg-[var(--sunken)] rounded-[var(--r-s)] p-0.5 shrink-0">
           <button
             type="button"
             onClick={() => setDeviceMode('mobile')}
@@ -252,7 +252,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
         </div>
 
         {/* Idiomas en móvil */}
-        <div className="flex items-center gap-1 bg-[var(--surface)] rounded-[var(--r-s)] p-0.5 shrink-0">
+        <div className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-s)] p-0.5 shrink-0">
           {FAN_FORM_LANGUAGES.map((l) => (
             <button
               key={l.code}
@@ -303,9 +303,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           </div>
         ) : (
           /* MOCKUP DE ESCRITORIO / NAVEGADOR */
-          <div className="w-full max-w-4xl bg-[var(--bg)] rounded-[var(--r-l)] overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
+          <div className="w-full max-w-4xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
             {/* Barra simulada de navegador */}
-            <div className="bg-[var(--surface)] px-4 py-2 flex items-center justify-between gap-3 text-xs font-sans shrink-0">
+            <div className="bg-[var(--sunken)] px-4 py-2 flex items-center justify-between gap-3 text-xs font-sans shrink-0">
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--alert)]/80" />
                 <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)]/80" />

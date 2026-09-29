@@ -336,7 +336,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 {totalEvents > 0 && (
                   <span
                     className={`text-[9px] px-1.5 py-0.2 rounded-[var(--r-pill)] font-mono font-bold ${
-                      isSelected ? 'bg-[var(--sunken)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc)]'
+                      isSelected ? 'bg-[var(--surface)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc)]'
                     }`}
                   >
                     {totalEvents} {totalEvents === 1 ? 'evt' : 'evts'}

@@ -101,7 +101,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
 
       {/* Editor / Simulador Expandido */}
       {isExpanded && (
-        <div className="p-3.5 border-t border-[var(--hair)] space-y-3 bg-[var(--sunken)] text-xs">
+        <div className="p-3.5 border-t border-[var(--hair)] space-y-3 bg-[var(--surface)] text-xs">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🎟️ Anticipada (€)</label>
@@ -109,7 +109,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={anticipada}
                 onChange={(e) => setAnticipada(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -119,7 +119,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={taquilla}
                 onChange={(e) => setTaquilla(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -129,7 +129,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={alquiler}
                 onChange={(e) => setAlquiler(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -139,7 +139,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={pctSala}
                 onChange={(e) => setPctSala(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -149,7 +149,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={gastosViaje}
                 onChange={(e) => setGastosViaje(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
@@ -159,7 +159,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="number"
                 value={numMusicos}
                 onChange={(e) => setNumMusicos(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
           </div>
@@ -204,7 +204,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               <button
                 type="button"
                 onClick={() => setIsExpanded(false)}
-                className="px-3 py-1 rounded bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold hover:bg-[var(--surface)] cursor-pointer"
+                className="px-3 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-semibold hover:bg-[var(--surface)] cursor-pointer"
               >
                 Cerrar
               </button>

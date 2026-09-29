@@ -64,7 +64,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
 
       {/* Quick Specs Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-[11px] font-medium text-[var(--ink-2)]">
             Canales de Mesa Mínimos
           </label>
@@ -216,7 +216,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           value={riderTecnicoText}
           onChange={(e) => setRiderTecnicoText(e.target.value)}
           placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
-          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:leading-relaxed"
+          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:leading-relaxed"
         />
       </div>
     </div>

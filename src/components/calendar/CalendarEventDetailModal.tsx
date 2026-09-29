@@ -511,7 +511,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Phone className="w-3.5 h-3.5" />
                 <span>2. Contactos Clave</span>
                 {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--sunken)] font-mono">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--surface)] font-mono">
                     {modalRoadbook.contactosClave.length}
                   </span>
                 )}
@@ -528,7 +528,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Shirt className="w-3.5 h-3.5" />
                 <span>3. Control Merchandising</span>
                 {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--sunken)] font-mono">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--surface)] font-mono">
                     {modalRoadbook.merchControl.items.length}
                   </span>
                 )}
@@ -562,7 +562,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
                   <span
                     className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] font-mono ${
-                      modalRoadbook.cierreMaterial.every((i) => i.checked) ? 'bg-[var(--ok)] text-[var(--ink)] font-black' : 'bg-[var(--sunken)]'
+                      modalRoadbook.cierreMaterial.every((i) => i.checked) ? 'bg-[var(--ok)] text-[var(--ink)] font-black' : 'bg-[var(--surface)]'
                     }`}
                   >
                     {modalRoadbook.cierreMaterial.filter((i) => i.checked).length}/{modalRoadbook.cierreMaterial.length}
@@ -1011,7 +1011,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           onChange={(e) => setNewContactNombre(e.target.value)}
                           placeholder="Ej: Manuel Producción"
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--surface)] text-[var(--ink)]'
+                            'bg-[var(--sunken)] text-[var(--ink)]'
                           }`}
                         />
                       </div>
@@ -1021,7 +1021,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           value={newContactRol}
                           onChange={(e) => setNewContactRol(e.target.value)}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--surface)] text-[var(--ink)]'
+                            'bg-[var(--sunken)] text-[var(--ink)]'
                           }`}
                         >
                           <option value="Promotor / Sala">Promotor / Sala</option>
@@ -1045,7 +1045,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           onChange={(e) => setNewContactTelefono(e.target.value)}
                           placeholder="+34 600 000 000"
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--surface)] text-[var(--ink)]'
+                            'bg-[var(--sunken)] text-[var(--ink)]'
                           }`}
                         />
                       </div>
@@ -1057,7 +1057,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           onChange={(e) => setNewContactEmail(e.target.value)}
                           placeholder="produccion@sala.com"
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--surface)] text-[var(--ink)]'
+                            'bg-[var(--sunken)] text-[var(--ink)]'
                           }`}
                         />
                       </div>
@@ -1070,7 +1070,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         onChange={(e) => setNewContactNotas(e.target.value)}
                         placeholder="Ej: Contacto para cobro de taquilla y apertura de puerta muelle"
                         className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
+                          'bg-[var(--sunken)] text-[var(--ink)]'
                         }`}
                       />
                     </div>
@@ -1390,7 +1390,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 value={newMerchNombre}
                                 onChange={(e) => setNewMerchNombre(e.target.value)}
                                 className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
-                                  'bg-[var(--surface)] text-[var(--ink)]'
+                                  'bg-[var(--sunken)] text-[var(--ink)]'
                                 }`}
                               />
                             </div>
@@ -1401,7 +1401,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 value={newMerchCategoria}
                                 onChange={(e) => setNewMerchCategoria(e.target.value as any)}
                                 className={`w-full px-2 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
-                                  'bg-[var(--surface)] text-[var(--ink)]'
+                                  'bg-[var(--sunken)] text-[var(--ink)]'
                                 }`}
                               >
                                 <option value="camisetas">👕 Camisetas</option>
@@ -1420,7 +1420,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 value={newMerchTalla}
                                 onChange={(e) => setNewMerchTalla(e.target.value)}
                                 className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
-                                  'bg-[var(--surface)] text-[var(--ink)]'
+                                  'bg-[var(--sunken)] text-[var(--ink)]'
                                 }`}
                               />
                             </div>
@@ -1435,7 +1435,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   value={newMerchPrecio}
                                   onChange={(e) => setNewMerchPrecio(Number(e.target.value) || 0)}
                                   className={`w-full px-2 py-1.5 rounded-[var(--r-m)] outline-none text-xs font-mono ${
-                                    'bg-[var(--surface)] text-[var(--ink)]'
+                                    'bg-[var(--sunken)] text-[var(--ink)]'
                                   }`}
                                 />
                               </div>
@@ -1447,7 +1447,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   value={newMerchStockInicial}
                                   onChange={(e) => setNewMerchStockInicial(Number(e.target.value) || 0)}
                                   className={`w-full px-2 py-1.5 rounded-[var(--r-m)] outline-none text-xs font-mono ${
-                                    'bg-[var(--surface)] text-[var(--ink)]'
+                                    'bg-[var(--sunken)] text-[var(--ink)]'
                                   }`}
                                 />
                               </div>
@@ -1515,7 +1515,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                       <h4 className={`text-xs font-bold font-sans ${textTitle}`}>{item.nombre}</h4>
                                       {item.talla && (
-                                        <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-[var(--sunken)] text-[var(--ink-2)]">
+                                        <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-[var(--surface)] text-[var(--ink-2)]">
                                           {item.talla}
                                         </span>
                                       )}
@@ -1640,7 +1640,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                       <span className="text-xs font-mono font-black text-[var(--acc)]">{vendidas} vendidas</span>
                                       <span className="block text-xs font-mono font-bold text-[var(--ok)]">{subtotal.toFixed(2)} €</span>
                                     </div>
-                                    <div className="w-20 bg-[var(--sunken)] rounded-[var(--r-pill)] h-1 mt-1 overflow-hidden">
+                                    <div className="w-20 bg-[var(--surface)] rounded-[var(--r-pill)] h-1 mt-1 overflow-hidden">
                                       <div
                                         className="h-full bg-[var(--acc)] transition-all duration-300"
                                         style={{ width: `${Math.min(100, pctVendido)}%` }}

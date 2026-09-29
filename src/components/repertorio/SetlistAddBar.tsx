@@ -165,7 +165,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
               }
             }}
             defaultValue=""
-            className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${"bg-[var(--surface)] text-[var(--ink)] hover:"}`}
+            className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${"bg-[var(--sunken)] text-[var(--ink)] hover:"}`}
           >
             <option value="">+ Añadir 1 Tema...</option>
             {sortedSongsByAlbumAndOrder.map((s, idx) => {
@@ -295,7 +295,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                           onChange={(e) => setNewShortcutIcon(e.target.value)}
                           maxLength={2}
                           placeholder="⭐"
-                          className="w-8 bg-[var(--surface)] rounded-[var(--r-s)] p-1 text-center text-xs focus:outline-none"
+                          className="w-8 bg-[var(--sunken)] rounded-[var(--r-s)] p-1 text-center text-xs focus:outline-none"
                         />
                         <input
                           value={newShortcutLabel}
@@ -307,7 +307,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                             if (e.key === "Enter") handleCreateShortcut();
                             if (e.key === "Escape") setIsAddingShortcut(false);
                           }}
-                          className="flex-1 min-w-0 bg-[var(--surface)] rounded-[var(--r-s)] px-2 py-1 text-xs focus:outline-none"
+                          className="flex-1 min-w-0 bg-[var(--sunken)] rounded-[var(--r-s)] px-2 py-1 text-xs focus:outline-none"
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pt-0.5">
@@ -322,7 +322,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                                 Math.max(0, parseInt(e.target.value, 10) || 0),
                               )
                             }
-                            className="w-10 bg-[var(--surface)] rounded text-center text-xs py-0.5 focus:outline-none"
+                            className="w-10 bg-[var(--sunken)] rounded text-center text-xs py-0.5 focus:outline-none"
                           />
                           <span>min</span>
                         </div>

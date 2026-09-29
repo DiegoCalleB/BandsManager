@@ -96,7 +96,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={localBandName}
               onChange={(e) => setLocalBandName(e.target.value)}
               placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
             />
           </div>
 
@@ -111,7 +111,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
             />
           </div>
 
@@ -126,7 +126,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm mb-2"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm mb-2"
             />
             <div className="flex flex-wrap gap-1.5">
               {commonGenres.slice(0, 8).map((g) => (
@@ -271,7 +271,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--bg)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group">
+          <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--surface)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group">
             {logoUrl ? (
               <img
                 src={logoUrl}

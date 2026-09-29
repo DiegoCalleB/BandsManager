@@ -3729,7 +3729,7 @@ export default function RepertorioSetlists({
                       onClick={() => setShowSetlistActionsMenu(false)}
                     />
                     <div
-                      className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                      className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                     >
                       <button
                         type="button"
@@ -3975,7 +3975,7 @@ export default function RepertorioSetlists({
                                     setShowChartSettingsMenu(false)
                                   }
                                 />
-                                <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-2.5 space-y-2.5">
+                                <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--sunken)] p-2.5 space-y-2.5">
                                   <button
                                     type="button"
                                     onClick={() => setShowIdealCurve((v) => !v)}
@@ -4995,7 +4995,7 @@ export default function RepertorioSetlists({
                                 createPortal(
                                   <div
                                     data-key-popover
-                                    className="fixed z-[100] bg-[var(--surface)] rounded-[var(--r-s)] p-2 space-y-1.5 w-[200px]"
+                                    className="fixed z-[100] bg-[var(--sunken)] rounded-[var(--r-s)] p-2 space-y-1.5 w-[200px]"
                                     style={{
                                       top: keyPopoverPos.top,
                                       left: keyPopoverPos.left,
@@ -5138,7 +5138,7 @@ export default function RepertorioSetlists({
                                   // energia = valor*2 para no tocar el resto del sistema, que ya usa escala 1-20.
                                   <div
                                     data-energy-popover
-                                    className="fixed z-[100] bg-[var(--surface)] rounded-[var(--r-s)] p-1.5 flex items-center gap-0.5"
+                                    className="fixed z-[100] bg-[var(--sunken)] rounded-[var(--r-s)] p-1.5 flex items-center gap-0.5"
                                     style={{
                                       top: energyPopoverPos.top,
                                       left: energyPopoverPos.left,
@@ -5810,7 +5810,7 @@ export default function RepertorioSetlists({
                 <select
                   value={catalogAlbumFilter}
                   onChange={(e) => setCatalogAlbumFilter(e.target.value)}
-                  className="text-sm py-2 px-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-medium focus:outline-none cursor-pointer hover:bg-[var(--sunken)] transition-colors"
+                  className="text-sm py-2 px-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] font-medium focus:outline-none cursor-pointer hover:bg-[var(--sunken)] transition-colors"
                 >
                   <option value="todos">Todos los discos</option>
                   {albumsList

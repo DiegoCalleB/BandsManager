@@ -1352,7 +1352,7 @@ Bakandeya Agent Manager IA & Músicos`;
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Buscar por banda, estilo, ciudad o contacto..."
-                  className="w-full bg-[var(--surface)]/90 text-[var(--ink)] pl-9 pr-3 py-2 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50 transition-colors"
+                  className="w-full bg-[var(--sunken)] text-[var(--ink)] pl-9 pr-3 py-2 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50 transition-colors"
                 />
                 {searchTerm && (
                   <button
@@ -1375,7 +1375,7 @@ Bakandeya Agent Manager IA & Músicos`;
                       e.target.value as BandRelationshipStatus | "todos",
                     )
                   }
-                  className="bg-[var(--surface)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
+                  className="bg-[var(--sunken)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
                 >
                   <option value="todos">🤝 Todos los Estados</option>
                   <option value="colegas_aliados">🤝 Colegas / Aliados</option>
@@ -1397,7 +1397,7 @@ Bakandeya Agent Manager IA & Músicos`;
                   id="band-filter-location"
                   value={locationFilter}
                   onChange={(e) => setLocationFilter(e.target.value)}
-                  className="bg-[var(--surface)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer max-w-[160px] truncate"
+                  className="bg-[var(--sunken)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer max-w-[160px] truncate"
                 >
                   <option value="todos">📍 Todas las Ciudades</option>
                   {availableLocations.map((loc) => (

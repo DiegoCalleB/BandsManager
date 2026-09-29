@@ -833,7 +833,7 @@ export function SetlistAIAnalysisModal({
                             key={idx}
                             className={`rounded-[var(--r-s)] p-3 transition cursor-pointer ${
                               isInvalid
-                                ? "bg-[var(--surface)] opacity-50"
+                                ? "bg-[var(--sunken)] opacity-50"
                                 : isHighlighted
                                   ? "bg-[var(--acc)]/80 ring-2 ring-[var(--acc)]/30"
                                   : "bg-[var(--surface)]/80 hover:"

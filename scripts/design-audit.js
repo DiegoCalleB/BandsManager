@@ -77,6 +77,11 @@ const CHECKS = {
     pattern: /(?<![\w:\[-])(?:border(?![\w\[-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
     severity: 'error',
   },
+  textoSobreRelleno: {
+    description: 'texto del mismo color que su relleno sólido (bg-[var(--acc)] + text-[var(--acc)]/acc-ink, ídem ok/alert) — en Oscuro queda invisible; usa text-[var(--on-acc|on-ok|on-alert)]',
+    pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink)\)\](?![\w\/-])/g,
+    severity: 'error',
+  },
   mayusculasDecorativas: {
     description: 'uppercase de Tailwind — visual-identity §1/§6: caja de frase siempre; las versalitas eliminan la silueta de la palabra y cansan en sesiones largas (un literal ya escrito en mayúsculas en el JSX no lo detecta esta regla)',
     pattern: /(?<![\w-])uppercase(?![\w-])/g,

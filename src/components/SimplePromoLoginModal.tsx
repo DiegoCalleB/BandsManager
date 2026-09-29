@@ -445,7 +445,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <div className="w-full h-px bg-[var(--hair)]"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O continuar con</span>
+                    <span className="px-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-medium">O continuar con</span>
                   </div>
                 </div>
 
@@ -569,7 +569,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <div className="w-full h-px bg-[var(--hair)]"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O registrarme con</span>
+                    <span className="px-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-medium">O registrarme con</span>
                   </div>
                 </div>
 

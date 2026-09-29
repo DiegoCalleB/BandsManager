@@ -1464,7 +1464,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
             {/* Step 1: Input & Parameters */}
             <div
-              className={`p-5 rounded-[var(--r-m)] space-y-4 ${"bg-[var(--surface)]"}`}
+              className={`p-5 rounded-[var(--r-m)] space-y-4 ${"bg-[var(--sunken)]"}`}
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-[var(--acc)] flex items-center gap-2">
@@ -1772,7 +1772,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         type="text"
                         value={albumTitle}
                         onChange={(e) => setAlbumTitle(e.target.value)}
-                        className={`px-2.5 py-1 text-xs font-bold rounded ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                        className={`px-2.5 py-1 text-xs font-bold rounded ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                       />
                     </div>
 
@@ -1913,7 +1913,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                 {/* Interactive Visual Concert Timeline */}
                 {tracks.length > 0 && (
-                  <div className="bg-[var(--surface)] p-3 rounded-[var(--r-m)] space-y-1.5">
+                  <div className="bg-[var(--sunken)] p-3 rounded-[var(--r-m)] space-y-1.5">
                     <div className="flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
                       <span className="flex items-center gap-1 font-bold text-[var(--acc)]">
                         <Sliders className="w-3.5 h-3.5" /> Línea del Tiempo del
@@ -2104,7 +2104,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     parseTimeToSeconds(e.target.value),
                                   )
                                 }
-                                className="w-14 px-1 py-0.5 text-center bg-[var(--surface)] rounded text-[var(--acc)] text-xs font-bold"
+                                className="w-14 px-1 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] text-xs font-bold"
                                 title="Tiempo de inicio (MM:SS)"
                               />
                               <span className="text-[var(--ink-2)] text-[11px]">
@@ -2120,7 +2120,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     parseTimeToSeconds(e.target.value),
                                   )
                                 }
-                                className="w-14 px-1 py-0.5 text-center bg-[var(--surface)] rounded text-[var(--acc)] text-xs font-bold"
+                                className="w-14 px-1 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] text-xs font-bold"
                                 title="Tiempo de fin (MM:SS)"
                               />
                               <span className="text-[var(--ink-2)] font-bold text-[11px]">
@@ -2287,8 +2287,8 @@ export const LiveConcertToAlbumModal: React.FC<
                                 }
                                 className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
                                   track.type === "musica"
-                                    ? "bg-[var(--surface)]/90 text-[var(--acc)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
-                                    : "bg-[var(--surface)]/90 text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
+                                    ? "bg-[var(--sunken)] text-[var(--acc)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
+                                    : "bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
                                 }`}
                                 placeholder={
                                   track.type === "musica"
@@ -2413,7 +2413,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                       e.target.value,
                                     )
                                   }
-                                  className="w-14 px-2 py-0.5 text-center bg-[var(--surface)] rounded text-[var(--acc)] font-bold text-xs"
+                                  className="w-14 px-2 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] font-bold text-xs"
                                   placeholder="Mim"
                                 />
                                 <span className="text-[var(--ink-2)] font-semibold text-[11px]">
@@ -2429,7 +2429,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                       parseInt(e.target.value) || 120,
                                     )
                                   }
-                                  className="w-14 px-2 py-0.5 text-center bg-[var(--surface)] rounded text-[var(--acc)] font-bold text-xs"
+                                  className="w-14 px-2 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] font-bold text-xs"
                                   placeholder="120"
                                 />
                                 {track.lyricsWithChords ? (
@@ -2545,7 +2545,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   }
                                   placeholder="[Intro]&#10;[Mim] [Do] [Sol] [Re]&#10;&#10;[Verso 1]&#10;[Mim]En la noche del concierto [Do]cantamos juntos..."
                                   rows={8}
-                                  className="w-full p-3 font-sans text-xs rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--acc)] placeholder-[var(--ink-2)] focus:outline-none focus:leading-relaxed"
+                                  className="w-full p-3 font-sans text-xs rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--acc)] placeholder-[var(--ink-2)] focus:outline-none focus:leading-relaxed"
                                 />
                               </div>
                             )}
@@ -2581,7 +2581,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               }
                               placeholder="[Intro musical / Palabras del artista al público]..."
                               rows={2}
-                              className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none leading-relaxed font-sans"
+                              className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none leading-relaxed font-sans"
                             />
                           </div>
                         )}
@@ -2711,7 +2711,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                                   <button
                                     onClick={() => setActiveSnippet(null)}
-                                    className="p-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                                    className="p-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                                     title="Cerrar reproductor"
                                   >
                                     <X className="w-4 h-4" />
@@ -2724,7 +2724,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               !analyzedSourcePath &&
                               !activeSnippet.audioUrl ? (
                                 <div className="space-y-2">
-                                  <div className="relative rounded-[var(--r-s)] overflow-hidden bg-[var(--surface)] aspect-video max-h-56 mx-auto">
+                                  <div className="relative rounded-[var(--r-s)] overflow-hidden bg-[var(--sunken)] aspect-video max-h-56 mx-auto">
                                     <iframe
                                       key={`yt-embed-${activeSnippet.trackIndex}-${Math.floor(activeSnippet.start)}`}
                                       src={`https://www.youtube-nocookie.com/embed/${getYouTubeVideoId(youtubeUrl)}?start=${Math.floor(activeSnippet.start)}&end=${Math.ceil(activeSnippet.end)}&autoplay=1&enablejsapi=1&rel=0`}
@@ -2799,7 +2799,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                           parseFloat(e.target.value),
                                         )
                                       }
-                                      className="w-full h-2.5 bg-[var(--surface)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)] hover:accent-[var(--acc)] transition-all"
+                                      className="w-full h-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)] hover:accent-[var(--acc)] transition-all"
                                     />
                                   </div>
 
@@ -2808,7 +2808,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     <div className="flex items-center gap-2">
                                       <button
                                         onClick={() => handleSkipSnippet(-5)}
-                                        className="px-2.5 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1"
+                                        className="px-2.5 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1"
                                         title="Retroceder 5 segundos"
                                       >
                                         <RotateCcw className="w-3.5 h-3.5" />{" "}
@@ -2837,7 +2837,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                                       <button
                                         onClick={() => handleSkipSnippet(5)}
-                                        className="px-2.5 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1"
+                                        className="px-2.5 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1"
                                         title="Adelantar 5 segundos"
                                       >
                                         <RotateCw className="w-3.5 h-3.5" /> +5s
@@ -2845,7 +2845,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     </div>
 
                                     {/* Playback speed selector */}
-                                    <div className="flex items-center gap-1 bg-[var(--surface)] p-1 rounded-[var(--r-s)] text-[11px] font-sans">
+                                    <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)] text-[11px] font-sans">
                                       <span className="text-[var(--ink-2)] font-sans px-1 text-[10px]">
                                         Velocidad:
                                       </span>
@@ -3064,7 +3064,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         value={cookiesInputText}
                         onChange={(e) => setCookiesInputText(e.target.value)}
                         placeholder="# Netscape HTTP Cookie File&#10;.youtube.com TRUE / TRUE 1789000000 SID ..."
-                        className="w-full font-sans text-[11px] p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)]"
+                        className="w-full font-sans text-[11px] p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)]"
                       />
                     </div>
 
@@ -3083,7 +3083,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => setCookieModalOpen(false)}
-                          className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold"
+                          className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold"
                         >
                           Cancelar
                         </button>
@@ -3119,7 +3119,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     <div>
                       <h3 className="text-base font-extrabold text-[var(--ink-2)] flex items-center gap-2">
                         <span>Nombrar Temas y Speeches</span>
-                        <span className="text-xs font-sans font-normal px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)] text-[var(--ink-2)]">
+                        <span className="text-xs font-sans font-normal px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                           {tracks.length} cortes
                         </span>
                       </h3>
@@ -3267,8 +3267,8 @@ export const LiveConcertToAlbumModal: React.FC<
                               }
                               className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
                                 tr.type === "musica"
-                                  ? "bg-[var(--surface)]/30 text-[var(--acc)]"
-                                  : "bg-[var(--surface)]/30 text-[var(--ink)]"
+                                  ? "bg-[var(--sunken)] text-[var(--acc)]"
+                                  : "bg-[var(--sunken)] text-[var(--ink)]"
                               }`}
                             />
                             {tr.title && (
@@ -3393,7 +3393,7 @@ export const LiveConcertToAlbumModal: React.FC<
                 {/* Tab 2: Batch Paste */}
                 {quickNamingActiveTab === "paste" && (
                   <div className="flex-1 overflow-y-auto space-y-3 min-h-[300px]">
-                    <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink-2)] space-y-2">
+                    <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink-2)] space-y-2">
                       <p className="font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                         <Sparkles className="w-4 h-4 text-[var(--ink-2)]" />
                         Pega el Setlist o Lista de Canciones y Speeches (una por
@@ -3419,7 +3419,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       onChange={(e) => setBatchPastedText(e.target.value)}
                       rows={10}
                       placeholder={`1. Intro y Saludo al Público\n2. Noches de Garaje\n3. Charla sobre el nuevo disco\n4. Ska del Norte\n5. Canto a la Sombra\n6. Presentación de los músicos\n7. Gira Sin Fin`}
-                      className="w-full p-3 font-sans text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] placeholder-[var(--ink-2)] focus:outline-none leading-relaxed"
+                      className="w-full p-3 font-sans text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] placeholder-[var(--ink-2)] focus:outline-none leading-relaxed"
                     />
 
                     <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
@@ -3456,7 +3456,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     type="button"
                     onClick={() => setShowQuickNamingModal(false)}
-                    className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold transition-colors"
+                    className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold transition-colors"
                   >
                     Listo / Cerrar
                   </button>

@@ -98,7 +98,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Campos de configuración */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
+              <div className="flex items-center justify-between p-3 bg-[var(--sunken)] rounded-[var(--r-m)]">
                 <div className="space-y-0.5 pr-3">
                   <span className="text-xs font-bold text-[var(--ink)]">
                     Mostrar tarjeta de donación
@@ -235,7 +235,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     Bizum (Teléfono)
                   </label>
                 </div>
-                <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:ring-1 focus-within:ring-[var(--ok)] rounded-[var(--r-s)] px-2.5">
+                <div className="flex items-center gap-1 bg-[var(--sunken)] focus-within:ring-1 focus-within:ring-[var(--ok)] rounded-[var(--r-s)] px-2.5">
                   <span className="text-[10px] text-[var(--ink-2)] font-sans">
                     TLF:
                   </span>
@@ -283,7 +283,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       (config.donacionRevolut?.metodoPorDefecto ||
                         "revolut") === "revolut"
                         ? "bg-[var(--acc)]/20 text-[var(--ink-2)]"
-                        : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                        : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--tentative)]" />
@@ -303,7 +303,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
                       config.donacionRevolut?.metodoPorDefecto === "paypal"
                         ? "bg-[var(--tentative)]/50 text-[var(--acc)]/80"
-                        : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                        : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]/80" />
@@ -323,7 +323,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
                       config.donacionRevolut?.metodoPorDefecto === "bizum"
                         ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
-                        : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                        : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]" />
@@ -349,7 +349,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     })
                   }
                   placeholder="Colabora con la banda"
-                  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
                 />
               </div>
 
@@ -370,7 +370,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     })
                   }
                   placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
-                  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
+                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
                 />
               </div>
             </div>
@@ -472,7 +472,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
             return (
               <div
                 key={idioma.code}
-                className=" rounded-[var(--r-m)] p-4 bg-[var(--surface)] space-y-4"
+                className=" rounded-[var(--r-m)] p-4 bg-[var(--sunken)] space-y-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
@@ -621,7 +621,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                       )
                                     }
                                     placeholder={`Instrumento en ${idioma.label}`}
-                                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
+                                    className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
                                   />
                                 </div>
                               )}
@@ -644,7 +644,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                     }
                                     rows={2}
                                     placeholder={`Trayectoria en ${idioma.label}`}
-                                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
+                                    className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
                                   />
                                 </div>
                               )}

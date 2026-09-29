@@ -174,7 +174,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200">
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden font-sans">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--hair)]/10 bg-[var(--surface)]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--hair)]/10 bg-[var(--sunken)]">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">
                 <Cpu className="w-5 h-5" />
@@ -346,7 +346,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3.5 border-t border-[var(--hair)]/10 bg-[var(--surface)] flex items-center justify-between text-xs text-[var(--ink-2)]">
+          <div className="px-6 py-3.5 border-t border-[var(--hair)]/10 bg-[var(--sunken)] flex items-center justify-between text-xs text-[var(--ink-2)]">
             <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
               <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" />
               <span>Concurrencia atómica garantizada con Exponential Backoff</span>

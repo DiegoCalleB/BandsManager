@@ -159,7 +159,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "poster-a4"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
-                  : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
+                  : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -183,7 +183,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "svg"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
-                  : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
+                  : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -207,7 +207,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "png-4k"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
-                  : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
+                  : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -231,7 +231,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "badge"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
-                  : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
+                  : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -252,7 +252,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
         </div>
 
         {/* Opciones de Personalización */}
-        <div className="space-y-4 bg-[var(--surface)] rounded-[var(--r-l)] p-5">
+        <div className="space-y-4 bg-[var(--sunken)] rounded-[var(--r-l)] p-5">
           <label className="text-xs font-bold text-[var(--acc)] font-sans block">
             2. Personalización:
           </label>
@@ -319,7 +319,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           <button
             type="button"
             onClick={handlePrint}
-            className="w-full sm:w-auto py-3 px-5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
+            className="w-full sm:w-auto py-3 px-5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             Imprimir en A4 / Guardar PDF

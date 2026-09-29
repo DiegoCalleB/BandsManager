@@ -1603,7 +1603,7 @@ export function PdfExportModal({
  pequeñas no compita por espacio con los controles y la vista previa, que son lo que
  de verdad hace falta ver de un vistazo. */}
           <div
-            className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 ${"bg-[var(--surface)]"}`}
+            className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 ${"bg-[var(--sunken)]"}`}
           >
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <div className="hidden sm:flex p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] shrink-0">
@@ -1663,7 +1663,7 @@ export function PdfExportModal({
 
           {/* Customization Control Panel */}
           <div
-            className={`p-3 sm:px-6 flex flex-col gap-3 text-xs font-sans shrink-0 ${"bg-[var(--surface)]"}`}
+            className={`p-3 sm:px-6 flex flex-col gap-3 text-xs font-sans shrink-0 ${"bg-[var(--sunken)]"}`}
           >
             {/* Row 1: Mode & Target Selector — en móvil un <select> compacto (los 3 botones en
  fila no cabían sin apretarse); en desktop, los botones de siempre, más cómodos con
@@ -1689,7 +1689,7 @@ export function PdfExportModal({
                 <option value="master">📄 Master Escenario / Sonido</option>
               </select>
 
-              <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)]">
+              <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <button
                   onClick={() => {
                     setPrintMode("all_members");
@@ -1697,7 +1697,7 @@ export function PdfExportModal({
                   }}
                   className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                     printMode === "all_members"
-                      ? "bg-[var(--surface)] text-[var(--ink)]"
+                      ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -1711,7 +1711,7 @@ export function PdfExportModal({
                   }}
                   className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                     printMode === "single_member"
-                      ? "bg-[var(--surface)] text-[var(--ink)]"
+                      ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -1724,7 +1724,7 @@ export function PdfExportModal({
                   }}
                   className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                     printMode === "master"
-                      ? "bg-[var(--surface)] text-[var(--ink)]"
+                      ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -1755,12 +1755,12 @@ export function PdfExportModal({
               {/* Densidad de vista:"sentado" busca el mínimo nº de hojas posible (para leer de
  cerca — atril, mesa de sonido);"de pie" fuerza la letra más grande de todas,
  aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
-              <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)]">
+              <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <button
                   onClick={() => setViewDensity("sentado")}
                   className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                     viewDensity === "sentado"
-                      ? "bg-[var(--surface)] text-[var(--ink)]"
+                      ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
@@ -1771,7 +1771,7 @@ export function PdfExportModal({
                   onClick={() => setViewDensity("de_pie")}
                   className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                     viewDensity === "de_pie"
-                      ? "bg-[var(--surface)] text-[var(--ink)]"
+                      ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
@@ -1834,7 +1834,7 @@ export function PdfExportModal({
                 <select
                   value={handwritingFont}
                   onChange={(e) => setHandwritingFont(e.target.value as any)}
-                  className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] font-bold text-[11px] cursor-pointer"
+                  className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-bold text-[11px] cursor-pointer"
                 >
                   <option value="caveat">✍️ Rotulador Fino (Caveat)</option>
                   <option value="permanent_marker">
@@ -1845,7 +1845,7 @@ export function PdfExportModal({
                 </select>
 
                 {/* Ink color selector */}
-                <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)]">
+                <div className="flex items-center gap-1 bg-[var(--surface)] p-1 rounded-[var(--r-s)]">
                   <button
                     onClick={() => setHandwritingColor("blue")}
                     className={`w-5 h-5 rounded-[var(--r-pill)] bg-[var(--tentative)] transition-transform cursor-pointer ${
@@ -1857,7 +1857,7 @@ export function PdfExportModal({
                   />
                   <button
                     onClick={() => setHandwritingColor("black")}
-                    className={`w-5 h-5 rounded-[var(--r-pill)] bg-[var(--surface)] transition-transform cursor-pointer ${
+                    className={`w-5 h-5 rounded-[var(--r-pill)] bg-[var(--sunken)] transition-transform cursor-pointer ${
                       handwritingColor === "black"
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
@@ -2064,7 +2064,7 @@ export function PdfExportModal({
                     </div>
                   </div>
 
-                  <div className=" bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
+                  <div className=" bg-[var(--sunken)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
                     <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)]">
                       {!isCurrentMaster
                         ? "REPERTORIO PERSONALIZADO"
@@ -2272,7 +2272,7 @@ export function PdfExportModal({
                                 </span>
 
                                 {showTonality && s.tonalidad && (
-                                  <span className="font-sans text-[11pt] font-black px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--ink)] leading-none ml-1 shrink-0">
+                                  <span className="font-sans text-[11pt] font-black px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink)] leading-none ml-1 shrink-0">
                                     {s.tonalidad}
                                   </span>
                                 )}

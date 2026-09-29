@@ -92,7 +92,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
+        <div className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center">
@@ -162,7 +162,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
             )}
 
             {generatedAudioUrl && (
-              <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] space-y-3 animate-in fade-in duration-300">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3 animate-in fade-in duration-300">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold font-sans text-[var(--acc)] flex items-center gap-1.5">
                     <Music className="w-4 h-4" /> Soundtrack Generado con Éxito
@@ -186,7 +186,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                 )}
 
                 {generatedLyrics && (
-                  <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink-2)] max-h-32 overflow-y-auto whitespace-pre-line">
+                  <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)] max-h-32 overflow-y-auto whitespace-pre-line">
                     <p className="text-[10px] text-[var(--acc)] font-bold mb-1">
                       Notas / Letra generada:
                     </p>

@@ -250,7 +250,7 @@ export function SongChordsViewerModal({
           </button>
 
           {/* MODAL HEADER */}
-          <div className="bg-[var(--surface)]  p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="bg-[var(--sunken)]  p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
                 <Music2 className="w-6 h-6" />
@@ -798,7 +798,7 @@ export function SongChordsViewerModal({
 
             {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
             {activeTab === "chords" && showChordDiagrams && (
-              <div className="w-full md:w-64 bg-[var(--surface)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
+              <div className="w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
                 <div className="flex items-center justify-between pb-2">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     🎸 Posiciones de Acordes ({uniqueChords.length})

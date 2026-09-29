@@ -161,7 +161,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setShowMobileMenu(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1.5 w-56 bg-[var(--surface)] rounded-[var(--r-m)] z-50 p-1.5 space-y-1 text-xs">
+                  <div className="absolute right-0 top-full mt-1.5 w-56 bg-[var(--sunken)] rounded-[var(--r-m)] z-50 p-1.5 space-y-1 text-xs">
                     <a
                       href={publicEpkUrl}
                       target="_blank"
@@ -266,7 +266,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <select
             value={activeBlock}
             onChange={(e) => onSelectBlock(e.target.value as EPKBlockId)}
-            className="w-full appearance-none bg-[var(--surface)]/80 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-sans text-[var(--acc)]/70 focus:outline-none focus:cursor-pointer"
+            className="w-full appearance-none bg-[var(--sunken)] rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-sans text-[var(--acc)]/70 focus:outline-none focus:cursor-pointer"
           >
             {EPK_BLOCKS.map((block) => (
               <option

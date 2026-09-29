@@ -524,7 +524,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 ${
                           evt.type === 'campaña'
                             ? 'bg-[var(--acc)]/30 text-[var(--acc)]'
-                            : 'bg-[var(--sunken)] text-[var(--ink)]'
+                            : 'bg-[var(--surface)] text-[var(--ink)]'
                         }`}
                       >
                         <span
@@ -887,7 +887,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     >
                       <div
                         onClick={() => onNavigate?.('fans', { concertId: selectedConcert.id })}
-                        className="p-1 bg-[var(--sunken)] rounded-[var(--r-m)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                        className="p-1 bg-[var(--surface)] rounded-[var(--r-m)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
                         title="Haz clic para abrir la configuración del QR"
                       >
                         <QRCode value={targetQrUrl} size={58} level="M" />
@@ -916,7 +916,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                               setCopiedQrId(selectedConcert.id);
                               setTimeout(() => setCopiedQrId(null), 2000);
                             }}
-                            className="px-2 py-0.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                            className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
                           >
                             {copiedQrId === selectedConcert.id ? (
                               <>
@@ -1009,7 +1009,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     }
                   }}
                   className={`w-full text-[10px] font-mono p-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
-                    'bg-[var(--surface)] text-[var(--ink)]'
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 >
                   <option value="">-- Sin repertorio asignado --</option>
@@ -1156,7 +1156,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             type="text"
                             value={currentRb.contactoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, contactoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
+                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
                           />
                         </div>
                         <div>
@@ -1165,7 +1165,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             type="text"
                             value={currentRb.telefonoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, telefonoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
+                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
                           />
                         </div>
                       </div>
@@ -1176,7 +1176,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           type="text"
                           value={currentRb.hotelNombre}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, hotelNombre: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
+                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
                         />
                       </div>
 
@@ -1186,7 +1186,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           type="text"
                           value={currentRb.cateringInfo}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, cateringInfo: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
+                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
                         />
                       </div>
                     </div>
@@ -1199,7 +1199,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         rows={4}
                         value={currentRb.inputList}
                         onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, inputList: e.target.value })}
-                        className={`w-full p-2 rounded font-mono text-[10px] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                        className={`w-full p-2 rounded font-mono text-[10px] ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                       />
                     </div>
 
@@ -1647,7 +1647,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       value={newRunTime}
                       onChange={(e) => setNewRunTime(e.target.value)}
                       className={`w-16 px-2 py-1 text-[10px] font-mono rounded outline-none ${
-                        'bg-[var(--surface)] text-[var(--ink)]'
+                        'bg-[var(--sunken)] text-[var(--ink)]'
                       }`}
                     />
                     <input
@@ -1656,7 +1656,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       value={newRunActivity}
                       onChange={(e) => setNewRunActivity(e.target.value)}
                       className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${
-                        'bg-[var(--surface)] text-[var(--ink)]'
+                        'bg-[var(--sunken)] text-[var(--ink)]'
                       }`}
                     />
                     <button
@@ -1677,7 +1677,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       value={newGearLabel}
                       onChange={(e) => setNewGearLabel(e.target.value)}
                       className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${
-                        'bg-[var(--surface)] text-[var(--ink)]'
+                        'bg-[var(--sunken)] text-[var(--ink)]'
                       }`}
                     />
                     <button
@@ -1753,7 +1753,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           checked={isChecked}
                           onChange={() => {}} // handled by div click
                           className={`rounded focus:ring-0 cursor-pointer h-3.5 w-3.5 ${
-                            '-slate-300 text-[var(--acc)] bg-[var(--surface)]'
+                            '-slate-300 text-[var(--acc)] bg-[var(--sunken)]'
                           }`}
                         />
                         <p className="text-[10px] font-sans leading-normal flex-1">{item.label}</p>

@@ -1655,7 +1655,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         handleEnrichAddresses();
                       }}
-                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink)] transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-all cursor-pointer active:scale-98 disabled:opacity-50"
                     >
                       <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
@@ -2037,7 +2037,7 @@ export default function BookingCRM({
                     <span>{tab.label}</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
-                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'
                       }`}
                     >
                       {count}

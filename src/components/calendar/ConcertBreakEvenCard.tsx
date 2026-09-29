@@ -46,11 +46,11 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-2 pt-1">
-        <div className="bg-[var(--sunken)] p-1.5 rounded-[var(--r-m)] ">
+        <div className="bg-[var(--surface)] p-1.5 rounded-[var(--r-m)] ">
           <span className="text-[9px] text-[var(--ink-2)] block font-mono">Gastos Estimados</span>
           <span className="text-xs font-bold text-[var(--alert)] font-mono">{analysis.gastosTotalesEstimados} €</span>
         </div>
-        <div className="bg-[var(--sunken)] p-1.5 rounded-[var(--r-m)] ">
+        <div className="bg-[var(--surface)] p-1.5 rounded-[var(--r-m)] ">
           <span className="text-[9px] text-[var(--ink-2)] block font-mono">Para Cubrir Gastos</span>
           <span className="text-xs font-bold text-[var(--acc)] font-mono">
             {analysis.entradasParaBreakEven > 0 ? `${analysis.entradasParaBreakEven} entradas` : 'Cubierto'}

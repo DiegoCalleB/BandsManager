@@ -218,7 +218,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           <button
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
-            className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+            className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
           >
             Seguir en segundo plano
           </button>

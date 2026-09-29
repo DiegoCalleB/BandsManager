@@ -908,7 +908,7 @@ export const Planes: React.FC<PlanesProps> = ({
                             <Check className="w-3 h-3 stroke-[3]" />
                           </div>
                         ) : (
-                          <div className="p-0.5 rounded-[var(--r-pill)] mt-0.5 shrink-0 bg-[var(--surface)] text-[var(--ink-2)]">
+                          <div className="p-0.5 rounded-[var(--r-pill)] mt-0.5 shrink-0 bg-[var(--sunken)] text-[var(--ink-2)]">
                             <X className="w-3 h-3 stroke-[2]" />
                           </div>
                         )}
@@ -1019,7 +1019,7 @@ export const Planes: React.FC<PlanesProps> = ({
         {/* Table Container */}
         <div className="rounded-[var(--r-l)] bg-[var(--surface)] overflow-hidden">
           {/* Header Row on Desktop */}
-          <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[var(--surface)] text-xs font-sans font-bold text-[var(--ink-2)]">
+          <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[var(--sunken)] text-xs font-sans font-bold text-[var(--ink-2)]">
             <div className="col-span-4">Módulo / Funcionalidad</div>
             <div className="col-span-2 text-center text-[var(--ink-2)]">
               Ensayo (0€)
@@ -1047,7 +1047,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   <button
                     type="button"
                     onClick={() => toggleSection(section.title)}
-                    className="w-full p-4 sm:p-5 flex items-center justify-between bg-[var(--surface)] hover:bg-[var(--surface)] transition-colors cursor-pointer text-left"
+                    className="w-full p-4 sm:p-5 flex items-center justify-between bg-[var(--sunken)] hover:bg-[var(--surface)] transition-colors cursor-pointer text-left"
                   >
                     <div className="flex items-center gap-3">
                       <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">

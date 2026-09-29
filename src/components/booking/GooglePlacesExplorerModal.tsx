@@ -1101,7 +1101,7 @@ export function GooglePlacesExplorerModal({
                   type="button"
                   onClick={handleMassCampaignSearch}
                   disabled={isMassCampaignSearching || isSearching}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all/20 cursor-pointer disabled:opacity-50 shrink-0"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all/20 cursor-pointer disabled:opacity-50 shrink-0"
                 >
                   {isMassCampaignSearching ? (
                     <>
@@ -1246,7 +1246,7 @@ export function GooglePlacesExplorerModal({
                     onChange={(e) => setSelectedCity(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     placeholder="Ciudad (ej. Granada, Madrid...)"
-                    className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                    className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                   />
                   {selectedCity && (
                     <button
@@ -1271,12 +1271,12 @@ export function GooglePlacesExplorerModal({
                       CATEGORIES.find((c) => c.id === selectedType)
                         ?.placeholder || "Búsqueda opcional..."
                     }
-                    className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                    className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                   />
                 </div>
 
                 {/* Number of Venues limit (1 a 10) */}
-                <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--bg)] px-3 py-1 rounded-[var(--r-m)]">
+                <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--surface)] px-3 py-1 rounded-[var(--r-m)]">
                   <span className="text-[10px] font-sans text-[var(--ink-2)] whitespace-nowrap">
                     Cantidad:
                   </span>
@@ -1353,7 +1353,7 @@ export function GooglePlacesExplorerModal({
               </div>
 
               {showAdvancedFilters && (
-                <div className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-2 gap-3 animate-fadeIn text-xs">
+                <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-2 gap-3 animate-fadeIn text-xs">
                   <div>
                     <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
                       Aforo Mínimo (personas)
@@ -1763,7 +1763,7 @@ export function GooglePlacesExplorerModal({
           {/* Discarded Suggestions Sub-Modal */}
           {showDiscardedModal && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-[var(--scrim)]/80 animate-fadeIn">
-              <div className="w-full max-w-lg bg-[var(--bg)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
+              <div className="w-full max-w-lg bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
                 <div className="p-4800 flex items-center justify-between bg-[var(--bg)]/60">
                   <div className="flex items-center gap-2">
                     <Ban className="w-4 h-4 text-[var(--alert)]" />
@@ -1794,7 +1794,7 @@ export function GooglePlacesExplorerModal({
                     discardedList.map((item) => (
                       <div
                         key={item.nombre_sala}
-                        className="p-2.5 rounded-[var(--r-m)] bg-[var(--bg)] flex items-center justify-between gap-3 text-xs"
+                        className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between gap-3 text-xs"
                       >
                         <div className="min-w-0">
                           <p className="font-bold text-[var(--ink)] truncate">

@@ -49,7 +49,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             no se muestra.
           </p>
 
-          <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
+          <div className="flex items-center justify-between p-3 bg-[var(--sunken)] rounded-[var(--r-m)]">
             <div className="space-y-0.5 pr-3">
               <span className="text-xs font-bold text-[var(--ink)]">
                 Mostrar cifras clave en el dossier público
@@ -117,7 +117,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                     })
                   }
                   placeholder={campo.placeholder}
-                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
                 />
               </div>
             ))}
@@ -139,7 +139,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             bloque no se muestra hasta que lo actives y tenga al menos una cita.
           </p>
 
-          <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
+          <div className="flex items-center justify-between p-3 bg-[var(--sunken)] rounded-[var(--r-m)]">
             <div className="space-y-0.5 pr-3">
               <span className="text-xs font-bold text-[var(--ink)]">
                 Mostrar reseñas de prensa en el dossier público
@@ -169,7 +169,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             {(config.resenasPrensa?.citas || []).map((cita, idx) => (
               <div
                 key={cita.id}
-                className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2"
+                className="rounded-[var(--r-m)] bg-[var(--sunken)] p-3.5 space-y-2"
               >
                 <div className="flex items-start gap-2">
                   <textarea

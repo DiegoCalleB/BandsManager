@@ -52,7 +52,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             type="button"
             onClick={() => setMoisesTab('stems')}
             className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+              moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
             <Sliders className="w-3.5 h-3.5" /> Separar Pistas
@@ -63,7 +63,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'how_it_works'
                 ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
-                : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
             <Info className="w-3.5 h-3.5" /> ¿Cómo funciona?
@@ -72,7 +72,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             type="button"
             onClick={() => setMoisesTab('upload')}
             className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+              moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
             <Upload className="w-3.5 h-3.5" /> Subir Pistas
@@ -118,7 +118,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
               <button
                 type="button"
                 onClick={() => setShowMoisesStemsModal(null)}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
               >
                 Cancelar
               </button>

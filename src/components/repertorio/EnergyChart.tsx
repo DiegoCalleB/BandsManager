@@ -522,7 +522,7 @@ export function EnergyChart({
             const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
             return (
               <div
-                className="absolute z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap"
+                className="absolute z-20 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap"
                 style={{
                   boxShadow: `0 0 0 2px ${info.hexColor}66`,
                   ...(isTouch
@@ -558,7 +558,7 @@ export function EnergyChart({
         {draggingFromIndex !== null &&
           dragAxis !== "y" &&
           hoverIndex !== null && (
-            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap">
+            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap">
               <span className="text-[var(--acc)]/70 font-bold">
                 {chartData[draggingFromIndex]?.name}
               </span>

@@ -251,7 +251,7 @@ export function ImportSetlistModal({
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
       <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto pointer-events-auto">
-        <div className="sticky top-0 z-10 bg-[var(--surface)] p-3 flex justify-between items-center">
+        <div className="sticky top-0 z-10 bg-[var(--sunken)] p-3 flex justify-between items-center">
           <div className="flex items-center gap-2.5">
             <ImagePlus className="w-5 h-5 text-[var(--ink-2)]" />
             <h2 className="text-base font-bold">
@@ -332,7 +332,7 @@ export function ImportSetlistModal({
                     return (
                       <div
                         key={idx}
-                        className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ? "bg-[var(--surface)]/80" : "bg-[var(--surface)] opacity-50"}`}
+                        className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ? "bg-[var(--surface)]/80" : "bg-[var(--sunken)] opacity-50"}`}
                       >
                         <span className="text-xs text-[var(--ink-2)]">
                           📋 {it.titulo}{" "}
@@ -355,7 +355,7 @@ export function ImportSetlistModal({
                   return (
                     <div
                       key={idx}
-                      className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ? "bg-[var(--surface)] opacity-50" : "bg-[var(--surface)]/80"}`}
+                      className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ? "bg-[var(--sunken)] opacity-50" : "bg-[var(--surface)]/80"}`}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-xs text-[var(--ink-2)] flex items-center gap-1.5">
@@ -376,7 +376,7 @@ export function ImportSetlistModal({
                               action: e.target.value as SongAction,
                             })
                           }
-                          className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] font-sans"
+                          className="text-[10px] bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] font-sans"
                         >
                           {it.matchedSongId && (
                             <option value="link_matched">
@@ -401,7 +401,7 @@ export function ImportSetlistModal({
                               updateSongItem(idx, { newTitle: e.target.value })
                             }
                             placeholder="Título de la canción nueva"
-                            className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
+                            className="text-[10px] bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
                           />
                         )}
                         {it.action === "link_other" && (
@@ -412,7 +412,7 @@ export function ImportSetlistModal({
                                 linkedSongId: e.target.value,
                               })
                             }
-                            className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
+                            className="text-[10px] bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
                           >
                             <option value="">
                               Elige una canción del catálogo...

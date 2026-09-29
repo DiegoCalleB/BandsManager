@@ -4875,7 +4875,7 @@ export default function SongStudioModal({
                                       step={0.05}
                                       value={currentTime}
                                       onChange={(e) => handleSeekIdea(idea, parseFloat(e.target.value))}
-                                      className="w-full accent-indigo-500 h-2 bg-[var(--surface)]/80 rounded-[var(--r-s)] cursor-pointer relative z-10 opacity-90 hover:opacity-100"
+                                      className="w-full accent-indigo-500 h-2 bg-[var(--surface)] rounded-[var(--r-s)] cursor-pointer relative z-10 opacity-90 hover:opacity-100"
                                     />
                                   </div>
                                 );
@@ -4969,7 +4969,7 @@ export default function SongStudioModal({
                                                     : isSolo
                                                       ? 'bg-[var(--acc)]/10 /80 ring-1 ring-[var(--acc)]/40 border-l-[var(--acc)]/30/30'
                                                       : hasSoloInIdea
-                                                        ? 'bg-[var(--sunken)] /80 opacity-40 grayscale-[50%]'
+                                                        ? 'bg-[var(--surface)] /80 opacity-40 grayscale-[50%]'
                                                         : 'bg-[var(--ink)]/5 '
                                             } hover:brightness-95`}
                                           >
@@ -5025,7 +5025,7 @@ export default function SongStudioModal({
                                                           onKeyDown={(e) =>
                                                             e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)
                                                           }
-                                                          className="w-full min-w-0 px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[11px] text-[var(--ink)] font-bold"
+                                                          className="w-full min-w-0 px-1.5 py-0.5 rounded bg-[var(--surface)] text-[11px] text-[var(--ink)] font-bold"
                                                           autoFocus
                                                         />
                                                         <button
@@ -5095,7 +5095,7 @@ export default function SongStudioModal({
                                                       step={0.05}
                                                       value={isMuted ? 0 : vol}
                                                       onChange={(e) => handleTrackVolumeChange(idea, tr.id, parseFloat(e.target.value))}
-                                                      className="flex-1 min-w-0 accent-indigo-500 h-1 bg-[var(--surface)]/80 rounded cursor-pointer"
+                                                      className="flex-1 min-w-0 accent-indigo-500 h-1 bg-[var(--surface)] rounded cursor-pointer"
                                                       title={`Volumen: ${Math.round(vol * 100)}%`}
                                                     />
 
@@ -5169,7 +5169,7 @@ export default function SongStudioModal({
                                                       step={0.05}
                                                       value={tr.pan ?? 0}
                                                       onChange={(e) => handleTrackPanChange(idea, tr.id, parseFloat(e.target.value))}
-                                                      className="w-full accent-purple-400 h-1 bg-[var(--surface)] rounded cursor-pointer"
+                                                      className="w-full accent-purple-400 h-1 bg-[var(--sunken)] rounded cursor-pointer"
                                                     />
                                                     <span className="text-[9px] font-bold text-[var(--ink-2)]">R</span>
                                                     <span className="text-[9px] text-[var(--tentative)]/80 font-bold shrink-0 min-w-[36px] text-right">
@@ -5213,7 +5213,7 @@ export default function SongStudioModal({
                                                       step={1}
                                                       value={tr.eqLow ?? 0}
                                                       onChange={(e) => handleTrackEqChange(idea, tr.id, 'low', parseFloat(e.target.value))}
-                                                      className="w-full accent-purple-400 h-1 bg-[var(--surface)] rounded cursor-pointer"
+                                                      className="w-full accent-purple-400 h-1 bg-[var(--sunken)] rounded cursor-pointer"
                                                     />
                                                   </div>
 
@@ -5229,7 +5229,7 @@ export default function SongStudioModal({
                                                       step={1}
                                                       value={tr.eqMid ?? 0}
                                                       onChange={(e) => handleTrackEqChange(idea, tr.id, 'mid', parseFloat(e.target.value))}
-                                                      className="w-full accent-purple-400 h-1 bg-[var(--surface)] rounded cursor-pointer"
+                                                      className="w-full accent-purple-400 h-1 bg-[var(--sunken)] rounded cursor-pointer"
                                                     />
                                                   </div>
 
@@ -5245,7 +5245,7 @@ export default function SongStudioModal({
                                                       step={1}
                                                       value={tr.eqHigh ?? 0}
                                                       onChange={(e) => handleTrackEqChange(idea, tr.id, 'high', parseFloat(e.target.value))}
-                                                      className="w-full accent-purple-400 h-1 bg-[var(--surface)] rounded cursor-pointer"
+                                                      className="w-full accent-purple-400 h-1 bg-[var(--sunken)] rounded cursor-pointer"
                                                     />
                                                   </div>
 
@@ -5543,7 +5543,7 @@ export default function SongStudioModal({
                                           step={10}
                                           value={autoLatencyTrimMs}
                                           onChange={(e) => setAutoLatencyTrimMs(Number(e.target.value))}
-                                          className="w-full h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-amber-400"
+                                          className="w-full h-1.5 bg-[var(--surface)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-amber-400"
                                         />
                                       </div>
                                     </div>

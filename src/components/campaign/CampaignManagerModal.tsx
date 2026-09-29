@@ -294,9 +294,9 @@ export function CampaignManagerModal({
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
-      <div className="bg-[var(--bg)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="p-5 flex items-center justify-between bg-[var(--surface)] ">
+        <div className="p-5 flex items-center justify-between bg-[var(--sunken)] ">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--hair)]/20 text-[var(--hair)]/80 flex items-center justify-center">
               <Target className="w-5 h-5" />
@@ -355,7 +355,7 @@ export function CampaignManagerModal({
                       setFormData({ ...formData, name: e.target.value })
                     }
                     placeholder="Ej: Campaña Diciembre 2026"
-                    className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
+                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
                   />
                 </div>
                 <div>
@@ -422,7 +422,7 @@ export function CampaignManagerModal({
                       }
                     }}
                     placeholder="Añadir ciudad (ej. Barcelona) y pulsar Enter"
-                    className="flex-1 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
+                    className="flex-1 bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
                   />
                   <button
                     type="button"
@@ -449,7 +449,7 @@ export function CampaignManagerModal({
                         minCapacity: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
+                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
                   />
                 </div>
                 <div>
@@ -465,7 +465,7 @@ export function CampaignManagerModal({
                         maxCapacity: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
+                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
                   />
                 </div>
               </div>
@@ -480,7 +480,7 @@ export function CampaignManagerModal({
                     {formData.targetDates?.map((date, idx) => (
                       <div
                         key={idx}
-                        className="flex flex-col gap-1 bg-[var(--surface)] px-2.5 py-1.5 rounded-[var(--r-m)] text-[var(--ink)]"
+                        className="flex flex-col gap-1 bg-[var(--sunken)] px-2.5 py-1.5 rounded-[var(--r-m)] text-[var(--ink)]"
                       >
                         <div className="flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -545,7 +545,7 @@ export function CampaignManagerModal({
                     setFormData({ ...formData, notes: e.target.value })
                   }
                   placeholder="Ej: Intercambio con bandas de ska/mestizaje locales para compartir backline y taquilla al 50%."
-                  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
+                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
                 />
               </div>
 
@@ -600,7 +600,7 @@ export function CampaignManagerModal({
                         className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors ${
                           isSelected
                             ? "bg-[var(--acc)]/30 text-[var(--acc)]/40"
-                            : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:"
+                            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:"
                         }`}
                       >
                         <cat.icon className="w-3 h-3" />
@@ -625,7 +625,7 @@ export function CampaignManagerModal({
                     )
                   }
                   placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para"${PITCH_CATEGORIES.find((c) => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
-                  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
+                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
                 />
                 <p className="text-[11px] text-[var(--ink-2)] italic mt-1">
                   💡 Cada caso de uso tiene su propio mensaje. Mientras esta
@@ -677,7 +677,7 @@ export function CampaignManagerModal({
                 className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
                   !activeCampaign
                     ? "bg-[var(--surface)]/80 ring-1 ring-[var(--acc)]/30"
-                    : "bg-[var(--surface)] hover:text-[var(--ink-2)] hover:text-[var(--ink-2)]"
+                    : "bg-[var(--sunken)] hover:text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -727,7 +727,7 @@ export function CampaignManagerModal({
                       className={`p-4 rounded-[var(--r-m)] transition-all relative overflow-hidden ${
                         isActive
                           ? "bg-[var(--surface)]/60 ring-1 ring-[var(--acc)]/30"
-                          : "bg-[var(--surface)] hover:"
+                          : "bg-[var(--sunken)] hover:"
                       }`}
                     >
                       {/* Left accent stripe */}
@@ -872,7 +872,7 @@ export function CampaignManagerModal({
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-[var(--surface)] flex justify-between items-center text-xs text-[var(--ink-2)]">
+        <div className="p-4 bg-[var(--sunken)] flex justify-between items-center text-xs text-[var(--ink-2)]">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[var(--ok)]" />
             <span>Persistencia en Supabase PostgreSQL</span>
