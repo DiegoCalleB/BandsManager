@@ -45,15 +45,7 @@ import {
   Calendar,
   Heart,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
+import { OndaSeries } from "../ui/Onda";
 import { api } from "../../services/api";
 import {
   getDeterministicGrowthPlan,
@@ -936,6 +928,31 @@ export function ReelsMetricsView({
     return [0, Math.ceil(maxVisibleValue * 1.1)];
   }, [maxVisibleValue]);
 
+  // La Onda pinta barras, no curvas: como mucho 10 fechas repartidas por el periodo (siempre la
+  // última) y una serie por canal activo.
+  const ondaSeries = React.useMemo(() => {
+    const total = chartTimelineData.length;
+    const step = Math.max(1, Math.ceil(total / 10));
+    const sampled = chartTimelineData.filter((_: unknown, i: number) => i % step === 0 || i === total - 1);
+    const etiqueta = (f: string) => {
+      const parts = (f || "").split("-");
+      return parts.length === 3 ? `${parts[2]}/${parts[1]}` : f;
+    };
+    const canales = [
+      { key: "instagram", on: hasInstagram && selectedChannels.instagram, label: "Instagram", color: "var(--acc)" },
+      { key: "tiktok", on: hasTikTok && selectedChannels.tiktok, label: "TikTok", color: "var(--ink)" },
+      { key: "youtube", on: hasYouTube && selectedChannels.youtube, label: "YouTube", color: "var(--ink-2)" },
+      { key: "spotify", on: hasSpotify && selectedChannels.spotify, label: "Spotify", color: "var(--ok)" },
+    ];
+    return canales
+      .filter((c) => c.on)
+      .map((c) => ({
+        label: c.label,
+        color: c.color,
+        data: sampled.map((d: any) => ({ label: etiqueta(d.fecha), value: Number(d[c.key] || 0) })),
+      }));
+  }, [chartTimelineData, selectedChannels, hasInstagram, hasTikTok, hasYouTube, hasSpotify]);
+
   const activeCount = [
     hasInstagram,
     hasTikTok,
@@ -1744,169 +1761,15 @@ export function ReelsMetricsView({
                     </button>
                   </div>
                 ) : (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                      data={chartTimelineData}
-                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                    >
-                      <defs>
-                        <linearGradient
-                          id="colorInstagram"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="var(--alert)"
-                            stopOpacity={0.25}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="var(--alert)"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="colorTikTok"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="var(--ok)"
-                            stopOpacity={0.25}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="var(--ok)"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="colorSpotify"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="var(--ok)"
-                            stopOpacity={0.25}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="var(--ok)"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="colorYouTube"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="var(--alert)"
-                            stopOpacity={0.25}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="var(--alert)"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        vertical={false}
-                        stroke={"#e2e8f0"}
-                      />
-                      <XAxis
-                        dataKey="fecha"
-                        stroke="var(--ink-2)"
-                        fontSize={9}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(tick) => {
-                          const parts = tick.split("-");
-                          return parts.length === 3
-                            ? `${parts[2]}/${parts[1]}`
-                            : tick;
-                        }}
-                      />
-                      <YAxis
-                        domain={yAxisDomain}
-                        stroke="var(--ink-2)"
-                        fontSize={9}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(val) =>
-                          val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val
-                        }
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "var(--surface)",
-                          borderColor: "var(--hair)",
-                          borderRadius: "8px",
-                          fontSize: "10px",
-                          fontFamily: "monospace",
-                        }}
-                        labelStyle={{ fontWeight: "bold", color: "var(--ink)" }}
-                      />
-                      {hasInstagram && selectedChannels.instagram && (
-                        <Area
-                          type="monotone"
-                          dataKey="instagram"
-                          name="Instagram"
-                          stroke="#ec4899"
-                          strokeWidth={2}
-                          fillOpacity={1}
-                          fill="url(#colorInstagram)"
-                        />
-                      )}
-                      {hasTikTok && selectedChannels.tiktok && (
-                        <Area
-                          type="monotone"
-                          dataKey="tiktok"
-                          name="TikTok"
-                          stroke="#06b6d4"
-                          strokeWidth={2}
-                          fillOpacity={1}
-                          fill="url(#colorTikTok)"
-                        />
-                      )}
-                      {hasYouTube && selectedChannels.youtube && (
-                        <Area
-                          type="monotone"
-                          dataKey="youtube"
-                          name="YouTube"
-                          stroke="#ef4444"
-                          strokeWidth={2}
-                          fillOpacity={1}
-                          fill="url(#colorYouTube)"
-                        />
-                      )}
-                      {hasSpotify && selectedChannels.spotify && (
-                        <Area
-                          type="monotone"
-                          dataKey="spotify"
-                          name="Spotify"
-                          stroke="var(--ok)"
-                          strokeWidth={2}
-                          fillOpacity={1}
-                          fill="url(#colorSpotify)"
-                        />
-                      )}
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <div className="h-full w-full flex items-end">
+                    <OndaSeries
+                      className="w-full"
+                      height={190}
+                      barWidth={ondaSeries.length > 2 ? 8 : 12}
+                      gap={2}
+                      series={ondaSeries}
+                    />
+                  </div>
                 )}
               </div>
             </div>

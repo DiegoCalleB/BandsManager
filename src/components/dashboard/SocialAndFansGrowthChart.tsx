@@ -23,15 +23,7 @@ import {
   Calendar,
   Clock,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
+import { OndaSeries } from "../ui/Onda";
 
 export type TimePeriod = "7d" | "30d" | "90d" | "1y" | "all";
 
@@ -471,16 +463,31 @@ export const SocialAndFansGrowthChart: React.FC<
   }, [chartTimelineData]);
 
   // Calculate dynamic Y-axis maximum domain based on active visible channels
-  const yAxisDomain = useMemo(() => {
-    let max = 100;
-    chartTimelineData.forEach((d) => {
-      if (selectedChannels.instagram) max = Math.max(max, d.instagram || 0);
-      if (selectedChannels.tiktok) max = Math.max(max, d.tiktok || 0);
-      if (selectedChannels.youtube) max = Math.max(max, d.youtube || 0);
-      if (selectedChannels.spotify) max = Math.max(max, d.spotify || 0);
-      if (selectedChannels.fans) max = Math.max(max, d.fans || 0);
-    });
-    return [0, Math.ceil(max * 1.15)];
+
+  // La Onda pinta barras, no curvas: se muestrean como mucho 10 fechas repartidas por el periodo
+  // (siempre incluida la última) y una serie por canal activo.
+  const ondaSeries = useMemo(() => {
+    const total = chartTimelineData.length;
+    const step = Math.max(1, Math.ceil(total / 10));
+    const sampled = chartTimelineData.filter((_, i) => i % step === 0 || i === total - 1);
+    const etiqueta = (f: string) => {
+      const parts = (f || "").split("-");
+      return parts.length === 3 ? `${parts[2]}/${parts[1]}` : f;
+    };
+    const canales: { key: "instagram" | "tiktok" | "youtube" | "spotify" | "fans"; label: string; color: string }[] = [
+      { key: "fans", label: "Fans registrados", color: "var(--acc)" },
+      { key: "instagram", label: "Instagram", color: "var(--ok)" },
+      { key: "tiktok", label: "TikTok", color: "var(--ink)" },
+      { key: "youtube", label: "YouTube", color: "var(--ink-2)" },
+      { key: "spotify", label: "Spotify", color: "var(--ink-3)" },
+    ];
+    return canales
+      .filter((c) => selectedChannels[c.key])
+      .map((c) => ({
+        label: c.label,
+        color: c.color,
+        data: sampled.map((d: any) => ({ label: etiqueta(d.fecha), value: Number(d[c.key] || 0) })),
+      }));
   }, [chartTimelineData, selectedChannels]);
 
   // Channel toggling handlers
@@ -1008,193 +1015,15 @@ export const SocialAndFansGrowthChart: React.FC<
             </button>
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={chartTimelineData}
-              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient
-                  id="dashboardColorInstagram"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--alert)"
-                    stopOpacity={0.25}
-                  />
-                  <stop offset="95%" stopColor="var(--alert)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient
-                  id="dashboardColorTikTok"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="5%" stopColor="var(--ok)" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="var(--ok)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient
-                  id="dashboardColorSpotify"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="5%" stopColor="var(--ok)" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="var(--ok)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient
-                  id="dashboardColorYouTube"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--alert)"
-                    stopOpacity={0.25}
-                  />
-                  <stop offset="95%" stopColor="var(--alert)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient
-                  id="dashboardColorFans"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="5%" stopColor="var(--acc)" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="var(--acc)" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={false}
-                stroke={"var(--hair)"}
-              />
-
-              <XAxis
-                dataKey="fecha"
-                stroke="var(--ink-2)"
-                fontSize={9}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(tick) => {
-                  if (!tick) return "";
-                  const parts = tick.split("-");
-                  return parts.length === 3 ? `${parts[2]}/${parts[1]}` : tick;
-                }}
-              />
-
-              <YAxis
-                domain={yAxisDomain}
-                stroke="var(--ink-2)"
-                fontSize={9}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(val) =>
-                  val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val
-                }
-              />
-
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "var(--surface)",
-                  border: "none",
-                  borderRadius: "10px",
-                  fontSize: "11px",
-                  fontFamily: "monospace",
-                  boxShadow: "0 10px 25px -5px rgba(0,0,0,0.4)",
-                }}
-                labelStyle={{
-                  fontWeight: "bold",
-                  color: "var(--ink)",
-                  marginBottom: "4px",
-                }}
-                formatter={(value: any, name: any) => {
-                  const num = Number(value || 0);
-                  const formatted =
-                    num >= 1000
-                      ? `${num.toLocaleString()} (${(num / 1000).toFixed(1)}k)`
-                      : `${num}`;
-                  if (name === "Fans Registrados (BD / Únete)") {
-                    return [
-                      `${formatted} (${uneteFans} vía formulario Únete)`,
-                      name,
-                    ];
-                  }
-                  return [formatted, name];
-                }}
-              />
-
-              {selectedChannels.instagram && (
-                <Area
-                  type="monotone"
-                  dataKey="instagram"
-                  name="Instagram"
-                  stroke="var(--alert)"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#dashboardColorInstagram)"
-                />
-              )}
-
-              {selectedChannels.tiktok && (
-                <Area
-                  type="monotone"
-                  dataKey="tiktok"
-                  name="TikTok"
-                  stroke="var(--ok)"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#dashboardColorTikTok)"
-                />
-              )}
-
-              {selectedChannels.youtube && (
-                <Area
-                  type="monotone"
-                  dataKey="youtube"
-                  name="YouTube"
-                  stroke="var(--alert)"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#dashboardColorYouTube)"
-                />
-              )}
-
-              {selectedChannels.spotify && (
-                <Area
-                  type="monotone"
-                  dataKey="spotify"
-                  name="Spotify"
-                  stroke="var(--ok)"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#dashboardColorSpotify)"
-                />
-              )}
-
-              {selectedChannels.fans && (
-                <Area
-                  type="monotone"
-                  dataKey="fans"
-                  name="Fans Registrados (BD / Únete)"
-                  stroke="var(--acc)"
-                  strokeWidth={3}
-                  fillOpacity={1}
-                  fill="url(#dashboardColorFans)"
-                />
-              )}
-            </AreaChart>
-          </ResponsiveContainer>
+          <div className="h-full w-full flex items-end">
+            <OndaSeries
+              className="w-full"
+              height={190}
+              barWidth={ondaSeries.length > 3 ? 7 : 11}
+              gap={2}
+              series={ondaSeries}
+            />
+          </div>
         )}
       </div>
 

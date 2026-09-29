@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
-import {
   Building2,
   DollarSign,
   Users,
@@ -20,7 +9,7 @@ import {
 } from "lucide-react";
 import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from "../../../types";
 import { getEnergyInfo } from "../../../utils/energyPacingUtils";
-import { Onda } from "../../ui/Onda";
+import { Onda, OndaSeries } from "../../ui/Onda";
 import { api } from "../../../services/api";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
@@ -309,92 +298,21 @@ export function RepertorioEnergyChartWidget({
         </div>
       </div>
 
-      {/* Chart Area — misma curva de energía que el Mapa de Energía de Repertorio
- (versión de solo lectura, sin drag/zonas/eventos de habla: aquí es solo
- una vista previa), no el Onda de barras — para que el Dashboard reconozca
- de un vistazo la misma forma que ya conoce de Repertorio. */}
-      <div className={`w-full ${minHeightClass} pt-2`}>
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={chartData}
-            margin={{ top: 14, right: 10, left: 10, bottom: 0 }}
-          >
-            <defs>
-              <linearGradient id="dashEnergyStroke" x1="0" y1="0" x2="1" y2="0">
-                {chartData.map((d, i) => (
-                  <stop
-                    key={d.num}
-                    offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
-                    stopColor={d.hexColor}
-                  />
-                ))}
-              </linearGradient>
-              <linearGradient id="dashEnergyFill" x1="0" y1="0" x2="1" y2="0">
-                {chartData.map((d, i) => (
-                  <stop
-                    key={d.num}
-                    offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
-                    stopColor={d.hexColor}
-                    stopOpacity={0.22}
-                  />
-                ))}
-              </linearGradient>
-            </defs>
-            <YAxis domain={[0, 20]} hide />
-            <XAxis dataKey="num" hide />
-            <Tooltip
-              contentStyle={{
-                background: "var(--surface)",
-                borderRadius: "var(--r-m)",
-                fontSize: 11,
-              }}
-              labelFormatter={(num) =>
-                chartData.find((d) => d.num === num)?.title || `Tema ${num}`
-              }
-              formatter={(val: number, _name, item) => {
-                const payload = (item?.payload as Record<string, number>) || {};
-                return [`${val}/20 · ${payload.bpm ?? ""} BPM`, "Energía"];
-              }}
-            />
-            <Area
-              type="monotone"
-              dataKey="energy"
-              stroke="url(#dashEnergyStroke)"
-              strokeWidth={2.5}
-              fill="url(#dashEnergyFill)"
-              fillOpacity={1}
-              isAnimationActive={true}
-              dot={(dotProps: {
-                cx?: number;
-                cy?: number;
-                payload?: Record<string, unknown>;
-              }) => {
-                const { cx, cy, payload } = dotProps;
-                if (cx == null || cy == null)
-                  return (
-                    <React.Fragment
-                      key={`d-${(payload as Record<string, unknown>)?.num}`}
-                    />
-                  );
-                const hexColor =
-                  (payload as Record<string, unknown>)?.hexColor ||
-                  "var(--acc)";
-                return (
-                  <circle
-                    key={`d-${(payload as Record<string, unknown>)?.num}`}
-                    cx={cx}
-                    cy={cy}
-                    r={4}
-                    strokeWidth={1.5}
-                    stroke="var(--surface)"
-                    fill={String(hexColor)}
-                  />
-                );
-              }}
-              activeDot={{ r: 6, strokeWidth: 2, stroke: "var(--surface)" }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      {/* Energía del setlist como Onda: una barra por tema, altura = energía, color = nivel de energía */}
+      <div className={`w-full ${minHeightClass} pt-2 flex items-end`}>
+        <Onda
+          className="w-full"
+          data={chartData.map((d) => ({
+            label: `${d.num}. ${d.title}`,
+            value: d.energy,
+            color: d.hexColor,
+          }))}
+          height={heightMode === "compact" ? 150 : heightMode === "tall" ? 300 : 220}
+          barWidth={22}
+          gap={6}
+          showLabels={false}
+          tooltipFormatter={(v) => `${v}/20`}
+        />
       </div>
     </div>
   );
@@ -582,70 +500,17 @@ export function FinancesChartWidget({
         </div>
       </div>
 
-      <div className={`w-full ${minHeightClass} pt-2`}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={defaultMonths}
-            margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
-          >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="var(--hair)"
-              vertical={false}
-            />
-            <XAxis dataKey="month" stroke="var(--ink-3)" fontSize={10} />
-            <YAxis stroke="var(--ink-3)" fontSize={10} />
-            <Tooltip
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload;
-                  return (
-                    <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] font-sans text-xs text-[var(--ink)] z-50">
-                      <div className="font-bold text-[var(--ok)]">
-                        {data.month}
-                      </div>
-                      <div className="text-[var(--ink-2)] mt-1 space-y-0.5">
-                        <div>
-                          Ingresos:{" "}
-                          <span className="font-bold text-[var(--ok)]">
-                            +{data.ingresos}€
-                          </span>
-                        </div>
-                        <div>
-                          Gastos:{" "}
-                          <span className="font-bold text-[var(--alert)]">
-                            -{data.gastos}€
-                          </span>
-                        </div>
-                        <div>
-                          Caché Medio:{" "}
-                          <span
-                            className={`font-bold ${"text-[var(--acc)]"}`}
-                          >
-                            {data.cacheMedio}€
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-                return null;
-              }}
-            />
-            <Bar
-              dataKey="ingresos"
-              fill="var(--ok)"
-              radius={[4, 4, 0, 0]}
-              name="Ingresos"
-            />
-            <Bar
-              dataKey="gastos"
-              fill="var(--alert)"
-              radius={[4, 4, 0, 0]}
-              name="Gastos"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+      <div className={`w-full ${minHeightClass} pt-2 flex items-end`}>
+        <OndaSeries
+          className="w-full"
+          series={[
+            { label: "Ingresos", color: "var(--acc)", data: defaultMonths.map((m) => ({ label: m.month, value: m.ingresos })) },
+            { label: "Gastos", color: "var(--ink-3)", data: defaultMonths.map((m) => ({ label: m.month, value: m.gastos })) },
+          ]}
+          height={heightMode === "compact" ? 120 : heightMode === "tall" ? 260 : 180}
+          barWidth={14}
+          gap={3}
+        />
       </div>
     </div>
   );
