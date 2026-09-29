@@ -606,7 +606,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
       {/* 1. Banner superior */}
       {showBanner && currentPlan === "ensayo" && (
-        <div className="relative overflow-hidden rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/20 via-amber-400/10 to-emerald-500/20 p-4 sm:p-5 text-[var(--ink)] shadow-black/40">
+        <div className="relative overflow-hidden rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/10 to-[var(--ok)]/20 p-4 sm:p-5 text-[var(--ink)] shadow-black/40">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3.5 text-center sm:text-left">
               <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 flex items-center justify-center text-[var(--acc)]/70 shrink-0">
@@ -828,10 +828,10 @@ export const Planes: React.FC<PlanesProps> = ({
                   <div
                     className={`p-3 rounded-[var(--r-l)] transition-all relative overflow-hidden ${
                       plan.isPopular
-                        ? "bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-amber-0/15 "
+                        ? "bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/10 to-[var(--acc)]/15 "
                         : plan.id === "cabeza_de_cartel"
-                          ? "bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15/50"
-                          : "bg-gradient-to-r from-neutral-500/20 viabg-[var(--surface)] to-neutral-500/10 "
+                          ? "bg-gradient-to-r from-[var(--ok)]/20 via-[var(--ok)]/10 to-[var(--ok)]/15/50"
+                          : "bg-gradient-to-r from-[var(--surface)]/20 viabg-[var(--surface)] to-[var(--surface)]/10 "
                     }`}
                   >
                     <div className="flex items-start gap-2.5">

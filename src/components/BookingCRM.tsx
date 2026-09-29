@@ -1483,7 +1483,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         handleTriggerEnviadorAgent();
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-[var(--ink)] transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer active:scale-98 disabled:opacity-50"
                     >
                       <span className="flex items-center gap-2">
                         {isDispatchingEmails ? (
@@ -1589,7 +1589,7 @@ export default function BookingCRM({
                         setIsQueueMonitorOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950/80 to-zinc-900 hover:from-emerald-900/90 hover:to-zinc-800 text-[var(--ok)] border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-[var(--ok)]/80 to-[var(--surface)] hover:from-[var(--ok)]/90 hover:to-[var(--surface)] text-[var(--ok)] border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
@@ -2604,7 +2604,7 @@ export default function BookingCRM({
           });
           setIsAddingLeadModalOpen(true);
         }}
-        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
+        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
         style={{ animationDuration: '3s' }}
         title="Añadir contacto"
       >

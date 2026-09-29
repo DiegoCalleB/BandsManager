@@ -179,7 +179,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
   return (
     <div className="space-y-4">
       {/* HEADER DE COPILOTO */}
-      <div className="p-3 bg-gradient-to-r from-[var(--acc)]/10 via-sky-500/10 to-emerald-500/10 border border-[var(--acc)]/30 rounded-2xl flex items-center justify-between gap-3">
+      <div className="p-3 bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--ok)]/10 border border-[var(--acc)]/30 rounded-2xl flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />

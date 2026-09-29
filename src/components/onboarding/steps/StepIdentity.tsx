@@ -178,7 +178,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                 onClick={() => setFontStyle(f.id)}
                 className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
                   isSelected
-                    ? "bg-[var(--acc)]/10  ring-1 ring-amber-0/30"
+                    ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
                     : "bg-[var(--bg)]/90  hover:bg-[var(--bg)]"
                 }`}
               >
@@ -220,7 +220,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
         </div>
 
         {/* Live Banner Preview */}
-        <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+        <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
           <div className="flex items-center gap-3.5 w-full sm:w-auto">
             {logoUrl ? (
               <img

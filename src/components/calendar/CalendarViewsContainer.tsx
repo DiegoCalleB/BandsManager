@@ -194,7 +194,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 'bg-[var(--acc)]/15 text-[var(--acc)] font-bold border-2 border-[var(--acc)]/80 shadow-md shadow-[var(--acc)]/10 hover:border-[var(--acc)] z-10';
             } else if (hasConcert && hasRehearsal) {
               borderAndBgClass =
-                'bg-gradient-to-br from-amber-950/40 to-emerald-950/40 border border-[var(--acc)]/50 hover:border-[var(--acc)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--ink)]';
+                'bg-gradient-to-br from-[var(--acc)]/40 to-[var(--ok)]/40 border border-[var(--acc)]/50 hover:border-[var(--acc)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--ink)]';
             } else if (hasConcert) {
               borderAndBgClass =
                 'bg-[var(--acc)]/20 border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--acc)]';

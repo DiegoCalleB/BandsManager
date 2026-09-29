@@ -158,7 +158,7 @@ export function TemplateConfigSection({
             <button
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-[var(--acc)]/20 to-amber-400/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-[var(--acc)]/20 to-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
               title="Genera las 7 plantillas desde una propuesta base"
             >
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />

@@ -66,7 +66,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
 
       {/* Action Recommendation Banner */}
       {todayBlueprint ? (
-        <div className="p-3.5 rounded-xl bg-gradient-to-r from-purple-950/30 via-neutral-900 to-transparent border border-[var(--acc)]/30 flex items-start justify-between gap-3">
+        <div className="p-3.5 rounded-xl bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-transparent border border-[var(--acc)]/30 flex items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] font-mono text-[10px] font-bold uppercase">

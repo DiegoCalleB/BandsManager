@@ -250,7 +250,7 @@ export function SongChordsViewerModal({
           </button>
 
           {/* MODAL HEADER */}
-          <div className="bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-purple-950/40 p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-[var(--acc)]/40 p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
                 <Music2 className="w-6 h-6" />
@@ -568,7 +568,7 @@ export function SongChordsViewerModal({
                 <div className="space-y-6 max-w-3xl mx-auto">
                   {/* SUBSTITUTE QUICK SUMMARY BANNER */}
                   {guiaSustituto?.estructura && (
-                    <div className="bg-gradient-to-r from-purple-950/40 via-[var(--surface)] to-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-xs font-sans space-y-1.5">
+                    <div className="bg-gradient-to-r from-[var(--acc)]/40 via-[var(--surface)] to-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-xs font-sans space-y-1.5">
                       <div className="flex items-center justify-between text-[var(--tentative)]/80 font-bold">
                         <span className="flex items-center gap-1.5">
                           <Zap className="w-4 h-4 text-[var(--acc)]" />
@@ -597,7 +597,7 @@ export function SongChordsViewerModal({
               {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
               {activeTab === "substitute" && (
                 <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
-                  <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] space-y-5">
+                  <div className="bg-gradient-to-br from-[var(--acc)]/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] space-y-5">
                     <div className="flex items-center gap-3/30 pb-4">
                       <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)]">
                         <UserCheck className="w-6 h-6" />

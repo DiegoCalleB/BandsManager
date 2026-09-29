@@ -2971,7 +2971,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           {/* ⏰ Gentle Nudge / Seguimiento Recomendado Banner */}
           {isLeadNeedsFollowup(selectedLead) && (
-            <div className="p-3 bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/20 border border-[var(--acc)]/40 rounded-xl flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+            <div className="p-3 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--surface)] to-[var(--acc)]/20 border border-[var(--acc)]/40 rounded-xl flex flex-wrap items-center justify-between gap-2.5 shadow-md">
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-lg bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
                   <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -3020,7 +3020,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               (selectedLead.fechas_propuestas_sala &&
                 selectedLead.fechas_propuestas_sala.length > 0) ||
               selectedLead.condiciones_economicas_detectadas) && (
-              <div className="p-3.5 bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/30 border border-[var(--acc)]/40 rounded-xl space-y-2.5 shadow-md">
+              <div className="p-3.5 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--surface)] to-[var(--acc)]/30 border border-[var(--acc)]/40 rounded-xl space-y-2.5 shadow-md">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-base">⚡</span>
@@ -3160,7 +3160,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowMultiModelModal(true)}
-                  className="px-2.5 py-1 bg-gradient-to-r from-amber-0/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-0/30 hover:to-emerald-500/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+                  className="px-2.5 py-1 bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/20 to-[var(--ok)]/20 hover:from-[var(--acc)]/30 hover:to-[var(--ok)]/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer transition-all"
                   title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
                 >
                   <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -3213,7 +3213,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Active Campaign Context Banner in Pitch Section */}
             {activeCampaign && activeCampaign.isActive !== false && (
-              <div className="mb-2.5 p-2.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 rounded-[var(--r-m)] space-y-2">
+              <div className="mb-2.5 p-2.5 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--acc)]/30 to-[var(--acc)]/40 rounded-[var(--r-m)] space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-xs shrink-0">🎯</span>
@@ -3827,7 +3827,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         <div className="space-y-3">
           {/* ⏰ Gentle Nudge / Seguimiento Recomendado Banner */}
           {isLeadNeedsFollowup(selectedLead) && (
-            <div className="p-3 bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/20 border border-[var(--acc)]/40 rounded-xl flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+            <div className="p-3 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--surface)] to-[var(--acc)]/20 border border-[var(--acc)]/40 rounded-xl flex flex-wrap items-center justify-between gap-2.5 shadow-md">
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-lg bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
                   <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />

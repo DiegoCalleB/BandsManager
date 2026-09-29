@@ -294,7 +294,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         topBarBtn:
           "bg-[var(--sunken)] hover:bg-[var(--sunken)]/80 text-[var(--ink)]",
         heroNoPhoto:
-          "bg-gradient-to-b from-stone-200 via-stone-100 to-[#f8f8f6]",
+          "bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[#f8f8f6]",
         heroOverlay:
           "bg-gradient-to-t from-[#f8f8f6] via-[#f8f8f6]/85 to-[#f8f8f6]/40",
         heroTitleClass:
@@ -409,9 +409,9 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         topBarBtn:
           "bg-[var(--ink)]/40 hover:bg-[var(--ink-2)]/40 text-[var(--ink)]/80",
         heroNoPhoto:
-          "bg-gradient-to-br from-slate-900 via-slate-950 to-[var(--acc)]/30",
+          "bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-[var(--acc)]/30",
         heroOverlay:
-          "bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/50",
+          "bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/85 to-[var(--surface)]/50",
         heroTitleClass:
           "text-[var(--ink)] leading-[0.88] tracking-tight text-[15vw] sm:text-[7rem] lg:text-[9rem]",
         heroTitleStyle: { fontFamily: "'Anton', 'Oswald', sans-serif" },

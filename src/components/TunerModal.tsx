@@ -482,7 +482,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="bg-gradient-to-b from-neutral-900 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-lg overflow-hidden flex flex-col my-auto max-h-[92vh]">
+        <div className="bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-lg overflow-hidden flex flex-col my-auto max-h-[92vh]">
           {/* Header */}
           <div className="p-410 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
             <div className="flex items-center gap-2.5">

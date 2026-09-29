@@ -242,11 +242,11 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   const getRandomGradient = (name: string) => {
     const gradients = [
       "from-[var(--acc)] to-[var(--acc)]",
-      "from-rose-600 to-[var(--acc)]",
-      "from-emerald-600 to-teal-400",
-      "from-indigo-600 to-[var(--acc-soft)]",
-      "from-blue-600 to-cyan-400",
-      "from-fuchsia-600 to-rose-400",
+      "from-[var(--alert)] to-[var(--acc)]",
+      "from-[var(--ok)] to-[var(--ok)]",
+      "from-[var(--acc)] to-[var(--acc-soft)]",
+      "from-[var(--acc)] to-[var(--acc)]",
+      "from-[var(--acc)] to-[var(--alert)]",
     ];
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -258,7 +258,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Pinned / Band Post Box */}
-      <div className="bg-gradient-to-r from-[var(--acc)]/10 via-neutral-900 to-neutral-900 rounded-[var(--r-l)] p-5 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-[var(--surface)] rounded-[var(--r-l)] p-5 relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             {effectiveBandLogo ? (

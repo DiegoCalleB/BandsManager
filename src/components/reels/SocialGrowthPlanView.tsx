@@ -130,7 +130,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
     <div className="space-y-6">
       {/* 1. Header Banner & Band Stage Archetype */}
       <div
-        className={`p-5 rounded-[var(--r-l)] transition-all ${"bg-gradient-to-br from-indigo-950/30 via-[var(--surface)]/60 to-[var(--surface)]/20"}`}
+        className={`p-5 rounded-[var(--r-l)] transition-all ${"bg-gradient-to-br from-[var(--acc)]/30 via-[var(--surface)]/60 to-[var(--surface)]/20"}`}
       >
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div>
@@ -185,7 +185,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer ${
                 isGeneratingAI
                   ? "bg-[var(--tentative)]/50 text-[var(--tentative)]/50 cursor-wait"
-                  : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] hover:scale-[1.02]"
+                  : "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] hover:scale-[1.02]"
               }`}
             >
               <RefreshCw
@@ -260,7 +260,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           <div className="flex items-center gap-3 w-full sm:w-64">
             <div className="w-full h-2 rounded-full bg-[var(--surface)]/80 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-500 rounded-full"
+                className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--ok)] transition-all duration-500 rounded-full"
                 style={{ width: `${progressPercent}%` }}
               ></div>
             </div>
@@ -558,12 +558,12 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             <div
               className={`p-5 rounded-[var(--r-l)] ${
                 currentChannel.platform === "instagram"
-                  ? "bg-gradient-to-r from-pink-950/20 to-[var(--surface)]/30"
+                  ? "bg-gradient-to-r from-[var(--acc)]/20 to-[var(--surface)]/30"
                   : currentChannel.platform === "tiktok"
-                    ? "bg-gradient-to-r from-cyan-950/20 to-[var(--surface)]/30"
+                    ? "bg-gradient-to-r from-[var(--acc)]/20 to-[var(--surface)]/30"
                     : currentChannel.platform === "youtube"
-                      ? "bg-gradient-to-r from-red-950/20 to-[var(--surface)]/30"
-                      : "bg-gradient-to-r from-emerald-950/20 to-[var(--surface)]/30"
+                      ? "bg-gradient-to-r from-[var(--alert)]/20 to-[var(--surface)]/30"
+                      : "bg-gradient-to-r from-[var(--ok)]/20 to-[var(--surface)]/30"
               }`}
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

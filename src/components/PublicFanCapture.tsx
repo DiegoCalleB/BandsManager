@@ -126,7 +126,7 @@ export const PublicFanCapture: React.FC = () => {
   return (
     <div className="min-h-screen bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-[var(--ink)]">
       {/* Background Glow */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-[var(--acc)]/10 via-neutral-950 to-neutral-950 pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-[var(--acc)]/10 via-[var(--surface)] to-[var(--surface)] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10 space-y-6">
         {/* LOGO & BRAND HEADER */}

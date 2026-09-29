@@ -94,7 +94,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               type="button"
               onClick={() => handleSelectSectionTab('salas')}
               className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                sectionTab === 'salas' ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                sectionTab === 'salas' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <Building2 className="w-3.5 h-3.5" />
@@ -104,7 +104,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               type="button"
               onClick={() => handleSelectSectionTab('medios')}
               className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                sectionTab === 'medios' ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                sectionTab === 'medios' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <Radio className="w-3.5 h-3.5" />
@@ -114,7 +114,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               type="button"
               onClick={() => handleSelectSectionTab('grupos')}
               className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                sectionTab === 'grupos' ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                sectionTab === 'grupos' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <Briefcase className="w-3.5 h-3.5" />
@@ -133,7 +133,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 onClose();
               }}
               className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
@@ -146,7 +146,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 onClose();
               }}
               className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <List className="w-3.5 h-3.5" />
@@ -381,7 +381,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               type="button"
               onClick={() => setTypeFilter(t.key)}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
               }`}
             >
               {t.label}
@@ -452,7 +452,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         <button
           type="button"
           onClick={() => onClose()}
-          className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] cursor-pointer shadow-sm"
+          className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer shadow-sm"
         >
           Ver {filteredCount} resultados
         </button>

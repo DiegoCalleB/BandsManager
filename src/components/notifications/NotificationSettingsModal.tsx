@@ -64,7 +64,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-xs">
         <div className="relative w-full max-w-lg bg-[var(--surface)] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
           {/* Header */}
-          <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312]">
+          <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-[#141312]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] flex items-center justify-center">
                 <BellRing className="w-5 h-5" />

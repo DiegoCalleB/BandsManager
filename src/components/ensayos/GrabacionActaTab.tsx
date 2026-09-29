@@ -306,7 +306,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     return (
                       <div
                         key={i}
-                        className="w-1.5 bg-gradient-to-t from-rose-500 to-[var(--acc)] rounded-full transition-all duration-150"
+                        className="w-1.5 bg-gradient-to-t from-[var(--alert)] to-[var(--acc)] rounded-full transition-all duration-150"
                         style={{ height: `${height}%` }}
                       />
                     );

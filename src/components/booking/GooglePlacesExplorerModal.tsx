@@ -1070,7 +1070,7 @@ export function GooglePlacesExplorerModal({
           {/* Content Container */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
             {/* Búsqueda Masiva de Campaña Activa: Recintos, Locales y Discotecas con Aforo y Estilo */}
-            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-purple-500/10 to-indigo-500/10 space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--acc)]/10 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div className="flex items-start sm:items-center gap-2.5">
                   <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
@@ -1101,7 +1101,7 @@ export function GooglePlacesExplorerModal({
                   type="button"
                   onClick={handleMassCampaignSearch}
                   disabled={isMassCampaignSearching || isSearching}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-[var(--acc)] via-amber-400 to-amber-500 hover:from-amber-400 hover:to-[var(--acc-soft)] text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all hover:shadow-[var(--acc)]/20 cursor-pointer disabled:opacity-50 shrink-0"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc-soft)] text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all hover:shadow-[var(--acc)]/20 cursor-pointer disabled:opacity-50 shrink-0"
                 >
                   {isMassCampaignSearching ? (
                     <>
@@ -1336,7 +1336,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearch()}
                     disabled={isSearching}
-                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
                   >
                     {isSearching ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1424,7 +1424,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
                     disabled={isSearching}
-                    className="px-2.5 py-0.5 text-[10px] rounded-lg font-bold transition-all cursor-pointer bg-gradient-to-r from-[var(--acc)]/20 to-purple-500/20 hover:from-[var(--acc)]/30 hover:to-purple-500/30 text-[var(--acc)] border border-[var(--acc)]/40 ml-auto"
+                    className="px-2.5 py-0.5 text-[10px] rounded-lg font-bold transition-all cursor-pointer bg-gradient-to-r from-[var(--acc)]/20 to-[var(--acc)]/20 hover:from-[var(--acc)]/30 hover:to-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 ml-auto"
                   >
                     ⚡ Rastrear Todas
                   </button>
@@ -1499,7 +1499,7 @@ export function GooglePlacesExplorerModal({
                     <button
                       onClick={handleExtractBatchEmails}
                       disabled={isExtractingBatch || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                      className="px-3.5 py-1.5 bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                       title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
                     >
                       {isExtractingBatch ? (

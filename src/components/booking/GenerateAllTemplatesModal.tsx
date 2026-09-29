@@ -261,8 +261,8 @@ export function GenerateAllTemplatesModal({
             disabled={isGenerating || !baseProposal.trim()}
             className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg hover:brightness-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
               isCampaign
-                ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-[var(--ink)] shadow-[var(--acc)]/25'
-                : 'bg-gradient-to-r from-[var(--acc)] to-amber-400 text-[var(--ink)] shadow-[var(--acc)]/20'
+                ? 'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] shadow-[var(--acc)]/25'
+                : 'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] shadow-[var(--acc)]/20'
             }`}
           >
             {isGenerating ? (

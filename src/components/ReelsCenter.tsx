@@ -4355,7 +4355,7 @@ export default function ReelsCenter({
                         </p>
                         <div className="w-full h-1 bg-[var(--surface)]/80 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-[var(--acc)] to-emerald-500"
+                            className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--ok)]"
                             style={{ width: "75% " }}
                           ></div>
                         </div>
@@ -4474,7 +4474,7 @@ export default function ReelsCenter({
                         <button
                           type="button"
                           onClick={handleCutPhysicalVideo}
-                          className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-yellow-400 hover:brightness-105 active:scale-[0.99] font-sans font-black text-xs text-[var(--ink)] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
+                          className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] hover:brightness-105 active:scale-[0.99] font-sans font-black text-xs text-[var(--ink)] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
                         >
                           <Sparkles className="w-4 h-4 text-[var(--ink)] fill-bg-[var(--surface)]" />
                           <span>

@@ -34,7 +34,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
 
   return (
     <div className="fixed inset-0 z-[120] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
-      <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 border border-[var(--acc)]/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
+      <div className="bg-gradient-to-b from-[var(--surface)] via-[var(--acc)]/80 to-[var(--surface)] border border-[var(--acc)]/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
           <div className="flex items-center gap-2.5 text-[var(--acc)] font-mono font-bold text-sm">
             <Sparkles className="w-5 h-5 text-[var(--acc)] animate-pulse" />
@@ -146,7 +146,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             type="button"
             disabled={isGeneratingAiTrack}
             onClick={handleSubmit}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
           >
             {isGeneratingAiTrack ? (
               <>

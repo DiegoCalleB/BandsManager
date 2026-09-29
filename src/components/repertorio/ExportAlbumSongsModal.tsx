@@ -561,7 +561,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   onClick={() => setFormat("zip")}
                   className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
                     format === "zip"
-                      ? "bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 text-[var(--ink)] ring-1 ring-[var(--ok)]/40"
+                      ? "bg-gradient-to-br from-[var(--ok)]/30 to-[var(--ok)]/40 text-[var(--ink)] ring-1 ring-[var(--ok)]/40"
                       : "bg-[var(--ok)]/10 text-[var(--ink-2)] hover:bg-[var(--ok)]/20"
                   }`}
                 >

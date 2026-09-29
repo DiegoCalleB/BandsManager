@@ -1417,7 +1417,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <div
                 className={`w-full max-w-lg rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               >
-                <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)]  flex justify-between items-center">
+                <div className="px-6 py-4 bg-gradient-to-r from-[var(--acc)]/60 via-[var(--surface)] to-[var(--surface)]  flex justify-between items-center">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center">
                       <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1534,7 +1534,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           key={plan.id}
                           className={`p-4 rounded-[var(--r-m)] transition-all ${
                             isCurrent
-                              ? "bg-[var(--acc)]/10  ring-1 ring-amber-0/30"
+                              ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
                               : "bg-[var(--surface)]/60 hover:"
                           }`}
                         >

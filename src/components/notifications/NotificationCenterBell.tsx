@@ -129,7 +129,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
           } z-50 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
         >
           {/* Header */}
-          <div className="p-3.5 border-b border-[var(--hair)] bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312] flex items-center justify-between">
+          <div className="p-3.5 border-b border-[var(--hair)] bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-[#141312] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <BellRing className="w-4 h-4 text-[var(--acc)]" />
               <span className="font-bold text-xs text-[var(--ink-2)] font-display">Notificaciones</span>

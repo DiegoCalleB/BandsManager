@@ -197,10 +197,10 @@ export function EnsayoCronometro({
           <div
             className={`h-full rounded-full transition-all duration-300 ${
               isOvertime
-                ? "bg-gradient-to-r from-rose-500 to-red-600"
+                ? "bg-gradient-to-r from-[var(--alert)] to-[var(--alert)]"
                 : progressPct > 80
-                  ? "bg-gradient-to-r from-[var(--acc)] to-orange-500"
-                  : "bg-gradient-to-r from-emerald-400 to-teal-500"
+                  ? "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]"
+                  : "bg-gradient-to-r from-[var(--ok)] to-[var(--ok)]"
             }`}
             style={{ width: `${progressPct}%` }}
           />

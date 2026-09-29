@@ -61,7 +61,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
       {/* Resumen Compacto (Siempre Visible) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="p-3 bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-900/60 hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
+        className="p-3 bg-gradient-to-r from-[var(--ok)]/40 via-[var(--surface)] to-[var(--surface)]/60 hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
       >
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-[var(--ok)]/20 border border-[var(--ok)]/40 flex items-center justify-center shrink-0">

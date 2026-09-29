@@ -977,7 +977,7 @@ export function ReelsMetricsView({
             onClick={() => setActiveMainSection("growth_plan")}
             className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
               activeMainSection === "growth_plan"
-                ? "bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)]/10 font-black"
+                ? "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)]/10 font-black"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -2453,9 +2453,9 @@ export function ReelsMetricsView({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-5 flex items-center justify-between bg-gradient-to-r from-pink-950/30 via-purple-950/20 to-[var(--surface)]">
+            <div className="p-5 flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/30 via-[var(--acc)]/20 to-[var(--surface)]">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 flex items-center justify-center text-[var(--ink)]">
+                <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)]">
                   <Instagram className="w-5 h-5" />
                 </div>
                 <div>
@@ -2658,7 +2658,7 @@ export function ReelsMetricsView({
                     className={`px-4 py-2.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
                       isConnectingIg || !igTokenInput.trim()
                         ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                        : "bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-[var(--ink)]"
+                        : "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)]"
                     }`}
                   >
                     {isConnectingIg ? (
@@ -2867,7 +2867,7 @@ export function ReelsMetricsView({
                   className={`w-full py-3 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     isAnalyzingScreenshot
                       ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                      : "bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-[var(--ink)]"
+                      : "bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)]"
                   }`}
                 >
                   {isAnalyzingScreenshot ? (

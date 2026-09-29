@@ -69,7 +69,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
     <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
       <div className="bg-[var(--surface)] border borderbg-[var(--surface)] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
         {/* Modal Header */}
-        <div className="p-5 border-b borderbg-[var(--surface)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/10 via-neutral-900 to-purple-500/10">
+        <div className="p-5 border-b borderbg-[var(--surface)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-[var(--acc)]/10">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
               <Sparkles className="w-5 h-5" />
@@ -146,7 +146,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 1: BLUEPRINT SEMANAL */}
           {activeTab === 'blueprint' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--acc)]/10 via-neutral-900 to-transparent border border-[var(--acc)]/25 flex items-start gap-3">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-transparent border border-[var(--acc)]/25 flex items-start gap-3">
                 <Lightbulb className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-[var(--acc)] uppercase tracking-wider font-mono">

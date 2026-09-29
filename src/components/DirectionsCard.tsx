@@ -24,7 +24,7 @@ export default function DirectionsCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
-      className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] transition-all duration-200 group cursor-pointer ${"bg-[var(--surface)] hover:bg-[var(--acc-soft)] hover:shadow-purple-500/10"} ${className}`}
+      className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] transition-all duration-200 group cursor-pointer ${"bg-[var(--surface)] hover:bg-[var(--acc-soft)] "} ${className}`}
     >
       {/* Tactile Simulated Map Grid */}
       <div className="absolute inset-0 pointer-events-none opacity-20 group-hover:opacity-35 transition-opacity">

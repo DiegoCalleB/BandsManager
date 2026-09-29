@@ -103,36 +103,43 @@ export interface RoadbookInfo {
   notasTecnicas?: string;
 }
 
+/**
+ * Paleta categórica para distinguir bandas en un calendario compartido (multi-banda).
+ * No es color de módulo Espectro — aquí el matiz variado ES la información (qué
+ * banda es cada evento), así que se sale a propósito de la paleta de un solo acento.
+ * `text` en tono 700/800 para que se lea sobre el `bg` translúcido en claro y oscuro
+ * a la vez, sin depender de `dark:` (prohibido en componentes por el sistema Espectro).
+ */
 export const BAND_COLOR_PALETTES = [
   {
-    bg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    bg: 'bg-amber-500/20 text-amber-800',
     badge: 'bg-amber-500 text-stone-950',
     dot: 'bg-amber-400',
     accent: '#f59e0b',
   },
-  { bg: 'bg-sky-500/20 text-sky-300 border-sky-500/40', badge: 'bg-sky-500 text-white', dot: 'bg-sky-400', accent: '#0284c7' },
+  { bg: 'bg-sky-500/20 text-sky-800', badge: 'bg-sky-500 text-white', dot: 'bg-sky-400', accent: '#0284c7' },
   {
-    bg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+    bg: 'bg-purple-500/20 text-purple-800',
     badge: 'bg-purple-500 text-white',
     dot: 'bg-purple-400',
     accent: '#a855f7',
   },
   {
-    bg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    bg: 'bg-emerald-500/20 text-emerald-800',
     badge: 'bg-emerald-500 text-stone-950',
     dot: 'bg-emerald-400',
     accent: '#10b981',
   },
-  { bg: 'bg-rose-500/20 text-rose-300 border-rose-500/40', badge: 'bg-rose-500 text-white', dot: 'bg-rose-400', accent: '#f43f5e' },
+  { bg: 'bg-rose-500/20 text-rose-800', badge: 'bg-rose-500 text-white', dot: 'bg-rose-400', accent: '#f43f5e' },
   {
-    bg: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
+    bg: 'bg-indigo-500/20 text-indigo-800',
     badge: 'bg-indigo-500 text-white',
     dot: 'bg-indigo-400',
     accent: '#6366f1',
   },
-  { bg: 'bg-teal-500/20 text-teal-300 border-teal-500/40', badge: 'bg-teal-500 text-stone-950', dot: 'bg-teal-400', accent: '#14b8a6' },
+  { bg: 'bg-teal-500/20 text-teal-800', badge: 'bg-teal-500 text-stone-950', dot: 'bg-teal-400', accent: '#14b8a6' },
   {
-    bg: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+    bg: 'bg-orange-500/20 text-orange-800',
     badge: 'bg-orange-500 text-stone-950',
     dot: 'bg-orange-400',
     accent: '#f97316',

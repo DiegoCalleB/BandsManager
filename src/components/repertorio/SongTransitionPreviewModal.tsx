@@ -1251,7 +1251,7 @@ export function SongTransitionPreviewModal({
                 {/* Crossfade overlap highlight */}
                 {config.style === "crossfade" && (
                   <div
-                    className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-0/30 to-emerald-500/30  pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
+                    className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-[var(--acc)]/30 to-[var(--ok)]/30  pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
                     style={{
                       left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
                       width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`,

@@ -926,7 +926,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--ok-soft)] hover:bg-[var(--ok)]/20 transition-all duration-200 ease-out hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow" : ""}`}
           >
             <span
-              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
+              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-[var(--ok)]/15 to-transparent animate-donate-sheen"
               aria-hidden="true"
             />
             <div
@@ -1431,7 +1431,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       <div
         className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ? "p-4 sm:p-6" : "p-6 sm:p-8"} space-y-6 relative overflow-hidden`}
       >
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r frombg-[var(--surface)] to-neutral-700" />
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r frombg-[var(--surface)] to-[var(--surface)]" />
 
         <div className="text-center space-y-4 pt-2">
           {logoUrl && !imgError ? (
@@ -1600,7 +1600,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick("epk", epkUrl, "redes")}
-              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)]  transition-all duration-300 hover:shadow-amber-0/10 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
+              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)]  transition-all duration-300  text-left cursor-pointer overflow-hidden active:scale-[0.99]"
             >
               {logoUrl && !imgError && (
                 <img
@@ -1618,7 +1618,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-500"
                 aria-hidden="true"
               />
-              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/25 to-rose-500/15 text-[var(--acc)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
+              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/25 to-[var(--alert)]/15 text-[var(--acc)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
                 {logoUrl && !imgError ? (
                   <img
                     src={logoUrl}

@@ -2300,7 +2300,7 @@ export default function Chatbot({
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-sans text-[var(--ink-2)]">Estado</span>
                 {activeRun.status === 'queued' && (
-                  <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20">
+                  <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)]">
                     🕒 En Cola
                   </span>
                 )}

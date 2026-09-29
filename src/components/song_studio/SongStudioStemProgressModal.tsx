@@ -21,7 +21,7 @@ import {
 const IrisPrismBanner: React.FC = () => {
   return (
     <div className="relative w-full h-20 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-900 via-black to-black opacity-80" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[var(--surface)] via-black to-black opacity-80" />
       <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
         <path d="M 0,40 L 160,40" stroke="white" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" className="animate-pulse" />
         <polygon points="160,15 220,65 160,65" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
@@ -102,7 +102,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
         <div className="mt-2 w-full h-1.5 bg-[var(--surface)] rounded-full overflow-hidden border border-[var(--hair)]/10">
           <div
             className={`h-full rounded-full transition-all duration-300 ${
-              !terminado ? 'bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400' : esError ? 'bg-[var(--alert)]' : 'bg-[var(--ok)]'
+              !terminado ? 'bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--ok)]' : esError ? 'bg-[var(--alert)]' : 'bg-[var(--ok)]'
             }`}
             style={{ width: `${terminado ? 100 : Math.max(5, stemProgressModal.progressPct || 0)}%` }}
           />
@@ -167,7 +167,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
               </div>
               <div className="w-full h-2.5 bg-[var(--surface)] rounded-full overflow-hidden border border-[var(--acc)]/30">
                 <div
-                  className="h-full bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400 transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--ok)] transition-all duration-300"
                   style={{ width: `${Math.max(5, stemProgressModal.progressPct || 0)}%` }}
                 />
               </div>

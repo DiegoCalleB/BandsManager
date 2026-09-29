@@ -697,7 +697,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       isDragged ? "opacity-30 scale-95" : ""
                     } ${
                       isActive
-                        ? "bg-gradient-to-b from-amber-0/20 via-[var(--surface)] to-[var(--bg)]  ring-1 ring-amber-0/40"
+                        ? "bg-gradient-to-b from-[var(--acc)]/20 via-[var(--surface)] to-[var(--bg)]  ring-1 ring-[var(--acc)]/40"
                         : "bg-[var(--surface)]  hover:bg-[var(--surface)] hover:shadow-lg"
                     } ${switchingBandId && !isSwitching ? "opacity-40 grayscale pointer-events-none" : ""}`}
                   >
@@ -811,7 +811,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <div className="w-full h-full rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/15 to-orange-600/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
+                        <div className="w-full h-full rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/15 to-[var(--acc)]/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
                           <Guitar className="w-8 h-8 opacity-80" />
                           <span className="text-xs font-black font-sans text-[var(--ink-2)]">
                             {band.bandName.slice(0, 2).toUpperCase()}
@@ -1599,7 +1599,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
             return (
               <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200 text-left">
                 <div className="w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)]  text-[var(--ink-2)] overflow-hidden flex flex-col">
-                  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)]  flex justify-between items-center">
+                  <div className="px-6 py-4 bg-gradient-to-r from-[var(--acc)]/60 via-[var(--surface)] to-[var(--surface)]  flex justify-between items-center">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center">
                         <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1636,7 +1636,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                               key={plan.id}
                               className={`p-4 rounded-[var(--r-m)] transition-all ${
                                 isCurrent
-                                  ? "bg-[var(--acc)]/10  ring-1 ring-amber-0/30"
+                                  ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
                                   : "bg-[var(--surface)]/60 hover:"
                               }`}
                             >

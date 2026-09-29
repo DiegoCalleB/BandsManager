@@ -733,7 +733,7 @@ export default function PracticeModePanel({
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-[var(--ok)]/40 transition-all active:scale-95 cursor-pointer"
+                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-[var(--ok)]/40 transition-all active:scale-95 cursor-pointer"
                     title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
                   >
                     {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}

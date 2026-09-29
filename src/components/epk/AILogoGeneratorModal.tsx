@@ -88,7 +88,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
         {/* Header */}
         <div className="px-6 py-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-[var(--ink)] shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)] shadow-md">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -212,7 +212,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <button
                 type="button"
                 onClick={handleApplyLogo}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition shadow-lg"
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition shadow-lg"
               >
                 <Check className="w-4 h-4" /> Aplicar al EPK
               </button>

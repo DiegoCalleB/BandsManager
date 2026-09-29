@@ -253,7 +253,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkGeneratePitches}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800/50 text-[var(--acc)]/40"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-gradient-to-r from-[var(--acc)]/80 to-[var(--acc)]/80 hover:from-[var(--acc)] hover:to-[var(--acc)]/50 text-[var(--acc)]/40"}`}
               title="Generar propuestas de pitch con IA para todos los seleccionados"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -265,7 +265,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkEnrich}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800/50 text-[var(--tentative)]/40"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-gradient-to-r from-[var(--acc)]/80 to-[var(--acc)]/80 hover:from-[var(--acc)] hover:to-[var(--acc)]/50 text-[var(--tentative)]/40"}`}
               title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
             >
               <Search className="w-3.5 h-3.5 text-[var(--ink-2)]" />

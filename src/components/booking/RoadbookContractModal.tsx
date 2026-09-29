@@ -447,7 +447,7 @@ Firmado en conformidad por ambas partes.`;
               <div className="space-y-4">
                 <div className="p-4 bg-[var(--surface)] rounded-2xl border border-[var(--hair)] space-y-3 text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[var(--acc)] to-sky-500 flex items-center justify-center shrink-0 shadow-lg">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[var(--acc)] to-[var(--acc)] flex items-center justify-center shrink-0 shadow-lg">
                       <Share2 className="w-7 h-7 text-[var(--ink)]" />
                     </div>
                     <div>

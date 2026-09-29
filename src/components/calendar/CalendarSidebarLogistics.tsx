@@ -332,7 +332,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
       {selectedEventDetails.type === 'free' ? (
         <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
           {getCampaignsForDate(selectedDateKey).length > 0 ? (
-            <div className="w-full text-left rounded-2xl bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-neutral-900 border border-[var(--acc)]/50 p-4 shadow-xl shadow-[var(--acc)]/20">
+            <div className="w-full text-left rounded-2xl bg-gradient-to-br from-[var(--acc)]/40 via-[var(--acc)]/20 to-[var(--surface)] border border-[var(--acc)]/50 p-4 shadow-xl shadow-[var(--acc)]/20">
               <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[var(--acc)]/30">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] flex items-center justify-center">
@@ -1029,7 +1029,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
                         setActiveStageSetlist(assignedSetlist);
                       }}
-                      className="flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-[var(--acc)]/20 transition-all cursor-pointer"
+                      className="flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-[var(--acc)]/20 transition-all cursor-pointer"
                       title="Lanzar Modo Escenario / Vista de Directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--ink)]" />
@@ -1310,7 +1310,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         printWindow.document.close();
                       }}
                       className={`w-full py-2 px-3 rounded-xl font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
-                        'bg-gradient-to-r from-indigo-600 to-blue-600 text-[var(--ink)]'
+                        'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)]'
                       }`}
                     >
                       <Download className="w-3.5 h-3.5" />

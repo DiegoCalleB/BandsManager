@@ -91,21 +91,21 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
   const getWeatherIconBackdrop = (iconType?: EventWeatherData["iconType"]) => {
     switch (iconType) {
       case "sun":
-        return "from-amber-0/30 via-amber-400/10 to-transparent ";
+        return "from-[var(--acc)]/30 via-[var(--acc)]/10 to-transparent ";
       case "cloud-sun":
-        return "from-amber-0/25 via-neutral-700/25 to-transparent ";
+        return "from-[var(--acc)]/25 via-[var(--surface)]/25 to-transparent ";
       case "cloud":
-        return "from-neutral-600/35 viabg-[var(--surface)]/25 to-transparent ";
+        return "from-[var(--surface)]/35 viabg-[var(--surface)]/25 to-transparent ";
       case "rain":
-        return "from-sky-500/30 via-blue-600/20 to-transparent/50";
+        return "from-[var(--acc)]/30 via-[var(--acc)]/20 to-transparent/50";
       case "lightning":
-        return "from-yellow-500/35 via-purple-900/35 to-transparent ";
+        return "from-[var(--acc)]/35 via-[var(--acc)]/35 to-transparent ";
       case "snow":
-        return "from-cyan-500/30 via-blue-900/25 to-transparent/50";
+        return "from-[var(--acc)]/30 via-[var(--acc)]/25 to-transparent/50";
       case "fog":
-        return "from-neutral-500/25 via-neutral-700/25 to-transparent ";
+        return "from-[var(--surface)]/25 via-[var(--surface)]/25 to-transparent ";
       default:
-        return "from-amber-0/20 to-transparent ";
+        return "from-[var(--acc)]/20 to-transparent ";
     }
   };
 
