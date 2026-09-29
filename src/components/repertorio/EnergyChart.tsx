@@ -107,6 +107,35 @@ interface EnergyChartProps {
   belowChartSlot?: React.ReactNode;
 }
 
+/** Curva suave que nunca sobrepasa los datos (interpolación monótona, Fritsch–Carlson). */
+function monotonePath(pts: { x: number; y: number }[]): string {
+  const n = pts.length;
+  if (n === 0) return "";
+  if (n === 1) return `M${pts[0].x},${pts[0].y}`;
+  const dx: number[] = [];
+  const m: number[] = [];
+  for (let i = 0; i < n - 1; i++) {
+    dx.push(pts[i + 1].x - pts[i].x || 1e-6);
+    m.push((pts[i + 1].y - pts[i].y) / dx[i]);
+  }
+  const t: number[] = [m[0]];
+  for (let i = 1; i < n - 1; i++) t.push(m[i - 1] * m[i] <= 0 ? 0 : (m[i - 1] + m[i]) / 2);
+  t.push(m[n - 2]);
+  for (let i = 0; i < n - 1; i++) {
+    if (m[i] === 0) { t[i] = 0; t[i + 1] = 0; continue; }
+    const a = t[i] / m[i];
+    const b = t[i + 1] / m[i];
+    const h = Math.hypot(a, b);
+    if (h > 3) { t[i] = (3 * a * m[i]) / h; t[i + 1] = (3 * b * m[i]) / h; }
+  }
+  let d = `M${pts[0].x},${pts[0].y}`;
+  for (let i = 0; i < n - 1; i++) {
+    const c = dx[i] / 3;
+    d += ` C${pts[i].x + c},${pts[i].y + t[i] * c} ${pts[i + 1].x - c},${pts[i + 1].y - t[i + 1] * c} ${pts[i + 1].x},${pts[i + 1].y}`;
+  }
+  return d;
+}
+
 /**
  * El Mapa de Energía del show, extraído a un componente reutilizable para poder mostrarlo tanto
  * en el editor de setlist como (en tamaño reducido) dentro del modal de Análisis IA — así las
@@ -154,6 +183,7 @@ export function EnergyChart({
   const [animMode, setAnimMode] = useState<"entrance" | "switch" | "fast">(
     "entrance",
   );
+  const [revealed, setRevealed] = useState(false);
   useEffect(() => {
     const isFirstEverPaint = !hasPlayedGrandEntranceRef.current;
     hasPlayedGrandEntranceRef.current = true;
@@ -162,7 +192,12 @@ export function EnergyChart({
       () => setAnimMode("fast"),
       (isFirstEverPaint ? GRAND_ENTRANCE_MS : SETLIST_SWITCH_MS) + 100,
     );
-    return () => clearTimeout(t);
+    setRevealed(false);
+    const r = requestAnimationFrame(() => requestAnimationFrame(() => setRevealed(true)));
+    return () => {
+      clearTimeout(t);
+      cancelAnimationFrame(r);
+    };
   }, [setlistKey]);
   // Arrastrar una barra horizontalmente reordena el setlist — la columna destino se calcula midiendo
   // las columnas reales del DOM, no una escala interna.
@@ -242,25 +277,41 @@ export function EnergyChart({
   // índice de canción distinto al de partida y reordenar solo sin querer, con"ningún control".
   const MIN_DRAG_PX = 10;
 
-  // Geometría fija del lienzo: arriba un hueco para insignias de unión / iconos de bloque, abajo
-  // la fila de etiquetas (#n, tonalidad, BPM). Lo demás es área de barras.
+  // Geometría del lienzo: arriba un hueco para insignias de unión / iconos de bloque, abajo la
+  // fila de etiquetas (#n, tonalidad, BPM). El ancho se mide con ResizeObserver.
   const TOP_PAD = compact ? 12 : 18;
   const LABEL_H = compact && !showTonalidad && !showBpmLine ? 0 : compact ? 12 : 26;
+  const PAD_L = compact ? 10 : 16;
+  const PAD_R = compact ? 10 : 18;
   const plotHeight = Math.max(1, height - TOP_PAD - LABEL_H);
   const yRange = Math.max(1, yDomain[1] - yDomain[0]);
-  const fracOf = (score: number) =>
-    Math.max(0.05, Math.min(1, (score - yDomain[0]) / yRange));
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setWidth(el.clientWidth));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const maxX = useMemo(
+    () => Math.max(1, ...chartData.filter((d) => d.isSong).map((d) => d.xPos)),
+    [chartData],
+  );
+  const innerW = Math.max(1, width - PAD_L - PAD_R);
+  const xAt = (xPos: number) => PAD_L + (xPos / maxX) * innerW;
+  const yAt = (score: number) =>
+    TOP_PAD + plotHeight * (1 - (Math.max(yDomain[0], Math.min(yDomain[1], score)) - yDomain[0]) / yRange);
+  const baseY = TOP_PAD + plotHeight;
 
-  // Una columna por elemento de `chartData` (canción o bloque). Se localiza la columna bajo el
-  // puntero midiendo las columnas reales del DOM — no depende de ninguna escala interna.
-  const colRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Columna más cercana a la X del puntero (incluye bloques como destino válido al reordenar).
   const getIndexFromClientX = (clientX: number): number => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect || chartData.length === 0) return 0;
+    const target = Math.max(0, Math.min(maxX, ((clientX - rect.left - PAD_L) / innerW) * maxX));
     let closest = 0;
     let closestDist = Infinity;
-    colRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const dist = Math.abs(clientX - (r.left + r.width / 2));
+    chartData.forEach((d, i) => {
+      const dist = Math.abs(d.xPos - target);
       if (dist < closestDist) {
         closestDist = dist;
         closest = i;
@@ -271,13 +322,6 @@ export function EnergyChart({
 
   // Píxeles verticales → unidades de energía (escala interna 1-20).
   const pxPerEnergyUnit = plotHeight / yRange;
-
-  const bpmRange = useMemo(() => {
-    const v = chartData
-      .map((d) => d.bpm)
-      .filter((x): x is number => typeof x === "number");
-    return v.length ? { min: Math.min(...v), max: Math.max(...v) } : null;
-  }, [chartData]);
 
   // Cambios con teclado / botones — mismo camino que el arrastre (onEnergyChange / onReorder).
   const bumpEnergy = (i: number, delta: number) => {
@@ -550,10 +594,7 @@ export function EnergyChart({
             </div>
           )}
         {/* Zonas de energía: bandas horizontales de fondo (luminancia, sin líneas). */}
-        <div
-          className="absolute inset-x-0 pointer-events-none"
-          style={{ top: TOP_PAD, height: plotHeight }}
-        >
+        <div className="absolute inset-x-0 pointer-events-none" style={{ top: TOP_PAD, height: plotHeight }}>
           {zonasEnergia.map((z) => (
             <div
               key={z.min}
@@ -568,164 +609,165 @@ export function EnergyChart({
           ))}
         </div>
 
-        {/* La Onda: una barra por canción, punta redondeada; los bloques (chapa, pausa, bis…) son
- una columna estrecha con su icono. `key={setlistKey}` remonta y re-anima al cambiar de setlist. */}
-        <div
-          key={setlistKey}
-          className="absolute inset-x-1 bottom-0 flex items-stretch gap-1"
-          style={{ top: 0 }}
-          role="list"
-          aria-label="Mapa de energía del setlist"
-        >
-          {chartData.map((d, i) => {
-            const isSelected = d.id === selectedSetlistItemId;
-            const isHighlighted =
-              highlightedSongIds.length > 0 && titlesMatch(d.name, highlightedSongIds);
-            const isDraggingThis = draggingFromIndex === i;
-            const isDropTarget =
-              draggingFromIndex !== null &&
-              dragAxis !== "y" &&
-              hoverIndex === i &&
-              hoverIndex !== draggingFromIndex;
-            const isPlaying = !!currentPlayingSongId && d.songId === currentPlayingSongId;
-            const canEditThisEnergy = !!onEnergyChange && d.songId != null;
-            const canDragThis = !!onReorder || canEditThisEnergy;
-            const liveScore =
-              isDraggingThis && dragAxis === "y" && liveEnergyScore !== null
-                ? liveEnergyScore
-                : d.score;
-            const info = typeof liveScore === "number" ? getEnergyInfo(liveScore) : null;
-            const tr = d.transitionToNext;
+        {width > 0 && (() => {
+          const liveOf = (d: EnergyChartPoint, i: number) =>
+            i === draggingFromIndex && dragAxis === "y" && liveEnergyScore !== null ? liveEnergyScore : d.score;
+          const pts = chartData
+            .map((d, i) => ({ d, i, s: liveOf(d, i) }))
+            .filter((q): q is { d: EnergyChartPoint; i: number; s: number } => q.d.isSong && typeof q.s === "number")
+            .map((q) => ({ ...q, x: xAt(q.d.xPos), y: yAt(q.s) }));
+          const line = monotonePath(pts);
+          const area = pts.length > 1 ? `${line} L${pts[pts.length - 1].x},${baseY} L${pts[0].x},${baseY} Z` : "";
+          const ideal = monotonePath(
+            chartData
+              .filter((d) => d.isSong && typeof d.idealScore === "number")
+              .map((d) => ({ x: xAt(d.xPos), y: yAt(d.idealScore as number) })),
+          );
+          const bpmPts = chartData
+            .filter((d) => d.isSong && typeof d.bpm === "number")
+            .map((d) => ({ x: xAt(d.xPos), v: d.bpm as number }));
+          const bMin = Math.min(...bpmPts.map((q) => q.v));
+          const bMax = Math.max(...bpmPts.map((q) => q.v));
+          const bpmLine = showBpmLine && bpmPts.length
+            ? monotonePath(bpmPts.map((q) => ({ x: q.x, y: TOP_PAD + plotHeight * (1 - (0.12 + (bMax === bMin ? 0.4 : ((q.v - bMin) / (bMax - bMin)) * 0.76))) })))
+            : "";
+          const gid = `energia-${compact ? "c" : "n"}`;
+          const reveal = animMode === "entrance" ? 1000 : animMode === "switch" ? 600 : 0;
+          const okBadge = (d: EnergyChartPoint) => d.transitionToNext?.status === "ok";
+          return (
+            <>
+              <svg width={width} height={height} className="absolute inset-0 pointer-events-none" aria-hidden="true">
+                <defs>
+                  <linearGradient id={`${gid}-stroke`} gradientUnits="userSpaceOnUse" x1={PAD_L} x2={width - PAD_R} y1="0" y2="0">
+                    {pts.map((q) => <stop key={q.d.id} offset={`${((q.x - PAD_L) / innerW) * 100}%`} stopColor={q.d.color} />)}
+                  </linearGradient>
+                  <linearGradient id={`${gid}-fill`} gradientUnits="userSpaceOnUse" x1={PAD_L} x2={width - PAD_R} y1="0" y2="0">
+                    {pts.map((q) => <stop key={q.d.id} offset={`${((q.x - PAD_L) / innerW) * 100}%`} stopColor={q.d.color} stopOpacity={0.22} />)}
+                  </linearGradient>
+                </defs>
 
-            if (d.isSpeechEvent) {
-              return (
-                <div
-                  key={d.id}
-                  role="listitem"
-                  ref={(el) => { colRefs.current[i] = el; }}
-                  className={`relative shrink-0 flex flex-col items-center cursor-pointer ${compact ? "w-4" : "w-6"} ${isSelected ? "bg-[var(--surface)] rounded-[var(--r-s)]" : ""}`}
-                  style={{ paddingTop: 0, paddingBottom: LABEL_H }}
-                  title={d.name}
+                {/* Bloques (chapa, pausa, bis…): línea vertical con su icono */}
+                {chartData.filter((d) => d.isSpeechEvent).map((d) => (
+                  <line key={`sp-${d.id}`} x1={xAt(d.xPos)} x2={xAt(d.xPos)} y1={TOP_PAD} y2={baseY} stroke={d.color} strokeWidth={2} strokeDasharray="4 3" strokeOpacity={0.7} />
+                ))}
+                {/* Uniones con la siguiente canción */}
+                {chartData.filter((d) => showTransitionBadges ? d.transitionToNext : d.harmonyClash).map((d) => {
+                  const bad = showTransitionBadges ? !okBadge(d) : true;
+                  return (
+                    <line key={`tr-${d.id}`} x1={xAt(d.xPos + 0.5)} x2={xAt(d.xPos + 0.5)} y1={TOP_PAD} y2={baseY}
+                      stroke={bad ? "var(--alert)" : "var(--ok)"} strokeWidth={bad ? 1.5 : 1} strokeDasharray={bad ? "3 2" : "2 3"} strokeOpacity={bad ? 0.85 : 0.45} />
+                  );
+                })}
+                {/* Guías de arrastre: dónde caería al soltar */}
+                {draggingFromIndex !== null && dragAxis !== "y" && hoverIndex !== null && chartData[hoverIndex] && (
+                  <line x1={xAt(chartData[hoverIndex].xPos)} x2={xAt(chartData[hoverIndex].xPos)} y1={TOP_PAD} y2={baseY} stroke="var(--acc)" strokeWidth={2} strokeDasharray="4 3" strokeOpacity={0.6} />
+                )}
+                {draggingFromIndex !== null && dragAxis === "y" && liveEnergyScore !== null && (
+                  <line x1={PAD_L} x2={width - PAD_R} y1={yAt(liveEnergyScore)} y2={yAt(liveEnergyScore)} stroke="var(--acc)" strokeWidth={2} strokeDasharray="4 3" strokeOpacity={0.6} />
+                )}
+
+                {showIdealCurve && ideal && (
+                  <path d={ideal} fill="none" stroke="var(--ink-2)" strokeWidth={compact ? 1.5 : 2} strokeDasharray="5 4" strokeOpacity={0.6} />
+                )}
+                <g style={{ clipPath: `inset(0 ${revealed ? 0 : 100}% 0 0)`, transition: revealed && reveal ? `clip-path ${reveal}ms ease-in-out` : "none" }}>
+                  {area && <path d={area} fill={`url(#${gid}-fill)`} />}
+                  {line && pts.length > 1 && <path d={line} fill="none" stroke={`url(#${gid}-stroke)`} strokeWidth={compact ? 2 : 3} strokeLinecap="round" strokeLinejoin="round" />}
+                  {bpmLine && <path d={bpmLine} fill="none" stroke="var(--acc)" strokeWidth={compact ? 1.5 : 2} strokeOpacity={0.85} />}
+                </g>
+
+                {/* Insignias ✓ / ✕ de unión */}
+                {showTransitionBadges && chartData.filter((d) => d.transitionToNext).map((d) => {
+                  const tr = d.transitionToNext!;
+                  const ok = tr.status === "ok";
+                  return (
+                    <text key={`tb-${d.id}`} x={xAt(d.xPos + 0.5)} y={TOP_PAD - 4} textAnchor="middle" fontWeight={900}
+                      fontSize={compact ? (ok ? 9 : 10) : ok ? 11 : 12} fill={ok ? "var(--ok)" : "var(--alert)"}>
+                      {ok ? "✓" : tr.coste.harmonyRelation === "choque" ? "✕ ⚡" : "✕"}
+                    </text>
+                  );
+                })}
+                {!showTransitionBadges && chartData.filter((d) => d.harmonyClash).map((d) => (
+                  <text key={`hc-${d.id}`} x={xAt(d.xPos + 0.5)} y={TOP_PAD - 4} textAnchor="middle" fontSize={compact ? 10 : 13}>⚡</text>
+                ))}
+                {chartData.filter((d) => d.isSpeechEvent).map((d) => (
+                  <text key={`si-${d.id}`} x={xAt(d.xPos)} y={TOP_PAD - 3} textAnchor="middle" fontSize={compact ? 13 : 18}>{d.icon}</text>
+                ))}
+              </svg>
+
+              {/* Puntos: botones reales (foco, teclado y arrastre) sobre la curva */}
+              {pts.map(({ d, i, x, y }) => {
+                const isSelected = d.id === selectedSetlistItemId;
+                const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(d.name, highlightedSongIds);
+                const isDraggingThis = draggingFromIndex === i;
+                const isPlaying = !!currentPlayingSongId && d.songId === currentPlayingSongId;
+                const canEditThisEnergy = !!onEnergyChange && d.songId != null;
+                const canDragThis = !!onReorder || canEditThisEnergy;
+                const r = isPlaying ? (compact ? 7 : 9) : isSelected || isHighlighted || isDraggingThis ? (compact ? 5.5 : 7.5) : compact ? 3.5 : 5.5;
+                return (
+                  <React.Fragment key={d.id}>
+                    <button
+                      type="button"
+                      aria-label={`#${d.idx + 1} ${d.name}, energía ${Math.round((d.score as number) / 2)} de 10`}
+                      aria-pressed={isSelected}
+                      onKeyDown={(e) => {
+                        if (e.key === "ArrowUp") { e.preventDefault(); bumpEnergy(i, 1); }
+                        else if (e.key === "ArrowDown") { e.preventDefault(); bumpEnergy(i, -1); }
+                        else if (e.key === "ArrowLeft" && e.altKey) { e.preventDefault(); moveItem(i, -1); }
+                        else if (e.key === "ArrowRight" && e.altKey) { e.preventDefault(); moveItem(i, 1); }
+                      }}
+                      onClick={(e) => { e.stopPropagation(); if (draggingFromIndex === null) selectPoint(d.id); }}
+                      onPointerDown={(e) => {
+                        if (!canDragThis) return;
+                        e.stopPropagation();
+                        (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
+                        startDrag(i, e.clientX, e.clientY, e.pointerId, e.pointerType);
+                      }}
+                      onPointerEnter={() => { if (isPointerFine) setTip({ i, left: Math.max(70, Math.min(width - 70, x)) }); }}
+                      onPointerLeave={() => setTip((t) => (t?.i === i ? null : t))}
+                      className="absolute w-9 h-9 rounded-[var(--r-pill)] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]"
+                      style={{
+                        left: x - 18, top: y - 18, touchAction: canDragThis ? "none" : undefined,
+                        transition: isDraggingThis ? "none" : "top 150ms ease-out, left 150ms ease-out",
+                        cursor: canDragThis ? (onReorder && canEditThisEnergy ? "move" : canEditThisEnergy ? "ns-resize" : "ew-resize") : "pointer",
+                      }}
+                    >
+                      {(isSelected || isPlaying) && (
+                        <span className="absolute rounded-[var(--r-pill)]" style={{ width: r * 2 + 8, height: r * 2 + 8, background: isPlaying ? "var(--ok)" : "var(--surface)", opacity: isPlaying ? 0.35 : 1 }} />
+                      )}
+                      <span className="relative rounded-[var(--r-pill)]" style={{ width: r * 2, height: r * 2, background: d.color, opacity: isDraggingThis ? 0.5 : isSelected || isHighlighted || isPlaying ? 1 : 0.75 }} />
+                    </button>
+                    {showTonalidad && d.tonalidad && (() => {
+                      const fs = compact ? 7.5 : 9;
+                      const abajo = y - r - 6 - fs < TOP_PAD;
+                      return (
+                        <span className="absolute pointer-events-none -translate-x-1/2 rounded-[var(--r-pill)] bg-[var(--surface)] px-1.5 font-mono font-semibold text-[var(--ink)] leading-[1.35]"
+                          style={{ left: x, top: abajo ? y + r + 3 : y - r - 5 - fs - 3, fontSize: fs }}>
+                          {d.tonalidad}
+                        </span>
+                      );
+                    })()}
+                  </React.Fragment>
+                );
+              })}
+
+              {/* Eje X: #n y, si toca, BPM */}
+              {LABEL_H > 0 && chartData.filter((d) => d.isSong).map((d) => (
+                <span key={`lb-${d.id}`} className="absolute -translate-x-1/2 text-center leading-tight text-[var(--ink-2)] pointer-events-none"
+                  style={{ left: xAt(d.xPos), top: baseY + 4, fontSize }}>
+                  {!compact && <>#{d.xPos + 1}</>}
+                  {showBpmLine && typeof d.bpm === "number" && <span className="block font-mono">{d.bpm}</span>}
+                </span>
+              ))}
+              {/* Bloques seleccionables (icono clicable) */}
+              {chartData.map((d, i) => d.isSpeechEvent ? (
+                <button key={`sb-${d.id}`} type="button" aria-label={d.name} title={d.name}
                   onClick={(e) => { e.stopPropagation(); selectPoint(d.id); }}
-                >
-                  <span className="leading-none" style={{ fontSize: compact ? 12 : 16, marginTop: 2 }}>{d.icon}</span>
-                  <span className="flex-1 w-0.5 mt-1 rounded-[var(--r-pill)]" style={{ background: d.color, opacity: 0.5 }} />
-                </div>
-              );
-            }
-
-            const frac = fracOf(typeof liveScore === "number" ? liveScore : yDomain[0]);
-            const idealFrac = typeof d.idealScore === "number" ? fracOf(d.idealScore) : null;
-            const bpmFrac =
-              showBpmLine && bpmRange && typeof d.bpm === "number"
-                ? 0.12 + (bpmRange.max === bpmRange.min ? 0.4 : ((d.bpm - bpmRange.min) / (bpmRange.max - bpmRange.min)) * 0.76)
-                : null;
-            const barOpacity = isDraggingThis ? 0.45 : isSelected || isHighlighted || isPlaying ? 1 : 0.6;
-            const entrance = animMode === "entrance" ? 900 : animMode === "switch" ? 500 : 180;
-
-            return (
-              <div
-                key={d.id}
-                role="listitem"
-                ref={(el) => { colRefs.current[i] = el; }}
-                className={`relative flex-1 min-w-0 flex flex-col cursor-pointer transition-colors ${isSelected ? "bg-[var(--surface)] rounded-[var(--r-s)]" : ""} ${isDropTarget ? "bg-[var(--acc-soft)] rounded-[var(--r-s)]" : ""}`}
-                style={{ paddingTop: TOP_PAD }}
-                onPointerEnter={(e) => {
-                  if (!isPointerFine) return;
-                  const el = e.currentTarget;
-                  const w = containerRef.current?.clientWidth ?? 300;
-                  setTip({ i, left: Math.max(70, Math.min(w - 70, el.offsetLeft + el.offsetWidth / 2 + 4)) });
-                }}
-                onPointerLeave={() => setTip((t) => (t?.i === i ? null : t))}
-                onClick={(e) => { e.stopPropagation(); if (draggingFromIndex === null) selectPoint(d.id); }}
-              >
-                {/* Insignia de unión con la siguiente canción (✓ fluida / ✕ revisar) */}
-                {showTransitionBadges && tr && (
-                  <span
-                    className="absolute z-10 font-black leading-none pointer-events-none"
-                    style={{
-                      right: -6, top: 2, fontSize: compact ? 9 : 11,
-                      color: tr.status === "ok" ? "var(--ok)" : "var(--alert)",
-                    }}
-                  >
-                    {tr.status === "ok" ? "✓" : tr.coste.harmonyRelation === "choque" ? "✕⚡" : "✕"}
-                  </span>
-                )}
-                {!showTransitionBadges && d.harmonyClash && (
-                  <span className="absolute z-10 leading-none pointer-events-none text-[var(--alert)]" style={{ right: -6, top: 2, fontSize: compact ? 10 : 13 }}>⚡</span>
-                )}
-
-                <div className="relative flex-1">
-                  {/* Curva ideal: marca discontinua a la altura ideal de esta canción */}
-                  {showIdealCurve && idealFrac !== null && (
-                    <span
-                      className="absolute left-[15%] right-[15%] pointer-events-none"
-                      style={{ bottom: `calc(${idealFrac * 100}% - 1px)`, height: 0, borderTop: "2px dashed var(--ink-2)", opacity: 0.6 }}
-                    />
-                  )}
-                  {isPlaying && (
-                    <span className="absolute left-1/2 -translate-x-1/2 text-[var(--ok)] leading-none pointer-events-none" style={{ bottom: `calc(${frac * 100}% + 4px)`, fontSize: compact ? 9 : 12 }}>▶</span>
-                  )}
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`#${d.idx + 1} ${d.name}${typeof d.score === "number" ? `, energía ${Math.round(d.score / 2)} de 10` : ""}`}
-                    aria-pressed={isSelected}
-                    onKeyDown={(e) => {
-                      if (e.key === "ArrowUp") { e.preventDefault(); bumpEnergy(i, 1); }
-                      else if (e.key === "ArrowDown") { e.preventDefault(); bumpEnergy(i, -1); }
-                      else if (e.key === "ArrowLeft" && e.altKey) { e.preventDefault(); moveItem(i, -1); }
-                      else if (e.key === "ArrowRight" && e.altKey) { e.preventDefault(); moveItem(i, 1); }
-                      else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectPoint(d.id); }
-                    }}
-                    onPointerDown={(e) => {
-                      if (!canDragThis) return;
-                      e.stopPropagation();
-                      (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
-                      startDrag(i, e.clientX, e.clientY, e.pointerId, e.pointerType);
-                    }}
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] motion-reduce:transition-none"
-                    style={{
-                      width: "min(72%, 30px)",
-                      minWidth: compact ? 4 : 8,
-                      height: `${frac * 100}%`,
-                      minHeight: canDragThis && !compact ? 24 : 0,
-                      background: d.color,
-                      opacity: barOpacity,
-                      borderRadius: "var(--r-pill) var(--r-pill) 0 0",
-                      touchAction: canDragThis ? "none" : undefined,
-                      cursor: canDragThis ? (onReorder && canEditThisEnergy ? "move" : canEditThisEnergy ? "ns-resize" : "ew-resize") : "pointer",
-                      transition: isDraggingThis ? "none" : `height ${entrance}ms ease-out, opacity 150ms`,
-                    }}
-                  />
-                  {bpmFrac !== null && (
-                    <span
-                      className="absolute left-1/2 -translate-x-1/2 rounded-[var(--r-pill)] bg-[var(--ink)] pointer-events-none"
-                      style={{ bottom: `calc(${bpmFrac * 100}% - 3px)`, width: compact ? 5 : 7, height: compact ? 5 : 7 }}
-                      title={`${d.bpm} BPM`}
-                    />
-                  )}
-                </div>
-
-                {/* Fila de etiquetas: posición, tonalidad, BPM */}
-                {LABEL_H > 0 && (
-                  <div className="flex flex-col items-center justify-start text-center leading-tight pointer-events-none" style={{ height: LABEL_H, fontSize }}>
-                    {!compact && <span className="text-[var(--ink-2)]">#{d.xPos + 1}</span>}
-                    {showTonalidad && d.tonalidad && (
-                      <span className="font-mono font-semibold text-[var(--ink)]">{d.tonalidad}</span>
-                    )}
-                    {showBpmLine && typeof d.bpm === "number" && !showTonalidad && (
-                      <span className="font-mono text-[var(--ink-2)]">{d.bpm}</span>
-                    )}
-                  </div>
-                )}
-                {info && isDraggingThis && dragAxis === "y" && (
-                  <span className="sr-only">{info.label}</span>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  className="absolute -translate-x-1/2 w-6 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] rounded-[var(--r-s)]"
+                  style={{ left: xAt(d.xPos), top: 0, height: TOP_PAD + 4, opacity: 0 }} data-idx={i} />
+              ) : null)}
+            </>
+          );
+        })()}
 
         {/* Tooltip con ratón real; en táctil el detalle vive en el panel de debajo. */}
         {isPointerFine && tip && draggingFromIndex === null && chartData[tip.i] && (
