@@ -1041,7 +1041,7 @@ export default function TourManager({
       {/* Modal Formulario de Gira */}
       {isModalOpen && (
         <ModalPortal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
+          <div data-modulo="sala" className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
             <div
               className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} flex flex-col my-auto max-h-[90vh]`}
             >
@@ -1107,11 +1107,11 @@ export default function TourManager({
                     </div>
 
                     {/* SELECCIÓN DE MIEMBROS DE LA BANDA (FORMACIÓN COMPLETA VS PARCIAL) */}
-                    <div className="sm:col-span-3 p-4 rounded-[var(--r-m)] bg-[var(--acc)]/90 space-y-4">
+                    <div className="sm:col-span-3 p-4 rounded-[var(--r-m)] bg-[var(--acc-soft)] space-y-4">
                       <div className="flex flex-wrap items-center justify-between gap-2/20 pb-3">
                         <div>
-                          <span className="text-xs font-sans font-bold text-[var(--tentative)]/80 tracking-wider flex items-center gap-1.5">
-                            <Users className="w-4 h-4 text-[var(--acc)]" />{" "}
+                          <span className="text-xs font-sans font-bold text-[var(--acc-ink)] tracking-wider flex items-center gap-1.5">
+                            <Users className="w-4 h-4 text-[var(--acc-ink)]" />{" "}
                             Miembros & Formación de la Gira
                           </span>
                           <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
@@ -1166,7 +1166,7 @@ export default function TourManager({
                               <button
                                 type="button"
                                 onClick={handleSelectAllMembers}
-                                className="text-[var(--tentative)]/80 hover:underline cursor-pointer"
+                                className="text-[var(--acc-ink)] hover:underline cursor-pointer"
                               >
                                 Seleccionar todos
                               </button>
@@ -1193,7 +1193,7 @@ export default function TourManager({
                                   onClick={() => handleToggleMember(m.id)}
                                   className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
                                     isSelected
-                                      ? "bg-[var(--tentative)]/20 text-[var(--ink)]"
+                                      ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                                       : "bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]"
                                   }`}
                                 >
@@ -1226,7 +1226,7 @@ export default function TourManager({
                       {/* Barra de Dietas por Músico */}
                       <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-3 text-xs">
                         <div className="flex items-center gap-2">
-                          <span className="text-[var(--tentative)]/80 font-sans font-bold">
+                          <span className="text-[var(--acc-ink)] font-sans font-bold">
                             Expedición:{" "}
                             {formConvocatoriaTipo === "completa"
                               ? availableMembers.length
@@ -1254,7 +1254,7 @@ export default function TourManager({
                           <button
                             type="button"
                             onClick={handleAutoCalculateDietas}
-                            className="px-2.5 py-1 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/30 text-xs font-sans font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                            className="px-2.5 py-1 rounded bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 text-xs font-sans font-bold flex items-center gap-1 transition-colors cursor-pointer"
                             title="Aplica la dieta total (personas x dieta) a todas las paradas de la ruta"
                           >
                             <Sparkles className="w-3 h-3" /> Aplicar a Paradas
@@ -1742,7 +1742,7 @@ export default function TourManager({
                         onChange={(e) =>
                           setFormSincronizarCalendario(e.target.checked)
                         }
-                        className="rounded text-[var(--tentative)] focus:ring-0 w-4 h-4 cursor-pointer"
+                        className="rounded text-[var(--acc)] focus:ring-0 w-4 h-4 cursor-pointer"
                       />
                       <span>
                         <strong className="text-[var(--ink)]">
@@ -1808,11 +1808,11 @@ export default function TourManager({
                             </span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-[var(--tentative)]/80 font-sans block">
+                            <span className="text-[10px] text-[var(--ink-2)] font-sans block">
                               Neto / Músico ({numPers}pax)
                             </span>
                             <span
-                              className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ? "text-[var(--tentative)]/80" : "text-[var(--alert)]"}`}
+                              className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"}`}
                             >
                               {netoPorPersona >= 0
                                 ? `+${netoPorPersona}`

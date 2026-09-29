@@ -348,7 +348,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
   };
 
   const inputClass =
-    'w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none focus:ring-2 focus:ring-[var(--acc)] transition-colors duration-200';
+    'w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none focus:ring-2 focus:ring-[var(--ink)]/30 transition-colors duration-200';
 
   return (
     <ModalPortal isOpen={true}>
@@ -411,7 +411,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       onMouseDown={(e) => e.preventDefault()}
                       tabIndex={-1}
                       aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
-                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--ink)] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -434,7 +434,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] font-semibold text-sm transition-[filter,transform] duration-200 active:scale-[0.99] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-pill)] bg-[var(--ink)] hover:brightness-105 text-[var(--bg)] font-semibold text-sm transition-[filter,transform] duration-200 active:scale-[0.99] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                   >
                     {loading ? 'Entrando...' : 'Entrar a mi cuenta'}
                   </button>
@@ -543,7 +543,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       onMouseDown={(e) => e.preventDefault()}
                       tabIndex={-1}
                       aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
-                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--ink)] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -551,7 +551,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {loading ? (
                       'Creando cuenta...'
@@ -628,7 +628,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
+                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
                     >
                       {loading ? 'Enviando...' : 'Enviar código de recuperación'}
                     </button>
@@ -663,7 +663,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
+                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
                     >
                       {loading ? 'Guardando...' : 'Guardar nueva contraseña'}
                     </button>
