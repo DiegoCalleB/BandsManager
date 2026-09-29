@@ -24,7 +24,8 @@
     "test:visual:update": "playwright test --project=visual --update-snapshots",
     "design:audit": "node scripts/design-audit.js",
     "design:audit:strict": "node scripts/design-audit.js --strict",
-    "design:fix": "node scripts/design-fixer.js && npm run typecheck && npm run build"
+    "design:fix": "node scripts/design-fixer.js && npm run typecheck && npm run build",
+    "audit:paleta": "python3 scripts/paleta-audit.py"
   },
   "dependencies": {
     "@distube/ytdl-core": "^4.16.12",

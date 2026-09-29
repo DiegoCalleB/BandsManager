@@ -94,8 +94,9 @@ Para cada pantalla, en este orden y **una sola pasada acotada** (capturar → an
 1. **Critique:** ¿qué delata plantilla o varias manos? (checklist anti-IA del §8 de `visual-identity`).
 2. **Audit:** `node scripts/design-audit.js`, `node scripts/superficies-check.mjs`, e2e de superficies.
 3. **Polish:** tipografía → espacio → estados → movimiento → detalle, en ese orden.
-4. **Prueba de los 200 px:** un recorte de 200 px debe ser reconocible como BandManager.
-5. **Prueba de la tercera hora:** ¿cansa la vista? Si dudas, sube la letra y el aire.
+4. **Armonía a ojo (obligatoria, siempre que cambie un color o una pantalla):** contact sheet de todos los módulos en Claro y Oscuro, mirada humana —¿reposa la vista?, ¿algún módulo grita más que el resto?, ¿los estados (ok, alerta, «posible») se confunden con un acento?— y `python3 scripts/paleta-audit.py`. Si a ojo no es agradable, **no se justifica con números: se busca otro color o otra paleta** (criterio: misma luminosidad y croma en OKLCH, solo cambia el tono; texto sobre relleno ≥ 4,5:1).
+5. **Prueba de los 200 px:** un recorte de 200 px debe ser reconocible como BandManager.
+6. **Prueba de la tercera hora:** ¿cansa la vista? Si dudas, sube la letra y el aire.
 
 Regla de oro contra "hecho por varias IAs": **un solo botón, un solo campo, una sola tarjeta, un solo modal** (`src/components/ui/`). Si vas a escribir la cuarta variante de un botón, estás creando la deriva.
 
@@ -107,4 +108,5 @@ Regla de oro contra "hecho por varias IAs": **un solo botón, un solo campo, una
 - [ ] Radios concéntricos; cifras tabulares; títulos con `balance`.
 - [ ] Sin emojis en la interfaz; iconos Lucide del mismo trazo.
 - [ ] Móvil: modal como hoja, máximo 3 bloques, sin scroll horizontal.
+- [ ] Armonía cromática mirada a ojo (contact sheet Claro y Oscuro) y `python3 scripts/paleta-audit.py` en verde.
 - [ ] `node scripts/design-audit.js` y `tsc` limpios; Playwright visual revisado a ojo.

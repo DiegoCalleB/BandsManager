@@ -231,31 +231,36 @@
 
    --acc  → rellenos y elementos gráficos
    --acc-ink → texto (versión oscurecida que pasa AA sobre claro)
-   No son intercambiables: #D9A62B sobre blanco no llega a 4,5:1.       */
+   No son intercambiables. PALETA CALIBRADA (2026-09-29, criterio OKLCH): todos los
+   módulos comparten luminosidad y croma — solo cambia el tono — para que ninguno
+   destaque más que otro y ninguno cuente como «el bueno». Claro: L≈0,55 (texto
+   blanco sobre relleno ≥ 4,5:1, AA). Oscuro: L≈0,76 (texto oscuro sobre relleno
+   ≥ 7:1). Antes: Discografía era el verde neón de Spotify (croma doble que el resto)
+   y el texto blanco sobre naranja/coral quedaba en 3,4:1, por debajo de AA.       */
 
 [data-modulo="booking"],
-[data-modulo="panel"]      { --acc:#D86E31; --acc-soft:#F9EAE1; --acc-ink:#813F18; --on-acc:#FFFFFF; }
-[data-modulo="repertorio"] { --acc:#E0615C; --acc-soft:#FDE9E7; --acc-ink:#A83C37; --on-acc:#FFFFFF; }
+[data-modulo="panel"]      { --acc:#C04815; --acc-soft:#FFEBE5; --acc-ink:#932F00; --on-acc:#FFFFFF; }
+[data-modulo="repertorio"] { --acc:#C0434C; --acc-soft:#FFEBEA; --acc-ink:#952832; --on-acc:#FFFFFF; }
 [data-modulo="gira"],
-[data-modulo="sala"]       { --acc:#17998C; --acc-soft:#DDF1EE; --acc-ink:#0E6B62; --on-acc:#FFFFFF; }
-[data-modulo="finanzas"]   { --acc:#3C7EA8; --acc-soft:#E2EDF4; --acc-ink:#24587A; --on-acc:#FFFFFF; }
+[data-modulo="sala"]       { --acc:#00837C; --acc-soft:#DBF7F4; --acc-ink:#00635D; --on-acc:#FFFFFF; }
+[data-modulo="finanzas"]   { --acc:#2B79A8; --acc-soft:#E2F3FF; --acc-ink:#135B84; --on-acc:#FFFFFF; }
 [data-modulo="fans"],
-[data-modulo="reels"]      { --acc:#9B5FB5; --acc-soft:#F0E7F5; --acc-ink:#6F3D87; --on-acc:#FFFFFF; }
+[data-modulo="reels"]      { --acc:#9055A9; --acc-soft:#F8EBFE; --acc-ink:#6F3C84; --on-acc:#FFFFFF; }
 [data-modulo="epk"],
-[data-modulo="dossier"]    { --acc:#A01E6F; --acc-soft:#F5E7F2; --acc-ink:#7A1554; --on-acc:#FFFFFF; }
-[data-modulo="discografia"] { --acc:#1DB954; --acc-soft:#E8F9F1; --acc-ink:#1B9F41; --on-acc:#FFFFFF; }
+[data-modulo="dossier"]    { --acc:#6066C1; --acc-soft:#ECEFFF; --acc-ink:#474B99; --on-acc:#FFFFFF; }
+[data-modulo="discografia"] { --acc:#2E8548; --acc-soft:#E3F6E6; --acc-ink:#166631; --on-acc:#FFFFFF; }
 
 [data-theme="dark"] [data-modulo="booking"],
-[data-theme="dark"] [data-modulo="panel"]      { --acc:#E99463; --acc-soft:#3A2415; --acc-ink:#E99463; --on-acc:#2A1608; }
-[data-theme="dark"] [data-modulo="repertorio"] { --acc:#F08B84; --acc-soft:#2D1A17; --acc-ink:#F08B84; --on-acc:#1F1413; }
+[data-theme="dark"] [data-modulo="panel"]      { --acc:#F69370; --acc-soft:#371F17; --acc-ink:#F69370; --on-acc:#22110B; }
+[data-theme="dark"] [data-modulo="repertorio"] { --acc:#F68F90; --acc-soft:#381E1E; --acc-ink:#F68F90; --on-acc:#221010; }
 [data-theme="dark"] [data-modulo="gira"],
-[data-theme="dark"] [data-modulo="sala"]       { --acc:#4FC7B8; --acc-soft:#122D29; --acc-ink:#4FC7B8; --on-acc:#08201C; }
-[data-theme="dark"] [data-modulo="finanzas"]   { --acc:#6FB0D9; --acc-soft:#14232E; --acc-ink:#6FB0D9; --on-acc:#0B1A24; }
+[data-theme="dark"] [data-modulo="sala"]       { --acc:#5AC6BD; --acc-soft:#092D2A; --acc-ink:#5AC6BD; --on-acc:#031A19; }
+[data-theme="dark"] [data-modulo="finanzas"]   { --acc:#7BB9E5; --acc-soft:#132938; --acc-ink:#7BB9E5; --on-acc:#081822; }
 [data-theme="dark"] [data-modulo="fans"],
-[data-theme="dark"] [data-modulo="reels"]      { --acc:#C08FD6; --acc-soft:#241A2B; --acc-ink:#C08FD6; --on-acc:#1C1023; }
+[data-theme="dark"] [data-modulo="reels"]      { --acc:#CC9CE1; --acc-soft:#2E2034; --acc-ink:#CC9CE1; --on-acc:#1B121F; }
 [data-theme="dark"] [data-modulo="epk"],
-[data-theme="dark"] [data-modulo="dossier"]    { --acc:#E879D9; --acc-soft:#2D1F3A; --acc-ink:#E879D9; --on-acc:#1A0F1F; }
-[data-theme="dark"] [data-modulo="discografia"] { --acc:#31D966; --acc-soft:#0D4620; --acc-ink:#31D966; --on-acc:#051410; }
+[data-theme="dark"] [data-modulo="dossier"]    { --acc:#A2ABF0; --acc-soft:#22243A; --acc-ink:#A2ABF0; --on-acc:#131524; }
+[data-theme="dark"] [data-modulo="discografia"] { --acc:#79C68A; --acc-soft:#172C1C; --acc-ink:#79C68A; --on-acc:#0C1A0F; }
 
 /* Clásico ignora el color por módulo a propósito: es el diseño de antes,
    y antes no había color por módulo. Cambiarlo sería no conservarlo. */
