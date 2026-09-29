@@ -185,6 +185,11 @@ export function CalendarWidget({
 
   upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
 
+  // La vista de lista es "próximas fechas": un bolo o ensayo ya pasado no pinta ahí aunque
+  // siga en upcomingEvents (esa lista completa la sigue usando el mini-calendario de abajo
+  // para marcar días ya pasados del mes que se está mirando).
+  const upcomingEventsList = upcomingEvents.filter((e) => e.dateStr >= todayStr);
+
   // Calendar month calculation helpers for mini_month view
   const year = currentMonthDate.getFullYear();
   const month = currentMonthDate.getMonth();
@@ -363,9 +368,9 @@ export function CalendarWidget({
       {/* VISTA 1: LISTA PRÓXIMAS FECHAS */}
       {viewMode === "list" && (
         <>
-          {upcomingEvents.length > 0 ? (
+          {upcomingEventsList.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {upcomingEvents.slice(0, 6).map((item) => (
+              {upcomingEventsList.slice(0, 6).map((item) => (
                 <div
                   key={item.id}
                   onClick={() =>
