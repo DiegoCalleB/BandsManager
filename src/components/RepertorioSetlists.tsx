@@ -3569,7 +3569,7 @@ export default function RepertorioSetlists({
   };
 
   return (
-    <div data-modulo="repertorio" className="space-y-3">
+    <div data-modulo={activeTab === "catalogo" ? "discografia" : "repertorio"} className="space-y-3">
       {/* REPERTORIO UNIFIED NAV BAR: Título, tabs segmentadas (Setlists & Directo / Catálogo & Discografía) y acciones rápidas */}
       <RepertorioNavBar
         activeTab={activeTab}
