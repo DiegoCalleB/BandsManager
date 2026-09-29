@@ -305,7 +305,7 @@ export default function BookingCampaignPanel({
                       campaignStartDate: e.target.value,
                     })
                   }
-                  className="w-full text-sm rounded-[var(--r-s)] focus:ring-[var(--acc)] focus:"
+                  className="w-full text-sm rounded-[var(--r-s)] focus:ring-[var(--acc)]"
                 />
               </div>
               <div>
@@ -321,7 +321,7 @@ export default function BookingCampaignPanel({
                       campaignEndDate: e.target.value,
                     })
                   }
-                  className="w-full text-sm rounded-[var(--r-s)] focus:ring-[var(--acc)] focus:"
+                  className="w-full text-sm rounded-[var(--r-s)] focus:ring-[var(--acc)]"
                 />
               </div>
             </div>

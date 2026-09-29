@@ -1363,7 +1363,7 @@ export function GooglePlacesExplorerModal({
                       placeholder="Ej. 150"
                       value={aforoMin}
                       onChange={(e) => setAforoMin(e.target.value)}
-                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
+                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none"
                     />
                   </div>
                   <div>
@@ -1375,7 +1375,7 @@ export function GooglePlacesExplorerModal({
                       placeholder="Ej. 800"
                       value={aforoMax}
                       onChange={(e) => setAforoMax(e.target.value)}
-                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
+                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none"
                     />
                   </div>
                 </div>

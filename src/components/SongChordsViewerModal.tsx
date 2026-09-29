@@ -80,6 +80,86 @@ export function SongChordsViewerModal({
   const [showStructureUploadModal, setShowStructureUploadModal] =
     useState<boolean>(false);
 
+  // Audio playback state
+  const audioUrl =
+    song.audioPrincipalUrl ||
+    song.audioUrl ||
+    (song.audioIdeas && song.audioIdeas.length > 0
+      ? song.audioIdeas[0].audioUrl
+      : "");
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [audioCurrentTime, setAudioCurrentTime] = useState<number>(0);
+  const [audioDuration, setAudioDuration] = useState<number>(
+    song.duracionSegundos || 0,
+  );
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Sync audio duration and cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
+
+  const handleToggleAudio = () => {
+    if (!audioUrl) {
+      setAiSuccessMsg(
+        "⚠️ Esta canción aún no tiene un archivo de audio o maqueta adjunto en el Repertorio.",
+      );
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+      return;
+    }
+
+    if (!audioRef.current) return;
+
+    if (isPlayingAudio) {
+      audioRef.current.pause();
+      setIsPlayingAudio(false);
+    } else {
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlayingAudio(true);
+        })
+        .catch((err) => {
+          console.error("Error al reproducir audio:", err);
+          setIsPlayingAudio(false);
+          setAiSuccessMsg("⚠️ No se pudo reproducir el audio del tema.");
+          setTimeout(() => setAiSuccessMsg(null), 4000);
+        });
+    }
+  };
+
+  const handleSeekAudio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = parseFloat(e.target.value);
+    setAudioCurrentTime(time);
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+    }
+  };
+
+  const handleRestartAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      setAudioCurrentTime(0);
+      if (!isPlayingAudio) {
+        audioRef.current
+          .play()
+          .then(() => setIsPlayingAudio(true))
+          .catch(() => {});
+      }
+    }
+  };
+
+  const formatAudioTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds < 0) return "0:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
   // El estado de edición solo se inicializa desde `song` al montar (useState no vuelve a leer
   // sus argumentos). Cuando la subida de estructura o la generación con IA actualizan `song`
   // desde fuera del formulario de edición, había que cerrar y reabrir el modal para verlo:
@@ -250,19 +330,47 @@ export function SongChordsViewerModal({
           </button>
 
           {/* MODAL HEADER */}
-          <div className="bg-[var(--sunken)]  p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="bg-[var(--sunken)] p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
-                <Music2 className="w-6 h-6" />
-              </div>
+              {/* INTERACTIVE PLAY / PAUSE BUTTON */}
+              <button
+                type="button"
+                onClick={handleToggleAudio}
+                className={`p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                  isPlayingAudio
+                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                    : audioUrl
+                      ? "bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)]"
+                      : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                }`}
+                title={
+                  isPlayingAudio
+                    ? "Pausar audio de la canción"
+                    : audioUrl
+                      ? "Reproducir audio de la canción (Escuchar mientras lees el cifrado)"
+                      : "Esta canción no tiene archivo de audio adjunto en Repertorio"
+                }
+              >
+                {isPlayingAudio ? (
+                  <Pause className="w-6 h-6 fill-current" />
+                ) : (
+                  <Play className="w-6 h-6 fill-current pl-0.5" />
+                )}
+              </button>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold tracking-tight text-[var(--ink)]">
+                  <h2 className="text-xl font-bold text-[var(--ink)]">
                     {formatSongTitle(song.titulo)}
                   </h2>
                   {song.esVersionCovers && (
                     <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
                       Cover
+                    </span>
+                  )}
+                  {isPlayingAudio && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--ok)]/80 text-[var(--ok)]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]"></span>
+                      En reproducción
                     </span>
                   )}
                 </div>
@@ -312,7 +420,7 @@ export function SongChordsViewerModal({
                 type="button"
                 onClick={handleGenerateWithAi}
                 disabled={isGeneratingAi}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 title={
                   song.audioPrincipalUrl
                     ? "Reanalizar escuchando el audio real de la canción"
@@ -364,7 +472,7 @@ export function SongChordsViewerModal({
                 onClick={() => setActiveTab("chords")}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   activeTab === "chords"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)] shadow"
+                    ? "bg-[var(--acc)] text-[var(--on-acc)] "
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
@@ -377,7 +485,7 @@ export function SongChordsViewerModal({
                 onClick={() => setActiveTab("substitute")}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   activeTab === "substitute"
-                    ? "bg-[var(--acc)] text-[var(--ink)] shadow"
+                    ? "bg-[var(--acc)] text-[var(--on-acc)] "
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
@@ -390,7 +498,7 @@ export function SongChordsViewerModal({
                 onClick={() => setActiveTab("edit")}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   activeTab === "edit"
-                    ? "bg-[var(--surface)]/80 text-[var(--ink)] shadow"
+                    ? "bg-[var(--surface)]/80 text-[var(--ink)] "
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
@@ -402,6 +510,68 @@ export function SongChordsViewerModal({
             {/* INTERACTIVE CONTROLS (Only visible on chords tab) */}
             {activeTab === "chords" && (
               <div className="flex flex-wrap items-center gap-3">
+                {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
+                <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-xl bg-[var(--acc)]/10">
+                  <button
+                    type="button"
+                    onClick={handleToggleAudio}
+                    className={`p-1.5 rounded-lg font-bold flex items-center justify-center transition cursor-pointer ${
+                      isPlayingAudio
+                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        : "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] hover:scale-105"
+                    }`}
+                    title={
+                      isPlayingAudio
+                        ? "Pausar audio de la canción"
+                        : audioUrl
+                          ? "Reproducir audio de la canción"
+                          : "Sin archivo de audio adjunto"
+                    }
+                  >
+                    {isPlayingAudio ? (
+                      <Pause className="w-3.5 h-3.5 fill-current" />
+                    ) : (
+                      <Play className="w-3.5 h-3.5 fill-current pl-0.5" />
+                    )}
+                  </button>
+
+                  {audioUrl ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleRestartAudio}
+                        className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
+                        title="Reiniciar desde el inicio (0:00)"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                      </button>
+
+                      <span className="text-[11px] text-[var(--acc-ink)] font-mono min-w-[32px] text-right font-semibold">
+                        {formatAudioTime(audioCurrentTime)}
+                      </span>
+
+                      <input
+                        type="range"
+                        min={0}
+                        max={audioDuration || 100}
+                        step={0.1}
+                        value={audioCurrentTime}
+                        onChange={handleSeekAudio}
+                        className="w-20 sm:w-28 h-1.5 bg-[var(--sunken)] rounded-lg appearance-none cursor-pointer accent-[var(--acc)]"
+                        title="Barra de posición de reproducción"
+                      />
+
+                      <span className="text-[11px] text-[var(--ink-2)] font-mono min-w-[32px]">
+                        {formatAudioTime(audioDuration)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-[10px] text-[var(--ink-2)] italic">
+                      Sin audio
+                    </span>
+                  )}
+                </div>
+
                 {/* TRANSPOSITION CONTROL */}
                 <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
                   <span className="text-[11px] text-[var(--ink-2)] mr-1">
@@ -462,7 +632,7 @@ export function SongChordsViewerModal({
                     onClick={() => setIsAutoScrolling(!isAutoScrolling)}
                     className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
                       isAutoScrolling
-                        ? "bg-[var(--ok)] text-[var(--ink)]"
+                        ? "bg-[var(--ok)] text-[var(--on-ok)]"
                         : "bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title="Iniciar/Pausar Desfile Automático"
@@ -487,7 +657,7 @@ export function SongChordsViewerModal({
                           onClick={() => setScrollSpeed(v)}
                           className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center transition cursor-pointer ${
                             scrollSpeed === v
-                              ? "bg-[var(--ok)] text-[var(--ink)]"
+                              ? "bg-[var(--ok)] text-[var(--on-ok)]"
                               : "bg-[var(--ink)]/10 text-[var(--ink-2)]"
                           }`}
                         >
@@ -533,7 +703,7 @@ export function SongChordsViewerModal({
             <div
               className={` px-4 py-2 text-xs font-sans flex items-center justify-between animate-in fade-in ${
                 aiSuccessMsg.startsWith("⚠️")
-                  ? "bg-[var(--acc-soft)]  text-[var(--acc)]/70"
+                  ? "bg-[var(--acc-soft)] text-[var(--acc)]/70"
                   : "bg-[var(--ok-soft)]/40 text-[var(--ink-2)]"
               }`}
             >
@@ -568,7 +738,7 @@ export function SongChordsViewerModal({
                 <div className="space-y-6 max-w-3xl mx-auto">
                   {/* SUBSTITUTE QUICK SUMMARY BANNER */}
                   {guiaSustituto?.estructura && (
-                    <div className="bg-[var(--acc)]/40  p-3.5 rounded-[var(--r-m)] text-xs font-sans space-y-1.5">
+                    <div className="bg-[var(--acc)]/40 p-3.5 rounded-[var(--r-m)] text-xs font-sans space-y-1.5">
                       <div className="flex items-center justify-between text-[var(--tentative)]/80 font-bold">
                         <span className="flex items-center gap-1.5">
                           <Zap className="w-4 h-4 text-[var(--acc)]" />
@@ -581,7 +751,7 @@ export function SongChordsViewerModal({
                           Ver Ficha Completa →
                         </button>
                       </div>
-                      <p className="text-[var(--ink-2)] text-sm font-semibold tracking-wide bg-[var(--sunken)] p-2 rounded-[var(--r-s)]5">
+                      <p className="text-[var(--ink-2)] text-sm font-semibold bg-[var(--sunken)] p-2 rounded-[var(--r-s)]5">
                         {guiaSustituto.estructura}
                       </p>
                     </div>
@@ -597,9 +767,9 @@ export function SongChordsViewerModal({
               {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
               {activeTab === "substitute" && (
                 <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
-                  <div className="bg-[var(--acc)]/60  p-6 rounded-[var(--r-l)] space-y-5">
+                  <div className="bg-[var(--acc)]/60 p-6 rounded-[var(--r-l)] space-y-5">
                     <div className="flex items-center gap-3/30 pb-4">
-                      <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)]">
+                      <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)]">
                         <UserCheck className="w-6 h-6" />
                       </div>
                       <div>
@@ -691,7 +861,7 @@ export function SongChordsViewerModal({
                       <button
                         type="button"
                         onClick={handleSaveEdits}
-                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <Save className="w-4 h-4" />
                         <span>Guardar Cambios</span>
@@ -848,6 +1018,31 @@ export function SongChordsViewerModal({
           onClose={() => setShowStructureUploadModal(false)}
           onUpdateSong={onUpdateSong}
         />
+
+        {/* HIDDEN HTML AUDIO ELEMENT FOR IN-MODAL PLAYBACK */}
+        {audioUrl && (
+          <audio
+            ref={audioRef}
+            src={audioUrl}
+            preload="metadata"
+            onTimeUpdate={() => {
+              if (audioRef.current) {
+                setAudioCurrentTime(audioRef.current.currentTime);
+              }
+            }}
+            onLoadedMetadata={() => {
+              if (audioRef.current && audioRef.current.duration) {
+                setAudioDuration(audioRef.current.duration);
+              }
+            }}
+            onEnded={() => {
+              setIsPlayingAudio(false);
+              setAudioCurrentTime(0);
+            }}
+            onPause={() => setIsPlayingAudio(false)}
+            onPlay={() => setIsPlayingAudio(true)}
+          />
+        )}
       </div>
     </ModalPortal>
   );
@@ -874,7 +1069,7 @@ function renderFormattedChordSheet(text: string) {
       return (
         <div
           key={idx}
-          className="text-[var(--acc)] font-bold text-base my-2 pt-2  flex items-center gap-2"
+          className="text-[var(--acc)] font-bold text-base my-2 pt-2 flex items-center gap-2"
         >
           <span className="px-2.5 py-0.5 rounded bg-[var(--acc)]/90 text-[var(--tentative)]/80">
             {line.trim()}
@@ -922,7 +1117,7 @@ function renderFormattedChordSheet(text: string) {
       return (
         <div
           key={idx}
-          className="font-bold text-[var(--acc)] text-sm tracking-wide py-0.5 leading-none select-none"
+          className="font-bold text-[var(--acc)] text-sm py-0.5 leading-none select-none"
         >
           {line}
         </div>
@@ -944,7 +1139,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
   const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
 
   return (
-    <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5  transition">
+    <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition">
       <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
         <span>{chord}</span>
       </div>

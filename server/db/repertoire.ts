@@ -1,17 +1,17 @@
-import { getSupabase, cleanBandId } from './core.js';
-import { ensureRegisteredBandExists } from './bands.js';
+import { getSupabase, cleanBandId } from "./core.js";
+import { ensureRegisteredBandExists } from "./bands.js";
 import {
   analizarEnergiaAudio,
   medirVariacionInterna,
   calcularVolumenPromedioAudio,
   calcularEnergiaMultifactor,
-} from '../utils/audioEnergy.js';
+} from "../utils/audioEnergy.js";
 import {
   analizarAudioConIris,
   detectarTonalidadDesdeAudio,
-} from '../utils/audioKey.js';
+} from "../utils/audioKey.js";
 
-import { INITIAL_SONGS, INITIAL_SETLISTS } from '../../src/db_seed.js';
+import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 
 /**
  * Analiza y persiste la dinámica interna del audio de un tema — y de paso, BPM y tonalidad
@@ -33,7 +33,7 @@ import { INITIAL_SONGS, INITIAL_SETLISTS } from '../../src/db_seed.js';
 export async function analizarYGuardarDinamicaCancion(
   songId: string,
   audioUrl: string,
-  bandId: string
+  bandId: string,
 ): Promise<{
   variacion: number;
   audioAnalizable: boolean;
@@ -57,13 +57,13 @@ export async function analizarYGuardarDinamicaCancion(
     (err) => {
       console.error(
         `[Repertorio] analizarAudioConIris lanzó (no debería):`,
-        err?.message || err
+        err?.message || err,
       );
       return { bpm: null, tonalidad: null, onsetDensity: null };
-    }
+    },
   );
   console.log(
-    `[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? 'ok' : 'no analizable'} bpm=${bpmDetectado ?? '-'} tonalidad=${tonalidadDetectada?.tonalidad ?? '-'} densidadOnsets=${onsetDensity?.toFixed(2) ?? '-'}`
+    `[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? "ok" : "no analizable"} bpm=${bpmDetectado ?? "-"} tonalidad=${tonalidadDetectada?.tonalidad ?? "-"} densidadOnsets=${onsetDensity?.toFixed(2) ?? "-"}`,
   );
 
   // El filtro de band_id admite las mismas variantes de formato que dbGetSongs (candidateIds):
@@ -72,10 +72,10 @@ export async function analizarYGuardarDinamicaCancion(
   // no matchea nada NO lanza error — devuelve éxito con 0 filas afectadas, así que sin esto el
   // "reanálisis" de canciones antiguas parece funcionar (200 OK) pero nunca persiste nada.
   const sb = getSupabase();
-  const rawClean = (bandId || '').trim();
-  const noPrefix = rawClean.replace(/^(band|reg)-/, '');
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
   const candidateIds = Array.from(
-    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`])
+    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`]),
   ).filter(Boolean);
 
   const ahora = new Date().toISOString();
@@ -117,18 +117,18 @@ export async function analizarYGuardarDinamicaCancion(
   // el formulario (que manda la canción completa), pero borraría título/audio/bpm/etc. si se
   // usara aquí con solo estos dos campos. Un UPDATE solo toca las columnas indicadas.
   const { data, error } = await sb
-    .from('songs')
+    .from("songs")
     .update(cambios)
-    .eq('id', songId)
-    .in('band_id', candidateIds)
-    .select('id');
+    .eq("id", songId)
+    .in("band_id", candidateIds)
+    .select("id");
   if (error)
     throw new Error(
-      `Supabase Error (guardar dinámica interna): ${error.message}`
+      `Supabase Error (guardar dinámica interna): ${error.message}`,
     );
   if (!data || data.length === 0) {
     throw new Error(
-      `No se encontró la canción ${songId} para esta banda (posible band_id en formato antiguo)`
+      `No se encontró la canción ${songId} para esta banda (posible band_id en formato antiguo)`,
     );
   }
 
@@ -156,20 +156,20 @@ export async function analizarYGuardarDinamicaCancion(
 export async function dbSetSongEnergiaManual(
   songId: string,
   energia: number,
-  bandId: string
+  bandId: string,
 ) {
   const sb = getSupabase();
-  const rawClean = (bandId || '').trim();
-  const noPrefix = rawClean.replace(/^(band|reg)-/, '');
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
   const candidateIds = Array.from(
-    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`])
+    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`]),
   ).filter(Boolean);
 
   const { data, error } = await sb
-    .from('songs')
+    .from("songs")
     .update({ energia, energia_manual: true })
-    .eq('id', songId)
-    .in('band_id', candidateIds)
+    .eq("id", songId)
+    .in("band_id", candidateIds)
     .select()
     .single();
   if (error)
@@ -190,30 +190,30 @@ export async function dbSetSongEnergiaManual(
  */
 async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
   const sb = getSupabase();
-  const rawClean = (bandId || '').trim();
-  const noPrefix = rawClean.replace(/^(band|reg)-/, '');
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
   const candidateIds = Array.from(
-    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`])
+    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`]),
   ).filter(Boolean);
 
   // Obtén todas las canciones con datos de energía calculados — excepto las que el usuario fijó
   // a mano (energia_manual): ese valor es una elección explícita, el recalibrado automático no
   // debe pisarlo silenciosamente solo porque se analizó el audio de otra canción del repertorio.
   const { data: songs, error: fetchError } = await sb
-    .from('songs')
+    .from("songs")
     .select(
-      'id, energia_db_promedio, energia_bpm_detectado, energia_onset_density'
+      "id, energia_db_promedio, energia_bpm_detectado, energia_onset_density",
     )
-    .in('band_id', candidateIds)
-    .eq('energia_manual', false)
+    .in("band_id", candidateIds)
+    .eq("energia_manual", false)
     .or(
-      'energia_db_promedio.not.is.null,energia_bpm_detectado.not.is.null,energia_onset_density.not.is.null'
+      "energia_db_promedio.not.is.null,energia_bpm_detectado.not.is.null,energia_onset_density.not.is.null",
     );
 
   if (fetchError) {
     console.error(
-      '[Repertorio] Error fetching songs for recalibration:',
-      fetchError.message
+      "[Repertorio] Error fetching songs for recalibration:",
+      fetchError.message,
     );
     return;
   }
@@ -222,13 +222,13 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
   // Calcular min/max para normalizar BPM, dB y densidad de onsets
   const bpms = songs
     .map((s) => s.energia_bpm_detectado as number)
-    .filter((bpm) => typeof bpm === 'number');
+    .filter((bpm) => typeof bpm === "number");
   const dbs = songs
     .map((s) => s.energia_db_promedio as number)
-    .filter((db) => typeof db === 'number');
+    .filter((db) => typeof db === "number");
   const onsetDensities = songs
     .map((s) => s.energia_onset_density as number)
-    .filter((d) => typeof d === 'number');
+    .filter((d) => typeof d === "number");
 
   if (bpms.length === 0 && dbs.length === 0 && onsetDensities.length === 0)
     return;
@@ -270,17 +270,17 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
       bpm,
       db,
       onsetDensity,
-      bandStats
+      bandStats,
     );
 
     const { error: updateError } = await sb
-      .from('songs')
+      .from("songs")
       .update({ energia })
-      .eq('id', song.id);
+      .eq("id", song.id);
     if (updateError) {
       console.error(
         `[Repertorio] Error updating energy for song ${song.id}:`,
-        updateError.message
+        updateError.message,
       );
     }
   }
@@ -290,12 +290,12 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
 function dispararAnalisisDinamicaEnSegundoPlano(
   songId: string,
   audioUrl: string,
-  bandId: string
+  bandId: string,
 ): void {
   analizarYGuardarDinamicaCancion(songId, audioUrl, bandId).catch((err) => {
     console.error(
       `[Repertorio] No se pudo analizar la dinámica interna de la canción ${songId}:`,
-      err?.message || err
+      err?.message || err,
     );
   });
 }
@@ -305,10 +305,10 @@ function dispararAnalisisDinamicaEnSegundoPlano(
 // y de ahí para abajo, cualquier otra pista armónica sin voz ni batería de por medio sigue
 // dando mejor señal que la mezcla completa.
 const ORDEN_PREFERENCIA_STEM_TONALIDAD = [
-  'Bajo',
-  'Arreglos',
-  'Guitarras',
-  'Teclados',
+  "Bajo",
+  "Arreglos",
+  "Guitarras",
+  "Teclados",
 ];
 
 /**
@@ -318,12 +318,12 @@ const ORDEN_PREFERENCIA_STEM_TONALIDAD = [
  */
 function encontrarMejorStemNuevoParaTonalidad(
   existingIdeas: any[],
-  incomingIdeas: any[]
+  incomingIdeas: any[],
 ): string | null {
   const idsExistentes = new Set(
     (existingIdeas || []).flatMap((idea: any) =>
-      (idea.pistas || []).map((p: any) => p?.id)
-    )
+      (idea.pistas || []).map((p: any) => p?.id),
+    ),
   );
   const urlPorInstrumento = new Map<string, string>();
   const instrumentosVistos: string[] = [];
@@ -331,7 +331,7 @@ function encontrarMejorStemNuevoParaTonalidad(
     for (const pista of idea?.pistas || []) {
       if (!pista) continue;
       instrumentosVistos.push(
-        `${pista.instrumento || '?'}${idsExistentes.has(pista.id) ? '(ya existía)' : '(nueva)'}`
+        `${pista.instrumento || "?"}${idsExistentes.has(pista.id) ? "(ya existía)" : "(nueva)"}`,
       );
       if (idsExistentes.has(pista.id)) continue;
       if (
@@ -352,7 +352,7 @@ function encontrarMejorStemNuevoParaTonalidad(
     }
   }
   console.log(
-    `[Repertorio] Chequeo stem→tonalidad: pistas vistas=[${instrumentosVistos.join(', ')}] → elegido=${elegido ? elegido.slice(0, 60) + '…' : 'ninguno'}`
+    `[Repertorio] Chequeo stem→tonalidad: pistas vistas=[${instrumentosVistos.join(", ")}] → elegido=${elegido ? elegido.slice(0, 60) + "…" : "ninguno"}`,
   );
   return elegido;
 }
@@ -366,38 +366,38 @@ function encontrarMejorStemNuevoParaTonalidad(
 export async function detectarYGuardarTonalidadDesdeStem(
   songId: string,
   stemAudioUrl: string,
-  bandId: string
+  bandId: string,
 ): Promise<{ tonalidad: string } | null> {
   console.log(
-    `[Repertorio] Redetectando tonalidad desde stem para ${songId}: ${stemAudioUrl.slice(0, 80)}…`
+    `[Repertorio] Redetectando tonalidad desde stem para ${songId}: ${stemAudioUrl.slice(0, 80)}…`,
   );
   const resultado = await detectarTonalidadDesdeAudio(stemAudioUrl, {
     timeoutMs: 90_000,
   });
   console.log(
     `[Repertorio] Resultado tonalidad desde stem para ${songId}:`,
-    resultado
+    resultado,
   );
   if (!resultado) return null;
 
   const sb = getSupabase();
-  const rawClean = (bandId || '').trim();
-  const noPrefix = rawClean.replace(/^(band|reg)-/, '');
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
   const candidateIds = Array.from(
-    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`])
+    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`]),
   ).filter(Boolean);
 
   const { error } = await sb
-    .from('songs')
+    .from("songs")
     .update({
       tonalidad: resultado.tonalidad,
       tonalidad_detectada_en: new Date().toISOString(),
     })
-    .eq('id', songId)
-    .in('band_id', candidateIds);
+    .eq("id", songId)
+    .in("band_id", candidateIds);
   if (error)
     throw new Error(
-      `Supabase Error (guardar tonalidad desde stem): ${error.message}`
+      `Supabase Error (guardar tonalidad desde stem): ${error.message}`,
     );
 
   return { tonalidad: resultado.tonalidad };
@@ -407,22 +407,22 @@ export async function detectarYGuardarTonalidadDesdeStem(
 function dispararDeteccionTonalidadDesdeStemEnSegundoPlano(
   songId: string,
   stemAudioUrl: string,
-  bandId: string
+  bandId: string,
 ): void {
   detectarYGuardarTonalidadDesdeStem(songId, stemAudioUrl, bandId).catch(
     (err) => {
       console.error(
         `[Repertorio] No se pudo redetectar la tonalidad desde el stem de la canción ${songId}:`,
-        err?.message || err
+        err?.message || err,
       );
-    }
+    },
   );
 }
 
 function parseJsonArray(val: any): any[] {
   if (!val) return [];
   if (Array.isArray(val)) return val;
-  if (typeof val === 'string' && val.trim()) {
+  if (typeof val === "string" && val.trim()) {
     try {
       const parsed = JSON.parse(val);
       if (Array.isArray(parsed)) return parsed;
@@ -432,15 +432,15 @@ function parseJsonArray(val: any): any[] {
 }
 
 export function mapSongRecord(s: any) {
-  if (!s || typeof s !== 'object') return s;
+  if (!s || typeof s !== "object") return s;
   const audioUrl =
     s.audio_principal_url ||
     s.audioPrincipalUrl ||
     s.audio_url ||
     s.audioUrl ||
-    '';
-  const portada = s.portada_url || s.portadaUrl || '';
-  const albumDisco = s.album_disco || s.albumDisco || s.album || '';
+    "";
+  const portada = s.portada_url || s.portadaUrl || "";
+  const albumDisco = s.album_disco || s.albumDisco || s.album || "";
   const parsedIdeas = parseJsonArray(s.audio_ideas || s.audioIdeas);
   const audioIdeas =
     parsedIdeas.length > 0
@@ -449,10 +449,10 @@ export function mapSongRecord(s: any) {
         ? [
             {
               id: `idea_${s.id}`,
-              titulo: 'Audio Oficial',
-              seccion: 'general' as const,
+              titulo: "Audio Oficial",
+              seccion: "general" as const,
               audioUrl,
-              subidoPor: 'Sync',
+              subidoPor: "Sync",
               fecha: new Date().toISOString(),
             },
           ]
@@ -462,13 +462,13 @@ export function mapSongRecord(s: any) {
     ...s,
     id: s.id,
     band_id: s.band_id || s.bandId,
-    titulo: s.titulo || 'Sin Título',
-    duracion: s.duracion || '03:30',
+    titulo: s.titulo || "Sin Título",
+    duracion: s.duracion || "03:30",
     duracionSegundos: Number(s.duracion_segundos ?? s.duracionSegundos ?? 210),
     duracion_segundos: Number(s.duracion_segundos ?? s.duracionSegundos ?? 210),
     duracionMinutos: Number(s.duracion_minutos ?? s.duracionMinutos ?? 3),
     duracion_minutos: Number(s.duracion_minutos ?? s.duracionMinutos ?? 3),
-    tonalidad: s.tonalidad || 'Mim',
+    tonalidad: s.tonalidad || "Mim",
     bpm: Number(s.bpm || 120),
     bpmDetectadoEn: s.bpm_detectado_en || s.bpmDetectadoEn || undefined,
     bpm_detectado_en: s.bpm_detectado_en || s.bpmDetectadoEn || undefined,
@@ -476,37 +476,37 @@ export function mapSongRecord(s: any) {
       s.tonalidad_detectada_en || s.tonalidadDetectadaEn || undefined,
     tonalidad_detectada_en:
       s.tonalidad_detectada_en || s.tonalidadDetectadaEn || undefined,
-    afinacion: s.afinacion || 'Estándar E',
+    afinacion: s.afinacion || "Estándar E",
     albumDisco,
     album_disco: albumDisco,
     album: s.album || albumDisco,
     ordenAlbum:
-      typeof s.orden_album === 'number'
+      typeof s.orden_album === "number"
         ? s.orden_album
-        : typeof s.ordenAlbum === 'number'
+        : typeof s.ordenAlbum === "number"
           ? s.ordenAlbum
           : undefined,
     orden_album:
-      typeof s.orden_album === 'number'
+      typeof s.orden_album === "number"
         ? s.orden_album
-        : typeof s.ordenAlbum === 'number'
+        : typeof s.ordenAlbum === "number"
           ? s.ordenAlbum
           : undefined,
-    genero: s.genero || 'Mestizaje',
-    tipo: s.tipo || 'original',
-    estado: s.estado || 'ensayando',
+    genero: s.genero || "Mestizaje",
+    tipo: s.tipo || "original",
+    estado: s.estado || "ensayando",
     energia: Number(s.energia || 10),
     energiaManual: Boolean(s.energia_manual ?? s.energiaManual ?? false),
     energiaVariacion:
-      typeof s.energia_variacion === 'number'
+      typeof s.energia_variacion === "number"
         ? s.energia_variacion
-        : typeof s.energiaVariacion === 'number'
+        : typeof s.energiaVariacion === "number"
           ? s.energiaVariacion
           : undefined,
     energia_variacion:
-      typeof s.energia_variacion === 'number'
+      typeof s.energia_variacion === "number"
         ? s.energia_variacion
-        : typeof s.energiaVariacion === 'number'
+        : typeof s.energiaVariacion === "number"
           ? s.energiaVariacion
           : undefined,
     energiaVariacionCalculadaEn:
@@ -521,16 +521,16 @@ export function mapSongRecord(s: any) {
     portada_url: portada,
     favoritoGeneral: Boolean(s.favorito_general ?? s.favoritoGeneral),
     favorito_general: Boolean(s.favorito_general ?? s.favoritoGeneral),
-    estadoTema: s.estado_tema || s.estadoTema || 'ensayando',
-    estado_tema: s.estado_tema || s.estadoTema || 'ensayando',
+    estadoTema: s.estado_tema || s.estadoTema || "ensayando",
+    estado_tema: s.estado_tema || s.estadoTema || "ensayando",
     esVersionCovers: Boolean(s.es_version_covers ?? s.esVersionCovers),
     es_version_covers: Boolean(s.es_version_covers ?? s.esVersionCovers),
-    enlaceAcordes: s.enlace_acordes || s.enlaceAcordes || '',
-    enlace_acordes: s.enlace_acordes || s.enlaceAcordes || '',
-    notasInternas: s.notas_internas || s.notasInternas || '',
-    notas_internas: s.notas_internas || s.notasInternas || '',
-    notasRepertorio: s.notas_repertorio || s.notasRepertorio || '',
-    notas_repertorio: s.notas_repertorio || s.notasRepertorio || '',
+    enlaceAcordes: s.enlace_acordes || s.enlaceAcordes || "",
+    enlace_acordes: s.enlace_acordes || s.enlaceAcordes || "",
+    notasInternas: s.notas_internas || s.notasInternas || "",
+    notas_internas: s.notas_internas || s.notasInternas || "",
+    notasRepertorio: s.notas_repertorio || s.notasRepertorio || "",
+    notas_repertorio: s.notas_repertorio || s.notasRepertorio || "",
     notasMiembros: s.notas_miembros || s.notasMiembros || {},
     notas_miembros: s.notas_miembros || s.notasMiembros || {},
     notasPorMiembro: s.notas_por_miembro || s.notasPorMiembro || [],
@@ -540,18 +540,18 @@ export function mapSongRecord(s: any) {
     audioUrl,
     audioIdeas,
     audio_ideas: audioIdeas,
-    cifradoTexto: s.cifrado_texto || s.cifradoTexto || '',
-    cifrado_texto: s.cifrado_texto || s.cifradoTexto || '',
+    cifradoTexto: s.cifrado_texto || s.cifradoTexto || "",
+    cifrado_texto: s.cifrado_texto || s.cifradoTexto || "",
     guiaSustituto: s.guia_sustituto || s.guiaSustituto || {},
     guia_sustituto: s.guia_sustituto || s.guiaSustituto || {},
     estructuraDocumentoUrl:
-      s.estructura_documento_url || s.estructuraDocumentoUrl || '',
+      s.estructura_documento_url || s.estructuraDocumentoUrl || "",
     estructura_documento_url:
-      s.estructura_documento_url || s.estructuraDocumentoUrl || '',
+      s.estructura_documento_url || s.estructuraDocumentoUrl || "",
     estructuraDocumentoNombre:
-      s.estructura_documento_nombre || s.estructuraDocumentoNombre || '',
+      s.estructura_documento_nombre || s.estructuraDocumentoNombre || "",
     estructura_documento_nombre:
-      s.estructura_documento_nombre || s.estructuraDocumentoNombre || '',
+      s.estructura_documento_nombre || s.estructuraDocumentoNombre || "",
     estructuraDocumentoProcesadoEn:
       s.estructura_documento_procesado_en ||
       s.estructuraDocumentoProcesadoEn ||
@@ -561,31 +561,49 @@ export function mapSongRecord(s: any) {
       s.estructuraDocumentoProcesadoEn ||
       undefined,
     estructuraVerificada: Boolean(
-      s.estructura_verificada ?? s.estructuraVerificada
+      s.estructura_verificada ?? s.estructuraVerificada,
     ),
     estructura_verificada: Boolean(
-      s.estructura_verificada ?? s.estructuraVerificada
+      s.estructura_verificada ?? s.estructuraVerificada,
     ),
   };
 }
 
 export async function dbGetSongs(bandId: string) {
   const sb = getSupabase();
-  const rawClean = (bandId || '').trim();
-  const noPrefix = rawClean.replace(/^(band|reg)-/, '');
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
   const candidateIds = Array.from(
-    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`])
+    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`]),
   ).filter(Boolean);
 
   const { data, error } = await sb
-    .from('songs')
-    .select('*')
-    .in('band_id', candidateIds)
-    .order('titulo', { ascending: true });
+    .from("songs")
+    .select("*")
+    .in("band_id", candidateIds)
+    .order("titulo", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (songs): ${error.message}`);
 
-  const songsData = data || [];
+  let songsData = data || [];
+  if (songsData.length === 0) {
+    const seedForBand = INITIAL_SONGS.filter(
+      (s) =>
+        candidateIds.includes(s.band_id) ||
+        candidateIds.includes((s.band_id || "").replace(/^(band|reg)-/, "")),
+    );
+    if (seedForBand.length > 0) {
+      for (const s of seedForBand) {
+        try {
+          await dbUpsertSong(s, bandId);
+        } catch (e) {
+          console.warn("Could not seed song to Supabase:", s.titulo, e);
+        }
+      }
+      songsData = seedForBand as any;
+    }
+  }
+
   return songsData.map(mapSongRecord);
 }
 
@@ -597,7 +615,7 @@ export async function dbGetSongs(bandId: string) {
 function preferClearableString(
   camelValue: any,
   snakeValue: any,
-  fallback = ''
+  fallback = "",
 ): string {
   if (camelValue !== undefined && camelValue !== null) return camelValue;
   if (snakeValue !== undefined && snakeValue !== null) return snakeValue;
@@ -607,7 +625,7 @@ function preferClearableString(
 export async function dbUpsertSong(
   song: any,
   bandId: string,
-  isAdmin: boolean = false
+  isAdmin: boolean = false,
 ) {
   const sb = getSupabase();
   // 'bandId' es el origen de confianza resuelto desde la sesión; si el usuario es admin,
@@ -628,18 +646,18 @@ export async function dbUpsertSong(
   } | null = null;
   if (finalSongId) {
     const { data } = await sb
-      .from('songs')
+      .from("songs")
       .select(
-        'id, band_id, audio_principal_url, audio_ideas, notas_miembros, notas_por_miembro, guia_sustituto'
+        "id, band_id, audio_principal_url, audio_ideas, notas_miembros, notas_por_miembro, guia_sustituto",
       )
-      .eq('id', finalSongId)
+      .eq("id", finalSongId)
       .maybeSingle();
     existing = data;
     const stripPrefix = (b?: string) =>
-      (b || '')
+      (b || "")
         .trim()
         .toLowerCase()
-        .replace(/^(band|reg)-/, '');
+        .replace(/^(band|reg)-/, "");
     if (existing) {
       const sameBand =
         stripPrefix(existing.band_id) === stripPrefix(targetBandId);
@@ -668,13 +686,13 @@ export async function dbUpsertSong(
     incomingIdeas = existingIdeas;
   } else {
     incomingIdeas = parseJsonArray(
-      song.audioIdeas !== undefined ? song.audioIdeas : song.audio_ideas
+      song.audioIdeas !== undefined ? song.audioIdeas : song.audio_ideas,
     );
     if (incomingIdeas.length > 0 && existingIdeas.length > 0) {
       incomingIdeas = incomingIdeas.map((incIdea: any) => {
         const existingMatch = existingIdeas.find(
           (e: any) =>
-            e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo)
+            e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo),
         );
         if (
           existingMatch &&
@@ -704,45 +722,45 @@ export async function dbUpsertSong(
       finalSongId ||
       `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     band_id: targetBandId,
-    titulo: song.titulo || 'Nueva Canción',
-    duracion: song.duracion || '03:30',
+    titulo: song.titulo || "Nueva Canción",
+    duracion: song.duracion || "03:30",
     duracion_segundos: Math.round(
-      Number(song.duracion_segundos || song.duracionSegundos || 210)
+      Number(song.duracion_segundos || song.duracionSegundos || 210),
     ),
     duracion_minutos: Math.round(
-      Number(song.duracion_minutos || song.duracionMinutos || 3)
+      Number(song.duracion_minutos || song.duracionMinutos || 3),
     ),
-    tonalidad: song.tonalidad || 'Mim',
+    tonalidad: song.tonalidad || "Mim",
     bpm: Number(song.bpm || 120),
-    afinacion: song.afinacion || 'Estándar E',
-    album_disco: song.album_disco || song.albumDisco || song.album || '',
+    afinacion: song.afinacion || "Estándar E",
+    album_disco: song.album_disco || song.albumDisco || song.album || "",
     orden_album: song.orden_album ?? song.ordenAlbum ?? null,
-    album: song.album || song.album_disco || song.albumDisco || '',
-    genero: song.genero || 'Mestizaje',
-    tipo: song.tipo || 'original',
-    estado: song.estado || 'ensayando',
+    album: song.album || song.album_disco || song.albumDisco || "",
+    genero: song.genero || "Mestizaje",
+    tipo: song.tipo || "original",
+    estado: song.estado || "ensayando",
     energia: Number(song.energia || 10),
     // Solo se incluyen si vienen con un valor real: no queremos que un guardado normal del
     // formulario (que no toca este campo) borre una variación ya analizada del audio.
-    ...(typeof (song.energia_variacion ?? song.energiaVariacion) === 'number'
+    ...(typeof (song.energia_variacion ?? song.energiaVariacion) === "number"
       ? {
           energia_variacion: Number(
-            song.energia_variacion ?? song.energiaVariacion
+            song.energia_variacion ?? song.energiaVariacion,
           ),
         }
       : {}),
     ...(typeof (
       song.energia_variacion_calculada_en ?? song.energiaVariacionCalculadaEn
-    ) === 'string'
+    ) === "string"
       ? {
           energia_variacion_calculada_en:
             song.energia_variacion_calculada_en ??
             song.energiaVariacionCalculadaEn,
         }
       : {}),
-    portada_url: song.portada_url || song.portadaUrl || '',
+    portada_url: song.portada_url || song.portadaUrl || "",
     favorito_general: Boolean(song.favorito_general ?? song.favoritoGeneral),
-    estado_tema: song.estado_tema || song.estadoTema || 'ensayando',
+    estado_tema: song.estado_tema || song.estadoTema || "ensayando",
     es_version_covers: Boolean(song.es_version_covers ?? song.esVersionCovers),
     // Prioridad camelCase > snake_case: los editores de la app (SongModal, MemberNotesModal...)
     // reciben la canción ya mapeada con AMBAS variantes (mapSongRecord duplica cada campo en
@@ -754,11 +772,11 @@ export async function dbUpsertSong(
     // viejo ganaba siempre y la nota por miembro no se guardaba nunca, ni reintentando.
     notas_internas: preferClearableString(
       song.notasInternas,
-      song.notas_internas
+      song.notas_internas,
     ),
     notas_repertorio: preferClearableString(
       song.notasRepertorio,
-      song.notas_repertorio
+      song.notas_repertorio,
     ),
     // Igual que audio_ideas arriba: si NINGUNA de las dos variantes (camel/snake) viene en el
     // payload, se preserva lo que hubiera en vez de resetear a {}/[] — mismo mecanismo que
@@ -776,7 +794,7 @@ export async function dbUpsertSong(
       song.audio_principal_url ||
       song.audioUrl ||
       song.audio_url ||
-      '',
+      "",
     audio_ideas: incomingIdeas || [],
     cifrado_texto: preferClearableString(song.cifradoTexto, song.cifrado_texto),
     guia_sustituto:
@@ -785,22 +803,22 @@ export async function dbUpsertSong(
         : (existing?.guia_sustituto ?? {}),
     enlace_acordes: preferClearableString(
       song.enlaceAcordes,
-      song.enlace_acordes
+      song.enlace_acordes,
     ),
     estructura_documento_url: preferClearableString(
       song.estructuraDocumentoUrl,
-      song.estructura_documento_url
+      song.estructura_documento_url,
     ),
     estructura_documento_nombre: preferClearableString(
       song.estructuraDocumentoNombre,
-      song.estructura_documento_nombre
+      song.estructura_documento_nombre,
     ),
     estructura_documento_procesado_en:
       song.estructuraDocumentoProcesadoEn ||
       song.estructura_documento_procesado_en ||
       null,
     estructura_verificada: Boolean(
-      song.estructuraVerificada ?? song.estructura_verificada
+      song.estructuraVerificada ?? song.estructura_verificada,
     ),
     created_at: existing
       ? (existing as any).created_at || song.created_at || nowIso
@@ -814,31 +832,31 @@ export async function dbUpsertSong(
   // conservando exactamente el mismo id y created_at.
   if (existing) {
     try {
-      await sb.from('songs').delete().eq('id', payload.id);
+      await sb.from("songs").delete().eq("id", payload.id);
     } catch {}
   }
 
   let { data, error } = await sb
-    .from('songs')
+    .from("songs")
     .insert(payload)
     .select()
     .single();
-  if (error && error.code === '23505') {
+  if (error && error.code === "23505") {
     // Si por concurrencia la fila seguía existiendo, forzar delete y reinsertar
     try {
-      await sb.from('songs').delete().eq('id', payload.id);
+      await sb.from("songs").delete().eq("id", payload.id);
     } catch {}
-    const retryIns = await sb.from('songs').insert(payload).select().single();
+    const retryIns = await sb.from("songs").insert(payload).select().single();
     data = retryIns.data;
     error = retryIns.error;
   }
   if (
     error &&
     error.message &&
-    (error.message.toLowerCase().includes('notas_miembros') ||
-      error.message.toLowerCase().includes('notas_por_miembro') ||
-      error.message.toLowerCase().includes('notas_repertorio') ||
-      error.message.toLowerCase().includes('energia_variacion'))
+    (error.message.toLowerCase().includes("notas_miembros") ||
+      error.message.toLowerCase().includes("notas_por_miembro") ||
+      error.message.toLowerCase().includes("notas_repertorio") ||
+      error.message.toLowerCase().includes("energia_variacion"))
   ) {
     const fallbackPayload = { ...payload };
     delete fallbackPayload.notas_miembros;
@@ -847,16 +865,16 @@ export async function dbUpsertSong(
     delete fallbackPayload.energia_variacion;
     delete fallbackPayload.energia_variacion_calculada_en;
     try {
-      await sb.from('songs').delete().eq('id', fallbackPayload.id);
+      await sb.from("songs").delete().eq("id", fallbackPayload.id);
     } catch {}
     const retry = await sb
-      .from('songs')
+      .from("songs")
       .insert(fallbackPayload)
       .select()
       .single();
     if (retry.error)
       throw new Error(
-        `Supabase Error (insert song fallback): ${retry.error.message}`
+        `Supabase Error (insert song fallback): ${retry.error.message}`,
       );
     data = retry.data;
     error = null;
@@ -872,7 +890,7 @@ export async function dbUpsertSong(
     dispararAnalisisDinamicaEnSegundoPlano(
       finalSongId,
       audioNuevo,
-      targetBandId
+      targetBandId,
     );
   }
 
@@ -881,13 +899,13 @@ export async function dbUpsertSong(
   // principal, porque separar pistas no lo toca.
   const stemNuevoParaTonalidad = encontrarMejorStemNuevoParaTonalidad(
     existingIdeas,
-    incomingIdeas
+    incomingIdeas,
   );
   if (stemNuevoParaTonalidad) {
     dispararDeteccionTonalidadDesdeStemEnSegundoPlano(
       finalSongId,
       stemNuevoParaTonalidad,
-      targetBandId
+      targetBandId,
     );
   }
 
@@ -897,10 +915,10 @@ export async function dbUpsertSong(
 export async function dbDeleteSong(id: string, bandId: string) {
   const sb = getSupabase();
   const { error } = await sb
-    .from('songs')
+    .from("songs")
     .delete()
-    .eq('id', id)
-    .eq('band_id', cleanBandId(bandId));
+    .eq("id", id)
+    .eq("band_id", cleanBandId(bandId));
   if (error) throw new Error(`Supabase Error (delete song): ${error.message}`);
   return true;
 }
@@ -908,21 +926,38 @@ export async function dbDeleteSong(id: string, bandId: string) {
 // --- SETLISTS ---
 export async function dbGetSetlists(bandId: string) {
   const sb = getSupabase();
-  const rawClean = (bandId || '').trim();
-  const noPrefix = rawClean.replace(/^(band|reg)-/, '');
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
   const candidateIds = Array.from(
-    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`])
+    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`]),
   ).filter(Boolean);
 
   const { data, error } = await sb
-    .from('setlists')
-    .select('*')
-    .in('band_id', candidateIds)
-    .order('fecha_ultima_edicion', { ascending: false });
+    .from("setlists")
+    .select("*")
+    .in("band_id", candidateIds)
+    .order("fecha_ultima_edicion", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (setlists): ${error.message}`);
 
-  const setlistData = data || [];
+  let setlistData = data || [];
+  if (setlistData.length === 0) {
+    const seedForBand = INITIAL_SETLISTS.filter(
+      (sl) =>
+        candidateIds.includes(sl.band_id) ||
+        candidateIds.includes((sl.band_id || "").replace(/^(band|reg)-/, "")),
+    );
+    if (seedForBand.length > 0) {
+      for (const sl of seedForBand) {
+        try {
+          await dbUpsertSetlist(sl, bandId);
+        } catch (e) {
+          console.warn("Could not seed setlist to Supabase:", sl.nombre, e);
+        }
+      }
+      setlistData = seedForBand as any;
+    }
+  }
 
   return setlistData.map((sl) => ({
     ...sl,
@@ -943,9 +978,9 @@ export async function dbUpsertSetlist(setlist: any, bandId: string) {
   let finalSetlistId = setlist.id;
   if (finalSetlistId) {
     const { data: existing } = await sb
-      .from('setlists')
-      .select('id, band_id')
-      .eq('id', finalSetlistId)
+      .from("setlists")
+      .select("id, band_id")
+      .eq("id", finalSetlistId)
       .maybeSingle();
     if (existing && existing.band_id !== targetBandId) {
       finalSetlistId = `setlist-${Date.now()}`;
@@ -955,13 +990,13 @@ export async function dbUpsertSetlist(setlist: any, bandId: string) {
   const payload = {
     id: finalSetlistId || `setlist-${Date.now()}`,
     band_id: targetBandId,
-    nombre: setlist.nombre || 'Repertorio',
-    descripcion: setlist.descripcion || '',
-    tipo_formato: setlist.tipo_formato || setlist.tipoFormato || 'festival',
+    nombre: setlist.nombre || "Repertorio",
+    descripcion: setlist.descripcion || "",
+    tipo_formato: setlist.tipo_formato || setlist.tipoFormato || "festival",
     duracion_total_estimada_minutos: Number(
       setlist.duracion_total_estimada_minutos ||
         setlist.duracionTotalEstimadaMinutos ||
-        0
+        0,
     ),
     items: setlist.items || [],
     ...(setlist.ai_analysis_json && {
@@ -973,7 +1008,7 @@ export async function dbUpsertSetlist(setlist: any, bandId: string) {
   };
 
   const { data, error } = await sb
-    .from('setlists')
+    .from("setlists")
     .upsert(payload)
     .select()
     .single();
@@ -985,10 +1020,10 @@ export async function dbUpsertSetlist(setlist: any, bandId: string) {
 export async function dbDeleteSetlist(id: string, bandId: string) {
   const sb = getSupabase();
   const { error } = await sb
-    .from('setlists')
+    .from("setlists")
     .delete()
-    .eq('id', id)
-    .eq('band_id', cleanBandId(bandId));
+    .eq("id", id)
+    .eq("band_id", cleanBandId(bandId));
   if (error)
     throw new Error(`Supabase Error (delete setlist): ${error.message}`);
   return true;
@@ -997,27 +1032,27 @@ export async function dbDeleteSetlist(id: string, bandId: string) {
 // --- SETLIST SHORTCUTS (per-band custom "quick add" presets, see RepertorioSetlists.tsx) ---
 function isMissingTableOrColumnError(error: any): boolean {
   if (!error) return false;
-  const msg = String(error.message || '').toLowerCase();
+  const msg = String(error.message || "").toLowerCase();
   return (
-    error.code === '42P01' ||
-    msg.includes('could not find the table') ||
-    msg.includes('schema cache') ||
-    (msg.includes('relation') && msg.includes('does not exist'))
+    error.code === "42P01" ||
+    msg.includes("could not find the table") ||
+    msg.includes("schema cache") ||
+    (msg.includes("relation") && msg.includes("does not exist"))
   );
 }
 
 export async function dbGetSetlistShortcuts(bandId: string) {
   const sb = getSupabase();
   const { data, error } = await sb
-    .from('setlist_shortcuts')
-    .select('*')
-    .eq('band_id', cleanBandId(bandId))
-    .order('created_at', { ascending: true });
+    .from("setlist_shortcuts")
+    .select("*")
+    .eq("band_id", cleanBandId(bandId))
+    .order("created_at", { ascending: true });
 
   if (error) {
     if (isMissingTableOrColumnError(error)) {
       console.warn(
-        `[Supabase] Tabla 'setlist_shortcuts' no encontrada aún en el schema cache. Devolviendo lista vacía.`
+        `[Supabase] Tabla 'setlist_shortcuts' no encontrada aún en el schema cache. Devolviendo lista vacía.`,
       );
       return [];
     }
@@ -1031,7 +1066,7 @@ export async function dbGetSetlistShortcuts(bandId: string) {
     tituloCustom: sc.titulo_custom,
     duracionEstimadaMinutos: sc.duracion_estimada_minutos,
     duracionEstimadaSegundos: sc.duracion_estimada_segundos,
-    notaTema: sc.nota_tema || '',
+    notaTema: sc.nota_tema || "",
   }));
 }
 
@@ -1047,13 +1082,13 @@ export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
       shortcut.id ||
       `shortcut-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     band_id: targetBandId,
-    icono: shortcut.icono || '⚡',
-    etiqueta: shortcut.etiqueta || 'Atajo',
+    icono: shortcut.icono || "⚡",
+    etiqueta: shortcut.etiqueta || "Atajo",
     titulo_custom:
       shortcut.titulo_custom ||
       shortcut.tituloCustom ||
       shortcut.etiqueta ||
-      'Atajo',
+      "Atajo",
     duracion_estimada_minutos:
       shortcut.duracion_estimada_minutos ??
       shortcut.duracionEstimadaMinutos ??
@@ -1062,18 +1097,18 @@ export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
       shortcut.duracion_estimada_segundos ??
       shortcut.duracionEstimadaSegundos ??
       null,
-    nota_tema: shortcut.nota_tema || shortcut.notaTema || '',
+    nota_tema: shortcut.nota_tema || shortcut.notaTema || "",
   };
 
   const { data, error } = await sb
-    .from('setlist_shortcuts')
+    .from("setlist_shortcuts")
     .upsert(payload)
     .select()
     .single();
   if (error) {
     if (isMissingTableOrColumnError(error)) {
       console.warn(
-        `[Supabase] Tabla 'setlist_shortcuts' no disponible al guardar atajo. Continuando con datos en memoria.`
+        `[Supabase] Tabla 'setlist_shortcuts' no disponible al guardar atajo. Continuando con datos en memoria.`,
       );
       return {
         id: payload.id,
@@ -1083,11 +1118,11 @@ export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
         tituloCustom: payload.titulo_custom,
         duracionEstimadaMinutos: payload.duracion_estimada_minutos,
         duracionEstimadaSegundos: payload.duracion_estimada_segundos,
-        notaTema: payload.nota_tema || '',
+        notaTema: payload.nota_tema || "",
       };
     }
     throw new Error(
-      `Supabase Error (upsert setlist_shortcut): ${error.message}`
+      `Supabase Error (upsert setlist_shortcut): ${error.message}`,
     );
   }
   return {
@@ -1098,23 +1133,23 @@ export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
     tituloCustom: data.titulo_custom,
     duracionEstimadaMinutos: data.duracion_estimada_minutos,
     duracionEstimadaSegundos: data.duracion_estimada_segundos,
-    notaTema: data.nota_tema || '',
+    notaTema: data.nota_tema || "",
   };
 }
 
 export async function dbDeleteSetlistShortcut(id: string, bandId: string) {
   const sb = getSupabase();
   const { error } = await sb
-    .from('setlist_shortcuts')
+    .from("setlist_shortcuts")
     .delete()
-    .eq('id', id)
-    .eq('band_id', cleanBandId(bandId));
+    .eq("id", id)
+    .eq("band_id", cleanBandId(bandId));
   if (error) {
     if (isMissingTableOrColumnError(error)) {
       return true;
     }
     throw new Error(
-      `Supabase Error (delete setlist_shortcut): ${error.message}`
+      `Supabase Error (delete setlist_shortcut): ${error.message}`,
     );
   }
   return true;

@@ -976,7 +976,7 @@ export default function Merchan({
                                 nombre: e.target.value,
                               })
                             }
-                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:"
+                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
                             placeholder="Nombre y apellidos"
                           />
                         </div>
@@ -997,7 +997,7 @@ export default function Merchan({
                                 direccion: e.target.value,
                               })
                             }
-                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:"
+                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
                             placeholder="Dirección completa del local o domicilio"
                           />
                         </div>
@@ -1016,7 +1016,7 @@ export default function Merchan({
                               cp: e.target.value,
                             })
                           }
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:"
+                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
                           placeholder="28001"
                         />
                       </div>
@@ -1034,7 +1034,7 @@ export default function Merchan({
                               ciudad: e.target.value,
                             })
                           }
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:"
+                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
                           placeholder="Madrid"
                         />
                       </div>
@@ -1054,7 +1054,7 @@ export default function Merchan({
                                 telefono: e.target.value,
                               })
                             }
-                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:"
+                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
                             placeholder="+34 600 000 000"
                           />
                         </div>

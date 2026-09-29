@@ -74,7 +74,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
             max={64}
             value={canalesMesa}
             onChange={(e) => setCanalesMesa(Number(e.target.value))}
-            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none focus:"
+            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
           />
         </div>
 

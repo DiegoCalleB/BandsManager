@@ -2490,7 +2490,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           nombre_sala: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none focus:"
+                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     />
                   </div>
 
@@ -2669,7 +2669,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         direccion: e.target.value,
                       })
                     }
-                    className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none focus:"
+                    className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                   />
                 </div>
 
@@ -3385,7 +3385,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     id: "curfew",
                     label: "⏰ Preguntar Curfew / Horarios",
                     text: "\n\nPor coordinar bien la duración del pase y prueba de sonido: ¿cuál es el horario estricto de finalización de música en vivo (curfew) de la sala y tenéis limitador de decibelios?",
-                    color: "text-[var(--acc)] bg-[var(--acc)]/10 hover:brightness-95",
+                    color:
+                      "text-[var(--acc)] bg-[var(--acc)]/10 hover:brightness-95",
                   },
                   {
                     id: "taquilla",
@@ -3426,10 +3427,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             {isEditingPitch ? (
               <div className="space-y-2">
                 <textarea
-                  rows={6}
+                  rows={10}
                   value={editedPitch}
                   onChange={(e) => setEditedPitch(e.target.value)}
-                  className="w-full p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--acc)]"
+                  className="w-full p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--acc)] min-h-[180px] resize-y"
                 />
                 <div className="flex items-center justify-between gap-2">
                   <span
@@ -3569,11 +3570,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </span>
                 </label>
                 <textarea
-                  rows={2}
+                  rows={4}
                   value={feedbackComment}
                   onChange={(e) => setFeedbackComment(e.target.value)}
                   placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'..."
-                  className="w-full p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
+                  className="w-full p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none min-h-[90px] resize-y"
                 />
               </div>
 
@@ -4377,7 +4378,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="space-y-2 text-xs">
                   <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1 text-[11px]">
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--ink-2)]">Estado del Buzón:</span>
+                      <span className="text-[var(--ink-2)]">
+                        Estado del Buzón:
+                      </span>
                       <span className="font-bold text-[var(--ink-2)] capitalize">
                         {selectedLead.email_verification.estado === "valido"
                           ? "✅ Buzón Válido"
@@ -4385,7 +4388,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--ink-2)]">Registros DNS MX:</span>
+                      <span className="text-[var(--ink-2)]">
+                        Registros DNS MX:
+                      </span>
                       <span className="font-bold text-[var(--ok)]">
                         {selectedLead.email_verification.mx_valido
                           ? "✓ Servidores de correo activos"
@@ -4393,7 +4398,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--ink-2)]">Tipo de Dirección:</span>
+                      <span className="text-[var(--ink-2)]">
+                        Tipo de Dirección:
+                      </span>
                       <span className="font-bold text-[var(--ink-2)]">
                         {selectedLead.email_verification.es_cuenta_rol
                           ? "Buzón de Booking / Programación"
@@ -4429,7 +4436,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center gap-2">
                 <div className="flex-1 flex items-center gap-1.5 bg-[var(--surface)] px-2.5 py-1.5 rounded-[var(--r-m)] text-xs">
                   <Navigation className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
-                  <span className="text-[var(--ink-2)] text-[11px]">Origen:</span>
+                  <span className="text-[var(--ink-2)] text-[11px]">
+                    Origen:
+                  </span>
                   <input
                     type="text"
                     value={routeOrigin}
@@ -5366,12 +5375,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Notes textarea */}
             <textarea
-              rows={2}
+              rows={4}
               required
               value={interactionNotes}
               onChange={(e) => setInteractionNotes(e.target.value)}
               placeholder="Ej: Hablé con Carlos por WhatsApp. Pide propuesta de fechas para Noviembre..."
-              className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans"
+              className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans resize-y min-h-[90px]"
             />
 
             <button

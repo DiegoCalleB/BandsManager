@@ -979,6 +979,18 @@ export function loadState(): any {
       if (!state.songs || !Array.isArray(state.songs)) {
         state.songs = INITIAL_SONGS;
         changed = true;
+      } else {
+        for (const initSong of INITIAL_SONGS) {
+          const s = state.songs.find((es: any) => es.id === initSong.id);
+          if (s) {
+            if (typeof s.energia !== 'number' || (initSong.energia && s.energia !== initSong.energia && !s.energiaManual)) {
+              s.energia = initSong.energia;
+              s.energiaManual = initSong.energiaManual;
+              s.energia_manual = initSong.energiaManual;
+              changed = true;
+            }
+          }
+        }
       }
 
       if (!state.setlists || !Array.isArray(state.setlists)) {

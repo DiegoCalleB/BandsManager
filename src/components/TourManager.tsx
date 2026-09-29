@@ -1399,7 +1399,7 @@ export default function TourManager({
                                       Number(e.target.value),
                                     )
                                   }
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-bold text-[var(--acc)]/70 focus:"
+                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-bold text-[var(--acc)]/70"
                                 />
                               </div>
 

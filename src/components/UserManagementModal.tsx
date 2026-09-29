@@ -13,6 +13,9 @@ import {
   Sparkles,
   RefreshCw,
   Link2,
+  Upload,
+  ImageIcon,
+  Loader2,
 } from "lucide-react";
 import { User, UserRole } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
@@ -20,12 +23,18 @@ import {
   STEM_INSTRUMENT_CATEGORIES,
   NON_STEM_ROLES,
 } from "../config/stemInstruments";
+import { uploadFileToServer } from "../utils/audioStorage";
 
 interface UserManagementModalProps {
   currentUser: User;
   users: User[];
   onClose: () => void;
   onRefreshUsers: () => void;
+  bandId?: string;
+  bandName?: string;
+  bandLogoUrl?: string;
+  onRefreshData?: () => void;
+  onUpdateLogo?: (newUrl: string) => void;
 }
 
 export const UserManagementModal: React.FC<UserManagementModalProps> = ({
@@ -33,10 +42,68 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
   users,
   onClose,
   onRefreshUsers,
+  bandId,
+  bandName,
+  bandLogoUrl,
+  onRefreshData,
+  onUpdateLogo,
 }) => {
-  const [activeTab, setActiveTab] = useState<"list" | "create" | "associate">(
-    "list",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "band_info" | "list" | "create" | "associate"
+  >("list");
+  const targetBandId = bandId || currentUser.band_id || "";
+  const [localLogo, setLocalLogo] = useState<string>(bandLogoUrl || "");
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+  useEffect(() => {
+    if (bandLogoUrl) {
+      setLocalLogo(bandLogoUrl);
+    }
+  }, [bandLogoUrl]);
+
+  const handleUploadLogoLocal = async (file: File) => {
+    setIsUploadingLogo(true);
+    setError(null);
+    setSuccessMsg(null);
+    try {
+      const uploadedUrl = await uploadFileToServer(file, {
+        bandId: targetBandId,
+        category: "logo",
+      });
+      const authHeaders = getHeaders();
+      const res = await fetch("/api/users/upload-logo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders,
+          "x-band-id": targetBandId,
+        },
+        body: JSON.stringify({
+          bandId: targetBandId,
+          logoUrl: uploadedUrl,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Error al guardar el logotipo");
+      }
+
+      setLocalLogo(uploadedUrl);
+      if (onUpdateLogo) {
+        onUpdateLogo(uploadedUrl);
+      }
+      if (onRefreshData) {
+        onRefreshData();
+      }
+      setSuccessMsg("¡Logotipo de la banda actualizado con éxito!");
+    } catch (err: any) {
+      console.error("Error uploading logo in UserManagementModal:", err);
+      setError(err.message || "Error al subir el logo");
+    } finally {
+      setIsUploadingLogo(false);
+    }
+  };
 
   // New user form state
   const [newUsername, setNewUsername] = useState("");
@@ -281,7 +348,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
         <div
-          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] bg-[var(--surface)] text-[var(--ink)]`}
         >
           <datalist id="instrument-suggestions">
             {STEM_INSTRUMENT_CATEGORIES.map((cat) => (
@@ -293,10 +360,10 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </datalist>
           {/* Modal Header */}
           <div
-            className={`px-6 py-4 flex justify-between items-center ${" bg-[var(--bg)]"}`}
+            className={`px-6 py-4 flex justify-between items-center bg-[var(--bg)]`}
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10  text-[var(--tentative)] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)] flex items-center justify-center">
                 <Users className="w-5 h-5" />
               </div>
               <div>
@@ -321,14 +388,29 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </div>
 
           {/* Tab Selection */}
-          <div className={`px-6 pt-3 flex gap-2 ${" bg-[var(--bg)]/50"}`}>
+          <div className={`px-6 pt-3 flex gap-2 overflow-x-auto bg-[var(--bg)]/50`}>
+            <button
+              onClick={() => {
+                setActiveTab("band_info");
+                setError(null);
+                setSuccessMsg(null);
+              }}
+              className={`px-4 py-2 text-xs font-bold font-mono tracking-wider transition-all flex items-center gap-1.5 shrink-0 ${
+                activeTab === "band_info"
+                  ? "text-[var(--acc-ink)] border-b-2 border-[var(--hair)]"
+                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
+              }`}
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Info & Logo de Banda</span>
+            </button>
             <button
               onClick={() => {
                 setActiveTab("list");
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === "list"
                   ? " text-[var(--tentative)]"
                   : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -343,7 +425,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === "create"
                   ? " text-[var(--tentative)]"
                   : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -358,27 +440,27 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === "associate"
                   ? "text-[var(--tentative)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
               }`}
             >
               <Link2 className="w-3.5 h-3.5" />
-              <span>Asociar Músico Existente</span>
+              <span>Asociar Músico</span>
             </button>
           </div>
 
           {/* Messages */}
           <div className="px-6 pt-3">
             {error && (
-              <div className="p-3 bg-[var(--alert)]/10  rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
+              <div className="p-3 bg-[var(--alert)]/10 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
             {successMsg && (
-              <div className="p-3 bg-[var(--ok)]/10  rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
+              <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
                 <Check className="w-4 h-4 shrink-0" />
                 <span>{successMsg}</span>
               </div>
@@ -387,7 +469,110 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
           {/* Tab Body */}
           <div className="p-6 overflow-y-auto flex-1 space-y-4">
-            {activeTab === "list" ? (
+            {activeTab === "band_info" ? (
+              <div className="space-y-5 animate-in fade-in duration-200">
+                {/* Band Logo Section */}
+                <div className="p-5 rounded-2xl bg-[var(--sunken)]/70 space-y-4 ">
+                  <div>
+                    <h4 className="font-bold text-sm text-[var(--ink)] flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4 text-[var(--acc-ink)]" />
+                      <span>Logotipo Oficial de la Banda</span>
+                    </h4>
+                    <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                      Este logo se muestra en el selector de proyectos, tu
+                      Dossier EPK y encabezados.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-5 pt-2">
+                    {/* Logo Box */}
+                    <div className="relative w-24 h-24 rounded-2xl bg-[var(--scrim)]/90 flex items-center justify-center p-2.5 overflow-hidden shrink-0">
+                      {localLogo ? (
+                        <img
+                          src={localLogo}
+                          alt={
+                            bandName ||
+                            currentUser.bandName ||
+                            "Logo de la banda"
+                          }
+                          className="w-full h-full object-contain filter "
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1">
+                          <Music className="w-8 h-8 opacity-70" />
+                          <span className="text-[10px] font-black font-mono text-[var(--ink-2)] ">
+                            Sin Logo
+                          </span>
+                        </div>
+                      )}
+
+                      {isUploadingLogo && (
+                        <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1.5 z-20">
+                          <Loader2 className="w-6 h-6 animate-spin text-[var(--acc-ink)]" />
+                          <span className="text-[9px] font-mono text-[var(--acc-ink)] font-bold ">
+                            Subiendo
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Upload Action */}
+                    <div className="flex-1 space-y-2.5 text-center sm:text-left">
+                      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs transition-all cursor-pointer active:scale-98">
+                        <Upload className="w-4 h-4" />
+                        <span>
+                          {isUploadingLogo
+                            ? "Guardando logotipo..."
+                            : "Subir o Cambiar Logo"}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={isUploadingLogo}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              await handleUploadLogoLocal(file);
+                            }
+                          }}
+                        />
+                      </label>
+                      <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
+                        Formatos soportados: PNG, JPG, WebP o SVG. Se recomienda
+                        fondo transparente.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Band Basic Info */}
+                <div className="p-4 rounded-2xl bg-[var(--sunken)]/60 text-xs space-y-3">
+                  <h4 className="font-bold text-xs font-mono text-[var(--acc-ink)]/90">
+                    Detalles del Proyecto
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
+                      <span className="text-[var(--ink-2)] block text-[10px] font-mono ">
+                        Nombre de la Banda
+                      </span>
+                      <span className="font-bold text-[var(--ink)] text-sm">
+                        {bandName || currentUser.bandName || "Mi Banda"}
+                      </span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
+                      <span className="text-[var(--ink-2)] block text-[10px] font-mono ">
+                        Total de Músicos
+                      </span>
+                      <span className="font-bold text-[var(--ink)] text-sm">
+                        {users.length} miembros registrados
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : activeTab === "list" ? (
               <div className="space-y-3">
                 {users.map((u) => {
                   const isLeader = u.role === "leader";
@@ -397,7 +582,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   return (
                     <div
                       key={u.id}
-                      className={`p-4 rounded-[var(--r-m)] transition-all ${"bg-[var(--sunken)]  hover:-neutral-300"}`}
+                      className={`p-4 rounded-[var(--r-m)] transition-all bg-[var(--sunken)] hover:-neutral-300`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
@@ -463,7 +648,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-all ${
                               u.role === "leader"
                                 ? "bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/40 hover:bg-[var(--acc)]/25"
-                                : "bg-[var(--surface)] text-[var(--acc)]/80  hover:bg-[var(--surface)]/80"
+                                : "bg-[var(--surface)] text-[var(--acc)]/80 hover:bg-[var(--surface)]/80"
                             } ${isSelf ? "opacity-70 cursor-not-allowed" : ""}`}
                           >
                             <option
@@ -490,7 +675,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 setChangePasswordValue("");
                               }
                             }}
-                            className="px-2.5 py-1.5 rounded-[var(--r-s)]  text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
+                            className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
                           >
                             <Key className="w-3 h-3 text-[var(--acc)]" />
                             <span>
@@ -502,7 +687,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             <button
                               type="button"
                               onClick={() => handleDeleteUser(u.id, u.username)}
-                              className="p-1.5 rounded-[var(--r-s)]  text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
+                              className="p-1.5 rounded-[var(--r-s)] text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
                               title="Eliminar usuario"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -521,13 +706,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                               setChangePasswordValue(e.target.value)
                             }
                             placeholder="Nueva contraseña secreta..."
-                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${"bg-[var(--sunken)]"}`}
+                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none bg-[var(--sunken)]`}
                           />
                           <button
                             type="button"
                             onClick={() => handleChangePassword(u.id)}
                             disabled={loading}
-                            className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] font-bold text-xs transition-colors flex items-center gap-1"
                           >
                             <Check className="w-3.5 h-3.5" />
                             <span>Guardar</span>
@@ -551,7 +736,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newUsername}
                       onChange={(e) => setNewUsername(e.target.value)}
                       placeholder="Ej: pablo, carlos, ana"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                       required
                     />
                   </div>
@@ -565,7 +750,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
                       placeholder="Ej: pablo@gmail.com"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                       required
                     />
                   </div>
@@ -581,7 +766,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="Ej: Pablo (Violín / Sintetizador)"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                       required
                     />
                   </div>
@@ -595,7 +780,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Contraseña del usuario"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                       required
                     />
                   </div>
@@ -608,7 +793,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <select
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                   >
                     <option value="member">Miembro de Banda (Músico)</option>
                     <option value="leader">Admin / Dirección de Banda</option>
@@ -625,7 +810,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     value={newInstrument}
                     onChange={(e) => setNewInstrument(e.target.value)}
                     placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                   />
                   <p className="text-[10px] text-[var(--ink-2)]">
                     Usa uno de los nombres sugeridos (Voz, Batería, Bajo,
@@ -695,7 +880,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     value={assocEmail}
                     onChange={(e) => setAssocEmail(e.target.value)}
                     placeholder="Introduce su email exacto..."
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
                     required
                   />
                 </div>
@@ -707,7 +892,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <select
                     value={assocRole}
                     onChange={(e) => setAssocRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
                   >
                     <option value="member">Miembro de Banda (Músico)</option>
                     <option value="leader">Admin / Dirección de Banda</option>
@@ -724,7 +909,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     value={assocInstrument}
                     onChange={(e) => setAssocInstrument(e.target.value)}
                     placeholder="Ej: Guitarra, Bajista, Manager, Coros"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
                   />
                 </div>
 
@@ -747,7 +932,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </div>
 
           {/* Modal Footer */}
-          <div className={`px-6 py-3 text-right ${" bg-[var(--bg)]"}`}>
+          <div className={`px-6 py-3 text-right bg-[var(--bg)]`}>
             <button
               onClick={onClose}
               className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"

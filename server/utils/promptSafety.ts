@@ -314,3 +314,75 @@ export function calculateSentenceBurstiness(text: string): { score: number; isOr
     isOrganic: stdDev >= 2.0
   };
 }
+
+export interface AgentOutputGuardrailResult {
+  cleanedText: string;
+  isSafe: boolean;
+  warnings: string[];
+}
+
+/**
+ * Guardrail de salida para agentes de IA (Scout, Redactor, Contestador).
+ * Neutraliza inyecciones XSS / HTML malicioso (<script>, javascript:, etc.),
+ * esquemas no autorizados, y enmascara posibles fugas de datos confidenciales
+ * (DNI/NIE, tarjetas bancarias, claves privadas/secretos) alucinados o inyectados por terceros.
+ */
+export function sanitizeAgentOutput(text: any): AgentOutputGuardrailResult {
+  if (text === null || text === undefined) {
+    return { cleanedText: "", isSafe: true, warnings: [] };
+  }
+  let output = typeof text === "string" ? text : String(text);
+  const warnings: string[] = [];
+
+  // 1. Eliminar scripts, etiquetas HTML peligrosas y atributos de evento
+  if (/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi.test(output)) {
+    output = output.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+    warnings.push("Se eliminaron etiquetas <script> potencialmente maliciosas.");
+  }
+  if (/<(iframe|object|embed|applet|meta|link|style)\b[^>]*>/gi.test(output)) {
+    output = output.replace(/<(iframe|object|embed|applet|meta|link|style)\b[^>]*>/gi, "");
+    warnings.push("Se eliminaron elementos HTML ejecutables no autorizados.");
+  }
+  if (/on\w+\s*=\s*["'][^"']*["']/gi.test(output)) {
+    output = output.replace(/on\w+\s*=\s*["'][^"']*["']/gi, "");
+    warnings.push("Se eliminaron atributos de evento inline.");
+  }
+
+  // 2. Neutralizar protocolos peligrosos (javascript:, data:text/html, vbscript:)
+  if (/javascript\s*:/gi.test(output)) {
+    output = output.replace(/javascript\s*:/gi, "blocked:");
+    warnings.push("Se neutralizó un esquema javascript: en el texto.");
+  }
+  if (/data\s*:\s*text\/html/gi.test(output)) {
+    output = output.replace(/data\s*:\s*text\/html/gi, "blocked:data-html");
+    warnings.push("Se neutralizó un URI data:text/html.");
+  }
+
+  // 3. Detección y Enmascaramiento de PII / Secretos sensibles (DNI español, Tarjetas, Claves privadas)
+  // DNI/NIE español (8 dígitos + letra o letra + 7 dígitos + letra)
+  const dniPattern = /\b([XYZxyz]?\d{7,8}[A-Za-z])\b/g;
+  if (dniPattern.test(output)) {
+    output = output.replace(dniPattern, "[DNI/DOCUMENTO PROTEGIDO]");
+    warnings.push("Se enmascaró un posible número de documento de identidad sensible.");
+  }
+
+  // Tarjetas de crédito (secuencias de 16 dígitos agrupados)
+  const ccPattern = /\b(?:\d{4}[ -]?){3}\d{4}\b/g;
+  if (ccPattern.test(output)) {
+    output = output.replace(ccPattern, "[TARJETA PROTEGIDA]");
+    warnings.push("Se enmascaró un posible número de tarjeta de crédito.");
+  }
+
+  // Claves maestras / Tokens de API (ej. sk-..., eyJhbGciOi...)
+  const apiKeyPattern = /\b(sk-[a-zA-Z0-9]{20,}|eyJ[a-zA-Z0-9_-]{20,}\.[a-zA-Z0-9_-]{20,}\.[a-zA-Z0-9_-]{20,})\b/g;
+  if (apiKeyPattern.test(output)) {
+    output = output.replace(apiKeyPattern, "[TOKEN/CLAVE PRIVADA ENMASCARADA]");
+    warnings.push("Se enmascaró una clave o token privado detectado en la salida.");
+  }
+
+  return {
+    cleanedText: output.trim(),
+    isSafe: warnings.length === 0,
+    warnings
+  };
+}

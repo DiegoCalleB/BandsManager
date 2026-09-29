@@ -115,7 +115,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberName}
             onChange={(e) => setNewMemberName(e.target.value)}
             placeholder="Nombre y Apellidos *"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
 
           <input
@@ -123,7 +123,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberRole}
             onChange={(e) => setNewMemberRole(e.target.value)}
             placeholder="Instrumento / Rol (ej. Batería, Bajo, Teclados) *"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
 
           <input
@@ -131,7 +131,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberEmail}
             onChange={(e) => setNewMemberEmail(e.target.value)}
             placeholder="Email (para invitarle a acceder al panel)"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
 
           <input
@@ -139,7 +139,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberInstagram}
             onChange={(e) => setNewMemberInstagram(e.target.value)}
             placeholder="Instagram (ej. @nombremusico)"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>
 

@@ -135,6 +135,102 @@ export function extensionPermitida(originalname: string): boolean {
   return EXTENSIONES_PERMITIDAS.has(ext);
 }
 
+/**
+ * Validación de Magic Bytes (Firmas Binarias).
+ * Comprueba los primeros bytes del búfer para verificar que el contenido binario coincide
+ * realmente con el formato declarado por la extensión, impidiendo la subida de scripts ejecutables
+ * (.sh, .php, .exe, .html maliciosos) disfrazados con extensiones permitidas.
+ */
+export function validarMagicBytes(buffer: Buffer, ext: string): boolean {
+  if (!buffer || buffer.length === 0) return false;
+  const cleanExt = (ext || '').toLowerCase().replace('.', '');
+  
+  if (buffer.length < 4) return false;
+
+  // JPEG: FF D8 FF
+  if (cleanExt === 'jpg' || cleanExt === 'jpeg') {
+    return buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF;
+  }
+
+  // PNG: 89 50 4E 47 (0x89 'PNG')
+  if (cleanExt === 'png') {
+    return buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47;
+  }
+
+  // GIF: 47 49 46 38 ('GIF8')
+  if (cleanExt === 'gif') {
+    return buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x38;
+  }
+
+  // WEBP: RIFF....WEBP (bytes 0-3: 'RIFF', bytes 8-11: 'WEBP')
+  if (cleanExt === 'webp') {
+    if (buffer.length < 12) return false;
+    const isRiff = buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
+    const isWebp = buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50;
+    return isRiff && isWebp;
+  }
+
+  // PDF: 25 50 44 46 ('%PDF')
+  if (cleanExt === 'pdf') {
+    return buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46;
+  }
+
+  // WAV / AIFF: RIFF....WAVE o FORM....AIFF
+  if (cleanExt === 'wav' || cleanExt === 'aiff' || cleanExt === 'aif') {
+    if (buffer.length < 12) return false;
+    const isRiffOrForm = (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46) ||
+                         (buffer[0] === 0x46 && buffer[1] === 0x4F && buffer[2] === 0x52 && buffer[3] === 0x4D);
+    return isRiffOrForm;
+  }
+
+  // MP3: 'ID3' (49 44 33) o frame sync MPEG (0xFF seguido de bits de cabecera)
+  if (cleanExt === 'mp3') {
+    const isId3 = buffer[0] === 0x49 && buffer[1] === 0x44 && buffer[2] === 0x33;
+    const isMpegSync = buffer[0] === 0xFF && (buffer[1] & 0xE0) === 0xE0;
+    return isId3 || isMpegSync;
+  }
+
+  // FLAC: 66 4C 61 43 ('fLaC')
+  if (cleanExt === 'flac') {
+    return buffer[0] === 0x66 && buffer[1] === 0x4C && buffer[2] === 0x61 && buffer[3] === 0x43;
+  }
+
+  // OGG / Opus: 4F 67 67 53 ('OggS')
+  if (cleanExt === 'ogg' || cleanExt === 'opus') {
+    return buffer[0] === 0x4F && buffer[1] === 0x47 && buffer[2] === 0x67 && buffer[3] === 0x53;
+  }
+
+  // MP4 / MOV / M4A / AAC: ftyp / moov / ADTS
+  if (cleanExt === 'mp4' || cleanExt === 'mov' || cleanExt === 'm4a' || cleanExt === 'aac') {
+    if (buffer.length >= 8) {
+      const isFtyp = buffer[4] === 0x66 && buffer[5] === 0x74 && buffer[6] === 0x79 && buffer[7] === 0x70;
+      const isMoov = buffer[4] === 0x6D && buffer[5] === 0x6F && buffer[6] === 0x6F && buffer[7] === 0x76;
+      const isAdts = buffer[0] === 0xFF && (buffer[1] & 0xF6) === 0xF0;
+      if (isFtyp || isMoov || isAdts) return true;
+    }
+  }
+
+  // WebM / MKV: 1A 45 DF A3 (EBML)
+  if (cleanExt === 'webm' || cleanExt === 'mkv' || cleanExt === 'avi') {
+    const isEbml = buffer[0] === 0x1A && buffer[1] === 0x45 && buffer[2] === 0xDF && buffer[3] === 0xA3;
+    const isRiffAvi = buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
+    return isEbml || isRiffAvi;
+  }
+
+  // DOCX / ZIP: 50 4B 03 04 ('PK\x03\x04')
+  if (cleanExt === 'docx') {
+    return buffer[0] === 0x50 && buffer[1] === 0x4B && buffer[2] === 0x03 && buffer[3] === 0x04;
+  }
+
+  // DOC: D0 CF 11 E0 (OLE2 Compound Document)
+  if (cleanExt === 'doc') {
+    return buffer[0] === 0xD0 && buffer[1] === 0xCF && buffer[2] === 0x11 && buffer[3] === 0xE0;
+  }
+
+  // Resto de extensiones permitidas
+  return EXTENSIONES_PERMITIDAS.has(cleanExt);
+}
+
 const multerFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (!extensionPermitida(file.originalname)) {
     return cb(new Error('Tipo de archivo no permitido.'));
@@ -423,6 +519,26 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       return res.status(400).json({ error: "Missing file or base64 payload" });
     }
 
+    // Validación de Magic Bytes (Firmas Binarias) antes del procesamiento o compresión
+    const rawExt = path.extname(originalFilename).replace('.', '');
+    let headerBytes: Buffer | null = null;
+    if (buffer && buffer.length >= 4) {
+      headerBytes = buffer.subarray(0, 64);
+    } else if (fs.existsSync(filePath)) {
+      const fd = fs.openSync(filePath, 'r');
+      headerBytes = Buffer.alloc(64);
+      const bytesRead = fs.readSync(fd, headerBytes, 0, 64, 0);
+      fs.closeSync(fd);
+      if (bytesRead < 4) headerBytes = null;
+    }
+
+    if (headerBytes && !validarMagicBytes(headerBytes, rawExt)) {
+      if (fs.existsSync(filePath)) {
+        try { fs.unlinkSync(filePath); } catch (_) {}
+      }
+      return res.status(400).json({ error: "Firma binaria del archivo no válida para el formato declarado (Magic Bytes mismatch)." });
+    }
+
     // Optimizador transparente: si es un audio pesado (.wav, .flac, .m4a, etc.), se comprime a MP3 256k
     const compResult = await compressAudioFileIfNeeded(filePath, mimeType);
     filePath = compResult.finalPath;
@@ -562,6 +678,18 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
       writeStream.end(() => resolve());
       writeStream.on("error", (err) => reject(err));
     });
+
+    // Validar Magic Bytes sobre el archivo reensamblado
+    const rawChunkExt = path.extname(filename).replace('.', '');
+    const headerChunkBytes = Buffer.alloc(64);
+    const fdChunk = fs.openSync(finalFilePath, 'r');
+    const bytesReadChunk = fs.readSync(fdChunk, headerChunkBytes, 0, 64, 0);
+    fs.closeSync(fdChunk);
+
+    if (bytesReadChunk >= 4 && !validarMagicBytes(headerChunkBytes, rawChunkExt)) {
+      try { fs.unlinkSync(finalFilePath); } catch (_) {}
+      return res.status(400).json({ error: "Firma binaria del archivo reensamblado no coincide con la extensión declarada." });
+    }
 
     // Clean up temporary chunk folder
     try {

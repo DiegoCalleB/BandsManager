@@ -4251,7 +4251,7 @@ export default function SongStudioModal({
                               setRecordedAudioUrl(null);
                             }}
                             placeholder="https://drive.google.com/..."
-                            className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[10px] text-[var(--ink)] focus:outline-none focus: font-sans"
+                            className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[10px] text-[var(--ink)] focus:outline-none font-sans"
                           />
                         </div>
 
@@ -4296,7 +4296,7 @@ export default function SongStudioModal({
                               <select
                                 value={selectedSongBaseUrl}
                                 onChange={(e) => setSelectedSongBaseUrl(e.target.value)}
-                                className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[11px] text-[var(--ink)] font-sans focus:outline-none focus: flex-1 min-w-0"
+                                className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[11px] text-[var(--ink)] font-sans focus:outline-none flex-1 min-w-0"
                               >
                                 {song.audioPrincipalUrl && <option value={song.audioPrincipalUrl}>🎵 Tema Original ({song.titulo})</option>}
                                 {song.audioIdeas?.map((idItem) => (

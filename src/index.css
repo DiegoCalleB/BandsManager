@@ -343,3 +343,23 @@ iframe.goog-te-banner-frame {
   }
 }
 
+/* =========================================================================
+   TEXTAREAS AMPLIABLES Y ESPACIOSAS (EXPANDABLE & RESIZABLE TEXTAREAS)
+   ========================================================================= */
+textarea {
+  resize: vertical !important;
+  min-height: 5.5rem;
+  line-height: 1.5;
+}
+
+/* Permitir que textareas específicas de inputs rápidos de una línea o modales pequeños tengan control */
+textarea.resize-y {
+  resize: vertical !important;
+}
+
+textarea::-webkit-resizer {
+  background-color: transparent;
+  background-image: radial-gradient(circle at center, rgba(212, 212, 216, 0.45) 1.5px, transparent 1.5px);
+  background-size: 5px 5px;
+}
+

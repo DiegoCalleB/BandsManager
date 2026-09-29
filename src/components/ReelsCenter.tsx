@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ThemeColors, SocialPost, SocialMetric } from "../types";
+import {
+  ThemeColors,
+  SocialPost,
+  SocialMetric,
+  BandSocialAccount,
+} from "../types";
 import { apiFetch } from "../utils/api";
 import {
   Sparkles,
@@ -39,6 +44,19 @@ import {
   Star,
   Bookmark,
   ThumbsUp,
+  ThumbsDown,
+  Camera,
+  Download,
+  FileText,
+  Send,
+  Disc,
+  Copy,
+  Lightbulb,
+  Zap,
+  Radio,
+  Globe,
+  ShieldCheck,
+  Rocket,
 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 
@@ -74,6 +92,9 @@ import {
   getCadenceWarnings,
 } from "../utils/reelsUtils";
 import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
+import { ViralGrowthStudio, SUBTITLE_STYLES } from "./reels/ViralGrowthStudio";
+import { ReelsPhoneMockup } from "./reels/ReelsPhoneMockup";
+import { ReelsTheaterModal } from "./reels/ReelsTheaterModal";
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
@@ -163,6 +184,53 @@ const PLATFORM_UI_ICONS: Record<
   YouTube: [ThumbsUp, MessageCircle, Share2],
   Facebook: [ThumbsUp, MessageCircle, Share2],
 };
+
+// Arsenal de Ganchos Virales categorizados para la industria musical (0-3s Hook Presets)
+const VIRAL_HOOK_PRESETS = [
+  {
+    categoria: "🎸 En Vivo & Directo",
+    icon: "🔥",
+    hooks: [
+      "Cuando el público canta más fuerte que la banda",
+      "El momento exacto en que se descontroló el bolo",
+      "Este solo de guitarra casi rompe el escenario",
+      "La energía de esta sala fue de otro planeta",
+      "Nadie esperaba que el concierto terminara así",
+    ],
+  },
+  {
+    categoria: "🥁 Ensayo & Backstage",
+    icon: "⚡",
+    hooks: [
+      "3 horas peleando este ritmo hasta que sonó así",
+      "Lo que nadie te enseña de la prueba de sonido",
+      "La parte de la canción que casi borramos",
+      "Cuando el batería mete un redoble improvisado",
+      "El secreto detrás de nuestro sonido en el local",
+    ],
+  },
+  {
+    categoria: "🚀 Lanzamiento & Temazo",
+    icon: "✨",
+    hooks: [
+      "Si escuchas indie/rock, este tema te va a flipar",
+      "La historia real detrás de esta letra",
+      "La canción que compusimos en una noche de furia",
+      "Nuevo single en Spotify (link en bio)",
+      "El estribillo que no te vas a poder sacar de la cabeza",
+    ],
+  },
+  {
+    categoria: "🤣 Humor & Músicos",
+    icon: "🎭",
+    hooks: [
+      "POV: El cantante olvida la letra en directo",
+      "Dime que tocas en una banda sin decírmelo",
+      "Nadie te prepara para romper una cuerda en el solo",
+      "Cuando el técnico de sonido te mira así",
+    ],
+  },
+];
 
 export default function ReelsCenter({
   colors,
@@ -433,6 +501,228 @@ export default function ReelsCenter({
   const [detectedContentType, setDetectedContentType] = useState<string | null>(
     null,
   );
+
+  // Framework Viral 3.0: 3 modos de copy + simulador Safe-Zone + Arsenal de Ganchos
+  const [copyObjective, setCopyObjective] = useState<
+    "viral" | "comunidad" | "conversion"
+  >("viral");
+  const [showSafeZone, setShowSafeZone] = useState<boolean>(false);
+  const [copiedNotification, setCopiedNotification] = useState<boolean>(false);
+  const [showHookArsenal, setShowHookArsenal] = useState<boolean>(false);
+  const [packDownloadedSuccess, setPackDownloadedSuccess] =
+    useState<boolean>(false);
+  const [thumbnailCapturedSuccess, setThumbnailCapturedSuccess] =
+    useState<boolean>(false);
+
+  // Despacho Automático y Cuentas Sociales Oficiales
+  const [autoPublishEnabled, setAutoPublishEnabled] = useState<boolean>(true);
+  const [socialAccounts, setSocialAccounts] = useState<BandSocialAccount[]>([]);
+  const [isPublishingNow, setIsPublishingNow] = useState<boolean>(false);
+  const [publishNowSuccess, setPublishNowSuccess] = useState<string | null>(
+    null,
+  );
+  const [showConnectModal, setShowConnectModal] = useState<boolean>(false);
+  const [connectingPlatform, setConnectingPlatform] = useState<string | null>(
+    null,
+  );
+  const [connectHandleInput, setConnectHandleInput] = useState<string>("");
+
+  // Viral Growth Engine 4.0: Bucle Infinito + Estilo de Subtítulos + Layouts + Punch-In Zoom + B-Roll Overlays
+  const [isSeamlessLoop, setIsSeamlessLoop] = useState<boolean>(true);
+  const [isPunchInZoom, setIsPunchInZoom] = useState<boolean>(true);
+  const [activeSubtitleStyle, setActiveSubtitleStyle] = useState<
+    "gold" | "neon" | "cinematic" | "minimal"
+  >("gold");
+  const [injectEmojis, setInjectEmojis] = useState<boolean>(true);
+  const [showSpotifyBadge, setShowSpotifyBadge] = useState<boolean>(true);
+  const [showRetentionProgressBar, setShowRetentionProgressBar] =
+    useState<boolean>(true);
+  const [showTourSticker, setShowTourSticker] = useState<boolean>(false);
+  const [tourStickerText, setTourStickerText] = useState<string>(
+    "🎟️ Gira 2026 · Próximo Bolo en Madrid",
+  );
+  const [layoutMode, setLayoutMode] = useState<"full" | "split" | "pip">(
+    "full",
+  );
+  const [beatDropFx, setBeatDropFx] = useState<boolean>(true);
+  const [smartPan, setSmartPan] = useState<boolean>(false);
+  const [magicAppliedNotification, setMagicAppliedNotification] =
+    useState<boolean>(false);
+
+  // ✨ Auto-Director Mágico (1-Click God Mode)
+  const handleTriggerMagicAutopilot = () => {
+    if (highlights.length > 0) {
+      let bestIdx = 0;
+      let maxScore = -1;
+      highlights.forEach((h, idx) => {
+        const score = Number(h.virality || (h as any).score || 80);
+        if (score > maxScore) {
+          maxScore = score;
+          bestIdx = idx;
+        }
+      });
+      handleSelectHighlight(bestIdx);
+    }
+
+    setIsPunchInZoom(true);
+    setIsSeamlessLoop(true);
+    setBeatDropFx(true);
+    setActiveSubtitleStyle("gold");
+    setInjectEmojis(true);
+    setShowSpotifyBadge(true);
+    setShowRetentionProgressBar(true);
+    setShowTourSticker(true);
+
+    const bestClip = highlights[selectedHighlightIndex] || highlights[0];
+    const autoHook =
+      bestClip?.hookText ||
+      "El momento exacto en que la sala entera explotó 🤯🔥";
+    setHighlights((prev) =>
+      prev.map((clip, idx) =>
+        idx === selectedHighlightIndex ? { ...clip, hookText: autoHook } : clip,
+      ),
+    );
+
+    if (!tourStickerText || tourStickerText.includes("Gira")) {
+      setTourStickerText(
+        "🎟️ Gira 2026 · " + (bandName || "En Concierto") + " (Entradas en Bio)",
+      );
+    }
+
+    setMagicAppliedNotification(true);
+    setTimeout(() => setMagicAppliedNotification(false), 4000);
+  };
+
+  // 🎟️ Sincronizar con Conciertos de la Banda
+  const handleSyncFromTourCRM = async () => {
+    try {
+      const res = await apiFetch<any>("/api/concerts");
+      if (
+        res?.success &&
+        Array.isArray(res.concerts) &&
+        res.concerts.length > 0
+      ) {
+        const proximo = res.concerts[0];
+        setTourStickerText(
+          "🎟️ " +
+            (proximo.fecha || "Próx. Fecha") +
+            " · " +
+            (proximo.ciudad || "Directo") +
+            " (" +
+            (proximo.lugar || bandName) +
+            ")",
+        );
+        setShowTourSticker(true);
+      } else {
+        setTourStickerText(
+          "🎟️ Gira 2026 · " + bandName + " (Entradas en Link de Bio)",
+        );
+        setShowTourSticker(true);
+      }
+    } catch {
+      setTourStickerText(
+        "🎟️ Gira 2026 · " + bandName + " (Entradas en Link de Bio)",
+      );
+      setShowTourSticker(true);
+    }
+  };
+
+  // Cargar cuentas vinculadas
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const res = await apiFetch<any>("/api/social/accounts");
+        if (res?.success && Array.isArray(res.accounts)) {
+          setSocialAccounts(res.accounts);
+        }
+      } catch (err) {
+        console.warn("No se pudieron cargar las cuentas sociales:", err);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
+  // Conectar cuenta social en 1 clic
+  const handleConnectSocialAccount = async (
+    platform: "Instagram" | "TikTok" | "YouTube",
+  ) => {
+    setConnectingPlatform(platform);
+    try {
+      const defaultHandle = `@${(bandName || "banda").toLowerCase().replace(/[^a-z0-9]+/g, "_")}`;
+      const handleToUse = connectHandleInput.trim() || defaultHandle;
+      const res = await apiFetch<any>("/api/social/accounts/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plataforma: platform,
+          handle: handleToUse,
+          account_name: `${bandName || "Banda"} Oficial`,
+        }),
+      });
+      if (res?.success && res.account) {
+        setSocialAccounts((prev) => [
+          res.account,
+          ...prev.filter((a) => a.plataforma !== platform),
+        ]);
+        setShowConnectModal(false);
+        setConnectHandleInput("");
+      }
+    } catch (err: any) {
+      console.error("Error conectando cuenta:", err);
+      alert("No se pudo vincular la cuenta.");
+    } finally {
+      setConnectingPlatform(null);
+    }
+  };
+
+  // Publicación inmediata 1-clic
+  const handlePublishNowDirectly = async () => {
+    setIsPublishingNow(true);
+    setPublishNowSuccess(null);
+    try {
+      const newPostId = `post-${Date.now()}`;
+      const activeAccount = socialAccounts.find(
+        (a) => a.plataforma?.toLowerCase() === selectedPlatform.toLowerCase(),
+      );
+      const handleToUse =
+        activeAccount?.handle ||
+        `@${(bandName || "banda").toLowerCase().replace(/[^a-z0-9]+/g, "_")}`;
+
+      const newPost: SocialPost = {
+        id: newPostId,
+        fecha: scheduledDate,
+        hora_programada: scheduledTime,
+        plataforma: selectedPlatform,
+        contenido: editedCopy,
+        estado: "en_cola",
+        responsable: "Banda",
+        video_url: renderedClipUrl || youtubeUrl,
+        media_type: "reel",
+        auto_publish: true,
+        account_handle: handleToUse,
+      };
+
+      await onAddPost(newPost);
+
+      const res = await apiFetch<any>(`/api/social/publish-now/${newPostId}`, {
+        method: "POST",
+      });
+
+      if (res?.success) {
+        setPublishNowSuccess(
+          `¡Publicado con éxito en ${selectedPlatform}! (${handleToUse}) 🎉`,
+        );
+        setTimeout(() => setPublishNowSuccess(null), 6000);
+      } else {
+        alert(res?.error || "Error al publicar.");
+      }
+    } catch (err: any) {
+      console.error("Error en publicación directa:", err);
+      alert("Error de conexión al despachar el Reel.");
+    } finally {
+      setIsPublishingNow(false);
+    }
+  };
 
   // Al escribir/pegar una URL de YouTube pedimos su ficha real (título, duración, canal,
   // si tiene subtítulos). Sin esto trabajábamos a ciegas y la línea de tiempo mentía.
@@ -1353,13 +1643,26 @@ export default function ReelsCenter({
     setSchedulingSuccess(false);
 
     try {
+      const activeAccount = socialAccounts.find(
+        (a) => a.plataforma?.toLowerCase() === selectedPlatform.toLowerCase(),
+      );
+      const handleToUse =
+        activeAccount?.handle ||
+        instagramHandle ||
+        `@${(bandName || "banda").toLowerCase().replace(/[^a-z0-9]+/g, "_")}`;
+
       const newPost: SocialPost = {
         id: `post-${Date.now()}`,
-        fecha: `${scheduledDate} ${scheduledTime}`,
+        fecha: scheduledDate,
+        hora_programada: scheduledTime,
         plataforma: selectedPlatform,
         contenido: editedCopy,
         estado: "aprobado",
-        responsable: "Jon",
+        responsable: "Banda",
+        video_url: renderedClipUrl || youtubeUrl,
+        media_type: "reel",
+        auto_publish: autoPublishEnabled,
+        account_handle: handleToUse,
       };
 
       await onAddPost(newPost);
@@ -1397,8 +1700,195 @@ export default function ReelsCenter({
 
     const clip = highlights[index];
     if (clip) {
-      setEditedCopy(copyForPlatform(clip, selectedPlatform));
+      if (copyObjective === "viral" && clip.copyViral) {
+        setEditedCopy(clip.copyViral);
+      } else if (copyObjective === "comunidad" && clip.copyComunidad) {
+        setEditedCopy(clip.copyComunidad);
+      } else if (copyObjective === "conversion" && clip.copyConversion) {
+        setEditedCopy(clip.copyConversion);
+      } else {
+        setEditedCopy(copyForPlatform(clip, selectedPlatform));
+      }
     }
+  };
+
+  const handleSwitchCopyObjective = (
+    obj: "viral" | "comunidad" | "conversion",
+  ) => {
+    setCopyObjective(obj);
+    const clip = highlights[selectedHighlightIndex];
+    if (!clip) return;
+    if (obj === "viral") {
+      setEditedCopy(clip.copyViral || clip.recommendedCopy || "");
+    } else if (obj === "comunidad") {
+      setEditedCopy(clip.copyComunidad || clip.recommendedCopy || "");
+    } else if (obj === "conversion") {
+      setEditedCopy(clip.copyConversion || clip.recommendedCopy || "");
+    }
+  };
+
+  const handleCopyFormattedPost = () => {
+    const clip = highlights[selectedHighlightIndex];
+    if (!clip) return;
+
+    const hook = clip.hookText
+      ? `🎯 [GANCHO EN PANTALLA: "${clip.hookText}"]\n\n`
+      : "";
+    const copyText = editedCopy.trim();
+    const ctaText = clip.cta ? `\n\n👉 ${clip.cta}` : "";
+    const tagsText =
+      clip.hashtags && clip.hashtags.length > 0
+        ? `\n\n${clip.hashtags.map((t) => (t.startsWith("#") ? t : `#${t}`)).join(" ")}`
+        : "";
+
+    const fullFormatted = `${hook}${copyText}${ctaText}${tagsText}`;
+
+    navigator.clipboard
+      .writeText(fullFormatted)
+      .then(() => {
+        setCopiedNotification(true);
+        setTimeout(() => setCopiedNotification(false), 2500);
+      })
+      .catch((err) => {
+        console.error("Error al copiar post formateado:", err);
+      });
+  };
+
+  // Selector de gancho predefinido del Arsenal
+  const handleSelectHookPreset = (hook: string) => {
+    setHighlights((prev) =>
+      prev.map((clip, idx) =>
+        idx === selectedHighlightIndex ? { ...clip, hookText: hook } : clip,
+      ),
+    );
+    setShowHookArsenal(false);
+  };
+
+  // Captura instantánea de fotograma / miniatura para la portada
+  const handleCaptureThumbnail = () => {
+    const clip = highlights[selectedHighlightIndex];
+    const bName = (bandName || "banda")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-");
+    const clipName = clip?.title
+      ? clip.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .slice(0, 20)
+      : `clip-${selectedHighlightIndex + 1}`;
+
+    const video = document.querySelector("video") as HTMLVideoElement | null;
+    if (video && video.videoWidth > 0) {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
+          const a = document.createElement("a");
+          a.href = dataUrl;
+          a.download = `portada_reel_${bName}_${clipName}.jpg`;
+          a.click();
+          setThumbnailCapturedSuccess(true);
+          setTimeout(() => setThumbnailCapturedSuccess(false), 2500);
+          return;
+        }
+      } catch (e) {
+        console.warn("No se pudo capturar canvas directo:", e);
+      }
+    }
+
+    const ytid = getYouTubeId(youtubeUrl);
+    if (ytid) {
+      const highResThumb = `https://img.youtube.com/vi/${ytid}/maxresdefault.jpg`;
+      const a = document.createElement("a");
+      a.href = highResThumb;
+      a.target = "_blank";
+      a.download = `portada_reel_${bName}_${clipName}.jpg`;
+      a.click();
+      setThumbnailCapturedSuccess(true);
+      setTimeout(() => setThumbnailCapturedSuccess(false), 2500);
+    }
+  };
+
+  // Descarga del Pack Completo en 1-Click (Video + Subtítulos + Copy TXT + Portada)
+  const handleDownloadCompletePack = () => {
+    const clip = highlights[selectedHighlightIndex];
+    if (!clip) return;
+
+    const bName = (bandName || "banda")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-");
+    const clipName = clip.title
+      ? clip.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .slice(0, 25)
+      : `clip-${selectedHighlightIndex + 1}`;
+
+    // 1. Descargar Ficha de Publicación TXT
+    const hookText = clip.hookText
+      ? `🎯 GANCHO VISUAL EN PANTALLA (0-3s):\n"${clip.hookText}"\n\n`
+      : "";
+    const copyText = `📝 TEXTO PARA EL POST (${selectedPlatform.toUpperCase()}):\n${editedCopy.trim()}\n\n`;
+    const ctaText = clip.cta ? `👉 LLAMADA A LA ACCIÓN:\n${clip.cta}\n\n` : "";
+    const tagsText =
+      clip.hashtags && clip.hashtags.length > 0
+        ? `🏷️ HASHTAGS:\n${clip.hashtags.map((t) => (t.startsWith("#") ? t : `#${t}`)).join(" ")}\n\n`
+        : "";
+    const horaOptima = optimalTime
+      ? `⏰ MEJOR HORA RECOMENDADA PARA PUBLICAR:\n${optimalTime.time} (${optimalTime.reason})\n\n`
+      : "";
+    const metaInfo = `🎵 ARTISTA: ${nombreBanda}\n🎬 RECORTE: ${clip.range || "0:00-0:30"} (${clip.duration || 30}s)\n⚡ OBJETIVO: ${copyObjective.toUpperCase()}\n`;
+
+    const txtContent = `${hookText}${copyText}${ctaText}${tagsText}${horaOptima}${metaInfo}`;
+    const blobTxt = new Blob([txtContent], {
+      type: "text/plain;charset=utf-8",
+    });
+    const urlTxt = URL.createObjectURL(blobTxt);
+    const aTxt = document.createElement("a");
+    aTxt.href = urlTxt;
+    aTxt.download = `post_${selectedPlatform.toLowerCase()}_${bName}_${clipName}.txt`;
+    aTxt.click();
+    URL.revokeObjectURL(urlTxt);
+
+    // 2. Descargar Subtítulos VTT si están disponibles
+    if (renderedSubUrl) {
+      const aSub = document.createElement("a");
+      aSub.href = renderedSubUrl;
+      aSub.download = `subtitulos_${bName}_${clipName}.vtt`;
+      aSub.click();
+    } else if (subtitleCues.length > 0) {
+      let vttContent = "WEBVTT\n\n";
+      subtitleCues.forEach((c, idx) => {
+        vttContent += `${idx + 1}\n${formatTime(c.start)}.000 --> ${formatTime(c.end)}.000\n${c.text}\n\n`;
+      });
+      const blobVtt = new Blob([vttContent], {
+        type: "text/vtt;charset=utf-8",
+      });
+      const urlVtt = URL.createObjectURL(blobVtt);
+      const aVtt = document.createElement("a");
+      aVtt.href = urlVtt;
+      aVtt.download = `subtitulos_${bName}_${clipName}.vtt`;
+      aVtt.click();
+      URL.revokeObjectURL(urlVtt);
+    }
+
+    // 3. Descargar Vídeo MP4 si ya está renderizado
+    if (renderedClipUrl) {
+      const aVid = document.createElement("a");
+      aVid.href = renderedClipUrl;
+      aVid.download = `video_reel_${bName}_${clipName}.mp4`;
+      aVid.click();
+    }
+
+    // 4. Capturar miniatura
+    handleCaptureThumbnail();
+
+    setPackDownloadedSuccess(true);
+    setTimeout(() => setPackDownloadedSuccess(false), 3500);
   };
 
   // Copy text to clipboard helper
@@ -1539,15 +2029,15 @@ export default function ReelsCenter({
   return (
     <div
       data-modulo="reels"
-      className={`space-y-6 ${"text-[var(--ink)]"} font-sans w-full max-w-full overflow-x-hidden`}
+      className={`space-y-6 text-[var(--ink)] font-sans w-full max-w-full overflow-x-hidden`}
     >
       {/* Header con Sincronización en Excel */}
       <div
-        className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${""}`}
+        className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 `}
       >
         {/* HEADER / TITULO PRINCIPAL */}
         <div className="mb-2">
-          <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-[var(--ink)] mb-2">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-[var(--ink)] mb-2">
             Medios
           </h1>
           <p className="text-sm font-sans text-[var(--ink-2)]">
@@ -1582,7 +2072,7 @@ export default function ReelsCenter({
           </button>
 
           <span
-            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${"bg-[var(--ok)]/10  text-[var(--ok)]"}`}
+            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--ok)]/10 text-[var(--ok)]`}
           >
             <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping shrink-0" />{" "}
             Auto-sync
@@ -1593,7 +2083,7 @@ export default function ReelsCenter({
       {/* Notificaciones de Sincronización */}
       {syncSuccessMessage && (
         <div
-          className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${"bg-[var(--ok)]/10 text-[var(--ok)]"}`}
+          className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 bg-[var(--ok)]/10 text-[var(--ok)]`}
         >
           <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
           <span className="flex-1 font-sans text-[10px]">
@@ -1609,7 +2099,7 @@ export default function ReelsCenter({
       )}
       {syncErrorMessage && (
         <div
-          className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${"bg-[var(--alert)]/10 text-[var(--alert)]"}`}
+          className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 bg-[var(--alert)]/10 text-[var(--alert)]`}
         >
           <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
           <span className="flex-1 font-sans text-[10px]">
@@ -1625,7 +2115,7 @@ export default function ReelsCenter({
       )}
 
       {/* Dynamic Segment Tab Selector */}
-      <div className={`flex pb-4 mb-2 flex-wrap gap-3 ${""}`}>
+      <div className={`flex pb-4 mb-2 flex-wrap gap-3 `}>
         <button
           id="tab-btn-pipeline"
           onClick={() => setActiveTab("pipeline")}
@@ -1658,9 +2148,9 @@ export default function ReelsCenter({
             <div className="space-y-6">
               {/* 1. Pipeline Kanban */}
               <div className={`${colors.card} p-5 space-y-4`}>
-                <div className={` pb-3 ${""}`}>
+                <div className={` pb-3 `}>
                   <h3
-                    className={`text-sm font-bold font-display ${"text-[var(--acc)]"}`}
+                    className={`text-sm font-bold font-display text-[var(--acc)]`}
                   >
                     Pipeline de Reels y Contenido
                   </h3>
@@ -1674,10 +2164,10 @@ export default function ReelsCenter({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Borradores */}
                   <div
-                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--sunken)]"}`}
+                    className={`space-y-3 rounded-[var(--r-s)] p-3 bg-[var(--sunken)]`}
                   >
                     <span
-                      className={`text-[10px] font-sans font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
+                      className={`text-[10px] font-sans font-bold block pb-1.5 text-[var(--acc)]`}
                     >
                       Borradores (
                       {posts.filter((r) => r.estado === "borrador").length})
@@ -1689,7 +2179,7 @@ export default function ReelsCenter({
                           <div
                             key={post.id}
                             onClick={() => setSelectedPostInPhone(post)}
-                            className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-all space-y-1.5 ${"bg-[var(--surface)]"} ${
+                            className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-all space-y-1.5 bg-[var(--surface)] ${
                               selectedPostInPhone?.id === post.id
                                 ? "-[var(--acc)]"
                                 : " hover:-indigo-300"
@@ -1717,7 +2207,7 @@ export default function ReelsCenter({
                               {post.contenido}
                             </p>
                             <div
-                              className={`flex justify-between items-center pt-1 ${""}`}
+                              className={`flex justify-between items-center pt-1 `}
                             >
                               <span className="text-[8px] font-sans text-[var(--ink-2)]">
                                 {post.fecha}
@@ -1728,7 +2218,7 @@ export default function ReelsCenter({
                                   e.stopPropagation();
                                   onUpdatePost(post.id, { estado: "aprobado" });
                                 }}
-                                className={`text-[8px] font-sans hover:underline cursor-pointer bg-transparent -none p-0 ${"text-[var(--acc)]"}`}
+                                className={`text-[8px] font-sans hover:underline cursor-pointer bg-transparent -none p-0 text-[var(--acc)]`}
                               >
                                 Aprobar →
                               </button>
@@ -1749,10 +2239,10 @@ export default function ReelsCenter({
 
                   {/* En Edición / Aprobados */}
                   <div
-                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--sunken)]"}`}
+                    className={`space-y-3 rounded-[var(--r-s)] p-3 bg-[var(--sunken)]`}
                   >
                     <span
-                      className={`text-[10px] font-sans font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
+                      className={`text-[10px] font-sans font-bold block pb-1.5 text-[var(--acc)]`}
                     >
                       En Edición / Aprobados (
                       {posts.filter((r) => r.estado === "aprobado").length})
@@ -1764,7 +2254,7 @@ export default function ReelsCenter({
                           <div
                             key={post.id}
                             onClick={() => setSelectedPostInPhone(post)}
-                            className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-all space-y-1.5 ${"bg-[var(--surface)]"} ${
+                            className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-all space-y-1.5 bg-[var(--surface)] ${
                               selectedPostInPhone?.id === post.id
                                 ? ""
                                 : "bg-[var(--surface)] hover:bg-[var(--acc-soft)]"
@@ -1792,7 +2282,7 @@ export default function ReelsCenter({
                               {post.contenido}
                             </p>
                             <div
-                              className={`flex justify-between items-center pt-1 ${""}`}
+                              className={`flex justify-between items-center pt-1 `}
                             >
                               <button
                                 id={`btn-move-borrador-${post.id}`}
@@ -1833,10 +2323,10 @@ export default function ReelsCenter({
 
                   {/* Listos / Publicados */}
                   <div
-                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--sunken)]"}`}
+                    className={`space-y-3 rounded-[var(--r-s)] p-3 bg-[var(--sunken)]`}
                   >
                     <span
-                      className={`text-[10px] font-sans text-[var(--ok)] font-bold block pb-1.5 ${""}`}
+                      className={`text-[10px] font-sans text-[var(--ok)] font-bold block pb-1.5 `}
                     >
                       Listos / Publicados (
                       {posts.filter((r) => r.estado === "publicado").length})
@@ -1848,7 +2338,7 @@ export default function ReelsCenter({
                           <div
                             key={post.id}
                             onClick={() => setSelectedPostInPhone(post)}
-                            className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-all space-y-1.5 ${"bg-[var(--surface)]"} ${
+                            className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-all space-y-1.5 bg-[var(--surface)] ${
                               selectedPostInPhone?.id === post.id
                                 ? ""
                                 : " hover:-emerald-300"
@@ -1876,7 +2366,7 @@ export default function ReelsCenter({
                               {post.contenido}
                             </p>
                             <div
-                              className={`flex justify-between items-center pt-1 ${""}`}
+                              className={`flex justify-between items-center pt-1 `}
                             >
                               <button
                                 id={`btn-move-aprobado-back-${post.id}`}
@@ -1911,9 +2401,9 @@ export default function ReelsCenter({
 
               {/* 2. Structured Soul AI Writer */}
               <div className={`${colors.card} p-5 space-y-4`}>
-                <div className={` pb-3 ${""}`}>
+                <div className={` pb-3 `}>
                   <h3
-                    className={`text-sm font-bold font-display flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
+                    className={`text-sm font-bold font-display flex items-center gap-1.5 text-[var(--acc)]`}
                   >
                     <Sparkles className="w-4 h-4" /> AI Reels Writer (Redacción
                     Estructurada)
@@ -1936,7 +2426,7 @@ export default function ReelsCenter({
                       value={reelIdea}
                       onChange={(e) => setReelIdea(e.target.value)}
                       placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino..."
-                      className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed ${"bg-[var(--sunken)]  text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50`}
                     />
                   </div>
 
@@ -1949,7 +2439,7 @@ export default function ReelsCenter({
                         id="btn-reels-hype"
                         onClick={() => handleGenerateCopy("hype")}
                         disabled={isGenerating}
-                        className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--acc)]  text-[var(--on-acc)]"}`}
+                        className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 bg-[var(--acc)] text-[var(--on-acc)]`}
                       >
                         <Flame className="w-4 h-4" /> Balkan Hype 🎺🔥
                       </button>
@@ -1957,7 +2447,7 @@ export default function ReelsCenter({
                         id="btn-reels-chill"
                         onClick={() => handleGenerateCopy("chill")}
                         disabled={isGenerating}
-                        className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ok)]"}`}
+                        className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ok)]`}
                       >
                         <Music className="w-4 h-4" /> Reggae Chill 🌿🕊️
                       </button>
@@ -1979,7 +2469,7 @@ export default function ReelsCenter({
                         rows={6}
                         value={generatedCopy}
                         onChange={(e) => setGeneratedCopy(e.target.value)}
-                        className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${"bg-[var(--sunken)]  text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/30"}`}
+                        className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/30`}
                       />
                     </div>
                   </div>
@@ -1991,11 +2481,11 @@ export default function ReelsCenter({
             <div className="space-y-6">
               {/* 1. Drag & Drop & Upload Area */}
               <div className={`${colors.card} p-5 space-y-4`}>
-                <div className={` pb-3 ${""}`}>
+                <div className={` pb-3 `}>
                   <h3
-                    className={`text-sm font-bold font-display flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
+                    className={`text-sm font-bold font-display flex items-center gap-1.5 text-[var(--acc)]`}
                   >
-                    <Video className={`w-4 h-4 ${"text-[var(--acc)]"}`} />{" "}
+                    <Video className={`w-4 h-4 text-[var(--acc)]`} />{" "}
                     Extraer Highlights de Vídeos de Ensayos / Directos
                   </h3>
                   <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
@@ -2071,12 +2561,12 @@ export default function ReelsCenter({
                     />
                     {selectedFile ? (
                       <div className="space-y-3">
-                        <div className="w-12 h-12 rounded-[var(--r-pill)] bg-[var(--ok)]/10  text-[var(--ok)] flex items-center justify-center mx-auto">
+                        <div className="w-12 h-12 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center mx-auto">
                           <CheckCircle2 className="w-6 h-6" />
                         </div>
                         <div>
                           <p
-                            className={`text-xs font-bold ${"text-[var(--ink)]"}`}
+                            className={`text-xs font-bold text-[var(--ink)]`}
                           >
                             {selectedFile.name}
                           </p>
@@ -2107,13 +2597,13 @@ export default function ReelsCenter({
                     ) : (
                       <div className="space-y-3">
                         <div
-                          className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
+                          className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc)]`}
                         >
                           <Upload className="w-5 h-5" />
                         </div>
                         <div>
                           <p
-                            className={`text-xs font-bold ${"text-[var(--ink-2)]"}`}
+                            className={`text-xs font-bold text-[var(--ink-2)]`}
                           >
                             Suelta tu vídeo aquí o haz clic para buscar
                           </p>
@@ -2127,17 +2617,17 @@ export default function ReelsCenter({
                   </div>
                 ) : (
                   <div
-                    className={` rounded-[var(--r-l)] p-8 transition-all ${" bg-[var(--surface)]"}`}
+                    className={` rounded-[var(--r-l)] p-8 transition-all bg-[var(--surface)]`}
                   >
                     <div className="space-y-4 max-w-xl mx-auto text-center">
                       <div
-                        className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
+                        className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc)]`}
                       >
                         <Youtube className="w-5 h-5" />
                       </div>
                       <div>
                         <p
-                          className={`text-xs font-bold ${"text-[var(--ink-2)]"}`}
+                          className={`text-xs font-bold text-[var(--ink-2)]`}
                         >
                           Introduce la URL del vídeo de YouTube
                         </p>
@@ -2153,7 +2643,7 @@ export default function ReelsCenter({
                           value={youtubeUrl}
                           onChange={(e) => setYoutubeUrl(e.target.value)}
                           placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
-                          className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-sans ${"bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                          className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                         />
                         {youtubeUrl && (
                           <button
@@ -2195,7 +2685,7 @@ export default function ReelsCenter({
 
                       {!isFetchingMeta && videoMeta && (
                         <div
-                          className={`flex gap-3 items-center p-2.5 rounded-[var(--r-m)] text-left ${"bg-[var(--sunken)]"}`}
+                          className={`flex gap-3 items-center p-2.5 rounded-[var(--r-m)] text-left bg-[var(--sunken)]`}
                         >
                           {videoMeta.thumbnail && (
                             <img
@@ -2207,7 +2697,7 @@ export default function ReelsCenter({
                           )}
                           <div className="min-w-0 flex-1 space-y-1">
                             <p
-                              className={`text-[11px] font-bold truncate ${"text-[var(--ink)]"}`}
+                              className={`text-[11px] font-bold truncate text-[var(--ink)]`}
                             >
                               {videoMeta.title || "Vídeo de YouTube"}
                             </p>
@@ -2219,7 +2709,7 @@ export default function ReelsCenter({
                               )}
                               {videoMeta.durationKnown ? (
                                 <span
-                                  className={`px-1.5 py-0.5 rounded font-bold ${"bg-[var(--acc)]/10 text-[var(--acc)]"}`}
+                                  className={`px-1.5 py-0.5 rounded font-bold bg-[var(--acc)]/10 text-[var(--acc)]`}
                                 >
                                   {formatTime(videoMeta.duration)}
                                 </span>
@@ -2266,7 +2756,7 @@ export default function ReelsCenter({
                         setContentType(e.target.value as typeof contentType)
                       }
                       title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                     >
                       <option value="auto">Detectar automáticamente</option>
                       <option value="concierto">Concierto / Directo</option>
@@ -2284,7 +2774,7 @@ export default function ReelsCenter({
                       value={videoTopic}
                       onChange={(e) => setVideoTopic(e.target.value)}
                       placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión..."
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans ${"bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                     />
                   </div>
                   <div className="space-y-1">
@@ -2295,7 +2785,7 @@ export default function ReelsCenter({
                       id="video-duration-select"
                       value={videoDuration}
                       onChange={(e) => setVideoDuration(Number(e.target.value))}
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                     >
                       <option value={15}>
                         15 segundos (Ideal para Reels cortos / Stories)
@@ -2314,7 +2804,7 @@ export default function ReelsCenter({
  clips sugeridos sin haber pulsado"Analizar" en esta visita. */}
                 {loadedFromSaveAt && highlights.length > 0 && !isAnalyzing && (
                   <div
-                    className={`p-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 ${"bg-[var(--ok)]/10 text-[var(--ok)]"}`}
+                    className={`p-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 bg-[var(--ok)]/10 text-[var(--ok)]`}
                   >
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
                     <span>
@@ -2341,21 +2831,21 @@ export default function ReelsCenter({
                     }
                     className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition-all ${
                       (inputType === "file" ? selectedFile : youtubeUrl)
-                        ? "bg-[var(--acc)]  text-[var(--acc-ink)]/10 hover:scale-[1.01]"
+                        ? "bg-[var(--acc)] text-[var(--acc-ink)]/10 hover:scale-[1.01]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                     }`}
                   >
                     {isAnalyzing ? (
                       <>
                         <RefreshCw
-                          className={`w-4 h-4 animate-spin ${"text-[var(--acc-ink)]"}`}
+                          className={`w-4 h-4 animate-spin text-[var(--acc-ink)]`}
                         />
                         <span>PROCESANDO METRAJE...</span>
                       </>
                     ) : (
                       <>
                         <Sparkles
-                          className={`w-4 h-4 ${"text-[var(--acc-ink)]"}`}
+                          className={`w-4 h-4 text-[var(--acc-ink)]`}
                         />
                         <span>ANALIZAR HIGHLIGHTS CON IA</span>
                       </>
@@ -2366,10 +2856,10 @@ export default function ReelsCenter({
                 {/* Loading indicator with detailed analytical logs */}
                 {isAnalyzing && (
                   <div
-                    className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--sunken)]"}`}
+                    className={`p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--sunken)]`}
                   >
                     <div className="flex justify-between items-center text-[10px] font-sans">
-                      <span className={`font-bold ${"text-[var(--acc)]"}`}>
+                      <span className={`font-bold text-[var(--acc)]`}>
                         Estado del análisis:
                       </span>
                       <span className="text-[var(--ink-2)]">
@@ -2377,7 +2867,7 @@ export default function ReelsCenter({
                       </span>
                     </div>
                     <p
-                      className={`text-[11px] font-sans leading-normal ${"text-[var(--ink-2)]"}`}
+                      className={`text-[11px] font-sans leading-normal text-[var(--ink-2)]`}
                     >
                       ⚡️{" "}
                       <span className={"text-[var(--acc)]"}>
@@ -2385,10 +2875,10 @@ export default function ReelsCenter({
                       </span>
                     </p>
                     <div
-                      className={`w-full h-1.5 rounded-[var(--r-pill)] overflow-hidden ${"bg-[var(--surface)]"}`}
+                      className={`w-full h-1.5 rounded-[var(--r-pill)] overflow-hidden bg-[var(--surface)]`}
                     >
                       <div
-                        className={`h-full transition-all duration-500 ${"bg-[var(--acc)] "}`}
+                        className={`h-full transition-all duration-500 bg-[var(--acc)] `}
                         style={{
                           width: `${((loadingStep + 1) / getLoadingSteps().length) * 100}%`,
                         }}
@@ -2398,7 +2888,7 @@ export default function ReelsCenter({
                 )}
 
                 {analysisError && (
-                  <div className="p-3 bg-[var(--alert)]/10  rounded-[var(--r-s)] text-[var(--alert)] text-xs flex gap-2 items-center">
+                  <div className="p-3 bg-[var(--alert)]/10 rounded-[var(--r-s)] text-[var(--alert)] text-xs flex gap-2 items-center">
                     <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
                     <span>{analysisError}</span>
                   </div>
@@ -2417,9 +2907,9 @@ export default function ReelsCenter({
               {/* 2. Lighttable (Mesa de Luz con los Clips Detectados) */}
               {highlights.length > 0 && (
                 <div className={`${colors.card} p-5 space-y-4`}>
-                  <div className={` pb-2 ${""}`}>
+                  <div className={` pb-2 `}>
                     <h3
-                      className={`text-sm font-bold font-display flex items-center gap-2 ${"text-[var(--acc)]"}`}
+                      className={`text-sm font-bold font-display flex items-center gap-2 text-[var(--acc)]`}
                     >
                       <Layers className="w-4 h-4" /> Mesa de Luz de Clips
                       Sugeridos (Highlights)
@@ -2452,7 +2942,7 @@ export default function ReelsCenter({
                             </span>
                           </div>
                           <div
-                            className={`relative w-full h-7 rounded-[var(--r-s)] overflow-hidden ${"bg-[var(--surface)]"}`}
+                            className={`relative w-full h-7 rounded-[var(--r-s)] overflow-hidden bg-[var(--surface)]`}
                           >
                             {ventanas.map((v, i) => {
                               const izq = Math.max(
@@ -2540,7 +3030,7 @@ export default function ReelsCenter({
                             if (!ventana?.motivo) return null;
                             return (
                               <p
-                                className={`text-[10px] font-sans italic leading-snug pt-0.5 ${"text-[var(--acc)]"}`}
+                                className={`text-[10px] font-sans italic leading-snug pt-0.5 text-[var(--acc)]`}
                               >
                                 "{ventana.motivo}"
                               </p>
@@ -2566,7 +3056,7 @@ export default function ReelsCenter({
                         >
                           {/* Simulated miniature video thumbnail track design */}
                           <div
-                            className={`w-full h-20 rounded-[var(--r-s)] relative flex flex-col justify-between p-2 overflow-hidden ${"bg-[var(--sunken)]"}`}
+                            className={`w-full h-20 rounded-[var(--r-s)] relative flex flex-col justify-between p-2 overflow-hidden bg-[var(--sunken)]`}
                           >
                             {/* Waveforms illustration background */}
                             <div className="absolute inset-x-0 bottom-0 h-8 flex items-end gap-[2px] opacity-25 px-1">
@@ -2576,7 +3066,7 @@ export default function ReelsCenter({
                               ].map((h, i) => (
                                 <div
                                   key={i}
-                                  className={`flex-1 ${"bg-[var(--acc)]"}`}
+                                  className={`flex-1 bg-[var(--acc)]`}
                                   style={{
                                     height: `${isSelected ? h : h * 0.7}%`,
                                   }}
@@ -2584,12 +3074,12 @@ export default function ReelsCenter({
                               ))}
                             </div>
                             <span
-                              className={`text-[8px] font-sans font-bold px-1.5 py-0.5 rounded self-start z-10 ${"bg-[var(--acc)] text-[var(--on-acc)]"}`}
+                              className={`text-[8px] font-sans font-bold px-1.5 py-0.5 rounded self-start z-10 bg-[var(--acc)] text-[var(--on-acc)]`}
                             >
                               {clip.range}
                             </span>
                             <div className="absolute inset-0 flex items-center justify-center z-0 opacity-80 group-hover:scale-105 transition-transform">
-                              <div className="w-8 h-8 rounded-[var(--r-pill)] bg-[var(--surface)]  flex items-center justify-center text-[var(--acc)]">
+                              <div className="w-8 h-8 rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--acc)]">
                                 <Play className="w-3.5 h-3.5 fill-[var(--acc)] ml-0.5" />
                               </div>
                             </div>
@@ -2600,7 +3090,7 @@ export default function ReelsCenter({
 
                           <div className="space-y-1.5">
                             <h4
-                              className={`text-[11px] font-bold font-sans line-clamp-1 flex items-center gap-1 transition-colors ${"text-[var(--ink-2)] group-hover:text-[var(--acc)]"}`}
+                              className={`text-[11px] font-bold font-sans line-clamp-1 flex items-center gap-1 transition-colors text-[var(--ink-2)] group-hover:text-[var(--acc)]`}
                             >
                               {clip.title}
                             </h4>
@@ -2612,25 +3102,25 @@ export default function ReelsCenter({
                           </div>
 
                           {/* Virality score meter */}
-                          <div className={`space-y-1 pt-1.5 ${""}`}>
+                          <div className={`space-y-1 pt-1.5 `}>
                             <div className="flex justify-between items-center text-[9px] font-sans text-[var(--ink-2)]">
                               <span className="flex items-center gap-1">
                                 <Flame
-                                  className={`w-3 h-3 ${"text-[var(--acc)]"}`}
+                                  className={`w-3 h-3 text-[var(--acc)]`}
                                 />{" "}
                                 Virality Score:
                               </span>
                               <span
-                                className={`font-bold ${"text-[var(--acc)]"}`}
+                                className={`font-bold text-[var(--acc)]`}
                               >
                                 {clip.virality}%
                               </span>
                             </div>
                             <div
-                              className={`w-full h-1 rounded-[var(--r-pill)] overflow-hidden ${"bg-[var(--sunken)]"}`}
+                              className={`w-full h-1 rounded-[var(--r-pill)] overflow-hidden bg-[var(--sunken)]`}
                             >
                               <div
-                                className={`h-full ${"bg-[var(--acc)]"}`}
+                                className={`h-full bg-[var(--acc)]`}
                                 style={{ width: `${clip.virality}%` }}
                               />
                             </div>
@@ -2645,9 +3135,9 @@ export default function ReelsCenter({
               {/* 3. Editor & Scheduler Form for Selected Highlight */}
               {highlights.length > 0 && (
                 <div className={`${colors.card} p-5 space-y-4`}>
-                  <div className={` pb-2 ${""}`}>
+                  <div className={` pb-2 `}>
                     <h3
-                      className={`text-sm font-bold font-display flex items-center gap-2 ${"text-[var(--acc)]"}`}
+                      className={`text-sm font-bold font-display flex items-center gap-2 text-[var(--acc)]`}
                     >
                       <Calendar className="w-4 h-4" /> Personalizar Publicación
                       y Programar en Calendario
@@ -2665,7 +3155,7 @@ export default function ReelsCenter({
                       <div className="lg:col-span-8 space-y-4">
                         {/* Selected Clip summary header */}
                         <div
-                          className={`p-3 rounded-[var(--r-m)] flex justify-between items-center gap-3 ${"bg-[var(--surface)]"}`}
+                          className={`p-3 rounded-[var(--r-m)] flex justify-between items-center gap-3 bg-[var(--surface)]`}
                         >
                           <div className="space-y-0.5 flex-1">
                             <span className="text-[9px] font-sans text-[var(--ink-2)]">
@@ -2686,12 +3176,12 @@ export default function ReelsCenter({
                                   ),
                                 );
                               }}
-                              className={`w-full bg-transparent text-xs font-bold font-sans -dashed  focus:-[var(--acc)] focus:outline-none py-0.5 ${textTitle}`}
+                              className={`w-full bg-transparent text-xs font-bold font-sans -dashed focus:-[var(--acc)] focus:outline-none py-0.5 ${textTitle}`}
                               placeholder="Escribe un título para este corte..."
                             />
                           </div>
                           <span
-                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
+                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 bg-[var(--acc)]/10 text-[var(--acc)]`}
                           >
                             {highlights[selectedHighlightIndex]?.range}
                           </span>
@@ -2699,12 +3189,12 @@ export default function ReelsCenter({
 
                         {/* AI Re-analyzer & User Notes Panel */}
                         <div
-                          className={`p-3.5 rounded-[var(--r-l)] space-y-3 ${"bg-[var(--surface)]/90 "}`}
+                          className={`p-3.5 rounded-[var(--r-l)] space-y-3 bg-[var(--surface)]/90 `}
                         >
                           <div className="flex justify-between items-center flex-wrap gap-2">
                             <div className="flex items-center gap-2">
                               <Sparkles
-                                className={`w-4 h-4 ${"text-[var(--acc)]"}`}
+                                className={`w-4 h-4 text-[var(--acc)]`}
                               />
                               <span
                                 className={`text-xs font-sans font-bold ${textTitle}`}
@@ -2719,7 +3209,7 @@ export default function ReelsCenter({
                               className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
                                 isReanalyzingClip
                                   ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                                  : "bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]"
+                                  : "bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]"
                               }`}
                             >
                               <Sparkles
@@ -2742,7 +3232,7 @@ export default function ReelsCenter({
                               value={clipUserNote}
                               onChange={(e) => setClipUserNote(e.target.value)}
                               placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín..."
-                              className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                              className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                             />
                           </div>
 
@@ -2751,7 +3241,7 @@ export default function ReelsCenter({
  o es solo un ajuste puntual de este corte. */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <div
-                              className={`p-2 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--surface)]"}`}
+                              className={`p-2 rounded-[var(--r-m)] space-y-1 bg-[var(--surface)]`}
                             >
                               <span className="text-[9px] font-sans text-[var(--ink-2)] block">
                                 Tono (versión anterior)
@@ -2775,7 +3265,7 @@ export default function ReelsCenter({
                               </div>
                             </div>
                             <div
-                              className={`p-2 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--surface)]"}`}
+                              className={`p-2 rounded-[var(--r-m)] space-y-1 bg-[var(--surface)]`}
                             >
                               <span className="text-[9px] font-sans text-[var(--ink-2)] block">
                                 Contenido (versión anterior)
@@ -2839,7 +3329,7 @@ export default function ReelsCenter({
 
                           {highlights[selectedHighlightIndex]?.reason && (
                             <div
-                              className={`p-2.5 rounded-[var(--r-m)] text-[11px] font-sans leading-relaxed ${"bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
+                              className={`p-2.5 rounded-[var(--r-m)] text-[11px] font-sans leading-relaxed bg-[var(--surface)]/80 text-[var(--ink-2)]`}
                             >
                               <span className="font-sans text-[9px] font-bold text-[var(--ink-2)] block mb-0.5">
                                 Diagnóstico IA del Fragmento:
@@ -2851,36 +3341,186 @@ export default function ReelsCenter({
                           )}
                         </div>
 
-                        {/* Copy editor textarea */}
+                        {/* 🚀 Viral Growth Studio 4.0 (Ganchos A/B + Bucle 120% + Subtítulos + Punch-In Zoom + Stickers B-Roll) */}
+                        <ViralGrowthStudio
+                          colors={colors}
+                          bandName={bandName}
+                          songTitle={
+                            videoMeta?.title ||
+                            highlights[selectedHighlightIndex]?.title ||
+                            ""
+                          }
+                          currentHook={
+                            highlights[selectedHighlightIndex]?.hookText || ""
+                          }
+                          onUpdateHook={(newHook) => {
+                            setHighlights((prev) =>
+                              prev.map((clip, idx) =>
+                                idx === selectedHighlightIndex
+                                  ? { ...clip, hookText: newHook }
+                                  : clip,
+                              ),
+                            );
+                          }}
+                          currentCopy={editedCopy}
+                          onUpdateCopy={(newCopy) => setEditedCopy(newCopy)}
+                          isSeamlessLoop={isSeamlessLoop}
+                          onToggleSeamlessLoop={(enabled) =>
+                            setIsSeamlessLoop(enabled)
+                          }
+                          isPunchInZoom={isPunchInZoom}
+                          onTogglePunchInZoom={(enabled) =>
+                            setIsPunchInZoom(enabled)
+                          }
+                          beatDropFx={beatDropFx}
+                          onToggleBeatDropFx={(enabled) =>
+                            setBeatDropFx(enabled)
+                          }
+                          smartPan={smartPan}
+                          onToggleSmartPan={(enabled) => setSmartPan(enabled)}
+                          cropMode={cropMode as any}
+                          onChangeCropMode={(cm) => setCropMode(cm as any)}
+                          activeSubtitleStyle={activeSubtitleStyle}
+                          onChangeSubtitleStyle={(st) =>
+                            setActiveSubtitleStyle(st)
+                          }
+                          injectEmojis={injectEmojis}
+                          onToggleInjectEmojis={(enabled) =>
+                            setInjectEmojis(enabled)
+                          }
+                          showSpotifyBadge={showSpotifyBadge}
+                          onToggleSpotifyBadge={(enabled) =>
+                            setShowSpotifyBadge(enabled)
+                          }
+                          showRetentionProgressBar={showRetentionProgressBar}
+                          onToggleRetentionProgressBar={(enabled) =>
+                            setShowRetentionProgressBar(enabled)
+                          }
+                          showTourSticker={showTourSticker}
+                          onToggleTourSticker={(enabled) =>
+                            setShowTourSticker(enabled)
+                          }
+                          tourStickerText={tourStickerText}
+                          onUpdateTourStickerText={(txt) =>
+                            setTourStickerText(txt)
+                          }
+                          onSyncFromTourCRM={handleSyncFromTourCRM}
+                          onTriggerMagicAutopilot={handleTriggerMagicAutopilot}
+                          magicAppliedNotification={magicAppliedNotification}
+                          layoutMode={layoutMode}
+                          onChangeLayoutMode={(lm) => setLayoutMode(lm)}
+                          showSafeZone={showSafeZone}
+                          onToggleSafeZone={() =>
+                            setShowSafeZone(!showSafeZone)
+                          }
+                        />
+
+                        {/* Copy editor with 3.0 Objective Tabs */}
                         <div className="space-y-1.5">
-                          <label className="block text-[10px] font-sans text-[var(--ink-2)]">
-                            Pie de Foto (Copy Recomendado para Redes)
-                          </label>
+                          <div className="flex justify-between items-center">
+                            <label className="block text-[10px] font-mono text-[var(--ink-2)]">
+                              Variante de Copy con ADN
+                            </label>
+                            <div className="flex gap-1">
+                              {[
+                                {
+                                  id: "viral" as const,
+                                  label: "⚡ Viral",
+                                  tip: "Algoritmo y debate en comentarios",
+                                },
+                                {
+                                  id: "comunidad" as const,
+                                  label: "🎸 Comunidad",
+                                  tip: "Conexión y lore de la banda",
+                                },
+                                {
+                                  id: "conversion" as const,
+                                  label: "🎟️ Conversión",
+                                  tip: "Spotify, entradas y EPK",
+                                },
+                              ].map((tab) => (
+                                <button
+                                  key={tab.id}
+                                  type="button"
+                                  onClick={() =>
+                                    handleSwitchCopyObjective(tab.id)
+                                  }
+                                  title={tab.tip}
+                                  className={`px-2 py-1 rounded text-[9.5px] font-mono font-bold transition-all cursor-pointer ${
+                                    copyObjective === tab.id
+                                      ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
+                                  }`}
+                                >
+                                  {tab.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
                           <textarea
                             id="highlight-copy-editor"
-                            rows={5}
+                            rows={4}
                             value={editedCopy}
                             onChange={(e) => setEditedCopy(e.target.value)}
-                            className={`w-full rounded-[var(--r-m)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                            className={`w-full rounded-xl p-3 text-xs font-sans leading-relaxed focus:outline-none bg-[var(--sunken)] text-[var(--ink)] `}
                           />
+
+                          {/* Quick action: 1-Click Formatted Copy for Instagram/TikTok */}
+                          <div className="flex items-center justify-between pt-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {highlights[selectedHighlightIndex]?.hashtags
+                                ?.slice(0, 4)
+                                .map((tag, tIdx) => (
+                                  <span
+                                    key={tIdx}
+                                    className="text-[9.5px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] px-1.5 py-0.5 rounded "
+                                  >
+                                    {tag.startsWith("#") ? tag : `#${tag}`}
+                                  </span>
+                                ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleCopyFormattedPost}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
+                                copiedNotification
+                                  ? "bg-[var(--ok)] text-[var(--on-ok)] font-black scale-105"
+                                  : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--acc-ink)] bg-[var(--acc)]/10"
+                              }`}
+                              title="Copia el gancho, el copy y los hashtags formateados listos para pegar en Instagram o TikTok"
+                            >
+                              {copiedNotification ? (
+                                <>
+                                  <Check className="w-3.5 h-3.5" />
+                                  <span>¡Copiado para Redes!</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Bookmark className="w-3.5 h-3.5" />
+                                  <span>1-Click Copiar Formato</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
 
                         {/* Recommendation Tips */}
                         {optimalTime && (
                           <div
-                            className={`p-3 rounded-[var(--r-m)] flex gap-3 items-start text-[11px] leading-relaxed ${"bg-[var(--acc)]/5  text-[var(--ink)]"}`}
+                            className={`p-3 rounded-[var(--r-m)] flex gap-3 items-start text-[11px] leading-relaxed bg-[var(--acc)]/5 text-[var(--ink)]`}
                           >
                             <Clock
-                              className={`w-4.5 h-4.5 mt-0.5 shrink-0 ${"text-[var(--acc)]"}`}
+                              className={`w-4.5 h-4.5 mt-0.5 shrink-0 text-[var(--acc)]`}
                             />
                             <div className="space-y-0.5">
                               <span
-                                className={`font-sans text-[9px] font-bold ${"text-[var(--acc)]"}`}
+                                className={`font-sans text-[9px] font-bold text-[var(--acc)]`}
                               >
                                 ¿Por qué este horario?
                               </span>
                               <p
-                                className={`font-sans ${"text-[var(--ink-2)]"}`}
+                                className={`font-sans text-[var(--ink-2)]`}
                               >
                                 {optimalTime.reason}
                               </p>
@@ -2942,7 +3582,7 @@ export default function ReelsCenter({
                               type="date"
                               value={scheduledDate}
                               onChange={(e) => setScheduledDate(e.target.value)}
-                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${"bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                             />
                           </div>
                           <div className="space-y-1">
@@ -2953,44 +3593,206 @@ export default function ReelsCenter({
                               type="time"
                               value={scheduledTime}
                               onChange={(e) => setScheduledTime(e.target.value)}
-                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${"bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
+                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                             />
                           </div>
                         </div>
 
-                        {/* Submit Button */}
-                        <div className="pt-2">
+                        {/* ⚡ Subida Automática Desatendida & Conexión de Cuenta */}
+                        <div
+                          className={`p-3 rounded-xl space-y-2 ${
+                            autoPublishEnabled
+                              ? "bg-[var(--acc)]/10 "
+                              : "bg-[var(--sunken)]/60 "
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                              <Zap
+                                className={`w-3.5 h-3.5 ${autoPublishEnabled ? "text-[var(--acc-ink)] fill-[var(--acc)]" : "text-[var(--ink-2)]"}`}
+                              />
+                              <span className="text-[10px] font-mono font-bold text-[var(--ink)]">
+                                Subida Automática a {selectedPlatform}
+                              </span>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={autoPublishEnabled}
+                                onChange={(e) =>
+                                  setAutoPublishEnabled(e.target.checked)
+                                }
+                                className="sr-only peer"
+                              />
+                              <div className="w-7 h-4 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[var(--acc)]"></div>
+                            </label>
+                          </div>
+
+                          {/* Cuenta vinculada actual */}
+                          {(() => {
+                            const acc = socialAccounts.find(
+                              (a) =>
+                                a.plataforma?.toLowerCase() ===
+                                selectedPlatform.toLowerCase(),
+                            );
+                            if (acc && acc.status === "conectado") {
+                              return (
+                                <div className="flex items-center justify-between text-[8.5px] font-mono bg-[var(--scrim)]/40 p-2 rounded-lg bg-[var(--ok)]/10">
+                                  <div className="flex items-center gap-1 text-[var(--ok)] font-bold truncate">
+                                    <ShieldCheck className="w-3 h-3 text-[var(--ok)] shrink-0" />
+                                    <span className="truncate">
+                                      {acc.handle}
+                                    </span>
+                                  </div>
+                                  <span className="text-[var(--ok)] text-[7.5px] font-bold shrink-0">
+                                    ● Conectado
+                                  </span>
+                                </div>
+                              );
+                            }
+                            return (
+                              <div className="flex items-center justify-between text-[8.5px] font-mono bg-[var(--scrim)]/40 p-2 rounded-lg bg-[var(--acc)]/10">
+                                <span className="text-[var(--ink-2)]">
+                                  Sin cuenta vinculada
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setShowConnectModal(true);
+                                    setConnectHandleInput(
+                                      instagramHandle ||
+                                        `@${(bandName || "banda").toLowerCase().replace(/[^a-z0-9]+/g, "_")}`,
+                                    );
+                                  }}
+                                  className="text-[var(--acc-ink)] hover:text-[var(--acc-ink)] font-bold underline cursor-pointer flex items-center gap-1"
+                                >
+                                  <span>🔗 Conectar en 1 Clic</span>
+                                </button>
+                              </div>
+                            );
+                          })()}
+                        </div>
+
+                        {/* Master Actions: Marie Kondo Clean & Zen Tiers */}
+                        <div className="space-y-2 pt-2">
                           <button
-                            type="submit"
-                            disabled={isScheduling}
-                            className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition-all ${
-                              isScheduling
-                                ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                                : "bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-black/15"
+                            type="button"
+                            onClick={handleDownloadCompletePack}
+                            className={`w-full py-2.5 px-3 rounded-xl font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all ${
+                              packDownloadedSuccess
+                                ? "bg-[var(--ok)] text-[var(--on-ok)] font-black"
+                                : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--acc-ink)] "
                             }`}
+                            title="Descarga el vídeo, subtítulos, portada y copy formateado"
                           >
-                            {isScheduling ? (
+                            {packDownloadedSuccess ? (
                               <>
-                                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                                <span>PROGRAMANDO...</span>
+                                <CheckCircle2 className="w-4 h-4" />
+                                <span>¡PACK 4-EN-1 DESCARGADO!</span>
                               </>
                             ) : (
                               <>
-                                <CheckCircle2 className="w-4 h-4" />
-                                <span>APROBAR Y PROGRAMAR</span>
+                                <Download className="w-4 h-4" />
+                                <span>📦 Descargar Pack Completo</span>
                               </>
                             )}
                           </button>
+
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              type="button"
+                              onClick={handleCaptureThumbnail}
+                              className={`py-2 px-3 rounded-lg text-[10.5px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                                thumbnailCapturedSuccess
+                                  ? "bg-[var(--ok)]/20 text-[var(--ok)] "
+                                  : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] "
+                              }`}
+                              title="Captura el fotograma actual en alta resolución para usar de portada"
+                            >
+                              <Camera className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+                              <span>
+                                {thumbnailCapturedSuccess
+                                  ? "¡Portada Guardada!"
+                                  : "Guardar Portada"}
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={handleCopyFormattedPost}
+                              className="py-2 px-3 rounded-lg bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[10.5px] font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                              title="Copia el texto formateado al portapapeles"
+                            >
+                              <Copy className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+                              <span>Copiar Copy</span>
+                            </button>
+                          </div>
+
+                          {/* Action Buttons: Publicar Ahora (1-Clic) vs Programar en Calendario */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            <button
+                              type="button"
+                              onClick={handlePublishNowDirectly}
+                              disabled={isPublishingNow}
+                              className={`py-3 px-2 rounded-xl font-mono text-xs font-black tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-all ${
+                                isPublishingNow
+                                  ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed"
+                                  : "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] active:scale-95"
+                              }`}
+                              title="Publica inmediatamente este Reel en tu cuenta oficial"
+                            >
+                              {isPublishingNow ? (
+                                <>
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                  <span>PUBLICANDO...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Rocket className="w-3.5 h-3.5" />
+                                  <span>PUBLICAR AHORA</span>
+                                </>
+                              )}
+                            </button>
+
+                            <button
+                              type="submit"
+                              disabled={isScheduling}
+                              className={`py-3 px-2 rounded-xl font-mono text-xs font-black tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-all ${
+                                isScheduling
+                                  ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed"
+                                  : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] "
+                              }`}
+                            >
+                              {isScheduling ? (
+                                <>
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                  <span>AGENDANDO...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Calendar className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+                                  <span>AGENDAR</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
 
+                        {publishNowSuccess && (
+                          <div className="p-2.5 bg-[var(--alert)]/10 rounded-lg text-[var(--alert)] text-xs text-center font-mono animate-fade-in mt-2 flex items-center justify-center gap-1.5">
+                            <Check className="w-4 h-4 text-[var(--alert)]" />
+                            <span>{publishNowSuccess}</span>
+                          </div>
+                        )}
+
                         {schedulingSuccess && (
-                          <div className="p-2.5 bg-[var(--ok)]/10  rounded-[var(--r-s)] text-[var(--ok)] text-xs text-center font-sans animate-bounce mt-2 flex items-center justify-center gap-1.5">
+                          <div className="p-2.5 bg-[var(--ok)]/10 rounded-[var(--r-s)] text-[var(--ok)] text-xs text-center font-sans animate-bounce mt-2 flex items-center justify-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
                             <span>¡Reel programado con éxito!</span>
                           </div>
                         )}
                         {scheduleErrors.length > 0 && (
-                          <div className="p-2.5 bg-[var(--alert)]/10  rounded-[var(--r-s)] text-[var(--alert)] text-[11px] font-sans mt-2 space-y-1">
+                          <div className="p-2.5 bg-[var(--alert)]/10 rounded-[var(--r-s)] text-[var(--alert)] text-[11px] font-sans mt-2 space-y-1">
                             {scheduleErrors.map((problema) => (
                               <div
                                 key={problema}
@@ -3024,11 +3826,11 @@ export default function ReelsCenter({
               {/* 4. Calendario de Publicaciones de la Banda List */}
               <div className={`${colors.card} p-5 space-y-4`}>
                 <div
-                  className={` pb-2 flex justify-between items-center ${""}`}
+                  className={` pb-2 flex justify-between items-center `}
                 >
                   <div>
                     <h3
-                      className={`text-sm font-bold font-display flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
+                      className={`text-sm font-bold font-display flex items-center gap-1.5 text-[var(--acc)]`}
                     >
                       <Calendar className="w-4 h-4" /> Calendario de
                       Publicaciones de la Banda ({posts.length})
@@ -3039,7 +3841,7 @@ export default function ReelsCenter({
                     </p>
                   </div>
                   <span
-                    className={`text-[8px] font-sans px-2 py-0.5 rounded ${" text-[var(--ink-2)] bg-[var(--bg)]"}`}
+                    className={`text-[8px] font-sans px-2 py-0.5 rounded text-[var(--ink-2)] bg-[var(--bg)]`}
                   >
                     Live Database
                   </span>
@@ -3061,7 +3863,7 @@ export default function ReelsCenter({
                     {[...posts].reverse().map((post) => (
                       <div
                         key={post.id}
-                        className={` rounded-[var(--r-m)] p-3 flex flex-col md:flex-row justify-between gap-3 items-stretch transition-all ${"bg-[var(--bg)]/50 hover:bg-[var(--sunken)]"}`}
+                        className={` rounded-[var(--r-m)] p-3 flex flex-col md:flex-row justify-between gap-3 items-stretch transition-all bg-[var(--bg)]/50 hover:bg-[var(--sunken)]`}
                       >
                         <div className="space-y-2 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -3085,14 +3887,14 @@ export default function ReelsCenter({
                             </span>
                           </div>
                           <p
-                            className={`text-xs line-clamp-3 leading-relaxed font-sans font-medium ${"text-[var(--ink)]"}`}
+                            className={`text-xs line-clamp-3 leading-relaxed font-sans font-medium text-[var(--ink)]`}
                           >
                             {post.contenido}
                           </p>
                         </div>
 
                         <div
-                          className={`flex md:flex-col justify-end items-end gap-2 md: md: pt-2.5 md:pt-0 md:pl-4 shrink-0 ${""}`}
+                          className={`flex md:flex-col justify-end items-end gap-2 md: md: pt-2.5 md:pt-0 md:pl-4 shrink-0 `}
                         >
                           <span className="text-[8px] font-sans text-[var(--ink-2)]">
                             Responsable:{" "}
@@ -3134,10 +3936,8 @@ export default function ReelsCenter({
           className={`xl:col-span-4 rounded-[var(--r-m)] p-5 flex flex-col justify-between select-none ${colors.card}`}
         >
           <div className="space-y-3">
-            <div className={` pb-2 ${""}`}>
-              <h3
-                className={`text-xs font-sans ${"text-[var(--acc)]"}`}
-              >
+            <div className={` pb-2 `}>
+              <h3 className={`text-xs font-sans text-[var(--acc)]`}>
                 Vista Previa en Redes
               </h3>
               <p className="text-[9px] text-[var(--ink-2)] font-sans mt-0.5">
@@ -3145,1708 +3945,115 @@ export default function ReelsCenter({
               </p>
             </div>
 
-            {/* Smart Phone Shell Frame */}
-            <div
-              className={`mx-auto w-[240px] h-[450px] rounded-[30px] relative overflow-hidden flex flex-col justify-between ${"bg-[var(--sunken)]"}`}
-            >
-              {/* Speaker & camera notch mockup */}
-              <div
-                className={`absolute top-2 left-1/2 -translate-x-1/2 w-20 h-4 rounded-[var(--r-pill)] z-20 flex items-center justify-center ${"bg-[var(--surface)]"}`}
-              >
-                <span
-                  className={`w-2 h-2 rounded-[var(--r-pill)] ${"bg-[var(--sunken)]"}`}
-                />
-              </div>
-
-              {/* Dynamic Video Mockup Content with Analog Synth pattern as background */}
-              <div className="absolute inset-0 z-10 flex flex-col justify-between p-3 pt-8 pb-3 relative">
-                {/* Background Decorative Pattern representing video overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[var(--sunken)]/90 pointer-events-none z-0" />
-
-                {/* Real Media Player Background or Fallback Wave Illustration */}
-                {activeTab === "analyzer" &&
-                inputType === "youtube" &&
-                getYouTubeId(youtubeUrl) &&
-                !isExpandedPreview ? (
-                  (() => {
-                    const { start, end } = parseRangeTimes(phoneDuration);
-                    if (renderedClipUrl) {
-                      return (
-                        <div className="absolute inset-0 z-[-1] overflow-hidden bg-[var(--surface)]">
-                          <video
-                            key={`mini-rendered-${renderedClipUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
-                            src={renderedClipUrl}
-                            autoPlay
-                            muted={isPreviewMuted}
-                            loop
-                            playsInline
-                            className="absolute w-full h-full object-cover opacity-90"
-                            onTimeUpdate={(e) => {
-                              const video = e.currentTarget;
-                              const cur = video.currentTime;
-                              if (subtitleCues && subtitleCues.length > 0) {
-                                const activeCue = subtitleCues.find(
-                                  (cue) => cur >= cue.start && cur <= cue.end,
-                                );
-                                setCurrentSubtitleText(
-                                  activeCue ? activeCue.text : "",
-                                );
-                              }
-                            }}
-                          >
-                            {renderedSubUrl && (
-                              <track
-                                src={renderedSubUrl}
-                                kind="subtitles"
-                                srcLang="es"
-                                label="Español"
-                                default
-                              />
-                            )}
-                          </video>
-
-                          {/* Kinetic Reels Subtitles Overlay */}
-                          {currentSubtitleText && !renderedBurnedSubs && (
-                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--surface)] px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center">
-                              <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
-                                ✨ {currentSubtitleText} ✨
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <div className="absolute inset-0 z-[-1] overflow-hidden bg-[var(--surface)]">
-                        <iframe
-                          key={`${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ? "muted" : "unmuted"}-${ytLoopCount}`}
-                          src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}?start=${start}&end=${end}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(youtubeUrl)}&showinfo=0&rel=0&iv_load_policy=3`}
-                          className="absolute w-[280%] h-full left-1/2 -translate-x-1/2 object-cover pointer-events-none opacity-80"
-                          allow="autoplay; encrypted-media"
-                          title="Highlight Clip Video Player"
-                        />
-                      </div>
-                    );
-                  })()
-                ) : activeTab === "analyzer" &&
-                  inputType === "file" &&
-                  localVideoUrl &&
-                  !isExpandedPreview ? (
-                  <div className="absolute inset-0 z-[-1] overflow-hidden bg-[var(--surface)]">
-                    <video
-                      key={`${localVideoUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
-                      src={localVideoUrl}
-                      autoPlay
-                      muted={isPreviewMuted}
-                      loop
-                      playsInline
-                      className="absolute w-full h-full object-cover opacity-80"
-                      onTimeUpdate={(e) => {
-                        const video = e.currentTarget;
-                        const { start, end } = parseRangeTimes(phoneDuration);
-                        if (end > start) {
-                          if (video.currentTime < start) {
-                            video.currentTime = start;
-                          }
-                          if (video.currentTime >= end) {
-                            video.currentTime = start;
-                            video.play().catch(() => {});
-                          }
-                        }
-                      }}
-                      onLoadedMetadata={(e) => {
-                        const video = e.currentTarget;
-                        if (
-                          Number.isFinite(video.duration) &&
-                          video.duration > 0
-                        ) {
-                          setLocalVideoDuration(Math.floor(video.duration));
-                        }
-                        const { start } = parseRangeTimes(phoneDuration);
-                        video.currentTime = start;
-                      }}
-                    />
-                  </div>
-                ) : (
-                  /* Vintage Audio Wave / Synth Illustration behind */
-                  <div className="absolute inset-0 bg-cover bg-center opacity-35 z-[-1] flex flex-col items-center justify-center p-4">
-                    <div
-                      className={`w-full h-full -dashed rounded-[var(--r-m)] flex flex-col items-center justify-center gap-3 ${""}`}
-                    >
-                      <div className="flex gap-4">
-                        <div
-                          className={`w-10 h-10 rounded-[var(--r-pill)] -dashed flex items-center justify-center text-[8px] font-sans ${" text-[var(--acc)]/70"}`}
-                        >
-                          VOL
-                        </div>
-                        <div
-                          className={`w-10 h-10 rounded-[var(--r-pill)] -dashed flex items-center justify-center text-[8px] font-sans ${" text-[var(--acc)]/70"}`}
-                        >
-                          SKA
-                        </div>
-                      </div>
-                      <span
-                        className={`text-[9px] font-sans text-center ${"text-[var(--tentative)]"}`}
-                      >
-                        {activeTab === "analyzer" && highlights.length > 0
-                          ? "[ HIGHLIGHT CLIP ACTIVE ]"
-                          : "[ Balkan Analog Synth ]"}
-                      </span>
-                      {phoneDuration && (
-                        <span
-                          className={`text-[10px] font-sans py-0.5 px-2 rounded-[var(--r-pill)] font-bold ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
-                        >
-                          {phoneDuration}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Top Status Header */}
-                <div className="flex justify-between items-center z-10">
-                  <span
-                    className={`text-[9px] font-sans font-bold ${"text-[var(--acc)]"}`}
-                  >
-                    {activeTab === "analyzer"
-                      ? "AI ANALYZER REEL"
-                      : "REELS PREVIEW"}
-                  </span>
-                  <div className="flex gap-1">
-                    <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] animate-ping" />
-                    <span className="text-[8px] font-sans text-[var(--alert)] font-bold">
-                      LIVE REC
-                    </span>
-                  </div>
-                </div>
-
-                {/* Floating Action Badges Column */}
-                {activeTab === "analyzer" &&
-                  ((inputType === "youtube" && getYouTubeId(youtubeUrl)) ||
-                    (inputType === "file" && localVideoUrl)) && (
-                    <div className="absolute top-12 right-3 z-30 flex flex-col gap-2">
-                      {/* Sound Toggle */}
-                      <button
-                        id="btn-toggle-sound"
-                        type="button"
-                        onClick={() => setIsPreviewMuted(!isPreviewMuted)}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]  text-[var(--ink)] hover:bg-[var(--sunken)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer select-none"
-                      >
-                        {isPreviewMuted ? (
-                          <>
-                            <VolumeX className="w-3 h-3 text-[var(--alert)]" />
-                            <span className="text-[7.5px] font-sans font-extrabold text-[var(--alert)]/40">
-                              SIN SONIDO
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <Volume2 className="w-3 h-3 text-[var(--ok)] animate-bounce" />
-                            <span className="text-[7.5px] font-sans font-extrabold text-[var(--ink)]">
-                              CON SONIDO
-                            </span>
-                          </>
-                        )}
-                      </button>
-
-                      {/* Maximize Toggle */}
-                      <button
-                        id="btn-maximize-preview"
-                        type="button"
-                        onClick={() => setIsExpandedPreview(true)}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]  text-[var(--ink)] hover:bg-[var(--sunken)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer select-none"
-                      >
-                        <Maximize2 className="w-3 h-3 text-[var(--ink-2)]" />
-                        <span className="text-[7.5px] font-sans font-extrabold text-[var(--tentative)]/40">
-                          VER GRANDE
-                        </span>
-                      </button>
-                    </div>
-                  )}
-
-                {/* Play Button Overlay (hidden when playing a real video to keep the clip clean) */}
-                {!(
-                  activeTab === "analyzer" &&
-                  ((inputType === "youtube" && getYouTubeId(youtubeUrl)) ||
-                    (inputType === "file" && localVideoUrl))
-                ) && (
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                    <div
-                      className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center text-[var(--acc)] ${"bg-[var(--surface)]/40"}`}
-                    >
-                      <Play
-                        className={`w-6 h-6 ml-0.5 ${"fill-[var(--acc)] text-[var(--acc)]"}`}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Right Side Social Action Widgets */}
-                <div className="self-end flex flex-col gap-4 items-center z-10 mr-1">
-                  <div className="flex flex-col items-center gap-1 cursor-pointer">
-                    <div className="w-8 h-8 rounded-[var(--r-pill)] bg-[var(--surface)]  flex items-center justify-center text-[var(--ink)] hover:text-[var(--alert)]">
-                      <Heart className="w-4 h-4 fill-[var(--surface)]/10" />
-                    </div>
-                    <span className="text-[8px] font-sans text-[var(--ink)] font-bold">
-                      2,108
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1 cursor-pointer">
-                    <div className="w-8 h-8 rounded-[var(--r-pill)] bg-[var(--surface)]  flex items-center justify-center text-[var(--ink)]">
-                      <MessageCircle className="w-4 h-4" />
-                    </div>
-                    <span className="text-[8px] font-sans text-[var(--ink)] font-bold">
-                      48
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1 cursor-pointer">
-                    <div className="w-8 h-8 rounded-[var(--r-pill)] bg-[var(--surface)]  flex items-center justify-center text-[var(--ink)]">
-                      <Share2 className="w-4 h-4" />
-                    </div>
-                    <span className="text-[8px] font-sans text-[var(--ink)] font-bold">
-                      186
-                    </span>
-                  </div>
-                </div>
-
-                {/* Bottom Video Metadata Overlays */}
-                <div className="z-10 space-y-2 mt-auto">
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[8px] font-sans font-bold ${"bg-[var(--acc)]/20  text-[var(--acc)]"}`}
-                    >
-                      {nombreBanda.charAt(0).toUpperCase()}
-                    </span>
-                    <div>
-                      <span className="text-[9px] font-bold text-[var(--ink)] block truncate max-w-[90px]">
-                        {instagramHandle || nombreBanda}
-                      </span>
-                      <span
-                        className={`text-[7px] font-sans block ${"text-[var(--acc)]"}`}
-                      >
-                        {nombreBanda}
-                      </span>
-                    </div>
-                  </div>
-
-                  {phoneTitle && (
-                    <h4 className="text-[10px] text-[var(--ink-2)] font-bold line-clamp-1">
-                      🎬 {phoneTitle}
-                    </h4>
-                  )}
-
-                  {/* Generated caption summary inside the reel overlay */}
-                  <p className="text-[9px] text-[var(--ink-2)] line-clamp-3 leading-normal font-sans">
-                    {phoneText}
-                  </p>
-
-                  {/* Slim, elegant progress timeline of the highlight clip */}
-                  {activeTab === "analyzer" &&
-                    highlights[selectedHighlightIndex] &&
-                    (() => {
-                      const { start, end, duration } = parseRangeTimes(
-                        highlights[selectedHighlightIndex]?.range,
-                      );
-                      if (duration > 0) {
-                        const pct = (simulatedTime / duration) * 100;
-                        return (
-                          <div
-                            className={`p-1.5 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--surface)]/90  text-[var(--ink)]"}`}
-                          >
-                            <div className="flex justify-between items-center text-[7.5px] font-sans font-bold">
-                              <span className={"text-[var(--acc)]"}>
-                                ⏱️ REC CORTE
-                              </span>
-                              <span className="font-sans">
-                                {formatTime(start + simulatedTime)} /{" "}
-                                {formatTime(end)}
-                              </span>
-                            </div>
-                            <div className="relative w-full h-1 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
-                              <div
-                                className={`absolute top-0 left-0 h-full rounded-[var(--r-pill)] transition-all duration-1000 ease-linear ${"bg-[var(--acc)] "}`}
-                                style={{ width: `${pct}%` }}
-                              />
-                            </div>
-                            <div className="flex justify-between text-[6.5px] font-sans text-[var(--ink-2)]">
-                              <span>Inicia: {formatTime(start)}</span>
-                              <span className="font-bold">
-                                Duración: {duration}s
-                              </span>
-                              <span>Termina: {formatTime(end)}</span>
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })()}
-
-                  {/* Track label scrolling simulation */}
-                  <div
-                    className={`flex items-center gap-1 text-[8px] font-sans py-1 px-1.5 rounded-[var(--r-pill)] max-w-[140px] truncate ${"text-[var(--acc)] bg-[var(--surface)] bg-[var(--surface)]/50"}`}
-                  >
-                    <Music className="w-2.5 h-2.5 shrink-0" />
-                    <span className="animate-marquee whitespace-nowrap">
-                      {videoMeta?.title || `Audio original · ${nombreBanda}`}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Simulated Upload Status Queue */}
-              <div className={`space-y-2 pt-4 mt-4 ${""}`}>
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-sans text-[var(--ink-2)]">
-                    Canal de Emisión
-                  </span>
-                  <button
-                    id="btn-reels-upload"
-                    onClick={handleSimulateUpload}
-                    disabled={uploadProgress !== null}
-                    className={`text-[9px] font-sans hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-40 bg-transparent -none ${"text-[var(--acc)]"}`}
-                  >
-                    <Upload className="w-3 h-3" /> Subir Directo
-                  </button>
-                </div>
-
-                {uploadProgress !== null ? (
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center text-[8px] font-sans text-[var(--ink-2)]">
-                      <span>Transmitiendo a APIs de Redes Sociales...</span>
-                      <span>{uploadProgress}%</span>
-                    </div>
-                    <div
-                      className={`w-full h-1.5 rounded-[var(--r-pill)] overflow-hidden ${"bg-[var(--surface)]"}`}
-                    >
-                      <div
-                        className={`h-full transition-all duration-200 ${"bg-[var(--acc)]"}`}
-                        style={{ width: `${uploadProgress}%` }}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-1.5 text-[10px] font-sans text-[var(--ink-2)] justify-end">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                    <span>Todo sincronizado</span>
-                  </div>
-                )}
-              </div>
-            </div>
+            <ReelsPhoneMockup
+              colors={colors}
+              activeTab={activeTab}
+              selectedPlatform={selectedPlatform}
+              nombreBanda={nombreBanda}
+              instagramHandle={instagramHandle}
+              phoneTitle={phoneTitle}
+              phoneText={phoneText}
+              phoneDuration={phoneDuration}
+              inputType={inputType}
+              youtubeUrl={youtubeUrl}
+              localVideoUrl={localVideoUrl}
+              renderedClipUrl={renderedClipUrl}
+              renderedSubUrl={renderedSubUrl}
+              renderedBurnedSubs={renderedBurnedSubs}
+              subtitleCues={subtitleCues}
+              currentSubtitleText={currentSubtitleText}
+              setCurrentSubtitleText={setCurrentSubtitleText}
+              setLocalVideoDuration={setLocalVideoDuration}
+              isPreviewMuted={isPreviewMuted}
+              setIsPreviewMuted={setIsPreviewMuted}
+              isExpandedPreview={isExpandedPreview}
+              setIsExpandedPreview={setIsExpandedPreview}
+              showSafeZone={showSafeZone}
+              setShowSafeZone={setShowSafeZone}
+              ytLoopCount={ytLoopCount}
+              simulatedTime={simulatedTime}
+              highlights={highlights}
+              selectedHighlightIndex={selectedHighlightIndex}
+              videoMeta={videoMeta}
+              isSeamlessLoop={isSeamlessLoop}
+              isPunchInZoom={isPunchInZoom}
+              activeSubtitleStyle={activeSubtitleStyle}
+              showSpotifyBadge={showSpotifyBadge}
+              showRetentionProgressBar={showRetentionProgressBar}
+              showTourSticker={showTourSticker}
+              tourStickerText={tourStickerText}
+              uploadProgress={uploadProgress}
+              handleSimulateUpload={handleSimulateUpload}
+            />
           </div>
         </div>
       </div>
 
-      {/* 🎬 MODO CINE / PREVISUALIZADOR EXPANDIDO */}
-      {isExpandedPreview && (
-        <div
-          id="theater-mode-modal"
-          onClick={() => setIsExpandedPreview(false)}
-          className="fixed inset-0 z-[200] bg-[var(--surface)]/98 flex flex-col items-center justify-start lg:justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-fade-in"
-        >
-          <div className="absolute inset-0 bg-[var(--accent)]/5  pointer-events-none" />
-
-          {/* Floating Close/Minimise button in the top right corner of the screen */}
-          <button
-            id="btn-close-theater-floating"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpandedPreview(false);
-            }}
-            className="fixed top-4 right-4 z-[250] p-3 rounded-[var(--r-pill)] bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-[var(--ink)] hover:text-[var(--ink)] transition-all hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center"
-            title="Cerrar modo cine (ESC o Click fuera)"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
-          {/* Mobile sticky top header bar */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-6xl mb-2 flex items-center justify-between p-3 rounded-[var(--r-l)] bg-[var(--surface)] lg:hidden shrink-0"
-          >
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
-              <span className="text-xs font-sans font-bold text-[var(--ink)]">
-                Modo Cine · Reels
-              </span>
-            </div>
-            <button
-              onClick={() => setIsExpandedPreview(false)}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--acc)] hover:text-[var(--ink)] font-bold text-xs font-sans flex items-center gap-1.5 cursor-pointer"
-            >
-              <X className="w-4 h-4" /> <span>Cerrar</span>
-            </button>
-          </div>
-
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] flex flex-col lg:flex-row h-auto lg:h-[90vh] lg:max-h-[90vh] overflow-visible lg:overflow-hidden"
-          >
-            {/* Left Column: Huge 9:16 vertical smartphone screen mockup */}
-            <div className="w-full lg:w-[460px] bg-[var(--surface)]/80 p-6 flex flex-col items-center justify-center lg: lg: relative select-none shrink-0">
-              <div className="absolute top-4 left-6 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
-                <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">
-                  MODO CINE ACTIVO
-                </span>
-              </div>
-
-              {/* Close Button for mobile, positioned in the top-right of the Left Column */}
-              <button
-                id="btn-close-theater-mobile"
-                onClick={() => setIsExpandedPreview(false)}
-                className="absolute top-3 right-4 z-50 p-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer lg:hidden"
-                title="Cerrar modo cine"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Physical phone mock wrapper */}
-              <div className="relative w-full max-w-[320px] aspect-[9/16] rounded-[36px] overflow-hidden  bg-[var(--surface)] shadow-black flex flex-col justify-between p-4 pt-10 pb-5">
-                {/* Speaker Notch */}
-                <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-20 h-4 rounded-[var(--r-pill)] bg-[var(--sunken)] bg-[var(--surface)]/50 z-20 flex items-center justify-center">
-                  <div className="w-8 h-1 rounded-[var(--r-pill)] bg-[var(--surface)]/70" />
-                </div>
-
-                {/* Video / Player */}
-                {inputType === "youtube" && getYouTubeId(youtubeUrl) ? (
-                  (() => {
-                    const { start, end } = parseRangeTimes(phoneDuration);
-                    if (renderedClipUrl) {
-                      return (
-                        <div className="absolute inset-0 z-0 overflow-hidden bg-[var(--surface)]">
-                          <video
-                            key={`expanded-rendered-${renderedClipUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
-                            src={renderedClipUrl}
-                            autoPlay
-                            muted={isPreviewMuted}
-                            loop
-                            controls
-                            playsInline
-                            className="absolute w-full h-full object-cover"
-                            onTimeUpdate={(e) => {
-                              const video = e.currentTarget;
-                              const cur = video.currentTime;
-                              if (subtitleCues && subtitleCues.length > 0) {
-                                const activeCue = subtitleCues.find(
-                                  (cue) => cur >= cue.start && cur <= cue.end,
-                                );
-                                setCurrentSubtitleText(
-                                  activeCue ? activeCue.text : "",
-                                );
-                              }
-                            }}
-                          >
-                            {renderedSubUrl && (
-                              <track
-                                src={renderedSubUrl}
-                                kind="subtitles"
-                                srcLang="es"
-                                label="Español"
-                                default
-                              />
-                            )}
-                          </video>
-
-                          {/* Subtitles Overlay inside Cinema Phone */}
-                          {currentSubtitleText && !renderedBurnedSubs && (
-                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--sunken)] px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center">
-                              <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
-                                ✨ {currentSubtitleText} ✨
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <div className="absolute inset-0 z-0 overflow-hidden bg-[var(--surface)]">
-                        <iframe
-                          key={`expanded-yt-${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ? "muted" : "unmuted"}-${ytLoopCount}`}
-                          src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}?start=${start}&end=${end}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=1&modestbranding=1&loop=1&playlist=${getYouTubeId(youtubeUrl)}&showinfo=0&rel=0&iv_load_policy=3`}
-                          className="absolute w-[280%] h-full left-1/2 -translate-x-1/2 object-cover"
-                          allow="autoplay; encrypted-media; picture-in-picture"
-                          title="Expanded Highlight Video Player"
-                        />
-                      </div>
-                    );
-                  })()
-                ) : inputType === "file" && localVideoUrl ? (
-                  <div className="absolute inset-0 z-0 overflow-hidden bg-[var(--surface)]">
-                    <video
-                      key={`expanded-file-${localVideoUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
-                      src={localVideoUrl}
-                      autoPlay
-                      muted={isPreviewMuted}
-                      loop
-                      controls
-                      playsInline
-                      className="absolute w-full h-full object-cover"
-                      onTimeUpdate={(e) => {
-                        const video = e.currentTarget;
-                        const { start, end } = parseRangeTimes(phoneDuration);
-                        if (end > start) {
-                          if (video.currentTime < start) {
-                            video.currentTime = start;
-                          }
-                          if (video.currentTime >= end) {
-                            video.currentTime = start;
-                            video.play().catch(() => {});
-                          }
-                        }
-                      }}
-                      onLoadedMetadata={(e) => {
-                        const video = e.currentTarget;
-                        const { start } = parseRangeTimes(phoneDuration);
-                        video.currentTime = start;
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="absolute inset-0 z-0 bg-[var(--sunken)] flex flex-col items-center justify-center p-4">
-                    <AlertCircle className="w-8 h-8 text-[var(--ink-2)] mb-2" />
-                    <span className="text-xs font-sans text-[var(--ink-2)]">
-                      No hay vídeo cargado
-                    </span>
-                  </div>
-                )}
-
-                {/* Dark Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-[var(--sunken)]/85 pointer-events-none z-10" />
-
-                {/* Vista previa de la plataforma: la propia UI de cada app tapa una franja distinta del
- borde derecho (guardar en Instagram/TikTok, like+dislike separados en YouTube...), así
- que un hookText o subtítulo pegado ahí puede quedar oculto en una red y no en otra. */}
-                <div className="absolute right-2 bottom-24 z-20 flex flex-col gap-3 items-center pointer-events-none">
-                  {PLATFORM_UI_ICONS[selectedPlatform].map((Icon, idx) => (
-                    <div
-                      key={idx}
-                      className="w-7 h-7 rounded-[var(--r-pill)] bg-[var(--sunken)] flex items-center justify-center text-[var(--ink)]/85"
-                    >
-                      <Icon className="w-3.5 h-3.5" />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Video Info Overlays inside the phone */}
-                <div className="z-10 flex justify-between items-center">
-                  <span className="text-[8px] font-sans text-[var(--acc)] font-extrabold bg-[var(--sunken)] py-1 px-2 rounded-[var(--r-pill)] ">
-                    Clip #{selectedHighlightIndex + 1}
-                  </span>
-                  <div className="flex gap-1 items-center bg-[var(--sunken)] py-1 px-2 rounded-[var(--r-pill)] ">
-                    <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] animate-ping" />
-                    <span className="text-[8px] font-sans text-[var(--alert)] font-bold">
-                      1080P HD
-                    </span>
-                  </div>
-                </div>
-
-                <div className="z-10 space-y-2 mt-auto text-left">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-[var(--r-pill)]  bg-[var(--acc)]/20 flex items-center justify-center text-[8px] font-sans font-bold text-[var(--acc)]">
-                      {nombreBanda.charAt(0).toUpperCase()}
-                    </span>
-                    <div>
-                      <span className="text-[9px] font-bold text-[var(--ink)] block truncate max-w-[120px]">
-                        {instagramHandle || nombreBanda}
-                      </span>
-                      <span className="text-[7px] font-sans text-[var(--ink-2)] block truncate max-w-[120px]">
-                        {nombreBanda}
-                      </span>
-                    </div>
-                  </div>
-
-                  {highlights[selectedHighlightIndex] && (
-                    <h4 className="text-[10px] text-[var(--ink-2)] font-bold line-clamp-1">
-                      🎬 {highlights[selectedHighlightIndex]?.title}
-                    </h4>
-                  )}
-
-                  <p className="text-[9px] text-[var(--ink-2)] line-clamp-3 leading-normal font-sans">
-                    {editedCopy ||
-                      highlights[selectedHighlightIndex]?.recommendedCopy ||
-                      ""}
-                  </p>
-
-                  {/* Slim, elegant progress timeline of the highlight clip inside expanded modal */}
-                  {highlights[selectedHighlightIndex] &&
-                    (() => {
-                      const { start, end, duration } = parseRangeTimes(
-                        highlights[selectedHighlightIndex]?.range,
-                      );
-                      if (duration > 0) {
-                        const pct = (simulatedTime / duration) * 100;
-                        return (
-                          <div className="p-1.5 rounded-[var(--r-m)]  bg-[var(--sunken)] text-[var(--ink-2)] space-y-1">
-                            <div className="flex justify-between items-center text-[7.5px] font-sans font-bold">
-                              <span className="text-[var(--acc)]">
-                                ⏱️ REC CORTE
-                              </span>
-                              <span className="font-sans">
-                                {formatTime(start + simulatedTime)} /{" "}
-                                {formatTime(end)}
-                              </span>
-                            </div>
-                            <div className="relative w-full h-1 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
-                              <div
-                                className="absolute top-0 left-0 h-full rounded-[var(--r-pill)] transition-all duration-1000 ease-linear bg-[var(--acc)] "
-                                style={{ width: `${pct}%` }}
-                              />
-                            </div>
-                            <div className="flex justify-between text-[6.5px] font-sans text-[var(--ink-2)]">
-                              <span>Inicia: {formatTime(start)}</span>
-                              <span className="font-bold text-[var(--acc)]">
-                                Duración: {duration}s
-                              </span>
-                              <span>Termina: {formatTime(end)}</span>
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })()}
-
-                  <div className="flex items-center gap-1 text-[8px] font-sans bg-[var(--sunken)] text-[var(--acc)] bg-[var(--surface)]/50 py-1 px-2 rounded-[var(--r-pill)] max-w-[150px] truncate">
-                    <Music className="w-2.5 h-2.5 shrink-0" />
-                    <span className="truncate">
-                      {videoMeta?.title || `Audio original · ${nombreBanda}`}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Sound Toggle under the phone */}
-              <div className="mt-4 flex items-center gap-2">
-                <button
-                  id="expanded-mute-btn"
-                  onClick={() => setIsPreviewMuted(!isPreviewMuted)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all cursor-pointer select-none text-xs font-sans font-bold"
-                >
-                  {isPreviewMuted ? (
-                    <>
-                      <VolumeX className="w-4 h-4 text-[var(--alert)]" />
-                      <span>Activar Audio</span>
-                    </>
-                  ) : (
-                    <>
-                      <Volume2 className="w-4 h-4 text-[var(--ok)]" />
-                      <span>Silenciar Audio</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Right Column: Information, Copy Editor & Scheduler */}
-            <div className="flex-1 p-6 md:p-8 flex flex-col justify-between overflow-y-visible lg:overflow-y-auto bg-[var(--sunken)] text-left">
-              <div className="space-y-6">
-                {/* Header */}
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc)] ">
-                        Highlight de Alto Impacto
-                      </span>
-                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--ink-2)] ">
-                        {highlights[selectedHighlightIndex]?.range || "N/D"}
-                      </span>
-                    </div>
-                    <h2 className="text-xl md:text-2xl font-bold text-[var(--ink)] font-sans tracking-tight">
-                      {highlights[selectedHighlightIndex]?.title ||
-                        "Clip sin título"}
-                    </h2>
-                  </div>
-
-                  {/* Close Button */}
-                  <button
-                    id="btn-close-theater"
-                    onClick={() => setIsExpandedPreview(false)}
-                    className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80  text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
-                    title="Cerrar modo cine"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* Virality Card & Reason */}
-                <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/50 bg-[var(--surface)]/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-sans text-[var(--ink-2)] block">
-                      Por qué este momento es viral
-                    </span>
-                    <p className="text-xs text-[var(--ink)] leading-relaxed max-w-xl">
-                      {highlights[selectedHighlightIndex]?.description ||
-                        "La IA está analizando los ganchos emocionales de este intervalo."}
-                    </p>
-                  </div>
-
-                  {/* Viral Progress Gauge */}
-                  <div className="flex items-center gap-3 shrink-0 bg-[var(--surface)] p-3 rounded-[var(--r-m)]">
-                    <div className="relative w-12 h-12 flex items-center justify-center">
-                      <svg className="w-full h-full transform -rotate-90">
-                        <circle
-                          cx="24"
-                          cy="24"
-                          r="20"
-                          stroke="currentColor"
-                          strokeWidth="3.5"
-                          className="text-[var(--ink)]"
-                          fill="transparent"
-                        />
-                        <circle
-                          cx="24"
-                          cy="24"
-                          r="20"
-                          stroke="currentColor"
-                          strokeWidth="3.5"
-                          className="text-[var(--acc)]"
-                          fill="transparent"
-                          strokeDasharray={`${2 * Math.PI * 20}`}
-                          strokeDashoffset={`${2 * Math.PI * 20 * (1 - (highlights[selectedHighlightIndex]?.virality || 90) / 100)}`}
-                        />
-                      </svg>
-                      <span className="absolute text-[11px] font-sans font-extrabold text-[var(--ink)]">
-                        {highlights[selectedHighlightIndex]?.virality || 95}%
-                      </span>
-                    </div>
-                    <div className="text-left">
-                      <div className="flex items-center gap-1">
-                        <Flame className="w-3.5 h-3.5 text-[var(--acc)] fill-[var(--acc)]" />
-                        <span className="text-xs font-bold text-[var(--ink)]">
-                          Viralidad
-                        </span>
-                      </div>
-                      <span className="text-[9px] font-sans text-[var(--acc)] block font-bold">
-                        POTENCIAL MÁXIMO
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ⏱️ PRECISION TRIM TIMELINE & ALIGNMENT ANALYZER */}
-                {highlights[selectedHighlightIndex] &&
-                  (() => {
-                    const { start, end, duration } = parseRangeTimes(
-                      highlights[selectedHighlightIndex]?.range,
-                    );
-                    if (duration > 0) {
-                      const totalDuration = timelineDuration;
-                      const startPct = (start / totalDuration) * 100;
-                      const endPct = (end / totalDuration) * 100;
-                      const activeWidth = endPct - startPct;
-                      const playheadPct =
-                        ((start + simulatedTime) / totalDuration) * 100;
-
-                      const updateCropTimes = (
-                        newStart: number,
-                        newEnd: number,
-                      ) => {
-                        const finalStart = Math.max(0, newStart);
-                        const finalEnd = Math.max(finalStart + 1, newEnd);
-
-                        const formatSecsToMMSS = (totalSecs: number) => {
-                          const mins = Math.floor(totalSecs / 60);
-                          const secs = totalSecs % 60;
-                          return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-                        };
-
-                        const newRange = `${formatSecsToMMSS(finalStart)}-${formatSecsToMMSS(finalEnd)}`;
-
-                        setHighlights((prev) =>
-                          prev.map((clip, index) =>
-                            index === selectedHighlightIndex
-                              ? { ...clip, range: newRange }
-                              : clip,
-                          ),
-                        );
-                        setSimulatedTime(0);
-                        setYtLoopCount((c) => c + 1);
-                      };
-
-                      const handleTimelineClick = (
-                        e: React.MouseEvent<HTMLDivElement>,
-                      ) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const clickX = e.clientX - rect.left;
-                        const clickPct = clickX / rect.width;
-                        const targetSeconds = Math.round(
-                          clickPct * totalDuration,
-                        );
-
-                        const distToStart = Math.abs(targetSeconds - start);
-                        const distToEnd = Math.abs(targetSeconds - end);
-
-                        let newStart = start;
-                        let newEnd = end;
-
-                        if (targetSeconds < start) {
-                          // Clicked left of start -> extend start to left
-                          newStart = targetSeconds;
-                        } else if (targetSeconds > end) {
-                          // Clicked right of end -> extend end to right
-                          newEnd = targetSeconds;
-                        } else {
-                          // Clicked inside -> adjust closer boundary
-                          if (distToStart < distToEnd) {
-                            newStart = Math.min(targetSeconds, end - 1);
-                          } else {
-                            newEnd = Math.max(targetSeconds, start + 1);
-                          }
-                        }
-                        updateCropTimes(newStart, newEnd);
-                      };
-
-                      return (
-                        <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/60 bg-[var(--surface)]/85 space-y-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-4 h-4 text-[var(--acc)]" />
-                              <span className="text-xs font-sans font-extrabold text-[var(--ink)]">
-                                Línea de Tiempo Interactiva
-                              </span>
-                            </div>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] ">
-                              REPRODUCIENDO CROP
-                            </span>
-                          </div>
-
-                          {/* Clickable interactive timeline slider track */}
-                          <div className="space-y-1.5">
-                            <div className="text-[10px] text-[var(--ink-2)] font-sans flex justify-between px-1">
-                              <span>00:00</span>
-                              <span className="text-[9px] text-[var(--acc)]/80 font-bold flex items-center gap-1">
-                                <span>🎛️ Arrastra los bordes</span>
-                                <span className="text-[var(--ink-2)]">•</span>
-                                <span>Haz click para posicionar</span>
-                              </span>
-                              <span>{formatTime(totalDuration)}</span>
-                            </div>
-
-                            <div
-                              id="interactive-timeline-container"
-                              onClick={handleTimelineClick}
-                              className="relative w-full h-10 bg-[var(--surface)] rounded-[var(--r-m)] overflow-hidden flex items-center cursor-pointer group hover:bg-[var(--sunken)] transition-colors touch-none"
-                              title="Haz click para ajustar el inicio o fin del recorte aquí"
-                            >
-                              {/* Visual highlight segment on the timeline */}
-                              <div
-                                className="absolute top-1 bottom-1 bg-[var(--acc)]/20 rounded-[var(--r-s)] flex items-center justify-between px-2 group-hover:bg-[var(--acc)]/25 transition-all touch-none"
-                                style={{
-                                  left: `${startPct}%`,
-                                  width: `${activeWidth}%`,
-                                }}
-                              >
-                                {/* Left Grab Handle (Start) */}
-                                <div
-                                  className="absolute left-0 top-0 bottom-0 w-3 -ml-1.5 flex items-center justify-center cursor-ew-resize group/lhandle z-30 touch-none"
-                                  onMouseDown={(e) => {
-                                    e.stopPropagation();
-                                    setDraggingBoundary("start");
-                                  }}
-                                  onTouchStart={(e) => {
-                                    e.stopPropagation();
-                                    setDraggingBoundary("start");
-                                  }}
-                                  title="Arrastrar para ajustar el inicio (Izquierda)"
-                                >
-                                  <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/lhandle:bg-[var(--surface)] rounded-[var(--r-pill)] transition-all group-hover/lhandle:scale-y-110" />
-                                </div>
-
-                                <span className="text-[8px] font-sans text-[var(--acc)]/70 font-extrabold tracking-tight select-none pointer-events-none pl-1">
-                                  START
-                                </span>
-                                <span className="text-[8px] font-sans text-[var(--ink)] select-none hidden sm:inline pointer-events-none">
-                                  Recorte ({duration}s)
-                                </span>
-                                <span className="text-[8px] font-sans text-[var(--acc)]/70 font-extrabold tracking-tight select-none pointer-events-none pr-1">
-                                  END
-                                </span>
-
-                                {/* Right Grab Handle (End) */}
-                                <div
-                                  className="absolute right-0 top-0 bottom-0 w-3 -mr-1.5 flex items-center justify-center cursor-ew-resize group/rhandle z-30 touch-none"
-                                  onMouseDown={(e) => {
-                                    e.stopPropagation();
-                                    setDraggingBoundary("end");
-                                  }}
-                                  onTouchStart={(e) => {
-                                    e.stopPropagation();
-                                    setDraggingBoundary("end");
-                                  }}
-                                  title="Arrastrar para ajustar el fin (Derecha)"
-                                >
-                                  <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/rhandle:bg-[var(--surface)] rounded-[var(--r-pill)] transition-all group-hover/rhandle:scale-y-110" />
-                                </div>
-                              </div>
-
-                              {/* Live Playhead Indicator inside the crop segment */}
-                              <div
-                                className="absolute top-0 bottom-0 w-0.5 bg-[var(--alert)] z-20 transition-all duration-1000 ease-linear pointer-events-none"
-                                style={{ left: `${playheadPct}%` }}
-                              >
-                                <div className="absolute -top-1 -left-1 w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--alert)]" />
-                                <div className="absolute top-1/2 -translate-y-1/2 left-2 bg-[var(--surface)] rounded px-1.5 py-0.5 text-[8.5px] font-sans text-[var(--ink)] whitespace-nowrap">
-                                  {formatTime(start + simulatedTime)}
-                                </div>
-                              </div>
-
-                              {/* Background track ticks */}
-                              <div className="absolute inset-0 flex justify-between px-3 pointer-events-none opacity-5">
-                                {[...Array(20)].map((_, i) => (
-                                  <div
-                                    key={i}
-                                    className="h-full w-[1px] bg-[var(--surface)]"
-                                  />
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="flex justify-between text-[10px] font-sans text-[var(--ink-2)] px-1">
-                              <span>
-                                ⏱️ Inicio:{" "}
-                                <strong className="text-[var(--ink)] font-bold">
-                                  {formatTime(start)}
-                                </strong>{" "}
-                                ({start}s)
-                              </span>
-                              <span className="text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold">
-                                Duración: {duration} segundos
-                              </span>
-                              <span>
-                                ⏱️ Fin:{" "}
-                                <strong className="text-[var(--ink)] font-bold">
-                                  {formatTime(end)}
-                                </strong>{" "}
-                                ({end}s)
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Controles Interactivos de Edición de Crop */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                            {/* Ajustar Inicio (Izquierda) */}
-                            <div className="space-y-1.5 text-left">
-                              <div className="flex justify-between items-center">
-                                <span className="text-[10.5px] font-sans text-[var(--ink-2)] font-extrabold flex items-center gap-1">
-                                  <span>⬅️ Ajustar Inicio (Izquierda)</span>
-                                </span>
-                                <span className="text-[10px] font-sans text-[var(--ink)] font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
-                                  {formatTime(start)}
-                                </span>
-                              </div>
-                              <div className="flex gap-2">
-                                <button
-                                  id="btn-crop-start-minus"
-                                  type="button"
-                                  onClick={() =>
-                                    handleAdjustCrop("start_minus")
-                                  }
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
-                                  title="Mover inicio 1 segundo atrás (extender por la izquierda)"
-                                >
-                                  <ChevronLeft className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                                  <span>-1s (Extender)</span>
-                                </button>
-                                <button
-                                  id="btn-crop-start-plus"
-                                  type="button"
-                                  disabled={start >= end - 1}
-                                  onClick={() => handleAdjustCrop("start_plus")}
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                                  title="Mover inicio 1 segundo adelante (recortar por la izquierda)"
-                                >
-                                  <span>+1s (Recortar)</span>
-                                  <ChevronRight className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                                </button>
-                              </div>
-                            </div>
-
-                            {/* Ajustar Fin (Derecha) */}
-                            <div className="space-y-1.5 text-left">
-                              <div className="flex justify-between items-center">
-                                <span className="text-[10.5px] font-sans text-[var(--ink-2)] font-extrabold flex items-center gap-1">
-                                  <span>➡️ Ajustar Fin (Derecha)</span>
-                                </span>
-                                <span className="text-[10px] font-sans text-[var(--ink)] font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
-                                  {formatTime(end)}
-                                </span>
-                              </div>
-                              <div className="flex gap-2">
-                                <button
-                                  id="btn-crop-end-minus"
-                                  type="button"
-                                  disabled={end <= start + 1}
-                                  onClick={() => handleAdjustCrop("end_minus")}
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                                  title="Mover fin 1 segundo atrás (recortar por la derecha)"
-                                >
-                                  <ChevronLeft className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                                  <span>-1s (Recortar)</span>
-                                </button>
-                                <button
-                                  id="btn-crop-end-plus"
-                                  type="button"
-                                  onClick={() => handleAdjustCrop("end_plus")}
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
-                                  title="Mover fin 1 segundo adelante (extender por la derecha)"
-                                >
-                                  <span>+1s (Extender)</span>
-                                  <ChevronRight className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Extra informational feedback with nice indicators */}
-                          <div className="bg-[var(--surface)]/50 p-3 rounded-[var(--r-m)] text-[11px] text-[var(--ink-2)] leading-relaxed font-sans space-y-1">
-                            <p>
-                              🚀{" "}
-                              <strong>¿Por qué dura exactamente esto?</strong>{" "}
-                              Los primeros segundos de un video son vitales para
-                              retener al espectador. Este recorte fue calculado
-                              por el algoritmo de IA basándose en los picos de
-                              intensidad acústica y velocidad de habla de la
-                              banda, asegurando una retención óptima.
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })()}
-
-                {/* ✂️ REAL PHYSICAL CUTTING & AUTOMATIC SUBTITLING SYSTEM */}
-                {highlights[selectedHighlightIndex] && youtubeUrl && (
-                  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/60 bg-[var(--surface)]/85 space-y-4">
-                    <div className="flex items-center gap-2">
-                      <Film className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                      <span className="text-xs font-sans font-extrabold text-[var(--ink)]">
-                        Generador de Reel Físico y Subtítulos
-                      </span>
-                    </div>
-
-                    <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
-                      Corta físicamente el fragmento del vídeo de YouTube a
-                      formato vertical 9:16 para Reels/TikTok y genera la pista
-                      de subtítulos sincronizada con la voz.
-                    </p>
-
-                    {/* Opciones de renderizado */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <span className="block text-[9px] font-sans text-[var(--ink-2)]">
-                          Encuadre vertical
-                        </span>
-                        <div className="grid grid-cols-3 gap-1">
-                          {[
-                            {
-                              valor: "crop" as const,
-                              etiqueta: "Recortar",
-                              ayuda:
-                                "Recorta los laterales. Encuadre cerrado: puede dejar fuera a parte de la banda.",
-                            },
-                            {
-                              valor: "blur" as const,
-                              etiqueta: "Fondo blur",
-                              ayuda:
-                                "Mete el vídeo entero centrado sobre un fondo desenfocado. No se pierde a nadie.",
-                            },
-                            {
-                              valor: "none" as const,
-                              etiqueta: "Original",
-                              ayuda: "Deja el encuadre horizontal tal cual.",
-                            },
-                          ].map((opcion) => (
-                            <button
-                              key={opcion.valor}
-                              type="button"
-                              title={opcion.ayuda}
-                              onClick={() => setCropMode(opcion.valor)}
-                              disabled={isCuttingVideo}
-                              className={`px-2 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-sans font-bold cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                                cropMode === opcion.valor
-                                  ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                                  : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                              }`}
-                            >
-                              {opcion.etiqueta}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <span className="block text-[9px] font-sans text-[var(--ink-2)]">
-                          Subtítulos
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => setBurnSubtitles((v) => !v)}
-                          disabled={
-                            isCuttingVideo ||
-                            (videoMeta ? !videoMeta.hasTranscript : false)
-                          }
-                          title={
-                            videoMeta && !videoMeta.hasTranscript
-                              ? "Este vídeo no tiene transcripción en YouTube, así que no hay nada que incrustar."
-                              : "Graba los subtítulos dentro de la imagen, que es como se ven en Reels y TikTok sin activar nada."
-                          }
-                          className={`w-full px-3 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-sans font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                            burnSubtitles
-                              ? "bg-[var(--ok)]/15  text-[var(--ink-2)]"
-                              : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                          }`}
-                        >
-                          {burnSubtitles ? (
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          ) : (
-                            <Check className="w-3.5 h-3.5 opacity-40" />
-                          )}
-                          <span>
-                            {burnSubtitles
-                              ? "Incrustados en el vídeo"
-                              : "Solo pista .vtt aparte"}
-                          </span>
-                        </button>
-                        {videoMeta && !videoMeta.hasTranscript && (
-                          <p className="text-[9px] font-sans text-[var(--ink-2)] leading-tight">
-                            Este vídeo no tiene transcripción en YouTube.
-                          </p>
-                        )}
-                        {burnSubtitles && (
-                          <button
-                            type="button"
-                            onClick={() => setKaraokeSubtitles((v) => !v)}
-                            disabled={isCuttingVideo}
-                            title="Resalta cada palabra según se pronuncia, como en TikTok/CapCut, en vez de enseñar la línea entera fija."
-                            className={`w-full px-3 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-sans font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                              karaokeSubtitles
-                                ? "bg-[var(--acc)]/15  text-[var(--acc)]"
-                                : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                            }`}
-                          >
-                            {karaokeSubtitles ? (
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                            ) : (
-                              <Check className="w-3.5 h-3.5 opacity-40" />
-                            )}
-                            <span>
-                              {karaokeSubtitles
-                                ? "Resaltado palabra a palabra"
-                                : "Línea fija clásica"}
-                            </span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Rendering State indicators */}
-                    {isCuttingVideo ? (
-                      <div className="bg-[var(--surface)]/80 p-4 rounded-[var(--r-m)] space-y-3">
-                        <div className="flex items-center gap-3">
-                          <RefreshCw className="w-5 h-5 text-[var(--acc)] animate-spin" />
-                          <span className="text-xs font-sans font-extrabold text-[var(--ink-2)]">
-                            RENDERIZANDO ARCHIVOS REALES...
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-[var(--acc)] font-sans pl-8">
-                          ⚡ {cuttingProgressText}
-                        </p>
-                        <div className="w-full h-1 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
-                          <div
-                            className="h-full bg-[var(--acc)] "
-                            style={{ width: "75% " }}
-                          ></div>
-                        </div>
-                      </div>
-                    ) : renderedClipUrl ? (
-                      <div className="bg-[var(--ok-soft)] p-4 rounded-[var(--r-m)]  space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
-                            <span className="text-xs font-sans font-extrabold text-[var(--ink)]">
-                              ¡Reel Renderizado con Éxito!
-                            </span>
-                          </div>
-                          <div className="flex gap-1 shrink-0">
-                            <span className="px-1.5 py-0.5 rounded text-[8px] font-sans bg-[var(--surface)]/15 text-[var(--ok)] font-extrabold ">
-                              {cropMode === "none"
-                                ? "ORIGINAL"
-                                : cropMode === "blur"
-                                  ? "9:16 BLUR"
-                                  : "9:16"}
-                            </span>
-                            {renderedBurnedSubs && (
-                              <span className="px-1.5 py-0.5 rounded text-[8px] font-sans bg-[var(--acc)]/15 text-[var(--acc)] font-extrabold ">
-                                SUBS
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <p className="text-[11px] text-[var(--ink)]">
-                          Clip listo
-                          {renderedClipSize > 0
-                            ? ` (${(renderedClipSize / (1024 * 1024)).toFixed(1)} MB)`
-                            : ""}
-                          . Se está reproduciendo en el simulador de la
-                          izquierda y puedes descargarlo ya.
-                        </p>
-
-                        {/* Sin esto, el usuario no sabe si el clip va a seguir ahí mañana o solo hasta el
- próximo despliegue del servidor. */}
-                        <div
-                          className={`p-2 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 ${
-                            renderedStoredPermanently
-                              ? "bg-[var(--ok)]/10  text-[var(--ink-2)]"
-                              : "bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]/70"
-                          }`}
-                        >
-                          <span>
-                            {renderedStoredPermanently
-                              ? "☁️ Guardado de forma permanente. Seguirá disponible aunque pase el tiempo."
-                              : "⚠️ Guardado solo temporalmente en el servidor. Descárgalo antes de que se reinicie o se despliegue una nueva versión."}
-                          </span>
-                        </div>
-
-                        {sinTranscripcionReal && (
-                          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -[var(--acc)]/20 text-[10px] text-[var(--acc)]/70 font-sans flex items-center gap-2">
-                            <span>
-                              ℹ️ Este vídeo no tiene transcripción en YouTube,
-                              así que el clip va sin subtítulos.
-                            </span>
-                          </div>
-                        )}
-
-                        <div className="flex flex-col sm:flex-row gap-2 pt-1">
-                          <a
-                            href={renderedClipUrl}
-                            download={`${
-                              (bandName || "reel")
-                                .toLowerCase()
-                                .replace(/[^a-z0-9]+/g, "-")
-                                .replace(/^-|-$/g, "") || "reel"
-                            }-${highlights[selectedHighlightIndex]?.range?.replace(/[^0-9]/g, "") || "clip"}.mp4`}
-                            rel="noreferrer noopener"
-                            className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--sunken)] text-[11px] font-sans font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            <span>Descargar MP4</span>
-                          </a>
-
-                          {renderedSubUrl && !renderedBurnedSubs && (
-                            <a
-                              href={renderedSubUrl}
-                              download="subtitulos.vtt"
-                              rel="noreferrer noopener"
-                              className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--sunken)] text-[11px] font-sans font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
-                            >
-                              <ExternalLink className="w-3.5 h-3.5" />
-                              <span>Descargar .VTT</span>
-                            </a>
-                          )}
-
-                          <button
-                            type="button"
-                            onClick={handleCutPhysicalVideo}
-                            className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10  hover:bg-[var(--acc)]/20 text-[11px] font-sans font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
-                          >
-                            <RotateCcw className="w-3.5 h-3.5" />
-                            <span>Volver a Renderizar</span>
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        {cuttingError && (
-                          <div className="bg-[var(--alert)]/90 p-3 rounded-[var(--r-m)] -red-800/40 text-[10.5px] text-[var(--alert)] font-sans flex items-start gap-2">
-                            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[var(--alert)]" />
-                            <div className="space-y-1">
-                              <span className="font-bold">
-                                ERROR DE RENDERIZADO:
-                              </span>
-                              <p className="leading-relaxed">{cuttingError}</p>
-                            </div>
-                          </div>
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={handleCutPhysicalVideo}
-                          className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:brightness-105 active:scale-[0.99] font-sans font-black text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
-                        >
-                          <Sparkles className="w-4 h-4 text-[var(--ink)] fill-bg-[var(--surface)]" />
-                          <span>
-                            ✂️ Renderizar Reel Físico + Auto-Subtítulos (9:16)
-                          </span>
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Subtitles timing preview list */}
-                    {subtitleCues.length > 0 && (
-                      <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] space-y-2.5">
-                        <div className="flex justify-between items-center bg-[var(--surface)]/50 pb-1.5">
-                          <span className="text-[9.5px] font-sans font-extrabold text-[var(--ink-2)]">
-                            Pista de Subtítulos Generada ({subtitleCues.length}{" "}
-                            líneas)
-                          </span>
-                          <span className="text-[8px] font-sans text-[var(--ok)] font-bold">
-                            ● AUTO-SYNCED
-                          </span>
-                        </div>
-                        <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1 text-[10px] scrollbar-thin scrollbar-thumbbg-[var(--surface)]">
-                          {subtitleCues.map((cue, idx) => (
-                            <div
-                              key={idx}
-                              className="flex gap-2 items-start py-0.5 -bg-[var(--surface)]/30 last:"
-                            >
-                              <span className="text-[8.5px] font-sans text-[var(--acc)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded shrink-0">
-                                {cue.start.toFixed(1)}s
-                              </span>
-                              <p className="text-[var(--ink)] font-sans italic leading-tight">
-                                "{cue.text}"
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Word-level exact offsets preview */}
-                    {wordOffsets.length > 0 && (
-                      <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] space-y-2.5 mt-3">
-                        <div className="flex justify-between items-center bg-[var(--surface)]/50 pb-1.5">
-                          <span className="text-[9.5px] font-sans font-extrabold text-[var(--ink-2)] flex items-center gap-1">
-                            <span>
-                              ⚡ Offsets de Palabras Sincronizados (
-                              {wordOffsets.length})
-                            </span>
-                          </span>
-                          <span className="px-1.5 py-0.5 rounded text-[8px] font-sans bg-[var(--surface)]/15 text-[var(--ok)] font-bold ">
-                            SINCRO LOCAL
-                          </span>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1 text-[9.5px] scrollbar-thin scrollbar-thumbbg-[var(--surface)]">
-                          {wordOffsets.map((w, idx) => (
-                            <div
-                              key={idx}
-                              className="px-2 py-1 rounded bg-[var(--surface)] bg-[var(--surface)]/80 flex items-center gap-1 hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 transition-colors"
-                              title={`Exact times: ${w.start.toFixed(2)}s to ${w.end.toFixed(2)}s`}
-                            >
-                              <span className="text-[var(--ink-2)] font-sans font-medium">
-                                "{w.word}"
-                              </span>
-                              <span className="text-[8px] font-sans text-[var(--acc)]">
-                                {w.start.toFixed(2)}s
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Hook, CTA y variantes por plataforma: lo que de verdad decide si alguien
- se queda en el primer segundo, y que antes la IA ni generaba. */}
-                {(() => {
-                  const clip = highlights[selectedHighlightIndex];
-                  if (!clip) return null;
-                  const variantes = [
-                    { etiqueta: "Instagram", texto: clip.recommendedCopy },
-                    { etiqueta: "TikTok", texto: clip.copyTikTok },
-                    { etiqueta: "YouTube Shorts", texto: clip.copyYouTube },
-                    { etiqueta: "Facebook", texto: clip.copyFacebook },
-                  ].filter((v) => v.texto && v.texto.trim());
-
-                  if (
-                    !clip.hookText &&
-                    !clip.cta &&
-                    variantes.length < 2 &&
-                    !(clip.hashtags || []).length
-                  )
-                    return null;
-
-                  return (
-                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/40 bg-[var(--surface)]/60 space-y-3">
-                      {clip.hookText && (
-                        <div className="space-y-1">
-                          <span className="block text-[9px] font-sans text-[var(--ink-2)]">
-                            Rótulo para los primeros 2 segundos
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <p className="flex-1 text-sm font-black text-[var(--acc)] leading-tight">
-                              "{clip.hookText}"
-                            </p>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleCopyToClipboard(clip.hookText || "")
-                              }
-                              className="shrink-0 px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[9px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] cursor-pointer"
-                            >
-                              Copiar
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      {clip.cta && (
-                        <div className="space-y-1">
-                          <span className="block text-[9px] font-sans text-[var(--ink-2)]">
-                            Llamada a la acción
-                          </span>
-                          <p className="text-[11px] text-[var(--ink)] leading-snug">
-                            {clip.cta}
-                          </p>
-                        </div>
-                      )}
-
-                      {variantes.length > 1 && (
-                        <div className="space-y-1.5">
-                          <span className="block text-[9px] font-sans text-[var(--ink-2)]">
-                            Versiones por plataforma (pulsa para usarla)
-                          </span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {variantes.map((v) => (
-                              <button
-                                key={v.etiqueta}
-                                type="button"
-                                onClick={() => setEditedCopy(v.texto || "")}
-                                title={v.texto}
-                                className={`px-2.5 py-1 rounded-[var(--r-s)] text-[9.5px] font-sans font-bold cursor-pointer transition-all ${
-                                  editedCopy === v.texto
-                                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                                    : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                                }`}
-                              >
-                                {v.etiqueta}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {(clip.hashtags || []).length > 0 && (
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between items-center">
-                            <span className="text-[9px] font-sans text-[var(--ink-2)]">
-                              Hashtags sugeridos
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setEditedCopy((prev) =>
-                                  `${prev.trimEnd()}\n\n${(clip.hashtags || []).join("")}`.trim(),
-                                )
-                              }
-                              className="text-[9px] font-sans text-[var(--acc)] hover:underline cursor-pointer bg-transparent -none"
-                            >
-                              Añadir todos al copy
-                            </button>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {(clip.hashtags || []).map((tag, i) => (
-                              <span
-                                key={`${tag}-${i}`}
-                                className="px-1.5 py-0.5 rounded bg-[var(--surface)] text-[9px] font-sans text-[var(--ink-2)]"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })()}
-
-                {/* Copy Editor Area */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                      <span>📝 Copy de Publicación Generado</span>
-                    </label>
-
-                    <button
-                      id="btn-copy-text"
-                      type="button"
-                      onClick={() => handleCopyToClipboard(editedCopy || "")}
-                      className="text-xs font-sans text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer bg-transparent -none py-1 px-2 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80"
-                    >
-                      {copySuccess ? (
-                        <>
-                          <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
-                          <span className="text-[var(--ok)] font-bold">
-                            ¡Copiado!
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <Share2 className="w-3.5 h-3.5" />
-                          <span>Copiar al portapapeles</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  <textarea
-                    id="txt-expanded-copy"
-                    value={editedCopy}
-                    onChange={(e) => setEditedCopy(e.target.value)}
-                    rows={7}
-                    placeholder="Escribe el copy para tus redes sociales..."
-                    className="w-full text-xs font-sans bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)] leading-relaxed font-normal"
-                  />
-                  <p className="text-[9.5px] font-sans text-[var(--ink-2)]">
-                    * Puedes editar este texto libremente antes de programarlo.
-                    Se actualizará en tiempo real en la pantalla del simulador
-                    de la izquierda.
-                  </p>
-                </div>
-
-                {/* Scheduling controls inside Modal */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-[var(--r-m)] bg-[var(--surface)]/30 bg-[var(--surface)]/50">
-                  <div>
-                    <label className="block text-[9px] font-sans text-[var(--ink-2)] mb-1 font-bold">
-                      Plataforma
-                    </label>
-                    <select
-                      id="modal-platform-select"
-                      value={selectedPlatform}
-                      onChange={(e) => {
-                        const nuevaPlataforma = e.target.value as
-                          | "Instagram"
-                          | "TikTok"
-                          | "YouTube"
-                          | "Facebook";
-                        setSelectedPlatform(nuevaPlataforma);
-                        setEditedCopy(
-                          copyForPlatform(
-                            highlights[selectedHighlightIndex],
-                            nuevaPlataforma,
-                          ),
-                        );
-                      }}
-                      className="w-full text-xs font-sans bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)] focus:outline-none cursor-pointer"
-                    >
-                      <option value="Instagram">Instagram Reel</option>
-                      <option value="TikTok">TikTok Video</option>
-                      <option value="YouTube">YouTube Shorts</option>
-                      <option value="Facebook">Facebook</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[9px] font-sans text-[var(--ink-2)] mb-1 font-bold">
-                      Fecha de Publicación
-                    </label>
-                    <input
-                      id="modal-date-input"
-                      type="date"
-                      value={scheduledDate}
-                      onChange={(e) => setScheduledDate(e.target.value)}
-                      className="w-full text-xs font-sans bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)] focus:outline-none cursor-pointer"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[9px] font-sans text-[var(--ink-2)] mb-1 font-bold">
-                      Hora Óptima Sugerida
-                    </label>
-                    <input
-                      id="modal-time-input"
-                      type="time"
-                      value={scheduledTime}
-                      onChange={(e) => setScheduledTime(e.target.value)}
-                      className="w-full text-xs font-sans bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)] focus:outline-none cursor-pointer"
-                    />
-                  </div>
-                </div>
-
-                {optimalTime && (
-                  <p className="text-[10px] font-sans text-[var(--ok)] flex items-center gap-1.5 px-1">
-                    <Check className="w-3.5 h-3.5 shrink-0 animate-bounce" />
-                    <span>
-                      <strong>Sugerencia de la IA:</strong> Programar el{" "}
-                      {optimalTime.day} {optimalTime.date} a las{" "}
-                      {optimalTime.time} ({optimalTime.reason})
-                    </span>
-                  </p>
-                )}
-              </div>
-
-              {/* Success / Error states and main schedule action */}
-              <div className="mt-6 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-left">
-                  {schedulingSuccess ? (
-                    <div className="flex items-center gap-1.5 text-[var(--ok)] text-xs font-bold font-sans">
-                      <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
-                      <span>
-                        ¡Clip guardado e insertado en tu agenda de redes!
-                      </span>
-                    </div>
-                  ) : scheduleErrors.length > 0 ? (
-                    <div className="space-y-1">
-                      {scheduleErrors.map((problema) => (
-                        <div
-                          key={problema}
-                          className="flex items-center gap-1.5 text-[var(--alert)] text-[11px] font-sans"
-                        >
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                          <span>{problema}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : scheduleWarnings.length > 0 ? (
-                    <div className="space-y-1">
-                      {scheduleWarnings.map((aviso) => (
-                        <div
-                          key={aviso}
-                          className="flex items-center gap-1.5 text-[var(--acc)] text-[11px] font-sans"
-                        >
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                          <span>{aviso}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                      Se guarda en tu agenda de Reels
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex gap-3 w-full sm:w-auto">
-                  <button
-                    id="btn-modal-cancel"
-                    type="button"
-                    onClick={() => setIsExpandedPreview(false)}
-                    className="flex-1 sm:flex-none px-5 py-2.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 text-xs font-sans font-bold transition-all cursor-pointer"
-                  >
-                    Salir de Modo Cine
-                  </button>
-
-                  <button
-                    id="btn-modal-submit-schedule"
-                    type="button"
-                    onClick={(e) => {
-                      handleSchedulePost(e);
-                    }}
-                    disabled={isScheduling || !editedCopy.trim()}
-                    className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] active:scale-95 transition-all cursor-pointer text-xs font-sans font-bold disabled:opacity-40"
-                  >
-                    {isScheduling ? "Guardando..." : "Aprobar y Programar Post"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 🎬 MODO CINE / PREVISUALIZADOR EXPANDIDO MODULAR */}
+      <ReelsTheaterModal
+        isOpen={isExpandedPreview}
+        onClose={() => setIsExpandedPreview(false)}
+        colors={colors}
+        nombreBanda={nombreBanda}
+        instagramHandle={instagramHandle}
+        bandName={bandName}
+        selectedPlatform={selectedPlatform}
+        setSelectedPlatform={setSelectedPlatform}
+        phoneDuration={phoneDuration}
+        inputType={inputType}
+        youtubeUrl={youtubeUrl}
+        localVideoUrl={localVideoUrl}
+        renderedClipUrl={renderedClipUrl}
+        renderedSubUrl={renderedSubUrl}
+        renderedBurnedSubs={renderedBurnedSubs}
+        renderedClipSize={renderedClipSize}
+        renderedStoredPermanently={renderedStoredPermanently}
+        sinTranscripcionReal={sinTranscripcionReal}
+        subtitleCues={subtitleCues}
+        currentSubtitleText={currentSubtitleText}
+        setCurrentSubtitleText={setCurrentSubtitleText}
+        wordOffsets={wordOffsets}
+        isPreviewMuted={isPreviewMuted}
+        setIsPreviewMuted={setIsPreviewMuted}
+        showSafeZone={showSafeZone}
+        ytLoopCount={ytLoopCount}
+        setYtLoopCount={setYtLoopCount}
+        simulatedTime={simulatedTime}
+        setSimulatedTime={setSimulatedTime}
+        timelineDuration={timelineDuration}
+        highlights={highlights}
+        setHighlights={setHighlights}
+        selectedHighlightIndex={selectedHighlightIndex}
+        videoMeta={videoMeta}
+        editedCopy={editedCopy}
+        setEditedCopy={setEditedCopy}
+        copySuccess={copySuccess}
+        handleCopyToClipboard={handleCopyToClipboard}
+        copyForPlatform={copyForPlatform}
+        cropMode={cropMode}
+        setCropMode={setCropMode}
+        burnSubtitles={burnSubtitles}
+        setBurnSubtitles={setBurnSubtitles}
+        karaokeSubtitles={karaokeSubtitles}
+        setKaraokeSubtitles={setKaraokeSubtitles}
+        isCuttingVideo={isCuttingVideo}
+        cuttingProgressText={cuttingProgressText}
+        cuttingError={cuttingError}
+        handleCutPhysicalVideo={handleCutPhysicalVideo}
+        handleAdjustCrop={handleAdjustCrop}
+        setDraggingBoundary={setDraggingBoundary}
+        scheduledDate={scheduledDate}
+        setScheduledDate={setScheduledDate}
+        scheduledTime={scheduledTime}
+        setScheduledTime={setScheduledTime}
+        optimalTime={optimalTime}
+        isScheduling={isScheduling}
+        schedulingSuccess={schedulingSuccess}
+        scheduleErrors={scheduleErrors}
+        scheduleWarnings={scheduleWarnings}
+        handleSchedulePost={handleSchedulePost}
+        platformIcons={PLATFORM_UI_ICONS}
+      />
 
       {/* Modal de Tono de Expresión de la banda activa */}
       <BandToneModal
@@ -4871,6 +4078,95 @@ export default function ReelsCenter({
         onReAnalyze={handleAnalyzeBakandeyaTone}
         onRefreshLearnedRules={handleRefreshLearnedRules}
       />
+
+      {/* Modal de Conexión de Cuentas Oficiales (1-Clic sin fricción) */}
+      {showConnectModal && (
+        <div className="fixed inset-0 z-[250] bg-[var(--scrim)]/80 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-[var(--sunken)] w-full max-w-md rounded-2xl p-6 space-y-5 text-left relative">
+            <button
+              onClick={() => setShowConnectModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-all cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-[var(--acc-ink)]">
+                <ShieldCheck className="w-5 h-5" />
+                <h3 className="text-sm font-bold font-mono text-[var(--ink)]">
+                  Vincular Cuenta Oficial
+                </h3>
+              </div>
+              <p className="text-xs text-[var(--ink-2)] font-sans">
+                Conecta tu perfil oficial en 1 clic para publicar
+                automáticamente a la hora que elijas y monitorizar las
+                reproducciones sin contraseñas ni paneles raros.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-mono font-bold text-[var(--ink-2)] block">
+                Nombre de usuario / Handle oficial:
+              </label>
+              <input
+                type="text"
+                value={connectHandleInput}
+                onChange={(e) => setConnectHandleInput(e.target.value)}
+                placeholder="@tubanda_oficial"
+                className="w-full rounded-xl bg-[var(--surface)] px-3.5 py-2.5 text-xs font-mono text-[var(--ink)] focus:outline-none bg-[var(--acc)]/10"
+              />
+            </div>
+
+            <div className="space-y-2 pt-2">
+              <span className="text-[9.5px] font-mono font-bold text-[var(--ink-2)] block">
+                Elige la red a vincular:
+              </span>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  {
+                    id: "Instagram" as const,
+                    name: "Instagram",
+                    color: "hover:text-[var(--alert)] bg-[var(--alert)]/10",
+                  },
+                  {
+                    id: "YouTube" as const,
+                    name: "YouTube",
+                    color: "hover:text-[var(--alert)] bg-[var(--alert)]/10",
+                  },
+                  {
+                    id: "TikTok" as const,
+                    name: "TikTok",
+                    color: "hover:text-[var(--acc-ink)] bg-[var(--acc)]/10",
+                  },
+                ].map((plat) => (
+                  <button
+                    key={plat.id}
+                    type="button"
+                    disabled={connectingPlatform !== null}
+                    onClick={() => handleConnectSocialAccount(plat.id)}
+                    className={`p-3 rounded-xl bg-[var(--sunken)]/80 text-xs font-mono font-bold text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${plat.color} active:scale-95 disabled:opacity-50`}
+                  >
+                    {connectingPlatform === plat.id ? (
+                      <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc-ink)]" />
+                    ) : (
+                      <Zap className="w-4 h-4 text-[var(--acc-ink)]" />
+                    )}
+                    <span>{plat.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-3 bg-[var(--sunken)]/80 rounded-xl text-[10px] font-mono text-[var(--ink-2)] flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
+              <span>
+                Tus permisos se almacenan de forma cifrada y solo se usan para
+                tus posts autorizados.
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

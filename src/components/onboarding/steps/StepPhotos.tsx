@@ -102,7 +102,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
           value={newPhotoUrl}
           onChange={(e) => setNewPhotoUrl(e.target.value)}
           placeholder="O añade una URL de imagen directa (https://...)"
-          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
         />
         <button
           type="button"

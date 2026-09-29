@@ -151,7 +151,7 @@ export function ConvocarEnsayoModal({
                   required
                   value={fecha}
                   onChange={(e) => setFecha(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs font-sans focus: outline-none"
+                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs font-sans outline-none"
                 />
               </div>
               <div>
@@ -194,7 +194,7 @@ export function ConvocarEnsayoModal({
                 <select
                   value={setlistId}
                   onChange={(e) => setSetlistId(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus: outline-none cursor-pointer"
+                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs outline-none cursor-pointer"
                 >
                   <option value="">Sin setlist específico (ensayo libre)</option>
                   {setlists.map((s) => (

@@ -344,7 +344,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     placeholder="Título de la toma (ej. Riff nuevo tema 2)..."
                     value={recordingTitle}
                     onChange={(e) => setRecordingTitle(e.target.value)}
-                    className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
+                    className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none"
                   />
                   <select
                     value={recordingTag}

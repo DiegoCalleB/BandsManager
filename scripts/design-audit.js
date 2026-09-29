@@ -74,7 +74,7 @@ const CHECKS = {
   },
   bordeDeCaja: {
     description: 'border de caja (clase `border` sola, o hover:/focus:border-…) — Ley 1 de visual-identity: separa el escalón de luminancia (--surface / --sunken) o el espacio. Solo se toleran divisores de una cara (border-t/b/l/r/x/y) con --hair',
-    pattern: /(?<![\w:\[-])(?:border(?![\w\[-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
+    pattern: /(?<![\w:\[-])(?:border(?![\w\[:-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
     severity: 'error',
   },
   textoSobreRelleno: {

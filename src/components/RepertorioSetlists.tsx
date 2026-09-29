@@ -169,6 +169,7 @@ import { EnergyChart, EnergyChartPoint } from "./repertorio/EnergyChart";
 import { SongTransitionPreviewModal } from "./repertorio/SongTransitionPreviewModal";
 import { titlesMatch } from "../utils/songTitleMatch";
 import { SAMPLER_SONGS, SAMPLER_SETLISTS } from "../config/sampleRepertoire";
+import { MOP_SONGS, MOP_SETLISTS } from "../db_seed";
 
 interface RepertorioSetlistsProps {
   colors: ThemeColors;
@@ -769,6 +770,7 @@ export default function RepertorioSetlists({
 
   const cleanBand = (bandId || "").replace(/^(band|reg)-/, "").toLowerCase();
   const isBakandeya = cleanBand === "bakandeya";
+  const isMasterOfPrompts = cleanBand === "master-of-prompts";
 
   // Plantilla de Bakandeya solo para la propia Bakandeya; el resto de bandas ven a sus
   // miembros reales (bandUsers, ya filtrados por banda en el servidor) y nunca el roster
@@ -787,6 +789,7 @@ export default function RepertorioSetlists({
       return rawList.filter((s) => {
         if (!s || typeof s !== "object") return false;
         const sId = (s.id || "").toLowerCase();
+        if (sId.startsWith("mop-song-") && isMasterOfPrompts) return true;
         if (sId.startsWith("sample-track-")) return true;
         if (
           sId.startsWith("song-cm-") ||
@@ -798,7 +801,7 @@ export default function RepertorioSetlists({
         return true;
       });
     },
-    [isBakandeya],
+    [isBakandeya, isMasterOfPrompts],
   );
 
   const sanitizeBandSetlists = React.useCallback(
@@ -3576,7 +3579,10 @@ export default function RepertorioSetlists({
   };
 
   return (
-    <div data-modulo={activeTab === "catalogo" ? "discografia" : "repertorio"} className="space-y-3">
+    <div
+      data-modulo={activeTab === "catalogo" ? "discografia" : "repertorio"}
+      className="space-y-3"
+    >
       {/* REPERTORIO UNIFIED NAV BAR: Título, tabs segmentadas (Setlists & Directo / Catálogo & Discografía) y acciones rápidas */}
       <RepertorioNavBar
         activeTab={activeTab}

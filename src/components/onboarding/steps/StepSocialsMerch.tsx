@@ -53,7 +53,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             value={socialLinks.instagram}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, instagram: e.target.value }))}
             placeholder="https://instagram.com/tubanda o @tubanda"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>
 
@@ -68,7 +68,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             value={socialLinks.spotify}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, spotify: e.target.value }))}
             placeholder="https://open.spotify.com/artist/..."
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>
 
@@ -83,7 +83,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             value={socialLinks.youtube}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, youtube: e.target.value }))}
             placeholder="https://youtube.com/@tubanda"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>
 
@@ -98,7 +98,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             value={socialLinks.tiktok}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, tiktok: e.target.value }))}
             placeholder="https://tiktok.com/@tubanda"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>
 
@@ -113,7 +113,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             value={socialLinks.website}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, website: e.target.value }))}
             placeholder="https://www.tubanda.com"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>
 
@@ -128,7 +128,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             value={socialLinks.whatsapp}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, whatsapp: e.target.value }))}
             placeholder="+34 600 000 000"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>
       </div>
@@ -150,7 +150,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
               value={merchStoreUrl}
               onChange={(e) => setMerchStoreUrl(e.target.value)}
               placeholder="https://tubanda.bandcamp.com/merch"
-              className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
             />
           </div>
 
@@ -161,7 +161,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
               value={merchHighlight}
               onChange={(e) => setMerchHighlight(e.target.value)}
               placeholder="Ej. Vinilo Edición Limitada + Camisetas de Gira (15€)"
-              className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
             />
           </div>
         </div>

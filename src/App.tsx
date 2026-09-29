@@ -2358,6 +2358,16 @@ export default function App() {
                 users={bandUsers}
                 onClose={() => setShowUserManagementModal(false)}
                 onRefreshUsers={fetchState}
+                bandId={currentActiveBandId}
+                bandName={currentActiveBandName}
+                bandLogoUrl={currentActiveBandLogo || epkConfig?.logoUrl}
+                onRefreshData={fetchState}
+                onUpdateLogo={async (newUrl) => {
+                  if (handleUpdateEpkConfig) {
+                    await handleUpdateEpkConfig({ ...epkConfig, logoUrl: newUrl });
+                  }
+                  await fetchState();
+                }}
               />
             )}
 

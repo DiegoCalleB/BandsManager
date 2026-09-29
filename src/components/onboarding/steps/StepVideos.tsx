@@ -127,7 +127,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
               value={newVideoUrl}
               onChange={(e) => setNewVideoUrl(e.target.value)}
               placeholder="URL de YouTube (https://www.youtube.com/watch?v=... o youtu.be/...)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
             />
           </div>
 
@@ -135,7 +135,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             <select
               value={newVideoType}
               onChange={(e) => setNewVideoType(e.target.value as any)}
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
             >
               <option value="videoclip">Videoclip Oficial</option>
               <option value="directo">Directo en Concierto</option>
@@ -151,7 +151,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             value={newVideoTitle}
             onChange={(e) => setNewVideoTitle(e.target.value)}
             placeholder="Título del vídeo (opcional, se extraerá de la URL si se omite)"
-            className="w-2/3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+            className="w-2/3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
 
           <button

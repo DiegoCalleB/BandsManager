@@ -540,7 +540,7 @@ export function OrdenDelDiaTab({
                     handleAddObjetivo();
                   }
                 }}
-                className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none focus:"
+                className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"
               />
               <button
                 type="button"
@@ -873,7 +873,7 @@ export function OrdenDelDiaTab({
                     value={searchSongQuery}
                     onChange={(e) => setSearchSongQuery(e.target.value)}
                     placeholder="Buscar por título, tonalidad, género..."
-                    className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] focus:outline-none focus:"
+                    className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] focus:outline-none"
                   />
                 </div>
 
@@ -1186,7 +1186,7 @@ export function OrdenDelDiaTab({
                     placeholder="Ej: Calentamiento & Sonido, Pausa café..."
                     value={blockTitulo}
                     onChange={(e) => setBlockTitulo(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none focus:"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"
                   />
                 </div>
 
@@ -1200,7 +1200,7 @@ export function OrdenDelDiaTab({
                     max="120"
                     value={blockDuracion}
                     onChange={(e) => setBlockDuracion(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink)] outline-none focus:"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink)] outline-none"
                   />
                 </div>
 
@@ -1213,7 +1213,7 @@ export function OrdenDelDiaTab({
                     placeholder="Ej: Ajustar retorno de monitores y afinación..."
                     value={blockEnfoque}
                     onChange={(e) => setBlockEnfoque(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none focus:"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"
                   />
                 </div>
               </div>

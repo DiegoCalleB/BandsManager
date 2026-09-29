@@ -183,6 +183,12 @@ describe('resolverFuenteAudioLocal', () => {
     expect(resultado?.ruta).toBe('/tmp/audio_real.mp3');
   });
 
+  it('resuelve rutas relativas a la carpeta public de samples', async () => {
+    const resultado = await resolverFuenteAudioLocal('/audio/samples/sample_03_fuego_asfalto.mp3');
+    expect(resultado).not.toBeNull();
+    expect(resultado?.ruta).toContain('sample_03_fuego_asfalto.mp3');
+  });
+
   it('sin fuente devuelve null', async () => {
     await expect(resolverFuenteAudioLocal('')).resolves.toBeNull();
   });
