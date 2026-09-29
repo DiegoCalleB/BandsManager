@@ -179,7 +179,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
   return (
     <div className="space-y-4">
       {/* HEADER DE COPILOTO */}
-      <div className="p-3 bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--ok)]/10 border border-[var(--hair)] rounded-[var(--r-l)] flex items-center justify-between gap-3">
+      <div className="p-3 bg-[var(--acc)]/10  border border-[var(--hair)] rounded-[var(--r-l)] flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 flex items-center justify-center shrink-0">
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -201,7 +201,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 1: CALCULADORA P&L Y PUNTO DE EQUILIBRIO */}
-      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calculator className="w-4 h-4 text-[var(--ok)]" />
@@ -301,7 +301,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 2: DEAL CLOSING COPILOT (ANÁLISIS DE RESPUESTAS Y OBJECIONES) */}
-      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
@@ -309,7 +309,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
               2. Asistente Táctico de Cierre (Objeciones & Negociación)
             </span>
           </div>
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] border ${sentimentAnalysis.color}`}>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${sentimentAnalysis.color}`}>
             {sentimentAnalysis.label}
           </span>
         </div>
@@ -345,7 +345,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 3: GENERADOR INSTANTÁNEO DE ROADBOOK & CONTRATO */}
-      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-[var(--acc)]" />

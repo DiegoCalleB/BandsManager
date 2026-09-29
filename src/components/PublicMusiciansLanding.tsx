@@ -260,7 +260,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           {/* Official BandManager Brand Logo */}
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--acc)]/30 via-[var(--acc)]/20 to-[var(--acc)]/30 rounded-[var(--r-xl)] blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-1 bg-[var(--acc)]/30  rounded-[var(--r-xl)] blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-[var(--surface)] p-1 flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
@@ -283,7 +283,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[var(--ink)] max-w-3xl mx-auto leading-[1.15]">
             {t.heroTitle}
             {""}
-            <span className="bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] bg-clip-text text-transparent">
+            <span className="bg-[var(--acc)]  bg-clip-text text-transparent">
               {t.heroHighlight}
             </span>
           </h1>
@@ -334,7 +334,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
  concretas todavía por confirmar */}
-        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/5 to-transparent">
+        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/10 ">
           <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
             <Rocket className="w-5 h-5" />
           </div>
@@ -349,7 +349,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* REGISTRATION FORM CARD OR SUCCESS CARD */}
         <section className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-[var(--acc)]/5 via-[var(--acc)]/0 to-transparent rounded-[var(--r-xl)] -z-10" />
+          <div className="absolute inset-0 bg-[var(--acc)]/5  rounded-[var(--r-xl)] -z-10" />
 
           {submitted ? (
             /* SUCCESS CONFIRMATION */
@@ -387,7 +387,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 )}
                 <a
                   href="/"
-                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]/60 text-[var(--ink)] font-sans text-xs font-black tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans text-xs font-black tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   {t.successExploreApp}
@@ -683,7 +683,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-[var(--acc)]/40 to-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
                   {loading ? (
                     <>

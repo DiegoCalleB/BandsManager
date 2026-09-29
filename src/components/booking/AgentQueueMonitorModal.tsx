@@ -171,8 +171,8 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
 
   return (
     <ModalPortal>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md animate-in fade-in duration-200">
-        <div className="bg-[var(--surface)] border border-[var(--hair)]/10 rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden font-sans">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200">
+        <div className="bg-[var(--surface)] border border-[var(--hair)]/10 rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden font-sans">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--hair)]/10 bg-[var(--surface)]">
             <div className="flex items-center gap-3">
@@ -215,7 +215,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           </div>
 
           {/* Body */}
-          <div className="p-6 space-y-6 overflow-y-auto custom-scrollbar flex-1 bg-gradient-to-b from-[#161512] to-[#0f0e0c]">
+          <div className="p-6 space-y-6 overflow-y-auto custom-scrollbar flex-1 bg-[var(--bg)]">
             {/* KPI Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] flex flex-col">

@@ -187,7 +187,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
         ) : (
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2  rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
+            className="  rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
           >
             <Upload className="w-6 h-6 text-[var(--ink-2)] mx-auto mb-1.5" />
             <span className="text-xs font-medium text-[var(--ink-2)] block">

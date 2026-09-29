@@ -728,7 +728,7 @@ export default function SpotifyPlayerBar({
                   {song.portadaUrl ? (
                     <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[var(--ok)]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
+                    <div className="w-full h-full bg-[var(--ok)]/30  flex items-center justify-center">
                       <Disc className={`w-7 h-7 ${isPlaying ? 'animate-spin-slow text-[var(--ok)]' : 'text-[var(--ink-2)]'}`} />
                     </div>
                   )}

@@ -327,7 +327,7 @@ export const SpotifyDiscographyModal: React.FC<
         className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-all ${"bg-[var(--surface)] text-[var(--ink)]"}`}
       >
         {/* Header Modal Bar */}
-        <div className="p-5 sm:p-6 flex items-center justify-between bg-gradient-to-r from-[var(--ok)]/20 via-[var(--ok)]/5 to-transparent">
+        <div className="p-5 sm:p-6 flex items-center justify-between bg-[var(--ok)]/20 ">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center/20">
               <Disc className="w-6 h-6 animate-spin-slow" />
@@ -660,7 +660,7 @@ export const SpotifyDiscographyModal: React.FC<
 
                       {/* Expanded Tracklist */}
                       {isExpanded && (
-                        <div className="border-t bg-[var(--sunken)] p-3 sm:p-4 space-y-1.5">
+                        <div className=" bg-[var(--sunken)] p-3 sm:p-4 space-y-1.5">
                           <div className="text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
                             <span>
                               Tracklist Oficial de Spotify (

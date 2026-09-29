@@ -727,13 +727,13 @@ export default function PracticeModePanel({
             </div>
 
             {/* Transporte + Looper de Secciones Inteligentes + Velocidad & Tono */}
-            <div className={`rounded-[var(--r-l)] border p-4 space-y-4 shadow-xl ${cardBg}`}>
+            <div className={`rounded-[var(--r-l)] p-4 space-y-4 ${cardBg}`}>
               {/* Reproductor principal y barra de tiempo con zona de bucle visual */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="w-11 h-11 rounded-[var(--r-l)] bg-gradient-to-tr from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-[var(--ok)]/40 transition-all active:scale-95 cursor-pointer"
+                    className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--ok)]  text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110/40 transition-all active:scale-95 cursor-pointer"
                     title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
                   >
                     {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -816,7 +816,7 @@ export default function PracticeModePanel({
                           onClick={() => applySmartSectionLoop(sec)}
                           className={`px-2.5 py-1.5 rounded-[var(--r-m)] border text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
-                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 shadow-md shadow-[var(--acc)]/40 ring-1 ring-[var(--acc)]'
+                              ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30/40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
                                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
                                 : 'bg-[var(--ink)]/5 border-[var(--hair)]/10 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]/20'

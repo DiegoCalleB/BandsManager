@@ -1638,7 +1638,7 @@ export function PdfExportModal({
             <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
               <button
                 onClick={() => handlePrint()}
-                className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-black transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95 hover:shadow-[var(--ok)]/20"
+                className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-black transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95/20"
               >
                 <Printer className="w-4 h-4" />
                 {/*"Músico(s)", no"Hoja(s)": cada uno puede generar más de una página física según
@@ -2064,7 +2064,7 @@ export function PdfExportModal({
                     </div>
                   </div>
 
-                  <div className="border-2 bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
+                  <div className=" bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
                     <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)] tracking-widest">
                       {!isCurrentMaster
                         ? "REPERTORIO PERSONALIZADO"

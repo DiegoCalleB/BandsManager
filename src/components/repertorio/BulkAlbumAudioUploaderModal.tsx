@@ -634,7 +634,7 @@ export function BulkAlbumAudioUploaderModal({
         className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden ${"bg-[var(--surface)] text-[var(--ink)]"}`}
       >
         {/* Modal Header */}
-        <div className="p-6 flex items-center justify-between shrink-0 bg-gradient-to-r from-[var(--ok)]/10 to-transparent">
+        <div className="p-6 flex items-center justify-between shrink-0 bg-[var(--ok)]/10 ">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 flex items-center justify-center text-[var(--ok)]">
               <FolderUp className="w-6 h-6" />

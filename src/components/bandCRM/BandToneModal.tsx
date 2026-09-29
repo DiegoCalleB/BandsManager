@@ -465,7 +465,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       }
                       className={`py-1 px-2.5 rounded-[var(--r-m)] text-[10px] font-bold transition-all cursor-pointer ${
                         isActive
-                          ? "bg-[var(--acc)] text-[var(--ink)] shadow-sm font-extrabold"
+                          ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
                       }`}
                     >
@@ -924,7 +924,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                             );
                             onClose();
                           }}
-                          className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-[10px] flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[var(--ok)]/20 transition-all"
+                          className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-[10px] flex items-center justify-center gap-2 cursor-pointer/20 transition-all"
                         >
                           <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch
                           Personalizado en Co-Booking

@@ -354,7 +354,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 config.bandasSimilares.map((band, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)] shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)]"
                   >
                     <span>{band}</span>
                     <button
@@ -391,7 +391,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 type="button"
                 onClick={handleAddSimilarBand}
                 disabled={!similarBandInput.trim()}
-                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition shadow-sm cursor-pointer shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir</span>

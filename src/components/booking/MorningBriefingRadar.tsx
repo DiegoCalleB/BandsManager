@@ -234,9 +234,9 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
   const totalActionCount = priorityItems.repliedCount + priorityItems.draftCount;
 
   return (
-    <div className="w-full bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] overflow-hidden shadow-2xl transition-all">
+    <div className="w-full bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] overflow-hidden transition-all">
       {/* HEADER PRINCIPAL / RADAR DE ACCIÓN */}
-      <div className="p-3.5 sm:p-4 bg-gradient-to-r from-[var(--acc)]/15 via-[var(--surface)] to-[var(--acc)]/10 border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
+      <div className="p-3.5 sm:p-4 bg-[var(--acc)]/15  border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 flex items-center justify-center shrink-0">
             <Sparkles className="w-5 h-5 text-[var(--acc)]" />
@@ -323,14 +323,14 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                   {priorityItems.all.map(({ lead, priorityType, tagLabel, tagColor, isDraft, hasDateConflict }) => (
                     <div
                       key={lead.id}
-                      className="bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] border border-[var(--hair)] hover:border-[var(--ink-3)] transition-all flex flex-col justify-between space-y-3 shadow-md group"
+                      className="bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] border border-[var(--hair)] hover:border-[var(--ink-3)] transition-all flex flex-col justify-between space-y-3 group"
                     >
                       <div className="space-y-2">
                         {/* Cabecera del Lead */}
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] border ${tagColor}`}>{tagLabel}</span>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${tagColor}`}>{tagLabel}</span>
                               {lead.ultimo_sentimiento_score !== undefined && (
                                 <span
                                   className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
@@ -462,7 +462,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {routingOpportunities.map((opp, idx) => (
-                      <div key={idx} className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border border-[var(--hair)] space-y-3 shadow-md">
+                      <div key={idx} className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border border-[var(--hair)] space-y-3">
                         <div className="flex items-start justify-between">
                           <div>
                             <span className="text-[10px] font-mono text-[var(--acc)] font-bold block">

@@ -315,7 +315,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                   <div
                     key={alert.id}
                     id={`alert-card-${alert.id}`}
-                    className={`p-4 rounded-[var(--r-l)] border transition-all duration-200 relative group flex flex-col justify-between ${cardBg}`}
+                    className={`p-4 rounded-[var(--r-l)] transition-all duration-200 relative group flex flex-col justify-between ${cardBg}`}
                   >
                     <div>
                       {/* Top status bar */}
@@ -324,7 +324,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           {!isRead && <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0" title="Sin leer" />}
 
                           <span
-                            className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold border ${badgeStyle}`}
+                            className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold ${badgeStyle}`}
                           >
                             {alert.category}
                           </span>

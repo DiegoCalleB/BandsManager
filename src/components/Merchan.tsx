@@ -371,7 +371,7 @@ export default function Merchan({
 
       {/* 🎁 Banner de Regalo Pendiente de Canjear */}
       {hasGiftPending && (
-        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/15 to-[var(--acc)]/10  flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/20   flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center shrink-0">
               <Gift className="w-6 h-6 stroke-[2.5]" />
@@ -403,7 +403,7 @@ export default function Merchan({
                 setClaimStep("form");
                 setShowClaimModal(true);
               }}
-              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
             >
               <PackageCheck className="w-4 h-4" />
               <span>Canjear Pegatinas Gratis</span>
@@ -660,7 +660,7 @@ export default function Merchan({
               isGenerating
                 ? "opacity-70 cursor-not-allowed"
                 : "hover:scale-[1.01]"
-            } ${"bg-gradient-to-br from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)]/10"}`}
+            } ${"bg-[var(--acc)]  text-[var(--ink)]/10"}`}
           >
             {isGenerating ? (
               <>
@@ -879,7 +879,7 @@ export default function Merchan({
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
           <div className="relative w-full max-w-2xl rounded-[var(--r-xl)] bg-[var(--surface)]  overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[var(--sunken)] flex items-center justify-between">
+            <div className="p-5 bg-[var(--surface)]  flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center font-bold">
                   <Gift className="w-5 h-5 stroke-[2.5]" />
@@ -1130,7 +1130,7 @@ export default function Merchan({
                   <button
                     type="button"
                     onClick={() => setClaimStep("success")}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans tracking-wider hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans tracking-wider hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
                   >
                     <PackageCheck className="w-4 h-4" />
                     <span>Pedir mis pegatinas</span>

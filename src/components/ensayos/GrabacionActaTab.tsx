@@ -306,7 +306,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     return (
                       <div
                         key={i}
-                        className="w-1.5 bg-gradient-to-t from-[var(--alert)] to-[var(--acc)] rounded-[var(--r-pill)] transition-all duration-150"
+                        className="w-1.5 bg-[var(--alert)]  rounded-[var(--r-pill)] transition-all duration-150"
                         style={{ height: `${height}%` }}
                       />
                     );
@@ -459,7 +459,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
       </div>
 
       {/* Bottom Section: AI Generated Minutes / Acta del Ensayo */}
-      <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] space-y-5">
+      <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[var(--surface)]  space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">

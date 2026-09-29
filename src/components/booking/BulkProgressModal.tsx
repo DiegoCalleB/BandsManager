@@ -53,7 +53,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
         <div className="w-full max-w-lg bg-[var(--surface)]/40 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[85vh] my-auto">
           {/* Header */}
-          <div className="p-4 sm:p-5800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
+          <div className="p-4 sm:p-5800 bg-[var(--surface)]  flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]/70">
                 {isCompleted ? (
@@ -102,8 +102,8 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               <div
                 className={`h-full transition-all duration-300 rounded-[var(--r-pill)] ${
                   isCompleted
-                    ? "bg-gradient-to-r from-[var(--ok)] to-[var(--ok)]"
-                    : "bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)]"
+                    ? "bg-[var(--ok)] "
+                    : "bg-[var(--acc)] "
                 }`}
                 style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
               />

@@ -26,7 +26,7 @@ export const OndaShowcase: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 p-6 bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] rounded-[var(--r-l)]">
+    <div className="space-y-6 p-6 bg-[var(--surface)]  rounded-[var(--r-l)]">
       {/* Header */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ export const OndaShowcase: React.FC = () => {
       </div>
 
       {/* Callout */}
-      <div className="border-l-4 pl-4 py-2 space-y-1">
+      <div className=" pl-4 py-2 space-y-1">
         <p className="text-sm font-semibold text-[var(--ink)]">La personalidad se ve en detalles como este.</p>
         <p className="text-xs text-[var(--ink-2)]">
           Onda no es solo una forma diferente de graficar — es el único lenguaje visual de BandManager. Hace que cualquiera que use la app

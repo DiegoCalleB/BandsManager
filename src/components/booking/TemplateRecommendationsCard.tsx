@@ -23,7 +23,7 @@ export function TemplateRecommendationsCard({
   return (
     <div
       className={`rounded-[var(--r-m)] border p-4 transition-all duration-200 ${
-        'bg-[var(--acc-soft)]/70 border-[var(--hair)] text-[var(--ink)] shadow-sm'
+        'bg-[var(--acc-soft)]/70 border-[var(--hair)] text-[var(--ink)]'
       }`}
     >
       {/* Header with category badge & toggle */}
@@ -56,7 +56,7 @@ export function TemplateRecommendationsCard({
             type="button"
             onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
             disabled={isOptimizing}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer active:scale-95 disabled:opacity-50 ${
+            className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-50 ${
               'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-extrabold'
             }`}
             title="Aplica la recomendación del agente y re-redacta la plantilla y pautas con IA"

@@ -1596,7 +1596,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <button
             type="button"
             onClick={() => setShowWhatsAppModal(true)}
-            className="py-2.5 px-3 bg-[var(--ok)]/90 hover:bg-[var(--ok)] border border-[var(--hair)] text-[var(--ok)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm group"
+            className="py-2.5 px-3 bg-[var(--ok)]/90 hover:bg-[var(--ok)] border border-[var(--hair)] text-[var(--ok)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer group"
             title={
               selectedLead.telefono_movil
                 ? `Abrir propuesta para WhatsApp (${selectedLead.telefono_movil})`
@@ -1612,7 +1612,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           {selectedLead.telefono_movil ? (
             <a
               href={`tel:${selectedLead.telefono_movil}`}
-              className="py-2.5 px-3 bg-[var(--acc)]/90 hover:bg-[var(--acc)] border border-[var(--hair)] text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+              className="py-2.5 px-3 bg-[var(--acc)]/90 hover:bg-[var(--acc)] border border-[var(--hair)] text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
               title={`Llamar al teléfono móvil: ${selectedLead.telefono_movil}`}
             >
               <Smartphone className="w-4 h-4 text-[var(--acc)] shrink-0" />
@@ -1623,7 +1623,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           {selectedLead.telefono_fijo ? (
             <a
               href={`tel:${selectedLead.telefono_fijo}`}
-              className="py-2.5 px-3 bg-[var(--acc)]/90 hover:bg-[var(--acc)] border border-[var(--hair)] text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+              className="py-2.5 px-3 bg-[var(--acc)]/90 hover:bg-[var(--acc)] border border-[var(--hair)] text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
               title={`Llamar al teléfono fijo: ${selectedLead.telefono_fijo}`}
             >
               <Phone className="w-4 h-4 text-[var(--acc)] shrink-0" />
@@ -2971,7 +2971,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           {/* ⏰ Gentle Nudge / Seguimiento Recomendado Banner */}
           {isLeadNeedsFollowup(selectedLead) && (
-            <div className="p-3 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--surface)] to-[var(--acc)]/20 border border-[var(--hair)] rounded-[var(--r-m)] flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+            <div className="p-3 bg-[var(--acc)]/40  border border-[var(--hair)] rounded-[var(--r-m)] flex flex-wrap items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 flex items-center justify-center shrink-0">
                   <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -2997,7 +2997,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   setEditedPitch(draft);
                   setIsEditingPitch(true);
                 }}
-                className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
                 <span>⚡ Cargar Nudge (40 palabras)</span>
@@ -3020,7 +3020,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               (selectedLead.fechas_propuestas_sala &&
                 selectedLead.fechas_propuestas_sala.length > 0) ||
               selectedLead.condiciones_economicas_detectadas) && (
-              <div className="p-3.5 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--surface)] to-[var(--acc)]/30 border border-[var(--hair)] rounded-[var(--r-m)] space-y-2.5 shadow-md">
+              <div className="p-3.5 bg-[var(--acc)]/40  border border-[var(--hair)] rounded-[var(--r-m)] space-y-2.5">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-base">⚡</span>
@@ -3045,7 +3045,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           setIsEditingPitch(true);
                         }
                       }}
-                      className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] rounded-[var(--r-m)] flex items-center gap-1 transition-all cursor-pointer shadow-sm"
+                      className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] rounded-[var(--r-m)] flex items-center gap-1 transition-all cursor-pointer"
                       title="Cargar la propuesta de respuesta sugerida por el playbook táctico"
                     >
                       <Sparkles className="w-3 h-3" />
@@ -3160,7 +3160,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowMultiModelModal(true)}
-                  className="px-2.5 py-1 bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/20 to-[var(--ok)]/20 hover:from-[var(--acc)]/30 hover:to-[var(--ok)]/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+                  className="px-2.5 py-1 bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer transition-all"
                   title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
                 >
                   <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -3213,7 +3213,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Active Campaign Context Banner in Pitch Section */}
             {activeCampaign && activeCampaign.isActive !== false && (
-              <div className="mb-2.5 p-2.5 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--acc)]/30 to-[var(--acc)]/40 rounded-[var(--r-m)] space-y-2">
+              <div className="mb-2.5 p-2.5 bg-[var(--acc)]/40  rounded-[var(--r-m)] space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-xs shrink-0">🎯</span>
@@ -3474,7 +3474,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             )}
 
             {/* SECCIÓN DE FEEDBACK Y ENTRENAMIENTO IA DEL PITCH (DYNAMIC FEW-SHOT & SELF-REFINING TONE DNA) */}
-            <div className="mt-4 p-3.5 bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] rounded-[var(--r-m)] space-y-3">
+            <div className="mt-4 p-3.5 bg-[var(--surface)]  rounded-[var(--r-m)] space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -3827,7 +3827,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         <div className="space-y-3">
           {/* ⏰ Gentle Nudge / Seguimiento Recomendado Banner */}
           {isLeadNeedsFollowup(selectedLead) && (
-            <div className="p-3 bg-gradient-to-r from-[var(--acc)]/40 via-[var(--surface)] to-[var(--acc)]/20 border border-[var(--hair)] rounded-[var(--r-m)] flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+            <div className="p-3 bg-[var(--acc)]/40  border border-[var(--hair)] rounded-[var(--r-m)] flex flex-wrap items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 flex items-center justify-center shrink-0">
                   <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -3857,7 +3857,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   }
                   setActiveTab("info");
                 }}
-                className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
                 <span>⚡ Cargar Nudge de Seguimiento</span>
@@ -4094,7 +4094,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               type="button"
               onClick={handleEnrichAllApis}
               disabled={isEnrichingApis}
-              className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+              className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               title="Volver a consultar todas las APIs en tiempo real"
             >
               <RefreshCw
@@ -4517,7 +4517,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
                 {selectedLead.social_engagement?.calidad_promo_sala && (
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
                       selectedLead.social_engagement.calidad_promo_sala ===
                       "alta"
                         ? "bg-[var(--ok)]/60 border-[var(--hair)] text-[var(--ok)]"
@@ -4621,7 +4621,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {selectedLead.booking_window_info
                   ?.estado_calendario_estimado && (
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
                       selectedLead.booking_window_info
                         .estado_calendario_estimado === "abierto"
                         ? "bg-[var(--ok)]/60 border-[var(--hair)] text-[var(--ok)]"
@@ -4723,7 +4723,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
                 {selectedLead.local_events_clash_info?.eventos_detectados && (
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
                       selectedLead.local_events_clash_info.eventos_detectados.some(
                         (e) => e.nivel_riesgo_solapamiento === "alto",
                       )
@@ -5059,7 +5059,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           </div>
 
           {/* 7. HERRAMIENTA 5: SIMULADOR INTERACTIVO DE TAQUILLA, CACHÉ & BREAK-EVEN (P&L FINANCIERO) */}
-          <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--ok)]/30 space-y-3.5 shadow-lg">
+          <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--ok)]/30 space-y-3.5">
             <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2 flex-wrap gap-2">
               <div className="flex items-center gap-2 text-[var(--ok)] font-bold text-xs">
                 <Calculator className="w-4 h-4" />
@@ -5072,7 +5072,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={() => handleRecalculateFinancial()}
                   disabled={isRecalculatingFinancial}
-                  className="px-3 py-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                  className="px-3 py-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 >
                   <RefreshCw
                     className={`w-3.5 h-3.5 ${isRecalculatingFinancial ? "animate-spin" : ""}`}

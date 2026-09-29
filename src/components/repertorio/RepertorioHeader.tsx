@@ -54,7 +54,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
             id="tab-btn-canciones"
             onClick={() => setActiveTab('canciones')}
             className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
-              activeTab === 'canciones' ? 'shadow-sm' : 'hover:opacity-80'
+              activeTab === 'canciones' ? '' : 'hover:opacity-80'
             }`}
             style={{
               backgroundColor: activeTab === 'canciones' ? colors.primary : 'transparent',
@@ -68,7 +68,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
             id="tab-btn-setlists"
             onClick={() => setActiveTab('setlists')}
             className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
-              activeTab === 'setlists' ? 'shadow-sm' : 'hover:opacity-80'
+              activeTab === 'setlists' ? '' : 'hover:opacity-80'
             }`}
             style={{
               backgroundColor: activeTab === 'setlists' ? colors.primary : 'transparent',

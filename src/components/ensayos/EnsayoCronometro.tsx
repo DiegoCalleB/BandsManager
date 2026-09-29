@@ -109,7 +109,7 @@ export function EnsayoCronometro({
   }
 
   return (
-    <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] relative overflow-hidden">
+    <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]  relative overflow-hidden">
       {/* Background soft when running */}
       {isActive && (
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-[var(--r-pill)] blur-3xl pointer-events-none" />
@@ -197,10 +197,10 @@ export function EnsayoCronometro({
           <div
             className={`h-full rounded-[var(--r-pill)] transition-all duration-300 ${
               isOvertime
-                ? "bg-gradient-to-r from-[var(--alert)] to-[var(--alert)]"
+                ? "bg-[var(--alert)] "
                 : progressPct > 80
-                  ? "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]"
-                  : "bg-gradient-to-r from-[var(--ok)] to-[var(--ok)]"
+                  ? "bg-[var(--acc)] "
+                  : "bg-[var(--ok)] "
             }`}
             style={{ width: `${progressPct}%` }}
           />

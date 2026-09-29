@@ -83,12 +83,12 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface)]/80 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface)]/80 animate-fadeIn">
+      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="px-6 py-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)] shadow-md">
+            <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--ink)]">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -169,7 +169,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
                 <img
                   src={generatedLogo}
                   alt="Logo generado con IA"
-                  className="w-44 h-44 rounded-[var(--r-l)] object-contain p-2 bg-[var(--surface)] border border-[var(--hair)] shadow-xl"
+                  className="w-44 h-44 rounded-[var(--r-l)] object-contain p-2 bg-[var(--surface)] border border-[var(--hair)]"
                 />
               </div>
             </div>
@@ -212,7 +212,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <button
                 type="button"
                 onClick={handleApplyLogo}
-                className="px-4 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition shadow-lg"
+                className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition"
               >
                 <Check className="w-4 h-4" /> Aplicar al EPK
               </button>

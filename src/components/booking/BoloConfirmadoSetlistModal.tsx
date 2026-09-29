@@ -387,7 +387,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 isSubmitting || (!selectedSetlistId && !generateNewSetlist)
               }
               onClick={handleSaveAndLink}
-              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--ok)]  text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               <Check className="w-4 h-4 stroke-[3]" />
               <span>

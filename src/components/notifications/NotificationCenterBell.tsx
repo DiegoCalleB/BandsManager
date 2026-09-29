@@ -110,7 +110,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
         {/* Unread badge count */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)] text-[10px] font-black font-mono text-[var(--ink)] shadow-md animate-pulse">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)] text-[10px] font-black font-mono text-[var(--ink)] animate-pulse">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -126,10 +126,10 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         <div
           className={`absolute ${
             variant === 'mobile' ? 'right-0 top-12 w-[300px] sm:w-[360px]' : 'right-0 md:left-0 top-12 w-[320px] sm:w-[380px]'
-          } z-50 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
+          } z-50 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
         >
           {/* Header */}
-          <div className="p-3.5 border-b border-[var(--hair)] bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-[#141312] flex items-center justify-between">
+          <div className="p-3.5 border-b border-[var(--hair)] bg-[var(--acc)]/30  flex items-center justify-between">
             <div className="flex items-center gap-2">
               <BellRing className="w-4 h-4 text-[var(--acc)]" />
               <span className="font-bold text-xs text-[var(--ink-2)] font-display">Notificaciones</span>

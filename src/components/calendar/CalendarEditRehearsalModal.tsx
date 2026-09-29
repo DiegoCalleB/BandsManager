@@ -54,9 +54,9 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
 
   return (
     <ModalPortal isOpen={true} onClose={() => setViewingRehearsal(null)}>
-      <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+      <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
-          className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
+          className={`w-full max-w-md rounded-[var(--r-l)] p-6 relative my-auto max-h-[90vh] overflow-y-auto ${
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
@@ -231,7 +231,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
+                  className="px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer font-bold"
                 >
                   Guardar Cambios
                 </button>

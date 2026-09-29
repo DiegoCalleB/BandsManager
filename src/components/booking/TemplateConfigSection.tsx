@@ -142,7 +142,7 @@ export function TemplateConfigSection({
                   setShowRecommendations(false);
                 }}
                 className={`py-1.5 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  isActive ? 'bg-[var(--acc)] text-[var(--ink)] font-black shadow-md' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
+                  isActive ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
                 }`}
               >
                 <IconComp className="w-3.5 h-3.5" />
@@ -158,7 +158,7 @@ export function TemplateConfigSection({
             <button
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
-              className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--acc)]/20 to-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] hover:border-[var(--ink-3)] hover:text-[var(--ink)] flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/20  text-[var(--acc)] border border-[var(--hair)] hover:border-[var(--ink-3)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
               title="Genera las 7 plantillas desde una propuesta base"
             >
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -170,7 +170,7 @@ export function TemplateConfigSection({
             id="template-btn-save"
             type="button"
             onClick={onSaveTemplates}
-            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Guardar</span>

@@ -898,7 +898,7 @@ export function SongTransitionPreviewModal({
                   {/* VU Meter for Track A */}
                   <div className="w-full bg-[var(--sunken)] h-1 rounded-[var(--r-pill)] overflow-hidden800">
                     <div
-                      className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] transition-all duration-75"
+                      className="h-full bg-[var(--acc)]  transition-all duration-75"
                       style={{ width: `${Math.min(100, liveGainA * 100)}%` }}
                     />
                   </div>
@@ -1073,7 +1073,7 @@ export function SongTransitionPreviewModal({
                   {/* VU Meter for Track B */}
                   <div className="w-full bg-[var(--sunken)] h-1 rounded-[var(--r-pill)] overflow-hidden800">
                     <div
-                      className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] transition-all duration-75"
+                      className="h-full bg-[var(--ok)]  transition-all duration-75"
                       style={{ width: `${Math.min(100, liveGainB * 100)}%` }}
                     />
                   </div>
@@ -1251,7 +1251,7 @@ export function SongTransitionPreviewModal({
                 {/* Crossfade overlap highlight */}
                 {config.style === "crossfade" && (
                   <div
-                    className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-[var(--acc)]/30 to-[var(--ok)]/30  pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
+                    className="absolute top-0.5 bottom-0.5 bg-[var(--acc)]/30   pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
                     style={{
                       left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
                       width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`,

@@ -63,9 +63,9 @@ export function GenerateAllTemplatesModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl border overflow-hidden ${
+        className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] border overflow-hidden ${
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
@@ -77,10 +77,10 @@ export function GenerateAllTemplatesModal({
         >
           <div className="flex items-center gap-2.5">
             <div
-              className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-black shadow-md ${
+              className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-black ${
                 isCampaign
-                  ? 'bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)] shadow-[var(--acc)]/20'
-                  : 'bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)] shadow-[var(--acc)]/20'
+                  ? 'bg-[var(--acc)]  text-[var(--ink)]/20'
+                  : 'bg-[var(--acc)]  text-[var(--ink)]/20'
               }`}
             >
               <Wand2 className="w-5 h-5" />
@@ -259,10 +259,10 @@ export function GenerateAllTemplatesModal({
             type="button"
             onClick={handleSubmit}
             disabled={isGenerating || !baseProposal.trim()}
-            className={`px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 shadow-lg hover:brightness-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+            className={`px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 hover:brightness-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
               isCampaign
-                ? 'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] shadow-[var(--acc)]/25'
-                : 'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] shadow-[var(--acc)]/20'
+                ? 'bg-[var(--acc)]  text-[var(--ink)]/25'
+                : 'bg-[var(--acc)]  text-[var(--ink)]/20'
             }`}
           >
             {isGenerating ? (

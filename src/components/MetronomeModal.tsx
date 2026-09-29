@@ -215,7 +215,7 @@ export function MetronomeModal({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="bg-gradient-to-b from-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
+        <div className="bg-[var(--surface)]  rounded-[var(--r-l)] w-full max-w-md overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
           {/* Header */}
           <div className="p-4 flex items-center justify-between bg-[var(--ink)]/5">
             <div className="flex items-center gap-2">
@@ -386,7 +386,7 @@ export function MetronomeModal({
               {/* Tap Tempo Button */}
               <button
                 onClick={handleTapTempo}
-                className="bg-gradient-to-br from-[var(--acc)]/20 to-[var(--acc)]/20 hover:from-[var(--acc)]/30 hover:to-[var(--acc)]/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
+                className="bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
               >
                 <span className="text-xs font-black text-[var(--acc)]/70 tracking-wider group-hover:scale-105 transition-transform">
                   👆 TAP TEMPO
@@ -432,7 +432,7 @@ export function MetronomeModal({
                 className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98 ${
                   isPlaying
                     ? "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)]"
-                    : "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)]"
+                    : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
                 }`}
               >
                 {isPlaying ? (

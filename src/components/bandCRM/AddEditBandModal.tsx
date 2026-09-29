@@ -94,9 +94,9 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+    <div className="fixed inset-0 bg-[var(--scrim)]/85 flex items-center justify-center p-4 z-[9999]">
       <div
-        className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
+        className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
           'bg-[var(--surface)] text-[var(--ink)]'
         }`}
       >
@@ -122,7 +122,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   type="button"
                   onClick={handleAiLookup}
                   disabled={isAiSearching || !formName.trim()}
-                  className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] transition-all disabled:opacity-50 cursor-pointer shadow-sm"
+                  className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] transition-all disabled:opacity-50 cursor-pointer"
                 >
                   {isAiSearching ? (
                     <>
@@ -165,7 +165,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             )}
 
             {aiProposal && (
-              <div className="md:col-span-2 p-3.5 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-m)] space-y-3 text-xs font-mono shadow-xl">
+              <div className="md:col-span-2 p-3.5 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-m)] space-y-3 text-xs font-mono">
                 <div className="flex items-center justify-between border-b border-[var(--hair)] pb-2">
                   <div className="flex items-center gap-1.5 text-[var(--acc)] font-bold">
                     <Sparkles className="w-4 h-4" />
@@ -540,7 +540,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer shadow-md"
+              className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer"
             >
               {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
             </button>

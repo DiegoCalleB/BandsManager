@@ -1949,7 +1949,7 @@ export default function ReelsCenter({
                         id="btn-reels-hype"
                         onClick={() => handleGenerateCopy("hype")}
                         disabled={isGenerating}
-                        className={`w-full py-3 font-sans font-bold text-xs tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]"}`}
+                        className={`w-full py-3 font-sans font-bold text-xs tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--acc)]  text-[var(--acc-ink)]"}`}
                       >
                         <Flame className="w-4 h-4" /> Balkan Hype 🎺🔥
                       </button>
@@ -2341,7 +2341,7 @@ export default function ReelsCenter({
                     }
                     className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all ${
                       (inputType === "file" ? selectedFile : youtubeUrl)
-                        ? "bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]/10 hover:scale-[1.01]"
+                        ? "bg-[var(--acc)]  text-[var(--acc-ink)]/10 hover:scale-[1.01]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                     }`}
                   >
@@ -2388,7 +2388,7 @@ export default function ReelsCenter({
                       className={`w-full h-1.5 rounded-[var(--r-pill)] overflow-hidden ${"bg-[var(--surface)]"}`}
                     >
                       <div
-                        className={`h-full transition-all duration-500 ${"bg-gradient-to-r from-[var(--acc)] to-[var(--accent)]"}`}
+                        className={`h-full transition-all duration-500 ${"bg-[var(--acc)] "}`}
                         style={{
                           width: `${((loadingStep + 1) / getLoadingSteps().length) * 100}%`,
                         }}
@@ -3465,7 +3465,7 @@ export default function ReelsCenter({
                             </div>
                             <div className="relative w-full h-1 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
                               <div
-                                className={`absolute top-0 left-0 h-full rounded-[var(--r-pill)] transition-all duration-1000 ease-linear ${"bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]"}`}
+                                className={`absolute top-0 left-0 h-full rounded-[var(--r-pill)] transition-all duration-1000 ease-linear ${"bg-[var(--acc)] "}`}
                                 style={{ width: `${pct}%` }}
                               />
                             </div>
@@ -3544,7 +3544,7 @@ export default function ReelsCenter({
           onClick={() => setIsExpandedPreview(false)}
           className="fixed inset-0 z-[200] bg-[var(--surface)]/98 flex flex-col items-center justify-start lg:justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-fade-in"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent)]/5 via-transparent to-[var(--acc)]/5 pointer-events-none" />
+          <div className="absolute inset-0 bg-[var(--accent)]/5  pointer-events-none" />
 
           {/* Floating Close/Minimise button in the top right corner of the screen */}
           <button
@@ -3790,7 +3790,7 @@ export default function ReelsCenter({
                             </div>
                             <div className="relative w-full h-1 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
                               <div
-                                className="absolute top-0 left-0 h-full rounded-[var(--r-pill)] transition-all duration-1000 ease-linear bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]"
+                                className="absolute top-0 left-0 h-full rounded-[var(--r-pill)] transition-all duration-1000 ease-linear bg-[var(--acc)] "
                                 style={{ width: `${pct}%` }}
                               />
                             </div>
@@ -4355,7 +4355,7 @@ export default function ReelsCenter({
                         </p>
                         <div className="w-full h-1 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--ok)]"
+                            className="h-full bg-[var(--acc)] "
                             style={{ width: "75% " }}
                           ></div>
                         </div>
@@ -4474,7 +4474,7 @@ export default function ReelsCenter({
                         <button
                           type="button"
                           onClick={handleCutPhysicalVideo}
-                          className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] hover:brightness-105 active:scale-[0.99] font-sans font-black text-xs text-[var(--ink)] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
+                          className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:brightness-105 active:scale-[0.99] font-sans font-black text-xs text-[var(--ink)] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
                         >
                           <Sparkles className="w-4 h-4 text-[var(--ink)] fill-bg-[var(--surface)]" />
                           <span>

@@ -994,7 +994,7 @@ export function ReelsMetricsView({
             onClick={() => setActiveMainSection("growth_plan")}
             className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
               activeMainSection === "growth_plan"
-                ? "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)]/10 font-black"
+                ? "bg-[var(--acc)]  text-[var(--ink)]/10 font-black"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -1778,7 +1778,7 @@ export function ReelsMetricsView({
           {/* 3. Vistas de Videos & Contenidos Reales (YouTube / Reels) */}
           <div className={`${colors.card} p-5 space-y-4`}>
             <div
-              className={`border-b pb-2 flex items-center justify-between ${""}`}
+              className={` pb-2 flex items-center justify-between ${""}`}
             >
               <div>
                 <h3
@@ -1873,7 +1873,7 @@ export function ReelsMetricsView({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Guardar/Editar Log Form (5 columns) */}
             <div className={`lg:col-span-5 ${colors.card} p-5 space-y-4`}>
-              <div className={`border-b pb-2 ${""}`}>
+              <div className={` pb-2 ${""}`}>
                 <h3
                   className={`text-xs font-bold font-display tracking-widest flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
                 >
@@ -2063,7 +2063,7 @@ export function ReelsMetricsView({
                     <button
                       type="button"
                       onClick={handleCancelEditMetric}
-                      className={`px-2 py-1 rounded font-sans text-[10px] font-bold tracking-widest cursor-pointer transition-all ${"border text-[var(--ink-2)] bg-[var(--bg)] hover:bg-[var(--sunken)]"}`}
+                      className={`px-2 py-1 rounded font-sans text-[10px] font-bold tracking-widest cursor-pointer transition-all ${" text-[var(--ink-2)] bg-[var(--bg)] hover:bg-[var(--sunken)]"}`}
                     >
                       Cancelar
                     </button>
@@ -2076,7 +2076,7 @@ export function ReelsMetricsView({
             <div
               className={`lg:col-span-7 ${colors.card} p-5 space-y-4 flex flex-col min-w-0`}
             >
-              <div className={`border-b pb-2 ${""}`}>
+              <div className={` pb-2 ${""}`}>
                 <h3
                   className={`text-xs font-bold font-display tracking-widest flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
                 >
@@ -2093,7 +2093,7 @@ export function ReelsMetricsView({
                 <table className="w-full text-left text-[10px] font-sans">
                   <thead>
                     <tr
-                      className={`border-b text-[var(--ink-2)] tracking-wider text-[8px] ${""}`}
+                      className={` text-[var(--ink-2)] tracking-wider text-[8px] ${""}`}
                     >
                       <th className="py-2.5 font-medium">Fecha</th>
                       {hasInstagram && (
@@ -2316,9 +2316,9 @@ export function ReelsMetricsView({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-5 flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/30 via-[var(--acc)]/20 to-[var(--surface)]">
+            <div className="p-5 flex items-center justify-between bg-[var(--acc)]/30 ">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)]">
+                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--ink)]">
                   <Instagram className="w-5 h-5" />
                 </div>
                 <div>
@@ -2521,7 +2521,7 @@ export function ReelsMetricsView({
                     className={`px-4 py-2.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
                       isConnectingIg || !igTokenInput.trim()
                         ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                        : "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)]"
+                        : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
                     }`}
                   >
                     {isConnectingIg ? (
@@ -2673,7 +2673,7 @@ export function ReelsMetricsView({
 
                 {!scanImageBase64 ? (
                   <label
-                    className={`border-2 rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${"bg-[var(--sunken)] hover:bg-[var(--surface)]/80"}`}
+                    className={` rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${"bg-[var(--sunken)] hover:bg-[var(--surface)]/80"}`}
                   >
                     <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center justify-center mb-3">
                       <UploadCloud className="w-6 h-6" />
@@ -2730,7 +2730,7 @@ export function ReelsMetricsView({
                   className={`w-full py-3 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     isAnalyzingScreenshot
                       ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                      : "bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)]"
+                      : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
                   }`}
                 >
                   {isAnalyzingScreenshot ? (

@@ -57,7 +57,7 @@ export const StepCompletedCelebration: React.FC<
   return (
     <div className="space-y-6 text-center animate-in zoom-in-95 duration-300 py-4">
       {/* Celebration Icon */}
-      <div className="w-16 h-16 rounded-[var(--r-l)] bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)] flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--acc)]  text-[var(--ink)] flex items-center justify-center mx-auto">
         <Sparkles className="w-8 h-8" />
       </div>
 

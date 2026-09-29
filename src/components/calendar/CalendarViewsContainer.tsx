@@ -188,22 +188,22 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             // Stylish border logic for non-selected vs event vs selected days
             let borderAndBgClass = '';
             if (isSelected) {
-              borderAndBgClass = 'bg-[var(--acc)] text-[var(--ink)] font-extrabold border border-[var(--hair)] shadow-xl shadow-[var(--acc)]/20 scale-[1.05] z-20';
+              borderAndBgClass = 'bg-[var(--acc)] text-[var(--ink)] font-extrabold border border-[var(--hair)]/20 scale-[1.05] z-20';
             } else if (isToday) {
               borderAndBgClass =
-                'bg-[var(--acc)]/15 text-[var(--acc)] font-bold border-2 border-[var(--acc)]/30 shadow-md shadow-[var(--acc)]/10 hover:border-[var(--ink-3)] z-10';
+                'bg-[var(--acc)]/15 text-[var(--acc)] font-bold border-2 border-[var(--acc)]/30/10 hover:border-[var(--ink-3)] z-10';
             } else if (hasConcert && hasRehearsal) {
               borderAndBgClass =
-                'bg-gradient-to-br from-[var(--acc)]/40 to-[var(--ok)]/40 border border-[var(--hair)] hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--ink)]';
+                'bg-[var(--acc)]/40  border border-[var(--hair)] hover:border-[var(--ink-3)]/10 text-[var(--ink)]';
             } else if (hasConcert) {
               borderAndBgClass =
-                'bg-[var(--acc)]/20 border border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--acc)]/10 text-[var(--acc)]';
+                'bg-[var(--acc)]/20 border border-[var(--acc)]/30 hover:border-[var(--ink-3)]/10 text-[var(--acc)]';
             } else if (hasRehearsal) {
               borderAndBgClass =
-                'bg-[var(--ok)]/20 border border-[var(--hair)] hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--ok)]/10 text-[var(--ok)]';
+                'bg-[var(--ok)]/20 border border-[var(--hair)] hover:border-[var(--ink-3)]/10 text-[var(--ok)]';
             } else if (hasCampaign) {
               borderAndBgClass =
-                'bg-[var(--acc)]/30 border border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:shadow-md hover:shadow-[var(--acc)]/20 text-[var(--acc)]';
+                'bg-[var(--acc)]/30 border border-[var(--acc)]/30 hover:border-[var(--ink-3)]/20 text-[var(--acc)]';
             } else {
               borderAndBgClass = 'bg-[var(--surface)] border border-[var(--hair)] hover:border-[var(--ink-3)] hover:bg-[var(--sunken)] text-[var(--ink)] shadow-xs';
             }
@@ -325,7 +325,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setSelectedDate(d)}
                 className={`flex flex-col items-center justify-center p-2 rounded-[var(--r-m)] transition-all cursor-pointer border ${
                   isSelected
-                    ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 shadow-md font-bold'
+                    ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)]/30 font-bold'
                     : isToday
                       ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 font-bold'
                       : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] hover:border-[var(--ink-3)]'
@@ -411,11 +411,11 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                             e.stopPropagation();
                             handleSelectEvent(c);
                           }}
-                          className={`p-2 rounded-[var(--r-m)] cursor-pointer transition-all border text-left min-w-0 ${
+                          className={`p-2 rounded-[var(--r-m)] cursor-pointer transition-all text-left min-w-0 ${
                             isEvtSelected
                               ? isPosible
-                                ? 'bg-[var(--acc)]/25 border-[var(--hair)] ring-1 ring-[var(--acc)]/50 shadow-md'
-                                : 'bg-[var(--acc)]/25 border-[var(--acc)]/30 ring-1 ring-[var(--acc)]/50 shadow-md'
+                                ? 'bg-[var(--acc)]/25 border-[var(--hair)] ring-1 ring-[var(--acc)]/50'
+                                : 'bg-[var(--acc)]/25 border-[var(--acc)]/30 ring-1 ring-[var(--acc)]/50'
                               : isPosible
                                 ? 'bg-[var(--acc)]/30 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/30 text-[var(--acc)]'
                                 : 'bg-[var(--acc)]/30 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/30'
@@ -477,11 +477,11 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                             e.stopPropagation();
                             handleSelectEvent(r);
                           }}
-                          className={`p-2 rounded-[var(--r-m)] cursor-pointer transition-all border text-left min-w-0 ${
+                          className={`p-2 rounded-[var(--r-m)] cursor-pointer transition-all text-left min-w-0 ${
                             isEvtSelected
                               ? isReu
-                                ? 'bg-[var(--acc)]/25 border-[var(--hair)] ring-1 ring-[var(--acc)]/50 shadow-md'
-                                : 'bg-[var(--ok)]/25 border-[var(--ok)]/30 ring-1 ring-[var(--ok)]/50 shadow-md'
+                                ? 'bg-[var(--acc)]/25 border-[var(--hair)] ring-1 ring-[var(--acc)]/50'
+                                : 'bg-[var(--ok)]/25 border-[var(--ok)]/30 ring-1 ring-[var(--ok)]/50'
                               : isReu
                                 ? 'bg-[var(--acc)]/30 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/30'
                                 : 'bg-[var(--ok)]/30 border-[var(--ok)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--ok)]/30'
@@ -670,7 +670,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             <button
               onClick={() => setShowCreateModal('concert')}
-              className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/90 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+              className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/90 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Añadir Evento</span>
@@ -772,7 +772,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           onClick={() => handleSelectEvent(evt)}
                           className={`flex items-center justify-between p-2.5 rounded-[var(--r-m)] cursor-pointer border transition-all ${
                             isEvtSelected
-                              ? 'bg-[var(--acc)]/20 border-[var(--hair)] shadow-md ring-1 ring-[var(--acc)]/50'
+                              ? 'bg-[var(--acc)]/20 border-[var(--hair)] ring-1 ring-[var(--acc)]/50'
                               : isConcert
                                 ? isPast
                                   ? 'bg-[var(--acc)]/15 border-[var(--acc)]/30 hover:border-[var(--ink-3)] hover:bg-[var(--acc)]/20'
@@ -805,7 +805,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                             <div className="min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">
                                 <span
-                                  className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded border ${
+                                  className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded ${
                                     isConcert
                                       ? isPast
                                         ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--hair)]'

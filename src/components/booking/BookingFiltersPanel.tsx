@@ -74,7 +74,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="p-3.5 rounded-[var(--r-l)] border bg-[var(--surface)] border-[var(--acc)]/30 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
+    <div className="p-3.5 rounded-[var(--r-l)] border bg-[var(--surface)] border-[var(--acc)]/30 space-y-3.5 animate-in slide-in-from-top-2 duration-150">
       <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/10">
         <span className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
           <Filter className="w-3.5 h-3.5" />
@@ -381,7 +381,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               type="button"
               onClick={() => setTypeFilter(t.key)}
               className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
-                typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
               }`}
             >
               {t.label}
@@ -452,7 +452,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         <button
           type="button"
           onClick={() => onClose()}
-          className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer shadow-sm"
+          className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer"
         >
           Ver {filteredCount} resultados
         </button>

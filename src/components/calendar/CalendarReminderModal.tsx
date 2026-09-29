@@ -46,9 +46,9 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4 animate-fade-in">
       <div
-        className={`max-w-md w-full rounded-[var(--r-l)] border p-5 shadow-2xl relative ${
+        className={`max-w-md w-full rounded-[var(--r-l)] border p-5 relative ${
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
@@ -169,7 +169,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             type="button"
             disabled={reminderSending}
             onClick={handleSendEventReminder}
-            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-xs font-bold text-[var(--ink)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all shadow-md"
+            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-xs font-bold text-[var(--ink)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all"
           >
             {reminderSending ? (
               <>

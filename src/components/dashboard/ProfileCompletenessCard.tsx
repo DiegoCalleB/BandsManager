@@ -440,7 +440,7 @@ export const ProfileCompletenessCard: React.FC<
       <div className="pt-3 space-y-1.5">
         <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 overflow-hidden relative">
           <div
-            className="h-full rounded-[var(--r-pill)] bg-gradient-to-r from-[var(--ok)] to-[var(--acc)] transition-all duration-500"
+            className="h-full rounded-[var(--r-pill)] bg-[var(--ok)]  transition-all duration-500"
             style={{ width: `${percentage}%` }}
           />
         </div>

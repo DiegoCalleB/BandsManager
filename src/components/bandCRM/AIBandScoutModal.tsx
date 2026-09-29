@@ -118,7 +118,7 @@ export function AIBandScoutModal({
           className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh]`}
         >
           {/* Header */}
-          <div className="p-4/10 flex justify-between items-center bg-gradient-to-r from-[var(--acc)]/10 to-[var(--acc)]/10">
+          <div className="p-4/10 flex justify-between items-center bg-[var(--acc)]/10 ">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc)]">
                 <Sparkles className="w-5 h-5" />
@@ -265,7 +265,7 @@ export function AIBandScoutModal({
                       <div className="flex items-center gap-4">
                         <div
                           className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center shrink-0
- ${selectedBands.has(idx) ? "bg-[var(--acc)] text-[var(--ink)]" : "border-2"}`}
+ ${selectedBands.has(idx) ? "bg-[var(--acc)] text-[var(--ink)]" : ""}`}
                         >
                           {selectedBands.has(idx) && (
                             <CheckCircle2 className="w-4 h-4" />

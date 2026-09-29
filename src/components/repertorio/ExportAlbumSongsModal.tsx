@@ -491,7 +491,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
           className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] transition-all ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
           {/* Header */}
-          <div className="p-4 sm:p-5 flex items-center justify-between gap-3 bg-gradient-to-r from-[var(--ok)]/10 via-transparent to-transparent">
+          <div className="p-4 sm:p-5 flex items-center justify-between gap-3 bg-[var(--ok)]/10 ">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 flex items-center justify-center text-[var(--ok)] shrink-0">
                 <Download className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -561,7 +561,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   onClick={() => setFormat("zip")}
                   className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
                     format === "zip"
-                      ? "bg-gradient-to-br from-[var(--ok)]/30 to-[var(--ok)]/40 text-[var(--ink)] ring-1 ring-[var(--ok)]/40"
+                      ? "bg-[var(--ok)]/30  text-[var(--ink)] ring-1 ring-[var(--ok)]/40"
                       : "bg-[var(--ok)]/10 text-[var(--ink-2)] hover:bg-[var(--ok)]/20"
                   }`}
                 >
@@ -730,7 +730,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                 {zipProgress.total > 0 && (
                   <div className="w-full h-2 bg-[var(--surface)] rounded-[var(--r-pill)] overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] transition-all duration-300 rounded-[var(--r-pill)]"
+                      className="h-full bg-[var(--ok)]  transition-all duration-300 rounded-[var(--r-pill)]"
                       style={{
                         width: `${Math.round((zipProgress.current / zipProgress.total) * 100)}%`,
                       }}
@@ -810,7 +810,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   type="button"
                   disabled={zipLoading}
                   onClick={handleDownloadZip}
-                  className="px-5 py-2.5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-[var(--r-l)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
                 >
                   {zipLoading ? (
                     <>

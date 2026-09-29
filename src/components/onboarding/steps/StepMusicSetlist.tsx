@@ -270,7 +270,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
 
           <div
             onClick={() => audioInputRef.current?.click()}
-            className="border-2  rounded-[var(--r-l)] p-8 text-center cursor-pointer transition-colors bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70"
+            className="  rounded-[var(--r-l)] p-8 text-center cursor-pointer transition-colors bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70"
           >
             <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--acc)]/10 text-[var(--acc)] flex items-center justify-center mx-auto mb-3">
               <Upload className="w-6 h-6" />
@@ -422,7 +422,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
       )}
 
       {/* ⚡ Generador de Setlist de Debut */}
-      <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/5 to-transparent space-y-2.5">
+      <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />

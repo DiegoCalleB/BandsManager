@@ -267,18 +267,18 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
   const modalRoadbook = getCurrentRoadbook(modalRoadbookKey, selectedConcert);
   return (
     <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
-      <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-[var(--scrim)]/70 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-[var(--scrim)]/70 animate-in fade-in duration-200">
         <div
           onTouchStart={handleModalTouchStart}
           onTouchMove={handleModalTouchMove}
           onTouchEnd={handleModalTouchEnd}
-          className={`relative w-full max-w-3xl rounded-[var(--r-l)] shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
+          className={`relative w-full max-w-3xl rounded-[var(--r-l)] max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
           {/* Barra superior del modal: navegación cronológica entre eventos */}
           <div
-            className={`sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-3 backdrop-blur-md ${
+            className={`sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-3 ${
               'bg-[var(--surface)]/95'
             }`}
           >
@@ -334,7 +334,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <img
                     src={modalBandInfo.logoUrl}
                     alt={modalBandInfo.name}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0"
                     onError={(e) => {
                       (e.currentTarget as HTMLElement).style.display = 'none';
                       const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
@@ -343,7 +343,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   />
                 ) : null}
                 <span
-                  className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-black drop-shadow-lg ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
+                  className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-black ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
                 >
                   {modalBandInfo.initials}
                 </span>
@@ -453,7 +453,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
-                    className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-lg transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] transition-colors cursor-pointer"
                   >
                     Sí, Eliminar Definitivamente
                   </button>
@@ -481,7 +481,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 onClick={() => setModalActiveTab('resumen')}
                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'resumen'
-                    ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                    ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                 }`}
               >
@@ -492,7 +492,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 onClick={() => setModalActiveTab('tecnica')}
                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'tecnica'
-                    ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                    ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                 }`}
               >
@@ -504,7 +504,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 onClick={() => setModalActiveTab('contactos')}
                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'contactos'
-                    ? 'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
+                    ? 'bg-[var(--ok)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                 }`}
               >
@@ -521,7 +521,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 onClick={() => setModalActiveTab('merchan')}
                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'merchan'
-                    ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                    ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                 }`}
               >
@@ -538,7 +538,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 onClick={() => setModalActiveTab('postshow')}
                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'postshow'
-                    ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                    ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                 }`}
               >
@@ -553,7 +553,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 onClick={() => setModalActiveTab('cierre')}
                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'cierre'
-                    ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                    ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                 }`}
               >
@@ -1130,7 +1130,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <button
                             type="button"
                             onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar || 'la sala')}
-                            className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-sm"
+                            className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                             title="Abrir WhatsApp directo con mensaje predefinido"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
@@ -1457,7 +1457,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <div className="flex justify-end pt-1">
                             <button
                               type="submit"
-                              className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
+                              className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1.5 cursor-pointer"
                             >
                               <Check className="w-3.5 h-3.5" />
                               <span>Guardar Producto en el Bolo</span>

@@ -86,7 +86,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       {/* Header Banner */}
-      <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--acc)]/15 via-[#181614] to-[var(--bg)]">
+      <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15 ">
         <div className="flex items-start gap-3.5">
           <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center justify-center shrink-0 mt-0.5">
             <Globe className="w-5 h-5 text-[var(--acc)]" />
@@ -140,7 +140,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
               }}
               className={`relative p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
                 isSelected
-                  ? "bg-gradient-to-br from-[var(--acc)]/20 via-[var(--acc)]/20 to-[var(--surface)]/90 ring-2 ring-[var(--acc)]/30 scale-[1.01]"
+                  ? "bg-[var(--acc)]/20  ring-2 ring-[var(--acc)]/30 scale-[1.01]"
                   : "bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--hair)]"
               }`}
             >

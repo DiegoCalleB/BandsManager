@@ -1422,7 +1422,7 @@ export const LiveConcertToAlbumModal: React.FC<
             className={`p-6 flex items-start justify-between ${"bg-[var(--acc)]/10"}`}
           >
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)]/10">
+              <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--ink)]/10">
                 <Disc3 className="w-7 h-7 animate-spin-slow" />
               </div>
               <div>
@@ -1552,7 +1552,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     onClick={handleAnalyzeConcert}
                     disabled={isAnalyzing || (!youtubeUrl && !uploadedFile)}
-                    className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] font-bold text-sm text-[var(--ink)]/10 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
+                    className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] font-bold text-sm text-[var(--ink)]/10 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
                   >
                     {isAnalyzing ? (
                       <>
@@ -1990,7 +1990,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     </div>
                     <div className="w-full sm:w-48 bg-[var(--surface)] h-2.5 rounded-[var(--r-pill)] overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] h-full transition-all duration-300"
+                        className="bg-[var(--ok)]  h-full transition-all duration-300"
                         style={{
                           width: `${(transcribeAllProgress.current / transcribeAllProgress.total) * 100}%`,
                         }}
@@ -2880,7 +2880,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     onClick={handleProcessAndSlice}
                     disabled={isProcessing}
-                    className="px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] font-extrabold text-[var(--ink)] text-sm flex items-center gap-2 transition-all"
+                    className="px-6 py-3 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] font-extrabold text-[var(--ink)] text-sm flex items-center gap-2 transition-all"
                   >
                     {isProcessing ? (
                       <>
@@ -2900,7 +2900,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
             {/* Step 3: Generated Result & Save to Catalog */}
             {generatedResult && (
-              <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--ok)]/40 to-[var(--surface)] space-y-4">
+              <div className="p-5 rounded-[var(--r-l)] bg-[var(--ok)]/40  space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">

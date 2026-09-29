@@ -1497,7 +1497,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           </div>
 
           {/* Personalización avanzada: recompensa, dominio/slug e idioma — plegada porque no se toca en cada visita */}
-          <div className="border-t pt-4">
+          <div className=" pt-4">
             <button
               type="button"
               onClick={() => setShowAdvancedQrConfig((v) => !v)}

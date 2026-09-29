@@ -113,7 +113,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* CONFIGURACIÓN DE FIRMA */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-5">
-          <div className="border-b pb-3 flex items-center justify-between flex-wrap gap-2">
+          <div className=" pb-3 flex items-center justify-between flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <AtSign className="w-5 h-5" /> Configurar Firma de Correo
             </h3>
@@ -328,7 +328,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
         <div className="space-y-6">
           {/* VISTA PREVIA EN VIVO DE LA FIRMA */}
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
-            <div className="border-b pb-3 flex items-center justify-between">
+            <div className=" pb-3 flex items-center justify-between">
               <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
                 <Mail className="w-5 h-5" /> Vista Previa de la Firma
               </h3>
@@ -560,7 +560,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     copiadoFirma === "rich"
                       ? "bg-[var(--ok)] text-[var(--ink)] ring-2 ring-[var(--ok)]"
-                      : "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc-soft)] text-[var(--ink)]"
+                      : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
                   }`}
                   title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
                 >

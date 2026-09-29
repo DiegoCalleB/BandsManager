@@ -133,9 +133,9 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
         <div
-          className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto border transition-all ${
+          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto border transition-all ${
             'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
           }`}
         >
@@ -384,9 +384,9 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 type="button"
                 onClick={handleOpenWhatsApp}
                 disabled={!hasValidPhone}
-                className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all shadow-md cursor-pointer ${
+                className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
                   hasValidPhone
-                    ? 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-extrabold shadow-[var(--ok)]/20'
+                    ? 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-extrabold/20'
                     : 'bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)] cursor-not-allowed'
                 }`}
               >

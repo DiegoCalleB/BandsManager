@@ -57,11 +57,11 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
   };
 
   return (
-    <div className="rounded-[var(--r-m)] border border-[var(--hair)] bg-[var(--surface)] overflow-hidden transition-all shadow-md">
+    <div className="rounded-[var(--r-m)] border border-[var(--hair)] bg-[var(--surface)] overflow-hidden transition-all">
       {/* Resumen Compacto (Siempre Visible) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="p-3 bg-gradient-to-r from-[var(--ok)]/40 via-[var(--surface)] to-[var(--surface)]/60 hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
+        className="p-3 bg-[var(--ok)]/40  hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
       >
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--ok)]/20 border border-[var(--hair)] flex items-center justify-center shrink-0">
@@ -212,7 +212,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="button"
                 onClick={handleSave}
                 disabled={isSaving}
-                className="px-3.5 py-1 rounded bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                className="px-3.5 py-1 rounded bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
                 {isSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                 <span>Guardar Deal</span>

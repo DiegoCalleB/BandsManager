@@ -48,9 +48,9 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 overflow-y-auto overscroll-contain animate-fadeIn">
         <div
-          className={`w-full max-w-md p-5 sm:p-6 rounded-[var(--r-xl)] shadow-2xl border ${
+          className={`w-full max-w-md p-5 sm:p-6 rounded-[var(--r-xl)] border ${
             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
           } my-auto max-h-[90vh] overflow-y-auto`}
         >

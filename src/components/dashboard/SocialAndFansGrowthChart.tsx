@@ -564,7 +564,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <button
                 type="button"
                 onClick={() => onNavigate("reels")}
-                className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${"bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)]"}`}
+                className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${"bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"}`}
                 title="Abrir el panel completo de métricas y sincronización"
               >
                 <Activity className="w-3.5 h-3.5" />
@@ -748,7 +748,7 @@ export const SocialAndFansGrowthChart: React.FC<
                   onClick={() => setSelectedPeriod(opt.id)}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--acc)]  text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
                   }`}
                   title={opt.label}

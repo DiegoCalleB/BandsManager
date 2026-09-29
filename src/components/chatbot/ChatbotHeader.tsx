@@ -76,7 +76,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             Mánager Virtual AI{' '}
             <span
               className={`w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block animate-pulse ${
-                'bg-[var(--acc)] shadow-[0_0_8px_rgba(79, 70, 229, 0.8)]'
+                'bg-[var(--acc)]'
               }`}
             />
           </h4>
@@ -90,7 +90,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             type="button"
             onClick={onOpenAutonomyModal}
             className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono border font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
-              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border-[var(--hair)] shadow-sm'
+              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border-[var(--hair)]'
             }`}
             title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
           >

@@ -61,10 +61,10 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
 
   return (
     <ModalPortal>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-xs">
-        <div className="relative w-full max-w-lg bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80">
+        <div className="relative w-full max-w-lg bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh]">
           {/* Header */}
-          <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-[#141312]">
+          <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--acc)]/30 ">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
                 <BellRing className="w-5 h-5" />
@@ -120,7 +120,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <button
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs shrink-0 transition-colors cursor-pointer shadow-md"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs shrink-0 transition-colors cursor-pointer"
                 >
                   Solicitar Permiso
                 </button>
@@ -300,7 +300,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer shadow-md"
+              className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer"
             >
               Guardar y Cerrar
             </button>

@@ -189,7 +189,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
               type="button"
               onClick={handleGenerateAccompaniment}
               disabled={isGeneratingAccompaniment || (!includeDrums && !includeBass)}
-              className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 cursor-pointer"
             >
               {isGeneratingAccompaniment ? (
                 <>

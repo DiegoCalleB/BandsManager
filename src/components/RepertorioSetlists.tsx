@@ -5357,7 +5357,7 @@ export default function RepertorioSetlists({
                       {/* EXPANDED DETAILS - Only when isExpanded */}
                       {isExpanded && (
                         <div
-                          className={`border-t px-2.5 py-2 text-[9px] font-sans space-y-1 ${"bg-[var(--bg)]"}`}
+                          className={` px-2.5 py-2 text-[9px] font-sans space-y-1 ${"bg-[var(--bg)]"}`}
                         >
                           {song.cantantePrincipal && (
                             <div className="text-[var(--ink-2)]">

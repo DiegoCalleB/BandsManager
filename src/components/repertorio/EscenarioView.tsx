@@ -93,7 +93,7 @@ const StageMetronomeDot: React.FC<{ isPlaying: boolean; bpm: number }> =
         className={`w-2 h-2 rounded-[var(--r-pill)] transition-all duration-75 ${
           isPlaying
             ? tick
-              ? "bg-[var(--acc)] scale-125 shadow-[0_0_8px_#f59e0b]"
+              ? "bg-[var(--acc)] scale-125"
               : "bg-[var(--acc)] scale-90"
             : "bg-[var(--surface)]"
         }`}
@@ -538,7 +538,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               />
 
               <div
-                className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[var(--ok)] transition-all duration-150 relative"
+                className="h-full bg-[var(--ok)]  transition-all duration-150 relative"
                 style={{ width: `${stageProgressPct}%` }}
               >
                 <div
@@ -872,7 +872,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   return (
                     <div
                       key={it.id}
-                      className="py-3 px-4 bg-gradient-to-r from-[var(--ok)]/20 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs tracking-wider flex items-center gap-2 my-2"
+                      className="py-3 px-4 bg-[var(--ok)]/20  rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs tracking-wider flex items-center gap-2 my-2"
                     >
                       <span className="text-sm">⚡</span>
                       <span>{it.tituloCustom || "SECCIÓN DEL SHOW"}</span>

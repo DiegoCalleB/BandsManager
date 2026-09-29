@@ -785,14 +785,14 @@ export const AgentAutonomySettingsModal: React.FC<
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
         <div
-          className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden flex flex-col my-auto animate-in zoom-in-95 duration-200 ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+          className={` rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden flex flex-col my-auto animate-in zoom-in-95 duration-200 ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
           {/* Modal Header */}
           <div
             className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${"bg-[var(--surface)]"}`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/20 to-[var(--acc)]/20 text-[var(--acc)]">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20  text-[var(--acc)]">
                 <Bot className="w-5 h-5" />
               </div>
               <div>
@@ -1470,7 +1470,7 @@ export const AgentAutonomySettingsModal: React.FC<
             {activeTab === "email_dispatch" && (
               <div className="space-y-6">
                 {/* Header Info */}
-                <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 to-[var(--acc)]/10 text-[var(--ink-2)] text-xs flex items-start gap-3">
+                <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10  text-[var(--ink-2)] text-xs flex items-start gap-3">
                   <Mail className="w-5 h-5 text-[var(--ink-2)] shrink-0 mt-0.5" />
                   <div className="space-y-1 leading-relaxed">
                     <strong className="font-bold text-[var(--tentative)]/40">
@@ -2135,7 +2135,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* Enlace a ADN de Tono */}
-                <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 to-[var(--acc)]/10 flex items-center justify-between gap-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  flex items-center justify-between gap-3">
                   <div>
                     <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70 tracking-wider">
                       ¿Quieres entrenar el tono de voz de la banda?
@@ -2165,7 +2165,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* Enlace rápido a plantillas en Booking */}
-                <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 to-[var(--acc)]/10 flex items-center justify-between">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  flex items-center justify-between">
                   <div>
                     <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70 tracking-wider">
                       ¿Quieres afinar las plantillas de correo?

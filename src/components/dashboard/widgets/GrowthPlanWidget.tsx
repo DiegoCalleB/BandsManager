@@ -23,7 +23,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
   const channelPlaybooks = growthPlan?.channelPlaybooks || [];
 
   return (
-    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/95 border border-[var(--hair)] shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/95 border border-[var(--hair)] space-y-4">
       {/* Widget Header */}
       <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
         <div className="flex items-center gap-2.5">
@@ -66,7 +66,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
 
       {/* Action Recommendation Banner */}
       {todayBlueprint ? (
-        <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-transparent border border-[var(--hair)] flex items-start justify-between gap-3">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30  border border-[var(--hair)] flex items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] font-mono text-[10px] font-bold">

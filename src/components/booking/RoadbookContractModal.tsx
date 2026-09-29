@@ -156,10 +156,10 @@ Firmado en conformidad por ambas partes.`;
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 overflow-y-auto">
         <div
           id="roadbook-contract-modal"
-          className="relative w-full max-w-4xl bg-[var(--surface)] border border-[var(--hair)]/80 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
+          className="relative w-full max-w-4xl bg-[var(--surface)] border border-[var(--hair)]/80 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
         >
           {/* HEADER DEL MODAL */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3">
@@ -447,7 +447,7 @@ Firmado en conformidad por ambas partes.`;
               <div className="space-y-4">
                 <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] border border-[var(--hair)] space-y-3 text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="w-14 h-14 rounded-[var(--r-l)] bg-gradient-to-tr from-[var(--acc)] to-[var(--acc)] flex items-center justify-center shrink-0 shadow-lg">
+                    <div className="w-14 h-14 rounded-[var(--r-l)] bg-[var(--acc)]  flex items-center justify-center shrink-0">
                       <Share2 className="w-7 h-7 text-[var(--ink)]" />
                     </div>
                     <div>

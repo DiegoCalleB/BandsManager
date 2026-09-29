@@ -545,7 +545,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowUpgradeModal(true)}
-                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--acc-ink)] text-xs font-bold font-sans transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--acc-ink)] text-xs font-bold font-sans transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
                     >
                       <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
                       <span>Upgrade</span>
@@ -1417,7 +1417,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <div
                 className={`w-full max-w-lg rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               >
-                <div className="px-6 py-4 bg-gradient-to-r from-[var(--acc)]/60 via-[var(--surface)] to-[var(--surface)]  flex justify-between items-center">
+                <div className="px-6 py-4 bg-[var(--acc)]/60   flex justify-between items-center">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center">
                       <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1652,7 +1652,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                     );
                                   }
                                 }}
-                                className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+                                className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
                               >
                                 <Sparkles className="w-3 h-3 fill-neutral-950" />
                                 <span>Seleccionar {plan.name}</span>

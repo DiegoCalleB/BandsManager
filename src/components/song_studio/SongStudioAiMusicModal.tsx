@@ -204,7 +204,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                       );
                       onClose();
                     }}
-                    className="w-full py-2 bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-xs tracking-wider rounded-[var(--r-m)] transition"
+                    className="w-full py-2 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs tracking-wider rounded-[var(--r-m)] transition"
                   >
                     + Añadir Soundtrack a la Canción / Estudio
                   </button>
@@ -225,7 +225,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating || !prompt.trim()}
-              className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 cursor-pointer"
             >
               {isGenerating ? (
                 <>

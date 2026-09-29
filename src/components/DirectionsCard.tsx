@@ -55,7 +55,7 @@ export default function DirectionsCard({
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 p-2.5 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 bg-gradient-to-r from-[var(--bg)] via-[var(--bg)]/95 to-transparent text-center w-full">
+      <div className="relative z-10 p-2.5 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 bg-[var(--bg)]  text-center w-full">
         {address && (
           <span
             className="text-[10px] font-sans text-[var(--ink-2)] truncate leading-tight max-w-[220px]"

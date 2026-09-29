@@ -256,7 +256,7 @@ export function PerfectSetlistModal({
         {/* Header + Mapa de Energía en un único bloque sticky, mismo patrón que el Análisis IA —
  así el gráfico se ve siempre arriba mientras se hace scroll por las acciones del plan. */}
         <div className="sticky top-0 z-10 bg-[var(--surface)]">
-          <div className="border-b p-3 flex justify-between items-center">
+          <div className=" p-3 flex justify-between items-center">
             <div className="flex items-center gap-2.5">
               <Wand2 className="w-5 h-5 text-[var(--ok)]" />
               <div>
@@ -283,7 +283,7 @@ export function PerfectSetlistModal({
           {/* Mapa de Energía integrado: arrastrar un punto reordena el setlist directamente, igual
  que en el gráfico grande de fuera. */}
           {hasChart && (
-            <div className="border-b p-3">
+            <div className=" p-3">
               <EnergyChart
                 setlistKey="perfect-setlist"
                 chartData={chartData!}

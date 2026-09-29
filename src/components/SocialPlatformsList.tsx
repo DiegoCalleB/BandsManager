@@ -182,7 +182,7 @@ export const PLATFORM_CONFIG: Record<
     label: "Instagram",
     colorClass: "text-[var(--alert)]",
     bgClass:
-      "bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--acc)]/10",
+      "bg-[var(--acc)]/10 ",
     borderClass: "border-[var(--hair)]",
     hoverClass:
       "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--alert)]/60",

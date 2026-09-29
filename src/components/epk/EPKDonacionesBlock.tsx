@@ -397,7 +397,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                   el Dossier
                 </div>
               ) : (
-                <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)]/95 via-[var(--surface)]/90 to-[var(--surface)]/95 p-4 space-y-3">
+                <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)]/95  p-4 space-y-3">
                   <div className="relative flex items-start gap-3 sm:gap-3.5">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">

@@ -77,6 +77,11 @@ const CHECKS = {
     pattern: /(?<![\w-])uppercase(?![\w-])/g,
     severity: 'error',
   },
+  efectosProhibidos: {
+    description: 'backdrop-blur, sombras de elevación (shadow-sm…2xl / shadow-[…]) o degradado de fondo — visual-identity §4: Espectro es plano, separa el escalón de luminancia (los scrims sobre imagen con from-black/to-transparent quedan permitidos)',
+    pattern: /className=\{?[`"'][^`"']*(?:(?<![\w-])backdrop-blur|(?<![\w-])(?:drop-)?shadow-(?:sm|md|lg|xl|2xl|inner|\[)|bg-gradient-to-(?![^`"']*(?:from-(?:black|transparent|\[#)|to-transparent)))/g,
+    severity: 'error',
+  },
   claseCorrupta: {
     description: 'clase Tailwind inválida por concatenación (bgbg-, borderbg-, dividebg-): no hace nada — resto de un find-and-replace roto',
     pattern: /(?<![\w-])(?:hover:)?(?:bgbg|borderbg|dividebg|ringbg|textbg)-\[/g,

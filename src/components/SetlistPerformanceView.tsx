@@ -1519,7 +1519,7 @@ const TeleprompterBlockPage: React.FC<{
       className={`w-full h-full flex flex-col items-center justify-center p-6 sm:p-12 text-center overflow-y-auto ${
         glareMode
           ? "bg-[var(--surface)]"
-          : "bg-gradient-to-b from-[var(--acc)]/40 via-[var(--surface)] to-[var(--sunken)]"
+          : "bg-[var(--acc)]/40 "
       }`}
     >
       <span className="text-5xl sm:text-7xl mb-6">{meta.icon}</span>

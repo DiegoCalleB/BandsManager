@@ -191,9 +191,9 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
   return (
     <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
-      <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+      <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
-          className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
+          className={`w-full max-w-md rounded-[var(--r-l)] p-6 relative my-auto max-h-[90vh] overflow-y-auto ${
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
@@ -214,7 +214,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               }}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'concert' && !concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black'
+                  ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -226,7 +226,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               onClick={() => setShowCreateModal('rehearsal')}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'rehearsal'
-                  ? 'bg-[var(--ok)] text-[var(--ink)] shadow-md font-black'
+                  ? 'bg-[var(--ok)] text-[var(--ink)] font-black'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -237,7 +237,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               type="button"
               onClick={() => setShowCreateModal('reunion')}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <span>💬</span>
@@ -251,7 +251,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               }}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'concert' && concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black'
+                  ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -365,7 +365,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer shadow-md"
+                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer"
                 >
                   Convocar Reunión
                 </button>
@@ -460,7 +460,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
+                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer font-bold"
                 >
                   Guardar Ensayo
                 </button>
@@ -572,7 +572,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className={`px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-all cursor-pointer shadow-md ${
+                  className={`px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-all cursor-pointer ${
                     concIsPosible
                       ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'
                       : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'

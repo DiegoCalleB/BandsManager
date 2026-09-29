@@ -3792,7 +3792,7 @@ export default function SongStudioModal({
         }`}
       >
         {countInCountdown !== null && (
-          <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] text-[var(--ink)] font-sans font-black px-6 py-3 rounded-[var(--r-l)] flex items-center gap-3">
+          <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-[var(--acc)]  text-[var(--ink)] font-sans font-black px-6 py-3 rounded-[var(--r-l)] flex items-center gap-3">
             <span className="text-2xl">🥁</span>
             <div className="text-sm">
               <div>PREPARANDO GRABACIÓN MULTIPISTA...</div>
@@ -3813,7 +3813,7 @@ export default function SongStudioModal({
           {/* Header Bar */}
           <div className="p-2.5 sm:p-5 flex items-center justify-between bg-[var(--ink)]/5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)]">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--ink)]">
                 <Disc className="w-5 h-5 animate-spin-slow" />
               </div>
               <div>
@@ -4275,7 +4275,7 @@ export default function SongStudioModal({
 
                       {/* ORIGINAL SONG BASE TRACK BANNER & SELECTOR */}
                       {useSongBaseTrack && (
-                        <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/50 via-[var(--acc)]/30 to-[var(--sunken)]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans text-[var(--ink)] animate-in fade-in duration-150">
+                        <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/50  flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans text-[var(--ink)] animate-in fade-in duration-150">
                           <div className="flex items-center gap-2.5">
                             <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0">
                               <Disc className="w-5 h-5 animate-spin-slow" />
@@ -4709,7 +4709,7 @@ export default function SongStudioModal({
  Motor" (en la cabecera del mezclador) — no hace falta tenerlo doblado aquí. */}
                             <div className="flex items-center gap-2 flex-wrap justify-end">
                               {!idea.stemEngineUsed && (
-                                <div className="flex items-center rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] overflow-hidden">
+                                <div className="flex items-center rounded-[var(--r-m)] bg-[var(--acc)]  overflow-hidden">
                                   <button
                                     type="button"
                                     onClick={() => setShowMoisesStemsModal(idea)}
@@ -5816,7 +5816,7 @@ export default function SongStudioModal({
             const curTime = currentTimeMap[activeIdea.id] || 0;
             const dur = durationMap[activeIdea.id] || 0;
             return (
-              <div className="border-t bg-[var(--bg)]/95 px-3 sm:px-4 py-2 flex items-center gap-3">
+              <div className=" bg-[var(--bg)]/95 px-3 sm:px-4 py-2 flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => togglePlayIdea(activeIdea)}

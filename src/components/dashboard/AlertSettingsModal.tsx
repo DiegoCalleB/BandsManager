@@ -263,11 +263,11 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
   return (
     <div
       id="alert-settings-modal-backdrop"
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/80 backdrop-blur-sm p-4 overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/80 p-4 overflow-y-auto"
     >
       <div
         id="alert-settings-modal-card"
-        className="bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] rounded-[var(--r-l)] w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] rounded-[var(--r-l)] w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]"
       >
         {/* Modal Header */}
         <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]/50">
@@ -614,7 +614,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               id="save-alert-settings-btn"
               type="button"
               onClick={handleSave}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95"
             >
               {savedSuccess ? (
                 <>

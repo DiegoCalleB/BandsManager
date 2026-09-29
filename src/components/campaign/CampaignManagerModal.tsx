@@ -296,7 +296,7 @@ export function CampaignManagerModal({
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
       <div className="bg-[var(--bg)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="p-5 flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[var(--bg)]">
+        <div className="p-5 flex items-center justify-between bg-[var(--surface)] ">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--hair)]/20 text-[var(--hair)]/80 flex items-center justify-center">
               <Target className="w-5 h-5" />
@@ -565,7 +565,7 @@ export function CampaignManagerModal({
                   <button
                     type="button"
                     onClick={() => setIsMultiTemplatesModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-gradient-to-r from-[var(--acc)]/30 to-[var(--acc)]/20 hover:from-[var(--acc)]/50 hover:to-[var(--acc)]/30 text-[var(--acc)] border border-[var(--hair)] hover:border-[var(--ink-3)] hover:text-[var(--ink)] transition-all shadow-sm active:scale-95 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-[var(--acc)]/30  hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--hair)] hover:border-[var(--ink-3)] hover:text-[var(--ink)] transition-all active:scale-95 cursor-pointer"
                     title="Adapta automáticamente el mensaje y objetivo de esta campaña a las 7 categorías de recintos"
                   >
                     <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />

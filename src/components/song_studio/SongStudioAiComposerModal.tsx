@@ -228,7 +228,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               type="button"
               onClick={handleGenerateIdea}
               disabled={isGenerating}
-              className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-sans text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+              className="w-full py-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
             >
               {isGenerating ? (
                 <>
@@ -293,7 +293,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   <button
                     type="button"
                     onClick={handleAcceptAndAddIdea}
-                    className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-xs font-sans font-bold text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+                    className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Añadir como Nueva Idea al Tema</span>

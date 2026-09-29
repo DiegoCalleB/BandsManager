@@ -219,7 +219,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkGeneratePitch}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-gradient-to-r from-[var(--acc)]/80 to-[var(--acc)]/80 hover:from-[var(--acc)] hover:to-[var(--acc)]/50 text-[var(--acc)]/40"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--acc)]/40"}`}
               title="Redactar propuestas de intercambio (Date Swaps) con IA"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />

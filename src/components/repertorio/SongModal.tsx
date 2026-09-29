@@ -120,9 +120,9 @@ export function SongModal({
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 overflow-y-auto overscroll-contain animate-fadeIn">
         <div
-          className={`w-full max-w-lg p-5 sm:p-6 rounded-[var(--r-xl)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
+          className={`w-full max-w-lg p-5 sm:p-6 rounded-[var(--r-xl)] my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
           }`}
         >

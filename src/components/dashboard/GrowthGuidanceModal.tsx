@@ -66,10 +66,10 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
   const channelData = growthPlan.channelPlaybooks?.find((c) => c.platform === selectedChannel) || growthPlan.channelPlaybooks?.[0];
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
-      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
+    <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
+      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col my-auto">
         {/* Modal Header */}
-        <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-[var(--acc)]/10">
+        <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--acc)]/10 ">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
               <Sparkles className="w-5 h-5" />
@@ -103,7 +103,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               onClick={() => setActiveTab('blueprint')}
               className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'blueprint'
-                  ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                  ? 'bg-[var(--acc)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
               }`}
             >
@@ -115,7 +115,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               onClick={() => setActiveTab('channels')}
               className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'channels'
-                  ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                  ? 'bg-[var(--acc)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
               }`}
             >
@@ -127,7 +127,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               onClick={() => setActiveTab('pillars')}
               className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'pillars'
-                  ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                  ? 'bg-[var(--acc)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
               }`}
             >
@@ -146,7 +146,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 1: BLUEPRINT SEMANAL */}
           {activeTab === 'blueprint' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-transparent border border-[var(--hair)] flex items-start gap-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  border border-[var(--hair)] flex items-start gap-3">
                 <Lightbulb className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-[var(--acc)] font-mono">
@@ -205,7 +205,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       onClick={() => setSelectedChannel(platform)}
                       className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
-                          ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+                          ? 'bg-[var(--acc)] text-[var(--ink)]'
                           : 'bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                       }`}
                     >
@@ -350,7 +350,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all cursor-pointer"
             >
               Cerrar & Empezar
             </button>

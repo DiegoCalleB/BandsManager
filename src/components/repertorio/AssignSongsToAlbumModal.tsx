@@ -170,7 +170,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
               </div>
             </div>
 
-            <div className="border-t pt-3 flex flex-col flex-1 overflow-hidden">
+            <div className=" pt-3 flex flex-col flex-1 overflow-hidden">
               <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)] mb-2">
                 <span className="font-bold flex items-center gap-1.5">
                   <Disc3 className="w-4 h-4 text-[var(--ok)]" />

@@ -742,7 +742,7 @@ export function ExcelImportModal({
           className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
           {/* MODAL HEADER */}
-          <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-[var(--ok)]/30 via-[var(--surface)]/50 to-[var(--acc)]/20">
+          <div className="flex items-center justify-between px-5 py-4 bg-[var(--ok)]/30 ">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">
                 <FileSpreadsheet className="w-5 h-5" />

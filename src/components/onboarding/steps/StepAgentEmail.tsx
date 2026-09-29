@@ -40,7 +40,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
       </div>
 
       {/* Intro info box */}
-      <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-[var(--surface)] space-y-2">
+      <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  space-y-2">
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-[var(--acc)]" />
           <h4 className="text-xs font-semibold text-[var(--acc)]/70">
