@@ -372,7 +372,7 @@ export function TemplateConfigSection({
           <div className="space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/5">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] animate-pulse" />
+                <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
                 <span className="text-xs font-mono font-bold text-[var(--ink-2)]">Vista Previa Simulada</span>
               </div>
               {testPromptResult && (

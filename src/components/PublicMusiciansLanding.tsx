@@ -194,7 +194,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               <span className="font-extrabold tracking-tight text-[var(--ink)] font-sans text-base flex items-center gap-0.5">
                 BandManager<span className="text-[var(--acc)]">.io</span>
               </span>
-              <span className="text-[10px] font-sans text-[var(--acc)]/80 block -mt-1 tracking-wider">
+              <span className="text-[10px] font-sans text-[var(--acc)]/80 block -mt-1">
                 IA Agéntica para tu Banda
               </span>
             </div>
@@ -274,7 +274,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold tracking-wider mt-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold mt-1">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{t.badge}</span>
             </div>
@@ -387,7 +387,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 )}
                 <a
                   href="/"
-                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans text-xs font-black tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans text-xs font-black transition hover:brightness-110 flex items-center justify-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   {t.successExploreApp}
@@ -398,7 +398,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             /* EARLY ACCESS FORM */
             <div className="p-6 sm:p-10 rounded-[var(--r-l)] bg-[var(--surface)] space-y-6">
               <div className="space-y-2 pb-6 text-center sm:text-left">
-                <div className="inline-flex items-center gap-2 text-[var(--acc)] font-sans text-xs font-bold tracking-wider">
+                <div className="inline-flex items-center gap-2 text-[var(--acc)] font-sans text-xs font-bold">
                   <Users className="w-4 h-4" />
                   <span>Early Access Waitlist</span>
                 </div>
@@ -422,7 +422,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Band Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelBandName}</span>
                         <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">
                           imprescindible
@@ -445,7 +445,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Email */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelEmail}</span>
                         <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">
                           imprescindible
@@ -467,7 +467,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Instagram */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelInstagram}</span>
                         <span className="text-[var(--ink-2)] text-[10px] font-normal lowercase tracking-normal">
                           recomendado
@@ -489,7 +489,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Contact Person Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelContactName}</span>
                         <span className="text-[var(--ink-2)] text-[10px] font-normal lowercase tracking-normal">
                           opcional
@@ -544,7 +544,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Music Genre */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider">
+                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
                           {t.labelGenre}
                         </label>
                         <input
@@ -560,7 +560,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                       {/* City */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider">
+                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
                           {t.labelCity}
                         </label>
                         <input
@@ -578,7 +578,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Phone / WhatsApp */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider">
+                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
                           {t.labelPhone}
                         </label>
                         <input
@@ -597,7 +597,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                       {/* Music link */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider">
+                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
                           {t.labelMusicLink}
                         </label>
                         <input
@@ -617,7 +617,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Priority Feature */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider">
+                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
                         {t.labelMainInterest}
                       </label>
                       <select
@@ -642,7 +642,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Notes */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] tracking-wider">
+                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
                         {t.labelNotes}
                       </label>
                       <textarea
@@ -683,7 +683,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-black text-sm hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
                   {loading ? (
                     <>

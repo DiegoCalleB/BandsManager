@@ -39,7 +39,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <BarChart3 className="w-5 h-5" /> Cifras Clave (Social Proof)
             </h3>
-            <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               {config.cifrasClave?.habilitado ? "✓ Visible en EPK" : "Oculto"}
             </span>
           </div>
@@ -101,7 +101,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
               ] as const
             ).map((campo) => (
               <div key={campo.key} className="space-y-1">
-                <label className="text-[10px] font-semibold text-[var(--ink-2)] tracking-wider block">
+                <label className="text-[10px] font-semibold text-[var(--ink-2)] block">
                   {campo.label}
                 </label>
                 <input
@@ -130,7 +130,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <Quote className="w-5 h-5" /> Reseñas y Citas de Prensa
             </h3>
-            <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               {config.resenasPrensa?.habilitado ? "✓ Visible en EPK" : "Oculto"}
             </span>
           </div>

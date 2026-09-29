@@ -707,7 +707,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
               {/* Mic Toggle Button */}
               <button
                 onClick={isListening ? stopTuner : startTuner}
-                className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
+                className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
                   isListening
                     ? "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]"
                     : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black"

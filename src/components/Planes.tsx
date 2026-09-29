@@ -492,7 +492,7 @@ export const Planes: React.FC<PlanesProps> = ({
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs tracking-wider transition-all shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs transition-all shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -535,7 +535,7 @@ export const Planes: React.FC<PlanesProps> = ({
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 font-bold text-xs tracking-wider transition-all shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 font-bold text-xs transition-all shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -581,7 +581,7 @@ export const Planes: React.FC<PlanesProps> = ({
           type="button"
           onClick={handleOpenCustomerPortal}
           disabled={isOpeningPortal}
-          className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-bold font-sans tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-bold font-sans transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
           {isOpeningPortal ? (
             <>
@@ -631,7 +631,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   if (deGiraBtn)
                     deGiraBtn.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
               </button>
@@ -650,7 +650,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
       {/* 2. Header & Toggle Mensual / Anual */}
       <div className="flex flex-col items-center text-center space-y-4 pt-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold">
           <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
           <span>Planes & Suscripciones</span>
         </div>
@@ -751,7 +751,7 @@ export const Planes: React.FC<PlanesProps> = ({
               {/* Popular Floating Badge */}
               {plan.isPopular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--ink)] text-[10px] font-black font-sans tracking-widest">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--ink)] text-[10px] font-black font-sans">
                     <Star className="w-3 h-3 fill-[var(--ink)]" />
                     <span>MÁS POPULAR</span>
                   </span>
@@ -761,7 +761,7 @@ export const Planes: React.FC<PlanesProps> = ({
               {/* Card Header */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-black font-display tracking-wider text-[var(--ink)]">
+                  <h3 className="text-xl font-black font-display text-[var(--ink)]">
                     {plan.name}
                   </h3>
                   <span
@@ -849,7 +849,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 flex-wrap mb-1">
                           <span
-                            className={`text-[10px] font-sans font-black tracking-wider px-1.5 py-0.5 rounded ${
+                            className={`text-[10px] font-sans font-black px-1.5 py-0.5 rounded ${
                               plan.isPopular
                                 ? "bg-[var(--acc)]/60 text-[var(--acc)]/70"
                                 : plan.id === "cabeza_de_cartel"
@@ -888,7 +888,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
                 {/* Feature List */}
                 <div className="pt-2 space-y-2.5">
-                  <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                  <p className="text-[10px] font-sans font-bold text-[var(--ink-2)]">
                     Características:
                   </p>
                   <ul className="space-y-2">
@@ -956,7 +956,7 @@ export const Planes: React.FC<PlanesProps> = ({
                     billingInterval={billingPeriod}
                     bandId={currentUser?.band_id}
                     userEmail={currentUser?.email}
-                    className={`text-xs tracking-wider ${getCtaStyle(plan.ctaVariant)}`}
+                    className={`text-xs ${getCtaStyle(plan.ctaVariant)}`}
                   >
                     <span className="flex items-center justify-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5" />
@@ -969,7 +969,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       type="button"
                       onClick={handleOpenCustomerPortal}
                       disabled={isOpeningPortal}
-                      className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-bold font-sans tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-bold font-sans transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
                       <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Bajar a {plan.name}</span>
@@ -989,7 +989,7 @@ export const Planes: React.FC<PlanesProps> = ({
       <div className="pt-8 space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2">
           <div className="text-center sm:text-left">
-            <h2 className="text-2xl sm:text-3xl font-black font-display tracking-wider text-[var(--ink)]">
+            <h2 className="text-2xl sm:text-3xl font-black font-display text-[var(--ink)]">
               Tabla Comparativa de Módulos
             </h2>
             <p className="text-xs text-[var(--ink-2)]">
@@ -1053,7 +1053,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">
                         <IconComp className="w-4 h-4" />
                       </div>
-                      <span className="text-sm sm:text-base font-bold font-display tracking-wider text-[var(--ink)]">
+                      <span className="text-sm sm:text-base font-bold font-display text-[var(--ink)]">
                         {section.title}
                       </span>
                     </div>

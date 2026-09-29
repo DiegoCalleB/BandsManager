@@ -207,12 +207,12 @@ export default function Finanzas({
       >
         <div>
           <h4
-            className={`text-xs font-sans tracking-widest ${"text-[var(--acc)]"}`}
+            className={`text-xs font-sans ${"text-[var(--acc)]"}`}
           >
             Finanzas & Libro Contable
           </h4>
           <h2
-            className={`text-xl font-bold font-display tracking-wider mt-1 ${textTitle}`}
+            className={`text-xl font-bold font-display mt-1 ${textTitle}`}
           >
             CONTABILIDAD DE BANDA
           </h2>
@@ -222,7 +222,7 @@ export default function Finanzas({
             id="sync-finanzas-excel-btn"
             onClick={handleSyncFinanzas}
             disabled={isSyncing}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer active:scale-95 ${
               isSyncing
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] "
@@ -280,7 +280,7 @@ export default function Finanzas({
         <div
           className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}
         >
-          <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--ok)] tracking-wider">
+          <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--ok)]">
             <span>Ingresos Cobrados</span>
             <TrendingUp className="w-4 h-4" />
           </div>
@@ -303,7 +303,7 @@ export default function Finanzas({
         <div
           className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}
         >
-          <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--alert)] tracking-wider">
+          <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--alert)]">
             <span>Gastos Liquidados</span>
             <TrendingDown className="w-4 h-4" />
           </div>
@@ -329,7 +329,7 @@ export default function Finanzas({
           }`}
         >
           <div
-            className={`flex justify-between items-center text-xs font-sans font-bold tracking-wider ${
+            className={`flex justify-between items-center text-xs font-sans font-bold ${
               balanceNeto >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"
             }`}
           >
@@ -356,7 +356,7 @@ export default function Finanzas({
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setActiveTab("rentabilidad")}
-            className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "rentabilidad"
                 ? colors.primary
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -366,7 +366,7 @@ export default function Finanzas({
           </button>
           <button
             onClick={() => setActiveTab("ledger")}
-            className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
+            className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${
               activeTab === "ledger"
                 ? colors.primary
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -376,7 +376,7 @@ export default function Finanzas({
           </button>
           <button
             onClick={() => setActiveTab("analytics")}
-            className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
+            className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${
               activeTab === "analytics"
                 ? colors.primary
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -388,7 +388,7 @@ export default function Finanzas({
 
         <button
           onClick={() => setIsAddOpen(true)}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${"bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]"}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer active:scale-95 ${"bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]"}`}
         >
           <Plus className="w-3.5 h-3.5" /> Registrar Operación
         </button>
@@ -490,7 +490,7 @@ export default function Finanzas({
           {/* Concert Profitability Table */}
           <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
             <div className="flex items-center justify-between  pb-3">
-              <h3 className="text-sm font-bold tracking-wider text-[var(--acc)] flex items-center gap-2">
+              <h3 className="text-sm font-bold text-[var(--acc)] flex items-center gap-2">
                 <Calculator className="w-4 h-4" /> Desglose de Gastos &
                 Rentabilidad por Bolo
               </h3>
@@ -984,7 +984,7 @@ export default function Finanzas({
                             {p.concepto}
                           </h4>
                           <span
-                            className={`text-[8px] px-1.5 py-0.5 rounded font-sans tracking-wider ${"bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                            className={`text-[8px] px-1.5 py-0.5 rounded font-sans ${"bg-[var(--sunken)] text-[var(--ink-2)]"}`}
                           >
                             {p.categoria}
                           </span>
@@ -1042,7 +1042,7 @@ export default function Finanzas({
               className={`p-4 rounded-[var(--r-m)] ${colors.card} ${cardBorder} space-y-4`}
             >
               <h3
-                className={`text-xs font-sans font-bold tracking-wider ${textTitle}`}
+                className={`text-xs font-sans font-bold ${textTitle}`}
               >
                 Resumen Contable
               </h3>
@@ -1090,7 +1090,7 @@ export default function Finanzas({
                 className={`flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
               >
                 <FileText className="w-4 h-4" />
-                <strong className="font-sans tracking-wider">
+                <strong className="font-sans">
                   Libro en Excel
                 </strong>
               </div>
@@ -1113,7 +1113,7 @@ export default function Finanzas({
         >
           <div>
             <h3
-              className={`text-sm font-bold font-display tracking-widest ${"text-[var(--acc)]"}`}
+              className={`text-sm font-bold font-display ${"text-[var(--acc)]"}`}
             >
               Análisis de Gastos por Categoría
             </h3>
@@ -1175,7 +1175,7 @@ export default function Finanzas({
                 className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--bg)]"} space-y-3 text-xs leading-relaxed`}
               >
                 <h4
-                  className={`font-sans font-bold tracking-wider ${textTitle}`}
+                  className={`font-sans font-bold ${textTitle}`}
                 >
                   Auditoría Operativa
                 </h4>

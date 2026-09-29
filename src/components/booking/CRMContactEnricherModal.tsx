@@ -140,7 +140,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
 
             {enrichedResults.length > 0 && (
               <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
-                <span className="text-[11px] font-semibold text-[var(--ink-2)] tracking-wider">Contactos actualizados:</span>
+                <span className="text-[11px] font-semibold text-[var(--ink-2)]">Contactos actualizados:</span>
                 {enrichedResults.map((r, i) => (
                   <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex flex-col gap-1">
                     <span className="font-bold text-[var(--ink-2)]">{r.name}</span>

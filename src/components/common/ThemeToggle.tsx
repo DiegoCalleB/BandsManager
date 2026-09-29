@@ -35,7 +35,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openU
       >
         <Palette className="w-4 h-4" />
         {!compact && (
-          <span className="text-[11px] font-sans font-bold tracking-wider">
+          <span className="text-[11px] font-sans font-bold">
             {prefEspectro === 'system' ? 'Auto' : prefEspectro === 'light' ? 'Claro' : prefEspectro === 'dark' ? 'Oscuro' : 'Clásico'}
           </span>
         )}

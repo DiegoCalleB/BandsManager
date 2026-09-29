@@ -350,7 +350,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 key={d.label}
                 className={`${styles.card} rounded-[var(--r-m)] p-4`}
               >
-                <p className="text-[10px] tracking-wider opacity-60 font-semibold">
+                <p className="text-[10px] opacity-60 font-semibold">
                   {d.label}
                 </p>
                 <p className="font-bold mt-1 text-sm">{d.valor}</p>
@@ -359,7 +359,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </div>
         {contenido.dato("necesidadesEscenario") && (
           <div className={`${styles.card} rounded-[var(--r-m)] p-4`}>
-            <p className="text-[10px] tracking-wider opacity-60 font-semibold">
+            <p className="text-[10px] opacity-60 font-semibold">
               {t("etiquetaNecesidades")}
             </p>
             <p className="text-sm mt-1 opacity-80">
@@ -668,7 +668,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               </div>
               <div className="pt-3">
                 <span
-                  className={`text-xs font-black ${styles.quoteMedium} tracking-wider font-sans`}
+                  className={`text-xs font-black ${styles.quoteMedium} font-sans`}
                 >
                   {cita.medio}
                 </span>
@@ -1153,7 +1153,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               </button>
               <div className="min-w-0 pr-1">
                 <p
-                  className={`text-[10px] ${styles.accentText} font-bold tracking-wider flex items-center gap-1`}
+                  className={`text-[10px] ${styles.accentText} font-bold flex items-center gap-1`}
                 >
                   <Music className="w-3 h-3" />{" "}
                   {isCurrentlyPlaying ? t("playerPista") : "Audio Demo"}

@@ -385,7 +385,7 @@ export const ProfileCompletenessCard: React.FC<
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-xs font-bold font-sans tracking-wider text-[var(--ink)] flex items-center gap-1.5">
+              <h3 className="text-xs font-bold font-sans text-[var(--ink)] flex items-center gap-1.5">
                 <Bot className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Entrenamiento & Preparación de Agentes IA
               </h3>
@@ -528,7 +528,7 @@ export const ProfileCompletenessCard: React.FC<
           {/* Detailed Breakdown List */}
           <div className="pt-2/80 space-y-2.5">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-sans tracking-wider font-bold text-[var(--acc)]">
+              <h4 className="text-xs font-sans font-bold text-[var(--acc)]">
                 Checklist de Configuración Agéntica ({completedPillarsCount}/
                 {pillars.length})
               </h4>
@@ -585,7 +585,7 @@ export const ProfileCompletenessCard: React.FC<
                   <Bot className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold font-display tracking-wider text-[var(--ink)]">
+                  <h3 className="text-lg font-bold font-display text-[var(--ink)]">
                     Entrenamiento de Agentes IA para {bandName}
                   </h3>
                   <p className="text-xs text-[var(--ink-2)] font-sans">

@@ -1020,35 +1020,35 @@ export default function BandCRM({
     switch (status) {
       case "colegas_aliados":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--surface)]/15 text-[var(--ok)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--surface)]/15 text-[var(--ok)] whitespace-nowrap shrink-0">
             <Handshake className="w-3 h-3 text-[var(--ok)] shrink-0" />
             <span>Colegas / Aliados</span>
           </span>
         );
       case "concierto_agendado":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 text-[var(--acc)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)] whitespace-nowrap shrink-0">
             <Zap className="w-3 h-3 text-[var(--acc)] shrink-0" />
             <span>Concierto Agendado</span>
           </span>
         );
       case "intercambio_propuesto":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 text-[var(--ink-2)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink-2)] whitespace-nowrap shrink-0">
             <Repeat className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span>Intercambio Propuesto</span>
           </span>
         );
       case "pendiente_respuesta":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--tentative)]/15 text-[var(--tentative)]/80 whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--tentative)]/15 text-[var(--tentative)]/80 whitespace-nowrap shrink-0">
             <Clock className="w-3 h-3 text-[var(--tentative)]/80 shrink-0" />
             <span>Pendiente Respuesta</span>
           </span>
         );
       case "no_disponible":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--alert)]/15 text-[var(--alert)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--alert)]/15 text-[var(--alert)] whitespace-nowrap shrink-0">
             <X className="w-3 h-3 text-[var(--alert)] shrink-0" />
             <span>No Disponible</span>
           </span>
@@ -1056,7 +1056,7 @@ export default function BandCRM({
       case "sin_contactar":
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--surface)]/80 text-[var(--ink-2)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink-2)] whitespace-nowrap shrink-0">
             <Radio className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span>Sin Contactar</span>
           </span>
@@ -1259,7 +1259,7 @@ Bakandeya Agent Manager IA & Músicos`;
           <div className="overflow-x-auto shrink-0 rounded-[var(--r-m)]">
             <table className="w-full text-left text-xs font-sans">
               <thead>
-                <tr className="bg-[var(--surface)] text-[var(--ink-2)] tracking-wider text-[10px]">
+                <tr className="bg-[var(--surface)] text-[var(--ink-2)] text-[10px]">
                   <th className="p-3">ID Reg.</th>
                   <th className="p-3">Nombre Banda</th>
                   <th className="p-3">Email Contacto</th>
@@ -1416,7 +1416,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         ? handleDeselectAllBands
                         : handleSelectAllFilteredBands
                     }
-                    className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+                    className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-sans font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                       selectedBandIds.length > 0
                         ? "bg-[var(--acc)]/15 text-[var(--acc)]/30 hover:bg-[var(--acc)]/25"
                         : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1511,7 +1511,7 @@ Bakandeya Agent Manager IA & Músicos`;
               className={`p-12 rounded-[var(--r-l)] text-center space-y-3 ${colors.card} `}
             >
               <AlertCircle className="w-10 h-10 text-[var(--ink-2)] mx-auto" />
-              <h3 className="text-sm font-sans font-bold text-[var(--ink-2)] tracking-wider">
+              <h3 className="text-sm font-sans font-bold text-[var(--ink-2)]">
                 No se encontraron bandas
               </h3>
               <p className="text-[10px] text-[var(--ink-2)] max-w-md mx-auto font-sans">
@@ -1521,7 +1521,7 @@ Bakandeya Agent Manager IA & Músicos`;
               </p>
               <button
                 onClick={handleOpenCreateModal}
-                className="mt-2 inline-flex items-center gap-2 px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-m)] transition-all cursor-pointer"
+                className="mt-2 inline-flex items-center gap-2 px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-sans font-bold text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir Primera Banda</span>
@@ -1568,7 +1568,7 @@ Bakandeya Agent Manager IA & Músicos`;
                           </button>
                           <div className="space-y-1 min-w-0">
                             <div className="flex items-center gap-1.5 min-w-0">
-                              <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink)] flex items-center gap-2 group-hover:text-[var(--acc)] transition-colors truncate min-w-0">
+                              <h3 className="text-base font-bold font-display text-[var(--ink)] flex items-center gap-2 group-hover:text-[var(--acc)] transition-colors truncate min-w-0">
                                 {band.imagen_url ? (
                                   <img
                                     src={band.imagen_url}
@@ -1772,7 +1772,7 @@ Bakandeya Agent Manager IA & Músicos`;
               className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} overflow-x-auto shrink-0`}
             >
               <table className="w-full text-left text-[10px] font-sans min-w-[850px]">
-                <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] tracking-wider text-[10px]">
+                <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] text-[10px]">
                   <tr>
                     <th className="py-2.5 px-3 w-10 text-center whitespace-nowrap">
                       <button

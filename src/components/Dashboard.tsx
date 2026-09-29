@@ -676,7 +676,7 @@ export default function Dashboard({
             <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">
               Dashboard
             </h1>
-            <p className="text-sm font-sans text-[var(--ink-2)] tracking-widest">
+            <p className="text-sm font-sans text-[var(--ink-2)]">
               Panel de {activeBandName}
               {agendaFilterMode === "all" && hasMultipleBands && (
                 <span className="ml-2 text-[var(--acc)] lowercase font-normal">
@@ -731,7 +731,7 @@ export default function Dashboard({
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)] flex items-center gap-2">
+                <h3 className="text-base font-bold font-display text-[var(--ink-2)] flex items-center gap-2">
                   Próximas Fechas y Agenda
                 </h3>
                 <p className="text-xs font-sans text-[var(--ink-2)]">
@@ -814,7 +814,7 @@ export default function Dashboard({
                       <span className="text-lg font-sans font-black leading-none text-[var(--acc)]">
                         {item.day}
                       </span>
-                      <span className="text-[10px] font-sans font-extrabold tracking-widest text-[var(--acc)]/70 mt-0.5">
+                      <span className="text-[10px] font-sans font-extrabold text-[var(--acc)]/70 mt-0.5">
                         {item.month}
                       </span>
                     </div>
@@ -822,7 +822,7 @@ export default function Dashboard({
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded font-sans font-bold tracking-wider ${
+                          className={`text-[10px] px-2 py-0.5 rounded font-sans font-bold ${
                             item.type === "concierto"
                               ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                               : "bg-[var(--ok)]/20 text-[var(--ink-2)]"
@@ -899,7 +899,7 @@ export default function Dashboard({
                     <QrCode className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
+                    <h3 className="text-sm font-bold font-display text-[var(--ink-2)]">
                       Captura QR & Fans
                     </h3>
                     <p className="text-[11px] font-sans text-[var(--ink-2)]">
@@ -939,7 +939,7 @@ export default function Dashboard({
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
+                    <h3 className="text-sm font-bold font-display text-[var(--ink-2)]">
                       Dossier (EPK) Digital
                     </h3>
                     <p className="text-[11px] font-sans text-[var(--ink-2)]">

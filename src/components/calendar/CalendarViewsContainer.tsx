@@ -156,7 +156,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
           className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold ${textSub} bg-[var(--surface)]/60 p-2 rounded-[var(--r-m)] border border-[var(--hair)]/80`}
         >
           {weekdays.map((day) => (
-            <div key={day} className="py-0.5 tracking-wider">
+            <div key={day} className="py-0.5">
               {day}
             </div>
           ))}

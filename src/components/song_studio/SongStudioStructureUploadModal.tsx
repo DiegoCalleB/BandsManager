@@ -486,7 +486,7 @@ export const SongStudioStructureUploadModal: React.FC<
                   {showComparison && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2/20">
                       <div className="space-y-1.5">
-                        <p className="text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                        <p className="text-[10px] font-sans text-[var(--ink-2)]">
                           Documento original
                         </p>
                         <div className="bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden max-h-96">
@@ -517,7 +517,7 @@ export const SongStudioStructureUploadModal: React.FC<
                         </div>
                       </div>
                       <div className="space-y-1.5">
-                        <p className="text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                        <p className="text-[10px] font-sans text-[var(--ink-2)]">
                           Acordes extraídos (guardados)
                         </p>
                         <div className="bg-[var(--sunken)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">

@@ -374,7 +374,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
             {/* Target Tooltip Badge */}
             <div
-              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] tracking-wider flex items-center gap-1 whitespace-nowrap`}
+              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] flex items-center gap-1 whitespace-nowrap`}
             >
               <span>👉 {currentStep.uiTarget?.label || "Aquí"}</span>
             </div>
@@ -412,7 +412,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           <div className="p-3.5 sm:p-4/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
             <div className="flex items-center gap-2">
               <span
-                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold tracking-wider ${accentStyles.badgeBg}`}
+                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold ${accentStyles.badgeBg}`}
               >
                 {tutorialConfig.badge}
               </span>
@@ -504,7 +504,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     <CurrentIcon className="w-5 h-5" />
                   </div>
                   <div className="space-y-0.5 min-w-0">
-                    <span className="text-[10px] font-sans tracking-widest text-[var(--ink-2)] font-semibold block">
+                    <span className="text-[10px] font-sans text-[var(--ink-2)] font-semibold block">
                       {currentStep.badge}
                     </span>
                     <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-[var(--ink)] leading-snug">
@@ -531,7 +531,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
                           <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--acc)]"></span>
                         </span>
-                        <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70">
+                        <span className="text-[10px] font-sans font-bold text-[var(--acc)]/70">
                           {currentStep.uiTarget.type === "button"
                             ? "🔘 Botón en pantalla"
                             : currentStep.uiTarget.type === "tab"

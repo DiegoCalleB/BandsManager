@@ -1316,7 +1316,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   <ListMusic className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-[var(--ink)] tracking-wider">
+                  <h3 className="text-sm font-bold text-[var(--ink)]">
                     Repertorio & Pistas Iris
                   </h3>
                   <p className="text-[11px] text-[var(--ink-2)]">

@@ -2114,7 +2114,7 @@ export default function CalendarView({
             {/* Top title & Action buttons */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0">
-                <h4 className={`text-[10px] font-sans tracking-widest ${'text-[var(--acc)]'}`}>
+                <h4 className={`text-[10px] font-sans ${'text-[var(--acc)]'}`}>
                   Calendario de Directos, Ensayos y Reuniones
                 </h4>
                 <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold mt-1 overflow-x-auto shrink-0 no-scrollbar pb-0.5 max-w-full">
@@ -2158,7 +2158,7 @@ export default function CalendarView({
                   <button
                     id="create-event-unified-btn"
                     onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
-                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold'}`}
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer active:scale-95 ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold'}`}
                     title="Añadir Concierto, Ensayo o Reunión"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -2172,7 +2172,7 @@ export default function CalendarView({
                       <div
                         className={`absolute right-0 mt-1.5 w-48 rounded-[var(--r-m)] z-50 py-1.5 overflow-hidden animate-in fade-in duration-150 ${'bg-[var(--surface)]/95 text-[var(--ink)]'}`}
                       >
-                        <div className="px-3 py-1 text-[9px] font-sans tracking-widest text-[var(--ink-2)] /40 mb-1">
+                        <div className="px-3 py-1 text-[9px] font-sans text-[var(--ink-2)] /40 mb-1">
                           Añadir al Calendario
                         </div>
                         <button
@@ -2230,7 +2230,7 @@ export default function CalendarView({
                   <button
                     id="export-ics-btn"
                     onClick={() => setShowSyncModal(true)}
-                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'}`}
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer active:scale-95 ${'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'}`}
                     title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
                   >
                     <Radio className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -2306,7 +2306,7 @@ export default function CalendarView({
                 </button>
               </div>
 
-              <h2 className={`text-base sm:text-lg lg:text-xl font-bold font-display tracking-wider truncate min-w-0 ${textTitle}`}>
+              <h2 className={`text-base sm:text-lg lg:text-xl font-bold font-display truncate min-w-0 ${textTitle}`}>
                 {calendarViewMode === '2m' ? (
                   <>
                     {monthNames[currentMonth]} - {monthNames[nextMonth]}{' '}
@@ -2451,7 +2451,7 @@ export default function CalendarView({
                           <Settings className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <h4 className="text-xs font-bold font-display tracking-wider">Vista por defecto</h4>
+                          <h4 className="text-xs font-bold font-display">Vista por defecto</h4>
                           <p className={`text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>Diferenciada por dispositivo · Supabase</p>
                         </div>
                       </div>
@@ -2776,7 +2776,7 @@ export default function CalendarView({
                 className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-black shrink-0 ${'bg-[var(--acc)]/15 /40 text-[var(--acc)]/70'}`}
               >
                 <span className="text-sm leading-none">{selectedDate.getDate()}</span>
-                <span className="text-[8px] tracking-wider mt-0.5 opacity-80">{monthNames[selectedDate.getMonth()]?.slice(0, 3)}</span>
+                <span className="text-[8px] mt-0.5 opacity-80">{monthNames[selectedDate.getMonth()]?.slice(0, 3)}</span>
               </div>
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -2877,7 +2877,7 @@ export default function CalendarView({
                       <div className="flex items-start justify-between gap-3 flex-wrap">
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-black tracking-wider bg-[var(--acc)] text-[var(--on-acc)]">
+                            <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-black bg-[var(--acc)] text-[var(--on-acc)]">
                               🎸 Concierto
                             </span>
                             <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
@@ -3043,7 +3043,7 @@ export default function CalendarView({
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span
-                              className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-black tracking-wider ${
+                              className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-black ${
                                 isReu ? 'bg-[var(--tentative)] text-[var(--ink)]' : 'bg-[var(--ok)] text-[var(--ink)]'
                               }`}
                             >

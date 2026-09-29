@@ -376,7 +376,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       {/* STATUS & HEALTH BAR ESCRITORIO (>= sm) */}
       <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[var(--surface)] rounded-[var(--r-m)] text-xs">
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto shrink-0 scrollbar-none py-0.5 text-[11px] font-sans">
-          <span className="text-[var(--ink-2)] tracking-wider text-[10px] shrink-0 font-bold">
+          <span className="text-[var(--ink-2)] text-[10px] shrink-0 font-bold">
             Estado:
           </span>
 

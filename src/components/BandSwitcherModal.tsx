@@ -612,7 +612,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
           {/* Top Header */}
           <div className="flex flex-col items-center mb-6 md:mb-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold mb-3">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Perfil & Selección de Banda</span>
             </div>
@@ -938,7 +938,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]  flex items-center justify-center text-[var(--ink-2)] group-hover:text-[var(--acc)] transition-all mb-2">
                 <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </div>
-              <span className="text-xs font-bold font-display tracking-wider text-center">
+              <span className="text-xs font-bold font-display text-center">
                 Añadir Proyecto
               </span>
               <span className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 text-center">
@@ -1347,7 +1347,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                     {/* PLAN 3: DE GIRA (Destacado) */}
                     <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 flex flex-col relative">
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--acc)] text-[var(--ink)] text-[9px] font-bold tracking-wider py-0.5 px-2.5 rounded-[var(--r-pill)] flex items-center gap-1 whitespace-nowrap">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--acc)] text-[var(--ink)] text-[9px] font-bold py-0.5 px-2.5 rounded-[var(--r-pill)] flex items-center gap-1 whitespace-nowrap">
                         <Star className="w-2.5 h-2.5 fill-current" />
                         Más Popular
                       </div>
@@ -1605,7 +1605,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans tracking-wider">
+                        <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans">
                           Planes & Upgrade — {targetBandName}
                         </h3>
                         <p className="text-[10px] text-[var(--ink-2)] font-sans">

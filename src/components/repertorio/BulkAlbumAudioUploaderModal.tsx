@@ -678,7 +678,7 @@ export function BulkAlbumAudioUploaderModal({
           {isCreatingBrandNewAlbum && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5">
               <div className="md:col-span-2 space-y-2">
-                <label className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                <label className="text-xs font-sans font-bold text-[var(--ink-2)]">
                   Nombre del Álbum / Disco
                 </label>
                 <input
@@ -691,7 +691,7 @@ export function BulkAlbumAudioUploaderModal({
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                <label className="text-xs font-sans font-bold text-[var(--ink-2)]">
                   Portada del Disco
                 </label>
                 <input
@@ -809,7 +809,7 @@ export function BulkAlbumAudioUploaderModal({
           {/* Tracks List / Matching Table */}
           {items.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] px-1">
+              <div className="flex items-center justify-between text-xs font-sans font-bold text-[var(--ink-2)] px-1">
                 <span>
                   {isCreatingBrandNewAlbum
                     ? "Pistas del Nuevo Álbum"

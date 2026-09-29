@@ -1650,7 +1650,7 @@ export default function App() {
                       referrerPolicy="no-referrer"
                     />
                     <div className="flex flex-col text-left">
-                      <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] leading-none">
+                      <span className="text-[9px] font-bold font-display text-[var(--ink-2)] leading-none">
                         BANDMANAGER
                         <span className="text-[var(--acc)]">.io</span>
                       </span>
@@ -1964,7 +1964,7 @@ export default function App() {
                   referrerPolicy="no-referrer"
                 />
                 <div className="flex flex-col text-left">
-                  <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] leading-none">
+                  <span className="text-[9px] font-bold font-display text-[var(--ink-2)] leading-none">
                     BANDMANAGER<span className="text-[var(--acc)]">.io</span>
                   </span>
                 </div>
@@ -2299,7 +2299,7 @@ export default function App() {
                       className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}
                     >
                       <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
-                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60 tracking-wider">
+                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60">
                         Acceso Restringido
                       </h3>
                       <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
@@ -2471,7 +2471,7 @@ export default function App() {
                       className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--tentative)]/50" : "bg-[var(--ok)]"}`}
                     />
                   </div>
-                  <span className="text-xs font-sans font-bold tracking-wider hidden sm:inline-block pr-1">
+                  <span className="text-xs font-sans font-bold hidden sm:inline-block pr-1">
                     {isChatLoading ? "Ejecutando..." : "Agente AI"}
                   </span>
                 </>

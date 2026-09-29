@@ -247,7 +247,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 Morning Briefing • Radar del Mánager
               </h3>
               {totalActionCount > 0 && (
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--ink)] text-[10px] font-black font-mono animate-pulse">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--ink)] text-[10px] font-black font-mono">
                   {totalActionCount} urgentes
                 </span>
               )}

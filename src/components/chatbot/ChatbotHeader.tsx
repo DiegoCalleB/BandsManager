@@ -75,7 +75,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           >
             Mánager Virtual AI{' '}
             <span
-              className={`w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block animate-pulse ${
+              className={`w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block ${
                 'bg-[var(--acc)]'
               }`}
             />

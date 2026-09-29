@@ -115,7 +115,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
 
       {/* Add Video Form */}
       <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
-        <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
+        <h4 className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
           <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
           Añadir Nuevo Vídeo (YouTube)
         </h4>

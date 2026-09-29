@@ -767,7 +767,7 @@ export function SongTransitionPreviewModal({
               >
                 <div>
                   <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1">
+                    <span className="text-[10px] font-bold text-[var(--ink-2)] flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60" />
                       #{indexA + 1} Anterior
                     </span>
@@ -942,7 +942,7 @@ export function SongTransitionPreviewModal({
               >
                 <div>
                   <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1">
+                    <span className="text-[10px] font-bold text-[var(--ink-2)] flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
                       #{indexB + 1} Siguiente
                     </span>

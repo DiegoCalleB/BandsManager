@@ -911,7 +911,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                           onChange={(e) => setResetCode(e.target.value)}
                           placeholder="Código de 6 dígitos"
                           maxLength={6}
-                          className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] font-sans tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:text-[var(--ink-2)] outline-none transition-all"
+                          className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] font-sans placeholder:font-sans placeholder:tracking-normal placeholder:text-[var(--ink-2)] outline-none transition-all"
                           required
                         />
                       </div>

@@ -474,7 +474,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 {name.slice(0, 2) || "BK"}
               </div>
               <div>
-                <h3 className="font-bold font-display tracking-wider text-sm flex items-center gap-2">
+                <h3 className="font-bold font-display text-sm flex items-center gap-2">
                   <span>Mi Perfil & Contraseña</span>
                 </h3>
                 <p className="text-[11px] text-[var(--ink-2)] font-sans flex items-center gap-1.5 flex-wrap">
@@ -482,7 +482,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     @{currentUser.username} •{" "}
                     {isAdmin ? "Administrador" : "Músico"}
                   </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/15 text-[var(--acc)]/70">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc)]/70">
                     <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
                     {currentPlanDef.name}
                   </span>
@@ -653,7 +653,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         {activeBandName || currentUser.bandName || "Tu Banda"}
                       </p>
                       {isPromoUser ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold bg-[var(--acc)]/60 text-[var(--acc)]/70">
                           <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
                           <span>{currentPlanDef.name}</span>
                         </span>
@@ -661,7 +661,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         <button
                           type="button"
                           onClick={() => setShowUpgradeModal(true)}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/60 hover:bg-[var(--acc)]/60 text-[var(--acc)]/70 cursor-pointer transition-colors"
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold bg-[var(--acc)]/60 hover:bg-[var(--acc)]/60 text-[var(--acc)]/70 cursor-pointer transition-colors"
                           title="Cambiar o mejorar suscripción"
                         >
                           <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -1423,7 +1423,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans tracking-wider">
+                      <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans">
                         Cambiar Plan de Suscripción
                       </h3>
                       <p className="text-[10px] text-[var(--ink-2)] font-sans">

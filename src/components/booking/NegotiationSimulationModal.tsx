@@ -76,7 +76,7 @@ export function NegotiationSimulationModal({
             <div>
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-[var(--acc)]" />
-                <h3 className="text-sm font-bold font-display tracking-widest">Simulador de Negociación Personalizado</h3>
+                <h3 className="text-sm font-bold font-display">Simulador de Negociación Personalizado</h3>
               </div>
               <p className={`text-[10px] font-sans mt-0.5 ${textMuted}`}>
                 Trato actual con{''}
@@ -97,12 +97,12 @@ export function NegotiationSimulationModal({
           <div className="space-y-4 select-text">
             {/* Role selector buttons */}
             <div className="space-y-1.5">
-              <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>¿Quién emite la respuesta simulada?</label>
+              <label className={`block text-[10px] font-sans ${textSub}`}>¿Quién emite la respuesta simulada?</label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => onRoleChange('sala')}
-                  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     simulationRole === 'sala'
                       ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]'
                       : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -113,7 +113,7 @@ export function NegotiationSimulationModal({
                 <button
                   type="button"
                   onClick={() => onRoleChange('banda')}
-                  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     simulationRole === 'banda'
                       ? 'bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]'
                       : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -126,7 +126,7 @@ export function NegotiationSimulationModal({
 
             {/* Scenario selector */}
             <div className="space-y-1.5">
-              <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>Instrucciones de Situación / Pauta Inicial</label>
+              <label className={`block text-[10px] font-sans ${textSub}`}>Instrucciones de Situación / Pauta Inicial</label>
               <select
                 value={simulationScenario}
                 onChange={(e) => onScenarioChange(e.target.value)}
@@ -143,7 +143,7 @@ export function NegotiationSimulationModal({
             {/* Sender Name & Subject */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>Nombre del Emisor</label>
+                <label className={`block text-[10px] font-sans ${textSub}`}>Nombre del Emisor</label>
                 <input
                   type="text"
                   value={simulationSenderName}
@@ -153,7 +153,7 @@ export function NegotiationSimulationModal({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>Asunto del Correo</label>
+                <label className={`block text-[10px] font-sans ${textSub}`}>Asunto del Correo</label>
                 <input
                   type="text"
                   value={simulationSubject}
@@ -167,7 +167,7 @@ export function NegotiationSimulationModal({
             {/* Simulation Instructions Prompt Area */}
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
-                <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
+                <label className={`block text-[10px] font-sans ${textSub}`}>
                   Instrucciones Detalladas de Negociación para la IA
                 </label>
                 <span className={`text-[10px] font-sans ${textMuted}`}>Cualquier cambio aquí personalizará el correo</span>
@@ -187,7 +187,7 @@ export function NegotiationSimulationModal({
                 type="button"
                 onClick={onGenerate}
                 disabled={isGeneratingSimulation || !simulationCustomInstruction}
-                className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]`}
+                className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]`}
               >
                 {isGeneratingSimulation ? (
                   <>
@@ -205,7 +205,7 @@ export function NegotiationSimulationModal({
             {(simulationGenerated || simulationMessage) && (
               <div className="space-y-2 pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="flex justify-between items-center">
-                  <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--acc)]'}`}>
+                  <label className={`block text-[10px] font-sans ${'text-[var(--acc)]'}`}>
                     ✨ Vista Previa del Correo Generado (Editable)
                   </label>
                   <span className="text-[10px] font-sans bg-[var(--surface)]/15 text-[var(--ok)]/80 px-2 py-1 rounded">
@@ -230,7 +230,7 @@ export function NegotiationSimulationModal({
             <button
               type="button"
               onClick={onClose}
-              className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
+              className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] transition-colors cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
             >
               Cancelar
             </button>
@@ -238,7 +238,7 @@ export function NegotiationSimulationModal({
               type="button"
               onClick={onCommit}
               disabled={!simulationMessage || isGeneratingSimulation}
-              className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]`}
+              className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]`}
             >
               <Check className="w-4 h-4" /> Guardar y Sincronizar
             </button>

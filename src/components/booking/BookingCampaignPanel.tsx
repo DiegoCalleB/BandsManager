@@ -141,7 +141,7 @@ export default function BookingCampaignPanel({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block text-xs text-[var(--ink-2)] font-medium mb-1 tracking-wider">
+            <label className="block text-xs text-[var(--ink-2)] font-medium mb-1">
               Nombre
             </label>
             <input
@@ -154,7 +154,7 @@ export default function BookingCampaignPanel({
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--ink-2)] font-medium mb-1 tracking-wider">
+            <label className="block text-xs text-[var(--ink-2)] font-medium mb-1">
               Ciudad/Región
             </label>
             <input
@@ -171,7 +171,7 @@ export default function BookingCampaignPanel({
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--ink-2)] font-medium mb-1 tracking-wider">
+            <label className="block text-xs text-[var(--ink-2)] font-medium mb-1">
               Aforo Objetivo
             </label>
             <div className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export default function BookingCampaignPanel({
           </div>
 
           <div className="md:col-span-2 lg:col-span-3">
-            <label className="block text-xs text-[var(--ink-2)] font-medium mb-2 tracking-wider">
+            <label className="block text-xs text-[var(--ink-2)] font-medium mb-2">
               Fechas Clave del Concierto
             </label>
             <div className="flex gap-2 flex-wrap items-center">
@@ -284,7 +284,7 @@ export default function BookingCampaignPanel({
           </div>
 
           <div className="md:col-span-2 lg:col-span-3">
-            <label className="block text-xs text-[var(--ink-2)] font-medium mb-2 tracking-wider">
+            <label className="block text-xs text-[var(--ink-2)] font-medium mb-2">
               🎪 Rango de Fechas para Filtrar Festivales/Eventos
             </label>
             <p className="text-xs text-[var(--ink-2)] mb-2">

@@ -104,7 +104,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
 
       {/* Reseñas / Citas de Prensa */}
       <div className="pt-2 space-y-3">
-        <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">Citas & Reseñas de Medios de Comunicación</h4>
+        <h4 className="text-xs font-semibold text-[var(--ink-2)]">Citas & Reseñas de Medios de Comunicación</h4>
 
         {pressQuotes.length > 0 && (
           <div className="space-y-2">

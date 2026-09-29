@@ -57,7 +57,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
       <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
         <div className="bg-[var(--surface)] rounded-[var(--r-m)] w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
           <div className="p-4 flex justify-between items-center bg-[var(--sunken)]">
-            <h3 className="text-sm font-bold font-display tracking-widest text-[var(--ink)] flex items-center gap-1.5">
+            <h3 className="text-sm font-bold font-display text-[var(--ink)] flex items-center gap-1.5">
               <Plus className="w-4 h-4" /> Agregar Nueva Sala a la Hoja
             </h3>
             <button
@@ -74,7 +74,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Nombre de la Sala*
                 </label>
                 <input
@@ -89,7 +89,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Ciudad*
                 </label>
                 <input
@@ -104,7 +104,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Región / Provincia
                 </label>
                 <input
@@ -118,7 +118,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Aforo Estimado (Pax)
                 </label>
                 <input
@@ -131,7 +131,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Género Musical Preferente
                 </label>
                 <input
@@ -144,7 +144,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Categoría de Contacto
                 </label>
                 <select
@@ -175,7 +175,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Usuario de Instagram (@)
                 </label>
                 <input
@@ -190,7 +190,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             </div>
 
             <div className="space-y-1.5 col-span-2">
-              <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+              <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                 Email de Contacto (Opcional, sino Scout lo buscará)
               </label>
               <input
@@ -204,7 +204,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             </div>
 
             <div className="space-y-1.5 col-span-2">
-              <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+              <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                 Notas Iniciales
               </label>
               <textarea

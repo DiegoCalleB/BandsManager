@@ -92,7 +92,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
       {/* Regalo / Lead Magnet Directo */}
       <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-xs font-semibold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5">
+          <h4 className="text-xs font-semibold text-[var(--acc)]/70 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
             Regalo para el Fan (Lead Magnet / Descarga Inmediata)
           </h4>
@@ -180,7 +180,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
       {/* Métodos de Pago y Propinas Directas */}
       <div className="pt-2 space-y-3">
-        <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
+        <h4 className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
           <DollarSign className="w-3.5 h-3.5 text-[var(--acc)]" />
           Métodos de Pago & Propinas Directas (Sin Comisiones)
         </h4>

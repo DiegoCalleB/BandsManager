@@ -23,7 +23,7 @@ const IrisPrismBanner: React.FC = () => {
     <div className="relative w-full h-20 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[var(--surface)] via-black to-black opacity-80" />
       <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
-        <path d="M 0,40 L 160,40" stroke="white" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" className="animate-pulse" />
+        <path d="M 0,40 L 160,40" stroke="white" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" className="" />
         <polygon points="160,15 220,65 160,65" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
         <polygon points="162,18 218,63 162,63" fill="rgba(255,255,255,0.05)" />
         <path d="M 195,43 L 400,10" stroke="#f43f5e" strokeWidth="2" opacity="0.8" />
@@ -73,14 +73,14 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           !terminado
             ? 'border border-[var(--hair)] hover:border-[var(--ink-3)]'
             : esError
-              ? 'border-2 border-[var(--alert)]/30 hover:border-[var(--ink-3)] animate-pulse'
-              : 'border-2 border-[var(--ok)]/30 hover:border-[var(--ink-3)] animate-pulse'
+              ? 'border-2 border-[var(--alert)]/30 hover:border-[var(--ink-3)]'
+              : 'border-2 border-[var(--ok)]/30 hover:border-[var(--ink-3)]'
         }`}
         title={terminado ? 'Iris ha terminado — toca para ver el resultado' : 'Reabrir el progreso de Iris'}
       >
         <div className="flex items-center gap-2">
           {!terminado ? (
-            <Cpu className="w-4 h-4 text-[var(--acc)] animate-pulse shrink-0" />
+            <Cpu className="w-4 h-4 text-[var(--acc)] shrink-0" />
           ) : esError ? (
             <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
           ) : (
@@ -138,7 +138,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
                   <CheckCircle2 className="w-5 h-5 text-[var(--ok)]" />
                 )
               ) : (
-                <Cpu className="w-5 h-5 text-[var(--acc)] animate-pulse" />
+                <Cpu className="w-5 h-5 text-[var(--acc)]" />
               )}
             </div>
             <div>

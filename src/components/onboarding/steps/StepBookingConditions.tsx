@@ -162,7 +162,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
       {/* Contacto Directo de Booking */}
       <div className="pt-2 space-y-3">
-        <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">
+        <h4 className="text-xs font-semibold text-[var(--ink-2)]">
           Persona de Contacto de Booking / Contratación
         </h4>
 

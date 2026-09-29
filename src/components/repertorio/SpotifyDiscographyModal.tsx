@@ -661,7 +661,7 @@ export const SpotifyDiscographyModal: React.FC<
                       {/* Expanded Tracklist */}
                       {isExpanded && (
                         <div className=" bg-[var(--sunken)] p-3 sm:p-4 space-y-1.5">
-                          <div className="text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
+                          <div className="text-[11px] font-sans font-bold text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
                             <span>
                               Tracklist Oficial de Spotify (
                               {album.tracks.length} temas)

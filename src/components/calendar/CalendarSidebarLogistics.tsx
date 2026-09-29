@@ -787,7 +787,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'-slate-100'}`}>
                 <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Compensación:</span>
-                <span className="text-[var(--ok)] dark:text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
+                <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
               </div>
             )}
             {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
@@ -1032,7 +1032,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-all cursor-pointer"
                       title="Lanzar Modo Escenario / Vista de Directo para este evento"
                     >
-                      <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--ink)]" />
+                      <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
                       <span>{selectedConcert ? 'Lanzar Modo Escenario' : 'Lanzar Modo Ensayo'}</span>
                     </button>
                   </div>
@@ -1782,7 +1782,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
         }`}
       >
         <span>Huso Horario: Madrid (UTC+2)</span>
-        <span className="text-[var(--ok)] dark:text-[var(--ok)]">● Sincronizado</span>
+        <span className="text-[var(--ok)]">● Sincronizado</span>
       </div>
     </div>
   );

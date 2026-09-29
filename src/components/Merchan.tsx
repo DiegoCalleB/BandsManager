@@ -345,7 +345,7 @@ export default function Merchan({
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1
-            className={`text-2xl sm:text-3xl font-black tracking-wider font-display flex items-center gap-3 ${"text-[var(--ink)]"}`}
+            className={`text-2xl sm:text-3xl font-black font-display flex items-center gap-3 ${"text-[var(--ink)]"}`}
           >
             <Sparkles className={`w-8 h-8 ${"text-[var(--acc)]"}`} />
             Taller de Merchandising IA
@@ -378,7 +378,7 @@ export default function Merchan({
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-sans font-black tracking-wider px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)]">
+                <span className="text-xs font-sans font-black px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)]">
                   Regalo de Bienvenida · Plan De Gira
                 </span>
                 <span className="text-[10px] font-sans text-[var(--acc)]/70 font-bold">
@@ -403,7 +403,7 @@ export default function Merchan({
                 setClaimStep("form");
                 setShowClaimModal(true);
               }}
-              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
             >
               <PackageCheck className="w-4 h-4" />
               <span>Canjear Pegatinas Gratis</span>
@@ -420,7 +420,7 @@ export default function Merchan({
         >
           <div className="space-y-3">
             <label
-              className={`block text-[10px] font-sans font-bold tracking-wider ${"text-[var(--ink-2)]"}`}
+              className={`block text-[10px] font-sans font-bold ${"text-[var(--ink-2)]"}`}
             >
               1. Tipo de Producto
             </label>
@@ -452,7 +452,7 @@ export default function Merchan({
 
           <div className="space-y-3">
             <label
-              className={`block text-[10px] font-sans font-bold tracking-wider ${"text-[var(--ink-2)]"}`}
+              className={`block text-[10px] font-sans font-bold ${"text-[var(--ink-2)]"}`}
             >
               2. Origen del Arte Gráfico
             </label>
@@ -512,7 +512,7 @@ export default function Merchan({
             >
               <div className="flex items-center justify-between">
                 <label
-                  className={`text-[10px] font-sans font-bold tracking-wider ${"text-[var(--ink-2)]"}`}
+                  className={`text-[10px] font-sans font-bold ${"text-[var(--ink-2)]"}`}
                 >
                   Imagen Personalizada Subida
                 </label>
@@ -557,7 +557,7 @@ export default function Merchan({
               className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--surface)]"}`}
             >
               <label
-                className={`block text-[10px] font-sans font-bold tracking-wider mb-2 ${"text-[var(--ink-2)]"}`}
+                className={`block text-[10px] font-sans font-bold mb-2 ${"text-[var(--ink-2)]"}`}
               >
                 Selecciona Álbum / EP
               </label>
@@ -583,7 +583,7 @@ export default function Merchan({
             className={`p-4 rounded-[var(--r-m)] space-y-2 ${"bg-[var(--tentative)]/20"}`}
           >
             <label
-              className={`block text-[10px] font-sans font-bold tracking-wider flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
+              className={`block text-[10px] font-sans font-bold flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
             >
               <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de
               Fondo (Canvas Layering)
@@ -616,7 +616,7 @@ export default function Merchan({
           {productType === "camiseta" && (
             <div className="space-y-3">
               <label
-                className={`font-sans text-[10px] font-bold tracking-widest ${"text-[var(--ink-2)]"}`}
+                className={`font-sans text-[10px] font-bold ${"text-[var(--ink-2)]"}`}
               >
                 3. Color de la Prenda
               </label>
@@ -639,7 +639,7 @@ export default function Merchan({
               className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--tentative)]/10"}`}
             >
               <label
-                className={`block text-[10px] font-sans font-bold tracking-wider flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
+                className={`block text-[10px] font-sans font-bold flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
               >
                 <QrCode className="w-3.5 h-3.5" /> Link de redirección del QR
               </label>
@@ -656,7 +656,7 @@ export default function Merchan({
           <button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className={`w-full py-4 rounded-[var(--r-m)] font-sans text-sm font-bold tracking-widest flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+            className={`w-full py-4 rounded-[var(--r-m)] font-sans text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
               isGenerating
                 ? "opacity-70 cursor-not-allowed"
                 : "hover:scale-[1.01]"
@@ -682,7 +682,7 @@ export default function Merchan({
         >
           <div className="flex items-center justify-between">
             <h2
-              className={`font-sans text-xs font-bold tracking-widest flex items-center gap-2 ${"text-[var(--ink-2)]"}`}
+              className={`font-sans text-xs font-bold flex items-center gap-2 ${"text-[var(--ink-2)]"}`}
             >
               <Layers className="w-4 h-4 text-[var(--acc)]" /> Galería de
               Diseños Producidos ({generatedDesigns.length})
@@ -885,7 +885,7 @@ export default function Merchan({
                   <Gift className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black font-display tracking-wider text-[var(--ink)] flex items-center gap-2">
+                  <h3 className="text-base font-black font-display text-[var(--ink)] flex items-center gap-2">
                     <span>Canjear Pack de Pegatinas Gratis</span>
                     <span className="text-[10px] font-sans font-black px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
                       100 uds
@@ -913,7 +913,7 @@ export default function Merchan({
                 <>
                   {/* 1. Previsualización del diseño elegido */}
                   <div className="space-y-3">
-                    <label className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-2">
+                    <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-2">
                       <Palette className="w-4 h-4 text-[var(--acc)]" />
                       <span>1. Previsualización del Diseño Elegido</span>
                     </label>
@@ -924,7 +924,7 @@ export default function Merchan({
                         <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--on-acc)] font-black flex items-center justify-center text-lg font-display mb-1">
                           {bandInitials}
                         </div>
-                        <span className="text-[9px] font-black font-display text-[var(--ink)] tracking-wider">
+                        <span className="text-[9px] font-black font-display text-[var(--ink)]">
                           {displayBandName.toUpperCase()}
                         </span>
                         <span className="text-[7px] font-sans text-[var(--acc)] font-bold">
@@ -955,7 +955,7 @@ export default function Merchan({
 
                   {/* 2. Formulario de dirección de envío */}
                   <div className="space-y-3 pt-2">
-                    <label className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-2">
+                    <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-[var(--acc)]" />
                       <span>2. Dirección de Envío (España)</span>
                     </label>
@@ -1070,7 +1070,7 @@ export default function Merchan({
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="text-2xl font-black font-display tracking-wider text-[var(--ink)]">
+                    <h4 className="text-2xl font-black font-display text-[var(--ink)]">
                       ¡Pedido Recibido con Éxito!
                     </h4>
                     <p className="text-sm font-bold text-[var(--acc)]/70">
@@ -1130,7 +1130,7 @@ export default function Merchan({
                   <button
                     type="button"
                     onClick={() => setClaimStep("success")}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans tracking-wider hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
                   >
                     <PackageCheck className="w-4 h-4" />
                     <span>Pedir mis pegatinas</span>

@@ -163,7 +163,7 @@ export function AIBandScoutModal({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div>
                 <label
-                  className={`block text-xs font-bold mb-1.5 tracking-wider ${subtextColor}`}
+                  className={`block text-xs font-bold mb-1.5 ${subtextColor}`}
                 >
                   Ciudad Origen de la Banda
                 </label>
@@ -181,7 +181,7 @@ export function AIBandScoutModal({
 
               <div>
                 <label
-                  className={`block text-xs font-bold mb-1.5 tracking-wider ${subtextColor}`}
+                  className={`block text-xs font-bold mb-1.5 ${subtextColor}`}
                 >
                   Estilo / Género Musical
                 </label>
@@ -199,7 +199,7 @@ export function AIBandScoutModal({
 
               <div>
                 <label
-                  className={`block text-xs font-bold mb-1.5 tracking-wider ${subtextColor}`}
+                  className={`block text-xs font-bold mb-1.5 ${subtextColor}`}
                 >
                   Cantidad (Max 10)
                 </label>
@@ -246,7 +246,7 @@ export function AIBandScoutModal({
             {results.length > 0 && (
               <div className="space-y-4">
                 <h4
-                  className={`font-bold text-sm tracking-wider ${subtextColor} flex items-center justify-between`}
+                  className={`font-bold text-sm ${subtextColor} flex items-center justify-between`}
                 >
                   Resultados del Scout
                   <span className="text-xs font-normal">

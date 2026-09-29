@@ -309,7 +309,7 @@ export function ImportSetlistModal({
           {reviewItems && (
             <div className="space-y-4">
               <div>
-                <label className="text-[11px] font-sans tracking-wider text-[var(--ink-2)] block mb-1">
+                <label className="text-[11px] font-sans text-[var(--ink-2)] block mb-1">
                   Nombre del repertorio
                 </label>
                 <input

@@ -195,7 +195,7 @@ export function EnsayosManager({
             setEditingRehearsal(null);
             setShowConvocarModal(true);
           }}
-          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:bg-[var(--acc)] transition-all cursor-pointer active:scale-95"
+          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm hover:bg-[var(--acc)] transition-all cursor-pointer active:scale-95"
         >
           <Plus className="w-4 h-4" />
           <span>Convocar Primer Ensayo</span>
@@ -246,7 +246,7 @@ export function EnsayosManager({
 
               {/* Status Badge */}
               <span
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-sans font-bold tracking-wider ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-sans font-bold ${
                   currentRehearsal?.estado === "completado"
                     ? "bg-[var(--ok)]/15 text-[var(--ink-2)]/30"
                     : currentRehearsal?.estado === "en_curso"

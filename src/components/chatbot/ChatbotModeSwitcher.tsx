@@ -25,7 +25,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
       }`}
     >
       <div className="flex items-center gap-2 min-w-0">
-        <span className={`w-2 h-2 rounded-[var(--r-pill)] shrink-0 ${agentsEnabled ? 'bg-[var(--acc)] animate-pulse' : 'bg-[var(--ok)]'}`} />
+        <span className={`w-2 h-2 rounded-[var(--r-pill)] shrink-0 ${agentsEnabled ? 'bg-[var(--acc)]' : 'bg-[var(--ok)]'}`} />
         <span className="font-bold truncate text-[11px]">
           {agentsEnabled ? '⚡ Agentes Supabase Activos (Backend & Database)' : '🤖 Modo Gemini Directo (100% Autónomo)'}
         </span>

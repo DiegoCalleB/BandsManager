@@ -85,7 +85,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
               <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones
               (Revolut, PayPal & Bizum)
             </h3>
-            <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-[10px] font-bold text-[var(--ink-2)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Crowdfunding Directo
             </span>
           </div>
@@ -378,7 +378,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
             {/* Vista previa en vivo */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                <span className="text-[10px] font-sans text-[var(--ink-2)]">
                   Previsualización en vivo
                 </span>
                 <button
@@ -483,7 +483,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       {idioma.label}
                     </span>
                     {hayTraduccion && !desactualizada && (
-                      <span className="text-[10px] tracking-wider font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)]">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)]">
                         Al día
                       </span>
                     )}
@@ -556,7 +556,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                           className="grid grid-cols-1 lg:grid-cols-2 gap-3"
                         >
                           <div>
-                            <label className="block text-[10px] tracking-wider text-[var(--ink-2)] font-semibold mb-1.5">
+                            <label className="block text-[10px] text-[var(--ink-2)] font-semibold mb-1.5">
                               {f.etiqueta} — original (ES)
                             </label>
                             <div className="w-full bg-[var(--surface)]/60 rounded-[var(--r-s)] p-3 text-xs text-[var(--ink-2)] whitespace-pre-line max-h-40 overflow-y-auto">
@@ -564,7 +564,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                             </div>
                           </div>
                           <div>
-                            <label className="block text-[10px] tracking-wider text-[var(--acc)]/80 font-semibold mb-1.5">
+                            <label className="block text-[10px] text-[var(--acc)]/80 font-semibold mb-1.5">
                               {f.etiqueta} — {idioma.label}
                             </label>
                             <textarea
@@ -587,7 +587,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       (m) => (m.rol || "").trim() || (m.bio || "").trim(),
                     ).length > 0 && (
                       <div className="space-y-3 pt-2">
-                        <p className="text-[10px] tracking-wider text-[var(--ink-2)] font-semibold">
+                        <p className="text-[10px] text-[var(--ink-2)] font-semibold">
                           Formación
                         </p>
                         {miembros

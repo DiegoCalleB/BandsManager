@@ -139,7 +139,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
             <Bell className="w-3.5 h-3.5" />
             {unreadAlerts.length > 0 && (
               <span
-                className={`absolute -top-0.5 -right-0.5 w-2 h-2 ${'bg-[var(--acc)]'} rounded-[var(--r-pill)] animate-pulse`}
+                className={`absolute -top-0.5 -right-0.5 w-2 h-2 ${'bg-[var(--acc)]'} rounded-[var(--r-pill)]`}
               />
             )}
           </div>

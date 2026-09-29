@@ -521,7 +521,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
           <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
             {/* 1. Album Selector */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold tracking-wider text-[var(--ink-2)] flex items-center justify-between">
+              <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center justify-between">
                 <span>Seleccionar Álbum / Disco</span>
                 <span className="text-[var(--ok)] font-sans font-bold text-[11px]">
                   {targetSongs.length}{" "}
@@ -551,7 +551,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
             {/* 2. Format Selection Tabs */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
+              <label className="text-xs font-semibold text-[var(--ink-2)]">
                 Formato de Exportación
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -751,7 +751,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
             {/* 4. Live Preview Box */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
-                <span className="font-semibold tracking-wider">
+                <span className="font-semibold">
                   Vista previa del archivo
                 </span>
                 <span className="font-sans text-[11px] text-[var(--ink-2)]">

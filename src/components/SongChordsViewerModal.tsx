@@ -616,7 +616,7 @@ export function SongChordsViewerModal({
                     {/* GUIDES GRID */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--acc)] font-bold block text-[11px] tracking-wider">
+                        <span className="text-[var(--acc)] font-bold block text-[11px]">
                           1. Estructura Exacta del Tema
                         </span>
                         <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
@@ -626,7 +626,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--ok)] font-bold block text-[11px] tracking-wider">
+                        <span className="text-[var(--ok)] font-bold block text-[11px]">
                           2. Progresión Armónica Clave
                         </span>
                         <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
@@ -636,7 +636,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--alert)] font-bold block text-[11px] tracking-wider">
+                        <span className="text-[var(--alert)] font-bold block text-[11px]">
                           3. Cortes, Entradas y Claves
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
@@ -646,7 +646,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--tentative)]/80 font-bold block text-[11px] tracking-wider">
+                        <span className="text-[var(--tentative)]/80 font-bold block text-[11px]">
                           4. Capo / Afinación
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
@@ -655,7 +655,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--acc)] font-bold block text-[11px] tracking-wider">
+                        <span className="text-[var(--acc)] font-bold block text-[11px]">
                           5. Protagonismo de Instrumentos / Arreglos
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
@@ -713,7 +713,7 @@ export function SongChordsViewerModal({
                     </div>
 
                     <div className="pt-3 space-y-3">
-                      <h4 className="text-xs font-sans font-bold text-[var(--tentative)]/80 tracking-wider">
+                      <h4 className="text-xs font-sans font-bold text-[var(--tentative)]/80">
                         Campos de la Ficha del Músico Sustituto:
                       </h4>
 

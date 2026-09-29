@@ -1974,7 +1974,7 @@ export default function Chatbot({
                         <div className="flex items-center justify-between gap-1.5">
                           <div className={`flex items-center gap-1.5 ${'text-[var(--tentative)]'}`}>
                             <Sparkles className="w-3.5 h-3.5" />
-                            <h5 className="font-sans font-bold text-[9px] tracking-widest">
+                            <h5 className="font-sans font-bold text-[9px]">
                               Propuestas del Manager ({nonTriggerActions.length})
                             </h5>
                           </div>
@@ -2053,7 +2053,7 @@ export default function Chatbot({
                                                   handleSaveAccompanimentToSong(audioKey, acc, songPicker[audioKey].selectedId)
                                                 }
                                                 disabled={!songPicker[audioKey].selectedId || audioState.saving}
-                                                className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                                className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
                                               >
                                                 {audioState.saving ? (
                                                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2068,7 +2068,7 @@ export default function Chatbot({
                                               type="button"
                                               onClick={() => handleSaveAccompanimentToSong(audioKey, acc)}
                                               disabled={audioState.saving}
-                                              className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                                              className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
                                             >
                                               {audioState.saving ? (
                                                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2091,7 +2091,7 @@ export default function Chatbot({
                                           type="button"
                                           onClick={() => handleGenerateAccompanimentAudio(audioKey, acc)}
                                           disabled={audioState?.loading}
-                                          className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                          className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
                                         >
                                           {audioState?.loading ? (
                                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2137,7 +2137,7 @@ export default function Chatbot({
                                             type="button"
                                             onClick={() => handleDownloadMelodicIdeaMidi(idea)}
                                             title="Abre en cualquier DAW o editor de partituras para editarla nota a nota"
-                                            className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-1.5 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                                            className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans py-1.5 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
                                           >
                                             <Download className="w-3.5 h-3.5" /> Descargar .mid
                                           </button>
@@ -2171,7 +2171,7 @@ export default function Chatbot({
                                                 type="button"
                                                 onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea, songPicker[audioKey].selectedId)}
                                                 disabled={!songPicker[audioKey].selectedId || audioState.saving}
-                                                className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                                className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
                                               >
                                                 {audioState.saving ? (
                                                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2186,7 +2186,7 @@ export default function Chatbot({
                                               type="button"
                                               onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea)}
                                               disabled={audioState.saving}
-                                              className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                                              className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
                                             >
                                               {audioState.saving ? (
                                                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2209,7 +2209,7 @@ export default function Chatbot({
                                           type="button"
                                           onClick={() => handleGenerateMelodicIdeaAudio(audioKey, idea)}
                                           disabled={audioState?.loading}
-                                          className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                          className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
                                         >
                                           {audioState?.loading ? (
                                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2230,7 +2230,7 @@ export default function Chatbot({
                                   <button
                                     id={`confirm-proposal-btn-${msg.id}-${aIdx}`}
                                     onClick={() => handleConfirmAction(msg.id, realIdx, act)}
-                                    className={`flex-1 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                    className={`flex-1 text-[10px] font-bold font-sans py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
                                   >
                                     ✓ Aprobar esta
                                   </button>
@@ -2282,7 +2282,7 @@ export default function Chatbot({
             className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 animate-in slide-in-from-bottom-2 fade-in duration-300 ${'-indigo-100 bg-[var(--surface)] text-[var(--ink)]'}`}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold tracking-widest">
+              <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold">
                 <Activity className={`w-3.5 h-3.5 ${'text-[var(--tentative)]'}`} />
                 <span>Monitoreando {activeRun.agentName}</span>
               </div>
@@ -2333,8 +2333,8 @@ export default function Chatbot({
 
               {/* Steps sequencer */}
               {activeRun.steps && activeRun.steps.length > 0 && (
-                <div className="mt-3 space-y-2 pt-2 -dashed dark:bg-[var(--surface)]">
-                  <div className="flex items-center gap-1.5 text-[9px] text-[var(--ink-2)] tracking-wider">
+                <div className="mt-3 space-y-2 pt-2 -dashed">
+                  <div className="flex items-center gap-1.5 text-[9px] text-[var(--ink-2)]">
                     <Terminal className="w-3 h-3" /> Secuencia de Pasos:
                   </div>
                   <div className="space-y-1.5 pl-1">
@@ -2382,7 +2382,7 @@ export default function Chatbot({
                     <div className="p-3.5 bg-[var(--ok-soft)] rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className="text-[11px] text-[var(--ok)] font-bold tracking-wider">¡Bandeja Sincronizada!</span>
+                        <span className="text-[11px] text-[var(--ok)] font-bold">¡Bandeja Sincronizada!</span>
                       </div>
                       <p className="text-[10px] leading-normal text-[var(--ok)]">
                         El agente Lector ha revisado tu bandeja de correo y actualizado el hilo de respuestas en Supabase.
@@ -2396,7 +2396,7 @@ export default function Chatbot({
                     <div className="p-3.5 bg-[var(--ok)]/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className="text-[11px] text-[var(--ok)] font-bold tracking-wider">¡Despacho Completado!</span>
+                        <span className="text-[11px] text-[var(--ok)] font-bold">¡Despacho Completado!</span>
                       </div>
                       <p className="text-[10px] leading-normal text-[var(--ok)]">
                         El agente Enviador ha procesado los correos autorizados en Supabase y registrado las fechas de envío.
@@ -2410,7 +2410,7 @@ export default function Chatbot({
                     <div className="p-3.5 bg-[var(--ok)]/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className="text-[11px] text-[var(--ok)] font-bold tracking-wider">¡Borradores Generados!</span>
+                        <span className="text-[11px] text-[var(--ok)] font-bold">¡Borradores Generados!</span>
                       </div>
                       <p className="text-[10px] leading-normal text-[var(--ok)]">
                         El agente Redactor ha generado propuestas personalizadas en Supabase listas para tu revisión.
@@ -2550,7 +2550,7 @@ export default function Chatbot({
                   <div className="p-3.5 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] space-y-2.5 animate-in fade-in duration-300 select-text">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                      <span className="text-[11px] text-[var(--ok)] font-bold tracking-wider">¡Búsqueda Finalizada!</span>
+                      <span className="text-[11px] text-[var(--ok)] font-bold">¡Búsqueda Finalizada!</span>
                     </div>
 
                     <p className="text-[10px] leading-normal text-[var(--ok)]">
@@ -2570,7 +2570,7 @@ export default function Chatbot({
                         <div className="space-y-2.5 max-h-48 overflow-y-auto pr-1">
                           {Object.entries(groupedLeads).map(([category, items]) => (
                             <div key={category} className="space-y-1">
-                              <span className="text-[8px] font-bold font-sans tracking-wider text-[var(--ok)]/70 block">
+                              <span className="text-[8px] font-bold font-sans text-[var(--ok)]/70 block">
                                 {category} ({items.length})
                               </span>
                               <div className="space-y-1 pl-1">

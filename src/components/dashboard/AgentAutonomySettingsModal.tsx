@@ -797,7 +797,7 @@ export const AgentAutonomySettingsModal: React.FC<
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink)]">
+                  <h3 className="text-base font-bold font-display text-[var(--ink)]">
                     Panel de Control de Agentes IA
                   </h3>
                   <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-bold">
@@ -1040,7 +1040,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 {/* 1. MODO DE ENVÍO */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                    <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <Send className="w-4 h-4" /> 1. Autonomía de Envío (Modo
                       de Despacho)
                     </h4>
@@ -1184,7 +1184,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 {/* 2. ALCANCE DE NEGOCIACIÓN */}
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                    <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <Bot className="w-4 h-4" /> 2. Alcance de Negociación del
                       Mánager AI
                     </h4>
@@ -1214,7 +1214,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       }`}
                     >
                       <div className="space-y-2">
-                        <span className="text-[9px] font-sans tracking-widest font-bold text-[var(--acc)]">
+                        <span className="text-[9px] font-sans font-bold text-[var(--acc)]">
                           Nivel A
                         </span>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
@@ -1248,7 +1248,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       }`}
                     >
                       <div className="space-y-2">
-                        <span className="text-[9px] font-sans tracking-widest font-bold text-[var(--ink-2)]">
+                        <span className="text-[9px] font-sans font-bold text-[var(--ink-2)]">
                           Nivel B
                         </span>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
@@ -1282,7 +1282,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       }`}
                     >
                       <div className="space-y-2">
-                        <span className="text-[9px] font-sans tracking-widest font-bold text-[var(--tentative)]">
+                        <span className="text-[9px] font-sans font-bold text-[var(--tentative)]">
                           Nivel C
                         </span>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
@@ -1300,7 +1300,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                 {/* 3. PARÁMETROS ECONÓMICOS */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
-                  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                  <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Euro className="w-4 h-4" /> 3. Caché Mínimo por Tipo de
                     Recinto para {bandName}
                   </h4>
@@ -1355,7 +1355,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   </div>
 
                   <div className="pt-3 space-y-2">
-                    <h5 className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+                    <h5 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                       <Euro className="w-3.5 h-3.5" /> Caché de Inicio de
                       Negociación (opcional)
                     </h5>
@@ -1487,7 +1487,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                 {/* 1. Remitente e Identidad del Agente */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
-                  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                  <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <AtSign className="w-4 h-4" /> 1. Remitente Oficial de la
                     Banda para los Agentes
                   </h4>
@@ -1571,7 +1571,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                 {/* 3. Modo de Despacho de Correo */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
-                  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                  <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Send className="w-4 h-4" /> 3. Modo de Despacho del Agente
                     Enviador
                   </h4>
@@ -1595,7 +1595,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] font-sans tracking-widest font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded">
+                          <span className="text-[9px] font-sans font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded">
                             Recomendado
                           </span>
                           <FileEdit className="w-4 h-4 text-[var(--acc)]" />
@@ -1630,7 +1630,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] font-sans tracking-widest font-bold text-[var(--ink-2)] bg-[var(--acc)]/10 px-2 py-0.5 rounded">
+                          <span className="text-[9px] font-sans font-bold text-[var(--ink-2)] bg-[var(--acc)]/10 px-2 py-0.5 rounded">
                             Directo
                           </span>
                           <Send className="w-4 h-4 text-[var(--ink-2)]" />
@@ -1819,7 +1819,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     <div className="flex items-center gap-2">
                       <Send className="w-4 h-4 text-[var(--acc)]" />
                       <div>
-                        <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ink)]">
+                        <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
                           Agente Enviador (Días y Horas de Envío de Pitches)
                         </h4>
                         <p className="text-[10px] text-[var(--ink-2)]">
@@ -1998,7 +1998,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-[var(--ink-2)]" />
-                    <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ink)]">
+                    <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
                       Agente Lector (Bandeja de Entrada)
                     </h4>
                     <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ink-2)] font-bold">
@@ -2018,7 +2018,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 {/* Monitor de Estado de Agentes de Supabase (GitHub Actions) */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ok)] flex items-center gap-1.5">
+                    <h4 className="text-xs font-sans font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <Activity className="w-4 h-4" /> Estado en Tiempo Real de
                       Agentes (Supabase Engine)
                     </h4>
@@ -2137,7 +2137,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 {/* Enlace a ADN de Tono */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  flex items-center justify-between gap-3">
                   <div>
-                    <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70 tracking-wider">
+                    <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70">
                       ¿Quieres entrenar el tono de voz de la banda?
                     </h4>
                     <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
@@ -2167,7 +2167,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 {/* Enlace rápido a plantillas en Booking */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  flex items-center justify-between">
                   <div>
-                    <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70 tracking-wider">
+                    <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70">
                       ¿Quieres afinar las plantillas de correo?
                     </h4>
                     <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
@@ -2248,7 +2248,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             key={cat}
                             className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1"
                           >
-                            <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                            <span className="text-[10px] font-sans font-bold text-[var(--ink-2)]">
                               {RESPONSE_LEARNED_CATEGORY_LABELS[cat] || cat}
                             </span>
                             {reglas.reglas_manuales &&
@@ -2303,7 +2303,7 @@ export const AgentAutonomySettingsModal: React.FC<
  onOpenTemplatesSection que ya usan la pestaña Autonomía y Tono para lo mismo. */}
                 <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-between gap-3">
                   <div>
-                    <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider">
+                    <h4 className="text-xs font-sans font-bold text-[var(--ink-2)]">
                       ¿Quieres que aprenda rápido, sin esperar a corregir
                       borradores?
                     </h4>
@@ -2344,7 +2344,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           {type.icon}
                         </span>
                         <div>
-                          <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ink)]">
+                          <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
                             {type.label}
                           </h4>
                           <p className="text-[10px] text-[var(--ink-2)] font-sans">
@@ -2484,7 +2484,7 @@ export const AgentAutonomySettingsModal: React.FC<
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ok)] flex items-center gap-2">
+                    <h4 className="text-xs font-sans font-bold text-[var(--ok)] flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4" /> Registro de Auditoría
                       de Ejecución de Agentes
                     </h4>
@@ -2596,7 +2596,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             <div className="flex flex-wrap items-center justify-between gap-2">
                               <div className="flex items-center gap-2">
                                 <span
-                                  className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold tracking-wider ${
+                                  className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold ${
                                     log.agente === "enviador"
                                       ? "bg-[var(--acc)]/10 text-[var(--acc)]/70"
                                       : log.agente === "scout"
@@ -2661,7 +2661,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             {Array.isArray(log.leads_afectados) &&
                               log.leads_afectados.length > 0 && (
                                 <div className="mt-2 pt-2  space-y-1.5">
-                                  <span className="text-[10px] font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center justify-between">
+                                  <span className="text-[10px] font-sans font-bold text-[var(--ink-2)] flex items-center justify-between">
                                     <span>
                                       Salas / Leads Procesados (
                                       {log.leads_afectados.length}):

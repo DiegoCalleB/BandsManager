@@ -229,7 +229,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
               </span>
               {hasAlerts && (
                 <span
-                  className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold tracking-wider ${
+                  className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold ${
                     dangerAlertsCount > 0
                       ? "bg-[var(--alert)] text-[var(--ink)]"
                       : "bg-[var(--acc)] text-[var(--on-acc)]"
@@ -419,7 +419,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
           {hasAlerts && (
             <div className="space-y-2 pt-1">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--alert)] flex items-center gap-1">
+                <span className="text-[10px] font-sans font-bold text-[var(--alert)] flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3 text-[var(--alert)]" />
                   Alertas de Escenario y Directo ({weatherData.alerts.length})
                 </span>
@@ -465,7 +465,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                                 {alert.title}
                               </span>
                               <span
-                                className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold tracking-wider ${
+                                className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold ${
                                   isDanger
                                     ? "bg-[var(--alert)] text-[var(--ink)]"
                                     : "bg-[var(--acc)] text-[var(--on-acc)]"
@@ -518,7 +518,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                                   : " text-[var(--ink)]/90"
                               }`}
                             >
-                              <div className="font-sans tracking-wider text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">
+                              <div className="font-sans text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">
                                 <ShieldAlert className="w-3 h-3 text-[var(--acc)]" />
                                 <span>Protocolo técnico recomendado:</span>
                               </div>

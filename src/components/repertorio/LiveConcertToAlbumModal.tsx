@@ -1467,7 +1467,7 @@ export const LiveConcertToAlbumModal: React.FC<
               className={`p-5 rounded-[var(--r-m)] space-y-4 ${"bg-[var(--surface)]"}`}
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold tracking-wider text-[var(--acc)] flex items-center gap-2">
+                <h3 className="text-sm font-bold text-[var(--acc)] flex items-center gap-2">
                   <Radio className="w-4 h-4" /> 1. Ingesta del Concierto
                   (YouTube o Archivo Local)
                 </h3>

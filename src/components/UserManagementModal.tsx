@@ -300,7 +300,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold font-display tracking-wider text-base flex items-center gap-2">
+                <h3 className="font-bold font-display text-base flex items-center gap-2">
                   <span>Gestión de Miembros de la Banda</span>
                   <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                     Panel Admin
@@ -328,7 +328,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 ${
                 activeTab === "list"
                   ? " text-[var(--tentative)]"
                   : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -343,7 +343,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 ${
                 activeTab === "create"
                   ? " text-[var(--tentative)]"
                   : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -358,7 +358,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 ${
                 activeTab === "associate"
                   ? "text-[var(--tentative)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"

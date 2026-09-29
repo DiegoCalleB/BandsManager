@@ -326,7 +326,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               <button
                 type="button"
                 onClick={startRecording}
-                className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center gap-2 cursor-pointer active:scale-95 transition-all"
+                className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-xs flex items-center gap-2 cursor-pointer active:scale-95 transition-all"
               >
                 <Mic className="w-4 h-4" />
                 <span>Iniciar Grabación con Micrófono</span>
@@ -466,7 +466,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--acc)]">
                 <Sparkles className="w-4 h-4" />
               </span>
-              <h3 className="text-sm font-sans font-bold text-[var(--ink)] tracking-wider">
+              <h3 className="text-sm font-sans font-bold text-[var(--ink)]">
                 Acta de Ensayo Inteligente (Human-in-the-loop)
               </h3>
             </div>
@@ -526,7 +526,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Executive Summary */}
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
-              <h4 className="text-xs font-sans font-bold text-[var(--acc)] tracking-wider flex items-center gap-1.5">
+              <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                 📝 Resumen Ejecutivo
               </h4>
               <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
@@ -537,7 +537,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {/* Temas Bordados vs A Pulir */}
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
               <div>
-                <h4 className="text-xs font-sans font-bold text-[var(--ok)] tracking-wider mb-1.5">
+                <h4 className="text-xs font-sans font-bold text-[var(--ok)] mb-1.5">
                   🟢 Temas Bordados
                 </h4>
                 <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
@@ -552,7 +552,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               </div>
 
               <div>
-                <h4 className="text-xs font-sans font-bold text-[var(--alert)] tracking-wider mb-1.5">
+                <h4 className="text-xs font-sans font-bold text-[var(--alert)] mb-1.5">
                   🔴 A Repasar Próximo Día
                 </h4>
                 <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
@@ -569,7 +569,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
             {/* Deberes para casa */}
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
-              <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
+              <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                 🎯 Deberes para Casa
               </h4>
               <div className="space-y-2">

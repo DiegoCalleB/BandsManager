@@ -2237,7 +2237,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       {/* CONTACT & LOCATION CARD */}
       <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2.5800">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)]">
+          <p className="text-[10px] font-sans font-bold text-[var(--ink-2)]">
             Ficha de Contacto & Ubicación
           </p>
           <div className="flex items-center gap-2 flex-wrap justify-end">
@@ -2356,7 +2356,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           String(selectedLead.tipo || "").toLowerCase(),
         )) && (
         <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2">
-          <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+          <p className="text-[10px] font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
             <span>🎸</span> Róster de Artistas & Servicios de Representación
           </p>
           {selectedLead.roster ? (
@@ -2455,7 +2455,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           {isEditingLeadInfo && (
             <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-[var(--ink)]">
               <div className="flex justify-between items-center pb-2800">
-                <span className="font-bold text-xs tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+                <span className="font-bold text-xs text-[var(--acc)] flex items-center gap-1.5">
                   <Edit3 className="w-3.5 h-3.5" /> Editar Ficha (
                   {selectedLead.nombre_sala})
                 </span>
@@ -2533,7 +2533,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {/* Logo Selector */}
                 <div className="bg-[var(--bg)]/60 p-3 rounded-[var(--r-m)]800 space-y-2.5">
                   <div className="flex items-center justify-between flex-wrap gap-2">
-                    <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                       Icono o Logo del Medio / Sala
                     </label>
                     <div className="flex items-center gap-2">
@@ -3151,7 +3151,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             )}
 
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className="text-xs font-bold font-sans text-[var(--acc)] tracking-wider">
+              <span className="text-xs font-bold font-sans text-[var(--acc)]">
                 {isReplyStage
                   ? "💬 Respuesta Redactada por IA"
                   : "✉️ Propuesta de Pitch Redactada"}
@@ -3478,7 +3478,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[var(--acc)]" />
-                  <span className="text-xs font-bold text-[var(--acc)]/70 font-sans tracking-wider flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[var(--acc)]/70 font-sans flex items-center gap-1.5">
                     Aprendizaje Agéntico & ADN de Tono
                     <span className="text-[9px] bg-[var(--acc)]/20 text-[var(--acc)]/70 px-1.5 py-0.5 rounded font-sans font-normal">
                       Dynamic Few-Shot
@@ -3579,7 +3579,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
               {/* Scope Selector: Solo este pitch vs Memoria Global Futura */}
               <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
-                <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] font-sans block">
+                <span className="text-[10px] font-bold text-[var(--ink-2)] font-sans block">
                   🎯 Alcance del entrenamiento IA:
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -5273,7 +5273,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-[var(--acc)]" />
-              <h4 className="text-xs font-bold text-[var(--ink)] tracking-wider font-sans">
+              <h4 className="text-xs font-bold text-[var(--ink)] font-sans">
                 Bitácora de Contacto y Llamadas
               </h4>
             </div>
@@ -5330,7 +5330,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Result Outcome Pills */}
             <div className="space-y-1">
-              <span className="text-[9px] tracking-wider text-[var(--ink-2)] font-sans">
+              <span className="text-[9px] text-[var(--ink-2)] font-sans">
                 Resultado del contacto:
               </span>
               <div className="flex flex-wrap gap-1">

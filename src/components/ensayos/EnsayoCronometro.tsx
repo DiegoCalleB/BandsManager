@@ -85,7 +85,7 @@ export function EnsayoCronometro({
           className={`w-3.5 h-3.5 ${isActive ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
         />
         <span
-          className={`font-sans font-bold text-sm tracking-wider ${isOvertime ? "text-[var(--alert)]" : "text-[var(--ink)]"}`}
+          className={`font-sans font-bold text-sm ${isOvertime ? "text-[var(--alert)]" : "text-[var(--ink)]"}`}
         >
           {formatTime(seconds)}
         </span>
@@ -120,10 +120,10 @@ export function EnsayoCronometro({
           <div
             className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--acc)]/60 text-[var(--acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
           >
-            <Clock className={`w-4 h-4 ${isActive ? "animate-pulse" : ""}`} />
+            <Clock className={`w-4 h-4 ${isActive ? "" : ""}`} />
           </div>
           <div>
-            <h4 className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">
+            <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
               Cronómetro de Ensayo
             </h4>
             <p className="text-[10px] font-sans text-[var(--ink-2)]">

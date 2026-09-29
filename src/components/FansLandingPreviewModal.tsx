@@ -68,7 +68,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-display tracking-wider truncate">
+              <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-display truncate">
                 {t('previewModalTitle')}
               </h2>
               <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">

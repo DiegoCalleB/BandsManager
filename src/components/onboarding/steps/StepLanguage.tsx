@@ -92,7 +92,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
             <Globe className="w-5 h-5 text-[var(--acc)]" />
           </div>
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-[10px] font-sans font-bold tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-[10px] font-sans font-bold">
               <Sparkles className="w-3 h-3 text-[var(--acc)]" />
               <span>Primer Paso Obligatorio / First Step</span>
             </div>

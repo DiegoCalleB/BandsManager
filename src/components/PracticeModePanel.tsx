@@ -658,7 +658,7 @@ export default function PracticeModePanel({
                 <Headphones className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h3 className="font-bold font-display tracking-wider text-sm truncate">Sala de Ensayo Individual</h3>
+                <h3 className="font-bold font-display text-sm truncate">Sala de Ensayo Individual</h3>
                 <p className="text-[11px] text-[var(--ink-2)] truncate">
                   {song.titulo} · {idea.titulo}
                 </p>
@@ -783,7 +783,7 @@ export default function PracticeModePanel({
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
                   <div className="flex items-center justify-between flex-wrap gap-1 text-[11px]">
                     <span className="font-bold text-[var(--acc)] flex items-center gap-1.5">
-                      <Repeat className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
+                      <Repeat className="w-3.5 h-3.5 text-[var(--acc)]" />
                       Looper de Secciones Inteligentes:
                     </span>
                     {loopA != null && loopB != null ? (

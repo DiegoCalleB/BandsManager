@@ -194,7 +194,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
           {/* Header */}
           <div className="flex justify-between items-start800/80 pb-3">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[10px] font-black tracking-wider mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[10px] font-black mb-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Concierto Confirmado
               </div>
@@ -387,7 +387,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 isSubmitting || (!selectedSetlistId && !generateNewSetlist)
               }
               onClick={handleSaveAndLink}
-              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--ok)]  text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--ok)]  text-[var(--ink)] font-sans font-black text-xs flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               <Check className="w-4 h-4 stroke-[3]" />
               <span>

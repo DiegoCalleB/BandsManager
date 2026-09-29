@@ -98,7 +98,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               <Lock className="w-7 h-7" />
             </div>
             <div>
-              <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-[var(--r-s)]">
+              <span className="text-[10px] font-sans font-bold text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-[var(--r-s)]">
                 Límite de {currentPlanDef.name} alcanzado
               </span>
               <h3 className="text-xl font-bold font-display tracking-wide text-[var(--ink)] mt-1">
@@ -129,7 +129,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[var(--acc)]" />
-                <span className="text-sm font-bold font-display tracking-wider text-[var(--acc)]/70">
+                <span className="text-sm font-bold font-display text-[var(--acc)]/70">
                   Plan Recomendado: {targetPlanDef.name}
                 </span>
               </div>
@@ -157,7 +157,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 billingInterval={billingPeriod}
                 bandId={currentUser?.band_id}
                 userEmail={currentUser?.email}
-                className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-black text-xs tracking-wider transition-all hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-black text-xs transition-all hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>
                   Mejorar a {targetPlanDef.name} ({targetPlanDef.price})

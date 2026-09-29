@@ -18,7 +18,7 @@ export interface SkeletonProps {
 /** Bloque base de carga: superficie `--sunken` con pulso, respeta prefers-reduced-motion
  *  (ver .animate-pulse en index.css). El tamaño lo pone quien lo usa vía className. */
 export const Skeleton: React.FC<SkeletonProps> = ({ className = '', radius = 'm', style }) => (
-  <div className={`animate-pulse bg-[var(--sunken)] ${className}`} style={{ borderRadius: RADIUS_VAR[radius], ...style }} />
+  <div data-carga="skeleton" className={`animate-pulse bg-[var(--sunken)] ${className}`} style={{ borderRadius: RADIUS_VAR[radius], ...style }} />
 );
 
 /** Fila de texto simulada: varias líneas de ancho decreciente, como un párrafo cargando. */

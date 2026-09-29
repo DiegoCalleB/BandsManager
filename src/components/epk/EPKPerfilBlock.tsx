@@ -101,7 +101,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               Ejecutivo
             </h3>
             <span
-              className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-[var(--r-pill)] ${
+              className={`text-[10px] font-bold px-2.5 py-1 rounded-[var(--r-pill)] ${
                 config.biografia &&
                 config.biografia.trim().length >= 80 &&
                 !config.biografia.toLowerCase().includes("por definir") &&
@@ -186,7 +186,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </h3>
             <div className="flex items-center gap-2">
               <span
-                className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-[var(--r-pill)] ${
+                className={`text-[10px] font-bold px-2.5 py-1 rounded-[var(--r-pill)] ${
                   (config.dossierPdfUrl &&
                     config.dossierPdfUrl.trim().length > 5) ||
                   (config.dossierTextoExtra &&
@@ -208,7 +208,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   ? "✓ Listo"
                   : "Mín. 80 car. o PDF"}
               </span>
-              <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-pill)] hidden sm:inline">
+              <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-pill)] hidden sm:inline">
                 Uso Interno
               </span>
             </div>
@@ -500,7 +500,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   </button>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-[var(--ink-2)] tracking-wider block">
+                  <label className="text-[10px] font-semibold text-[var(--ink-2)] block">
                     Breve descripción / Trayectoria (opcional)
                   </label>
                   <textarea
@@ -514,7 +514,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-[var(--ink-2)] tracking-wider block">
+                  <label className="text-[10px] font-semibold text-[var(--ink-2)] block">
                     Instagram personal (opcional)
                   </label>
                   <div className="relative">

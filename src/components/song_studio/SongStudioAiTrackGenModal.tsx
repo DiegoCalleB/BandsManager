@@ -37,7 +37,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
       <div className="bg-[var(--surface)]  border border-[var(--hair)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-[var(--acc)]/30 pb-3">
           <div className="flex items-center gap-2.5 text-[var(--acc)] font-mono font-bold text-sm">
-            <Sparkles className="w-5 h-5 text-[var(--acc)] animate-pulse" />
+            <Sparkles className="w-5 h-5 text-[var(--acc)]" />
             <span>Generador de Pista de Acompañamiento IA</span>
           </div>
           <button

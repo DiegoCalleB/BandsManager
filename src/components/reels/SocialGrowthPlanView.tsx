@@ -139,7 +139,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 <Sparkles className="w-4 h-4" />
               </span>
               <h3
-                className={`text-base font-bold font-display tracking-wider ${"text-[var(--ink)]"}`}
+                className={`text-base font-bold font-display ${"text-[var(--ink)]"}`}
               >
                 Plan de Crecimiento Musical ({growthPlan.horizonDays} Días)
               </h3>
@@ -412,7 +412,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                       {channel.platform === "spotify" && (
                         <Music2 className="w-4 h-4 text-[var(--ok)]" />
                       )}
-                      <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                      <h4 className="text-xs font-sans font-bold text-[var(--ink-2)]">
                         {channel.name}
                       </h4>
                     </div>
@@ -581,7 +581,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     {currentChannel.platform === "spotify" && (
                       <Music2 className="w-5 h-5 text-[var(--ok)]" />
                     )}
-                    <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink)]">
+                    <h3 className="text-base font-bold font-display text-[var(--ink)]">
                       Estrategia para {currentChannel.name}
                     </h3>
                     <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)]">
@@ -608,7 +608,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               {/* Action Items & Tactics Checklist (7 columns) */}
               <div className="lg:col-span-7 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+                  <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
                     Checklist de Tácticas & Plan de Acción para la Banda
                   </h4>
@@ -686,7 +686,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 <div
                   className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--surface)]"}`}
                 >
-                  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5 mb-3">
+                  <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5 mb-3">
                     <Flame className="w-4 h-4" />
                     Ganchos Líricos & Visuales de Alto Impacto
                   </h4>
@@ -721,7 +721,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     <div
                       className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--surface)]"}`}
                     >
-                      <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--tentative)] flex items-center gap-1.5 mb-3">
+                      <h4 className="text-xs font-sans font-bold text-[var(--tentative)] flex items-center gap-1.5 mb-3">
                         <Lightbulb className="w-4 h-4" />
                         Conceptos Virales Adaptados a Tu Sonido
                       </h4>
@@ -751,7 +751,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
                 {/* Errores Críticos a Evitar (Don'ts) */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)]/90 space-y-3">
-                  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--alert)] flex items-center gap-1.5">
+                  <h4 className="text-xs font-sans font-bold text-[var(--alert)] flex items-center gap-1.5">
                     <AlertCircle className="w-4 h-4" />
                     Errores Típicos de Músicos a Evitar
                   </h4>

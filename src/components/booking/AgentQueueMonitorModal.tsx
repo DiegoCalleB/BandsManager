@@ -148,7 +148,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
         );
       case 'processing':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] animate-pulse">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
             ● En Proceso
           </span>
         );

@@ -274,7 +274,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             )}
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)]">
+                <span className="text-xs font-sans font-bold text-[var(--acc)]">
                   Muro Oficial de la Banda
                 </span>
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
@@ -290,7 +290,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowNewPostModal(true)}
-              className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-sans font-black tracking-wider rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer active:scale-95"
+              className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-sans font-black rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer active:scale-95"
             >
               <Send className="w-3.5 h-3.5" /> Publicar Comunicado
             </button>
@@ -404,7 +404,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
       {/* Fan Posts / Shouts Stream */}
       <div className="space-y-4">
         <div className="flex items-center justify-between pt-2">
-          <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-2">
+          <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-2">
             <MessageCircle className="w-3.5 h-3.5 text-[var(--acc)]" />
             Muro de Fans & Mensajes de la Comunidad ({fans.length})
           </h4>
@@ -685,7 +685,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
             <form onSubmit={handleCreateAnnouncement} className="space-y-3.5">
               <div>
-                <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
+                <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Título o Titular *
                 </label>
                 <input
@@ -699,7 +699,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
+                <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Mensaje para la Comunidad de Fans *
                 </label>
                 <textarea
@@ -722,7 +722,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-sans text-xs font-black tracking-wider rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-sans text-xs font-black rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-1.5"
                 >
                   <Send className="w-3.5 h-3.5" /> Publicar en el Muro
                 </button>

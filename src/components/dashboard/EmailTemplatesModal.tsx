@@ -144,7 +144,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink)] flex items-center gap-2">
+                <h3 className="text-base font-bold font-display text-[var(--ink)] flex items-center gap-2">
                   Plantillas & Ejemplos Reales de Email
                 </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans">
@@ -199,7 +199,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3">
                 <div>
-                  <span className="text-[10px] font-sans text-[var(--acc)] tracking-widest font-bold">
+                  <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
                     {currentTpl.type}
                   </span>
                   <h4 className="text-sm font-bold font-display text-[var(--ink)]">
@@ -232,7 +232,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
               {/* Subject preview */}
               <div className="space-y-1">
-                <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
+                <span className="text-[10px] font-sans text-[var(--ink-2)]">
                   Asunto del Correo:
                 </span>
                 <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-sans font-bold text-[var(--acc)]/70">
@@ -242,7 +242,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
               {/* Body preview */}
               <div className="space-y-1">
-                <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
+                <span className="text-[10px] font-sans text-[var(--ink-2)]">
                   Cuerpo del Mensaje:
                 </span>
                 <pre className="p-4 rounded-[var(--r-s)] bg-[var(--surface)]/90 text-xs font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">

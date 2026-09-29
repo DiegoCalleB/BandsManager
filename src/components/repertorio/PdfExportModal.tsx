@@ -1611,7 +1611,7 @@ export function PdfExportModal({
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-display font-black text-sm sm:text-lg tracking-wider text-[var(--ink)] truncate">
+                  <h3 className="font-display font-black text-sm sm:text-lg text-[var(--ink)] truncate">
                     Generador de Repertorios
                   </h3>
                   <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black font-sans bg-[var(--surface)] text-[var(--ink)] shrink-0">
@@ -2065,7 +2065,7 @@ export function PdfExportModal({
                   </div>
 
                   <div className=" bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
-                    <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)] tracking-widest">
+                    <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)]">
                       {!isCurrentMaster
                         ? "REPERTORIO PERSONALIZADO"
                         : "COPIA DE CONTROL"}
@@ -2363,7 +2363,7 @@ export function PdfExportModal({
                             className="flex items-center gap-2 my-0.5"
                           >
                             <div className="flex-1 h-px bg-black" />
-                            <span className="font-['Oswald',sans-serif] text-[10pt] font-black tracking-wider text-[var(--ink)] whitespace-nowrap">
+                            <span className="font-['Oswald',sans-serif] text-[10pt] font-black text-[var(--ink)] whitespace-nowrap">
                               {item.tituloCustom || "BLOQUE"}
                             </span>
                             <div className="flex-1 h-px bg-black" />
@@ -2379,7 +2379,7 @@ export function PdfExportModal({
                             className="flex items-center gap-2 my-0.5"
                           >
                             <div className="flex-1 h-px bg-black" />
-                            <span className="font-['Oswald',sans-serif] text-[10pt] font-black tracking-wider text-[var(--ink)] whitespace-nowrap">
+                            <span className="font-['Oswald',sans-serif] text-[10pt] font-black text-[var(--ink)] whitespace-nowrap">
                               {item.tituloCustom || "BIS / ENCORE"}
                             </span>
                             <div className="flex-1 h-px bg-black" />

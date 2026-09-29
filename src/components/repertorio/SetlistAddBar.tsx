@@ -227,7 +227,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
               <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 p-2 space-y-2 text-xs">
                 {/* Standard Preset Events */}
                 <div>
-                  <div className="text-[10px] tracking-wider text-[var(--ink-2)] px-2 py-1 font-semibold">
+                  <div className="text-[10px] text-[var(--ink-2)] px-2 py-1 font-semibold">
                     Eventos de Show
                   </div>
                   <div className="grid grid-cols-1 gap-0.5">
@@ -272,7 +272,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                 {/* Custom Band Shortcuts */}
                 <div className="pt-1">
                   <div className="flex items-center justify-between px-2 py-1">
-                    <span className="text-[10px] tracking-wider text-[var(--ok)] font-semibold">
+                    <span className="text-[10px] text-[var(--ok)] font-semibold">
                       Accesos Rápidos de la Banda
                     </span>
                     {!isAddingShortcut && (

@@ -298,7 +298,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           {!showBulkInput ? (
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">
+                <h4 className="text-xs font-semibold text-[var(--ink-2)]">
                   Añadir Canción Individual
                 </h4>
                 <button
@@ -355,7 +355,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           ) : (
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">
+                <h4 className="text-xs font-semibold text-[var(--ink-2)]">
                   Pegar Títulos en Bloque (Uno por línea)
                 </h4>
                 <button

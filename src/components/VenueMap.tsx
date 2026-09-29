@@ -858,7 +858,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       <div
         className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 hidden sm:block ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
       >
-        <div className="font-bold text-[9px] tracking-wider mb-1 text-[var(--ink-2)]">
+        <div className="font-bold text-[9px] mb-1 text-[var(--ink-2)]">
           Leyenda
         </div>
         <div className="flex items-center gap-2">

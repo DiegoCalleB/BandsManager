@@ -193,7 +193,7 @@ export function MemberNotesModal({
               </div>
               <div>
                 <h3
-                  className={`text-base font-black font-display tracking-wider ${"text-[var(--ink)]"}`}
+                  className={`text-base font-black font-display ${"text-[var(--ink)]"}`}
                 >
                   Notas para Repertorio por Miembro
                 </h3>
@@ -288,7 +288,7 @@ export function MemberNotesModal({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span
-                  className={`text-xs font-sans font-bold tracking-wider ${"text-[var(--ink-2)]"}`}
+                  className={`text-xs font-sans font-bold ${"text-[var(--ink-2)]"}`}
                 >
                   Miembros de la Banda ({allMembersToDisplay.length})
                 </span>

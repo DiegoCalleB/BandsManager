@@ -292,7 +292,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca
               Interna)
             </h3>
-            <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Solo visible aquí
             </span>
           </div>

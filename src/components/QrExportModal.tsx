@@ -149,7 +149,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
         {/* Selector de Formato de Exportación */}
         <div className="space-y-3">
-          <label className="text-xs font-bold text-[var(--acc)] font-sans tracking-wider block">
+          <label className="text-xs font-bold text-[var(--acc)] font-sans block">
             1. Elige el formato de exportación:
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -253,7 +253,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
         {/* Opciones de Personalización */}
         <div className="space-y-4 bg-[var(--surface)] rounded-[var(--r-l)] p-5">
-          <label className="text-xs font-bold text-[var(--acc)] font-sans tracking-wider block">
+          <label className="text-xs font-bold text-[var(--acc)] font-sans block">
             2. Personalización:
           </label>
 
@@ -308,7 +308,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             type="button"
             onClick={handleDownload}
             disabled={isExporting}
-            className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
+            className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
           >
             <Download className="w-4 h-4" />
             {isExporting
@@ -319,7 +319,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           <button
             type="button"
             onClick={handlePrint}
-            className="w-full sm:w-auto py-3 px-5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
+            className="w-full sm:w-auto py-3 px-5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             Imprimir en A4 / Guardar PDF

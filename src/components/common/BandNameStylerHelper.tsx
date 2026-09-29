@@ -99,7 +99,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Presets Grid */}
             <div className="space-y-1.5">
-              <label className="text-[10px] font-sans tracking-wider text-[var(--ink-2)] font-bold flex items-center justify-between">
+              <label className="text-[10px] font-sans text-[var(--ink-2)] font-bold flex items-center justify-between">
                 <span>Transformar Nombre Actual:</span>
                 <span className="text-[var(--acc)]/80 font-normal">
                   Clic para aplicar
@@ -136,7 +136,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Quick Symbols Palette */}
             <div className="space-y-1.5 pt-1">
-              <label className="text-[10px] font-sans tracking-wider text-[var(--ink-2)] font-bold flex items-center justify-between">
+              <label className="text-[10px] font-sans text-[var(--ink-2)] font-bold flex items-center justify-between">
                 <span>Insertar Carácter o Símbolo:</span>
                 <span className="text-[var(--ink-2)] font-normal">
                   Añadir al nombre

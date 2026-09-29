@@ -409,7 +409,7 @@ export function OrdenDelDiaTab({
             <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--acc)]">
               <ListOrdered className="w-4 h-4" />
             </span>
-            <h3 className="text-sm font-sans font-bold text-[var(--ink)] tracking-wider">
+            <h3 className="text-sm font-sans font-bold text-[var(--ink)]">
               Orden del Día & Objetivos
             </h3>
           </div>
@@ -458,7 +458,7 @@ export function OrdenDelDiaTab({
 
           <button
             onClick={onGoToLiveMode}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-black text-xs tracking-wider hover:brightness-110 transition-all cursor-pointer active:scale-95"
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-black text-xs hover:brightness-110 transition-all cursor-pointer active:scale-95"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>Iniciar Modo Local en Vivo</span>
@@ -473,7 +473,7 @@ export function OrdenDelDiaTab({
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
-                <h4 className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">
+                <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
                   Objetivos del Ensayo
                 </h4>
               </div>
@@ -554,7 +554,7 @@ export function OrdenDelDiaTab({
 
           {/* Quick tips */}
           <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2">
-            <h5 className="text-[11px] font-sans font-bold text-[var(--acc)] tracking-wider flex items-center gap-1.5">
+            <h5 className="text-[11px] font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
               💡 Consejos de Productividad
             </h5>
             <ul className="text-xs text-[var(--ink-2)] space-y-1.5 pl-4 list-disc font-sans">
@@ -578,7 +578,7 @@ export function OrdenDelDiaTab({
         {/* Right Column: Run of Show Timeline with Drag & Drop */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-2">
+            <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-2">
               <ListOrdered className="w-4 h-4 text-[var(--acc)]" />
               <span>Bloques y Canciones de la Sesión ({agenda.length})</span>
             </h4>

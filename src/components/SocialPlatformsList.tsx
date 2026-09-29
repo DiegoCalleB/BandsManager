@@ -419,7 +419,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
     return (
       <div className="space-y-2">
         {showTitle && (
-          <p className="text-xs text-[var(--ink-2)] font-semibold tracking-wider text-center">
+          <p className="text-xs text-[var(--ink-2)] font-semibold text-center">
             {title}
           </p>
         )}
@@ -464,7 +464,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
     <div className="space-y-3">
       {showTitle && (
         <div className="text-center">
-          <p className="text-xs text-[var(--acc)] font-bold tracking-wider">
+          <p className="text-xs text-[var(--acc)] font-bold">
             {title}
           </p>
           <p className="text-[11px] text-[var(--ink-2)] mt-0.5">

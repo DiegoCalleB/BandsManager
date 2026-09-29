@@ -290,7 +290,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
           {/* REDES VINCULADAS */}
           <div className="pt-2 space-y-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className="text-xs font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
+              <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                 <Share2 className="w-3.5 h-3.5" /> Redes enlazadas
               </span>
               {onNavigateToBlock && (

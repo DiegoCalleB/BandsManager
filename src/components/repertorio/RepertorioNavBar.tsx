@@ -148,7 +148,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                   <div
                     className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] p-1.5 space-y-1 text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   >
-                    <div className="px-2.5 py-1.5 text-[11px] tracking-wider text-[var(--ink-2)] font-semibold flex items-center justify-between">
+                    <div className="px-2.5 py-1.5 text-[11px] text-[var(--ink-2)] font-semibold flex items-center justify-between">
                       <span>Tus Setlists ({setlists.length})</span>
                       <button
                         type="button"

@@ -74,7 +74,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">Tipo</label>
+              <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Tipo</label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -102,7 +102,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
             </div>
 
             <div>
-              <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">Categoría</label>
+              <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Categoría</label>
               <select
                 value={categoria}
                 onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
@@ -120,7 +120,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
             </div>
 
             <div>
-              <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">Concepto / Descripción</label>
+              <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Concepto / Descripción</label>
               <input
                 type="text"
                 required
@@ -133,7 +133,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">Importe (€)</label>
+                <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Importe (€)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -145,7 +145,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">Fecha</label>
+                <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Fecha</label>
                 <input
                   type="date"
                   required
@@ -157,7 +157,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
             </div>
 
             <div>
-              <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">Estado</label>
+              <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Estado</label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"

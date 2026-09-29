@@ -64,7 +64,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview
               (Landing de Fans & EPK)
             </h3>
-            <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Player Interactivo
             </span>
           </div>

@@ -608,7 +608,7 @@ export function ModoLocalEnVivoTab({
           <div className="space-y-6">
             {/* Song Structure Flow */}
             <div>
-              <label className="block text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider mb-2.5">
+              <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-2.5">
                 Estructura & Dinámica del Tema
               </label>
               <div className="flex flex-wrap items-center gap-2">
@@ -633,7 +633,7 @@ export function ModoLocalEnVivoTab({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Focus Note */}
               <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2">
-                <label className="text-xs font-sans font-bold text-[var(--acc)] tracking-wider flex items-center gap-1.5">
+                <label className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                   <Flame className="w-3.5 h-3.5" /> Enfoque / Detalle para este
                   ensayo
                 </label>
@@ -648,7 +648,7 @@ export function ModoLocalEnVivoTab({
 
               {/* Quick Musician Cheatsheet */}
               <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2">
-                <label className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
+                <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                   <Music className="w-3.5 h-3.5 text-[var(--acc)]" /> Afinación
                   & Arreglos
                 </label>
@@ -679,7 +679,7 @@ export function ModoLocalEnVivoTab({
             <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => setIsMetronomeActive(!isMetronomeActive)}
-                className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-sans font-bold text-xs tracking-wider transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-sans font-bold text-xs transition-all cursor-pointer ${
                   isMetronomeActive
                     ? "bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]"
                     : "bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]"
@@ -1148,7 +1148,7 @@ function renderFormattedChords(
     if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
       return (
         <div key={idx} className="pt-3 pb-1">
-          <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-sans font-black tracking-wider">
+          <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-sans font-black">
             {line.trim()}
           </span>
         </div>

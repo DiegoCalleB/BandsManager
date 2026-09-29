@@ -269,7 +269,7 @@ export function MetronomeModal({
 
             {/* Large BPM Display & Quick Adjustment */}
             <div className="flex flex-col items-center justify-center bg-[var(--sunken)] rounded-[var(--r-l)] p-6 relative overflow-hidden">
-              <div className="text-xs font-sans font-bold text-[var(--acc)] tracking-widest mb-1 flex items-center gap-1">
+              <div className="text-xs font-sans font-bold text-[var(--acc)] mb-1 flex items-center gap-1">
                 <Zap className="w-3.5 h-3.5" /> Tempo Actual
               </div>
 
@@ -293,7 +293,7 @@ export function MetronomeModal({
                   <span className="text-5xl font-black font-sans tracking-tight text-[var(--ink)]">
                     {bpm}
                   </span>
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
+                  <span className="text-[10px] font-sans text-[var(--ink-2)]">
                     Pulsaciones por Minuto
                   </span>
                 </div>
@@ -388,7 +388,7 @@ export function MetronomeModal({
                 onClick={handleTapTempo}
                 className="bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
               >
-                <span className="text-xs font-black text-[var(--acc)]/70 tracking-wider group-hover:scale-105 transition-transform">
+                <span className="text-xs font-black text-[var(--acc)]/70 group-hover:scale-105 transition-transform">
                   👆 TAP TEMPO
                 </span>
                 <span className="text-[10px] text-[var(--ink-2)]">

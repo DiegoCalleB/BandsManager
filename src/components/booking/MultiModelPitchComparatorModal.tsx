@@ -629,7 +629,7 @@ export const MultiModelPitchComparatorModal: React.FC<
             {/* TABLA COMPARATIVA DE RENTABILIDAD & TARIFAS */}
             <div className="mt-4 p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5 font-sans">
+                <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5 font-sans">
                   <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />
                   Resumen de Costes & ROI para la Banda
                 </span>

@@ -610,7 +610,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <div className="flex items-center gap-2 text-[11px] pt-2">
                       <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
                       <span className={`font-mono ${textSub}`}>Compensación:</span>
-                      <span className="text-[var(--ok)] dark:text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
+                      <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
                     </div>
                   )}
                   {selectedEventDetails.type === 'concert' &&

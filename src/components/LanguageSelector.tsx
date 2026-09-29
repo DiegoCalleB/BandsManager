@@ -67,7 +67,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-44 rounded-[var(--r-m)] bg-[var(--bg)] z-50 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
-          <div className="px-3 py-1.5/60 text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+          <div className="px-3 py-1.5/60 text-[10px] font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
             <Globe className="w-3 h-3 text-[var(--acc)]" />
             <span>Seleccionar Idioma</span>
           </div>

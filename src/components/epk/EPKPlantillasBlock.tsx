@@ -132,7 +132,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                 <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-sans tracking-wider">
+                <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-sans">
                   1. Elige la Plantilla Visual del Dossier
                 </h4>
                 <p className="hidden sm:block text-xs text-[var(--ink-2)]">
@@ -250,7 +250,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                 <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-sans tracking-wider">
+                <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-sans">
                   2. Organiza el Orden de las Secciones
                 </h4>
                 <p className="hidden sm:block text-xs text-[var(--ink-2)]">

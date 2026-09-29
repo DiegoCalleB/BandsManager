@@ -170,7 +170,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 1. Scope selection */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
+          <label className="text-xs font-bold text-[var(--acc)]/70 block">
             1. ¿Qué contactos quieres exportar?
           </label>
           <div className="grid grid-cols-1 gap-2">
@@ -267,7 +267,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 2. Format selection */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
+          <label className="text-xs font-bold text-[var(--acc)]/70 block">
             2. Formato de descarga
           </label>
           <div className="grid grid-cols-2 gap-3">

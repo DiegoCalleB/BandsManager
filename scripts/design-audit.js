@@ -82,6 +82,16 @@ const CHECKS = {
     pattern: /className=\{?[`"'][^`"']*(?:(?<![\w-])backdrop-blur|(?<![\w-])(?:drop-)?shadow-(?:sm|md|lg|xl|2xl|inner|\[)|bg-gradient-to-(?![^`"']*(?:from-(?:black|transparent|\[#)|to-transparent)))/g,
     severity: 'error',
   },
+  darkTailwind: {
+    description: 'variante dark: de Tailwind en el marcado — visual-identity §4: el tema se resuelve en tokens, no en el componente',
+    pattern: /className=\{?[`"'][^`"']*(?<![\w-])dark:/g,
+    severity: 'error',
+  },
+  pulsoDecorativo: {
+    description: 'animate-pulse — solo para carga real (skeleton / "cargando"); nunca decorativo (visual-identity §4). Si es un skeleton de verdad, la línea debe contener "skeleton", "loading", "cargando", "Generando" o "Procesando"',
+    pattern: /^(?!.*(?:skeleton|data-carga|loading|cargando|Loading|Skeleton|Generando|Procesando|animated \?|animate-pulse en index\.css)).*(?<![\w-])animate-pulse(?![\w-]).*$/gm,
+    severity: 'error',
+  },
   claseCorrupta: {
     description: 'clase Tailwind inválida por concatenación (bgbg-, borderbg-, dividebg-): no hace nada — resto de un find-and-replace roto',
     pattern: /(?<![\w-])(?:hover:)?(?:bgbg|borderbg|dividebg|ringbg|textbg)-\[/g,

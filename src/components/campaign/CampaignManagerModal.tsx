@@ -304,7 +304,7 @@ export function CampaignManagerModal({
             <div>
               <h2 className="text-base sm:text-lg font-bold font-display text-[var(--ink)] flex items-center gap-2">
                 Gestor de Campañas de Booking
-                <span className="text-[10px] font-sans font-bold tracking-wider px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--hair)]/80">
+                <span className="text-[10px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--hair)]/80">
                   {campaigns.length} disponibles
                 </span>
               </h2>
@@ -329,7 +329,7 @@ export function CampaignManagerModal({
             /* Editing / Creation Form */
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-3">
-                <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)]">
+                <span className="text-xs font-sans font-bold text-[var(--acc)]">
                   {editingCampaignId
                     ? "✎ Editar Campaña"
                     : "➕ Crear Nueva Campaña"}
@@ -345,7 +345,7 @@ export function CampaignManagerModal({
               {/* Name & Color */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                  <label className="block text-[11px] font-sans font-bold text-[var(--ink-2)] mb-1">
                     Nombre de la Campaña *
                   </label>
                   <input
@@ -359,7 +359,7 @@ export function CampaignManagerModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                  <label className="block text-[11px] font-sans font-bold text-[var(--ink-2)] mb-1">
                     Color en Calendario
                   </label>
                   <div className="flex items-center gap-2 mt-1">
@@ -389,7 +389,7 @@ export function CampaignManagerModal({
 
               {/* Target Cities */}
               <div>
-                <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                <label className="block text-[11px] font-sans font-bold text-[var(--ink-2)] mb-1">
                   Ciudades Objetivo *
                 </label>
                 <div className="flex flex-wrap gap-1.5 mb-2">
@@ -437,7 +437,7 @@ export function CampaignManagerModal({
               {/* Capacity Range */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                  <label className="block text-[11px] font-sans font-bold text-[var(--ink-2)] mb-1">
                     Aforo Mínimo (pax)
                   </label>
                   <input
@@ -453,7 +453,7 @@ export function CampaignManagerModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                  <label className="block text-[11px] font-sans font-bold text-[var(--ink-2)] mb-1">
                     Aforo Máximo (pax)
                   </label>
                   <input
@@ -472,7 +472,7 @@ export function CampaignManagerModal({
 
               {/* Target Dates List & Quick Add */}
               <div>
-                <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                <label className="block text-[11px] font-sans font-bold text-[var(--ink-2)] mb-1">
                   Fechas Objetivo (se marcarán en Calendario y pitches IA) *
                 </label>
                 <div className="space-y-2 mb-2.5">
@@ -535,7 +535,7 @@ export function CampaignManagerModal({
 
               {/* Notes / Co-booking details */}
               <div>
-                <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                <label className="block text-[11px] font-sans font-bold text-[var(--ink-2)] mb-1">
                   Notas de Enfoque y Co-booking
                 </label>
                 <textarea
@@ -659,7 +659,7 @@ export function CampaignManagerModal({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                  <span className="text-xs font-sans font-bold text-[var(--ink-2)]">
                     Campañas Registradas
                   </span>
                 </div>

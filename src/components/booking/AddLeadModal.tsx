@@ -137,7 +137,7 @@ export function AddLeadModal({
             {/* Name + AI Scout Auto-fill */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
+                <label className={`block text-[10px] font-sans ${textSub}`}>
                   {sectionTab === 'medios'
                     ? 'Nombre del Medio / Revista *'
                     : sectionTab === 'grupos'
@@ -176,7 +176,7 @@ export function AddLeadModal({
 
             {/* Status Messages */}
             {isModalScraping && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-pulse bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)]">
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)]">
                 <Loader2 className="w-4 h-4 animate-spin shrink-0 text-[var(--acc)]" />
                 <span className="font-medium">{modalScrapeStatus}</span>
               </div>
@@ -193,7 +193,7 @@ export function AddLeadModal({
             {/* City & Venue Type */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>Ciudad</label>
+                <label className={`block text-[10px] font-sans mb-1 ${textSub}`}>Ciudad</label>
                 <input
                   type="text"
                   placeholder="Ej. Madrid, Barcelona"
@@ -485,13 +485,13 @@ export function AddLeadModal({
               <button
                 type="button"
                 onClick={onClose}
-                className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
+                className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] transition-colors cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider transition-all cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
+                className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold transition-all cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
               >
                 {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
               </button>

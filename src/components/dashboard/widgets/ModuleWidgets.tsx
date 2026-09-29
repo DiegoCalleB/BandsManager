@@ -119,7 +119,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
             <Music className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Repertorio & Setlists</h3>
+            <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Repertorio & Setlists</h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">Canciones e Iris Stems</p>
           </div>
         </div>
@@ -161,7 +161,7 @@ export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = fals
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Balance & Cachés</h3>
+            <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Balance & Cachés</h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">Recaudación bruta proyectada</p>
           </div>
         </div>
@@ -180,7 +180,7 @@ export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = fals
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
         <div>
           <span className="text-2xl font-sans font-black text-[var(--ok)]">{totalCache.toLocaleString('es-ES')} €</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">Suma de cachés de bolos</p>
+          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">Suma de cachés de bolos</p>
         </div>
         <div className="text-right">
           <span className="text-xs font-sans text-[var(--ink-2)] font-bold">{concerts.length} conciertos</span>
@@ -203,7 +203,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Fans & Captación</h3>
+            <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Fans & Captación</h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">Comunidad y códigos QR</p>
           </div>
         </div>
@@ -222,7 +222,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
       <div className="grid grid-cols-2 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
           <span className="text-2xl font-sans font-bold text-[var(--acc)]">{fans.length}</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-1">Fans Registrados</p>
+          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-1">Fans Registrados</p>
         </div>
         <button
           type="button"
@@ -247,7 +247,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Dossier EPK Público</h3>
+            <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Dossier EPK Público</h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">Presencia y prensa para salas</p>
           </div>
         </div>
@@ -293,7 +293,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
             <Bot className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Agente IA de Booking</h3>
+            <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Agente IA de Booking</h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">Redactor & Lector Autónomo</p>
           </div>
         </div>
@@ -312,7 +312,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
         <div>
           <span className="text-lg font-sans font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
+          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">Pendientes de Aprobación Humana</p>
         </div>
         <span className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">● Activo</span>
       </div>
@@ -330,7 +330,7 @@ export function TourStatusWidget({ tours = [], onNavigate, isStitchLight = false
             <Truck className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Giras & Logística</h3>
+            <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Giras & Logística</h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">Rutas de conciertos y producción</p>
           </div>
         </div>

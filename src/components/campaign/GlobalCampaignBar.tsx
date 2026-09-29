@@ -70,7 +70,7 @@ export function GlobalCampaignBar({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[8px] font-sans font-extrabold tracking-wider px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc)]/40 shrink-0">
+              <span className="text-[8px] font-sans font-extrabold px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc)]/40 shrink-0">
                 🎯 CAMPAÑA
               </span>
               <h2

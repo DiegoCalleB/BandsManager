@@ -183,7 +183,7 @@ export const PublicFanCapture: React.FC = () => {
             )}
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5" /> Nombre y Apellidos *
               </label>
               <input
@@ -197,7 +197,7 @@ export const PublicFanCapture: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
                 <Mail className="w-3.5 h-3.5" /> Correo Electrónico *
               </label>
               <input
@@ -212,7 +212,7 @@ export const PublicFanCapture: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1">
+                <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-[var(--acc)]" /> Ciudad
                 </label>
                 <input
@@ -225,7 +225,7 @@ export const PublicFanCapture: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1">
+                <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1">
                   <Music className="w-3 h-3 text-[var(--acc)]" /> ¿Origen?
                 </label>
                 <input

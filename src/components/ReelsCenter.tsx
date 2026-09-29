@@ -1550,14 +1550,14 @@ export default function ReelsCenter({
           <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-[var(--ink)] mb-2">
             Medios
           </h1>
-          <p className="text-sm font-sans text-[var(--ink-2)] tracking-widest">
+          <p className="text-sm font-sans text-[var(--ink-2)]">
             Analítica Social y Prensa
           </p>
         </div>
         <div className="flex gap-2.5 items-center flex-wrap">
           <button
             onClick={handleOpenToneModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-all cursor-pointer"
             title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1568,7 +1568,7 @@ export default function ReelsCenter({
             id="sync-reels-excel-btn"
             onClick={handleSyncReels}
             disabled={isSyncingReels}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer active:scale-95 ${
               isSyncingReels
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] "
@@ -1629,7 +1629,7 @@ export default function ReelsCenter({
         <button
           id="tab-btn-pipeline"
           onClick={() => setActiveTab("pipeline")}
-          className={`px-5 py-2.5 font-sans text-[10px] tracking-widest transition-all duration-300 rounded-[var(--r-m)] cursor-pointer ${
+          className={`px-5 py-2.5 font-sans text-[10px] transition-all duration-300 rounded-[var(--r-m)] cursor-pointer ${
             activeTab === "pipeline"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-black/10"
               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
@@ -1640,7 +1640,7 @@ export default function ReelsCenter({
         <button
           id="tab-btn-analyzer"
           onClick={() => setActiveTab("analyzer")}
-          className={`px-5 py-2.5 font-sans text-[10px] tracking-widest transition-all duration-300 rounded-[var(--r-m)] flex items-center gap-1.5 cursor-pointer ${
+          className={`px-5 py-2.5 font-sans text-[10px] transition-all duration-300 rounded-[var(--r-m)] flex items-center gap-1.5 cursor-pointer ${
             activeTab === "analyzer"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-black/10"
               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
@@ -1660,7 +1660,7 @@ export default function ReelsCenter({
               <div className={`${colors.card} p-5 space-y-4`}>
                 <div className={` pb-3 ${""}`}>
                   <h3
-                    className={`text-sm font-bold font-display tracking-widest ${"text-[var(--acc)]"}`}
+                    className={`text-sm font-bold font-display ${"text-[var(--acc)]"}`}
                   >
                     Pipeline de Reels y Contenido
                   </h3>
@@ -1677,7 +1677,7 @@ export default function ReelsCenter({
                     className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--surface)]"}`}
                   >
                     <span
-                      className={`text-[10px] font-sans tracking-wider font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
+                      className={`text-[10px] font-sans font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
                     >
                       Borradores (
                       {posts.filter((r) => r.estado === "borrador").length})
@@ -1752,7 +1752,7 @@ export default function ReelsCenter({
                     className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--surface)]"}`}
                   >
                     <span
-                      className={`text-[10px] font-sans tracking-wider font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
+                      className={`text-[10px] font-sans font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
                     >
                       En Edición / Aprobados (
                       {posts.filter((r) => r.estado === "aprobado").length})
@@ -1836,7 +1836,7 @@ export default function ReelsCenter({
                     className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--surface)]"}`}
                   >
                     <span
-                      className={`text-[10px] font-sans tracking-wider text-[var(--ok)] font-bold block pb-1.5 ${""}`}
+                      className={`text-[10px] font-sans text-[var(--ok)] font-bold block pb-1.5 ${""}`}
                     >
                       Listos / Publicados (
                       {posts.filter((r) => r.estado === "publicado").length})
@@ -1888,7 +1888,7 @@ export default function ReelsCenter({
                               >
                                 ← Re-editar
                               </button>
-                              <span className="text-[8px] font-sans text-[var(--ok)] flex items-center gap-0.5 font-bold tracking-wider">
+                              <span className="text-[8px] font-sans text-[var(--ok)] flex items-center gap-0.5 font-bold">
                                 <CheckCircle2 className="w-2.5 h-2.5" />{" "}
                                 Publicado
                               </span>
@@ -1913,7 +1913,7 @@ export default function ReelsCenter({
               <div className={`${colors.card} p-5 space-y-4`}>
                 <div className={` pb-3 ${""}`}>
                   <h3
-                    className={`text-sm font-bold font-display tracking-widest flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
+                    className={`text-sm font-bold font-display flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
                   >
                     <Sparkles className="w-4 h-4" /> AI Reels Writer (Redacción
                     Estructurada)
@@ -1927,7 +1927,7 @@ export default function ReelsCenter({
 
                 <div className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                       Idea de Contenido o Anécdota
                     </label>
                     <textarea
@@ -1949,7 +1949,7 @@ export default function ReelsCenter({
                         id="btn-reels-hype"
                         onClick={() => handleGenerateCopy("hype")}
                         disabled={isGenerating}
-                        className={`w-full py-3 font-sans font-bold text-xs tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--acc)]  text-[var(--acc-ink)]"}`}
+                        className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--acc)]  text-[var(--acc-ink)]"}`}
                       >
                         <Flame className="w-4 h-4" /> Balkan Hype 🎺🔥
                       </button>
@@ -1957,7 +1957,7 @@ export default function ReelsCenter({
                         id="btn-reels-chill"
                         onClick={() => handleGenerateCopy("chill")}
                         disabled={isGenerating}
-                        className={`w-full py-3 font-sans font-bold text-xs tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ok)]"}`}
+                        className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ok)]"}`}
                       >
                         <Music className="w-4 h-4" /> Reggae Chill 🌿🕊️
                       </button>
@@ -1993,7 +1993,7 @@ export default function ReelsCenter({
               <div className={`${colors.card} p-5 space-y-4`}>
                 <div className={` pb-3 ${""}`}>
                   <h3
-                    className={`text-sm font-bold font-display tracking-widest flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
+                    className={`text-sm font-bold font-display flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
                   >
                     <Video className={`w-4 h-4 ${"text-[var(--acc)]"}`} />{" "}
                     Extraer Highlights de Vídeos de Ensayos / Directos
@@ -2339,7 +2339,7 @@ export default function ReelsCenter({
                       (inputType === "file" ? !selectedFile : !youtubeUrl) ||
                       isAnalyzing
                     }
-                    className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all ${
+                    className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition-all ${
                       (inputType === "file" ? selectedFile : youtubeUrl)
                         ? "bg-[var(--acc)]  text-[var(--acc-ink)]/10 hover:scale-[1.01]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
@@ -2419,7 +2419,7 @@ export default function ReelsCenter({
                 <div className={`${colors.card} p-5 space-y-4`}>
                   <div className={` pb-2 ${""}`}>
                     <h3
-                      className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${"text-[var(--acc)]"}`}
+                      className={`text-sm font-bold font-display flex items-center gap-2 ${"text-[var(--acc)]"}`}
                     >
                       <Layers className="w-4 h-4" /> Mesa de Luz de Clips
                       Sugeridos (Highlights)
@@ -2442,7 +2442,7 @@ export default function ReelsCenter({
                       return (
                         <div className="space-y-1.5">
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] font-sans text-[var(--ink-2)] tracking-wider">
+                            <span className="text-[9px] font-sans text-[var(--ink-2)]">
                               {conDesglose
                                 ? "Señales medidas (volumen · arranque · montaje)"
                                 : "Energía medida en el audio"}
@@ -2647,7 +2647,7 @@ export default function ReelsCenter({
                 <div className={`${colors.card} p-5 space-y-4`}>
                   <div className={` pb-2 ${""}`}>
                     <h3
-                      className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${"text-[var(--acc)]"}`}
+                      className={`text-sm font-bold font-display flex items-center gap-2 ${"text-[var(--acc)]"}`}
                     >
                       <Calendar className="w-4 h-4" /> Personalizar Publicación
                       y Programar en Calendario
@@ -2707,7 +2707,7 @@ export default function ReelsCenter({
                                 className={`w-4 h-4 ${"text-[var(--acc)]"}`}
                               />
                               <span
-                                className={`text-xs font-sans font-bold tracking-wider ${textTitle}`}
+                                className={`text-xs font-sans font-bold ${textTitle}`}
                               >
                                 Reanalizar y Refinar Fragmento con IA
                               </span>
@@ -2732,7 +2732,7 @@ export default function ReelsCenter({
                           </div>
 
                           <div className="space-y-1">
-                            <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                            <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                               Notas u Observaciones del Fragmento (Opcional -
                               ej:"En este tramo toca el bajo Jon","Sólo
                               instrumental","Presentación de la banda")
@@ -2753,7 +2753,7 @@ export default function ReelsCenter({
                             <div
                               className={`p-2 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--surface)]"}`}
                             >
-                              <span className="text-[9px] font-sans tracking-wider text-[var(--ink-2)] block">
+                              <span className="text-[9px] font-sans text-[var(--ink-2)] block">
                                 Tono (versión anterior)
                               </span>
                               <div className="flex items-center gap-0.5">
@@ -2777,7 +2777,7 @@ export default function ReelsCenter({
                             <div
                               className={`p-2 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--surface)]"}`}
                             >
-                              <span className="text-[9px] font-sans tracking-wider text-[var(--ink-2)] block">
+                              <span className="text-[9px] font-sans text-[var(--ink-2)] block">
                                 Contenido (versión anterior)
                               </span>
                               <div className="flex items-center gap-0.5">
@@ -2801,7 +2801,7 @@ export default function ReelsCenter({
                           </div>
 
                           <div className="flex items-center gap-1.5 text-[10px] font-sans">
-                            <span className="text-[var(--ink-2)] tracking-wider">
+                            <span className="text-[var(--ink-2)]">
                               Alcance del ajuste:
                             </span>
                             <button
@@ -2853,7 +2853,7 @@ export default function ReelsCenter({
 
                         {/* Copy editor textarea */}
                         <div className="space-y-1.5">
-                          <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                          <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                             Pie de Foto (Copy Recomendado para Redes)
                           </label>
                           <textarea
@@ -2875,7 +2875,7 @@ export default function ReelsCenter({
                             />
                             <div className="space-y-0.5">
                               <span
-                                className={`font-sans text-[9px] font-bold tracking-wider ${"text-[var(--acc)]"}`}
+                                className={`font-sans text-[9px] font-bold ${"text-[var(--acc)]"}`}
                               >
                                 ¿Por qué este horario?
                               </span>
@@ -2963,7 +2963,7 @@ export default function ReelsCenter({
                           <button
                             type="submit"
                             disabled={isScheduling}
-                            className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all ${
+                            className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition-all ${
                               isScheduling
                                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                                 : "bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-black/15"
@@ -3028,7 +3028,7 @@ export default function ReelsCenter({
                 >
                   <div>
                     <h3
-                      className={`text-sm font-bold font-display tracking-widest flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
+                      className={`text-sm font-bold font-display flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
                     >
                       <Calendar className="w-4 h-4" /> Calendario de
                       Publicaciones de la Banda ({posts.length})
@@ -3080,7 +3080,7 @@ export default function ReelsCenter({
                               <Clock className="w-3.5 h-3.5 text-[var(--ink-2)]" />{" "}
                               {post.fecha}
                             </span>
-                            <span className="text-[8px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold tracking-wider">
+                            <span className="text-[8px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold">
                               {post.estado}
                             </span>
                           </div>
@@ -3136,7 +3136,7 @@ export default function ReelsCenter({
           <div className="space-y-3">
             <div className={` pb-2 ${""}`}>
               <h3
-                className={`text-xs font-sans tracking-widest ${"text-[var(--acc)]"}`}
+                className={`text-xs font-sans ${"text-[var(--acc)]"}`}
               >
                 Vista Previa en Redes
               </h3>
@@ -3287,7 +3287,7 @@ export default function ReelsCenter({
                         </div>
                       </div>
                       <span
-                        className={`text-[9px] font-sans tracking-widest text-center ${"text-[var(--tentative)]"}`}
+                        className={`text-[9px] font-sans text-center ${"text-[var(--tentative)]"}`}
                       >
                         {activeTab === "analyzer" && highlights.length > 0
                           ? "[ HIGHLIGHT CLIP ACTIVE ]"
@@ -3307,7 +3307,7 @@ export default function ReelsCenter({
                 {/* Top Status Header */}
                 <div className="flex justify-between items-center z-10">
                   <span
-                    className={`text-[9px] font-sans tracking-wider font-bold ${"text-[var(--acc)]"}`}
+                    className={`text-[9px] font-sans font-bold ${"text-[var(--acc)]"}`}
                   >
                     {activeTab === "analyzer"
                       ? "AI ANALYZER REEL"
@@ -3336,14 +3336,14 @@ export default function ReelsCenter({
                         {isPreviewMuted ? (
                           <>
                             <VolumeX className="w-3 h-3 text-[var(--alert)]" />
-                            <span className="text-[7.5px] font-sans font-extrabold tracking-wider text-[var(--alert)]/40">
+                            <span className="text-[7.5px] font-sans font-extrabold text-[var(--alert)]/40">
                               SIN SONIDO
                             </span>
                           </>
                         ) : (
                           <>
                             <Volume2 className="w-3 h-3 text-[var(--ok)] animate-bounce" />
-                            <span className="text-[7.5px] font-sans font-extrabold tracking-wider text-[var(--ink)]">
+                            <span className="text-[7.5px] font-sans font-extrabold text-[var(--ink)]">
                               CON SONIDO
                             </span>
                           </>
@@ -3358,7 +3358,7 @@ export default function ReelsCenter({
                         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)]  text-[var(--ink)] hover:bg-[var(--sunken)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer select-none"
                       >
                         <Maximize2 className="w-3 h-3 text-[var(--ink-2)]" />
-                        <span className="text-[7.5px] font-sans font-extrabold tracking-wider text-[var(--tentative)]/40">
+                        <span className="text-[7.5px] font-sans font-extrabold text-[var(--tentative)]/40">
                           VER GRANDE
                         </span>
                       </button>
@@ -3566,7 +3566,7 @@ export default function ReelsCenter({
           >
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
-              <span className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">
+              <span className="text-xs font-sans font-bold text-[var(--ink)]">
                 Modo Cine · Reels
               </span>
             </div>
@@ -3586,7 +3586,7 @@ export default function ReelsCenter({
             <div className="w-full lg:w-[460px] bg-[var(--surface)]/80 p-6 flex flex-col items-center justify-center lg: lg: relative select-none shrink-0">
               <div className="absolute top-4 left-6 flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
-                <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold tracking-wider">
+                <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">
                   MODO CINE ACTIVO
                 </span>
               </div>
@@ -3731,7 +3731,7 @@ export default function ReelsCenter({
 
                 {/* Video Info Overlays inside the phone */}
                 <div className="z-10 flex justify-between items-center">
-                  <span className="text-[8px] font-sans text-[var(--acc)] font-extrabold tracking-widest bg-[var(--sunken)] py-1 px-2 rounded-[var(--r-pill)] ">
+                  <span className="text-[8px] font-sans text-[var(--acc)] font-extrabold bg-[var(--sunken)] py-1 px-2 rounded-[var(--r-pill)] ">
                     Clip #{selectedHighlightIndex + 1}
                   </span>
                   <div className="flex gap-1 items-center bg-[var(--sunken)] py-1 px-2 rounded-[var(--r-pill)] ">
@@ -3845,10 +3845,10 @@ export default function ReelsCenter({
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc)]  tracking-wider">
+                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc)] ">
                         Highlight de Alto Impacto
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--ink-2)]  tracking-wider">
+                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                         {highlights[selectedHighlightIndex]?.range || "N/D"}
                       </span>
                     </div>
@@ -3872,7 +3872,7 @@ export default function ReelsCenter({
                 {/* Virality Card & Reason */}
                 <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/50 bg-[var(--surface)]/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider block">
+                    <span className="text-[10px] font-sans text-[var(--ink-2)] block">
                       Por qué este momento es viral
                     </span>
                     <p className="text-xs text-[var(--ink)] leading-relaxed max-w-xl">
@@ -3917,7 +3917,7 @@ export default function ReelsCenter({
                           Viralidad
                         </span>
                       </div>
-                      <span className="text-[9px] font-sans text-[var(--acc)] tracking-widest block font-bold">
+                      <span className="text-[9px] font-sans text-[var(--acc)] block font-bold">
                         POTENCIAL MÁXIMO
                       </span>
                     </div>
@@ -4002,7 +4002,7 @@ export default function ReelsCenter({
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <Clock className="w-4 h-4 text-[var(--acc)]" />
-                              <span className="text-xs font-sans font-extrabold text-[var(--ink)] tracking-wider">
+                              <span className="text-xs font-sans font-extrabold text-[var(--ink)]">
                                 Línea de Tiempo Interactiva
                               </span>
                             </div>
@@ -4128,7 +4128,7 @@ export default function ReelsCenter({
                             {/* Ajustar Inicio (Izquierda) */}
                             <div className="space-y-1.5 text-left">
                               <div className="flex justify-between items-center">
-                                <span className="text-[10.5px] font-sans text-[var(--ink-2)] font-extrabold tracking-wider flex items-center gap-1">
+                                <span className="text-[10.5px] font-sans text-[var(--ink-2)] font-extrabold flex items-center gap-1">
                                   <span>⬅️ Ajustar Inicio (Izquierda)</span>
                                 </span>
                                 <span className="text-[10px] font-sans text-[var(--ink)] font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
@@ -4165,7 +4165,7 @@ export default function ReelsCenter({
                             {/* Ajustar Fin (Derecha) */}
                             <div className="space-y-1.5 text-left">
                               <div className="flex justify-between items-center">
-                                <span className="text-[10.5px] font-sans text-[var(--ink-2)] font-extrabold tracking-wider flex items-center gap-1">
+                                <span className="text-[10.5px] font-sans text-[var(--ink-2)] font-extrabold flex items-center gap-1">
                                   <span>➡️ Ajustar Fin (Derecha)</span>
                                 </span>
                                 <span className="text-[10px] font-sans text-[var(--ink)] font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
@@ -4221,7 +4221,7 @@ export default function ReelsCenter({
                   <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/60 bg-[var(--surface)]/85 space-y-4">
                     <div className="flex items-center gap-2">
                       <Film className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                      <span className="text-xs font-sans font-extrabold text-[var(--ink)] tracking-wider">
+                      <span className="text-xs font-sans font-extrabold text-[var(--ink)]">
                         Generador de Reel Físico y Subtítulos
                       </span>
                     </div>
@@ -4235,7 +4235,7 @@ export default function ReelsCenter({
                     {/* Opciones de renderizado */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <span className="block text-[9px] font-sans text-[var(--ink-2)] tracking-wider">
+                        <span className="block text-[9px] font-sans text-[var(--ink-2)]">
                           Encuadre vertical
                         </span>
                         <div className="grid grid-cols-3 gap-1">
@@ -4277,7 +4277,7 @@ export default function ReelsCenter({
                       </div>
 
                       <div className="space-y-1.5">
-                        <span className="block text-[9px] font-sans text-[var(--ink-2)] tracking-wider">
+                        <span className="block text-[9px] font-sans text-[var(--ink-2)]">
                           Subtítulos
                         </span>
                         <button
@@ -4365,7 +4365,7 @@ export default function ReelsCenter({
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
-                            <span className="text-xs font-sans font-extrabold text-[var(--ink)] tracking-wider">
+                            <span className="text-xs font-sans font-extrabold text-[var(--ink)]">
                               ¡Reel Renderizado con Éxito!
                             </span>
                           </div>
@@ -4474,7 +4474,7 @@ export default function ReelsCenter({
                         <button
                           type="button"
                           onClick={handleCutPhysicalVideo}
-                          className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:brightness-105 active:scale-[0.99] font-sans font-black text-xs text-[var(--ink)] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
+                          className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:brightness-105 active:scale-[0.99] font-sans font-black text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
                         >
                           <Sparkles className="w-4 h-4 text-[var(--ink)] fill-bg-[var(--surface)]" />
                           <span>
@@ -4488,7 +4488,7 @@ export default function ReelsCenter({
                     {subtitleCues.length > 0 && (
                       <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] space-y-2.5">
                         <div className="flex justify-between items-center bg-[var(--surface)]/50 pb-1.5">
-                          <span className="text-[9.5px] font-sans font-extrabold text-[var(--ink-2)] tracking-wider">
+                          <span className="text-[9.5px] font-sans font-extrabold text-[var(--ink-2)]">
                             Pista de Subtítulos Generada ({subtitleCues.length}{" "}
                             líneas)
                           </span>
@@ -4518,7 +4518,7 @@ export default function ReelsCenter({
                     {wordOffsets.length > 0 && (
                       <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] space-y-2.5 mt-3">
                         <div className="flex justify-between items-center bg-[var(--surface)]/50 pb-1.5">
-                          <span className="text-[9.5px] font-sans font-extrabold text-[var(--ink-2)] tracking-wider flex items-center gap-1">
+                          <span className="text-[9.5px] font-sans font-extrabold text-[var(--ink-2)] flex items-center gap-1">
                             <span>
                               ⚡ Offsets de Palabras Sincronizados (
                               {wordOffsets.length})
@@ -4574,7 +4574,7 @@ export default function ReelsCenter({
                     <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/40 bg-[var(--surface)]/60 space-y-3">
                       {clip.hookText && (
                         <div className="space-y-1">
-                          <span className="block text-[9px] font-sans text-[var(--ink-2)] tracking-wider">
+                          <span className="block text-[9px] font-sans text-[var(--ink-2)]">
                             Rótulo para los primeros 2 segundos
                           </span>
                           <div className="flex items-center gap-2">
@@ -4596,7 +4596,7 @@ export default function ReelsCenter({
 
                       {clip.cta && (
                         <div className="space-y-1">
-                          <span className="block text-[9px] font-sans text-[var(--ink-2)] tracking-wider">
+                          <span className="block text-[9px] font-sans text-[var(--ink-2)]">
                             Llamada a la acción
                           </span>
                           <p className="text-[11px] text-[var(--ink)] leading-snug">
@@ -4607,7 +4607,7 @@ export default function ReelsCenter({
 
                       {variantes.length > 1 && (
                         <div className="space-y-1.5">
-                          <span className="block text-[9px] font-sans text-[var(--ink-2)] tracking-wider">
+                          <span className="block text-[9px] font-sans text-[var(--ink-2)]">
                             Versiones por plataforma (pulsa para usarla)
                           </span>
                           <div className="flex flex-wrap gap-1.5">
@@ -4633,7 +4633,7 @@ export default function ReelsCenter({
                       {(clip.hashtags || []).length > 0 && (
                         <div className="space-y-1.5">
                           <div className="flex justify-between items-center">
-                            <span className="text-[9px] font-sans text-[var(--ink-2)] tracking-wider">
+                            <span className="text-[9px] font-sans text-[var(--ink-2)]">
                               Hashtags sugeridos
                             </span>
                             <button
@@ -4667,7 +4667,7 @@ export default function ReelsCenter({
                 {/* Copy Editor Area */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                       <span>📝 Copy de Publicación Generado</span>
                     </label>
 

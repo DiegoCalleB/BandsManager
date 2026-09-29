@@ -1172,7 +1172,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           />
 
           <div className="space-y-2">
-            <h2 className="text-2xl font-black text-[var(--ink)] font-display tracking-widest flex items-center justify-center gap-2">
+            <h2 className="text-2xl font-black text-[var(--ink)] font-display flex items-center justify-center gap-2">
               <PartyPopper className="w-6 h-6 text-[var(--acc)]" />
               {t("welcomeTitle", { bandName })}
             </h2>
@@ -1189,7 +1189,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {tieneBeneficios && (
             <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-6 mt-6 space-y-4">
-              <h3 className="text-[var(--acc)] font-black tracking-widest text-xs font-sans">
+              <h3 className="text-[var(--acc)] font-black text-xs font-sans">
                 {t("benefitsTitle")}
               </h3>
 
@@ -1209,12 +1209,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
               {codigoDescuentoFan && (
                 <div className="pt-2">
-                  <p className="text-[10px] text-[var(--ink-2)] tracking-wider font-bold mb-1">
+                  <p className="text-[10px] text-[var(--ink-2)] font-bold mb-1">
                     {t("merchCode")}
                   </p>
                   <div className="flex items-center justify-center gap-2 p-3 bg-[var(--surface)] rounded-[var(--r-s)]">
                     <Tag className="w-4 h-4 text-[var(--ok)]" />
-                    <span className="font-sans text-[var(--ok)] font-bold tracking-widest">
+                    <span className="font-sans text-[var(--ok)] font-bold">
                       {codigoDescuentoFan}
                     </span>
                   </div>
@@ -1226,7 +1226,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {/* COMPARTIR CON UN AMIGO */}
           <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-left space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5 tracking-wider">
+              <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                 <Share2 className="w-3.5 h-3.5" />{" "}
                 {t("shareWithFriend") || "Pásaselo a un colega"}
               </span>
@@ -1326,7 +1326,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <div className="pt-4 text-left">
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
+                    <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
                       <Briefcase className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                       {t("bookingTitle")}
                     </div>
@@ -1390,7 +1390,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {/* Banner para músicos y bandas */}
           <div className="pt-4 text-left">
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  space-y-2.5">
-              <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
+              <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
                 <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                 <span>{t("musicianBannerTitle")}</span>
               </div>
@@ -1446,16 +1446,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           ) : (
             <div className="w-24 h-24 mx-auto rounded-[var(--r-l)]  bg-[var(--surface)]  flex flex-col items-center justify-center p-2">
               <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5" />
-              <span className="text-[10px] font-black text-[var(--acc)]/70 font-display tracking-wider line-clamp-1">
+              <span className="text-[10px] font-black text-[var(--acc)]/70 font-display line-clamp-1">
                 {bandName}
               </span>
             </div>
           )}
           <div className="space-y-1">
-            <h1 className="text-3xl font-black text-[var(--ink)] font-display tracking-widest">
+            <h1 className="text-3xl font-black text-[var(--ink)] font-display">
               {t("joinTitle", { bandName })}
             </h1>
-            <p className="text-[var(--acc)]/80 text-[10px] font-sans tracking-widest font-bold">
+            <p className="text-[var(--acc)]/80 text-[10px] font-sans font-bold">
               {t("officialChannel")}
             </p>
           </div>
@@ -1680,7 +1680,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {upcomingConcerts && upcomingConcerts.length > 0 && (
               <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2.5 text-left">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5 tracking-wider">
+                  <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />{" "}
                     {t("upcomingShowsTitle") || "Próximos Conciertos"}
                   </span>
@@ -1783,7 +1783,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
             {/* CAMPOS OBLIGATORIOS (Rápidos y sin fricción) */}
             <div>
-              <label className="text-[10px] font-black text-[var(--ink-2)] font-sans tracking-widest mb-1.5 block">
+              <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
                 {t("labelName")} *
               </label>
               <input
@@ -1798,7 +1798,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-[var(--ink-2)] font-sans tracking-widest mb-1.5 block">
+              <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
                 {t("labelEmail")} *
               </label>
               <input
@@ -1837,7 +1837,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {showOptionalFields && (
               <div className="space-y-3.5 pt-1 pl-1 pr-1 animate-in fade-in duration-200">
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans tracking-widest mb-1.5 block">
+                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelCity")}
                   </label>
                   <input
@@ -1851,7 +1851,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans tracking-widest mb-1.5 block">
+                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelHowFound")}
                   </label>
                   <select
@@ -1871,7 +1871,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans tracking-widest mb-1.5 block">
+                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelFavSong", { bandName })}
                   </label>
                   <input
@@ -1889,7 +1889,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans tracking-widest mb-1.5 block">
+                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelInstagram")}
                   </label>
                   <input
@@ -1904,7 +1904,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans tracking-widest mb-1.5 block">
+                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelMessage")}
                   </label>
                   <textarea
@@ -1961,7 +1961,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 mt-1 bg-[var(--acc)]  hover:bg-[var(--acc-soft)] text-[#121111] font-black text-sm tracking-widest font-sans rounded-[var(--r-m)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
+              className="w-full py-4 mt-1 bg-[var(--acc)]  hover:bg-[var(--acc-soft)] text-[#121111] font-black text-sm font-sans rounded-[var(--r-m)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
             >
               {loading ? (
                 <>
@@ -1979,7 +1979,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {/* Social Links shown below form as well */}
             {socialLinks && Object.values(socialLinks).some(Boolean) && (
               <div className="pt-4 space-y-2">
-                <p className="text-[11px] font-bold text-[var(--ink-2)] font-sans text-center tracking-wider">
+                <p className="text-[11px] font-bold text-[var(--ink-2)] font-sans text-center">
                   {t("followUsAlso")}
                 </p>
                 <SocialPlatformsList
@@ -2004,7 +2004,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[var(--acc)]">
                     <Briefcase className="w-4 h-4 text-[var(--acc)]" />
-                    <span className="text-xs font-sans font-black tracking-wider">
+                    <span className="text-xs font-sans font-black">
                       {t("bookingTitle")}
                     </span>
                   </div>
@@ -2074,7 +2074,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {/* Banner para músicos y bandas al final del formulario */}
         <div className="pt-4 text-left">
           <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  space-y-2.5">
-            <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
+            <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
               <Sparkles className="w-4 h-4 text-[var(--acc)]" />
               <span>{t("musicianBannerTitle")}</span>
             </div>
@@ -2100,7 +2100,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
           <div className="max-w-lg w-full bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4">
-              <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm tracking-wider">
+              <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm">
                 <Shield className="w-5 h-5" /> {t("privacyModalTitle")}
               </div>
               <button
@@ -2121,7 +2121,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <div className="pt-4 text-right">
               <button
                 onClick={() => setShowPrivacyModal(false)}
-                className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] transition-colors"
+                className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--ink)] font-bold font-sans text-xs rounded-[var(--r-m)] transition-colors"
               >
                 {t("understood")}
               </button>

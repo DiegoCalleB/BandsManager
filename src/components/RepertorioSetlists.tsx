@@ -3919,7 +3919,7 @@ export default function RepertorioSetlists({
                   >
                     <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
                       <span
-                        className="font-semibold tracking-wider text-[var(--ink-2)] truncate text-[11px]"
+                        className="font-semibold text-[var(--ink-2)] truncate text-[11px]"
                         title="Arrastra un punto en horizontal para reordenar el setlist, o en vertical para cambiar su energía. También puedes seleccionarlo y usar las flechas."
                       >
                         📈 Mapa de Energía
@@ -5520,7 +5520,7 @@ export default function RepertorioSetlists({
                               ),
                             );
                           }}
-                          className="bg-transparent text-[13px] font-extrabold font-sans text-[var(--acc)]/40 focus:outline-none min-w-0 flex-1 tracking-wider"
+                          className="bg-transparent text-[13px] font-extrabold font-sans text-[var(--acc)]/40 focus:outline-none min-w-0 flex-1"
                         />
 
                         {/* Spacer */}
@@ -6026,7 +6026,7 @@ export default function RepertorioSetlists({
                     return (
                       <React.Fragment key={`${s.id}-${idx}`}>
                         {showAlbumHeader && (
-                          <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]">
+                          <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-[10px] font-sans font-bold text-[var(--acc)]">
                             <span>💿 {albumLabel}</span>
                             <div
                               className={`h-px flex-1 ${"bg-[var(--sunken)]"}`}

@@ -534,7 +534,7 @@ export const SocialAndFansGrowthChart: React.FC<
           </div>
           <div>
             <h3
-              className={`text-sm font-bold font-display tracking-wider flex items-center gap-2 ${"text-[var(--ink)]"}`}
+              className={`text-sm font-bold font-display flex items-center gap-2 ${"text-[var(--ink)]"}`}
             >
               Evolución de Redes Sociales & Base de Fans en BBDD
               <span className="text-[9px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
@@ -584,7 +584,7 @@ export const SocialAndFansGrowthChart: React.FC<
             className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
+              <span className="text-[10px] font-sans font-bold text-[var(--alert)] flex items-center gap-1">
                 <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />{" "}
                 Instagram
               </span>
@@ -613,7 +613,7 @@ export const SocialAndFansGrowthChart: React.FC<
             className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
+              <span className="text-[10px] font-sans font-bold text-[var(--acc)] flex items-center gap-1">
                 <Video className="w-3.5 h-3.5 text-[var(--acc)]" /> TikTok
               </span>
               <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/80 font-sans">
@@ -641,7 +641,7 @@ export const SocialAndFansGrowthChart: React.FC<
             className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
+              <span className="text-[10px] font-sans font-bold text-[var(--alert)] flex items-center gap-1">
                 <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" /> YouTube
               </span>
               <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]/60 font-sans">
@@ -669,7 +669,7 @@ export const SocialAndFansGrowthChart: React.FC<
             className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--ok)] flex items-center gap-1">
+              <span className="text-[10px] font-sans font-bold text-[var(--ok)] flex items-center gap-1">
                 <Music2 className="w-3.5 h-3.5 text-[var(--ok)]" /> Spotify
               </span>
               <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ink-2)] font-sans">
@@ -696,7 +696,7 @@ export const SocialAndFansGrowthChart: React.FC<
           className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all col-span-2 sm:col-span-1 ${"bg-[var(--accent-alt)]/10"}`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
+            <span className="text-[10px] font-sans font-bold text-[var(--acc)] flex items-center gap-1">
               <Heart className="w-3.5 h-3.5 text-[var(--acc)] fill-[var(--acc)]/20" />{" "}
               Fans BBDD
             </span>

@@ -1030,7 +1030,7 @@ export function GooglePlacesExplorerModal({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold font-display tracking-wider text-[var(--acc)]">
+                  <h2 className="text-base font-bold font-display text-[var(--acc)]">
                     Buscador de Salas & Nuevos Leads (Scout Descubridor)
                   </h2>
                   <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-sans font-bold">
@@ -1078,7 +1078,7 @@ export function GooglePlacesExplorerModal({
                   </div>
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-bold font-display tracking-wider text-[var(--acc)]/70">
+                      <span className="text-xs font-bold font-display text-[var(--acc)]/70">
                         Prospección Masiva de Campaña
                       </span>
                       {activeCampaign && (
@@ -1383,7 +1383,7 @@ export function GooglePlacesExplorerModal({
 
               {/* Quick City Chips */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[10px] text-[var(--ink-2)] font-bold tracking-wider mr-1">
+                <span className="text-[10px] text-[var(--ink-2)] font-bold mr-1">
                   Ciudades rápidas:
                 </span>
                 {QUICK_CITIES.map((city) => (
@@ -1563,7 +1563,7 @@ export function GooglePlacesExplorerModal({
                                 </h4>
                                 {place.alreadyInCrm && (
                                   <span
-                                    className="text-[9px] px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold tracking-wider shrink-0"
+                                    className="text-[9px] px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold shrink-0"
                                     title="Este contacto ya existe en tu CRM de Leads"
                                   >
                                     En CRM ({place.crmStatus || "Registrado"})

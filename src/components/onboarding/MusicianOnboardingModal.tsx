@@ -77,7 +77,7 @@ export const MusicianOnboardingModal: React.FC<
           </button>
 
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans font-bold tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans font-bold">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Primeros Pasos para Músicos</span>
             </div>

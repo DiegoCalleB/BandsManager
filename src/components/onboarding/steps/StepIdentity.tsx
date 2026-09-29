@@ -234,7 +234,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               </div>
             )}
             <div className="min-w-0">
-              <span className="text-[10px] font-sans tracking-wider text-[var(--acc)] font-bold block">
+              <span className="text-[10px] font-sans text-[var(--acc)] font-bold block">
                 Previsualización en Dossier EPK
               </span>
               <div

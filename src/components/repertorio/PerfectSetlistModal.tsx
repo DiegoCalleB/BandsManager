@@ -412,7 +412,7 @@ export function PerfectSetlistModal({
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center gap-1">
-                  <span className="text-[9px] font-sans tracking-wider text-[var(--ink-2)]">Intensidad</span>
+                  <span className="text-[9px] font-sans text-[var(--ink-2)]">Intensidad</span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`intensidad-${star}`}
@@ -426,7 +426,7 @@ export function PerfectSetlistModal({
                   ))}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-[9px] font-sans tracking-wider text-[var(--ink-2)]">Contenido</span>
+                  <span className="text-[9px] font-sans text-[var(--ink-2)]">Contenido</span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`contenido-${star}`}
@@ -448,7 +448,7 @@ export function PerfectSetlistModal({
                 className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[11px] text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
               />
               <div className="flex items-center gap-1.5 text-[10px] font-sans">
-                <span className="text-[var(--ink-2)] tracking-wider">Alcance:</span>
+                <span className="text-[var(--ink-2)]">Alcance:</span>
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('este_setlist')}

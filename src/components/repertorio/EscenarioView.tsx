@@ -221,7 +221,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/20 text-[var(--ok)] font-sans text-[10px] font-black tracking-wider inline-flex items-center gap-1.5">
+            <span className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/20 text-[var(--ok)] font-sans text-[10px] font-black inline-flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] animate-ping" />
               Directo & Concierto
             </span>
@@ -229,7 +229,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
             {/* Offline Robustness Badge */}
             {!isOnline ? (
               <span
-                className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans text-[10px] font-black tracking-wider inline-flex items-center gap-1.5"
+                className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans text-[10px] font-black inline-flex items-center gap-1.5"
                 title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
@@ -237,7 +237,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               </span>
             ) : isCached ? (
               <span
-                className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)] font-sans text-[10px] font-bold tracking-wider inline-flex items-center gap-1.5"
+                className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)] font-sans text-[10px] font-bold inline-flex items-center gap-1.5"
                 title="Repertorio, letras, acordes y tempos guardados localmente para tocar sin red"
               >
                 <Check className="w-3 h-3 text-[var(--ok)]" />
@@ -521,7 +521,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           <div className="space-y-1.5 pt-1">
             <div className="flex justify-between items-center text-[11px] font-sans text-[var(--ink-2)] font-bold px-0.5">
               <span>{formatSecondsToMmSs(stageCurrentTime)}</span>
-              <span className="text-[10px] text-[var(--ink-2)] tracking-widest font-sans">
+              <span className="text-[10px] text-[var(--ink-2)] font-sans">
                 {stageIsPlaying ? "• EN REPRODUCCIÓN" : "PAUSADO"}
               </span>
               <span>{formatSecondsToMmSs(stageItemDuration)}</span>
@@ -872,7 +872,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   return (
                     <div
                       key={it.id}
-                      className="py-3 px-4 bg-[var(--ok)]/20  rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs tracking-wider flex items-center gap-2 my-2"
+                      className="py-3 px-4 bg-[var(--ok)]/20  rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs flex items-center gap-2 my-2"
                     >
                       <span className="text-sm">⚡</span>
                       <span>{it.tituloCustom || "SECCIÓN DEL SHOW"}</span>

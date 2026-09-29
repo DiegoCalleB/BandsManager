@@ -149,7 +149,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* AI Proposal Overlay / Card */}
             {isAiSearching && (
-              <div className="md:col-span-2 p-3 bg-[var(--surface)]/90 border border-[var(--hair)] rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono animate-pulse">
+              <div className="md:col-span-2 p-3 bg-[var(--surface)]/90 border border-[var(--hair)] rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono">
                 <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
                 <span>Buscando datos de "{formName}" con IA en la web...</span>
               </div>

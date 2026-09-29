@@ -334,7 +334,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
   const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 bg-[var(--surface)] text-[var(--ink)]`;
   const labelClass =
-    "text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)] block mb-1";
+    "text-[9px] font-sans font-bold text-[var(--ink-2)] block mb-1";
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -349,7 +349,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold font-display tracking-wider text-[var(--acc)]">
+                <h3 className="text-sm font-bold font-display text-[var(--acc)]">
                   Análisis de ADN de Expresión y Tono: {band.nombre_banda}
                 </h3>
                 <p className="text-[10px] text-[var(--ink-2)] font-sans">
@@ -1164,7 +1164,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                 key={cat}
                                 className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5"
                               >
-                                <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                                <span className="text-[9px] font-sans font-bold text-[var(--ink-2)]">
                                   {CATEGORY_LABELS[cat] || cat}
                                 </span>
                                 {reglas.reglas_manuales &&

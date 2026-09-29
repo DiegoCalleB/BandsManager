@@ -707,7 +707,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (temp === "muy_caliente" || lead.ultimo_sentimiento === "muy_positivo") {
       return (
         <span
-          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)] shrink-0 animate-pulse shadow-xs"
+          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)] shrink-0 shadow-xs"
           title="Lead muy receptivo / Cierre inminente"
         >
           <Flame className="w-2.5 h-2.5 text-[var(--ok)] fill-emerald-400" />
@@ -1389,7 +1389,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         <div className="overflow-x-auto shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] pb-10">
           <table className="w-full text-left min-w-[980px]">
             <thead>
-              <tr className="text-[10px] font-semibold tracking-wider text-[var(--ink-2)] bg-[var(--sunken)]">
+              <tr className="text-[10px] font-semibold text-[var(--ink-2)] bg-[var(--sunken)]">
                 {/* Select All Checkbox Header */}
                 {onToggleSelectLead && (
                   <th className="py-2.5 px-2.5 w-10 text-center whitespace-nowrap">
