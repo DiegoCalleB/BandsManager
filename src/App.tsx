@@ -1155,7 +1155,7 @@ export default function App() {
   return (
     <PlayerProvider>
       <div
-        className={`min-h-screen ${colors.bg} flex flex-col md:flex-row transition-colors duration-500 font-sans w-full max-w-[100vw] overflow-clip`}
+        className={`h-screen ${colors.bg} flex flex-col md:flex-row transition-colors duration-500 font-sans w-full max-w-[100vw] overflow-hidden`}
       >
         {/* LEFT SIDEBAR */}
         {/* MOBILE TOP BAR */}
@@ -1994,7 +1994,7 @@ export default function App() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
+        <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 md:p-8 pb-24 md:pb-8 overflow-y-auto custom-scrollbar">
           {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
           {activeCampaign &&
             ["booking", "medios", "management", "bandas"].includes(
