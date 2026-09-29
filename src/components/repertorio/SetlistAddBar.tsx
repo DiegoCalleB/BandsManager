@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import {
   Plus,
-  Zap,
   ListPlus,
-  Check,
   X,
   ChevronDown,
   Sparkles,
+  Layers,
+  Pin,
+  Mic,
+  Drum,
+  MessageCircle,
+  Wrench,
+  Bomb,
+  Megaphone,
+  type LucideIcon,
 } from "lucide-react";
+import { Button } from "../ui";
 import { Song, Setlist, SetlistShortcut } from "../../types";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 
@@ -79,143 +87,94 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
     return sel.tituloCustom || "Evento seleccionado";
   })();
 
-  const QUICK_EVENTS = [
-    {
-      label: "Presentación Banda",
-      icon: "🎤",
-      type: "presentacion",
-      desc: "Saludo inicial o presentación del grupo",
-    },
-    {
-      label: "Solo Batería / Percusión",
-      icon: "🥁",
-      type: "beatbox",
-      desc: "Performance o ritmo solista",
-    },
-    {
-      label: "Intro / Historia del Tema",
-      icon: "🗣️",
-      type: "intro_tema",
-      desc: "Narración antes de empezar",
-    },
-    {
-      label: "Cambio Instrumento",
-      icon: "🔧",
-      type: "cambio_instrumento",
-      desc: "Afinación o ajuste técnico",
-    },
-    {
-      label: "Chapa / Charla con Público",
-      icon: "💬",
-      type: "chapa",
-      desc: "Interacción con los asistentes",
-    },
-    {
-      label: "BIS Final",
-      icon: "💣",
-      type: "bis",
-      desc: "Parón pre-bis o tema sorpresa",
-    },
+  const QUICK_EVENTS: { label: string; Icon: LucideIcon; type: string; desc: string }[] = [
+    { label: "Presentación Banda", Icon: Mic, type: "presentacion", desc: "Saludo inicial o presentación del grupo" },
+    { label: "Solo Batería / Percusión", Icon: Drum, type: "beatbox", desc: "Performance o ritmo solista" },
+    { label: "Intro / Historia del Tema", Icon: Megaphone, type: "intro_tema", desc: "Narración antes de empezar" },
+    { label: "Cambio Instrumento", Icon: Wrench, type: "cambio_instrumento", desc: "Afinación o ajuste técnico" },
+    { label: "Chapa / Charla con Público", Icon: MessageCircle, type: "chapa", desc: "Interacción con los asistentes" },
+    { label: "BIS Final", Icon: Bomb, type: "bis", desc: "Parón pre-bis o tema sorpresa" },
   ];
 
   return (
-    <div className="space-y-1.5 pt-0.5">
-      {/* Insertion Mode Indicator */}
+    <div className="space-y-2 pt-0.5">
+      {/* Modo inserción: dónde caerá lo próximo que se añada */}
       {selectedSetlistItemId && (
-        <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-xs">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="shrink-0 text-[var(--acc)] font-semibold">
-              📌 Insertando debajo de:
-            </span>
-            <span className="truncate font-medium text-[var(--ink)]">
-              "{selectedItemLabel}"
-            </span>
+        <div className="flex items-center justify-between gap-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] px-3 py-2 text-xs text-[var(--acc-ink)]">
+          <div className="flex min-w-0 items-center gap-2">
+            <Pin className="size-4 shrink-0" aria-hidden="true" />
+            <span className="shrink-0 font-semibold">Insertando debajo de</span>
+            <span className="truncate font-medium text-[var(--ink)]">{selectedItemLabel}</span>
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={() => setSelectedSetlistItemId(null)}
-            className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] text-xs whitespace-nowrap cursor-pointer transition-colors"
             title="Deseleccionar e insertar al final de la lista"
+            aria-label="Deseleccionar"
           >
-            ✕ Deseleccionar
-          </button>
+            <X className="size-4" />
+          </Button>
         </div>
       )}
 
-      {/* Main Single-Line Actions Bar */}
-      <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-        {/* Left: Song Adding Controls */}
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          {/* Add Multiple Songs Button */}
-          <button
-            type="button"
-            onClick={() => setIsAddSongsModalOpen(true)}
-            className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-ui shrink-0"
-            title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
+      {/* Acciones de añadir: envuelven en móvil (antes se superponían) */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Button
+          variant="soft"
+          size="sm"
+          onClick={() => setIsAddSongsModalOpen(true)}
+          title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
+        >
+          <ListPlus className="size-4" aria-hidden="true" />
+          Añadir temas
+        </Button>
+
+        <select
+          onChange={(e) => {
+            if (e.target.value) {
+              handleAddItemToSetlist(e.target.value, "cancion");
+              e.target.value = "";
+            }
+          }}
+          defaultValue=""
+          aria-label="Añadir un tema del catálogo"
+          className="h-9 min-w-0 flex-1 basis-40 cursor-pointer truncate rounded-[var(--r-pill)] bg-[var(--sunken)] px-3.5 text-xs font-medium text-[var(--ink)] transition-ui hover:brightness-95 sm:max-w-[16rem] sm:flex-none"
+        >
+          <option value="">Añadir un tema…</option>
+          {sortedSongsByAlbumAndOrder.map((s, idx) => {
+            const albumLabel = s.albumDisco || s.album || "Single";
+            const cleanTitle = formatSongTitle(s.titulo);
+            return (
+              <option key={`${s.id}-${idx}`} value={s.id}>
+                [{albumLabel}] {cleanTitle} ({s.tonalidad ? `${s.tonalidad} · ` : ""}
+                {s.duracion || "0:00"})
+              </option>
+            );
+          })}
+        </select>
+
+        <div className="relative ml-auto flex shrink-0 items-center gap-2">
+          <Button
+            variant="neutral"
+            size="sm"
+            onClick={() => handleAddItemToSetlist(undefined, "bloque_header", "Bloque nuevo")}
+            title="Añadir un encabezado de bloque para estructurar el concierto"
           >
-            <ListPlus className="w-3.5 h-3.5 text-[var(--ok)]" />
-            <span>+ Añadir Temas</span>
-          </button>
-
-          {/* Single Song Select Dropdown */}
-          <select
-            onChange={(e) => {
-              if (e.target.value) {
-                handleAddItemToSetlist(e.target.value, "cancion");
-                e.target.value = "";
-              }
-            }}
-            defaultValue=""
-            className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${"bg-[var(--sunken)] text-[var(--ink)] hover:"}`}
+            <Layers className="size-4" aria-hidden="true" />
+            Bloque
+          </Button>
+          <Button
+            variant="neutral"
+            size="sm"
+            onClick={() => setShowEventMenu((v) => !v)}
+            aria-expanded={showEventMenu}
+            title="Añadir saludos, presentaciones, descansos, bises o eventos personalizados"
           >
-            <option value="">+ Añadir 1 Tema...</option>
-            {sortedSongsByAlbumAndOrder.map((s, idx) => {
-              const albumLabel = s.albumDisco || s.album || "Single";
-              const cleanTitle = formatSongTitle(s.titulo);
-              return (
-                <option key={`${s.id}-${idx}`} value={s.id}>
-                  [{albumLabel}] {cleanTitle} (
-                  {s.tonalidad ? `${s.tonalidad} • ` : ""}
-                  {s.duracion || "0:00"})
-                </option>
-              );
-            })}
-          </select>
-        </div>
-
-        {/* Right: Quick Events & Blocks Menu */}
-        <div className="relative shrink-0">
-          <div className="flex items-center gap-1.5">
-            {/* Quick Block Add */}
-            <button
-              type="button"
-              onClick={() =>
-                handleAddItemToSetlist(
-                  undefined,
-                  "bloque_header",
-                  "⚡ Bloque Nuevo",
-                )
-              }
-              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-ui"
-              title="Añadir un encabezado de bloque para estructurar el concierto"
-            >
-              <span>⚡</span>
-              <span className="hidden xs:inline">+ Bloque</span>
-            </button>
-
-            {/* Events Dropdown Toggle */}
-            <button
-              type="button"
-              onClick={() => setShowEventMenu((v) => !v)}
-              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-ui"
-              title="Añadir saludos, presentaciones, descansos, bises o eventos personalizados"
-            >
-              <Zap className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-              <span>Eventos & Shows</span>
-              <ChevronDown
-                className={`w-3 h-3 transition-transform ${showEventMenu ? "rotate-180" : ""}`}
-              />
-            </button>
-          </div>
+            <Sparkles className="size-4" aria-hidden="true" />
+            Eventos
+            <ChevronDown className={`size-3.5 transition-transform ${showEventMenu ? "rotate-180" : ""}`} aria-hidden="true" />
+          </Button>
 
           {/* Events Popover Menu */}
           {showEventMenu && (
@@ -242,7 +201,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                         className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition flex items-center justify-between cursor-pointer"
                       >
                         <span className="flex items-center gap-2 font-medium">
-                          <span>{ev.icon}</span>
+                          <ev.Icon className="size-4 text-[var(--ink-2)]" aria-hidden="true" />
                           <span>{ev.label}</span>
                         </span>
                         <span className="text-micro text-[var(--ink-2)]">
@@ -264,8 +223,8 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                     }}
                     className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 font-medium transition flex items-center gap-2 cursor-pointer"
                   >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>+ Evento a Medida (Nombre, Audio, Minutos)...</span>
+                    <Plus className="size-4" aria-hidden="true" />
+                    <span>Evento a medida (nombre, audio, minutos)…</span>
                   </button>
                 </div>
 
@@ -294,7 +253,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                           value={newShortcutIcon}
                           onChange={(e) => setNewShortcutIcon(e.target.value)}
                           maxLength={2}
-                          placeholder="⭐"
+                          placeholder="Icono"
                           className="w-8 bg-[var(--sunken)] rounded-[var(--r-s)] p-1 text-center text-xs focus:outline-none"
                         />
                         <input

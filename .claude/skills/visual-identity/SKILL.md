@@ -21,7 +21,7 @@ Esta skill es **la autoridad estética del repositorio** (qué se ve). Cómo se 
 | Causa | Regla |
 |---|---|
 | Contraste extremo | Texto entre **10:1 y 14:1**. Espectro está en 12,4:1. Ni menos (ilegible) ni más (quema). |
-| Exceso de bordes | **Ningún borde decorativo.** Las tarjetas se separan por escalón de luminancia (superficie más clara que el fondo) y espacio. Se permite un borde solo si *significa* algo: foco de teclado, campo en reposo, elemento seleccionado, divisor de tabla densa — siempre con `--line` / `--line-strong`. |
+| Exceso de bordes | **Ningún borde decorativo.** Las tarjetas se separan por escalón de luminancia (superficie más clara que el fondo) y espacio. Se permite un borde solo si *significa* algo: foco de teclado, campo en reposo, elemento seleccionado, divisor de tabla densa, **capa flotante (menú, popover)** — siempre con `--line` / `--line-strong`. |
 | Mayúsculas | Caja de frase siempre. Las versalitas eliminan la silueta de la palabra. |
 | Tipografía condensada | Prohibida. Humanista de aperturas abiertas. |
 | Negro puro de noche | Nunca `#000`/`#FFF`. Provocan halación con astigmatismo. |

@@ -74,7 +74,8 @@ for (const f of ficheros(RAIZ)) {
         if (otroRelleno && distintos.size === 0) actual = null;
         if (distintos.size === 1 && BOXY.test(txt)) {
           const mio = [...distintos][0];
-          if (ancestro && ancestro.bg === mio) {
+          const conBordeConSentido = /border-\[var\(--line/.test(txt); // capa flotante (menú, popover): su borde la separa
+          if (ancestro && ancestro.bg === mio && !conBordeConSentido) {
             const linea = sf.getLineAndCharacterOfPosition(attr.getStart(sf)).line + 1;
             console.log(`❌ ${f}:${linea} — caja ${mio} dentro de otra ${mio} (línea ${ancestro.linea}): invisible sin borde`);
             total++;

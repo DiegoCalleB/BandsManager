@@ -240,24 +240,24 @@
 
 [data-modulo="booking"],
 [data-modulo="panel"]      { --acc:#C04815; --acc-soft:#FFEBE5; --acc-ink:#932F00; --on-acc:#FFFFFF; }
-[data-modulo="repertorio"] { --acc:#C0434C; --acc-soft:#FFEBEA; --acc-ink:#952832; --on-acc:#FFFFFF; }
+[data-modulo="repertorio"] { --acc:#9055A9; --acc-soft:#F8EBFE; --acc-ink:#6F3C84; --on-acc:#FFFFFF; }
 [data-modulo="gira"],
 [data-modulo="sala"]       { --acc:#00837C; --acc-soft:#DBF7F4; --acc-ink:#00635D; --on-acc:#FFFFFF; }
 [data-modulo="finanzas"]   { --acc:#2B79A8; --acc-soft:#E2F3FF; --acc-ink:#135B84; --on-acc:#FFFFFF; }
 [data-modulo="fans"],
-[data-modulo="reels"]      { --acc:#9055A9; --acc-soft:#F8EBFE; --acc-ink:#6F3C84; --on-acc:#FFFFFF; }
+[data-modulo="reels"]      { --acc:#AD4681; --acc-soft:#FFE9F3; --acc-ink:#882E62; --on-acc:#FFFFFF; }
 [data-modulo="epk"],
 [data-modulo="dossier"]    { --acc:#6066C1; --acc-soft:#ECEFFF; --acc-ink:#474B99; --on-acc:#FFFFFF; }
 [data-modulo="discografia"] { --acc:#2E8548; --acc-soft:#E3F6E6; --acc-ink:#166631; --on-acc:#FFFFFF; }
 
 [data-theme="dark"] [data-modulo="booking"],
 [data-theme="dark"] [data-modulo="panel"]      { --acc:#F69370; --acc-soft:#371F17; --acc-ink:#F69370; --on-acc:#22110B; }
-[data-theme="dark"] [data-modulo="repertorio"] { --acc:#F68F90; --acc-soft:#381E1E; --acc-ink:#F68F90; --on-acc:#221010; }
+[data-theme="dark"] [data-modulo="repertorio"] { --acc:#CC9CE1; --acc-soft:#2E2034; --acc-ink:#CC9CE1; --on-acc:#1B121F; }
 [data-theme="dark"] [data-modulo="gira"],
 [data-theme="dark"] [data-modulo="sala"]       { --acc:#5AC6BD; --acc-soft:#092D2A; --acc-ink:#5AC6BD; --on-acc:#031A19; }
 [data-theme="dark"] [data-modulo="finanzas"]   { --acc:#7BB9E5; --acc-soft:#132938; --acc-ink:#7BB9E5; --on-acc:#081822; }
 [data-theme="dark"] [data-modulo="fans"],
-[data-theme="dark"] [data-modulo="reels"]      { --acc:#CC9CE1; --acc-soft:#2E2034; --acc-ink:#CC9CE1; --on-acc:#1B121F; }
+[data-theme="dark"] [data-modulo="reels"]      { --acc:#E991BE; --acc-soft:#351E2A; --acc-ink:#E991BE; --on-acc:#201018; }
 [data-theme="dark"] [data-modulo="epk"],
 [data-theme="dark"] [data-modulo="dossier"]    { --acc:#A2ABF0; --acc-soft:#22243A; --acc-ink:#A2ABF0; --on-acc:#131524; }
 [data-theme="dark"] [data-modulo="discografia"] { --acc:#79C68A; --acc-soft:#172C1C; --acc-ink:#79C68A; --on-acc:#0C1A0F; }

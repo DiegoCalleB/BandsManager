@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
+import { ShowIcon } from "../ui/ShowIcon";
 import { titlesMatch } from "../../utils/songTitleMatch";
 import { getEnergyInfo } from "../../utils/energyPacingUtils";
 import { EvaluacionUnion } from "../../utils/setlistCompatibility";
@@ -595,15 +596,16 @@ export function EnergyChart({
           )}
         {/* Zonas de energía: bandas horizontales de fondo (luminancia, sin líneas). */}
         <div className="absolute inset-x-0 pointer-events-none" style={{ top: TOP_PAD, height: plotHeight }}>
-          {zonasEnergia.map((z) => (
+          {/* Bandas alternas de luminancia neutra: dan escala sin meter cinco colores más */}
+          {zonasEnergia.map((z, zi) => (
             <div
               key={z.min}
               className="absolute inset-x-0"
               style={{
                 bottom: `${((Math.max(z.y1, yDomain[0]) - yDomain[0]) / yRange) * 100}%`,
                 height: `${((Math.min(z.y2, yDomain[1]) - Math.max(z.y1, yDomain[0])) / yRange) * 100}%`,
-                background: z.color,
-                opacity: 0.07,
+                background: 'var(--ink)',
+                opacity: zi % 2 === 0 ? 0.035 : 0.0,
               }}
             />
           ))}
@@ -638,24 +640,24 @@ export function EnergyChart({
             <>
               <svg width={width} height={height} className="absolute inset-0 pointer-events-none" aria-hidden="true">
                 <defs>
-                  <linearGradient id={`${gid}-stroke`} gradientUnits="userSpaceOnUse" x1={PAD_L} x2={width - PAD_R} y1="0" y2="0">
-                    {pts.map((q) => <stop key={q.d.id} offset={`${((q.x - PAD_L) / innerW) * 100}%`} stopColor={q.d.color} />)}
-                  </linearGradient>
-                  <linearGradient id={`${gid}-fill`} gradientUnits="userSpaceOnUse" x1={PAD_L} x2={width - PAD_R} y1="0" y2="0">
-                    {pts.map((q) => <stop key={q.d.id} offset={`${((q.x - PAD_L) / innerW) * 100}%`} stopColor={q.d.color} stopOpacity={0.22} />)}
+                  {/* Un solo tono (el del módulo): el degradado por categoría de energía mezclaba
+                      verde y naranja en un oliva sucio. La energía la lee la altura, no el color. */}
+                  <linearGradient id={`${gid}-fill`} gradientUnits="userSpaceOnUse" x1="0" x2="0" y1={TOP_PAD} y2={baseY}>
+                    <stop offset="0%" stopColor="var(--acc)" stopOpacity={0.22} />
+                    <stop offset="100%" stopColor="var(--acc)" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
 
                 {/* Bloques (chapa, pausa, bis…): línea vertical con su icono */}
                 {chartData.filter((d) => d.isSpeechEvent).map((d) => (
-                  <line key={`sp-${d.id}`} x1={xAt(d.xPos)} x2={xAt(d.xPos)} y1={TOP_PAD} y2={baseY} stroke={d.color} strokeWidth={2} strokeDasharray="4 3" strokeOpacity={0.7} />
+                  <line key={`sp-${d.id}`} x1={xAt(d.xPos)} x2={xAt(d.xPos)} y1={TOP_PAD} y2={baseY} stroke="var(--ink-3)" strokeWidth={1} strokeDasharray="3 3" strokeOpacity={0.55} />
                 ))}
                 {/* Uniones con la siguiente canción */}
                 {chartData.filter((d) => showTransitionBadges ? d.transitionToNext : d.harmonyClash).map((d) => {
                   const bad = showTransitionBadges ? !okBadge(d) : true;
                   return (
                     <line key={`tr-${d.id}`} x1={xAt(d.xPos + 0.5)} x2={xAt(d.xPos + 0.5)} y1={TOP_PAD} y2={baseY}
-                      stroke={bad ? "var(--alert)" : "var(--ok)"} strokeWidth={bad ? 1.5 : 1} strokeDasharray={bad ? "3 2" : "2 3"} strokeOpacity={bad ? 0.85 : 0.45} />
+                      stroke={bad ? "var(--alert)" : "var(--ok)"} strokeWidth={1} strokeDasharray="2 3" strokeOpacity={bad ? 0.6 : 0.3} />
                   );
                 })}
                 {/* Guías de arrastre: dónde caería al soltar */}
@@ -671,8 +673,8 @@ export function EnergyChart({
                 )}
                 <g style={{ clipPath: `inset(0 ${revealed ? 0 : 100}% 0 0)`, transition: revealed && reveal ? `clip-path ${reveal}ms ease-in-out` : "none" }}>
                   {area && <path d={area} fill={`url(#${gid}-fill)`} />}
-                  {line && pts.length > 1 && <path d={line} fill="none" stroke={`url(#${gid}-stroke)`} strokeWidth={compact ? 2 : 3} strokeLinecap="round" strokeLinejoin="round" />}
-                  {bpmLine && <path d={bpmLine} fill="none" stroke="var(--acc)" strokeWidth={compact ? 1.5 : 2} strokeOpacity={0.85} />}
+                  {line && pts.length > 1 && <path d={line} fill="none" stroke="var(--acc)" strokeWidth={compact ? 2 : 3} strokeLinecap="round" strokeLinejoin="round" />}
+                  {bpmLine && <path d={bpmLine} fill="none" stroke="var(--ink-2)" strokeWidth={compact ? 1.5 : 2} strokeOpacity={0.8} />}
                 </g>
 
                 {/* Insignias ✓ / ✕ de unión */}
@@ -682,17 +684,20 @@ export function EnergyChart({
                   return (
                     <text key={`tb-${d.id}`} x={xAt(d.xPos + 0.5)} y={TOP_PAD - 4} textAnchor="middle" fontWeight={900}
                       fontSize={compact ? (ok ? 9 : 10) : ok ? 11 : 12} fill={ok ? "var(--ok)" : "var(--alert)"}>
-                      {ok ? "✓" : tr.coste.harmonyRelation === "choque" ? "✕ ⚡" : "✕"}
+                      {ok ? "✓" : "✕"}
                     </text>
                   );
                 })}
                 {!showTransitionBadges && chartData.filter((d) => d.harmonyClash).map((d) => (
-                  <text key={`hc-${d.id}`} x={xAt(d.xPos + 0.5)} y={TOP_PAD - 4} textAnchor="middle" fontSize={compact ? 10 : 13}>⚡</text>
-                ))}
-                {chartData.filter((d) => d.isSpeechEvent).map((d) => (
-                  <text key={`si-${d.id}`} x={xAt(d.xPos)} y={TOP_PAD - 3} textAnchor="middle" fontSize={compact ? 13 : 18}>{d.icon}</text>
+                  <text key={`hc-${d.id}`} x={xAt(d.xPos + 0.5)} y={TOP_PAD - 4} textAnchor="middle" fontWeight={900} fontSize={compact ? 10 : 12} fill="var(--alert)">✕</text>
                 ))}
               </svg>
+              {/* Iconos de bloque (chapa, presentación, bis…): Lucide, nunca el emoji guardado */}
+              {chartData.filter((d) => d.isSpeechEvent).map((d) => (
+                <span key={`si-${d.id}`} className="pointer-events-none absolute -translate-x-1/2 text-[var(--ink-2)]" style={{ left: xAt(d.xPos), top: 1 }}>
+                  <ShowIcon emoji={d.icon} className={compact ? 'size-3' : 'size-4'} />
+                </span>
+              ))}
 
               {/* Puntos: botones reales (foco, teclado y arrastre) sobre la curva */}
               {pts.map(({ d, i, x, y }) => {
@@ -734,7 +739,7 @@ export function EnergyChart({
                       {(isSelected || isPlaying) && (
                         <span className="absolute rounded-[var(--r-pill)]" style={{ width: r * 2 + 8, height: r * 2 + 8, background: isPlaying ? "var(--ok)" : "var(--surface)", opacity: isPlaying ? 0.35 : 1 }} />
                       )}
-                      <span className="relative rounded-[var(--r-pill)]" style={{ width: r * 2, height: r * 2, background: d.color, opacity: isDraggingThis ? 0.5 : isSelected || isHighlighted || isPlaying ? 1 : 0.75 }} />
+                      <span className="relative rounded-[var(--r-pill)]" style={{ width: r * 2, height: r * 2, background: "var(--acc)", opacity: isDraggingThis ? 0.5 : isSelected || isHighlighted || isPlaying ? 1 : 0.75 }} />
                     </button>
                     {showTonalidad && d.tonalidad && (() => {
                       const fs = compact ? 7.5 : 9;
