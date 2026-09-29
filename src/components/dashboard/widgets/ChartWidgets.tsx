@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Building2,
   DollarSign,
@@ -428,22 +428,43 @@ export function BookingFunnelChartWidget({
 
 /* 3. GRÁFICO DE FINANZAS & CACHÉ POR CONCIERTO */
 export function FinancesChartWidget({
+  concerts = [],
   onNavigate,
   heightMode = "normal",
 }: ChartWidgetProps) {
-  // Aggregate revenue and average cache
-  const defaultMonths = [
-    { month: "Ene", ingresos: 1200, gastos: 450, cacheMedio: 1200 },
-    { month: "Feb", ingresos: 1800, gastos: 600, cacheMedio: 1500 },
-    { month: "Mar", ingresos: 2400, gastos: 800, cacheMedio: 1800 },
-    { month: "Abr", ingresos: 3100, gastos: 950, cacheMedio: 2000 },
-    { month: "May", ingresos: 4200, gastos: 1200, cacheMedio: 2200 },
-    { month: "Jun", ingresos: 5800, gastos: 1600, cacheMedio: 2500 },
-  ];
+  // Últimos 6 meses con datos reales: ingresos = caché de los bolos confirmados; gastos = desglose
+  // de gastosDetalle. Nada inventado — sin bolos con caché, el widget lo dice en vez de pintar cifras.
+  const months = useMemo(() => {
+    const NOMBRES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    const hoy = new Date();
+    const buckets = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(hoy.getFullYear(), hoy.getMonth() - (5 - i), 1);
+      return {
+        key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+        month: NOMBRES[d.getMonth()],
+        ingresos: 0,
+        gastos: 0,
+      };
+    });
+    for (const c of concerts) {
+      if (c.is_posible || c.tipo === "posible") continue;
+      const b = buckets.find((x) => (c.fecha || "").startsWith(x.key));
+      if (!b) continue;
+      b.ingresos += Number(c.cache) || 0;
+      const g = c.gastosDetalle;
+      if (g) {
+        b.gastos +=
+          (g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0);
+      }
+    }
+    return buckets;
+  }, [concerts]);
 
-  const totalIngresos = defaultMonths.reduce((acc, m) => acc + m.ingresos, 0);
-  const totalGastos = defaultMonths.reduce((acc, m) => acc + m.gastos, 0);
+  const totalIngresos = months.reduce((acc, m) => acc + m.ingresos, 0);
+  const totalGastos = months.reduce((acc, m) => acc + m.gastos, 0);
   const beneficio = totalIngresos - totalGastos;
+  const hayDatos = totalIngresos > 0 || totalGastos > 0;
+  const eur = (n: number) => `${n.toLocaleString("es-ES")}€`;
 
   const minHeightClass =
     heightMode === "compact"
@@ -487,7 +508,7 @@ export function FinancesChartWidget({
             Ingresos Totales
           </span>
           <span className="font-bold text-[var(--ok)] text-sm">
-            +{totalIngresos}€
+            {eur(totalIngresos)}
           </span>
         </div>
         <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
@@ -495,22 +516,28 @@ export function FinancesChartWidget({
             Neto / Beneficio
           </span>
           <span className="font-bold text-[var(--acc)] text-sm">
-            +{beneficio}€
+            {eur(beneficio)}
           </span>
         </div>
       </div>
 
       <div className={`w-full ${minHeightClass} pt-2 flex items-end`}>
+        {!hayDatos ? (
+          <p className="w-full text-center self-center text-xs text-[var(--ink-3)] font-sans px-4">
+            Aún no hay cachés registrados en estos 6 meses. Cuando cierres un bolo con su caché, aparecerá aquí.
+          </p>
+        ) : (
         <OndaSeries
           className="w-full"
           series={[
-            { label: "Ingresos", color: "var(--acc)", data: defaultMonths.map((m) => ({ label: m.month, value: m.ingresos })) },
-            { label: "Gastos", color: "var(--ink-3)", data: defaultMonths.map((m) => ({ label: m.month, value: m.gastos })) },
+            { label: "Ingresos", color: "var(--acc)", data: months.map((m) => ({ label: m.month, value: m.ingresos })) },
+            { label: "Gastos", color: "var(--ink-3)", data: months.map((m) => ({ label: m.month, value: m.gastos })) },
           ]}
           height={heightMode === "compact" ? 120 : heightMode === "tall" ? 260 : 180}
           barWidth={14}
           gap={3}
         />
+        )}
       </div>
     </div>
   );
@@ -524,25 +551,19 @@ export function SocialFansGrowthWidget({
   isStitchLight = false,
 }: ChartWidgetProps) {
   const fansCount = fans.length;
-  const growthData = [
-    { mes: "Ene", fans: Math.max(5, Math.round(fansCount * 0.2)), qrScans: 12 },
-    {
-      mes: "Feb",
-      fans: Math.max(12, Math.round(fansCount * 0.4)),
-      qrScans: 28,
-    },
-    {
-      mes: "Mar",
-      fans: Math.max(25, Math.round(fansCount * 0.6)),
-      qrScans: 45,
-    },
-    {
-      mes: "Abr",
-      fans: Math.max(40, Math.round(fansCount * 0.8)),
-      qrScans: 62,
-    },
-    { mes: "May", fans: Math.max(60, fansCount || 85), qrScans: 90 },
-  ];
+  // Acumulado real de fans por mes de captura (últimos 6 meses). Nada inventado.
+  const growthData = useMemo(() => {
+    const NOMBRES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    const hoy = new Date();
+    return Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(hoy.getFullYear(), hoy.getMonth() - (5 - i), 1);
+      const finMes = new Date(d.getFullYear(), d.getMonth() + 1, 1).toISOString().slice(0, 10);
+      return {
+        mes: NOMBRES[d.getMonth()],
+        fans: fans.filter((f) => (f.fechaCaptura || "").slice(0, 10) < finMes).length,
+      };
+    });
+  }, [fans]);
 
   const minHeightClass =
     heightMode === "compact"
@@ -583,13 +604,18 @@ export function SocialFansGrowthWidget({
       <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans">
         <span className="text-[var(--ink-2)]">Fans Registrados:</span>
         <span className="font-bold text-[var(--acc)] text-sm">
-          {fansCount > 0 ? fansCount : 85} seguidores
+          {fansCount} seguidores
         </span>
       </div>
 
       <div
         className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}
       >
+        {fansCount === 0 ? (
+          <p className="text-xs text-[var(--ink-3)] font-sans px-4 text-center">
+            Aún no hay fans registrados. Pon el QR en la mesa de merchan y esto empieza a moverse.
+          </p>
+        ) : (
         <Onda
           data={growthData.map((d) => ({
             label: d.mes,
@@ -608,6 +634,7 @@ export function SocialFansGrowthWidget({
           tooltipFormatter={(val) => `${val} fans acumulados`}
           className="w-full"
         />
+        )}
       </div>
     </div>
   );
