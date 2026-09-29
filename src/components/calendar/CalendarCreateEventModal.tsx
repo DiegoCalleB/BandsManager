@@ -205,7 +205,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
           </button>
 
           {/* Segmented Event Type Selector */}
-          <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-5 border border-[var(--hair)]/5">
+          <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-5 ">
             <button
               type="button"
               onClick={() => {
@@ -278,8 +278,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 >
                   {effectiveBandsList.map((b) => (
@@ -297,8 +297,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={reuAsunto}
                   onChange={(e) => setReuAsunto(e.target.value)}
                   placeholder="Ej: Repaso de repertorio y presupuestos"
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                   required
                 />
@@ -311,8 +311,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="text"
                     value={reuHora}
                     onChange={(e) => setReuHora(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -323,8 +323,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={reuLugar}
                     onChange={(e) => setReuLugar(e.target.value)}
                     placeholder="Online (Meet, Zoom, etc)"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -337,8 +337,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={reuEnlace}
                   onChange={(e) => setReuEnlace(e.target.value)}
                   placeholder="https://meet.google.com/xyz-abc"
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -349,8 +349,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={reuNotas}
                   onChange={(e) => setReuNotas(e.target.value)}
                   rows={3}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -381,8 +381,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 >
                   {effectiveBandsList.map((b) => (
@@ -400,8 +400,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="text"
                     value={rehTime}
                     onChange={(e) => setRehTime(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -411,8 +411,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="text"
                     value={rehLugar}
                     onChange={(e) => setRehLugar(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -424,8 +424,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   <select
                     value={rehSetlistId}
                     onChange={(e) => setRehSetlistId(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   >
                     <option value="">Sin repertorio específico</option>
@@ -444,8 +444,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={rehNotas}
                   onChange={(e) => setRehNotas(e.target.value)}
                   rows={2}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -476,8 +476,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                    'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 >
                   {effectiveBandsList.map((b) => (
@@ -496,8 +496,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={concCiudad}
                     onChange={(e) => setConcCiudad(e.target.value)}
                     placeholder="Ej: Madrid"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                     required
                   />
@@ -509,8 +509,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={concSala}
                     onChange={(e) => setConcSala(e.target.value)}
                     placeholder="Ej: Sala El Sol"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                     required
                   />
@@ -524,8 +524,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="number"
                     value={concCache}
                     onChange={(e) => setConcCache(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -535,8 +535,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="number"
                     value={concAforo}
                     onChange={(e) => setConcAforo(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -548,8 +548,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   <select
                     value={concSetlistId}
                     onChange={(e) => setConcSetlistId(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
-                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
+                      'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   >
                     <option value="">Seleccionar repertorio...</option>

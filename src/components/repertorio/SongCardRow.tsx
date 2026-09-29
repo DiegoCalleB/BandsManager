@@ -138,12 +138,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
         isDragging
           ? 'opacity-30 scale-[0.98]'
           : isDragOver
-            ? 'border-[var(--hair)] ring-2 ring-[var(--ok)]/50 bg-[var(--ok)]/10'
+            ? 'ring-2 ring-[var(--ok)]/50 bg-[var(--ok)]/10'
             : isPlayingCurrent
               ? 'bg-[var(--ok)]/10 text-[var(--ink)] ring-1 ring-[var(--ok)]/20'
               : isSelected
                 ? 'bg-[var(--acc)]/10 text-[var(--ink)]'
-                : 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink)]'
+                : 'bg-[var(--sunken)] hover:bg-[var(--bg)] text-[var(--ink)]'
       } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
       <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto shrink-0">
@@ -322,8 +322,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={onOpenChords}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] border-[var(--hair)]'
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] '
               }`}
               title="Ver cifrado de acordes, armonía y letra"
             >

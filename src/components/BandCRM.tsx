@@ -1275,7 +1275,7 @@ Bakandeya Agent Manager IA & Músicos`;
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--hair)]800/60 bg-[var(--surface)]/40 text-[var(--ink-2)]">
+              <tbody className="divide-y divide-[var(--hair)]/60 bg-[var(--surface)]/40 text-[var(--ink-2)]">
                 {registeredBands.length === 0 ? (
                   <tr>
                     <td
@@ -1826,7 +1826,7 @@ Bakandeya Agent Manager IA & Músicos`;
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--hair)]800/60 text-[var(--ink-2)]">
+                <tbody className="divide-y divide-[var(--hair)]/60 text-[var(--ink-2)]">
                   {filteredBands.map((band) => {
                     const isRowSelected = selectedBandIds.includes(band.id);
                     return (

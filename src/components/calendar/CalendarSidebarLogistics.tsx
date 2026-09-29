@@ -332,14 +332,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
       {selectedEventDetails.type === 'free' ? (
         <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
           {getCampaignsForDate(selectedDateKey).length > 0 ? (
-            <div className="w-full text-left rounded-[var(--r-l)] bg-[var(--acc)]/40  border border-[var(--hair)] p-4/20">
+            <div className="w-full text-left rounded-[var(--r-l)] bg-[var(--acc)]/40 p-4/20">
               <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[var(--acc)]/30">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center">
                     <Target className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[9px] font-mono font-extrabold text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-[var(--r-pill)] border border-[var(--hair)]">
+                    <span className="text-[9px] font-mono font-extrabold text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-[var(--r-pill)] ">
                       🎯 Fecha Objetivo de Campaña
                     </span>
                     <p className="text-[11px] font-mono text-[var(--ink-2)] font-bold mt-0.5">
@@ -375,7 +375,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   </div>
 
                   {camp.notes && (
-                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
+                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)] ">
                       &ldquo;{camp.notes}&rdquo;
                     </p>
                   )}
@@ -385,7 +385,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <button
                         type="button"
                         onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
-                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--hair)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                       >
                         <Building2 className="w-3 h-3 text-[var(--acc)]" />
                         <span>Salas CRM</span>
@@ -475,7 +475,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     onClick={() => setUpcomingFilter(f.id as any)}
                     className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer ${
                       upcomingFilter === f.id
-                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]'
+                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                         : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
@@ -515,16 +515,16 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       }}
                       className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-all cursor-pointer ${
                         evt.type === 'campaña'
-                          ? 'bg-[var(--acc)]/20 hover:border-[var(--ink-3)] border border-[var(--acc)]/30'
-                          : 'bg-[var(--surface)] hover:border-[var(--ink-3)] border border-[var(--hair)]'
-                      }`}
+                          ? 'bg-[var(--acc)]/20 '
+                          : 'bg-[var(--sunken)] '
+                      } hover:brightness-95`}
                     >
                       {/* Custom calendar badge: Day number top, short month bottom */}
                       <div
-                        className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 border ${
+                        className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 ${
                           evt.type === 'campaña'
-                            ? 'bg-[var(--acc)]/30 border-[var(--acc)]/30 text-[var(--acc)]'
-                            : 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
+                            ? 'bg-[var(--acc)]/30 text-[var(--acc)]'
+                            : 'bg-[var(--sunken)] text-[var(--ink)]'
                         }`}
                       >
                         <span
@@ -550,7 +550,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                               evt.type === 'concierto'
                                 ? 'bg-[var(--acc)]/15 text-[var(--acc)]'
                                 : evt.type === 'campaña'
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                                   : 'bg-[var(--ok-soft)] text-[var(--ok)]'
                             }`}
                           >
@@ -558,7 +558,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           </span>
                           {evt.bandName && (
                             <span
-                              className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--surface)]/80 text-[var(--acc)] border border-[var(--hair)] truncate max-w-[100px]"
+                              className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--sunken)]/80 text-[var(--acc)] truncate max-w-[100px]"
                               title={evt.bandName}
                             >
                               {evt.bandName}
@@ -591,8 +591,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
           {/* Day details */}
           <div className={`pb-4 mb-4 flex items-center gap-3 border-b ${'border-[var(--hair)]'}`}>
             <div
-              className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 border ${
-                'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
+              className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 ${
+                'bg-[var(--sunken)] text-[var(--ink)]'
               }`}
             >
               <span className={`text-base font-mono font-black leading-none ${'text-[var(--acc)]'}`}>
@@ -612,7 +612,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   Logística de Ensayos y Conciertos
                 </div>
                 {(selectedConcert || selectedRehearsal) && (
-                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] shadow-xs flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs flex items-center gap-1">
                     🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
                   </span>
                 )}
@@ -627,8 +627,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
-                  className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer items-center gap-1 ${
-                    'bg-[var(--acc-soft)] border-[var(--hair)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
+                  className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer items-center gap-1 ${
+                    'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Ampliar esta ficha en un modal centrado"
                 >
@@ -645,8 +645,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     setReminderErrorMsg(null);
                     setShowReminderModal(true);
                   }}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--acc-soft)] border-[var(--hair)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
+                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                    'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Enviar un recordatorio por correo/notificación a los convocados"
                 >
@@ -657,8 +657,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--acc-soft)] border-[var(--hair)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
+                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                    'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Editar ficha completa del concierto"
                 >
@@ -669,8 +669,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--ok-soft)] border-[var(--hair)] text-[var(--ok)] hover:bg-[var(--ok-soft)]'
+                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                    'bg-[var(--ok-soft)] text-[var(--ok)] hover:bg-[var(--ok-soft)]'
                   }`}
                   title="Editar ficha completa del ensayo"
                 >
@@ -686,7 +686,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteConcert(selectedConcert.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--hair)] text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -700,7 +700,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteRehearsal(selectedRehearsal.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--hair)] text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -722,9 +722,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     className={`px-2 py-1 rounded-[var(--r-pill)] text-[9px] font-mono font-bold transition-colors cursor-pointer ${
                       isActive
                         ? evt.kind === 'concert'
-                          ? 'bg-[var(--acc)]/30 border-[var(--acc)]/30 text-[var(--acc)]'
-                          : 'bg-[var(--ok)]/30 border-[var(--ok)]/30 text-[var(--ok)]'
-                        : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                          ? 'bg-[var(--acc)]/30 text-[var(--acc)]'
+                          : 'bg-[var(--ok)]/30 text-[var(--ok)]'
+                        : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                     }`}
                   >
                     {evt.label}
@@ -881,13 +881,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     </div>
 
                     <div
-                      className={`p-2 rounded-[var(--r-m)] border flex items-center gap-2.5 ${
-                        'bg-[var(--surface)] border-[var(--hair)]'
+                      className={`p-2 rounded-[var(--r-m)] flex items-center gap-2.5 ${
+                        'bg-[var(--sunken)] '
                       }`}
                     >
                       <div
                         onClick={() => onNavigate?.('fans', { concertId: selectedConcert.id })}
-                        className="p-1 bg-[var(--surface)] rounded-[var(--r-m)] shadow border border-[var(--hair)] shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                        className="p-1 bg-[var(--sunken)] rounded-[var(--r-m)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
                         title="Haz clic para abrir la configuración del QR"
                       >
                         <QRCode value={targetQrUrl} size={58} level="M" />
@@ -895,7 +895,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                       <div className="flex-1 min-w-0 space-y-1.5">
                         <p
-                          className="text-[9px] font-mono text-[var(--ink-2)] truncate break-all bg-[var(--surface)]/60 p-1 rounded border border-[var(--hair)]/60 text-[var(--acc)] font-semibold"
+                          className="text-[9px] font-mono text-[var(--ink-2)] truncate break-all bg-[var(--sunken)]/60 p-1 rounded text-[var(--acc)] font-semibold"
                           title={targetQrUrl}
                         >
                           {targetQrUrl}
@@ -905,7 +905,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             href={targetQrUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-[var(--hair)] transition-colors"
+                            className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors"
                           >
                             <ExternalLink className="w-2.5 h-2.5" /> Abrir
                           </a>
@@ -916,7 +916,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                               setCopiedQrId(selectedConcert.id);
                               setTimeout(() => setCopiedQrId(null), 2000);
                             }}
-                            className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-[var(--hair)] transition-colors cursor-pointer"
+                            className="px-2 py-0.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
                           >
                             {copiedQrId === selectedConcert.id ? (
                               <>
@@ -944,14 +944,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <Video className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
                     <span>Detalles de la Reunión:</span>
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)]">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] ">
                     🤝 Coordinación
                   </span>
                 </div>
 
                 <div
-                  className={`p-2.5 rounded-[var(--r-m)] border space-y-2 ${
-                    'bg-[var(--surface)] border-[var(--hair)]'
+                  className={`p-2.5 rounded-[var(--r-m)] space-y-2 ${
+                    'bg-[var(--sunken)] '
                   }`}
                 >
                   {selectedRehearsal.asunto && (
@@ -1220,11 +1220,11 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
  h2 { font-size: 14px; color: #555; margin-top: 2px; margin-bottom: 20px; font-weight: normal; }
  .badge { display: inline-block; padding: 4px 10px; background: #fef3c7; color: #92400e; font-weight: bold; border-radius: 4px; font-size: 11px; font-family: monospace; }
  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
- .card { border: 1px solid #e5e7eb; padding: 12px 15px; border-radius: 8px; background: #fafafa; }
+ .card { : 1px solid #e5e7eb; padding: 12px 15px; border-radius: 8px; background: #fafafa; }
  .card-title { font-size: 11px; text-transform:; font-weight: bold; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 6px; }
  .item-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #e5e7eb; font-size: 12px; }
  .time { font-weight: bold; font-family: monospace; color: #d97706; width: 60px; }
- pre { font-family: monospace; font-size: 11px; background: #fff; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; white-space: pre-wrap; margin: 0; }
+ pre { font-family: monospace; font-size: 11px; background: #fff; padding: 10px; : 1px solid #e5e7eb; border-radius: 6px; white-space: pre-wrap; margin: 0; }
  .footer { margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 10px; font-size: 10px; color: #888; text-align: center; }
  </style>
  </head>
@@ -1327,7 +1327,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2.5">
                     <div
-                      className={`p-2.5 rounded-[var(--r-m)] border ${'bg-[var(--acc-soft)]/70 border-[var(--hair)]'}`}
+                      className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--acc-soft)]/70 '}`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-bold flex items-center gap-1 text-[var(--acc)] font-mono text-[10px]">
@@ -1413,7 +1413,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         {contacts.map((c) => (
                           <div
                             key={c.id}
-                            className={`p-2 rounded-[var(--r-m)] border flex items-center justify-between gap-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                            className={`p-2 rounded-[var(--r-m)] flex items-center justify-between gap-2 ${'bg-[var(--sunken)] '}`}
                           >
                             <div className="min-w-0">
                               <div className="font-bold truncate text-[10px]">{c.nombre}</div>
@@ -1495,13 +1495,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                     {/* Arqueo Rápido */}
                     <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono">
-                      <div className="p-1.5 rounded bg-[var(--ok)]/10 border border-[var(--hair)] flex flex-col">
+                      <div className="p-1.5 rounded bg-[var(--ok)]/10 flex flex-col">
                         <span className="text-[var(--ok)]/80 text-[8px] flex items-center gap-0.5">
                           <Banknote className="w-2.5 h-2.5" /> Efectivo
                         </span>
                         <span className="font-bold text-[var(--ok)] text-[11px]">{(merch.ingresosEfectivo || 0).toFixed(0)}€</span>
                       </div>
-                      <div className="p-1.5 rounded bg-[var(--acc)]/10 border border-[var(--hair)] flex flex-col">
+                      <div className="p-1.5 rounded bg-[var(--acc)]/10 flex flex-col">
                         <span className="text-[var(--acc)]/80 text-[8px] flex items-center gap-0.5">
                           <Smartphone className="w-2.5 h-2.5" /> Bizum / TPV
                         </span>
@@ -1509,7 +1509,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-[var(--surface)]/60 border border-[var(--hair)]">
+                    <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-[var(--sunken)]/60 ">
                       <span className="text-[var(--ink-2)]">
                         Total cobrado: <strong className="text-[var(--ink)]">{totalCobrado.toFixed(0)}€</strong>
                       </span>

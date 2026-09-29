@@ -394,7 +394,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 className={`p-2 rounded-[var(--r-m)] text-[10px] font-sans font-bold flex items-center gap-1 transition-all cursor-pointer ${
                   showPedalShortcuts
                     ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
-                    : "bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]700"
+                    : "bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 }`}
                 title="Atajos de teclado / Pedal Bluetooth para pasar canciones sin manos"
               >
@@ -674,7 +674,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
           {/* Live Stage Lyrics & Chords Teleprompter Drawer (Offline-safe) */}
           {showChordsPanel && (
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]800 space-y-3 animate-fadeIn">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3 animate-fadeIn">
               <div className="flex flex-wrap items-center justify-between gap-2800 pb-2.5">
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-[var(--ok)]" />
@@ -758,7 +758,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
               {/* Musician/Substitute notes if present */}
               {currentStageSong?.notasRepertorio && (
-                <div className="p-2.5 rounded bg-[var(--bg)]/80800 text-xs font-sans text-[var(--ink)]/90">
+                <div className="p-2.5 rounded bg-[var(--bg)]/80 text-xs font-sans text-[var(--ink)]/90">
                   <span className="font-bold text-[var(--acc)]">
                     💡 Nota de directo:
                   </span>{" "}

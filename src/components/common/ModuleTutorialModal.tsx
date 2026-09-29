@@ -284,7 +284,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]",
       hookBorder: "bg-[var(--tentative)]/10 text-[var(--ink)]",
       highlightText: "text-[var(--acc)]",
-      targetCard: "border-[var(--hair)] bg-[var(--tentative)]/5",
+      targetCard: "bg-[var(--tentative)]/5",
       targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
       targetBtn:
         "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80",
@@ -310,7 +310,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold",
       hookBorder: "bg-[var(--acc)]/10 text-[var(--tentative)]/40",
       highlightText: "text-[var(--ink-2)]",
-      targetCard: "border-[var(--hair)] bg-[var(--acc)]/5",
+      targetCard: "bg-[var(--acc)]/5",
       targetBadge: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
       targetBtn:
         "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-2)]/40",

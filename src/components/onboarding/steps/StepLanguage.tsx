@@ -141,7 +141,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
               className={`relative p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
                 isSelected
                   ? "bg-[var(--acc)]/20  ring-2 ring-[var(--acc)]/30 scale-[1.01]"
-                  : "bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--hair)]"
+                  : "bg-[var(--surface)]/90 hover:bg-[var(--surface)] "
               }`}
             >
               {/* Top Row: Flag & Name */}

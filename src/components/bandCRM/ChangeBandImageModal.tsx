@@ -105,7 +105,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
         onClick={onClose}
       >
         <div
-          className="bg-[var(--surface)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+          className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between800 pb-3">
@@ -128,7 +128,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
               {band.imagen_url ? (
                 <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover" />
               ) : (
-                <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--sunken)]700 flex items-center justify-center text-3xl">
+                <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--sunken)] flex items-center justify-center text-3xl">
                   {band.icono || '🎸'}
                 </div>
               )}
@@ -185,7 +185,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
               <button
                 type="button"
                 onClick={() => setShowUrlInput(true)}
-                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)]800 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
+                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
               >
                 <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Pegar URL directa de imagen</span>

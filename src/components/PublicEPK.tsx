@@ -556,7 +556,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   {config.bandasSimilares.map((band, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)]"
+                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 text-[var(--acc)] "
                     >
                       {band}
                     </span>

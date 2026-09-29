@@ -339,7 +339,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             id="epk-header-copy-btn"
             type="button"
             onClick={onCopyUrl}
-            className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer"
+            className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer"
             title="Copiar enlace web público del EPK"
           >
             {copiedPublicUrl ? (
@@ -355,7 +355,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             href={publicEpkUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 hover:text-[var(--ink)] text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition"
+            className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--acc)]/70 hover:text-[var(--ink)] text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition"
             title="Abrir vista pública del EPK"
           >
             <ExternalLink className="w-3.5 h-3.5 text-[var(--acc)]" />

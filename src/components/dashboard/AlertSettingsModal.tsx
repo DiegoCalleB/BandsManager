@@ -267,18 +267,18 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     >
       <div
         id="alert-settings-modal-card"
-        className="bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] rounded-[var(--r-l)] w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-l)] w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]"
       >
         {/* Modal Header */}
         <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]/50">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] ">
               <Bell className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-[var(--ink-2)] tracking-tight flex items-center gap-2">
                 Configuración del Radar de Alertas
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                   Mánager Pro
                 </span>
               </h2>
@@ -304,7 +304,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             onClick={() => setActiveTab('rules')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-all border-b-2 flex items-center gap-2 ${
               activeTab === 'rules'
-                ? 'border-[var(--acc)]/30 text-[var(--acc)] bg-[var(--surface)]/90'
+                ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
             }`}
           >
@@ -317,7 +317,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             onClick={() => setActiveTab('channels')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-all border-b-2 flex items-center gap-2 ${
               activeTab === 'channels'
-                ? 'border-[var(--acc)]/30 text-[var(--acc)] bg-[var(--surface)]/90'
+                ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
             }`}
           >
@@ -330,7 +330,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             onClick={() => setActiveTab('plan')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-all border-b-2 flex items-center gap-2 ${
               activeTab === 'plan'
-                ? 'border-[var(--acc)]/30 text-[var(--acc)] bg-[var(--surface)]/90'
+                ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
             }`}
           >
@@ -355,12 +355,12 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                   <div
                     key={rule.id}
                     id={`alert-rule-card-${rule.id}`}
-                    className={`p-4 rounded-[var(--r-m)] border transition-all ${
+                    className={`p-4 rounded-[var(--r-m)] transition-all ${
                       !isModuleAllowed
-                        ? 'bg-[var(--surface)]/40 border-[var(--hair)]/60 opacity-65'
+                        ? 'bg-[var(--sunken)]/40 opacity-65'
                         : rule.enabled
-                          ? 'bg-[var(--surface)]/90 border-[var(--hair)]/80'
-                          : 'bg-[var(--surface)]/60 border-[var(--hair)]/80 text-[var(--ink-2)]'
+                          ? 'bg-[var(--sunken)]/90 '
+                          : 'bg-[var(--sunken)]/60 text-[var(--ink-2)]'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -369,18 +369,18 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                           <h4 className="text-sm font-bold text-[var(--ink-2)] flex items-center gap-2">{rule.name}</h4>
 
                           {!isModuleAllowed ? (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--alert)]/10 text-[var(--alert)] border border-[var(--hair)] flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--alert)]/10 text-[var(--alert)] flex items-center gap-1">
                               <Lock className="w-3 h-3" />
                               Módulo {rule.requiredModule.toUpperCase()} Bloqueado en Plan
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)]">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--sunken)] text-[var(--ink-2)] ">
                               {rule.category.toUpperCase()}
                             </span>
                           )}
 
                           {rule.targetRoleOnly && (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)] flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1">
                               <ShieldCheck className="w-3 h-3" />
                               Solo Mánager
                             </span>
@@ -403,7 +403,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                                 onChange={(e) => handleUpdateThreshold(rule.id, parseInt(e.target.value, 10))}
                                 className="w-28 accent-amber-500 cursor-pointer"
                               />
-                              <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
+                              <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                                 {rule.daysThreshold} días
                               </span>
                             </div>
@@ -432,8 +432,8 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                               onClick={() => handleToggleRuleChannel(rule.id, 'notifyInApp')}
                               className={`px-2 py-1 rounded text-[10px] font-mono font-semibold transition-all flex items-center gap-1 ${
                                 rule.notifyInApp
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30'
-                                  : 'bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)]'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                                  : 'bg-[var(--sunken)] text-[var(--ink-2)] '
                               }`}
                               title="Notificar dentro de la app (In-App)"
                             >
@@ -446,8 +446,8 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                               onClick={() => handleToggleRuleChannel(rule.id, 'notifyEmail')}
                               className={`px-2 py-1 rounded text-[10px] font-mono font-semibold transition-all flex items-center gap-1 ${
                                 rule.notifyEmail
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30'
-                                  : 'bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)]'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                                  : 'bg-[var(--sunken)] text-[var(--ink-2)] '
                               }`}
                               title="Notificar por correo electrónico (Email)"
                             >
@@ -466,7 +466,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
 
           {activeTab === 'channels' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 border border-[var(--hair)] space-y-4">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/80 space-y-4">
                 <h3 className="text-sm font-bold text-[var(--ink-2)] flex items-center gap-2">
                   <Mail className="w-4 h-4 text-[var(--acc)]" />
                   Configuración de Despacho por Correo (Email Digest)
@@ -480,7 +480,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                       value={config.recipientEmail || ''}
                       onChange={(e) => setConfig((prev) => ({ ...prev, recipientEmail: e.target.value }))}
                       placeholder="manager@labanda.com"
-                      className="w-full px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
 
@@ -496,10 +496,10 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                           key={f.id}
                           type="button"
                           onClick={() => setConfig((prev) => ({ ...prev, digestFrequency: f.id as any }))}
-                          className={`p-3 rounded-[var(--r-m)] border text-left transition-all ${
+                          className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
                             config.digestFrequency === f.id
-                              ? 'bg-[var(--acc)]/15 border-[var(--acc)]/30 text-[var(--ink-2)]'
-                              : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                              ? 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
+                              : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                           }`}
                         >
                           <div className="text-xs font-bold mb-0.5">{f.label}</div>
@@ -512,7 +512,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               </div>
 
               {/* Roles & Permissions section */}
-              <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 border border-[var(--hair)] space-y-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/80 space-y-3">
                 <h3 className="text-sm font-bold text-[var(--ink-2)] flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
                   Control de Accesos y Destinatarios por Rol
@@ -524,7 +524,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                 </p>
 
                 <div className="space-y-2 pt-1">
-                  <label className="flex items-center gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] cursor-pointer hover:border-[var(--hair)]">
+                  <label className="flex items-center gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] cursor-pointer hover:brightness-95">
                     <input
                       type="radio"
                       name="recipientRole"
@@ -538,7 +538,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                     </div>
                   </label>
 
-                  <label className="flex items-center gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] cursor-pointer hover:border-[var(--hair)]">
+                  <label className="flex items-center gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] cursor-pointer hover:brightness-95">
                     <input
                       type="radio"
                       name="recipientRole"
@@ -557,25 +557,25 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
           )}
 
           {activeTab === 'plan' && (
-            <div className="space-y-4 p-4 rounded-[var(--r-m)] bg-[var(--surface)]/90 border border-[var(--hair)] text-[var(--ink-2)] text-xs leading-relaxed">
+            <div className="space-y-4 p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/90 text-[var(--ink-2)] text-xs leading-relaxed">
               <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-sm mb-2">
                 <Sparkles className="w-4 h-4" />
                 El Plan Perfecto: Notificaciones Útiles sin Spam
               </div>
 
               <div className="space-y-3">
-                <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)]">
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ">
                   <span className="font-bold text-[var(--ink-2)] block mb-1">1. Regla del Hito Relevante (Zero Ruido)</span>
                   Las alertas no notifican cambios insignificantes. Solo saltan cuando hay una ventana estacional de festivales abierta, un
                   lead congelado que requiere re-contacto o un cobro pendiente.
                 </div>
 
-                <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)]">
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ">
                   <span className="font-bold text-[var(--ink-2)] block mb-1">2. Acción a 1 Clic Directa</span>
                   Cada alerta incluye su botón ejecutor (*"Lanzar Campaña"*, *"Revisar Borradores"*, *"Ver Contactos Stale"*).
                 </div>
 
-                <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)]">
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ">
                   <span className="font-bold text-[var(--ink-2)] block mb-1">3. Protección por Roles de Seguridad</span>
                   Las cifras de caché, negociaciones de salas y borradores financieros quedan aislados para que solo el Mánager/Líder los
                   configure y reciba.
@@ -592,7 +592,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               type="button"
               onClick={handleSendTestDigest}
               disabled={sendingTestDigest}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border border-[var(--hair)]/80 text-[var(--acc)] hover:text-[var(--acc)] text-xs font-semibold transition-all flex items-center gap-1.5 disabled:opacity-50"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] hover:text-[var(--acc)] text-xs font-semibold transition-all flex items-center gap-1.5 disabled:opacity-50"
             >
               <Mail className="w-3.5 h-3.5" />
               <span>{sendingTestDigest ? 'Enviando...' : 'Probar Email de Resumen'}</span>

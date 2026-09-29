@@ -2245,8 +2245,8 @@ export default function CalendarView({
           <div className="mt-3 pt-2">
             <div className="flex items-center gap-2">
               <div
-                className={`relative flex-1 flex items-center rounded-[var(--r-m)] border transition-all ${
-                  'bg-[var(--surface)] border-[var(--hair)] focus-within:border-[var(--ink-3)] shadow-xs'
+                className={`relative flex-1 flex items-center rounded-[var(--r-m)] transition-all ${
+                  'bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--ink-3)] shadow-xs'
                 }`}
               >
                 <Search className="w-4 h-4 ml-3 text-[var(--ink-2)] shrink-0" />
@@ -2271,7 +2271,7 @@ export default function CalendarView({
                 )}
               </div>
               {calendarSearchTerm && (
-                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)]">
+                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] ">
                   {filteredConcerts.length + filteredRehearsals.length} resultados
                 </div>
               )}
@@ -2768,7 +2768,7 @@ export default function CalendarView({
         {/* SELECTED DAY AGENDA CARD - Inmediatamente visible bajo el calendario */}
         <div
           id="calendar-selected-day-banner"
-          className={`mt-5 p-4 rounded-[var(--r-l)] transition-all duration-200 ${'bg-[var(--surface)]'}`}
+          className={`mt-5 p-4 rounded-[var(--r-l)] transition-all duration-200 ${'bg-[var(--sunken)]'}`}
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-310">
             <div className="flex items-center gap-3">

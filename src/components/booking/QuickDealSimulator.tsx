@@ -57,14 +57,14 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
   };
 
   return (
-    <div className="rounded-[var(--r-m)] border border-[var(--hair)] bg-[var(--surface)] overflow-hidden transition-all">
+    <div className="rounded-[var(--r-m)] bg-[var(--sunken)] overflow-hidden transition-all">
       {/* Resumen Compacto (Siempre Visible) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
         className="p-3 bg-[var(--ok)]/40  hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--ok)]/20 border border-[var(--hair)] flex items-center justify-center shrink-0">
+          <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center shrink-0">
             <Calculator className="w-3.5 h-3.5 text-[var(--ok)]" />
           </div>
           <div>
@@ -73,10 +73,10 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               <span
                 className={`text-[10px] font-sans font-bold px-1.5 py-0.2 rounded ${
                   isViable
-                    ? 'bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--hair)]'
+                    ? 'bg-[var(--ok)]/20 text-[var(--ok)] '
                     : isAjustado
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30'
-                      : 'bg-[var(--alert)]/20 text-[var(--alert)] border border-[var(--alert)]/30'
+                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                      : 'bg-[var(--alert)]/20 text-[var(--alert)] '
                 }`}
               >
                 {isViable ? '🟢 Muy Viable' : isAjustado ? '🟡 Ajustado' : '🔴 Exigente'}
@@ -103,88 +103,88 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
       {isExpanded && (
         <div className="p-3.5 border-t border-[var(--hair)] space-y-3 bg-[var(--sunken)] text-xs">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🎟️ Anticipada (€)</label>
               <input
                 type="number"
                 value={anticipada}
                 onChange={(e) => setAnticipada(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🚪 Puerta (€)</label>
               <input
                 type="number"
                 value={taquilla}
                 onChange={(e) => setTaquilla(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🏢 Alquiler Sala (€)</label>
               <input
                 type="number"
                 value={alquiler}
                 onChange={(e) => setAlquiler(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">% Comisión Sala</label>
               <input
                 type="number"
                 value={pctSala}
                 onChange={(e) => setPctSala(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🚐 Gastos Viaje (€)</label>
               <input
                 type="number"
                 value={gastosViaje}
                 onChange={(e) => setGastosViaje(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
 
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🎸 Nº Músicos</label>
               <input
                 type="number"
                 value={numMusicos}
                 onChange={(e) => setNumMusicos(Number(e.target.value))}
-                className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:border-[var(--ink-3)] outline-none"
+                className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
               />
             </div>
           </div>
 
           {/* Tarjetas de Resultado Rápido */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--hair)] text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 text-center">
               <span className="text-[10px] text-[var(--ok)] font-bold block">Punto de Equilibrio</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">{liveBreakEven} tix</span>
               <span className="text-[9px] text-[var(--ink-2)] block">para cubrir costes</span>
             </div>
 
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/60 text-center">
               <span className="text-[10px] text-[var(--ink-2)] font-bold block">% Aforo Sala</span>
               <span className="text-lg font-bold text-[var(--ink-2)] font-mono block">{liveBreakEvenPct}%</span>
               <span className="text-[9px] text-[var(--ink-2)] block">de {aforo} personas</span>
             </div>
 
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/60 text-center">
               <span className="text-[10px] text-[var(--ink-2)] font-bold block">Margen (80% aforo)</span>
               <span className="text-lg font-bold text-[var(--ok)] font-mono block">+{beneficio80Pct} €</span>
               <span className="text-[9px] text-[var(--ink-2)] block">total banda</span>
             </div>
 
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--hair)] text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 text-center">
               <span className="text-[10px] text-[var(--ok)] font-bold block">Por Músico (80%)</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">+{porMusico80Pct} €</span>
               <span className="text-[9px] text-[var(--ok)]/80 block">limpio cada uno</span>

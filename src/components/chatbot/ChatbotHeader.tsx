@@ -56,13 +56,13 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
   return (
     <div
       className={`px-5 py-4 flex items-center justify-between border-b ${
-        'bg-[var(--surface)] border-[var(--hair)]'
+        'bg-[var(--sunken)] '
       }`}
     >
       <div className="flex items-center gap-3">
         <div
-          className={`p-1.5 rounded-[var(--r-m)] border ${
-            'bg-[var(--acc-soft)] border-[var(--hair)] text-[var(--acc)]'
+          className={`p-1.5 rounded-[var(--r-m)] ${
+            'bg-[var(--acc-soft)] text-[var(--acc)]'
           }`}
         >
           <Guitar className="w-4 h-4" />
@@ -89,8 +89,8 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenAutonomyModal}
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono border font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
-              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border-[var(--hair)]'
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] '
             }`}
             title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
           >
@@ -102,8 +102,8 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           </button>
         ) : (
           <div
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono border font-semibold opacity-80 ${
-              'bg-[var(--acc-soft)] text-[var(--acc)] border-[var(--hair)]'
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono font-semibold opacity-80 ${
+              'bg-[var(--acc-soft)] text-[var(--acc)] '
             }`}
             title="Límites de autonomía configurados (Configuración restringida a Administradores)"
           >
@@ -127,8 +127,8 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           <button
             id="close-floating-chat-btn"
             onClick={onClose}
-            className={`p-1.5 rounded border transition-all cursor-pointer flex items-center justify-center active:scale-95 ${
-              'bg-[var(--sunken)] hover:bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+            className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center active:scale-95 ${
+              'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
             title="Cerrar Chat"
           >

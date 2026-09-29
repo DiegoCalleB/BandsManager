@@ -41,7 +41,7 @@ const BAND_STATUS_OPTIONS: {
   {
     status: "sin_contactar",
     label: "Sin Contactar",
-    color: "bg-[var(--ink-3)]/60 text-[var(--ink-2)]600",
+    color: "bg-[var(--ink-3)]/60 text-[var(--ink-2)]",
     icon: Clock,
   },
   {
@@ -231,7 +231,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={() => onBulkToggleFavorite(true)}
-              className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60700 text-[var(--acc)]/70"}`}
+              className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc)]/70"}`}
               title="Marcar bandas como favoritas"
             >
               <Star className="w-4 h-4 fill-[var(--acc)]/30 text-[var(--acc)]" />

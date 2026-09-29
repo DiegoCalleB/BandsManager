@@ -337,7 +337,7 @@ export default function BookingCampaignPanel({
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 text-sm bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
+            className="px-4 py-2 text-sm bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)] rounded-[var(--r-s)] font-medium flex items-center gap-2"
           >
             <Check className="w-4 h-4" /> Guardar y Activar
           </button>

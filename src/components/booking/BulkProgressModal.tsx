@@ -87,7 +87,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
           </div>
 
           {/* Progress bar */}
-          <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60800">
+          <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60">
             <div className="flex items-center justify-between text-xs font-sans">
               <span className="text-[var(--ink-2)] font-bold">
                 Progreso global

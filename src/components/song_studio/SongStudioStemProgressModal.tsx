@@ -33,7 +33,7 @@ const IrisPrismBanner: React.FC = () => {
         <path d="M 195,43 L 400,58" stroke="#06b6d4" strokeWidth="2" opacity="0.8" />
         <path d="M 195,43 L 400,70" stroke="#a855f7" strokeWidth="2" opacity="0.8" />
       </svg>
-      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--surface)]/60 border border-[var(--hair)]/10 text-[10px] font-mono text-[var(--ink-2)]">
+      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)]/60 text-[10px] font-mono text-[var(--ink-2)]">
         <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] animate-ping" />
         <span>Iris Espectro · Separación Multicapa por IA</span>
       </div>
@@ -71,11 +71,11 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
         onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: false } : null))}
         className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-[var(--r-l)] bg-[var(--surface)]/95 p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
           !terminado
-            ? 'border border-[var(--hair)] hover:border-[var(--ink-3)]'
+            ? ''
             : esError
-              ? 'border-2 border-[var(--alert)]/30 hover:border-[var(--ink-3)]'
-              : 'border-2 border-[var(--ok)]/30 hover:border-[var(--ink-3)]'
-        }`}
+              ? 'border-2 '
+              : 'border-2 '
+        } bg-[var(--alert)]/10 hover:brightness-95`}
         title={terminado ? 'Iris ha terminado — toca para ver el resultado' : 'Reabrir el progreso de Iris'}
       >
         <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           )}
           <Maximize2 className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
         </div>
-        <div className="mt-2 w-full h-1.5 bg-[var(--surface)] rounded-[var(--r-pill)] overflow-hidden border border-[var(--hair)]/10">
+        <div className="mt-2 w-full h-1.5 bg-[var(--sunken)] rounded-[var(--r-pill)] overflow-hidden ">
           <div
             className={`h-full rounded-[var(--r-pill)] transition-all duration-300 ${
               !terminado ? 'bg-[var(--acc)] ' : esError ? 'bg-[var(--alert)]' : 'bg-[var(--ok)]'
@@ -113,7 +113,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
 
   return (
     <div className="fixed inset-0 bg-[var(--scrim)]/85 z-[9999] flex items-center justify-center p-4">
-      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] space-y-5 animate-in fade-in zoom-in-95 duration-200">
         {!terminado && (
           <div className="-mx-6">
             <IrisPrismBanner />
@@ -126,9 +126,9 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
               className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center relative ${
                 terminado
                   ? esError
-                    ? 'bg-[var(--alert)]/20 border-[var(--hair)]'
-                    : 'bg-[var(--ok)]/20 border-[var(--ok)]/30'
-                  : 'bg-[var(--acc)]/20 border-[var(--acc)]/30'
+                    ? 'bg-[var(--alert)]/20 '
+                    : 'bg-[var(--ok)]/20 '
+                  : 'bg-[var(--acc)]/20 '
               }`}
             >
               {terminado ? (
@@ -165,7 +165,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
                 <span className="text-[var(--acc)] font-bold">Progreso: {Math.round(stemProgressModal.progressPct || 0)}%</span>
                 <span className="text-[var(--ink-2)] animate-pulse">Procesando frecuencia de audio...</span>
               </div>
-              <div className="w-full h-2.5 bg-[var(--surface)] rounded-[var(--r-pill)] overflow-hidden border border-[var(--hair)]">
+              <div className="w-full h-2.5 bg-[var(--sunken)] rounded-[var(--r-pill)] overflow-hidden ">
                 <div
                   className="h-full bg-[var(--acc)]  transition-all duration-300"
                   style={{ width: `${Math.max(5, stemProgressModal.progressPct || 0)}%` }}
@@ -175,7 +175,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           )}
 
           {terminado && !esError && (
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--hair)] space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--ok)]/40 space-y-3">
               <p className="text-[var(--ok)] font-bold flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" /> Las pistas aisladas ya están disponibles en la vista multicanal.
               </p>
@@ -186,7 +186,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           )}
 
           {esError && (
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)]/40 border border-[var(--hair)] space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)]/40 space-y-3">
               <p className="text-[var(--alert)] font-bold flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-[var(--alert)]" />
                 {stemProgressModal.errorType === 'billing_required' ? 'Plan o cuota agotada' : 'No se pudo completar la separación'}

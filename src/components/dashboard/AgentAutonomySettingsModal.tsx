@@ -808,7 +808,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       <ShieldCheck className="w-3 h-3" /> Mánager / Admin
                     </span>
                   ) : (
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ink-3)]/60 text-[var(--ink-2)]600 flex items-center gap-1 font-bold">
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ink-3)]/60 text-[var(--ink-2)] flex items-center gap-1 font-bold">
                       <Lock className="w-3 h-3" /> Modo Lectura (Músico)
                     </span>
                   )}
@@ -1650,13 +1650,13 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* 4. Control de Estado de Lectura en Bandeja (Agente Lector) */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Mail className="w-4 h-4" /> 4. Control de Estado en Bandeja
                     de Entrada (Agente Lector)
                   </h4>
 
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-3">
+                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"
@@ -1668,7 +1668,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             markAsReadInInbox: e.target.checked,
                           })
                         }
-                        className="mt-0.5 rounded border-[var(--hair)] bg-[var(--surface)] text-[var(--acc)] focus:ring-[var(--acc)] disabled:opacity-60"
+                        className="mt-0.5 rounded bg-[var(--sunken)] text-[var(--acc)] focus:ring-[var(--acc)] disabled:opacity-60"
                       />
                       <div className="space-y-1">
                         <span className="text-xs font-bold text-[var(--ink-2)] block">

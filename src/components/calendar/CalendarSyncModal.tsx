@@ -33,8 +33,8 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
   return (
     <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4 animate-fade-in">
       <div
-        className={`max-w-lg w-full rounded-[var(--r-l)] border p-5 relative ${
-          'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+        className={`max-w-lg w-full rounded-[var(--r-l)] p-5 relative ${
+          'bg-[var(--surface)] text-[var(--ink)]'
         }`}
       >
         <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
@@ -56,7 +56,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
         <div className="py-4 space-y-4 text-xs">
           <div
-            className={`p-3 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+            className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)] '}`}
           >
             <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold">
               URL de Suscripción iCal (Privada)
@@ -66,8 +66,8 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
                 type="text"
                 readOnly
                 value={rutaFeed}
-                className={`flex-1 p-2 text-xs rounded-[var(--r-m)] border outline-none font-mono ${
-                  'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+                className={`flex-1 p-2 text-xs rounded-[var(--r-m)] outline-none font-mono ${
+                  'bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               />
               <button
@@ -95,7 +95,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webCalFeed)}`}
               target="_blank"
               rel="noreferrer"
-              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--hair)] text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Calendar className="w-4 h-4 text-[var(--acc)]" />
               <span>Añadir a Google Calendar</span>
@@ -103,14 +103,14 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
             <a
               href={webCalFeed}
-              className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 border border-[var(--hair)] text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Radio className="w-4 h-4 text-[var(--ok)]" />
               <span>Suscribir en iPhone / Mac</span>
             </a>
           </div>
 
-          <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)]/5 space-y-1.5 text-[11px] text-[var(--ink-2)]">
+          <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5 text-[11px] text-[var(--ink-2)]">
             <p className="font-bold text-[var(--ink-2)]">Pasos en Google Calendar (1 minuto):</p>
             <ol className="list-decimal list-inside space-y-1 text-[var(--ink-2)]">
               <li>

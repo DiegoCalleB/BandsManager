@@ -1674,7 +1674,7 @@ export default function ReelsCenter({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Borradores */}
                   <div
-                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--surface)]"}`}
+                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--sunken)]"}`}
                   >
                     <span
                       className={`text-[10px] font-sans font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
@@ -1749,7 +1749,7 @@ export default function ReelsCenter({
 
                   {/* En Edición / Aprobados */}
                   <div
-                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--surface)]"}`}
+                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--sunken)]"}`}
                   >
                     <span
                       className={`text-[10px] font-sans font-bold block pb-1.5 ${"text-[var(--acc)]"}`}
@@ -1833,7 +1833,7 @@ export default function ReelsCenter({
 
                   {/* Listos / Publicados */}
                   <div
-                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--surface)]"}`}
+                    className={`space-y-3 rounded-[var(--r-s)] p-3 ${"bg-[var(--sunken)]"}`}
                   >
                     <span
                       className={`text-[10px] font-sans text-[var(--ok)] font-bold block pb-1.5 ${""}`}
@@ -3147,7 +3147,7 @@ export default function ReelsCenter({
 
             {/* Smart Phone Shell Frame */}
             <div
-              className={`mx-auto w-[240px] h-[450px] rounded-[30px] -[6px] relative overflow-hidden flex flex-col justify-between ${" bg-[var(--surface)]"}`}
+              className={`mx-auto w-[240px] h-[450px] rounded-[30px] relative overflow-hidden flex flex-col justify-between ${"bg-[var(--sunken)]"}`}
             >
               {/* Speaker & camera notch mockup */}
               <div

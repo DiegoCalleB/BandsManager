@@ -1153,7 +1153,7 @@ export function GooglePlacesExplorerModal({
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
                           isChecked
                             ? "bg-[var(--acc)]/60 text-[var(--acc)]/70 "
-                            : "bg-[var(--bg)]/80 text-[var(--ink-2)]800 hover:text-[var(--ink-2)]"
+                            : "bg-[var(--bg)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                         }`}
                       >
                         <span>{item.icon}</span>
@@ -1221,7 +1221,7 @@ export function GooglePlacesExplorerModal({
                         className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                           isSelected
                             ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                            : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:bg-[var(--surface)]"
+                            : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]"
                         }`}
                         title={cat.desc}
                       >
@@ -1246,7 +1246,7 @@ export function GooglePlacesExplorerModal({
                     onChange={(e) => setSelectedCity(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     placeholder="Ciudad (ej. Granada, Madrid...)"
-                    className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                    className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                   />
                   {selectedCity && (
                     <button
@@ -1271,12 +1271,12 @@ export function GooglePlacesExplorerModal({
                       CATEGORIES.find((c) => c.id === selectedType)
                         ?.placeholder || "Búsqueda opcional..."
                     }
-                    className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                    className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                   />
                 </div>
 
                 {/* Number of Venues limit (1 a 10) */}
-                <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--bg)] px-3 py-1 rounded-[var(--r-m)]800">
+                <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--bg)] px-3 py-1 rounded-[var(--r-m)]">
                   <span className="text-[10px] font-sans text-[var(--ink-2)] whitespace-nowrap">
                     Cantidad:
                   </span>
@@ -1314,7 +1314,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchMultiSource()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] border border-[var(--hair)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
                   >
                     <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1325,7 +1325,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchPublicCultural()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] border border-[var(--hair)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
                   >
                     <Building2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -1363,7 +1363,7 @@ export function GooglePlacesExplorerModal({
                       placeholder="Ej. 150"
                       value={aforoMin}
                       onChange={(e) => setAforoMin(e.target.value)}
-                      className="w-full p-2 bg-[var(--bg)]700 rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
+                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
                     />
                   </div>
                   <div>
@@ -1375,7 +1375,7 @@ export function GooglePlacesExplorerModal({
                       placeholder="Ej. 800"
                       value={aforoMax}
                       onChange={(e) => setAforoMax(e.target.value)}
-                      className="w-full p-2 bg-[var(--bg)]700 rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
+                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
                     />
                   </div>
                 </div>
@@ -1414,7 +1414,7 @@ export function GooglePlacesExplorerModal({
                       type="button"
                       onClick={() => handleSearchSimilarBands(band)}
                       disabled={isSearching}
-                      className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] disabled:opacity-50"
+                      className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50"
                       title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
                     >
                       🔍 {band}
@@ -1424,7 +1424,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
                     disabled={isSearching}
-                    className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] font-bold transition-all cursor-pointer bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--hair)] ml-auto"
+                    className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] font-bold transition-all cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] ml-auto"
                   >
                     ⚡ Rastrear Todas
                   </button>
@@ -1475,7 +1475,7 @@ export function GooglePlacesExplorerModal({
             {places.length > 0 ? (
               <div className="space-y-3">
                 {/* Batch Actions Bar */}
-                <div className="p-3 bg-[var(--bg)]/90 rounded-[var(--r-m)]800 flex flex-wrap items-center justify-between gap-3">
+                <div className="p-3 bg-[var(--bg)]/90 rounded-[var(--r-m)] flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={toggleSelectAll}
@@ -1533,7 +1533,7 @@ export function GooglePlacesExplorerModal({
                       className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col justify-between space-y-2.5 ${
                         place.selected
                           ? "bg-[var(--bg)]/50"
-                          : "bg-[var(--bg)]/60800/80 opacity-70"
+                          : "bg-[var(--bg)]/60/80 opacity-70"
                       }`}
                     >
                       <div className="space-y-2">
@@ -1552,7 +1552,7 @@ export function GooglePlacesExplorerModal({
                                 className="w-10 h-10 rounded-[var(--r-s)] object-cover700 shrink-0"
                               />
                             ) : (
-                              <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--sunken)]700 flex items-center justify-center text-lg shrink-0">
+                              <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--sunken)] flex items-center justify-center text-lg shrink-0">
                                 {place.icono || "🏛️"}
                               </div>
                             )}
@@ -1625,7 +1625,7 @@ export function GooglePlacesExplorerModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              className="bg-[var(--bg)]700 text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus:cursor-pointer"
+                              className="bg-[var(--bg)] text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus:cursor-pointer"
                             >
                               {CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>
@@ -1713,7 +1713,7 @@ export function GooglePlacesExplorerModal({
                               </span>
                             </div>
                           ) : (
-                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)]800 text-[10px] flex items-center justify-between gap-2">
+                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[10px] flex items-center justify-between gap-2">
                               <span className="text-[var(--ink-2)] italic">
                                 Sin correo extraído aún
                               </span>
@@ -1763,7 +1763,7 @@ export function GooglePlacesExplorerModal({
           {/* Discarded Suggestions Sub-Modal */}
           {showDiscardedModal && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-[var(--scrim)]/80 animate-fadeIn">
-              <div className="w-full max-w-lg bg-[var(--bg)]800 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
+              <div className="w-full max-w-lg bg-[var(--bg)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
                 <div className="p-4800 flex items-center justify-between bg-[var(--bg)]/60">
                   <div className="flex items-center gap-2">
                     <Ban className="w-4 h-4 text-[var(--alert)]" />

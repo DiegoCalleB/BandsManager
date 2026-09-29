@@ -163,7 +163,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   value={editRehearsalDraft.setlistId || ''}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
                   className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-m)] outline-none font-mono ${
-                    'bg-[var(--surface)] text-[var(--ink)] border border-[var(--hair)]'
+                    'bg-[var(--sunken)] text-[var(--ink)] '
                   }`}
                 >
                   <option value="">-- Sin repertorio específico --</option>
@@ -215,7 +215,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                       setViewingRehearsal(null);
                     }
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20 border border-[var(--hair)] flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20 flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3 h-3" />
                   <span>Eliminar</span>

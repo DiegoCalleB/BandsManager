@@ -100,7 +100,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         }}
         className={`relative p-2 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-center ${
           isOpen
-            ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] shadow-xs'
+            ? 'bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs'
             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
         }`}
         title="Centro de Notificaciones Push"
@@ -126,7 +126,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         <div
           className={`absolute ${
             variant === 'mobile' ? 'right-0 top-12 w-[300px] sm:w-[360px]' : 'right-0 md:left-0 top-12 w-[320px] sm:w-[380px]'
-          } z-50 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
+          } z-50 bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 bg-[var(--acc)]/10`}
         >
           {/* Header */}
           <div className="p-3.5 border-b border-[var(--hair)] bg-[var(--acc)]/30  flex items-center justify-between">
@@ -134,7 +134,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
               <BellRing className="w-4 h-4 text-[var(--acc)]" />
               <span className="font-bold text-xs text-[var(--ink-2)] font-display">Notificaciones</span>
               {unreadCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 border border-[var(--hair)] text-[10px] font-mono text-[var(--acc)] font-bold">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[10px] font-mono text-[var(--acc)] font-bold">
                   {unreadCount} nuevas
                 </span>
               )}
@@ -215,7 +215,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     item.read ? 'bg-transparent hover:bg-[var(--surface)]/60 opacity-80' : 'bg-[var(--acc)]/5 hover:bg-[var(--acc)]/10'
                   }`}
                 >
-                  <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-center shrink-0 mt-0.5">
                     {renderCategoryIcon(item.category)}
                   </div>
                   <div className="flex-1 min-w-0 space-y-0.5">
@@ -227,7 +227,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     </div>
                     <p className="text-[11px] text-[var(--ink-2)] line-clamp-2 leading-tight">{item.body}</p>
                     {item.leadName && (
-                      <span className="inline-block text-[9px] font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded border border-[var(--hair)] mt-1">
+                      <span className="inline-block text-[9px] font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
                         📍 {item.leadName}
                       </span>
                     )}
@@ -267,7 +267,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 setIsOpen(false);
                 onOpenSettings();
               }}
-              className="text-[10px] font-bold text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--hair)]"
+              className="text-[10px] font-bold text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 "
             >
               <Settings className="w-3 h-3" />
               <span>Configurar avisos</span>

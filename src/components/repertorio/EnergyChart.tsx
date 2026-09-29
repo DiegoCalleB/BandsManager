@@ -505,11 +505,6 @@ export function EnergyChart({
                 : undefined,
         }}
       >
-        {!compact && (
-          <style>{`
- /* Espectro flat design: removed effects per Law 1 */
- `}</style>
-        )}
         {/* Arrastrando en vertical: burbuja con la energía en vivo, pegada al dedo/cursor (no fija
  arriba en el centro) para que se note claramente cómo sube y baja el número al mover.
  En ratón/lápiz se coloca a un lado (izquierda o derecha según de qué mitad del gráfico se

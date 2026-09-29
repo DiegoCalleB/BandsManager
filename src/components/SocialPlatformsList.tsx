@@ -183,9 +183,9 @@ export const PLATFORM_CONFIG: Record<
     colorClass: "text-[var(--alert)]",
     bgClass:
       "bg-[var(--acc)]/10 ",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--alert)]/60",
+      "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:text-[var(--alert)]/60 hover:brightness-95",
   },
   youtube: {
     label: "YouTube",
@@ -219,79 +219,79 @@ export const PLATFORM_CONFIG: Record<
     label: "SoundCloud",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]",
   },
   bandsintown: {
     label: "Bandsintown",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]",
   },
   songkick: {
     label: "Songkick",
     colorClass: "text-[var(--alert)]",
     bgClass: "bg-[var(--alert)]/10",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--alert)]/20 hover:border-[var(--ink-3)] hover:text-[var(--alert)]",
+      "hover:bg-[var(--alert)]/20 hover:text-[var(--alert)]",
   },
   wegow: {
     label: "Wegow",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]",
   },
   tidal: {
     label: "TIDAL",
     colorClass: "text-[var(--ink-2)]",
     bgClass: "bg-[var(--surface)]",
-    borderClass: "border-[var(--hair)]",
-    hoverClass: "hover:bg-[var(--surface)] hover:border-[var(--hair)] hover:text-[var(--ink)]",
+    borderClass: "",
+    hoverClass: "hover:bg-[var(--surface)] hover:text-[var(--ink)]",
   },
   deezer: {
     label: "Deezer",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]",
   },
   amazonMusic: {
     label: "Amazon Music",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]",
   },
   twitch: {
     label: "Twitch",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--acc)]/20 hover:border-[var(--ink-3)] hover:text-[var(--acc)]",
+      "hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]",
   },
   threads: {
     label: "Threads",
     colorClass: "text-[var(--ink-2)]",
     bgClass: "bg-[var(--surface)]/90",
-    borderClass: "border-[var(--hair)]",
-    hoverClass: "hover:bg-[var(--surface)] hover:border-[var(--hair)] hover:text-[var(--ink)]",
+    borderClass: "",
+    hoverClass: "hover:bg-[var(--surface)] hover:text-[var(--ink)]",
   },
   facebook: {
     label: "Facebook",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--tentative)]/50",
-    borderClass: "border-[var(--hair)]",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--tentative)]/50 hover:border-[var(--ink-3)] hover:text-[var(--acc)]/80",
+      "hover:bg-[var(--tentative)]/50 hover:text-[var(--acc)]/80",
   },
   twitter: {
     label: "X / Twitter",
@@ -318,9 +318,9 @@ export const PLATFORM_CONFIG: Record<
     label: "PayPal",
     colorClass: "text-[var(--ink-2)]",
     bgClass: "bg-[var(--bg)]/15",
-    borderClass: "border-[var(--hair)]/40",
+    borderClass: "",
     hoverClass:
-      "hover:bg-[var(--bg)]/25 hover:border-[var(--hair)]/60 hover:text-[var(--ink-2)]",
+      "hover:bg-[var(--bg)]/25 hover:text-[var(--ink-2)]",
   },
   whatsapp: {
     label: "WhatsApp",

@@ -137,8 +137,8 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   className={`text-[11px] px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
                     genre.toLowerCase().includes(g.toLowerCase())
                       ? "bg-[var(--acc)]/20 text-[var(--acc)]/70  font-semibold"
-                      : "bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:border-[var(--hair)]"
-                  }`}
+                      : "bg-[var(--sunken)]/60 text-[var(--ink-2)] "
+                  } hover:brightness-95`}
                 >
                   {g}
                 </button>

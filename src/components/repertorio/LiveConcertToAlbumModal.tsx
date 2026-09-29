@@ -1640,7 +1640,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <button
                         type="button"
                         onClick={() => setCookieModalOpen(true)}
-                        className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs"
+                        className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--acc)]/70 font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs"
                         title="Configurar cookies de la cuenta de YouTube para descargar automáticamente en el servidor sin bloqueos"
                       >
                         <Lock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -2016,7 +2016,7 @@ export const LiveConcertToAlbumModal: React.FC<
                             ? "bg-[var(--acc)]/15 ring-1 ring-[var(--acc)]/50"
                             : track.type === "musica"
                               ? "bg-[var(--acc-soft)]  "
-                              : "bg-[var(--tentative)]/5 hover:border-[var(--ink-3)]"
+                              : "bg-[var(--tentative)]/5 "
                         }`}
                       >
                         {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
@@ -3194,7 +3194,7 @@ export const LiveConcertToAlbumModal: React.FC<
                           className={`p-2.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center gap-2.5 ${
                             tr.type === "musica"
                               ? "bg-[var(--acc-soft)]  "
-                              : "bg-[var(--tentative)]/5 hover:border-[var(--ink-3)]"
+                              : "bg-[var(--tentative)]/5 hover:brightness-95"
                           }`}
                         >
                           {/* Index + Type Toggle Button */}

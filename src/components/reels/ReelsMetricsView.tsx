@@ -2122,7 +2122,7 @@ export function ReelsMetricsView({
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[var(--hair)]500/10">
+                  <tbody className="divide-y divide-[var(--hair)]/10">
                     {metrics.length === 0 ? (
                       <tr>
                         <td colSpan={3 + activeCount} className="py-12 px-4">

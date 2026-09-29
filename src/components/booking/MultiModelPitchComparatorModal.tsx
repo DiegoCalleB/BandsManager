@@ -184,7 +184,7 @@ export const MultiModelPitchComparatorModal: React.FC<
   const getProviderBadge = (id: string) => {
     if (id === "gemini") return "bg-[var(--acc)]/15 text-[var(--acc)]/70 ";
     if (id === "deepseek") return "bg-[var(--acc)]/15 text-[var(--acc)]/30";
-    return "bg-[var(--sunken)] text-[var(--ink-2)]700";
+    return "bg-[var(--sunken)] text-[var(--ink-2)]";
   };
 
   const getFallbackCostEstimate = (
@@ -256,14 +256,14 @@ export const MultiModelPitchComparatorModal: React.FC<
           </div>
 
           {/* CONTROLS & VENUE BAR */}
-          <div className="p-4 bg-[var(--bg)]800/80 space-y-3">
+          <div className="p-4 bg-[var(--bg)]/80 space-y-3">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               {/* Venue Badge */}
               <div className="flex items-center gap-2 text-xs">
                 <span className="text-[var(--ink-2)] font-sans text-[11px]">
                   SALA DESTINO:
                 </span>
-                <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]700 text-[var(--acc)]/70 font-bold">
+                <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--acc)]/70 font-bold">
                   🏟️ {lead.nombre_sala} ({lead.ciudad || "España"})
                 </span>
                 <span className="text-[var(--ink-2)] text-[11px]">
@@ -289,8 +289,8 @@ export const MultiModelPitchComparatorModal: React.FC<
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                         isSelected
                           ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
-                          : "bg-[var(--bg)]/60 text-[var(--ink-2)]800 hover:border-[var(--hair)]700"
-                      }`}
+                          : "bg-[var(--bg)]/60 text-[var(--ink-2)] "
+                      } hover:brightness-95`}
                     >
                       <span>{prov.icon}</span>
                       <span>{prov.name}</span>
@@ -311,7 +311,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   value={customComment}
                   onChange={(e) => setCustomComment(e.target.value)}
                   placeholder="Ajuste puntual opcional: Ej.'Destacar que tenemos 100k streams','Proponer viernes o sábado'..."
-                  className="w-full px-3 py-2 bg-[var(--sunken)] rounded-[var(--r-m)]700 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
+                  className="w-full px-3 py-2 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleRunComparison();
                   }}
@@ -358,7 +358,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               </div>
             </div>
 
-            <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-m)]800 self-start sm:self-auto">
+            <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-m)] self-start sm:self-auto">
               <span className="text-[10px] text-[var(--ink-2)] px-2 font-sans">
                 Escala:
               </span>
@@ -510,7 +510,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                       </div>
 
                       {/* Cost & Economics Card Banner */}
-                      <div className="px-3.5 py-2.5 bg-[var(--sunken)]800/70 flex items-center justify-between text-xs">
+                      <div className="px-3.5 py-2.5 bg-[var(--sunken)]/70 flex items-center justify-between text-xs">
                         <div>
                           <div className="flex items-center gap-1.5">
                             <Coins className="w-3.5 h-3.5 text-[var(--ok)]" />

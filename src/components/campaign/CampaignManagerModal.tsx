@@ -565,7 +565,7 @@ export function CampaignManagerModal({
                   <button
                     type="button"
                     onClick={() => setIsMultiTemplatesModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-[var(--acc)]/30  hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--hair)] hover:border-[var(--ink-3)] hover:text-[var(--ink)] transition-all active:scale-95 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] hover:text-[var(--ink)] transition-all active:scale-95 cursor-pointer"
                     title="Adapta automáticamente el mensaje y objetivo de esta campaña a las 7 categorías de recintos"
                   >
                     <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -574,7 +574,7 @@ export function CampaignManagerModal({
                 </div>
 
                 {templateGenerationFeedback && (
-                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 border border-[var(--hair)] text-[var(--acc)] text-xs flex items-center justify-between">
+                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs flex items-center justify-between">
                     <span>{templateGenerationFeedback}</span>
                     <button
                       type="button"

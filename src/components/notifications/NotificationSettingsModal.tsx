@@ -62,11 +62,11 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
   return (
     <ModalPortal>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80">
-        <div className="relative w-full max-w-lg bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="relative w-full max-w-lg bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] bg-[var(--acc)]/10">
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--acc)]/30 ">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center">
                 <BellRing className="w-5 h-5" />
               </div>
               <div>
@@ -86,7 +86,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
           <div className="p-4 sm:p-6 overflow-y-auto space-y-5 text-xs text-[var(--ink-2)]">
             {/* Permission Banner */}
             {permission === 'granted' ? (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--hair)] flex items-start gap-3 text-[var(--ok)]">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 flex items-start gap-3 text-[var(--ok)]">
                 <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <span className="font-bold block text-sm">Permiso concedido en este navegador</span>
@@ -96,7 +96,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 </div>
               </div>
             ) : permission === 'denied' ? (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/40 border border-[var(--hair)] flex items-start gap-3 text-[var(--alert)]">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/40 flex items-start gap-3 text-[var(--alert)]">
                 <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0 mt-0.5" />
                 <div className="flex-1 space-y-1">
                   <span className="font-bold block text-sm">Permiso bloqueado en el navegador</span>
@@ -107,7 +107,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 </div>
               </div>
             ) : (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 border border-[var(--hair)] flex items-start justify-between gap-3 text-[var(--acc)]">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 flex items-start justify-between gap-3 text-[var(--acc)]">
                 <div className="flex items-start gap-3">
                   <Bell className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                   <div>
@@ -128,7 +128,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             )}
 
             {/* Master Switches */}
-            <div className="space-y-3 bg-[var(--surface)] p-4 rounded-[var(--r-m)] border border-[var(--hair)]">
+            <div className="space-y-3 bg-[var(--sunken)] p-4 rounded-[var(--r-m)] ">
               {/* Master toggle */}
               <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
                 <div className="flex items-center gap-2.5">
@@ -161,7 +161,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <button
                     type="button"
                     onClick={onTriggerTestSound}
-                    className="text-[10px] text-[var(--ink-2)] hover:text-[var(--acc)] px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] border border-[var(--hair)] transition-colors cursor-pointer"
+                    className="text-[10px] text-[var(--ink-2)] hover:text-[var(--acc)] px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition-colors cursor-pointer"
                     title="Reproducir sonido de prueba"
                   >
                     🔊 Probar
@@ -186,7 +186,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 Eventos a Notificar
               </span>
 
-              <div className="space-y-2 bg-[var(--surface)] p-3 rounded-[var(--r-m)] border border-[var(--hair)]">
+              <div className="space-y-2 bg-[var(--sunken)] p-3 rounded-[var(--r-m)] ">
                 {/* 1. Lead Status Changed */}
                 <div className="flex items-start justify-between p-2 rounded-[var(--r-m)] hover:bg-[var(--surface)]/40 transition-colors">
                   <div className="flex items-start gap-2.5">
@@ -201,7 +201,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.leadStatusChanged}
                     onChange={() => handleToggleEvent('leadStatusChanged')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--surface)] border-[var(--hair)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--sunken)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
@@ -221,7 +221,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.leadNewMessage}
                     onChange={() => handleToggleEvent('leadNewMessage')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--surface)] border-[var(--hair)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--sunken)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
@@ -241,7 +241,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.agentPendingApproval}
                     onChange={() => handleToggleEvent('agentPendingApproval')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--surface)] border-[var(--hair)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--sunken)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
@@ -259,7 +259,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.concertConfirmed}
                     onChange={() => handleToggleEvent('concertConfirmed')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--surface)] border-[var(--hair)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--sunken)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
@@ -279,7 +279,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.leadDiscovered}
                     onChange={() => handleToggleEvent('leadDiscovered')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--surface)] border-[var(--hair)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-[var(--acc)] bg-[var(--sunken)] focus:ring-[var(--acc)] cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
               </div>
@@ -291,7 +291,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <button
               type="button"
               onClick={onTriggerTest}
-              className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-[var(--hair)]"
+              className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer "
             >
               <Bell className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Probar Notificación Push</span>

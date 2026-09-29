@@ -123,7 +123,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               <button
                 type="button"
                 onClick={() => setShowSetlistDropdown((v) => !v)}
-                className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer ${'bg-[var(--surface)] text-[var(--ink)] hover:'}`}
+                className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink)] hover:'}`}
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-[var(--acc)] font-bold shrink-0">📋</span>

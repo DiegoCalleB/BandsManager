@@ -67,17 +67,17 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
-      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col my-auto">
+      <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col my-auto">
         {/* Modal Header */}
         <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--acc)]/10 ">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] ">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan Estratégico de Crecimiento & Promoción</h3>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)]">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                   {growthPlan.horizonDays} Días
                 </span>
               </div>
@@ -146,7 +146,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 1: BLUEPRINT SEMANAL */}
           {activeTab === 'blueprint' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  border border-[var(--hair)] flex items-start gap-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-start gap-3">
                 <Lightbulb className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-[var(--acc)] font-mono">
@@ -163,16 +163,16 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 {growthPlan.weeklyBlueprint?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] hover:border-[var(--hair)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:brightness-95"
                   >
                     <div className="flex items-start sm:items-center gap-3">
-                      <span className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-xs font-mono font-bold text-[var(--acc)] shrink-0 min-w-[75px] text-center">
+                      <span className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--acc)] shrink-0 min-w-[75px] text-center">
                         {item.day}
                       </span>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs font-bold text-[var(--ink-2)]">{item.focus}</span>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)]">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] ">
                             {item.recommendedPlatform}
                           </span>
                         </div>
@@ -181,7 +181,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-[var(--hair)]">
-                      <span className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1 bg-[var(--surface)] px-2 py-1 rounded-[var(--r-m)] border border-[var(--hair)]">
+                      <span className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)] ">
                         <Zap className="w-3 h-3 text-[var(--acc)]" />
                         {item.optimalPostingTime}
                       </span>
@@ -206,7 +206,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
                           ? 'bg-[var(--acc)] text-[var(--ink)]'
-                          : 'bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                          : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                       }`}
                     >
                       {platform === 'instagram' && <Instagram className="w-3.5 h-3.5" />}
@@ -222,10 +222,10 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               {channelData && (
                 <div className="space-y-4 animate-fade-in">
                   {/* Channel Summary Card */}
-                  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-2">
+                  <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Estrategia para {channelData.name}</h4>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)] ">
                         {channelData.growthStage}
                       </span>
                     </div>
@@ -247,11 +247,11 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                           <div
                             key={action.id}
                             onClick={() => toggleAction(action.id)}
-                            className={`p-3 rounded-[var(--r-m)] border transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                            className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start justify-between gap-3 ${
                               isDone
-                                ? 'bg-[var(--ok)]/20 border-[var(--ok)]/30 opacity-75'
-                                : 'bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--hair)]'
-                            }`}
+                                ? 'bg-[var(--ok)]/20 opacity-75'
+                                : 'bg-[var(--sunken)] '
+                            } hover:brightness-95`}
                           >
                             <div className="flex items-start gap-3">
                               <div className={`p-1 rounded-[var(--r-s)] mt-0.5 ${isDone ? 'text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}>
@@ -262,7 +262,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                                   <span className={`text-xs font-bold ${isDone ? 'line-through text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>
                                     {action.title}
                                   </span>
-                                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[var(--surface)] border border-[var(--hair)] text-[var(--acc)] font-bold">
+                                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--acc)] font-bold">
                                     {action.impact}
                                   </span>
                                 </div>
@@ -277,7 +277,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
                   {/* Hook Formulas */}
                   {channelData.hookFormulas && channelData.hookFormulas.length > 0 && (
-                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-2">
+                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-2">
                       <h5 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" /> Fórmulas de Gancho Probadas
                       </h5>
@@ -298,7 +298,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 3: DIAGNÓSTICO & PILARES */}
           {activeTab === 'pillars' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-2">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
                 <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Resumen Ejecutivo & Diagnóstico</h4>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">{growthPlan.executiveSummary}</p>
               </div>
@@ -309,7 +309,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {growthPlan.overallPillars?.map((p, idx) => (
-                    <div key={idx} className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-2">
+                    <div key={idx} className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-[var(--acc)]">{p.pillar}</span>
                         <span className="text-xs font-mono font-bold text-[var(--ink-2)]">{p.weightPercentage}%</span>

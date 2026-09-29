@@ -1262,8 +1262,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     onClose();
                     onOpenNotificationSettings();
                   }}
-                  className={`w-full p-2.5 rounded-[var(--r-m)] border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
-                    "bg-[var(--ink-3)] border-[var(--hair)] text-[var(--ink)] hover:bg-[var(--ink-3)]"
+                  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                    "bg-[var(--ink-3)] text-[var(--ink)] hover:bg-[var(--ink-3)]"
                   }`}
                 >
                   <div className="flex items-center gap-2">

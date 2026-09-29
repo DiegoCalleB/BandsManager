@@ -43,7 +43,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             type="button"
             onClick={onOpenAutonomyModal}
             className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
-              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border border-[var(--hair)]'
+              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] '
             }`}
             title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
           >
@@ -63,8 +63,8 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
           }}
           className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
             agentsEnabled
-              ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--hair)]'
-              : 'bg-[var(--ok)] hover:bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]/30'
+              ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] '
+              : 'bg-[var(--ok)] hover:bg-[var(--ok)]/15 text-[var(--ok)] '
           }`}
           title={agentsEnabled ? 'Desactivar motor de agentes de Supabase y usar solo Gemini' : 'Activar motor de agentes en Supabase'}
         >

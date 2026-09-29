@@ -50,13 +50,13 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 overflow-y-auto overscroll-contain animate-fadeIn">
         <div
-          className={`w-full max-w-md p-5 sm:p-6 rounded-[var(--r-xl)] border ${
-            'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+          className={`w-full max-w-md p-5 sm:p-6 rounded-[var(--r-xl)] ${
+            'bg-[var(--surface)] text-[var(--ink)]'
           } my-auto max-h-[90vh] overflow-y-auto`}
         >
           <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 border border-[var(--acc)]/30 flex items-center justify-center text-[var(--acc)] shrink-0">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
                 <Layers className="w-4 h-4" />
               </div>
               <div>
@@ -104,8 +104,8 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
                 placeholder="ej. Repertorio de ritmo alto pensado para festivales..."
-                className={`w-full p-3 rounded-[var(--r-m)] border font-medium text-xs focus:outline-none ${
-                  'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)] focus:border-[var(--ink-3)]'
+                className={`w-full p-3 rounded-[var(--r-m)] font-medium text-xs focus:outline-none ${
+                  'bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--ink-3)]'
                 }`}
               />
             </div>

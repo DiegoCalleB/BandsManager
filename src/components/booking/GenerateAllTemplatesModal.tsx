@@ -65,14 +65,14 @@ export function GenerateAllTemplatesModal({
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] border overflow-hidden ${
-          'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
+        className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden ${
+          'bg-[var(--surface)] text-[var(--ink)]'
         }`}
       >
         {/* Header */}
         <div
           className={`p-5 flex items-center justify-between border-b ${
-            'bg-[var(--surface)] border-[var(--hair)]'
+            'bg-[var(--sunken)] '
           }`}
         >
           <div className="flex items-center gap-2.5">
@@ -89,10 +89,10 @@ export function GenerateAllTemplatesModal({
               <h3 className="text-base font-bold font-sans flex items-center gap-2">
                 {isCampaign ? 'Generador Multi-Escenario para Campaña' : 'Generador Multi-Escenario IA'}
                 <span
-                  className={`text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-mono font-bold border ${
+                  className={`text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-mono font-bold ${
                     isCampaign
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--hair)]'
-                      : 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
+                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                      : 'bg-[var(--acc)]/20 text-[var(--acc)] '
                   }`}
                 >
                   7 Categorías en 1 Clic
@@ -120,7 +120,7 @@ export function GenerateAllTemplatesModal({
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1">
           {errorMsg && (
-            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 border border-[var(--hair)] text-[var(--alert)] text-xs flex items-center justify-between">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 text-[var(--alert)] text-xs flex items-center justify-between">
               <span>{errorMsg}</span>
               <button type="button" onClick={() => setErrorMsg(null)} className="font-bold text-[var(--alert)] hover:text-[var(--ink)]">
                 ✕
@@ -130,24 +130,24 @@ export function GenerateAllTemplatesModal({
 
           {/* Campaign Context Pill (if in campaign mode) */}
           {isCampaign && campaignContext && (
-            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 border border-[var(--hair)] text-[var(--acc)] text-xs space-y-1.5">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs space-y-1.5">
               <div className="flex items-center gap-2 font-bold text-[var(--acc)]">
                 <Sparkles className="w-4 h-4 shrink-0" />
                 <span>Contexto de Campaña detectado:</span>
               </div>
               <div className="flex flex-wrap gap-2 text-[11px] pt-1">
                 {campaignContext.targetCities?.length ? (
-                  <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 border border-[var(--hair)]">
+                  <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 ">
                     📍 Ciudades: {campaignContext.targetCities.join(', ')}
                   </span>
                 ) : null}
                 {campaignContext.targetDates?.length ? (
-                  <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 border border-[var(--hair)]">
+                  <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 ">
                     📅 Fechas: {campaignContext.targetDates.join(', ')}
                   </span>
                 ) : null}
                 {campaignContext.minCapacity || campaignContext.maxCapacity ? (
-                  <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 border border-[var(--hair)]">
+                  <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 ">
                     👥 Aforo: {campaignContext.minCapacity || 100} - {campaignContext.maxCapacity || 500} pax
                   </span>
                 ) : null}
@@ -157,10 +157,10 @@ export function GenerateAllTemplatesModal({
 
           {/* Info pill */}
           <div
-            className={`p-4 rounded-[var(--r-m)] border text-xs leading-relaxed space-y-2 ${
+            className={`p-4 rounded-[var(--r-m)] text-xs leading-relaxed space-y-2 ${
               isCampaign
-                ? 'bg-[var(--acc)]/30 border-[var(--hair)] text-[var(--acc)]'
-                : 'bg-[var(--acc-soft)] border-[var(--acc)]/30 text-[var(--acc-ink)]'
+                ? 'bg-[var(--acc)]/30 text-[var(--acc)]'
+                : 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
             }`}
           >
             <div className={`flex items-center gap-2 font-bold ${isCampaign ? 'text-[var(--acc)]' : 'text-[var(--acc)]'}`}>
@@ -193,7 +193,7 @@ export function GenerateAllTemplatesModal({
               onChange={(e) => setBaseProposal(e.target.value)}
               disabled={isGenerating}
               className={`w-full p-4 rounded-[var(--r-m)] text-xs font-sans leading-relaxed focus:outline-none transition-all resize-y ${
-                'bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink)] focus:border-[var(--ink-3)] focus:ring-1 focus:ring-[var(--acc)]'
+                'bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--ink-3)] focus:ring-1 focus:ring-[var(--acc)]'
               }`}
               placeholder={
                 isCampaign
@@ -216,8 +216,8 @@ export function GenerateAllTemplatesModal({
                 return (
                   <div
                     key={idx}
-                    className={`p-2.5 rounded-[var(--r-m)] border flex items-start gap-2.5 ${
-                      'bg-[var(--surface)] border-[var(--hair)]'
+                    className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-2.5 ${
+                      'bg-[var(--sunken)] '
                     }`}
                   >
                     <div
@@ -241,7 +241,7 @@ export function GenerateAllTemplatesModal({
         {/* Footer */}
         <div
           className={`p-4 px-6 flex items-center justify-between border-t ${
-            'bg-[var(--surface)] border-[var(--hair)]'
+            'bg-[var(--sunken)] '
           }`}
         >
           <button

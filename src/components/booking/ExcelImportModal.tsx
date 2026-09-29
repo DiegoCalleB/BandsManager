@@ -767,7 +767,7 @@ export function ExcelImportModal({
               <button
                 type="button"
                 onClick={handleDownloadTemplate}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]700 transition-all cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] transition-all cursor-pointer"
                 title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
               >
                 <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -868,7 +868,7 @@ export function ExcelImportModal({
                     </strong>{" "}
                     de cualquier hoja de cálculo que use tu banda.
                   </p>
-                  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)]700">
+                  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span>
                       Detección automática de salas, ciudades, teléfonos, emails
@@ -927,7 +927,7 @@ export function ExcelImportModal({
                       <select
                         value={selectedSheet}
                         onChange={(e) => handleSheetChange(e.target.value)}
-                        className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]700 text-[var(--ink)] focus:outline-none"
+                        className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                       >
                         {sheetNames.map((s) => (
                           <option key={s} value={s}>
@@ -956,7 +956,7 @@ export function ExcelImportModal({
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                           defaultCategory === cat.id
                             ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold"
-                            : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800"
+                            : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
                         <span>{cat.icon}</span>
@@ -1008,7 +1008,7 @@ export function ExcelImportModal({
                           ciudad: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar (Usar'España') --</option>
                       {rawHeaders.map((h) => (
@@ -1032,7 +1032,7 @@ export function ExcelImportModal({
                           email_contacto: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1044,7 +1044,7 @@ export function ExcelImportModal({
                   </div>
 
                   {/* Teléfono Móvil (WhatsApp) */}
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-1.5">
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <span>📱</span>
                       <span>Teléfono Móvil (WhatsApp)</span>
@@ -1057,7 +1057,7 @@ export function ExcelImportModal({
                           telefono_movil: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1069,7 +1069,7 @@ export function ExcelImportModal({
                   </div>
 
                   {/* Teléfono Fijo */}
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-1.5">
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <span>☎️</span>
                       <span>Teléfono Fijo</span>
@@ -1082,7 +1082,7 @@ export function ExcelImportModal({
                           telefono_fijo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1107,7 +1107,7 @@ export function ExcelImportModal({
                           telefono: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1131,7 +1131,7 @@ export function ExcelImportModal({
                           aforo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">
                         -- No asignar (Usar por defecto) --
@@ -1157,7 +1157,7 @@ export function ExcelImportModal({
                           instagram: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1181,7 +1181,7 @@ export function ExcelImportModal({
                           website: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1205,7 +1205,7 @@ export function ExcelImportModal({
                           tipo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- Usar categoría por defecto --</option>
                       {rawHeaders.map((h) => (
@@ -1229,7 +1229,7 @@ export function ExcelImportModal({
                           contacto_nombre: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1253,7 +1253,7 @@ export function ExcelImportModal({
                           genero: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1277,7 +1277,7 @@ export function ExcelImportModal({
                           direccion: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1301,7 +1301,7 @@ export function ExcelImportModal({
                           notas: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1340,7 +1340,7 @@ export function ExcelImportModal({
                         placeholder="Buscar en la vista previa..."
                         value={searchPreview}
                         onChange={(e) => setSearchPreview(e.target.value)}
-                        className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] text-xs focus:outline-none"
+                        className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
                       />
                     </div>
 
@@ -1491,7 +1491,7 @@ export function ExcelImportModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              className="px-2 py-1 rounded bg-[var(--bg)]800 text-[var(--ink)] text-[11px] focus:outline-none cursor-pointer"
+                              className="px-2 py-1 rounded bg-[var(--bg)] text-[var(--ink)] text-[11px] focus:outline-none cursor-pointer"
                             >
                               {CATEGORY_OPTIONS.map((c) => (
                                 <option key={c.id} value={c.id}>
@@ -1543,7 +1543,7 @@ export function ExcelImportModal({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)]800 transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Cambiar archivo</span>
@@ -1555,7 +1555,7 @@ export function ExcelImportModal({
                   type="button"
                   disabled={isImporting}
                   onClick={() => setStep(2)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)]800 transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer disabled:opacity-50"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Revisar mapeo</span>

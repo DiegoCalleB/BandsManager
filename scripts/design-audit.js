@@ -72,6 +72,11 @@ const CHECKS = {
     pattern: /(?<![:\w-])border(?:-[tblrxy])?-\[var\(--(?:acc|acc-ink|ok|alert|tentative)\)\](?!\/(?:[0-3][0-9]|40|[0-9])\b)/g,
     severity: 'error',
   },
+  bordeDeCaja: {
+    description: 'border de caja (clase `border` sola, o hover:/focus:border-…) — Ley 1 de visual-identity: separa el escalón de luminancia (--surface / --sunken) o el espacio. Solo se toleran divisores de una cara (border-t/b/l/r/x/y) con --hair',
+    pattern: /(?<![\w:\[-])(?:border(?![\w\[-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
+    severity: 'error',
+  },
   mayusculasDecorativas: {
     description: 'uppercase de Tailwind — visual-identity §1/§6: caja de frase siempre; las versalitas eliminan la silueta de la palabra y cansan en sesiones largas (un literal ya escrito en mayúsculas en el JSX no lo detecta esta regla)',
     pattern: /(?<![\w-])uppercase(?![\w-])/g,

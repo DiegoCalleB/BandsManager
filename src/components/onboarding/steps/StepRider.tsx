@@ -84,8 +84,8 @@ export const StepRider: React.FC<StepRiderProps> = ({
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             llevaMicrofoniaPropia
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
-              : "bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]"
-          }`}
+              : "bg-[var(--bg)] text-[var(--ink-2)] "
+          } hover:brightness-95`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold">Microfonía Propia</span>
@@ -104,8 +104,8 @@ export const StepRider: React.FC<StepRiderProps> = ({
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             llevaInEars
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
-              : "bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]"
-          }`}
+              : "bg-[var(--bg)] text-[var(--ink-2)] "
+          } hover:brightness-95`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold">Monitoraje In-Ears</span>
@@ -122,8 +122,8 @@ export const StepRider: React.FC<StepRiderProps> = ({
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             necesitaBacklineBateria
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
-              : "bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]"
-          }`}
+              : "bg-[var(--bg)] text-[var(--ink-2)] "
+          } hover:brightness-95`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold">Backline Sala</span>

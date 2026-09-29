@@ -159,18 +159,18 @@ Firmado en conformidad por ambas partes.`;
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 overflow-y-auto">
         <div
           id="roadbook-contract-modal"
-          className="relative w-full max-w-4xl bg-[var(--surface)] border border-[var(--hair)]/80 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
+          className="relative w-full max-w-4xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
         >
           {/* HEADER DEL MODAL */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0">
                 <FileText className="w-5 h-5 text-[var(--acc)]" />
               </div>
               <div>
                 <h3 className="text-sm sm:text-base font-bold text-[var(--ink-2)] font-display flex items-center gap-2">
                   <span>Hoja de Ruta (Roadbook) & Contrato Pro</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 border border-[var(--hair)] text-[var(--acc)] font-mono">
+                  <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] font-mono">
                     Gira {bandName}
                   </span>
                 </h3>
@@ -197,7 +197,7 @@ Firmado en conformidad por ambas partes.`;
               <select
                 value={currentLead.id}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
-                className="bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 focus:outline-none focus:border-[var(--ink-3)]"
+                className="bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
               >
                 {leads.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -208,7 +208,7 @@ Firmado en conformidad por ambas partes.`;
             </div>
 
             {/* Pestañas */}
-            <div className="flex items-center gap-1 bg-[var(--surface)]/90 p-1 rounded-[var(--r-m)] border border-[var(--hair)]">
+            <div className="flex items-center gap-1 bg-[var(--sunken)]/90 p-1 rounded-[var(--r-m)] ">
               <button
                 type="button"
                 onClick={() => setActiveTab('roadbook')}
@@ -248,14 +248,14 @@ Firmado en conformidad por ambas partes.`;
             {activeTab === 'roadbook' && (
               <div className="space-y-4">
                 {/* Controles rápidos de edición de horarios */}
-                <div className="p-3.5 bg-[var(--surface)] rounded-[var(--r-m)] border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Fecha Evento</label>
                     <input
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -264,7 +264,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -273,7 +273,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -282,13 +282,13 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización de la Hoja de Ruta Pro */}
-                <div className="bg-[var(--surface)] p-5 rounded-[var(--r-l)] border border-[var(--hair)] space-y-4 font-sans print:bg-[var(--surface)] print:text-[var(--ink)] print:border-none">
+                <div className="bg-[var(--surface)] p-5 rounded-[var(--r-l)] space-y-4 font-sans print:bg-[var(--surface)] print:text-[var(--ink)] print:border-none">
                   {/* Cabecera del documento */}
                   <div className="flex items-start justify-between border-b border-[var(--hair)] pb-3">
                     <div>
@@ -322,27 +322,27 @@ Firmado en conformidad por ambas partes.`;
                         Timeline de Operaciones
                       </span>
                       <div className="space-y-2">
-                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)]">
+                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/60 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{departureTime}</span>
                           <span className="text-[var(--ink-2)]">Salida furgoneta desde {originCity}</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)]">
+                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/60 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{arrivalTime}</span>
                           <span className="text-[var(--ink-2)]">Llegada, descarga y carga en camerino</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 border border-[var(--acc)]/30">
+                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{soundcheckTime}</span>
                           <span className="text-[var(--ink-2)] font-medium">Prueba sonido (D.I.s violín acústico, sintes, voces & IEMs)</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)]">
+                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/60 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{dinnerTime}</span>
                           <span className="text-[var(--ink-2)]">Cena de banda / descanso previo</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 border border-[var(--ok)]/30">
+                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 ">
                           <span className="text-xs font-mono font-bold text-[var(--ok)] w-12">{showTime}</span>
                           <span className="text-[var(--ink-2)] font-bold">⚡ INICIO CONCIERTO (Show 75 min)</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)]">
+                        <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/60 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{curfewTime}</span>
                           <span className="text-[var(--ink-2)]">Cierre, recogida, firmas y salida</span>
                         </div>
@@ -353,7 +353,7 @@ Firmado en conformidad por ambas partes.`;
                       <span className="text-[10px] font-mono font-bold text-[var(--ink-2)] block border-b border-[var(--hair)]/80 pb-1">
                         Contactos y Especificaciones
                       </span>
-                      <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] space-y-2">
+                      <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-2">
                         <div>
                           <span className="text-[10px] text-[var(--ink-2)] block">Responsable de Sala / Programador:</span>
                           <span className="font-medium text-[var(--ink-2)]">{contactPerson}</span>
@@ -387,13 +387,13 @@ Firmado en conformidad por ambas partes.`;
             {activeTab === 'contract' && (
               <div className="space-y-4">
                 {/* Parámetros de negociación del contrato */}
-                <div className="p-3.5 bg-[var(--surface)] rounded-[var(--r-m)] border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Régimen Económico</label>
                     <select
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     >
                       <option value="taquilla">Taquilla (%)</option>
                       <option value="cache">Caché Fijo (€)</option>
@@ -412,7 +412,7 @@ Firmado en conformidad por ambas partes.`;
                         if (dealType === 'cache') setCacheAmount(val);
                         else setTicketPrice(val);
                       }}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -421,7 +421,7 @@ Firmado en conformidad por ambas partes.`;
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--ink-3)]"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
                   <div>
@@ -430,13 +430,13 @@ Firmado en conformidad por ambas partes.`;
                       type="number"
                       value={venueCapacity}
                       disabled
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded p-1 font-mono"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 font-mono"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización del Contrato */}
-                <div className="bg-[var(--surface)] p-5 rounded-[var(--r-l)] border border-[var(--hair)] space-y-3 font-mono text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
+                <div className="bg-[var(--surface)] p-5 rounded-[var(--r-l)] space-y-3 font-mono text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
                   {contractText}
                 </div>
               </div>
@@ -445,7 +445,7 @@ Firmado en conformidad por ambas partes.`;
             {/* PESTAÑA 3: ENLACE WEB DIGITAL */}
             {activeTab === 'weblink' && (
               <div className="space-y-4">
-                <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] border border-[var(--hair)] space-y-3 text-center sm:text-left">
+                <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] space-y-3 text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row items-center gap-4">
                     <div className="w-14 h-14 rounded-[var(--r-l)] bg-[var(--acc)]  flex items-center justify-center shrink-0">
                       <Share2 className="w-7 h-7 text-[var(--ink)]" />
@@ -464,7 +464,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       readOnly
                       value={`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`}
-                      className="w-full bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-3 py-2 font-mono"
+                      className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-3 py-2 font-mono"
                     />
                     <button
                       type="button"
@@ -477,7 +477,7 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                 </div>
 
-                <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)]/80 flex items-center gap-2 text-xs text-[var(--ink-2)]">
+                <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] flex items-center gap-2 text-xs text-[var(--ink-2)]">
                   <Info className="w-4 h-4 text-[var(--acc)] shrink-0" />
                   <span>
                     El enlace web no expone datos sensibles ni contraseñas; solo los datos operacionales de este concierto específico.
@@ -500,7 +500,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                   title="Copiar texto formateado listo para WhatsApp"
                 >
                   {copiedWhatsApp ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -512,7 +512,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedContract ? '¡Contrato Copiado!' : 'Copiar Contrato'}</span>
@@ -522,7 +522,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 title="Imprimir documento o guardar como PDF"
               >
                 <Printer className="w-3.5 h-3.5 text-[var(--ink-2)]" />

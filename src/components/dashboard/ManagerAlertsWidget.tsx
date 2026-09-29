@@ -121,7 +121,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
     <div
       id="manager-alerts-container"
       className={`mb-4 rounded-[var(--r-l)] ${
-        'bg-[var(--surface)] border border-[var(--hair)] shadow-xs text-[var(--ink)]'
+        'bg-[var(--surface)] shadow-xs text-[var(--ink)]'
       } overflow-hidden transition-all`}
     >
       {/* Panel Header */}
@@ -281,7 +281,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {filteredAlerts.length === 0 ? (
               <div
-                className={`col-span-full py-8 text-center text-xs ${'text-[var(--ink-2)] bg-[var(--surface)]/50 border-[var(--hair)]'} rounded-[var(--r-m)] border`}
+                className={`col-span-full py-8 text-center text-xs ${'text-[var(--ink-2)] bg-[var(--sunken)]/50 '} rounded-[var(--r-m)] `}
               >
                 No hay alertas que coincidan con el filtro seleccionado.
               </div>
@@ -292,18 +292,18 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 const isRead = readIds.includes(alert.id);
 
                 const cardBg = isRead
-                  ? 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] opacity-80'
+                  ? 'bg-[var(--sunken)] text-[var(--ink-2)] opacity-80'
                   : isUrgent
-                    ? 'bg-[var(--alert)]/8 border-[var(--alert)]/30 text-[var(--ink)]'
+                    ? 'bg-[var(--alert)]/8 text-[var(--ink)]'
                     : isWarning
-                      ? 'bg-[var(--acc-soft)] border-[var(--acc)]/30 text-[var(--ink)]'
-                      : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]';
+                      ? 'bg-[var(--acc-soft)] text-[var(--ink)]'
+                      : 'bg-[var(--sunken)] text-[var(--ink)]';
 
                 const badgeStyle = isUrgent
-                  ? 'bg-[var(--alert)]/15 text-[var(--alert)] border-[var(--alert)]/30'
+                  ? 'bg-[var(--alert)]/15 text-[var(--alert)] '
                   : isWarning
-                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] border-[var(--hair)]'
-                    : 'bg-[var(--ok-soft)] text-[var(--ok)] border-[var(--ok)]/30';
+                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] '
+                    : 'bg-[var(--surface)] text-[var(--ok)] ';
 
                 const actionBtnStyle = isUrgent
                   ? 'bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)]'

@@ -324,7 +324,7 @@ export function MemberNotesModal({
                     <button
                       type="button"
                       onClick={handleAddCustomMember}
-                      className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-95"
+                      className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-95"
                     >
                       Añadir
                     </button>

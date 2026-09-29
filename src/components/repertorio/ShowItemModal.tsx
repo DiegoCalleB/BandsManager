@@ -69,7 +69,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
-      <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card} border border-[var(--acc)]/30`}>
+      <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card} bg-[var(--acc)]/10`}>
         <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
             <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)]">⚡</span>
@@ -187,7 +187,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 onClose();
                 setEditingShowItem(null);
               }}
-              className="px-4 py-2 rounded-[var(--r-m)] border border-[var(--hair)] text-xs font-bold text-[var(--ink-2)] hover:bg-[var(--sunken)] cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:bg-[var(--sunken)] cursor-pointer"
             >
               Cancelar
             </button>

@@ -122,7 +122,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   type="button"
                   onClick={handleAiLookup}
                   disabled={isAiSearching || !formName.trim()}
-                  className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] transition-all disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] transition-all disabled:opacity-50 cursor-pointer"
                 >
                   {isAiSearching ? (
                     <>
@@ -149,14 +149,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* AI Proposal Overlay / Card */}
             {isAiSearching && (
-              <div className="md:col-span-2 p-3 bg-[var(--surface)]/90 border border-[var(--hair)] rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono">
+              <div className="md:col-span-2 p-3 bg-[var(--sunken)]/90 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono">
                 <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
                 <span>Buscando datos de "{formName}" con IA en la web...</span>
               </div>
             )}
 
             {aiError && (
-              <div className="md:col-span-2 p-3 bg-[var(--alert)]/40 border border-[var(--hair)] rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--alert)] font-mono">
+              <div className="md:col-span-2 p-3 bg-[var(--alert)]/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--alert)] font-mono">
                 <span>⚠️ {aiError}</span>
                 <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert)]/50 rounded">
                   <X className="w-3.5 h-3.5" />
@@ -165,7 +165,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             )}
 
             {aiProposal && (
-              <div className="md:col-span-2 p-3.5 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-m)] space-y-3 text-xs font-mono">
+              <div className="md:col-span-2 p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3 text-xs font-mono bg-[var(--acc)]/10">
                 <div className="flex items-center justify-between border-b border-[var(--hair)] pb-2">
                   <div className="flex items-center gap-1.5 text-[var(--acc)] font-bold">
                     <Sparkles className="w-4 h-4" />
@@ -193,7 +193,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-[var(--ink-2)]">
                   {aiProposal.estilo_musical && (
-                    <div className="flex items-center justify-between bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
+                    <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] ">
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Estilo:</span> {aiProposal.estilo_musical}
                       </div>
@@ -208,7 +208,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.localizacion && (
-                    <div className="flex items-center justify-between bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
+                    <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] ">
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Origen:</span> {aiProposal.localizacion}
                       </div>
@@ -223,7 +223,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.contacto_nombre && (
-                    <div className="flex items-center justify-between bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
+                    <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] ">
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Contacto:</span> {aiProposal.contacto_nombre}
                       </div>
@@ -238,7 +238,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.email && (
-                    <div className="flex items-center justify-between bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
+                    <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] ">
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Email:</span> {aiProposal.email}
                       </div>
@@ -253,7 +253,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.telefono && (
-                    <div className="flex items-center justify-between bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
+                    <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] ">
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Tel:</span> {aiProposal.telefono}
                       </div>
@@ -268,7 +268,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.instagram && (
-                    <div className="flex items-center justify-between bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
+                    <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] ">
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Instagram:</span> {aiProposal.instagram}
                       </div>
@@ -283,7 +283,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {(aiProposal.spotify_url || aiProposal.youtube_url) && (
-                    <div className="flex items-center justify-between bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)] sm:col-span-2">
+                    <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] sm:col-span-2">
                       <div className="truncate max-w-[80%]">
                         <span className="text-[var(--ink-2)] font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}
                       </div>
@@ -298,7 +298,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.biografia && (
-                    <div className="bg-[var(--surface)]/70 p-2 rounded-[var(--r-m)] border border-[var(--hair)] sm:col-span-2 space-y-1">
+                    <div className="bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] sm:col-span-2 space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[var(--ink-2)] font-bold">Resumen / Bio:</span>
                         <button
@@ -319,12 +319,12 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             )}
 
             {/* Icono o Imagen / Logo de la Banda */}
-            <div className="space-y-2 sm:col-span-2 p-3 bg-[var(--surface)]/60 rounded-[var(--r-m)] border border-[var(--hair)]">
+            <div className="space-y-2 sm:col-span-2 p-3 bg-[var(--sunken)]/60 rounded-[var(--r-m)] ">
               <label className="block text-[10px] font-mono text-[var(--acc)] font-bold">Icono o Logo / Foto de la Banda</label>
 
               <div className="flex flex-wrap items-center gap-3">
                 {/* Preview current avatar */}
-                <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--sunken)] border border-[var(--hair)] flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--sunken)] flex items-center justify-center overflow-hidden shrink-0">
                   {formImageUrl ? (
                     <img src={formImageUrl} alt="Logo Banda" className="w-full h-full object-cover" />
                   ) : (
@@ -345,7 +345,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                         }}
                         className={`w-7 h-7 rounded-[var(--r-m)] text-sm flex items-center justify-center transition-all cursor-pointer ${
                           formIcon === emoji && !formImageUrl
-                            ? 'bg-[var(--acc)]/20 border border-[var(--hair)] text-[var(--ink)] scale-110'
+                            ? 'bg-[var(--acc)]/20 text-[var(--ink)] scale-110'
                             : 'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
                         }`}
                       >
@@ -358,7 +358,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 {/* Upload file button */}
                 <div className="shrink-0 space-y-1">
                   <span className="text-[10px] text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
-                  <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 transition-all active:scale-95">
+                  <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-m)] text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 transition-all active:scale-95">
                     {isUploadingLogo ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
                     ) : (

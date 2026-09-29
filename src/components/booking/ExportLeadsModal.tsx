@@ -181,7 +181,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
                 exportScope === "filtered"
                   ? "bg-[var(--acc)]/20  text-[var(--ink)]"
-                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] hover:brightness-95"
               }`}
             >
               <Filter
@@ -210,7 +210,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
                 exportScope === "all"
                   ? "bg-[var(--acc)]/20  text-[var(--ink)]"
-                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] hover:brightness-95"
               }`}
             >
               <Layers
@@ -240,7 +240,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                 className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
                   exportScope === "selected"
                     ? "bg-[var(--acc)]/20  text-[var(--ink)]"
-                    : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
+                    : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] hover:brightness-95"
                 }`}
               >
                 <CheckSquare
@@ -277,7 +277,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
                 exportFormat === "csv"
                   ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
-                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] hover:brightness-95"
               }`}
             >
               <FileSpreadsheet className="w-4 h-4 text-[var(--ok)] shrink-0" />
@@ -295,7 +295,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
                 exportFormat === "json"
                   ? "bg-[var(--acc)]/20 text-[var(--tentative)]/40 font-bold"
-                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] hover:brightness-95"
               }`}
             >
               <FileCode className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
@@ -311,7 +311,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 3. CSV Options */}
         {exportFormat === "csv" && (
-          <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80800 space-y-2">
+          <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-2">
             <span className="text-[11px] font-bold text-[var(--ink-2)] block">
               Campos adicionales en CSV:
             </span>

@@ -523,7 +523,7 @@ export function FinancesChartWidget({
 
       <div className={`w-full ${minHeightClass} pt-2 flex items-end`}>
         {!hayDatos ? (
-          <p className="w-full text-center self-center text-xs text-[var(--ink-3)] font-sans px-4">
+          <p className="w-full text-center self-center text-xs text-[var(--ink-2)] font-sans px-4">
             Aún no hay cachés registrados en estos 6 meses. Cuando cierres un bolo con su caché, aparecerá aquí.
           </p>
         ) : (
@@ -612,7 +612,7 @@ export function SocialFansGrowthWidget({
         className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}
       >
         {fansCount === 0 ? (
-          <p className="text-xs text-[var(--ink-3)] font-sans px-4 text-center">
+          <p className="text-xs text-[var(--ink-2)] font-sans px-4 text-center">
             Aún no hay fans registrados. Pon el QR en la mesa de merchan y esto empieza a moverse.
           </p>
         ) : (

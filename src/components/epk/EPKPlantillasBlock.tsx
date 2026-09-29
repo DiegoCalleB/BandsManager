@@ -168,7 +168,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                   className={`text-left rounded-[var(--r-m)] sm:rounded-[var(--r-l)] transition relative overflow-hidden flex flex-col justify-between p-2.5 sm:p-4 cursor-pointer ${
                     isSelected
                       ? "bg-[var(--surface)] ring-2 ring-[var(--acc)]/20"
-                      : "bg-[var(--surface)]/80 hover:border-[var(--hair)] hover:bg-[var(--surface)]/80"
+                      : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80"
                   }`}
                 >
                   {/* PREVIEW MINIATURA GRÁFICA */}

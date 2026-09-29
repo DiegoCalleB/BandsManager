@@ -3915,7 +3915,7 @@ export default function RepertorioSetlists({
                 {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
                 {energyAnalysis.points.length > 0 && (
                   <div
-                    className={`p-3 sm:p-4 rounded-[var(--r-l)] space-y-2.5 animate-fadeIn ${"bg-[var(--bg)]"}`}
+                    className={`p-3 sm:p-4 rounded-[var(--r-l)] space-y-2.5 animate-fadeIn ${"bg-[var(--surface)]"}`}
                   >
                     <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
                       <span

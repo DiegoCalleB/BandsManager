@@ -160,7 +160,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
         }}
       >
         <div
-          className="bg-[var(--surface)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+          className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -275,7 +275,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                 <span>Pegar URL directa de imagen</span>
               </button>
             ) : (
-              <div className="p-3 bg-[var(--bg)]700 rounded-[var(--r-m)] space-y-2">
+              <div className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] space-y-2">
                 <label className="block text-[10px] font-sans text-[var(--ink-2)]">
                   Pegar enlace de imagen (URL)
                 </label>

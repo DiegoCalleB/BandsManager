@@ -600,7 +600,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </h1>
             {isOffline && (
               <span
-                className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--hair)] flex items-center gap-1"
+                className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] flex items-center gap-1"
                 title="Modo Escenario Offline Guard activo — Letras y acordes guardados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
@@ -613,7 +613,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             {/* Toggle Directo / Ensayo */}
             <div
               className={`flex items-center rounded-[var(--r-s)] p-0.5 text-xs font-bold shrink-0 ${
-                glareMode ? "bg-[var(--surface)]300" : "bg-[var(--sunken)]"
+                glareMode ? "bg-[var(--surface)]" : "bg-[var(--sunken)]"
               }`}
             >
               <button
@@ -1358,8 +1358,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       className={`p-3 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition ${
                         isCurrent
                           ? "bg-[var(--acc)]/90 text-[var(--acc)]/40"
-                          : "bg-[var(--bg)]/60800 hover:border-[var(--hair)]700 text-[var(--ink-2)]"
-                      }`}
+                          : "bg-[var(--bg)]/60 text-[var(--ink-2)]"
+                      } hover:brightness-95`}
                     >
                       <div className="flex items-center gap-2.5">
                         <span className="text-lg">{meta.icon}</span>
@@ -1387,8 +1387,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     className={`p-3 rounded-[var(--r-m)] transition flex flex-col gap-2.5 ${
                       isCurrent
                         ? "bg-[var(--acc)]/10 "
-                        : "bg-[var(--surface)]800/80 hover:border-[var(--hair)]700"
-                    }`}
+                        : "bg-[var(--surface)]/80 "
+                    } hover:brightness-95`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
@@ -1468,7 +1468,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           setShowSongListDrawer(false);
                           handleLaunchStudio(song);
                         }}
-                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]700 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
                         title="Abrir Studio multipista completo de este tema"
                       >
                         <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]/50" />
