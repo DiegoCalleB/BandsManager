@@ -12,8 +12,8 @@ interface ConcertBreakEvenCardProps {
 export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
   concert,
   isStitchLight = false,
-  textTitle = 'text-white',
-  textSub = 'text-neutral-400',
+  textTitle = 'text-[var(--ink)]',
+  textSub = 'text-[var(--ink-2)]',
 }) => {
   const analysis = calcularBreakEvenConcierto(concert, 'Madrid', 4);
   const net = analysis.beneficioNetoEstimado;
@@ -27,12 +27,12 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
         <span
           className={`px-2 py-0.5 rounded-full text-[10px] ${
             analysis.estadoRentabilidad === 'beneficio'
-              ? 'bg-emerald-500/10 text-emerald-400 border border-[var(--ok)]/20'
+              ? 'bg-[var(--ok)]/10 text-[var(--ok)] border border-[var(--ok)]/20'
               : analysis.estadoRentabilidad === 'cubierto'
-                ? 'bg-amber-500/10 text-amber-300 border border-[var(--acc)]/20'
+                ? 'bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20'
                 : analysis.estadoRentabilidad === 'perdida_moderada'
-                  ? 'bg-orange-500/10 text-orange-400 border border-[var(--acc)]/20'
-                  : 'bg-rose-500/10 text-rose-400 border border-[var(--alert)]/20'
+                  ? 'bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20'
+                  : 'bg-[var(--alert)]/10 text-[var(--alert)] border border-[var(--alert)]/20'
           }`}
         >
           {analysis.estadoRentabilidad === 'beneficio'
@@ -47,12 +47,12 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
 
       <div className="grid grid-cols-2 gap-2 pt-1">
         <div className="bg-[var(--sunken)] p-1.5 rounded-lg border borderbg-[var(--surface)]/40">
-          <span className="text-[9px] text-neutral-400 block font-mono">Gastos Estimados</span>
-          <span className="text-xs font-bold text-rose-400 font-mono">{analysis.gastosTotalesEstimados} €</span>
+          <span className="text-[9px] text-[var(--ink-2)] block font-mono">Gastos Estimados</span>
+          <span className="text-xs font-bold text-[var(--alert)] font-mono">{analysis.gastosTotalesEstimados} €</span>
         </div>
         <div className="bg-[var(--sunken)] p-1.5 rounded-lg border borderbg-[var(--surface)]/40">
-          <span className="text-[9px] text-neutral-400 block font-mono">Para Cubrir Gastos</span>
-          <span className="text-xs font-bold text-amber-300 font-mono">
+          <span className="text-[9px] text-[var(--ink-2)] block font-mono">Para Cubrir Gastos</span>
+          <span className="text-xs font-bold text-[var(--acc)] font-mono">
             {analysis.entradasParaBreakEven > 0 ? `${analysis.entradasParaBreakEven} entradas` : 'Cubierto'}
           </span>
         </div>
@@ -60,11 +60,11 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
 
       <div className="text-[10px] font-mono leading-relaxed pt-1 flex items-center justify-between border-t borderbg-[var(--surface)]/30">
         <span className={textSub}>Resultado neto estimado:</span>
-        <span className={`font-bold font-mono ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+        <span className={`font-bold font-mono ${net >= 0 ? 'text-[var(--ok)]' : 'text-[var(--alert)]'}`}>
           {net >= 0 ? `+${net}€ Neto` : `${net}€ En pérdidas`}
         </span>
       </div>
-      <p className="text-[9px] font-sans text-neutral-400/90 italic mt-1 leading-normal">{analysis.mensajeStatus}</p>
+      <p className="text-[9px] font-sans text-[var(--ink-2)]/90 italic mt-1 leading-normal">{analysis.mensajeStatus}</p>
     </div>
   );
 };

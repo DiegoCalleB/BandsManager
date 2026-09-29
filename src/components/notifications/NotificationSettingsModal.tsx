@@ -62,7 +62,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
   return (
     <ModalPortal>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-xs">
-        <div className="relative w-full max-w-lg bg-[#141312] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="relative w-full max-w-lg bg-[var(--surface)] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312]">
             <div className="flex items-center gap-3">
@@ -128,7 +128,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             )}
 
             {/* Master Switches */}
-            <div className="space-y-3 bg-[#1A1918] p-4 rounded-xl border border-[var(--hair)]">
+            <div className="space-y-3 bg-[var(--surface)] p-4 rounded-xl border border-[var(--hair)]">
               {/* Master toggle */}
               <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
                 <div className="flex items-center gap-2.5">
@@ -186,7 +186,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 Eventos a Notificar
               </span>
 
-              <div className="space-y-2 bg-[#1A1918] p-3 rounded-xl border border-[var(--hair)]">
+              <div className="space-y-2 bg-[var(--surface)] p-3 rounded-xl border border-[var(--hair)]">
                 {/* 1. Lead Status Changed */}
                 <div className="flex items-start justify-between p-2 rounded-lg hover:bg-[var(--surface)]/40 transition-colors">
                   <div className="flex items-start gap-2.5">
@@ -287,7 +287,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-[var(--hair)] bg-[#121110] flex items-center justify-between gap-3">
+          <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3">
             <button
               type="button"
               onClick={onTriggerTest}

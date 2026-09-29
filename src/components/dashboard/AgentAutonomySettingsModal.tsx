@@ -1650,13 +1650,13 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* 4. Control de Estado de Lectura en Bandeja (Agente Lector) */}
-                <div className="p-4 rounded-xl bg-neutral-950 border borderbg-[var(--surface)] space-y-3">
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                <div className="p-4 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
                     <Mail className="w-4 h-4" /> 4. Control de Estado en Bandeja
                     de Entrada (Agente Lector)
                   </h4>
 
-                  <div className="p-3.5 rounded-xl bg-neutral-900 border borderbg-[var(--surface)] space-y-3">
+                  <div className="p-3.5 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"
@@ -1668,26 +1668,26 @@ export const AgentAutonomySettingsModal: React.FC<
                             markAsReadInInbox: e.target.checked,
                           })
                         }
-                        className="mt-0.5 rounded border-[var(--hair)] bg-neutral-950 text-amber-500 focus:ring-amber-500 disabled:opacity-60"
+                        className="mt-0.5 rounded border-[var(--hair)] bg-[var(--surface)] text-[var(--acc)] focus:ring-[var(--acc)] disabled:opacity-60"
                       />
                       <div className="space-y-1">
-                        <span className="text-xs font-bold text-zinc-100 block">
+                        <span className="text-xs font-bold text-[var(--ink-2)] block">
                           Marcar correos como "Leídos" en Gmail / Outlook al
                           procesarlos
                         </span>
-                        <p className="text-[11px] text-neutral-400 font-sans leading-relaxed">
+                        <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
                           {config.markAsReadInInbox ? (
-                            <span className="text-amber-300">
+                            <span className="text-[var(--acc)]">
                               ⚠️ Activado: El Agente Lector quitará la marca de
                               "No leído" en tu correo oficial cada vez que
                               analice un mensaje entrante.
                             </span>
                           ) : (
-                            <span className="text-emerald-400 font-medium">
+                            <span className="text-[var(--ok)] font-medium">
                               ✓ Desactivado (Recomendado): El Agente Lector
                               analizará y registrará las respuestas en el CRM,
                               pero{" "}
-                              <strong className="text-emerald-300">
+                              <strong className="text-[var(--ok)]">
                                 conservará tus correos SIN LEER en tu
                                 Gmail/Outlook
                               </strong>{" "}
@@ -2439,7 +2439,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 e.target.checked,
                               )
                             }
-                            className="rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-purple-500 disabled:opacity-60"
+                            className="rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-[var(--acc)] disabled:opacity-60"
                           />
                           <span>
                             Mencionar enlace al Dossier/EPK si procede

@@ -143,7 +143,7 @@ export function ConvocarEnsayoModal({
             {/* Essential Row: Date & Start Time */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-neutral-200 mb-1">
+                <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                   Fecha <span className="text-[var(--acc)]">*</span>
                 </label>
                 <input
@@ -155,7 +155,7 @@ export function ConvocarEnsayoModal({
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-neutral-200 mb-1">
+                <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                   Hora de Inicio <span className="text-[var(--acc)]">*</span>
                 </label>
                 <input
@@ -163,32 +163,32 @@ export function ConvocarEnsayoModal({
                   required
                   value={hora}
                   onChange={(e) => setHora(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus:border-[var(--acc)] outline-none font-medium"
+                  className="w-full px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs focus:border-[var(--acc)] outline-none font-medium"
                 />
               </div>
             </div>
 
             {/* Lugar / Local */}
             <div>
-              <label className="block text-xs font-semibold text-neutral-200 mb-1">
+              <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                 Lugar / Local de Ensayo <span className="text-[var(--acc)]">*</span>
               </label>
               <div className="relative">
-                <MapPin className="w-3.5 h-3.5 absolute left-3 top-2.5 text-neutral-400" />
+                <MapPin className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[var(--ink-2)]" />
                 <input
                   type="text"
                   required
                   placeholder="Ej. Local 4 - Rock Palace, Madrid"
                   value={lugar}
                   onChange={(e) => setLugar(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus:border-[var(--acc)] outline-none font-medium"
+                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs focus:border-[var(--acc)] outline-none font-medium"
                 />
               </div>
             </div>
 
             {/* Setlist Asociado */}
             <div>
-              <label className="block text-xs font-semibold text-neutral-200 mb-1">Repertorio a Repasar (Opcional)</label>
+              <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Repertorio a Repasar (Opcional)</label>
               <div className="relative">
                 <Disc3 className="w-3.5 h-3.5 absolute left-3 top-3 text-[var(--acc)]" />
                 <select
@@ -207,18 +207,18 @@ export function ConvocarEnsayoModal({
             </div>
 
             {/* Collapsible Accordion: Advanced Rehearsal Options */}
-            <div className="rounded-2xl border border-[#2a2825] bg-[#1a1918]/60 overflow-hidden transition-all">
+            <div className="rounded-2xl border border-[var(--hair)] bg-[var(--surface)]/60 overflow-hidden transition-all">
               <button
                 type="button"
                 onClick={() => setShowAdvanced((prev) => !prev)}
-                className="w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors hover:bgbg-[var(--surface)]/60 cursor-pointer text-zinc-300"
+                className="w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors hover:bgbg-[var(--surface)]/60 cursor-pointer text-[var(--ink-2)]"
               >
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span className="font-semibold">Más opciones de ensayo</span>
-                  <span className="text-[10px] text-zinc-500 font-normal">(Horario fin, músicos, objetivos...)</span>
+                  <span className="text-[10px] text-[var(--ink-2)] font-normal">(Horario fin, músicos, objetivos...)</span>
                 </div>
-                {showAdvanced ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+                {showAdvanced ? <ChevronUp className="w-4 h-4 text-[var(--ink-2)]" /> : <ChevronDown className="w-4 h-4 text-[var(--ink-2)]" />}
               </button>
 
               {showAdvanced && (
@@ -226,16 +226,16 @@ export function ConvocarEnsayoModal({
                   {/* Hora Fin & Duración */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-neutral-400 mb-1">Hora Fin Estimada</label>
+                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Hora Fin Estimada</label>
                       <input
                         type="time"
                         value={horaFin}
                         onChange={(e) => setHoraFin(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-[var(--acc)]"
+                        className="w-full px-3 py-1.5 rounded-xl bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--acc)]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-neutral-400 mb-1">Duración (Minutos)</label>
+                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Duración (Minutos)</label>
                       <input
                         type="number"
                         min="15"
@@ -243,7 +243,7 @@ export function ConvocarEnsayoModal({
                         step="15"
                         value={duracionEstimadaMin}
                         onChange={(e) => setDuracionEstimadaMin(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-[var(--acc)]"
+                        className="w-full px-3 py-1.5 rounded-xl bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--acc)]"
                       />
                     </div>
                   </div>
@@ -251,8 +251,8 @@ export function ConvocarEnsayoModal({
                   {/* Músicos Convocados */}
                   {bandUsers.length > 0 && (
                     <div>
-                      <label className="block text-[11px] font-semibold text-neutral-400 mb-1">Músicos Convocados</label>
-                      <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-[#141413] border border-[#2a2825]">
+                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Músicos Convocados</label>
+                      <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-[var(--surface)] border border-[var(--hair)]">
                         {bandUsers.map((u) => {
                           const isSelected = convocadosIds.includes(u.id);
                           return (
@@ -263,7 +263,7 @@ export function ConvocarEnsayoModal({
                               className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${
                                 isSelected
                                   ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 font-bold'
-                                  : 'bgbg-[var(--surface)]/60 text-neutral-400 hover:border-[var(--hair)]'
+                                  : 'bgbg-[var(--surface)]/60 text-[var(--ink-2)] hover:border-[var(--hair)]'
                               }`}
                             >
                               <Users className="w-3 h-3" />
@@ -278,15 +278,15 @@ export function ConvocarEnsayoModal({
                   {/* Objetivos */}
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <label className="text-[11px] font-semibold text-neutral-400">Objetivos de la Sesión</label>
-                      <span className="text-[10px] text-neutral-500">{objetivos.length} asignados</span>
+                      <label className="text-[11px] font-semibold text-[var(--ink-2)]">Objetivos de la Sesión</label>
+                      <span className="text-[10px] text-[var(--ink-2)]">{objetivos.length} asignados</span>
                     </div>
 
                     <div className="space-y-1 mb-2">
                       {objetivos.map((obj) => (
                         <div
                           key={obj.id}
-                          className="flex items-center justify-between gap-2 p-1.5 rounded-lg bg-[#141413] border border-[#2a2825] text-xs text-zinc-200"
+                          className="flex items-center justify-between gap-2 p-1.5 rounded-lg bg-[var(--surface)] border border-[var(--hair)] text-xs text-[var(--ink-2)]"
                         >
                           <div className="flex items-center gap-1.5 truncate">
                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)] shrink-0" />
@@ -295,7 +295,7 @@ export function ConvocarEnsayoModal({
                           <button
                             type="button"
                             onClick={() => handleRemoveObjetivo(obj.id)}
-                            className="text-neutral-500 hover:text-[var(--alert)] p-0.5 shrink-0"
+                            className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 shrink-0"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
@@ -315,12 +315,12 @@ export function ConvocarEnsayoModal({
                             handleAddObjetivo();
                           }
                         }}
-                        className="flex-1 px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-xs text-zinc-100 outline-none focus:border-[var(--acc)]"
+                        className="flex-1 px-3 py-1.5 rounded-xl bg-[var(--surface)] border border-[var(--hair)] text-xs text-[var(--ink-2)] outline-none focus:border-[var(--acc)]"
                       />
                       <button
                         type="button"
                         onClick={handleAddObjetivo}
-                        className="px-3 py-1.5 rounded-xl bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-200 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
@@ -329,13 +329,13 @@ export function ConvocarEnsayoModal({
 
                   {/* Notas Generales */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-neutral-400 mb-1">Notas / Material a llevar</label>
+                    <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Notas / Material a llevar</label>
                     <textarea
                       rows={2}
                       placeholder="Ej. Traer juego nuevo de cuerdas..."
                       value={notas}
                       onChange={(e) => setNotas(e.target.value)}
-                      className="w-full p-2.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-[var(--acc)] resize-none"
+                      className="w-full p-2.5 rounded-xl bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] text-xs outline-none focus:border-[var(--acc)] resize-none"
                     />
                   </div>
                 </div>

@@ -444,9 +444,9 @@ export const ProfileCompletenessCard: React.FC<
             style={{ width: `${percentage}%` }}
           />
         </div>
-        <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400">
+        <div className="flex justify-between items-center text-[10px] font-mono text-[var(--ink-2)]">
           <span>0%</span>
-          <span className="text-amber-400 font-semibold">
+          <span className="text-[var(--acc)] font-semibold">
             {percentage}% completado
           </span>
           <span>100%</span>

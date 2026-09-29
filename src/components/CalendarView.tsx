@@ -2249,7 +2249,7 @@ export default function CalendarView({
                   'bg-[var(--surface)] border-[var(--hair)] focus-within:border-[var(--acc)] shadow-xs'
                 }`}
               >
-                <Search className="w-4 h-4 ml-3 text-neutral-400 shrink-0" />
+                <Search className="w-4 h-4 ml-3 text-[var(--ink-2)] shrink-0" />
                 <input
                   type="text"
                   value={calendarSearchTerm}
@@ -2263,7 +2263,7 @@ export default function CalendarView({
                   <button
                     type="button"
                     onClick={() => setCalendarSearchTerm('')}
-                    className="p-1 mr-2 text-neutral-400 hover:text-white rounded-full transition-colors cursor-pointer"
+                    className="p-1 mr-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-full transition-colors cursor-pointer"
                     title="Borrar búsqueda"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -2271,7 +2271,7 @@ export default function CalendarView({
                 )}
               </div>
               {calendarSearchTerm && (
-                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-[var(--acc)]/30">
+                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-lg bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
                   {filteredConcerts.length + filteredRehearsals.length} resultados
                 </div>
               )}

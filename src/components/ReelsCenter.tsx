@@ -3172,7 +3172,7 @@ export default function ReelsCenter({
                     const { start, end } = parseRangeTimes(phoneDuration);
                     if (renderedClipUrl) {
                       return (
-                        <div className="absolute inset-0 z-[-1] overflow-hidden bg-black">
+                        <div className="absolute inset-0 z-[-1] overflow-hidden bg-[var(--surface)]">
                           <video
                             key={`mini-rendered-${renderedClipUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
                             src={renderedClipUrl}
@@ -3218,7 +3218,7 @@ export default function ReelsCenter({
                     }
 
                     return (
-                      <div className="absolute inset-0 z-[-1] overflow-hidden bg-black">
+                      <div className="absolute inset-0 z-[-1] overflow-hidden bg-[var(--surface)]">
                         <iframe
                           key={`${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ? "muted" : "unmuted"}-${ytLoopCount}`}
                           src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}?start=${start}&end=${end}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(youtubeUrl)}&showinfo=0&rel=0&iv_load_policy=3`}
@@ -3233,7 +3233,7 @@ export default function ReelsCenter({
                   inputType === "file" &&
                   localVideoUrl &&
                   !isExpandedPreview ? (
-                  <div className="absolute inset-0 z-[-1] overflow-hidden bg-black">
+                  <div className="absolute inset-0 z-[-1] overflow-hidden bg-[var(--surface)]">
                     <video
                       key={`${localVideoUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
                       src={localVideoUrl}
@@ -3602,7 +3602,7 @@ export default function ReelsCenter({
               </button>
 
               {/* Physical phone mock wrapper */}
-              <div className="relative w-full max-w-[320px] aspect-[9/16] rounded-[36px] overflow-hidden  bg-black shadow-black flex flex-col justify-between p-4 pt-10 pb-5">
+              <div className="relative w-full max-w-[320px] aspect-[9/16] rounded-[36px] overflow-hidden  bg-[var(--surface)] shadow-black flex flex-col justify-between p-4 pt-10 pb-5">
                 {/* Speaker Notch */}
                 <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-20 h-4 rounded-full bg-[var(--surface)] bg-[var(--surface)]/50 z-20 flex items-center justify-center">
                   <div className="w-8 h-1 rounded-full bg-[var(--surface)]/70" />
@@ -3614,7 +3614,7 @@ export default function ReelsCenter({
                     const { start, end } = parseRangeTimes(phoneDuration);
                     if (renderedClipUrl) {
                       return (
-                        <div className="absolute inset-0 z-0 overflow-hidden bg-black">
+                        <div className="absolute inset-0 z-0 overflow-hidden bg-[var(--surface)]">
                           <video
                             key={`expanded-rendered-${renderedClipUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
                             src={renderedClipUrl}
@@ -3661,7 +3661,7 @@ export default function ReelsCenter({
                     }
 
                     return (
-                      <div className="absolute inset-0 z-0 overflow-hidden bg-black">
+                      <div className="absolute inset-0 z-0 overflow-hidden bg-[var(--surface)]">
                         <iframe
                           key={`expanded-yt-${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ? "muted" : "unmuted"}-${ytLoopCount}`}
                           src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}?start=${start}&end=${end}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=1&modestbranding=1&loop=1&playlist=${getYouTubeId(youtubeUrl)}&showinfo=0&rel=0&iv_load_policy=3`}
@@ -3673,7 +3673,7 @@ export default function ReelsCenter({
                     );
                   })()
                 ) : inputType === "file" && localVideoUrl ? (
-                  <div className="absolute inset-0 z-0 overflow-hidden bg-black">
+                  <div className="absolute inset-0 z-0 overflow-hidden bg-[var(--surface)]">
                     <video
                       key={`expanded-file-${localVideoUrl}-${isPreviewMuted ? "muted" : "unmuted"}`}
                       src={localVideoUrl}

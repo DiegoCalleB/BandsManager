@@ -289,7 +289,7 @@ export function TemplateConfigSection({
               value={activeTemplate.subject}
               onChange={(e) => activeTemplate.setSubject(e.target.value)}
               placeholder="Ej: Propuesta de directo: {{nombre_banda}} en {{nombre_sala}}"
-              className="w-full bg-[#141414] border border-[var(--hair)] rounded-xl px-3 py-2 text-xs text-[var(--ink-2)] placeholder-neutral-500 focus:border-[var(--acc)] focus:outline-none transition-colors"
+              className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-xl px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none transition-colors"
             />
           </div>
 
@@ -319,7 +319,7 @@ export function TemplateConfigSection({
               rows={8}
               value={activeTemplate.body}
               onChange={(e) => activeTemplate.setBody(e.target.value)}
-              className="w-full bg-[#141414] border border-[var(--hair)] rounded-xl p-3 text-xs text-[var(--ink-2)] placeholder-neutral-500 focus:border-[var(--acc)] focus:outline-none leading-relaxed transition-colors font-sans"
+              className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-xl p-3 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none leading-relaxed transition-colors font-sans"
               placeholder="Escribe el cuerpo base de la plantilla usando las etiquetas como {{nombre_sala}}, {{ciudad}}..."
             />
           </div>
@@ -335,7 +335,7 @@ export function TemplateConfigSection({
               rows={2}
               value={activeTemplate.guidelines}
               onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
-              className="w-full bg-[#141414] border border-[var(--acc)]/20 rounded-xl px-3 py-2 text-xs text-[var(--ink-2)] placeholder-neutral-500 focus:border-[var(--acc)] focus:outline-none transition-colors"
+              className="w-full bg-[var(--surface)] border border-[var(--acc)]/20 rounded-xl px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none transition-colors"
               placeholder="Ej: Mantén el mensaje en menos de 100 palabras, tono cercano, destaca nuestra sección rítmica..."
             />
           </div>
@@ -368,7 +368,7 @@ export function TemplateConfigSection({
         </div>
 
         {/* Right Column: Live Preview Sandbox (5 cols) */}
-        <div className="lg:col-span-5 bg-[#141414] border borderbg-[var(--surface)] rounded-2xl p-4 flex flex-col justify-between min-h-[360px]">
+        <div className="lg:col-span-5 bg-[var(--surface)] border borderbg-[var(--surface)] rounded-2xl p-4 flex flex-col justify-between min-h-[360px]">
           <div className="space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/5">
               <div className="flex items-center gap-2">

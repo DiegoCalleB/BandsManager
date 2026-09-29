@@ -95,7 +95,7 @@ const StageMetronomeDot: React.FC<{ isPlaying: boolean; bpm: number }> =
             ? tick
               ? "bg-[var(--acc)] scale-125 shadow-[0_0_8px_#f59e0b]"
               : "bg-[var(--acc)] scale-90"
-            : "bg-zinc-600"
+            : "bg-[var(--surface)]"
         }`}
       />
     );

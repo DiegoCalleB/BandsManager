@@ -98,7 +98,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
               value={aiTrackGenPrompt}
               onChange={(e) => setAiTrackGenPrompt(e.target.value)}
               placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
-              className="w-full h-20 bg-[var(--sunken)] border border-[var(--acc)]/40 rounded-xl p-2.5 text-[var(--ink)] placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
+              className="w-full h-20 bg-[var(--sunken)] border border-[var(--acc)]/40 rounded-xl p-2.5 text-[var(--ink)] placeholder:text-[var(--ink-2)] font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
             />
           </div>
 

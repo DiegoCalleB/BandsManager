@@ -1641,7 +1641,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         </div>
 
         {/* Intelligence Scout Tools Toolbar (Jina Reader, Radar Wegow, Instagram Apify) */}
-        <div className="bg-[#121110] p-2.5 rounded-xl border border-[var(--hair)] space-y-2">
+        <div className="bg-[var(--surface)] p-2.5 rounded-xl border border-[var(--hair)] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono font-bold text-[var(--acc)] uppercase tracking-wider flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -4070,7 +4070,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       {activeTab === "intelligence" && (
         <div className="space-y-4 font-sans animate-fadeIn">
           {/* Top Bar with Refresh All APIs button */}
-          <div className="p-3 bg-[#1A1918] border border-[var(--acc)]/30 rounded-xl flex items-center justify-between flex-wrap gap-2.5">
+          <div className="p-3 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-xl flex items-center justify-between flex-wrap gap-2.5">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-[var(--acc)]/10 border border-[var(--acc)]/30 flex items-center justify-center text-[var(--acc)]">
                 <Sparkles className="w-4 h-4" />
@@ -4110,7 +4110,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {/* 1. SPOTIFY AUDIENCE & CITY DEMAND */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--ok)]/30 space-y-3 relative overflow-hidden">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--ok)]/30 space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--ok)] font-bold text-xs">
                   <Headphones className="w-4 h-4" />
@@ -4190,7 +4190,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 2. GOOGLE PLACES & FICHA TÉCNICA */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--acc)]/30 space-y-3 relative">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/30 space-y-3 relative">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <MapPin className="w-4 h-4" />
@@ -4271,7 +4271,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 3. SETLIST.FM & HISTORIAL DE CONCIERTOS */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--acc)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <Disc className="w-4 h-4" />
@@ -4349,7 +4349,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 4. VERIFICACIÓN EMAIL & SERVIDORES MX */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--acc)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <ShieldCheck className="w-4 h-4" />
@@ -4415,7 +4415,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 5. HERRAMIENTA 1: RUTAS DE GIRA, GASOLINA & FURGONETA */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--acc)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <Truck className="w-4 h-4" />
@@ -4509,7 +4509,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 6. HERRAMIENTA 2: RADAR DE REDES SOCIALES (INSTAGRAM & TIKTOK) */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--alert)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--alert)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <Instagram className="w-4 h-4" />
@@ -4612,7 +4612,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 8. HERRAMIENTA 1: RADAR DE CALENDARIO & VENTANA DE PROGRAMACIÓN (BOOKING WINDOW) */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--acc)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <CalendarDays className="w-4 h-4" />
@@ -4715,7 +4715,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 9. HERRAMIENTA 2: RADAR DE EVENTOS LOCALES & ALERTA DE CLASH */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--alert)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--alert)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--alert)] font-bold text-xs">
                   <Flame className="w-4 h-4" />
@@ -4843,7 +4843,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 10. HERRAMIENTA 4: RADAR DE MEDIOS, RADIOS & PRENSA CULTURAL LOCAL */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--acc)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <Megaphone className="w-4 h-4" />
@@ -4947,7 +4947,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* 11. HERRAMIENTA 5: RADAR DE BANDAS LOCALES AFINES (CO-BOOKING) */}
-            <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--acc)]/30 space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/30 space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <Handshake className="w-4 h-4" />
@@ -5059,7 +5059,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           </div>
 
           {/* 7. HERRAMIENTA 5: SIMULADOR INTERACTIVO DE TAQUILLA, CACHÉ & BREAK-EVEN (P&L FINANCIERO) */}
-          <div className="p-4 rounded-xl bg-[#1A1918] border border-[var(--ok)]/40 space-y-3.5 shadow-lg">
+          <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--ok)]/40 space-y-3.5 shadow-lg">
             <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2 flex-wrap gap-2">
               <div className="flex items-center gap-2 text-[var(--ok)] font-bold text-xs">
                 <Calculator className="w-4 h-4" />

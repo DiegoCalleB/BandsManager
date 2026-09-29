@@ -647,7 +647,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                         onClick={() => setNewAvatarColor(c)}
                         className={`w-7 h-7 rounded-full transition-transform ${
                           newAvatarColor === c
-                            ? "scale-110  ring-2 ring-emerald-500"
+                            ? "scale-110  ring-2 ring-[var(--ok)]"
                             : " opacity-75 hover:opacity-100"
                         }`}
                         style={{ backgroundColor: c }}

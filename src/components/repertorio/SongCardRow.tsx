@@ -138,9 +138,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
         isDragging
           ? 'opacity-30 scale-[0.98]'
           : isDragOver
-            ? 'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10'
+            ? 'border-[var(--ok)] ring-2 ring-[var(--ok)]/50 bg-[var(--ok)]/10'
             : isPlayingCurrent
-              ? 'bg-[var(--ok)]/10 text-[var(--ink)] ring-1 ring-emerald-500/20'
+              ? 'bg-[var(--ok)]/10 text-[var(--ink)] ring-1 ring-[var(--ok)]/20'
               : isSelected
                 ? 'bg-[var(--acc)]/10 text-[var(--ink)]'
                 : 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink)]'
@@ -323,7 +323,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               type="button"
               onClick={onOpenChords}
               className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                'bg-[var(--ok-soft)] hover:bg-emerald-100 text-emerald-800 border-[var(--ok)]'
+                'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] border-[var(--ok)]'
               }`}
               title="Ver cifrado de acordes, armonía y letra"
             >
@@ -403,7 +403,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       }}
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                     >
-                      <Edit3 className="w-3.5 h-3.5 text-zinc-400" />
+                      <Edit3 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Editar Canción</span>
                     </button>
                   )}
@@ -416,9 +416,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onOpenMemberNotes();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-amber-500/15 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer font-medium"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-[var(--acc)]/15 text-[var(--acc)] transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
-                      <Users className="w-3.5 h-3.5 text-amber-400" />
+                      <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>Notas por Miembro</span>
                     </button>
                   )}
@@ -449,7 +449,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       }}
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris' : '✨ Separar Stems con Iris'}</span>
                     </button>
                   )}

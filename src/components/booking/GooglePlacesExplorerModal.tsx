@@ -1336,7 +1336,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearch()}
                     disabled={isSearching}
-                    className="px-4 py-2 bg-[#f2ca50] hover:bg-[var(--acc-soft)] text-[#2c2200] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
                   >
                     {isSearching ? (
                       <Loader2 className="w-4 h-4 animate-spin" />

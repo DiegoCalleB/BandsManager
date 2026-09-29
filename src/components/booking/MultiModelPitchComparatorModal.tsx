@@ -464,7 +464,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                       key={prop.provider + idx}
                       className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
                         isSelected
-                          ? "bg-[var(--surface)]/80 ring-1 ring-emerald-500/40"
+                          ? "bg-[var(--surface)]/80 ring-1 ring-[var(--ok)]/40"
                           : "bg-[var(--surface)] hover:bg-[var(--sunken)]"
                       }`}
                     >

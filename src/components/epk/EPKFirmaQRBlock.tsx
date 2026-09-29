@@ -559,7 +559,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   onClick={handleCopyRichSignature}
                   className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     copiadoFirma === "rich"
-                      ? "bg-[var(--ok)] text-[var(--ink)] ring-2 ring-emerald-400"
+                      ? "bg-[var(--ok)] text-[var(--ink)] ring-2 ring-[var(--ok)]"
                       : "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc-soft)] text-[var(--ink)]"
                   }`}
                   title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"

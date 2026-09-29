@@ -62,26 +62,26 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
         >
           <button
             onClick={() => setViewingRehearsal(null)}
-            className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-1 rounded-full text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
           >
             ✕
           </button>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
             {isReunion ? (
-              <span className="text-purple-400">💬 Editar Reunión</span>
+              <span className="text-[var(--acc)]">💬 Editar Reunión</span>
             ) : (
-              <span className="text-emerald-400">🎙️ Editar Ensayo</span>
+              <span className="text-[var(--ok)]">🎙️ Editar Ensayo</span>
             )}
           </h3>
-          <p className="text-[11px] font-mono text-neutral-400 mb-4">
-            Modificando fecha: <strong className="text-white">{editRehearsalDraft.fecha}</strong>
+          <p className="text-[11px] font-mono text-[var(--ink-2)] mb-4">
+            Modificando fecha: <strong className="text-[var(--ink)]">{editRehearsalDraft.fecha}</strong>
           </p>
 
           <form onSubmit={handleSaveRehearsalEdit} className="space-y-3.5">
             {isReunion && (
               <div>
-                <label className="block text-[10px] font-mono text-neutral-400 mb-1">Asunto de la Reunión</label>
+                <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Asunto de la Reunión</label>
                 <input
                   type="text"
                   value={editRehearsalDraft.asunto || ''}
@@ -96,7 +96,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[10px] font-mono text-neutral-400 mb-1">Fecha</label>
+                <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Fecha</label>
                 <input
                   type="date"
                   value={editRehearsalDraft.fecha}
@@ -108,7 +108,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-mono text-neutral-400 mb-1">Horario</label>
+                <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Horario</label>
                 <input
                   type="text"
                   value={editRehearsalDraft.hora}
@@ -122,7 +122,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             </div>
 
             <div>
-              <label className="block text-[10px] font-mono text-neutral-400 mb-1">
+              <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
                 {isReunion ? 'Plataforma / Lugar' : 'Local / Ubicación'}
               </label>
               <input
@@ -138,7 +138,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
 
             {isReunion && (
               <div>
-                <label className="block text-[10px] font-mono text-neutral-400 mb-1">Enlace de Videollamada</label>
+                <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Enlace de Videollamada</label>
                 <input
                   type="text"
                   value={editRehearsalDraft.enlace_reunion || ''}
@@ -153,8 +153,8 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
 
             {!isReunion && availableSetlists.length > 0 && (
               <div>
-                <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
-                  <span className="flex items-center gap-1 text-[#10b981]">
+                <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
+                  <span className="flex items-center gap-1 text-[var(--ok)]">
                     <Music className="w-3 h-3" />
                     <span>Repertorio Asociado</span>
                   </span>
@@ -177,7 +177,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             )}
 
             <div>
-              <label className="block text-[10px] font-mono text-neutral-400 mb-1">Estado</label>
+              <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Estado</label>
               <select
                 value={editRehearsalDraft.estado}
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
@@ -192,7 +192,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             </div>
 
             <div>
-              <label className="block text-[10px] font-mono text-neutral-400 mb-1">
+              <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
                 {isReunion ? 'Orden del Día / Notas' : 'Objetivos / Notas'}
               </label>
               <textarea
@@ -215,7 +215,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                       setViewingRehearsal(null);
                     }
                   }}
-                  className="px-2.5 py-1 rounded-lg text-[10px] font-mono bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-[var(--alert)]/30 flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg text-[10px] font-mono bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20 border border-[var(--alert)]/30 flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3 h-3" />
                   <span>Eliminar</span>
@@ -225,13 +225,13 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 <button
                   type="button"
                   onClick={() => setViewingRehearsal(null)}
-                  className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+                  className="px-2 py-1 text-[10px] font-mono rounded-lg text-[var(--ink-2)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition-all cursor-pointer shadow-md font-bold"
+                  className="px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
                 >
                   Guardar Cambios
                 </button>

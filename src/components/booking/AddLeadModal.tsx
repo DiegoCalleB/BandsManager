@@ -122,7 +122,7 @@ export function AddLeadModal({
                       ? 'Nuevo Contacto de Industria'
                       : 'Nueva Sala o Festival'}
                 </h3>
-                <p className="text-[11px] text-zinc-400 font-normal">Añade un contacto a tu pipeline CRM de booking</p>
+                <p className="text-[11px] text-[var(--ink-2)] font-normal">Añade un contacto a tu pipeline CRM de booking</p>
               </div>
             </div>
             <button
@@ -209,7 +209,7 @@ export function AddLeadModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                   {sectionTab === 'medios' ? 'Tipo de Medio' : 'Tipo de Espacio'}
                 </label>
                 {sectionTab === 'medios' ? (
@@ -253,7 +253,7 @@ export function AddLeadModal({
             {/* Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 mb-1">Email Principal</label>
+                <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Email Principal</label>
                 <input
                   type="email"
                   placeholder="info@sala.com"
@@ -269,7 +269,7 @@ export function AddLeadModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 mb-1">Teléfono (WhatsApp)</label>
+                <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Teléfono (WhatsApp)</label>
                 <input
                   type="tel"
                   placeholder="+34 612 345 678"
@@ -305,9 +305,9 @@ export function AddLeadModal({
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span className="font-semibold">Más datos de contacto y notas</span>
-                  <span className="text-[10px] text-zinc-400 font-normal">(Logo, dirección, proposal...)</span>
+                  <span className="text-[10px] text-[var(--ink-2)] font-normal">(Logo, dirección, proposal...)</span>
                 </div>
-                {showAdvanced ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+                {showAdvanced ? <ChevronUp className="w-4 h-4 text-[var(--ink-2)]" /> : <ChevronDown className="w-4 h-4 text-[var(--ink-2)]" />}
               </button>
 
               {showAdvanced && (
@@ -315,7 +315,7 @@ export function AddLeadModal({
                   {/* Logo block */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <label className="text-[11px] font-semibold text-zinc-400">Logo o Icono</label>
+                      <label className="text-[11px] font-semibold text-[var(--ink-2)]">Logo o Icono</label>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -326,7 +326,7 @@ export function AddLeadModal({
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
                         </button>
-                        <label className="cursor-pointer px-2.5 py-1 bgbg-[var(--surface)] hover:bg-neutral-700 text-zinc-200 text-[10px] rounded-lg flex items-center gap-1 font-bold transition-all border border-[var(--hair)]">
+                        <label className="cursor-pointer px-2.5 py-1 bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-lg flex items-center gap-1 font-bold transition-all border border-[var(--hair)]">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
                           <input
@@ -349,14 +349,14 @@ export function AddLeadModal({
                     </div>
 
                     {newLeadData.imagen_url ? (
-                      <div className="flex items-center gap-3 p-2 bg-neutral-950 rounded-xl border borderbg-[var(--surface)]">
+                      <div className="flex items-center gap-3 p-2 bg-[var(--surface)] rounded-xl border borderbg-[var(--surface)]">
                         <img
                           src={newLeadData.imagen_url}
                           alt="Logo"
                           className="w-8 h-8 rounded-lg object-cover border border-[var(--acc)]/50 shrink-0"
                         />
                         <div className="flex-1 min-w-0">
-                          <p className="text-[10px] text-zinc-300 font-semibold truncate">{newLeadData.imagen_url}</p>
+                          <p className="text-[10px] text-[var(--ink-2)] font-semibold truncate">{newLeadData.imagen_url}</p>
                         </div>
                         <button
                           type="button"
@@ -375,8 +375,8 @@ export function AddLeadModal({
                             onClick={() => setNewLeadData((prev) => ({ ...prev, icono: emoji }))}
                             className={`w-7 h-7 rounded-lg text-xs flex items-center justify-center transition-all cursor-pointer ${
                               newLeadData.icono === emoji
-                                ? 'bg-[var(--acc)] text-stone-950 font-bold scale-105 shadow-xs'
-                                : 'bgbg-[var(--surface)] text-zinc-300 hover:bg-neutral-700'
+                                ? 'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105 shadow-xs'
+                                : 'bgbg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
                             }`}
                           >
                             {emoji}
@@ -389,7 +389,7 @@ export function AddLeadModal({
                   {/* Address & Region */}
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] font-semibold text-zinc-400 mb-1">Dirección</label>
+                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Dirección</label>
                       <input
                         type="text"
                         placeholder="Calle San Vicente 33"
@@ -401,7 +401,7 @@ export function AddLeadModal({
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-zinc-400 mb-1">Región / Alcance</label>
+                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Región / Alcance</label>
                       <input
                         type="text"
                         placeholder="Comunidad / Provincia"
@@ -417,7 +417,7 @@ export function AddLeadModal({
                   {/* Secondary email & fixed phone */}
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] font-semibold text-zinc-400 mb-1">Email Secundario</label>
+                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Email Secundario</label>
                       <input
                         type="email"
                         placeholder="promotora@mail.com"
@@ -429,7 +429,7 @@ export function AddLeadModal({
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-zinc-400 mb-1">Teléfono Fijo</label>
+                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Teléfono Fijo</label>
                       <input
                         type="tel"
                         placeholder="+34 912 345 678"
@@ -451,7 +451,7 @@ export function AddLeadModal({
 
                   {/* Pitch / Proposal */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-zinc-400 mb-1">Propuesta de Concierto</label>
+                    <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Propuesta de Concierto</label>
                     <textarea
                       rows={2}
                       placeholder="Propuesta de fecha, caché o taquilla..."
@@ -465,7 +465,7 @@ export function AddLeadModal({
 
                   {/* Internal Notes */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-zinc-400 mb-1">Notas Internas</label>
+                    <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Notas Internas</label>
                     <input
                       type="text"
                       placeholder="Programador principal, aforo 300, etc."

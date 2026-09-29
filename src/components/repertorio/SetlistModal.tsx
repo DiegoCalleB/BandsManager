@@ -56,12 +56,12 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
         >
           <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-[var(--acc)]/30 flex items-center justify-center text-amber-400 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[var(--acc)]/15 border border-[var(--acc)]/30 flex items-center justify-center text-[var(--acc)] shrink-0">
                 <Layers className="w-4 h-4" />
               </div>
               <div>
                 <h3 className="text-sm font-bold tracking-tight">{setlistToEdit ? 'Editar Repertorio' : 'Crear Nuevo Repertorio'}</h3>
-                <p className="text-[11px] text-zinc-400 font-normal">Configura los detalles principales de tu setlist</p>
+                <p className="text-[11px] text-[var(--ink-2)] font-normal">Configura los detalles principales de tu setlist</p>
               </div>
             </div>
             <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
@@ -71,7 +71,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-sans">
             <div>
-              <label className="block text-zinc-200 font-semibold mb-1">Nombre del Repertorio *</label>
+              <label className="block text-[var(--ink-2)] font-semibold mb-1">Nombre del Repertorio *</label>
               <input
                 type="text"
                 required
@@ -83,7 +83,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
             </div>
 
             <div>
-              <label className="block text-zinc-200 font-semibold mb-1">Formato de Concierto</label>
+              <label className="block text-[var(--ink-2)] font-semibold mb-1">Formato de Concierto</label>
               <select
                 value={tipoFormato}
                 onChange={(e) => setTipoFormato(e.target.value as any)}
@@ -98,7 +98,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
             </div>
 
             <div>
-              <label className="block text-zinc-200 font-semibold mb-1">Notas de Escenario / Descripción</label>
+              <label className="block text-[var(--ink-2)] font-semibold mb-1">Notas de Escenario / Descripción</label>
               <textarea
                 rows={3}
                 value={descripcion}

@@ -557,7 +557,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   if (isResting) {
     return (
       <div
-        className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center text-center p-8 cursor-pointer select-none"
+        className="fixed inset-0 z-[9999] bg-[var(--surface)] flex flex-col items-center justify-center text-center p-8 cursor-pointer select-none"
         onClick={() => setIsResting(false)}
       >
         <span className="text-5xl mb-4">😴</span>
@@ -574,7 +574,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ? "bg-[var(--surface)] text-[var(--ink)]" : "bg-black text-[var(--ink)]"}`}
+      className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ? "bg-[var(--surface)] text-[var(--ink)]" : "bg-[var(--surface)] text-[var(--ink)]"}`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -600,10 +600,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </h1>
             {isOffline && (
               <span
-                className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-[var(--acc)]/40 flex items-center gap-1"
+                className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 flex items-center gap-1"
                 title="Modo Escenario Offline Guard activo — Letras y acordes guardados localmente"
               >
-                <WifiOff className="w-3 h-3 text-amber-400" />
+                <WifiOff className="w-3 h-3 text-[var(--acc)]" />
                 <span className="hidden sm:inline">Offline Seguro</span>
               </span>
             )}

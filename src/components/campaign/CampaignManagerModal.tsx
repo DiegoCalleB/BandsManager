@@ -355,7 +355,7 @@ export function CampaignManagerModal({
                       setFormData({ ...formData, name: e.target.value })
                     }
                     placeholder="Ej: Campaña Diciembre 2026"
-                    className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-500"
+                    className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
                   />
                 </div>
                 <div>
@@ -377,7 +377,7 @@ export function CampaignManagerModal({
                         onClick={() => setFormData({ ...formData, color: col })}
                         className={`w-7 h-7 rounded-[var(--r-s)] transition-transform cursor-pointer ${
                           formData.color === col
-                            ? "scale-110 ring-2 ring-white/40"
+                            ? "scale-110 ring-2 ring-[var(--ink)]/40"
                             : "border-transparent opacity-70 hover:opacity-100"
                         }`}
                         style={{ backgroundColor: col }}
@@ -552,7 +552,7 @@ export function CampaignManagerModal({
               {/* Campaign-specific pitch templates, one per lead use case */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-2">
+                  <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-2">
                     Plantillas de Pitch de Campaña por Caso de Uso
                     {filledPitchCategoriesCount > 0 && (
                       <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--hair)]/20 text-[var(--hair)]/80">
@@ -565,21 +565,21 @@ export function CampaignManagerModal({
                   <button
                     type="button"
                     onClick={() => setIsMultiTemplatesModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-gradient-to-r from-purple-600/30 to-purple-500/20 hover:from-purple-600/50 hover:to-purple-500/30 text-purple-300 border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-white transition-all shadow-sm active:scale-95 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-gradient-to-r from-purple-600/30 to-purple-500/20 hover:from-purple-600/50 hover:to-purple-500/30 text-[var(--acc)] border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-[var(--ink)] transition-all shadow-sm active:scale-95 cursor-pointer"
                     title="Adapta automáticamente el mensaje y objetivo de esta campaña a las 7 categorías de recintos"
                   >
-                    <Wand2 className="w-3.5 h-3.5 text-purple-400" />
+                    <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                     <span>Generar las 7 con IA</span>
                   </button>
                 </div>
 
                 {templateGenerationFeedback && (
-                  <div className="p-2.5 rounded-xl bg-purple-500/10 border border-[var(--acc)]/30 text-purple-200 text-xs flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-[var(--acc)]/10 border border-[var(--acc)]/30 text-[var(--acc)] text-xs flex items-center justify-between">
                     <span>{templateGenerationFeedback}</span>
                     <button
                       type="button"
                       onClick={() => setTemplateGenerationFeedback(null)}
-                      className="font-bold text-purple-400 hover:text-white ml-2"
+                      className="font-bold text-[var(--acc)] hover:text-[var(--ink)] ml-2"
                     >
                       ✕
                     </button>
@@ -676,7 +676,7 @@ export function CampaignManagerModal({
                 onClick={() => onSetActiveCampaign(null)}
                 className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
                   !activeCampaign
-                    ? "bg-[var(--surface)]/80 ring-1 ring-amber-400/30"
+                    ? "bg-[var(--surface)]/80 ring-1 ring-[var(--acc)]/30"
                     : "bg-[var(--surface)] hover:text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                 }`}
               >
@@ -726,7 +726,7 @@ export function CampaignManagerModal({
                       key={camp.id}
                       className={`p-4 rounded-[var(--r-m)] transition-all relative overflow-hidden ${
                         isActive
-                          ? "bg-[var(--surface)]/60 ring-1 ring-purple-500/30"
+                          ? "bg-[var(--surface)]/60 ring-1 ring-[var(--acc)]/30"
                           : "bg-[var(--surface)] hover:"
                       }`}
                     >

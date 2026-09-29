@@ -20,12 +20,12 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
     <div
       className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
         agentsEnabled
-          ? 'bg-amber-50/80 text-[var(--acc-ink)] border-b border-[var(--acc)]/80'
-          : 'bg-emerald-50/80 text-emerald-900 border-b border-[var(--ok)]/80'
+          ? 'bg-[var(--acc)]/80 text-[var(--on-acc)] border-b border-[var(--acc)]/80'
+          : 'bg-[var(--ok)]/80 text-[var(--ok)] border-b border-[var(--ok)]/80'
       }`}
     >
       <div className="flex items-center gap-2 min-w-0">
-        <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}`} />
+        <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ? 'bg-[var(--acc)] animate-pulse' : 'bg-[var(--ok)]'}`} />
         <span className="font-bold truncate text-[11px] uppercase tracking-wider">
           {agentsEnabled ? '⚡ Agentes Supabase Activos (Backend & Database)' : '🤖 Modo Gemini Directo (100% Autónomo)'}
         </span>
@@ -43,13 +43,13 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             type="button"
             onClick={onOpenAutonomyModal}
             className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
-              'bg-purple-100 hover:bg-purple-200 text-purple-800 border border-[var(--acc)]'
+              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border border-[var(--acc)]'
             }`}
             title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
           >
-            <Sliders className="w-3 h-3 text-purple-400" />
+            <Sliders className="w-3 h-3 text-[var(--acc)]" />
             <span>Niveles de Autonomía</span>
-            <span className="px-1 py-0.2 rounded text-[8px] bg-purple-500/50 text-white font-black">ADMIN</span>
+            <span className="px-1 py-0.2 rounded text-[8px] bg-[var(--acc)]/50 text-[var(--ink)] font-black">ADMIN</span>
           </button>
         )}
 
@@ -64,7 +64,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
           className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
             agentsEnabled
               ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]'
-              : 'bg-emerald-200 hover:bg-[#10b981]/15 text-[var(--ok)] border border-[var(--ok)]'
+              : 'bg-[var(--ok)] hover:bg-[var(--ok)]/15 text-[var(--ok)] border border-[var(--ok)]'
           }`}
           title={agentsEnabled ? 'Desactivar motor de agentes de Supabase y usar solo Gemini' : 'Activar motor de agentes en Supabase'}
         >

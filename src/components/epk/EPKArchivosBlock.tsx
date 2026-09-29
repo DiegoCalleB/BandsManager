@@ -408,15 +408,15 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             </div>
             {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
             <div className="pt-3 border-t border-[var(--hair)]/80 space-y-3">
-              <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+              <h4 className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[var(--acc)]"></span>
                 Parámetros Técnicos Clave para el Agente (Respuestas directas a
                 salas)
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
                 {/* Monitoreo */}
-                <div className="bg-slate-950/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">
+                <div className="bg-[var(--surface)]/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
                     Sistema de Monitoreo
                   </label>
                   <select
@@ -432,7 +432,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         },
                       })
                     }
-                    className="w-full bg-slate-900 border border-[var(--hair)] rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-[var(--acc)]"
+                    className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
                   >
                     <option value="sin_preferencia">
                       Sin preferencia / Sala
@@ -441,13 +441,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     <option value="in_ear">In-Ears propios (IEM)</option>
                     <option value="mixto">Mixto (In-Ears + Cuñas)</option>
                   </select>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-[var(--ink-2)]">
                     Evita pedir monitores extra si lleváis IEM.
                   </p>
                 </div>
                 {/* Backline */}
-                <div className="bg-slate-950/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">
+                <div className="bg-[var(--surface)]/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
                     Backline (Amplis / Batería)
                   </label>
                   <select
@@ -461,7 +461,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         },
                       })
                     }
-                    className="w-full bg-slate-900 border border-[var(--hair)] rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-[var(--acc)]"
+                    className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
                   >
                     <option value="completo">Backline completo propio</option>
                     <option value="parcial">
@@ -471,13 +471,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       Necesitamos backline de sala
                     </option>
                   </select>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-[var(--ink-2)]">
                     Crucial para pactar dobles carteles.
                   </p>
                 </div>
                 {/* Microfonía */}
-                <div className="bg-slate-950/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">
+                <div className="bg-[var(--surface)]/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
                     Microfonía / DIs
                   </label>
                   <div className="flex gap-1.5 pt-0.5">
@@ -492,7 +492,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)]"}`}
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40" : "bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]"}`}
                     >
                       De la sala
                     </button>
@@ -507,18 +507,18 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)]"}`}
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40" : "bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]"}`}
                     >
                       Propia
                     </button>
                   </div>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-[var(--ink-2)]">
                     Informa al técnico de la casa.
                   </p>
                 </div>
                 {/* Tiempo de prueba y canales */}
-                <div className="bg-slate-950/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">
+                <div className="bg-[var(--surface)]/80 border border-[var(--hair)] rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
                     Prueba / Canales Mínimos
                   </label>
                   <div className="flex gap-2">
@@ -537,7 +537,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         })
                       }
                       placeholder="30 min"
-                      className="w-1/2 bg-slate-900 border border-[var(--hair)] rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-[var(--acc)]"
+                      className="w-1/2 bg-[var(--surface)] border border-[var(--hair)] rounded-lg px-2 py-1 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
                     />
                     <input
                       type="number"
@@ -554,10 +554,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         })
                       }
                       placeholder="12 ch"
-                      className="w-1/2 bg-slate-900 border border-[var(--hair)] rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-[var(--acc)]"
+                      className="w-1/2 bg-[var(--surface)] border border-[var(--hair)] rounded-lg px-2 py-1 text-xs text-[var(--ink)] outline-none focus:border-[var(--acc)]"
                     />
                   </div>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-[var(--ink-2)]">
                     Minutos y canales de mesa.
                   </p>
                 </div>

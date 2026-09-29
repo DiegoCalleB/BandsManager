@@ -463,14 +463,14 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               )}
 
                               {lead.telefono_movil && (
-                                <div className="flex items-center gap-1.5 truncate text-emerald-400 font-medium">
+                                <div className="flex items-center gap-1.5 truncate text-[var(--ok)] font-medium">
                                   <span>📱</span>
                                   <span>{lead.telefono_movil}</span>
                                 </div>
                               )}
 
                               {lead.telefono_fijo && (
-                                <div className="flex items-center gap-1.5 truncate text-sky-400 font-medium">
+                                <div className="flex items-center gap-1.5 truncate text-[var(--acc)] font-medium">
                                   <span>☎️</span>
                                   <span>{lead.telefono_fijo}</span>
                                 </div>

@@ -321,7 +321,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                       {/* Top status bar */}
                       <div className="flex items-center justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2 flex-wrap">
-                          {!isRead && <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Sin leer" />}
+                          {!isRead && <span className="w-2 h-2 rounded-full bg-[var(--ok)] shrink-0" title="Sin leer" />}
 
                           <span
                             className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider border ${badgeStyle}`}

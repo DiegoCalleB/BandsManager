@@ -201,7 +201,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 1: CALCULADORA P&L Y PUNTO DE EQUILIBRIO */}
-      <div className="bg-[#1A1918] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calculator className="w-4 h-4 text-[var(--ok)]" />
@@ -301,7 +301,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 2: DEAL CLOSING COPILOT (ANÁLISIS DE RESPUESTAS Y OBJECIONES) */}
-      <div className="bg-[#1A1918] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
@@ -345,7 +345,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 3: GENERADOR INSTANTÁNEO DE ROADBOOK & CONTRATO */}
-      <div className="bg-[#1A1918] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-[var(--acc)]" />

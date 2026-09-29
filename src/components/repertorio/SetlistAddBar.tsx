@@ -165,7 +165,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
               }
             }}
             defaultValue=""
-            className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-indigo-500/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${"bg-[var(--surface)] text-[var(--ink)] hover:"}`}
+            className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${"bg-[var(--surface)] text-[var(--ink)] hover:"}`}
           >
             <option value="">+ Añadir 1 Tema...</option>
             {sortedSongsByAlbumAndOrder.map((s, idx) => {

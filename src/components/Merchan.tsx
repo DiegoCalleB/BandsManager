@@ -325,7 +325,7 @@ export default function Merchan({
         type: productType,
         url: rawGraphicUrl,
         processedUrl: processedUrl,
-        bg: "bg-black",
+        bg: "bg-[var(--surface)]",
         text: "Generado con Capas Canvas",
         assetType,
         shirtColor: productType === "camiseta" ? shirtColor : undefined,

@@ -785,9 +785,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             )}
             {!isPromoPlan && selectedEventDetails.type === 'concert' && (
               <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'-slate-100'}`}>
-                <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
+                <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Compensación:</span>
-                <span className="text-[#10b981] dark:text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
+                <span className="text-[var(--ok)] dark:text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
               </div>
             )}
             {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
@@ -992,7 +992,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <span>Repertorio Asignado:</span>
                   </div>
                   {assignedSetlist && (
-                    <span className="text-[10px] font-mono px-2 py-1 rounded bg-[#10b981]/15 text-[#10b981] font-bold">
+                    <span className="text-[10px] font-mono px-2 py-1 rounded bg-[var(--ok)]/15 text-[var(--ok)] font-bold">
                       {assignedSetlist.items?.length || 0} canciones/ítems
                     </span>
                   )}
@@ -1782,7 +1782,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
         }`}
       >
         <span>Huso Horario: Madrid (UTC+2)</span>
-        <span className="text-[#10b981] dark:text-[var(--ok)]">● Sincronizado</span>
+        <span className="text-[var(--ok)] dark:text-[var(--ok)]">● Sincronizado</span>
       </div>
     </div>
   );

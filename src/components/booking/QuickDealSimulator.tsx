@@ -57,7 +57,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
   };
 
   return (
-    <div className="rounded-xl border border-[var(--ok)]/30 bg-[#161514] overflow-hidden transition-all shadow-md">
+    <div className="rounded-xl border border-[var(--ok)]/30 bg-[var(--surface)] overflow-hidden transition-all shadow-md">
       {/* Resumen Compacto (Siempre Visible) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}

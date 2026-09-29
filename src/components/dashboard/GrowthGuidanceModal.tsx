@@ -67,7 +67,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
-      <div className="bg-[#141416] border borderbg-[var(--surface)] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
+      <div className="bg-[var(--surface)] border borderbg-[var(--surface)] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
         {/* Modal Header */}
         <div className="p-5 border-b borderbg-[var(--surface)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/10 via-neutral-900 to-purple-500/10">
           <div className="flex items-center gap-3">
@@ -97,7 +97,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         </div>
 
         {/* Modal Navigation Tabs */}
-        <div className="px-5 py-2.5 bg-[#101012] border-b borderbg-[var(--surface)]/80 flex items-center justify-between gap-2 overflow-x-auto">
+        <div className="px-5 py-2.5 bg-[var(--surface)] border-b borderbg-[var(--surface)]/80 flex items-center justify-between gap-2 overflow-x-auto">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('blueprint')}
@@ -142,7 +142,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 overflow-y-auto space-y-5 flex-1 bg-[#141416]">
+        <div className="p-5 overflow-y-auto space-y-5 flex-1 bg-[var(--surface)]">
           {/* TAB 1: BLUEPRINT SEMANAL */}
           {activeTab === 'blueprint' && (
             <div className="space-y-4">
@@ -163,7 +163,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 {growthPlan.weeklyBlueprint?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-[#18181b] border borderbg-[var(--surface)]/90 hover:border-[var(--hair)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="p-3.5 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)]/90 hover:border-[var(--hair)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                   >
                     <div className="flex items-start sm:items-center gap-3">
                       <span className="px-2.5 py-1 rounded-lg bg-[var(--surface)] border borderbg-[var(--surface)] text-xs font-mono font-bold text-[var(--acc)] shrink-0 min-w-[75px] text-center">
@@ -222,7 +222,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               {channelData && (
                 <div className="space-y-4 animate-fade-in">
                   {/* Channel Summary Card */}
-                  <div className="p-4 rounded-xl bg-[#18181b] border borderbg-[var(--surface)] space-y-2">
+                  <div className="p-4 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Estrategia para {channelData.name}</h4>
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30">
@@ -250,7 +250,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                             className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
                               isDone
                                 ? 'bg-[var(--ok)]/20 border-[var(--ok)]/30 opacity-75'
-                                : 'bg-[#18181b] borderbg-[var(--surface)] hover:border-[var(--hair)]'
+                                : 'bg-[var(--surface)] borderbg-[var(--surface)] hover:border-[var(--hair)]'
                             }`}
                           >
                             <div className="flex items-start gap-3">
@@ -298,7 +298,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 3: DIAGNÓSTICO & PILARES */}
           {activeTab === 'pillars' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-[#18181b] border borderbg-[var(--surface)] space-y-2">
+              <div className="p-4 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
                 <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Resumen Ejecutivo & Diagnóstico</h4>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">{growthPlan.executiveSummary}</p>
               </div>
@@ -309,7 +309,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {growthPlan.overallPillars?.map((p, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-[#18181b] border borderbg-[var(--surface)] space-y-2">
+                    <div key={idx} className="p-3.5 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-[var(--acc)]">{p.pillar}</span>
                         <span className="text-xs font-mono font-bold text-[var(--ink-2)]">{p.weightPercentage}%</span>
@@ -327,7 +327,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         </div>
 
         {/* Modal Footer Quick Navigation */}
-        <div className="p-4 border-t borderbg-[var(--surface)] bg-[#101012] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 border-t borderbg-[var(--surface)] bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-3">
           <span className="text-xs text-[var(--ink-2)]">
             Aplica estas recomendaciones directas para impulsar tu venta de entradas y repercusión.
           </span>

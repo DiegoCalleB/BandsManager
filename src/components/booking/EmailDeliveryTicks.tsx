@@ -29,10 +29,10 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
     if (lead.estado === 'pendiente_aprobacion' || lead.estado === 'aprobado_propuesta') {
       return (
         <span
-          className="inline-flex items-center gap-1 text-[11px] text-zinc-400 bg-zinc-800/80 px-2 py-0.5 rounded-full border border-[var(--hair)]/50"
+          className="inline-flex items-center gap-1 text-[11px] text-[var(--ink-2)] bg-[var(--surface)]/80 px-2 py-0.5 rounded-full border border-[var(--hair)]/50"
           title="Borrador listo o pendiente de despacho"
         >
-          <Clock className={size === 'sm' ? 'w-2.5 h-2.5 text-zinc-400' : 'w-3 h-3 text-zinc-400'} />
+          <Clock className={size === 'sm' ? 'w-2.5 h-2.5 text-[var(--ink-2)]' : 'w-3 h-3 text-[var(--ink-2)]'} />
           {showLabel && <span>En cola</span>}
         </span>
       );
@@ -44,13 +44,13 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   if (hasClicked) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-400 bg-sky-950/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-full shadow-xs"
+        className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] bg-[var(--acc)]/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-full shadow-xs"
         title={`¡Leído y clic en EPK! (${lead.clics_epk} clics, ${openCount} aperturas)`}
       >
-        <CheckCheck className={size === 'sm' ? 'w-3 h-3 text-sky-400' : 'w-3.5 h-3.5 text-sky-400'} />
-        <MousePointerClick className="w-2.5 h-2.5 text-purple-400" />
+        <CheckCheck className={size === 'sm' ? 'w-3 h-3 text-[var(--acc)]' : 'w-3.5 h-3.5 text-[var(--acc)]'} />
+        <MousePointerClick className="w-2.5 h-2.5 text-[var(--acc)]" />
         {showLabel && (
-          <span className="text-[10px] text-sky-300">EPK visto {lead.clics_epk && lead.clics_epk > 1 ? `(${lead.clics_epk})` : ''}</span>
+          <span className="text-[10px] text-[var(--acc)]">EPK visto {lead.clics_epk && lead.clics_epk > 1 ? `(${lead.clics_epk})` : ''}</span>
         )}
       </span>
     );
@@ -60,11 +60,11 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   if (wasOpened) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-400 bg-sky-950/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-full shadow-xs"
+        className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] bg-[var(--acc)]/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-full shadow-xs"
         title={`Email abierto por la sala (${openCount} ${openCount === 1 ? 'vez' : 'veces'})`}
       >
-        <CheckCheck className={size === 'sm' ? 'w-3.5 h-3.5 text-sky-400' : 'w-4 h-4 text-sky-400'} />
-        {showLabel && <span className="text-[10px] text-sky-300">Leído {openCount > 1 ? `(${openCount})` : ''}</span>}
+        <CheckCheck className={size === 'sm' ? 'w-3.5 h-3.5 text-[var(--acc)]' : 'w-4 h-4 text-[var(--acc)]'} />
+        {showLabel && <span className="text-[10px] text-[var(--acc)]">Leído {openCount > 1 ? `(${openCount})` : ''}</span>}
       </span>
     );
   }
@@ -72,11 +72,11 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   // 3. Enviado pero todavía no abierto (Tick simple gris de WhatsApp)
   return (
     <span
-      className="inline-flex items-center gap-1 text-[11px] text-zinc-300 bg-zinc-800/90 border border-[var(--hair)]/60 px-2 py-0.5 rounded-full"
+      className="inline-flex items-center gap-1 text-[11px] text-[var(--ink-2)] bg-[var(--surface)]/90 border border-[var(--hair)]/60 px-2 py-0.5 rounded-full"
       title={lead.fecha_envio ? `Enviado el ${lead.fecha_envio}` : 'Enviado a la sala'}
     >
-      <Check className={size === 'sm' ? 'w-3 h-3 text-zinc-400' : 'w-3.5 h-3.5 text-zinc-400'} />
-      {showLabel && <span className="text-[10px] text-zinc-400">Entregado</span>}
+      <Check className={size === 'sm' ? 'w-3 h-3 text-[var(--ink-2)]' : 'w-3.5 h-3.5 text-[var(--ink-2)]'} />
+      {showLabel && <span className="text-[10px] text-[var(--ink-2)]">Entregado</span>}
     </span>
   );
 };

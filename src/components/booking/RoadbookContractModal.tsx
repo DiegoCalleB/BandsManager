@@ -159,10 +159,10 @@ Firmado en conformidad por ambas partes.`;
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto">
         <div
           id="roadbook-contract-modal"
-          className="relative w-full max-w-4xl bg-[#141414] border border-[var(--hair)]/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
+          className="relative w-full max-w-4xl bg-[var(--surface)] border border-[var(--hair)]/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-[var(--ink-2)]"
         >
           {/* HEADER DEL MODAL */}
-          <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[#1A1918] flex items-center justify-between gap-3">
+          <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
                 <FileText className="w-5 h-5 text-[var(--acc)]" />
@@ -248,7 +248,7 @@ Firmado en conformidad por ambas partes.`;
             {activeTab === 'roadbook' && (
               <div className="space-y-4">
                 {/* Controles rápidos de edición de horarios */}
-                <div className="p-3.5 bg-[#1A1918] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3.5 bg-[var(--surface)] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Fecha Evento</label>
                     <input
@@ -387,7 +387,7 @@ Firmado en conformidad por ambas partes.`;
             {activeTab === 'contract' && (
               <div className="space-y-4">
                 {/* Parámetros de negociación del contrato */}
-                <div className="p-3.5 bg-[#1A1918] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3.5 bg-[var(--surface)] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-[9px] font-mono text-[var(--ink-2)] uppercase block mb-1">Régimen Económico</label>
                     <select
@@ -445,7 +445,7 @@ Firmado en conformidad por ambas partes.`;
             {/* PESTAÑA 3: ENLACE WEB DIGITAL */}
             {activeTab === 'weblink' && (
               <div className="space-y-4">
-                <div className="p-4 bg-[#1A1918] rounded-2xl border border-[var(--hair)] space-y-3 text-center sm:text-left">
+                <div className="p-4 bg-[var(--surface)] rounded-2xl border border-[var(--hair)] space-y-3 text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[var(--acc)] to-sky-500 flex items-center justify-center shrink-0 shadow-lg">
                       <Share2 className="w-7 h-7 text-[var(--ink)]" />
@@ -488,7 +488,7 @@ Firmado en conformidad por ambas partes.`;
           </div>
 
           {/* FOOTER DE ACCIONES */}
-          <div className="p-4 border-t border-[var(--hair)] bg-[#1A1918] flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs text-[var(--ink-2)]">
               <span className="font-mono text-[11px] text-[var(--acc)] font-bold">
                 {currentLead.nombre_sala} • {currentLead.ciudad}

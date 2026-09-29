@@ -179,7 +179,7 @@ export const PublicMusiciansLanding: React.FC = () => {
       <header className="relative z-20  bg-[var(--bg)]/90 sticky top-0">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] p-0.5 flex items-center justify-center shrink-0">
               <img
                 src="/bandmanageriodefinitiva.jpeg"
                 alt="BandManager.io Logo"
@@ -261,7 +261,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-[var(--acc)]/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
-              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black p-1 flex items-center justify-center">
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-[var(--surface)] p-1 flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
                   alt="BandManager.io"

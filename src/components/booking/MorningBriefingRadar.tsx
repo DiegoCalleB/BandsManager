@@ -97,7 +97,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
         const text = (lead.ultimo_mensaje_recibido || '').toLowerCase();
         let priorityType: 'hot' | 'budget' | 'schedule' | 'general' = 'general';
         let tagLabel = '💬 Conversación Activa';
-        let tagColor = 'text-purple-400 bg-purple-500/15 border-[var(--acc)]/30';
+        let tagColor = 'text-[var(--acc)] bg-[var(--acc)]/15 border-[var(--acc)]/30';
 
         // Usar sentimiento/intención IA si está disponible
         if (
@@ -293,7 +293,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
           <button
             type="button"
             onClick={() => toggleExpanded()}
-            className="p-2 rounded-xl bg-[var(--sunken)] border border-[var(--hair)] text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-[var(--sunken)] border border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             title={isExpanded ? 'Plegar radar' : 'Desplegar radar'}
           >
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -468,7 +468,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                             <span className="text-[10px] font-mono text-[var(--acc)] font-bold uppercase block">
                               EJE LOGÍSTICO: {opp.corridorName}
                             </span>
-                            <h4 className="text-sm font-bold text-white mt-0.5">
+                            <h4 className="text-sm font-bold text-[var(--ink)] mt-0.5">
                               Bolo en {opp.concertCity} ({opp.concertDateStr})
                             </h4>
                             <p className="text-xs text-[var(--ink-2)] mt-0.5">{opp.suggestedAction}</p>

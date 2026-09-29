@@ -4572,7 +4572,7 @@ export default function RepertorioSetlists({
                                         : w.type === "success"
                                           ? "bg-[var(--ok)]/10 text-[var(--ink-2)]/30"
                                           : "bg-[var(--acc)]/10 text-[var(--ink-2)]/30"
-                                    } ${isHighlighted ? "ring-2 ring-white/60" : ""}`}
+                                    } ${isHighlighted ? "ring-2 ring-[var(--ink)]/60" : ""}`}
                                     style={{
                                       cursor: hasSongs ? "pointer" : "default",
                                     }}
@@ -4852,7 +4852,7 @@ export default function RepertorioSetlists({
                         isDragging ? "opacity-40 scale-[0.98]" : ""
                       } ${isDragOver ? "scale-[1.01] bg-[var(--ok)]/10" : ""} ${
                         isSelected
-                          ? "ring-2 ring-indigo-500/20 bg-[var(--ok)]/10"
+                          ? "ring-2 ring-[var(--acc)]/20 bg-[var(--ok)]/10"
                           : "bg-[var(--surface)] hover:bg-[var(--surface)]/80"
                       }`}
                     >
@@ -4982,7 +4982,7 @@ export default function RepertorioSetlists({
                                   });
                                   setEditingKeyItemId(it.id);
                                 }}
-                                className={`text-[9px] font-sans px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
+                                className={`text-[9px] font-sans px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-[var(--ink)]/40 ${
                                   desiredKey
                                     ? "bg-[var(--acc)]/20 text-[var(--acc)]"
                                     : "bg-[var(--surface)]/15 text-[var(--ok)]"
@@ -5120,7 +5120,7 @@ export default function RepertorioSetlists({
                                   });
                                   setEditingEnergyItemId(it.id);
                                 }}
-                                className={`text-[8px] font-sans px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass}`}
+                                className={`text-[8px] font-sans px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-[var(--ink)]/40 ${energy.bgClass} ${energy.textClass}`}
                                 title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? "— fijada a mano" : ""}. Clic para cambiarla.`}
                               >
                                 <span>{energy.icon}</span>
@@ -5757,7 +5757,7 @@ export default function RepertorioSetlists({
                     }
                   />
                   <div className="absolute inset-0 bg-[var(--scrim)]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Play className="w-6 h-6 text-white fill-[var(--surface)]" />
+                    <Play className="w-6 h-6 text-[var(--ink)] fill-[var(--surface)]" />
                   </div>
                 </div>
 
@@ -5798,7 +5798,7 @@ export default function RepertorioSetlists({
                       selectPlayerSongWithQueue(first, true, null);
                     }
                   }}
-                  className="shrink-0 w-12 h-12 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-white font-bold flex items-center justify-center transition-all cursor-pointer active:scale-95"
+                  className="shrink-0 w-12 h-12 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold flex items-center justify-center transition-all cursor-pointer active:scale-95"
                   title="Reproducir catálogo"
                 >
                   {activePlayerSong &&
@@ -5838,7 +5838,7 @@ export default function RepertorioSetlists({
                   }
                   className={`px-3.5 py-2 rounded-[var(--r-m)] text-sm font-medium transition-colors flex items-center gap-2 ${
                     catalogStatusFilter === "listo"
-                      ? "bg-[var(--acc)] text-white"
+                      ? "bg-[var(--acc)] text-[var(--ink)]"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -5856,7 +5856,7 @@ export default function RepertorioSetlists({
                     setEditingSong(null);
                     setShowSongModal(true);
                   }}
-                  className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-white font-medium text-sm flex items-center gap-2 transition-all active:scale-95"
+                  className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-medium text-sm flex items-center gap-2 transition-all active:scale-95"
                 >
                   <Plus className="w-4 h-4" />
                   <span className="hidden sm:inline">Tema</span>

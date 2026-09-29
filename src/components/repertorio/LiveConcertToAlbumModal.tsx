@@ -1575,7 +1575,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         type="checkbox"
                         checked={transcribeFirst}
                         onChange={(e) => setTranscribeFirst(e.target.checked)}
-                        className="w-4 h-4 text-[var(--ok)] rounded focus:ring-emerald-500 bg-[var(--surface)] mt-0.5"
+                        className="w-4 h-4 text-[var(--ok)] rounded focus:ring-[var(--ok)] bg-[var(--surface)] mt-0.5"
                       />
                       <div>
                         <span className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
@@ -2288,7 +2288,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                 className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
                                   track.type === "musica"
                                     ? "bg-[var(--surface)]/90 text-[var(--acc)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
-                                    : "bg-[var(--surface)]/90 text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-400"
+                                    : "bg-[var(--surface)]/90 text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
                                 }`}
                                 placeholder={
                                   track.type === "musica"
@@ -2724,7 +2724,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               !analyzedSourcePath &&
                               !activeSnippet.audioUrl ? (
                                 <div className="space-y-2">
-                                  <div className="relative rounded-[var(--r-s)] overflow-hidden bg-black aspect-video max-h-56 mx-auto">
+                                  <div className="relative rounded-[var(--r-s)] overflow-hidden bg-[var(--surface)] aspect-video max-h-56 mx-auto">
                                     <iframe
                                       key={`yt-embed-${activeSnippet.trackIndex}-${Math.floor(activeSnippet.start)}`}
                                       src={`https://www.youtube-nocookie.com/embed/${getYouTubeVideoId(youtubeUrl)}?start=${Math.floor(activeSnippet.start)}&end=${Math.ceil(activeSnippet.end)}&autoplay=1&enablejsapi=1&rel=0`}

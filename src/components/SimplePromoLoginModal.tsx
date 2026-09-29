@@ -411,7 +411,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       onMouseDown={(e) => e.preventDefault()}
                       tabIndex={-1}
                       aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
-                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -543,7 +543,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       onMouseDown={(e) => e.preventDefault()}
                       tabIndex={-1}
                       aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
-                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>

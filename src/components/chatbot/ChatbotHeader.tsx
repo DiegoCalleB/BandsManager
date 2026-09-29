@@ -80,7 +80,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
               }`}
             />
           </h4>
-          <span className="text-[9px] font-mono text-neutral-500">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
+          <span className="text-[9px] font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
         </div>
       </div>
 
@@ -90,15 +90,15 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             type="button"
             onClick={onOpenAutonomyModal}
             className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
-              'bg-purple-100 hover:bg-purple-200 text-purple-800 border-[var(--acc)] shadow-sm'
+              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border-[var(--acc)] shadow-sm'
             }`}
             title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
           >
-            <Sliders className="w-3 h-3 text-purple-400" />
+            <Sliders className="w-3 h-3 text-[var(--acc)]" />
             <span>
               Autonomía: {dispatchLabel} • Min {minCache}€
             </span>
-            <span className="px-1 py-0.2 text-[8px] rounded font-black bg-purple-500/40 text-purple-100 ml-0.5">ADMIN</span>
+            <span className="px-1 py-0.2 text-[8px] rounded font-black bg-[var(--acc)]/40 text-[var(--acc)] ml-0.5">ADMIN</span>
           </button>
         ) : (
           <div
@@ -107,7 +107,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             }`}
             title="Límites de autonomía configurados (Configuración restringida a Administradores)"
           >
-            <Sliders className="w-3 h-3 text-purple-400" />
+            <Sliders className="w-3 h-3 text-[var(--acc)]" />
             <span>
               Autonomía: {dispatchLabel} • Min {minCache}€
             </span>
@@ -128,7 +128,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             id="close-floating-chat-btn"
             onClick={onClose}
             className={`p-1.5 rounded border transition-all cursor-pointer flex items-center justify-center active:scale-95 ${
-              'bg-[var(--sunken)] hover:bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:text-slate-800'
+              'bg-[var(--sunken)] hover:bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
             title="Cerrar Chat"
           >

@@ -609,7 +609,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     onClick={() => setAvatarColor(c)}
                     className={`w-7 h-7 rounded-full transition-transform cursor-pointer ${
                       avatarColor === c
-                        ? "scale-110  ring-2 ring-emerald-500"
+                        ? "scale-110  ring-2 ring-[var(--ok)]"
                         : " opacity-75 hover:opacity-100"
                     }`}
                     style={{ backgroundColor: c }}
@@ -1267,12 +1267,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <BellRing className="w-4 h-4 text-amber-400" />
+                    <BellRing className="w-4 h-4 text-[var(--acc)]" />
                     <span className="text-xs font-mono font-semibold">
                       Notificaciones Push del Navegador
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono font-bold text-amber-400 flex items-center gap-1">
+                  <span className="text-[11px] font-mono font-bold text-[var(--acc)] flex items-center gap-1">
                     <span>Configurar</span>
                     <ChevronDown className="w-3.5 h-3.5 -rotate-90" />
                   </span>

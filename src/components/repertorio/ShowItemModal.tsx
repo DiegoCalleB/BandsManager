@@ -72,12 +72,12 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
       <div className={`w-full max-w-lg p-6 rounded-2xl space-y-4 shadow-2xl ${colors.card} border border-[var(--acc)]/30`}>
         <div className="flex justify-between items-center pb-3 border-b borderbg-[var(--surface)]">
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-sky-500/20 text-sky-400 rounded-xl">⚡</span>
+            <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-xl">⚡</span>
             <div>
               <h3 className={`text-sm font-extrabold font-mono uppercase ${colors.text}`}>
                 {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
               </h3>
-              <p className="text-[10px] text-neutral-400 font-sans">
+              <p className="text-[10px] text-[var(--ink-2)] font-sans">
                 Organiza momentos del directo (beatbox, presentaciones, bloque de temas, pausas).
               </p>
             </div>
@@ -87,7 +87,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               onClose();
               setEditingShowItem(null);
             }}
-            className="text-neutral-400 hover:text-white p-1 rounded-lg hover:bgbg-[var(--surface)] cursor-pointer"
+            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-lg hover:bgbg-[var(--surface)] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -95,7 +95,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
           <div>
-            <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-1">Nombre / Título del Momento</label>
+            <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Nombre / Título del Momento</label>
             <input
               type="text"
               required
@@ -108,7 +108,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-1">Tipo de Elemento</label>
+              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Tipo de Elemento</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
@@ -123,7 +123,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-1">Duración Est. (minutos)</label>
+              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Duración Est. (minutos)</label>
               <input
                 type="number"
                 min="0"
@@ -138,7 +138,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-1">Tono / Key</label>
+              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Tono / Key</label>
               <input
                 type="text"
                 value={key}
@@ -148,7 +148,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-1">BPM / Tempo</label>
+              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">BPM / Tempo</label>
               <input
                 type="number"
                 value={tempo}
@@ -158,7 +158,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-1">Afinación</label>
+              <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Afinación</label>
               <input
                 type="text"
                 value={tuning}
@@ -170,7 +170,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-1">Notas para los Músicos / Atril</label>
+            <label className="block text-[10px] uppercase font-bold text-[var(--ink-2)] mb-1">Notas para los Músicos / Atril</label>
             <textarea
               rows={2}
               value={notes}
@@ -187,13 +187,13 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 onClose();
                 setEditingShowItem(null);
               }}
-              className="px-4 py-2 rounded-xl border border-[var(--hair)] text-xs font-bold text-neutral-300 hover:bgbg-[var(--surface)] cursor-pointer"
+              className="px-4 py-2 rounded-xl border border-[var(--hair)] text-xs font-bold text-[var(--ink-2)] hover:bgbg-[var(--surface)] cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-sky-500 text-white font-bold hover:bg-sky-400 shadow-lg text-xs font-mono cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-[var(--acc)] text-[var(--ink)] font-bold hover:bg-[var(--acc)] shadow-lg text-xs font-mono cursor-pointer flex items-center gap-1.5"
             >
               <span>Guardar en Setlist</span>
             </button>

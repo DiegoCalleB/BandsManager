@@ -172,9 +172,9 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
   return (
     <ModalPortal>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md animate-in fade-in duration-200">
-        <div className="bg-[#12110e] border border-[var(--hair)]/10 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden font-sans">
+        <div className="bg-[var(--surface)] border border-[var(--hair)]/10 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden font-sans">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--hair)]/10 bg-[#1a1916]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--hair)]/10 bg-[var(--surface)]">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-[var(--acc)]/10 border border-[var(--acc)]/30 text-[var(--acc)]">
                 <Cpu className="w-5 h-5" />
@@ -218,7 +218,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           <div className="p-6 space-y-6 overflow-y-auto custom-scrollbar flex-1 bg-gradient-to-b from-[#161512] to-[#0f0e0c]">
             {/* KPI Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--acc)]/20 flex flex-col">
+              <div className="p-3.5 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/20 flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>En Cola</span>
                   <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -227,7 +227,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 <span className="text-[10px] text-[var(--ink-2)] mt-1">Trabajos esperando turno</span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--acc)]/20 flex flex-col">
+              <div className="p-3.5 rounded-xl bg-[var(--surface)] border border-[var(--acc)]/20 flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>En Proceso</span>
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)] animate-spin" />
@@ -236,7 +236,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 <span className="text-[10px] text-[var(--ink-2)] mt-1">Ejecutando en worker</span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--ok)]/20 flex flex-col">
+              <div className="p-3.5 rounded-xl bg-[var(--surface)] border border-[var(--ok)]/20 flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>Completados</span>
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -245,7 +245,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 <span className="text-[10px] text-[var(--ink-2)] mt-1">Procesados con éxito</span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#1c1b18] border border-[var(--alert)]/20 flex flex-col">
+              <div className="p-3.5 rounded-xl bg-[var(--surface)] border border-[var(--alert)]/20 flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
                   <span>Con Error / Backoff</span>
                   <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)]" />
@@ -302,11 +302,11 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <span>Cargando telemetría de Supabase...</span>
                 </div>
               ) : recentJobs.length === 0 ? (
-                <div className="py-10 text-center text-[var(--ink-2)] text-xs bg-[#161512] rounded-xl border border-[var(--hair)]/5">
+                <div className="py-10 text-center text-[var(--ink-2)] text-xs bg-[var(--surface)] rounded-xl border border-[var(--hair)]/5">
                   No hay trabajos recientes en cola. El sistema está en reposo.
                 </div>
               ) : (
-                <div className="rounded-xl border border-[var(--hair)]/10 bg-[#161512] overflow-hidden">
+                <div className="rounded-xl border border-[var(--hair)]/10 bg-[var(--surface)] overflow-hidden">
                   <div className="divide-y divide-white/5">
                     {recentJobs.map((job) => (
                       <div
@@ -346,7 +346,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3.5 border-t border-[var(--hair)]/10 bg-[#161512] flex items-center justify-between text-xs text-[var(--ink-2)]">
+          <div className="px-6 py-3.5 border-t border-[var(--hair)]/10 bg-[var(--surface)] flex items-center justify-between text-xs text-[var(--ink-2)]">
             <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
               <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" />
               <span>Concurrencia atómica garantizada con Exponential Backoff</span>

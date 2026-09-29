@@ -126,7 +126,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         <div
           className={`absolute ${
             variant === 'mobile' ? 'right-0 top-12 w-[300px] sm:w-[360px]' : 'right-0 md:left-0 top-12 w-[320px] sm:w-[380px]'
-          } z-50 bg-[#141312] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
+          } z-50 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
         >
           {/* Header */}
           <div className="p-3.5 border-b border-[var(--hair)] bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312] flex items-center justify-between">
@@ -247,7 +247,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="p-2.5 border-t border-[var(--hair)] bg-[#121110] flex items-center justify-between text-[11px]">
+          <div className="p-2.5 border-t border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between text-[11px]">
             {history.length > 0 ? (
               <button
                 type="button"

@@ -671,7 +671,7 @@ export function SetlistAIAnalysisModal({
                           : w.type === "success"
                             ? "bg-[var(--ok)]/10 text-[var(--ink-2)]/30"
                             : "bg-[var(--acc)]/10 text-[var(--ink-2)]/30"
-                      } ${isHighlighted ? "ring-2 ring-white/60" : ""}`}
+                      } ${isHighlighted ? "ring-2 ring-[var(--ink)]/60" : ""}`}
                       style={{ cursor: hasSongs ? "pointer" : "default" }}
                       onMouseEnter={() => {
                         if (hasSongs) onHighlightSongs?.(w.songTitles!);
@@ -835,7 +835,7 @@ export function SetlistAIAnalysisModal({
                               isInvalid
                                 ? "bg-[var(--surface)] opacity-50"
                                 : isHighlighted
-                                  ? "bg-[var(--acc)]/80 ring-2 ring-purple-400/30"
+                                  ? "bg-[var(--acc)]/80 ring-2 ring-[var(--acc)]/30"
                                   : "bg-[var(--surface)]/80 hover:"
                             }`}
                             onMouseEnter={() => {

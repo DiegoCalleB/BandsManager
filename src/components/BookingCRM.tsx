@@ -2604,7 +2604,7 @@ export default function BookingCRM({
           });
           setIsAddingLeadModalOpen(true);
         }}
-        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
+        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
         style={{ animationDuration: '3s' }}
         title="Añadir contacto"
       >
