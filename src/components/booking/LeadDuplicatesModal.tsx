@@ -246,7 +246,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   <h2 className="text-base sm:text-lg font-bold tracking-tight text-[var(--ink)]">
                     Detector y Limpiador de Duplicados
                   </h2>
-                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70">
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70">
                     {duplicateGroups.length}{" "}
                     {duplicateGroups.length === 1 ? "grupo" : "grupos"}
                   </span>
@@ -364,7 +364,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
           <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
             {duplicateGroups.length === 0 ? (
               <div className="py-16 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center mx-auto">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-bold text-[var(--ink)]">
@@ -385,7 +385,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   {/* Group Top Info */}
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 ">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[var(--acc)]/15 text-[var(--acc)]/70 flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[11px] font-semibold bg-[var(--acc)]/15 text-[var(--acc)]/70 flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         {group.matchReasonLabel}
                       </span>
@@ -442,7 +442,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                 </div>
                               </div>
 
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--surface)]/80 text-[var(--ink-2)] capitalize shrink-0">
+                              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-semibold bg-[var(--surface)]/80 text-[var(--ink-2)] capitalize shrink-0">
                                 {lead.estado || "nuevo"}
                               </span>
                             </div>

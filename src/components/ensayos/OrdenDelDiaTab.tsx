@@ -715,7 +715,7 @@ export function OrdenDelDiaTab({
                               {formatSongTitle(item.titulo)}
                             </span>
                             <span
-                              className={`px-2 py-0.5 rounded-md text-[10px] font-sans font-bold ${bType.bg} ${bType.text}`}
+                              className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold ${bType.bg} ${bType.text}`}
                             >
                               {bType.icon} {bType.label}
                             </span>
@@ -734,17 +734,17 @@ export function OrdenDelDiaTab({
 
                             {/* Evaluation badge if set */}
                             {item.evaluacion === "bordada" && (
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
+                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
                                 🟢 Bordada
                               </span>
                             )}
                             {item.evaluacion === "regular" && (
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
                                 🟡 Regular
                               </span>
                             )}
                             {item.evaluacion === "repetir" && (
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
+                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
                                 🔴 Repetir
                               </span>
                             )}
@@ -955,7 +955,7 @@ export function OrdenDelDiaTab({
                       >
                         {/* Number in selection order */}
                         <div
-                          className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
+                          className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
                             isSelected
                               ? "bg-[var(--acc)]/60 text-[var(--ink)] scale-105"
                               : "text-[var(--ink-2)]"

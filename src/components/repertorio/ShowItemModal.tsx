@@ -69,10 +69,10 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm">
-      <div className={`w-full max-w-lg p-6 rounded-2xl space-y-4 shadow-2xl ${colors.card} border border-[var(--acc)]/30`}>
+      <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card} border border-[var(--acc)]/30`}>
         <div className="flex justify-between items-center pb-3 border-b borderbg-[var(--surface)]">
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-xl">⚡</span>
+            <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)]">⚡</span>
             <div>
               <h3 className={`text-sm font-extrabold font-mono uppercase ${colors.text}`}>
                 {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
@@ -87,7 +87,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               onClose();
               setEditingShowItem(null);
             }}
-            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-lg hover:bgbg-[var(--surface)] cursor-pointer"
+            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] hover:bgbg-[var(--surface)] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -102,7 +102,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Ej: Intro de Teclado + Presentación, Solo de Batería, Biset..."
-              className={`w-full p-2.5 rounded-xl border outline-none ${colors.input}`}
+              className={`w-full p-2.5 rounded-[var(--r-m)] border outline-none ${colors.input}`}
             />
           </div>
 
@@ -112,7 +112,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className={`w-full p-2.5 rounded-xl border outline-none ${colors.input}`}
+                className={`w-full p-2.5 rounded-[var(--r-m)] border outline-none ${colors.input}`}
               >
                 <option value="interlude">Interludio / Transición</option>
                 <option value="speech">Presentación / Hablado</option>
@@ -131,7 +131,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 value={durationMin}
                 onChange={(e) => setDurationMin(e.target.value === '' ? '' : Number(e.target.value))}
                 placeholder="2.5"
-                className={`w-full p-2.5 rounded-xl border outline-none ${colors.input}`}
+                className={`w-full p-2.5 rounded-[var(--r-m)] border outline-none ${colors.input}`}
               />
             </div>
           </div>
@@ -144,7 +144,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
                 placeholder="Ej: Am"
-                className={`w-full p-2 rounded-xl border outline-none ${colors.input}`}
+                className={`w-full p-2 rounded-[var(--r-m)] border outline-none ${colors.input}`}
               />
             </div>
             <div>
@@ -154,7 +154,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 value={tempo}
                 onChange={(e) => setTempo(e.target.value === '' ? '' : Number(e.target.value))}
                 placeholder="120"
-                className={`w-full p-2 rounded-xl border outline-none ${colors.input}`}
+                className={`w-full p-2 rounded-[var(--r-m)] border outline-none ${colors.input}`}
               />
             </div>
             <div>
@@ -164,7 +164,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 value={tuning}
                 onChange={(e) => setTuning(e.target.value)}
                 placeholder="Drop D"
-                className={`w-full p-2 rounded-xl border outline-none ${colors.input}`}
+                className={`w-full p-2 rounded-[var(--r-m)] border outline-none ${colors.input}`}
               />
             </div>
           </div>
@@ -176,7 +176,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Ej: Luces rojas fijas, no hablar por micro, entrar directo al bombo..."
-              className={`w-full p-2.5 rounded-xl border outline-none ${colors.input}`}
+              className={`w-full p-2.5 rounded-[var(--r-m)] border outline-none ${colors.input}`}
             />
           </div>
 
@@ -187,13 +187,13 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 onClose();
                 setEditingShowItem(null);
               }}
-              className="px-4 py-2 rounded-xl border border-[var(--hair)] text-xs font-bold text-[var(--ink-2)] hover:bgbg-[var(--surface)] cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-m)] border border-[var(--hair)] text-xs font-bold text-[var(--ink-2)] hover:bgbg-[var(--surface)] cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[var(--acc)] text-[var(--ink)] font-bold hover:bg-[var(--acc)] shadow-lg text-xs font-mono cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] font-bold hover:bg-[var(--acc)] shadow-lg text-xs font-mono cursor-pointer flex items-center gap-1.5"
             >
               <span>Guardar en Setlist</span>
             </button>

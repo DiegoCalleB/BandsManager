@@ -143,12 +143,12 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               >
                 Plan de Crecimiento Musical ({growthPlan.horizonDays} Días)
               </h3>
-              <span className="text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full bg-[var(--ok)]/10 text-[var(--ok)]">
+              <span className="text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)]">
                 🎸 {bandName}
               </span>
               {archetype && (
                 <span
-                  className={`text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full ${archetype.stageBadgeColor}`}
+                  className={`text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-[var(--r-pill)] ${archetype.stageBadgeColor}`}
                 >
                   {archetype.stageName}
                 </span>
@@ -258,9 +258,9 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-64">
-            <div className="w-full h-2 rounded-full bg-[var(--surface)]/80 overflow-hidden">
+            <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--ok)] transition-all duration-500 rounded-full"
+                className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--ok)] transition-all duration-500 rounded-[var(--r-pill)]"
                 style={{ width: `${progressPercent}%` }}
               ></div>
             </div>
@@ -358,7 +358,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--tentative)]/10 text-[var(--tentative)] font-bold">
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/10 text-[var(--tentative)] font-bold">
                       Pilar Musical {idx + 1}
                     </span>
                     <span className="text-xs font-sans font-bold text-[var(--ok)]">
@@ -417,7 +417,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                       </h4>
                     </div>
                     <span
-                      className={`text-[9px] font-sans px-2 py-0.5 rounded-full ${channelColor}`}
+                      className={`text-[9px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] ${channelColor}`}
                     >
                       {channel.growthStage}
                     </span>
@@ -584,7 +584,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink)]">
                       Estrategia para {currentChannel.name}
                     </h3>
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-2)]">
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)]">
                       {currentChannel.growthStage}
                     </span>
                   </div>
@@ -701,7 +701,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                         </p>
                         <button
                           onClick={() => copyToClipboard(hook, `hook-${hIdx}`)}
-                          className="p-1.5 rounded-md hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all shrink-0 cursor-pointer"
+                          className="p-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all shrink-0 cursor-pointer"
                           title="Copiar gancho"
                         >
                           {copiedHook === `hook-${hIdx}` ? (

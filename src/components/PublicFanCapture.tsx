@@ -143,7 +143,7 @@ export const PublicFanCapture: React.FC = () => {
                 <Music className="w-10 h-10" />
               </div>
             )}
-            <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--ink)] p-1.5 rounded-full">
+            <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--ink)] p-1.5 rounded-[var(--r-pill)]">
               <Heart className="w-4 h-4 fill-neutral-950" />
             </span>
           </div>
@@ -277,7 +277,7 @@ export const PublicFanCapture: React.FC = () => {
         ) : (
           /* THANK YOU CARD */
           <div className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 sm:p-8 space-y-6 text-center animate-fade-in">
-            <div className="w-16 h-16 bg-[var(--acc)]/20 text-[var(--acc)] rounded-full mx-auto flex items-center justify-center">
+            <div className="w-16 h-16 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-pill)] mx-auto flex items-center justify-center">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 

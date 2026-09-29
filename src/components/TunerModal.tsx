@@ -553,7 +553,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                               }
                             }
                           }}
-                          className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                          className={`px-2 py-1 rounded-[var(--r-s)] font-bold transition-all cursor-pointer ${
                             isCatSelected
                               ? "bg-[var(--ok)] text-[var(--ink)]"
                               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -633,14 +633,14 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 </div>
 
                 {/* Meter track */}
-                <div className="w-full bg-[var(--surface)] h-6 rounded-full relative overflow-hidden flex items-center px-1">
+                <div className="w-full bg-[var(--surface)] h-6 rounded-[var(--r-pill)] relative overflow-hidden flex items-center px-1">
                   {/* Center target indicator */}
                   <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-2 bg-[var(--ok)]/40 z-0" />
                   <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-[var(--ok)] z-10" />
 
                   {/* Needle pointer */}
                   <div
-                    className={`absolute top-0.5 bottom-0.5 w-3.5 rounded-full transition-all duration-100 z-20 ${
+                    className={`absolute top-0.5 bottom-0.5 w-3.5 rounded-[var(--r-pill)] transition-all duration-100 z-20 ${
                       isTunedIn
                         ? "bg-[var(--ok)] scale-110"
                         : currentCents < -5
@@ -674,7 +674,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                         {pitch.freq} Hz
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded-md font-bold ${
+                        className={`px-2 py-0.5 rounded-[var(--r-s)] font-bold ${
                           isTunedIn
                             ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
                             : pitch.cents < 0

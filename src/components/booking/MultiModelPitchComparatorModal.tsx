@@ -234,7 +234,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   <h2 className="text-base font-bold text-[var(--ink)] font-display">
                     Comparador A/B: DeepSeek 🚀 vs. Gemini ⚡
                   </h2>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     A/B Testing + Costes Reales (€)
                   </span>
                 </div>
@@ -469,7 +469,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                       }`}
                     >
                       {/* Model Header */}
-                      <div className="p-3.5800/80 flex items-center justify-between bg-[var(--sunken)] rounded-t-xl">
+                      <div className="p-3.5800/80 flex items-center justify-between bg-[var(--sunken)] rounded-t-[var(--r-m)]">
                         <div className="flex items-center gap-2">
                           <span className="text-lg">
                             {getProviderIcon(prop.provider)}

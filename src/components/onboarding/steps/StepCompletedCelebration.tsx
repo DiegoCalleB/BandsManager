@@ -73,19 +73,19 @@ export const StepCompletedCelebration: React.FC<
 
       {/* Stats Summary Pills */}
       <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
-        <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
+        <span className="text-xs px-3 py-1 rounded-[var(--r-pill)] bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
           <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalSongs} Temas
         </span>
-        <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
+        <span className="text-xs px-3 py-1 rounded-[var(--r-pill)] bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
           <Globe className="w-3.5 h-3.5 text-[var(--alert)]" /> {totalVideos}{" "}
           Vídeos
         </span>
-        <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
+        <span className="text-xs px-3 py-1 rounded-[var(--r-pill)] bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalEvents}{" "}
           Fechas
         </span>
         {hasRider && (
-          <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
+          <span className="text-xs px-3 py-1 rounded-[var(--r-pill)] bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-[var(--ok)]" /> Rider Técnico
           </span>
         )}
@@ -102,7 +102,7 @@ export const StepCompletedCelebration: React.FC<
                 Dossier EPK Online
               </h4>
             </div>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
+            <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
               Para Salas y Festivales
             </span>
           </div>
@@ -145,7 +145,7 @@ export const StepCompletedCelebration: React.FC<
                 Landing & QR de Fans
               </h4>
             </div>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--alert)]/20 text-[var(--alert)]/60 font-medium">
+            <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--alert)]/60 font-medium">
               Para Conciertos
             </span>
           </div>

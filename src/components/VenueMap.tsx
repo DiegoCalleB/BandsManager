@@ -862,19 +862,19 @@ export const VenueMap: React.FC<VenueMapProps> = ({
           Leyenda
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)] inline-block" />
+          <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] inline-block" />
           <span>Aprobado / Confirmado</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--acc)] inline-block" />
+          <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] inline-block" />
           <span>Pendiente aprobación</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--tentative)]/50 inline-block" />
+          <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/50 inline-block" />
           <span>Interesado / Negociando</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--tentative)] inline-block" />
+          <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--tentative)] inline-block" />
           <span>Nuevo / Contactado</span>
         </div>
       </div>

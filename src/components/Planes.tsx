@@ -558,7 +558,7 @@ export const Planes: React.FC<PlanesProps> = ({
               <span className="text-xs font-sans text-[var(--ink-2)]">
                 Plan activo:
               </span>
-              <span className="px-2 py-0.5 rounded-md bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold">
+              <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold">
                 {currentPlan.replace("_", "")}
               </span>
               {activeBandName && (
@@ -650,7 +650,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
       {/* 2. Header & Toggle Mensual / Anual */}
       <div className="flex flex-col items-center text-center space-y-4 pt-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold tracking-widest">
           <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
           <span>Planes & Suscripciones</span>
         </div>
@@ -693,7 +693,7 @@ export const Planes: React.FC<PlanesProps> = ({
             >
               <span>Anual</span>
               <span
-                className={`text-[10px] font-sans px-2 py-0.5 rounded-full font-extrabold ${
+                className={`text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-extrabold ${
                   billingPeriod === "annual"
                     ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                     : "bg-[var(--ok)]/20 text-[var(--ok)]"
@@ -751,7 +751,7 @@ export const Planes: React.FC<PlanesProps> = ({
               {/* Popular Floating Badge */}
               {plan.isPopular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] text-[10px] font-black font-sans tracking-widest">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] text-[10px] font-black font-sans tracking-widest">
                     <Star className="w-3 h-3 fill-[var(--ink)]" />
                     <span>MÁS POPULAR</span>
                   </span>
@@ -765,7 +765,7 @@ export const Planes: React.FC<PlanesProps> = ({
                     {plan.name}
                   </h3>
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-sans font-bold ${getBadgeStyle(plan.badgeType)}`}
+                    className={`px-2.5 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold ${getBadgeStyle(plan.badgeType)}`}
                   >
                     {plan.badgeLabel}
                   </span>
@@ -899,7 +899,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       >
                         {feat.included ? (
                           <div
-                            className={`p-0.5 rounded-full mt-0.5 shrink-0 ${
+                            className={`p-0.5 rounded-[var(--r-pill)] mt-0.5 shrink-0 ${
                               plan.isPopular
                                 ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                                 : "bg-[var(--ok)]/20 text-[var(--ok)]"
@@ -908,7 +908,7 @@ export const Planes: React.FC<PlanesProps> = ({
                             <Check className="w-3 h-3 stroke-[3]" />
                           </div>
                         ) : (
-                          <div className="p-0.5 rounded-full mt-0.5 shrink-0 bg-[var(--surface)] text-[var(--ink-2)]">
+                          <div className="p-0.5 rounded-[var(--r-pill)] mt-0.5 shrink-0 bg-[var(--surface)] text-[var(--ink-2)]">
                             <X className="w-3 h-3 stroke-[2]" />
                           </div>
                         )}
@@ -1127,7 +1127,7 @@ export const Planes: React.FC<PlanesProps> = ({
                             </span>
                             {typeof row.de_gira === "boolean" ? (
                               row.de_gira ? (
-                                <div className="p-1 rounded-full bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                                <div className="p-1 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70">
                                   <Check className="w-4 h-4 stroke-[3]" />
                                 </div>
                               ) : (
@@ -1146,7 +1146,7 @@ export const Planes: React.FC<PlanesProps> = ({
                             </span>
                             {typeof row.cabeza_de_cartel === "boolean" ? (
                               row.cabeza_de_cartel ? (
-                                <div className="p-1 rounded-full bg-[var(--ok)]/20 text-[var(--ok)]">
+                                <div className="p-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)]">
                                   <Check className="w-4 h-4 stroke-[3]" />
                                 </div>
                               ) : (

@@ -128,7 +128,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center p-6">
-        <div className="w-12 h-12 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 rounded-[var(--r-pill)] animate-spin mb-4"></div>
         <p className="text-[var(--acc)] font-medium">{t("cargando")}</p>
       </div>
     );
@@ -493,7 +493,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--alert-soft)] transition-all duration-200 active:scale-95 text-[var(--ink-2)] hover:text-[var(--ink)]"
+                          className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)]/90 hover:bg-[var(--alert-soft)] transition-all duration-200 active:scale-95 text-[var(--ink-2)] hover:text-[var(--ink)]"
                           title={interpolate(t("seguirMiembro"), {
                             name: m.nombre,
                           })}
@@ -556,7 +556,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   {config.bandasSimilares.map((band, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 rounded-full text-xs font-medium bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30 backdrop-blur-xs"
+                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30 backdrop-blur-xs"
                     >
                       {band}
                     </span>
@@ -582,7 +582,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <div className="space-y-2.5 pt-2 text-sm">
               <div className="flex items-center gap-2.5 font-medium">
                 <span
-                  className={`w-2 h-2 rounded-full ${styles.accentBtn.includes("fuchsia") ? "bg-[var(--tentative)]/80" : styles.accentBtn.includes("orange") ? "bg-[var(--acc)]/80" : "bg-[var(--acc)]/60"} shrink-0`}
+                  className={`w-2 h-2 rounded-[var(--r-pill)] ${styles.accentBtn.includes("fuchsia") ? "bg-[var(--tentative)]/80" : styles.accentBtn.includes("orange") ? "bg-[var(--acc)]/80" : "bg-[var(--acc)]/60"} shrink-0`}
                 ></span>
                 <span>
                   {config.contactoBooking?.nombre || t("managerPorDefecto")}
@@ -812,7 +812,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   })
                 }
                 aria-label={t("fotoAnterior")}
-                className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+                className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
               >
                 ‹
               </button>
@@ -825,7 +825,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   })
                 }
                 aria-label={t("fotoSiguiente")}
-                className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+                className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
               >
                 ›
               </button>
@@ -914,7 +914,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   </div>
                 </div>
                 <span
-                  className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize `}
+                  className={`text-xs font-semibold px-2.5 py-1 rounded-[var(--r-pill)] ${styles.badge} capitalize `}
                 >
                   {c.tipo}
                 </span>
@@ -958,10 +958,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <img
               src={displayLogo}
               alt={t("logoAlt")}
-              className="w-8 h-8 rounded-full object-cover"
+              className="w-8 h-8 rounded-[var(--r-pill)] object-cover"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--acc)] font-bold text-xs">
+            <div className="w-8 h-8 rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--acc)] font-bold text-xs">
               {bandName.charAt(0).toUpperCase()}
             </div>
           )}
@@ -987,7 +987,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 onClick={() => setLanguage(l.code)}
                 aria-pressed={language === l.code}
                 title={l.label}
-                className={`px-2 py-1 rounded-md text-xs font-bold transition ${language === l.code ? styles.accentBtn : "opacity-70 hover:opacity-100"}`}
+                className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-bold transition ${language === l.code ? styles.accentBtn : "opacity-70 hover:opacity-100"}`}
               >
                 <span aria-hidden="true">{l.flag}</span>
                 <span className="hidden sm:inline ml-1">{l.code}</span>
@@ -1114,7 +1114,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               href={safeUrl(config.dossierPdfUrl)}
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-flex items-center gap-1.5 px-4 py-2 ${styles.accentBtnSubtle} text-xs font-bold rounded-full transition print:hidden`}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 ${styles.accentBtnSubtle} text-xs font-bold rounded-[var(--r-pill)] transition print:hidden`}
             >
               <Download className="w-3.5 h-3.5" />{" "}
               {config.dossierPdfName || t("descargarDossier")}

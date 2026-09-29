@@ -194,7 +194,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
           {/* Header */}
           <div className="flex justify-between items-start800/80 pb-3">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[10px] font-black tracking-wider mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[10px] font-black tracking-wider mb-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Concierto Confirmado
               </div>
@@ -351,7 +351,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                             {st.nombre}
                           </span>
                           {isOptimal && (
-                            <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[9px] font-black">
+                            <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[9px] font-black">
                               ✨ Sugerido
                             </span>
                           )}
@@ -364,7 +364,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                       </div>
 
                       <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                        className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center shrink-0 ${
                           isSelected
                             ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                             : "ring-1 ring-[var(--hair)]"

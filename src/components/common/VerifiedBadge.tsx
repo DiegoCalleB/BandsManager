@@ -37,14 +37,14 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
       onMouseLeave={() => setShowTooltip(false)}
     >
       <span
-        className={`inline-flex items-center justify-center rounded-full bg-gradient-to-tr from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] text-[var(--ink)] font-black ring-1 ring-[var(--acc)]/50 ${sizeClasses[size]}`}
+        className={`inline-flex items-center justify-center rounded-[var(--r-pill)] bg-gradient-to-tr from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] text-[var(--ink)] font-black ring-1 ring-[var(--acc)]/50 ${sizeClasses[size]}`}
         title="Lead Verificado • Conversación activa mediante agentes de IA"
       >
         <Check className={`${iconSizes[size]} stroke-[3.5]`} />
       </span>
 
       {showLabel && (
-        <span className="text-[11px] font-bold tracking-wide text-[var(--acc)]/70 bg-[var(--acc)]/10 px-1.5 py-0.5 rounded-md">
+        <span className="text-[11px] font-bold tracking-wide text-[var(--acc)]/70 bg-[var(--acc)]/10 px-1.5 py-0.5 rounded-[var(--r-s)]">
           Verificado
         </span>
       )}

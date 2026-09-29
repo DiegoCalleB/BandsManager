@@ -45,7 +45,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
               <div>
                 <h3 className="font-bold tracking-wider text-sm flex items-center gap-2">
                   <span>Selección de Tipografía & Fuente</span>
-                  <span className="text-[10px] font-sans font-normal px-2 py-0.5 rounded-full bg-[var(--surface)]/15 text-[var(--ok)] ">
+                  <span className="text-[10px] font-sans font-normal px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/15 text-[var(--ok)] ">
                     En tiempo real
                   </span>
                 </h3>
@@ -102,7 +102,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                           {preset.name}
                         </span>
                         <span
-                          className={`text-[9px] font-sans font-bold px-2 py-0.5 rounded-full tracking-wider ${
+                          className={`text-[9px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] tracking-wider ${
                             preset.id === "plus_jakarta"
                               ? "bg-[var(--surface)]/15 text-[var(--ok)] "
                               : preset.isSoft
@@ -121,7 +121,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                     <div className="flex items-center gap-2">
                       {isSelected && (
                         <span
-                          className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${"bg-[var(--acc)] text-[var(--on-acc)]"}`}
+                          className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center font-bold text-xs ${"bg-[var(--acc)] text-[var(--on-acc)]"}`}
                         >
                           <Check className="w-3.5 h-3.5 stroke-[3]" />
                         </span>

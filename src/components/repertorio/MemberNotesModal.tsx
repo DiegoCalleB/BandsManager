@@ -230,17 +230,17 @@ export function MemberNotesModal({
                 <span className="text-[var(--ink-2)] font-bold">
                   Preparación de la banda:
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/10 text-[var(--ok)]">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)]">
                   ✅ {summary.lista} listos
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/80">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/80">
                   🔶 {summary.casiLista} casi
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]">
                   🌱 {summary.aprendiendo} aprendiendo
                 </span>
                 {summary.sinOpinar > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-2)]">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)]">
                     {summary.sinOpinar} sin marcar
                   </span>
                 )}
@@ -368,14 +368,14 @@ export function MemberNotesModal({
                           >
                             {member.name}
                           </span>
-                          <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-[var(--ink)]/10 text-[var(--ink-2)] font-sans">
+                          <span className="ml-2 text-[11px] px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ink)]/10 text-[var(--ink-2)] font-sans">
                             {member.instrument}
                           </span>
                         </div>
                       </div>
 
                       {hasNote && (
-                        <span className="text-[10px] font-sans font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <span className="text-[10px] font-sans font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded-[var(--r-pill)] flex items-center gap-1">
                           <Check className="w-3 h-3" /> Con notas
                         </span>
                       )}

@@ -1132,7 +1132,7 @@ export default function TourManager({
                                 availableMembers.map((m) => m.id),
                               );
                             }}
-                            className={`px-3 py-1 text-xs font-sans font-bold rounded-md transition-all cursor-pointer ${
+                            className={`px-3 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${
                               formConvocatoriaTipo === "completa"
                                 ? "bg-[var(--acc)] text-[var(--ink)]"
                                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1143,7 +1143,7 @@ export default function TourManager({
                           <button
                             type="button"
                             onClick={() => setFormConvocatoriaTipo("parcial")}
-                            className={`px-3 py-1 text-xs font-sans font-bold rounded-md transition-all cursor-pointer ${
+                            className={`px-3 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${
                               formConvocatoriaTipo === "parcial"
                                 ? "bg-[var(--acc)] text-[var(--ink)]"
                                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1860,7 +1860,7 @@ export default function TourManager({
               className={`w-full max-w-md rounded-[var(--r-l)] ${colors.card} p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 my-auto`}
             >
               <div className="flex items-center gap-3 text-[var(--alert)]">
-                <div className="p-3 rounded-full bg-[var(--alert)]/10 shrink-0">
+                <div className="p-3 rounded-[var(--r-pill)] bg-[var(--alert)]/10 shrink-0">
                   <Trash2 className="w-6 h-6" />
                 </div>
                 <div>

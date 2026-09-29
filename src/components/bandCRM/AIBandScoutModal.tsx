@@ -134,7 +134,7 @@ export function AIBandScoutModal({
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-[var(--sunken)] rounded-full transition-colors text-[var(--ink-2)] hover:text-[var(--ink-2)]"
+              className="p-2 hover:bg-[var(--sunken)] rounded-[var(--r-pill)] transition-colors text-[var(--ink-2)] hover:text-[var(--ink-2)]"
             >
               <X className="w-5 h-5" />
             </button>
@@ -223,7 +223,7 @@ export function AIBandScoutModal({
               >
                 {isSearching ? (
                   <>
-                    <div className="w-5 h-5 border-t-[var(--hair)] rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-t-[var(--hair)] rounded-[var(--r-pill)] animate-spin" />
                     Buscando bandas compatibles...
                   </>
                 ) : (
@@ -264,7 +264,7 @@ export function AIBandScoutModal({
                     >
                       <div className="flex items-center gap-4">
                         <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0
+                          className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center shrink-0
  ${selectedBands.has(idx) ? "bg-[var(--acc)] text-[var(--ink)]" : "border-2"}`}
                         >
                           {selectedBands.has(idx) && (

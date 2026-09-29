@@ -630,9 +630,9 @@ export default function SpotifyPlayerBar({
                 )}
                 {isPlaying && (
                   <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
-                    <span className="w-0.5 h-2 md:h-3 bg-[var(--surface)] rounded-full" />
-                    <span className="w-0.5 h-3 md:h-4 bg-[var(--surface)] rounded-full delay-75" />
-                    <span className="w-0.5 h-2 bg-[var(--surface)] rounded-full delay-150" />
+                    <span className="w-0.5 h-2 md:h-3 bg-[var(--surface)] rounded-[var(--r-pill)]" />
+                    <span className="w-0.5 h-3 md:h-4 bg-[var(--surface)] rounded-[var(--r-pill)] delay-75" />
+                    <span className="w-0.5 h-2 bg-[var(--surface)] rounded-[var(--r-pill)] delay-150" />
                   </div>
                 )}
               </div>
@@ -674,7 +674,7 @@ export default function SpotifyPlayerBar({
               <button
                 type="button"
                 onClick={togglePlayPause}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition hover:scale-105 active:scale-95"
+                className="w-9 h-9 md:w-10 md:h-10 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition hover:scale-105 active:scale-95"
                 title={isPlaying ? 'Pausar' : 'Reproducir'}
               >
                 {isPlaying ? (
@@ -732,9 +732,9 @@ export default function SpotifyPlayerBar({
                   )}
                   {isPlaying && (
                     <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
-                      <span className="w-1 h-4 bg-[var(--surface)] rounded-full" />
-                      <span className="w-1 h-6 bg-[var(--surface)] rounded-full delay-75" />
-                      <span className="w-1 h-3 bg-[var(--surface)] rounded-full delay-150" />
+                      <span className="w-1 h-4 bg-[var(--surface)] rounded-[var(--r-pill)]" />
+                      <span className="w-1 h-6 bg-[var(--surface)] rounded-[var(--r-pill)] delay-75" />
+                      <span className="w-1 h-3 bg-[var(--surface)] rounded-[var(--r-pill)] delay-150" />
                     </div>
                   )}
                 </div>
@@ -821,7 +821,7 @@ export default function SpotifyPlayerBar({
                 {/* Loop Practice Toggle */}
                 <button
                   onClick={() => setIsLooping(!isLooping)}
-                  className={`p-1.5 rounded-full transition-all cursor-pointer ${
+                  className={`p-1.5 rounded-[var(--r-pill)] transition-all cursor-pointer ${
                     isLooping ? 'text-[var(--ok)] bg-[var(--surface)]/10' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title={isLooping ? 'Repetir tema activado' : 'Activar Bucle'}
@@ -841,7 +841,7 @@ export default function SpotifyPlayerBar({
                 {/* Play / Pause - Authentic Spotify Green Circle */}
                 <button
                   onClick={togglePlayPause}
-                  className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
+                  className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
                   title={isPlaying ? 'Pausar' : 'Reproducir Canción'}
                 >
                   {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -859,7 +859,7 @@ export default function SpotifyPlayerBar({
                 {/* Crossfade Toggle — fundido real de 5s al pasar al siguiente tema de la cola */}
                 <button
                   onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
-                  className={`p-1.5 rounded-full transition-all cursor-pointer text-sm ${
+                  className={`p-1.5 rounded-[var(--r-pill)] transition-all cursor-pointer text-sm ${
                     crossfadeEnabled ? 'text-[var(--ok)] bg-[var(--ok)]/15' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title={crossfadeEnabled ? 'Fundido entre temas activado (5s)' : 'Activar fundido entre temas (5s)'}

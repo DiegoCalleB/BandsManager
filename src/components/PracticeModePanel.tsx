@@ -727,13 +727,13 @@ export default function PracticeModePanel({
             </div>
 
             {/* Transporte + Looper de Secciones Inteligentes + Velocidad & Tono */}
-            <div className={`rounded-2xl border p-4 space-y-4 shadow-xl ${cardBg}`}>
+            <div className={`rounded-[var(--r-l)] border p-4 space-y-4 shadow-xl ${cardBg}`}>
               {/* Reproductor principal y barra de tiempo con zona de bucle visual */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-[var(--ok)]/40 transition-all active:scale-95 cursor-pointer"
+                    className="w-11 h-11 rounded-[var(--r-l)] bg-gradient-to-tr from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-[var(--ok)]/40 transition-all active:scale-95 cursor-pointer"
                     title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
                   >
                     {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -761,7 +761,7 @@ export default function PracticeModePanel({
                         step={0.1}
                         value={Math.min(currentTime, duration)}
                         onChange={(e) => handleSeekBarChange(Number(e.target.value))}
-                        className="w-full accent-emerald-400 cursor-pointer h-2 bgbg-[var(--surface)] rounded-lg appearance-none"
+                        className="w-full accent-emerald-400 cursor-pointer h-2 bgbg-[var(--surface)] rounded-[var(--r-m)] appearance-none"
                       />
                       {/* Resaltado visual del bucle A-B */}
                       {loopA != null && loopB != null && duration > 0 && (
@@ -780,7 +780,7 @@ export default function PracticeModePanel({
 
               {/* SECCIONES INTELIGENTES (SMART SECTION LOOPER) */}
               {smartSections.length > 0 && (
-                <div className="p-3 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
                   <div className="flex items-center justify-between flex-wrap gap-1 text-[11px]">
                     <span className="font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <Repeat className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
@@ -788,7 +788,7 @@ export default function PracticeModePanel({
                     </span>
                     {loopA != null && loopB != null ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-[var(--ok)] font-bold bg-[var(--ok)]/15 border border-[var(--ok)]/30 px-2 py-0.5 rounded-lg">
+                        <span className="text-[10px] text-[var(--ok)] font-bold bg-[var(--ok)]/15 border border-[var(--ok)]/30 px-2 py-0.5 rounded-[var(--r-m)]">
                           🔁 Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
                         </span>
                         <button
@@ -814,7 +814,7 @@ export default function PracticeModePanel({
                           key={sec.id}
                           type="button"
                           onClick={() => applySmartSectionLoop(sec)}
-                          className={`px-2.5 py-1.5 rounded-xl border text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          className={`px-2.5 py-1.5 rounded-[var(--r-m)] border text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
                               ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] shadow-md shadow-[var(--acc)]/40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
@@ -836,14 +836,14 @@ export default function PracticeModePanel({
               {/* CONTROLES DE TEMPO & TRASPOSICIÓN DE TONO */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 {/* Bloque Tempo & Presets de Velocidad */}
-                <div className="p-3 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                       <Gauge className="w-3.5 h-3.5 text-[var(--acc)]" />
                       Tempo & Velocidad
                     </span>
                     <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
+                      className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] border ${
                         speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]/10'
                       }`}
                     >
@@ -860,7 +860,7 @@ export default function PracticeModePanel({
                           key={spd}
                           type="button"
                           onClick={() => changeSpeed(spd)}
-                          className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
+                          className={`py-1 rounded-[var(--r-m)] border text-center transition-all cursor-pointer font-bold ${
                             isActive
                               ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] font-black'
                               : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
@@ -911,14 +911,14 @@ export default function PracticeModePanel({
                 </div>
 
                 {/* Bloque Tono (Pitch Transpose) & Metrónomo */}
-                <div className="p-3 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
+                <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-2 font-mono">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                       <ArrowUpDown className="w-3.5 h-3.5 text-[var(--acc)]" />
                       Tono (Sin pitufo)
                     </span>
                     <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
+                      className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] border ${
                         semitonesOffset !== 0
                           ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40'
                           : 'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]/10'
@@ -945,7 +945,7 @@ export default function PracticeModePanel({
                           key={st}
                           type="button"
                           onClick={() => setSemitonesOffset(st)}
-                          className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
+                          className={`py-1 rounded-[var(--r-m)] border text-center transition-all cursor-pointer font-bold ${
                             isActive
                               ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] font-black'
                               : 'bg-[var(--ink)]/5 border-[var(--hair)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
@@ -962,7 +962,7 @@ export default function PracticeModePanel({
                     <button
                       onClick={() => setMetronomeOn((v) => !v)}
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}
-                      className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] border transition-all cursor-pointer ${
                         metronomeOn
                           ? 'bg-[var(--acc)]/20 border-[var(--acc)]/40 text-[var(--acc)]'
                           : 'bgbg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -974,7 +974,7 @@ export default function PracticeModePanel({
                     <button
                       onClick={markBeatAnchor}
                       title="Alinear claqueta con el primer beat"
-                      className={`text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
+                      className={`text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] border transition-all cursor-pointer ${
                         beatAnchorSec > 0
                           ? 'bg-[var(--ok)]/20 border-[var(--ok)]/40 text-[var(--ok)]'
                           : 'bgbg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'

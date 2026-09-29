@@ -175,7 +175,7 @@ export function EnsayosManager({
   if (rehearsals.length === 0) {
     return (
       <div className="p-6 sm:p-12 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-        <div className="w-16 h-16 rounded-3xl bg-[var(--acc)]/60 flex items-center justify-center text-[var(--acc)] mx-auto">
+        <div className="w-16 h-16 rounded-[var(--r-xl)] bg-[var(--acc)]/60 flex items-center justify-center text-[var(--acc)] mx-auto">
           <Mic className="w-8 h-8" />
         </div>
 
@@ -246,7 +246,7 @@ export function EnsayosManager({
 
               {/* Status Badge */}
               <span
-                className={`px-2.5 py-1 rounded-full text-[10px] font-sans font-bold tracking-wider ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-sans font-bold tracking-wider ${
                   currentRehearsal?.estado === "completado"
                     ? "bg-[var(--ok)]/15 text-[var(--ink-2)]/30"
                     : currentRehearsal?.estado === "en_curso"

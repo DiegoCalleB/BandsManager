@@ -98,9 +98,9 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               </span>
             </div>
 
-            <div className="w-full h-2.5 bg-[var(--sunken)] rounded-full overflow-hidden">
+            <div className="w-full h-2.5 bg-[var(--sunken)] rounded-[var(--r-pill)] overflow-hidden">
               <div
-                className={`h-full transition-all duration-300 rounded-full ${
+                className={`h-full transition-all duration-300 rounded-[var(--r-pill)] ${
                   isCompleted
                     ? "bg-gradient-to-r from-[var(--ok)] to-[var(--ok)]"
                     : "bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)]"

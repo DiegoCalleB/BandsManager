@@ -61,7 +61,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
     >
       <div className="flex items-center gap-3">
         <div
-          className={`p-1.5 rounded-lg border ${
+          className={`p-1.5 rounded-[var(--r-m)] border ${
             'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc)]'
           }`}
         >
@@ -75,7 +75,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           >
             Mánager Virtual AI{' '}
             <span
-              className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${
+              className={`w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block animate-pulse ${
                 'bg-[var(--acc)] shadow-[0_0_8px_rgba(79, 70, 229, 0.8)]'
               }`}
             />
@@ -89,7 +89,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenAutonomyModal}
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono border font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
               'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] border-[var(--acc)] shadow-sm'
             }`}
             title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
@@ -102,7 +102,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           </button>
         ) : (
           <div
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border font-semibold opacity-80 ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono border font-semibold opacity-80 ${
               'bg-[var(--acc-soft)] text-[var(--acc)] border-[var(--acc)]'
             }`}
             title="Límites de autonomía configurados (Configuración restringida a Administradores)"

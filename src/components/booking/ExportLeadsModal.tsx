@@ -192,7 +192,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   <span className="text-xs font-bold">
                     Contactos a la vista con filtro actual
                   </span>
-                  <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                  <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     {filteredLeads.length} contactos
                   </span>
                 </div>
@@ -221,7 +221,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   <span className="text-xs font-bold">
                     Todos los contactos del CRM
                   </span>
-                  <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">
+                  <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                     {allLeads.length} contactos
                   </span>
                 </div>
@@ -251,7 +251,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                     <span className="text-xs font-bold">
                       Solo contactos seleccionados
                     </span>
-                    <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                    <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70">
                       {selectedLeads.length} seleccionados
                     </span>
                   </div>

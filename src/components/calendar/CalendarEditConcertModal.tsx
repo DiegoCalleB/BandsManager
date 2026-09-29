@@ -76,13 +76,13 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
     <ModalPortal isOpen={true} onClose={() => setViewingConcert(null)}>
       <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
-          className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
+          className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
           <button
             onClick={() => setViewingConcert(null)}
-            className="absolute top-4 right-4 p-1 rounded-full text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
           >
             ✕
           </button>
@@ -103,7 +103,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   value={editDraft.ciudad}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, ciudad: e.target.value } : prev))}
                   required
-                  className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                  className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
                     'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
@@ -115,7 +115,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   value={editDraft.sala}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, sala: e.target.value } : prev))}
                   required
-                  className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                  className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
                     'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
@@ -129,7 +129,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 value={editDraft.fecha}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
                 required
-                className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none font-mono ${
                   'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
@@ -142,7 +142,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 value={editDraft.direccion || ''}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, direccion: e.target.value } : prev))}
                 placeholder="ej. Calle Jardines 3, Madrid"
-                className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
                   'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
@@ -157,7 +157,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   type="number"
                   value={editDraft.cache}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, cache: Number(e.target.value) } : prev))}
-                  className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                  className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none font-mono ${
                     'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
@@ -167,7 +167,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 <select
                   value={editDraft.estado_pago}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
-                  className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                  className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
                     'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 >
@@ -188,7 +188,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               <select
                 value={editDraft.setlistId || ''}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
-                className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
+                className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-m)] outline-none font-mono ${
                   'bg-[var(--surface)] text-[var(--ink)] border border-[var(--hair)]'
                 }`}
               >
@@ -201,7 +201,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               </select>
             </div>
 
-            <div className="flex items-center gap-2 py-1 px-2 rounded-lg bg-[var(--acc)]/20 border border-[var(--acc)]/30">
+            <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/30">
               <input
                 type="checkbox"
                 id="editConcIsPosibleCheck"
@@ -223,7 +223,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 value={editDraft.notas || ''}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                 rows={2}
-                className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-m)] outline-none ${
                   'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
@@ -239,7 +239,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                       setViewingConcert(null);
                     }
                   }}
-                  className="px-2.5 py-1 rounded-lg text-[10px] font-mono bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20 border border-[var(--alert)]/30 flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20 border border-[var(--alert)]/30 flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3 h-3" />
                   <span>Eliminar</span>
@@ -249,13 +249,13 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 <button
                   type="button"
                   onClick={() => setViewingConcert(null)}
-                  className="px-2 py-1 text-[10px] font-mono rounded-lg text-[var(--ink-2)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+                  className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-m)] text-[var(--ink-2)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
+                  className="px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
                 >
                   Guardar Cambios
                 </button>

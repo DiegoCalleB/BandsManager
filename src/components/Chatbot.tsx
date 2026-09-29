@@ -1981,7 +1981,7 @@ export default function Chatbot({
                           {pendingActions.length > 1 && (
                             <button
                               onClick={() => handleConfirmAllActions(msg.id, msg.proposedActions || [])}
-                              className={`text-[9px] font-bold font-sans px-2 py-1 rounded-md transition-all active:scale-95 ${'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]'}`}
+                              className={`text-[9px] font-bold font-sans px-2 py-1 rounded-[var(--r-s)] transition-all active:scale-95 ${'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]'}`}
                             >
                               ⚡ Aprobar Todos ({pendingActions.length})
                             </button>
@@ -2358,7 +2358,7 @@ export default function Chatbot({
 
                       return (
                         <div key={idx} className="flex items-center gap-2 text-[10px] font-sans">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+                          <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${dotColor}`} />
                           <span className={`truncate leading-none ${textColor}`}>{step.name}</span>
                           {isStepRunning && <RefreshCw className="w-2.5 h-2.5 animate-spin text-[var(--acc)] shrink-0" />}
                         </div>

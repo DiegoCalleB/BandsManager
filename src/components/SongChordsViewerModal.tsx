@@ -243,7 +243,7 @@ export function SongChordsViewerModal({
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-[var(--sunken)] hover:bg-[var(--alert)]/30 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
+            className="absolute top-3 right-3 z-20 p-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--alert)]/30 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
             title="Cerrar"
           >
             <X className="w-5 h-5" />

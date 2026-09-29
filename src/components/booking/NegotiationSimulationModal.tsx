@@ -87,7 +87,7 @@ export function NegotiationSimulationModal({
             <button
               type="button"
               onClick={onClose}
-              className={`p-1 rounded-full transition-colors cursor-pointer hover:bg-[var(--surface)]/80 ${textSub}`}
+              className={`p-1 rounded-[var(--r-pill)] transition-colors cursor-pointer hover:bg-[var(--surface)]/80 ${textSub}`}
             >
               <X className="w-5 h-5" />
             </button>

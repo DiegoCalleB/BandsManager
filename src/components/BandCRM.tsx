@@ -1117,7 +1117,7 @@ Bakandeya Agent Manager IA & Músicos`;
               <Users className="w-4 h-4 text-[var(--acc)]" />
               <span>Grupos</span>
             </h2>
-            <span className="text-[11px] font-sans text-[var(--ink-2)] bg-[var(--surface)] px-2 py-0.5 rounded-full">
+            <span className="text-[11px] font-sans text-[var(--ink-2)] bg-[var(--surface)] px-2 py-0.5 rounded-[var(--r-pill)]">
               {totalBands}
             </span>
           </div>
@@ -1129,7 +1129,7 @@ Bakandeya Agent Manager IA & Músicos`;
             <button
               type="button"
               onClick={() => setSubTab("co_booking")}
-              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
                 subTab === "co_booking"
                   ? "bg-[var(--sunken)] text-[var(--ink)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1145,14 +1145,14 @@ Bakandeya Agent Manager IA & Músicos`;
                   setSubTab("registered_bands");
                   fetchRegisteredBands();
                 }}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
                   subTab === "registered_bands"
                     ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
                 <span>Registro</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[var(--ok)]/30 text-[var(--ink)] font-bold">
+                <span className="text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--ok)]/30 text-[var(--ink)] font-bold">
                   {registeredBands.length}
                 </span>
               </button>
@@ -1297,7 +1297,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         {band.id || `reg-${idx + 1}`}
                       </td>
                       <td className="p-3 font-bold text-[var(--ink)] flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[var(--ok)]"></span>
+                        <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]"></span>
                         <span>
                           {band.nombre_banda ||
                             band.nombreBanda ||
@@ -1308,7 +1308,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         {band.email || "—"}
                       </td>
                       <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
+                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
                           {band.plan || "emergente"}
                         </span>
                       </td>
@@ -1318,7 +1318,7 @@ Bakandeya Agent Manager IA & Músicos`;
                           : "—"}
                       </td>
                       <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--ok)]/15 text-[var(--ok)]">
+                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--ok)]/15 text-[var(--ok)]">
                           {band.estado_cuenta || "activo"}
                         </span>
                       </td>
@@ -1573,7 +1573,7 @@ Bakandeya Agent Manager IA & Músicos`;
                                   <img
                                     src={band.imagen_url}
                                     alt={band.nombre_banda}
-                                    className="w-6 h-6 rounded-full object-cover/50 shrink-0"
+                                    className="w-6 h-6 rounded-[var(--r-pill)] object-cover/50 shrink-0"
                                   />
                                 ) : (
                                   <span className="text-sm shrink-0">
@@ -1592,7 +1592,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
                             <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-sans text-[var(--ink-2)]">
                               <span
-                                className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[var(--acc)] flex items-center gap-1 shrink-0 max-w-[160px]"
+                                className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-[var(--r-s)] text-[var(--acc)] flex items-center gap-1 shrink-0 max-w-[160px]"
                                 title={band.estilo_musical}
                               >
                                 <Music className="w-3 h-3 text-[var(--acc)] shrink-0" />
@@ -1602,7 +1602,7 @@ Bakandeya Agent Manager IA & Músicos`;
                               </span>
 
                               <span
-                                className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[var(--ink-2)] flex items-center gap-1 shrink-0 max-w-[140px]"
+                                className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-[var(--r-s)] text-[var(--ink-2)] flex items-center gap-1 shrink-0 max-w-[140px]"
                                 title={band.localizacion}
                               >
                                 <MapPin className="w-3 h-3 text-[var(--alert)] shrink-0" />
@@ -1861,7 +1861,7 @@ Bakandeya Agent Manager IA & Músicos`;
                               <img
                                 src={band.imagen_url}
                                 alt={band.nombre_banda}
-                                className="w-5 h-5 rounded-full object-cover/50 shrink-0"
+                                className="w-5 h-5 rounded-[var(--r-pill)] object-cover/50 shrink-0"
                               />
                             ) : (
                               <span className="text-xs shrink-0">

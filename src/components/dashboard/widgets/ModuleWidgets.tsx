@@ -314,7 +314,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
           <span className="text-lg font-sans font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
           <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
         </div>
-        <span className="px-2.5 py-1 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">● Activo</span>
+        <span className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">● Activo</span>
       </div>
     </div>
   );

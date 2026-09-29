@@ -368,13 +368,13 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           >
             {/* Corner Ping Beacon */}
             <span className="absolute -top-2 -right-2 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--acc)]/60 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-[var(--acc)]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
+              <span className="relative inline-flex rounded-[var(--r-pill)] h-4 w-4 bg-[var(--acc)]"></span>
             </span>
 
             {/* Target Tooltip Badge */}
             <div
-              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] tracking-wider flex items-center gap-1 whitespace-nowrap`}
+              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] tracking-wider flex items-center gap-1 whitespace-nowrap`}
             >
               <span>👉 {currentStep.uiTarget?.label || "Aquí"}</span>
             </div>
@@ -405,14 +405,14 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           className={
             effectiveFloatingMode
               ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95  rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
-              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] md:border md:border-[var(--hair)]/90 rounded-none md:rounded-[var(--r-xl)] shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
           }
         >
           {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
           <div className="p-3.5 sm:p-4/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
             <div className="flex items-center gap-2">
               <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-sans font-bold tracking-wider ${accentStyles.badgeBg}`}
+                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold tracking-wider ${accentStyles.badgeBg}`}
               >
                 {tutorialConfig.badge}
               </span>
@@ -461,7 +461,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    className={`h-1.5 rounded-[var(--r-pill)] transition-all duration-300 cursor-pointer ${
                       idx === currentStepIndex
                         ? accentStyles.activeDot
                         : "w-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]"
@@ -528,8 +528,8 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--acc)]/60 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--acc)]"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
+                          <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--acc)]"></span>
                         </span>
                         <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70">
                           {currentStep.uiTarget.type === "button"

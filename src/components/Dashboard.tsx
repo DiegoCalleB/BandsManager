@@ -1190,7 +1190,7 @@ export default function Dashboard({
                     <span>Personalizar / Reordenar</span>
                   </div>
                   {isEditDashboardMode && (
-                    <span className="w-2 h-2 rounded-full bg-[var(--acc)]" />
+                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
                   )}
                 </button>
 

@@ -530,7 +530,7 @@ export const SocialAndFansGrowthChart: React.FC<
               className={`text-sm font-bold font-display tracking-wider flex items-center gap-2 ${"text-[var(--ink)]"}`}
             >
               Evolución de Redes Sociales & Base de Fans en BBDD
-              <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
+              <span className="text-[9px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
                 <CheckCircle2 className="w-2.5 h-2.5" /> Supabase Conectada
               </span>
             </h3>
@@ -807,7 +807,7 @@ export const SocialAndFansGrowthChart: React.FC<
                 className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
               >
                 <span
-                  className={`w-2 h-2 rounded-full ${selectedChannels.instagram ? "bg-[var(--alert)]" : "bg-[var(--sunken)]"}`}
+                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.instagram ? "bg-[var(--alert)]" : "bg-[var(--sunken)]"}`}
                 ></span>
                 <Instagram className="w-3 h-3 text-[var(--alert)]" />
                 <span>Instagram</span>
@@ -846,7 +846,7 @@ export const SocialAndFansGrowthChart: React.FC<
                 className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
               >
                 <span
-                  className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ? "bg-[var(--acc)]/80" : "bg-[var(--sunken)]"}`}
+                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.tiktok ? "bg-[var(--acc)]/80" : "bg-[var(--sunken)]"}`}
                 ></span>
                 <Video className="w-3 h-3 text-[var(--acc)]" />
                 <span>TikTok</span>
@@ -885,7 +885,7 @@ export const SocialAndFansGrowthChart: React.FC<
                 className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
               >
                 <span
-                  className={`w-2 h-2 rounded-full ${selectedChannels.youtube ? "bg-[var(--alert)]" : "bg-[var(--sunken)]"}`}
+                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.youtube ? "bg-[var(--alert)]" : "bg-[var(--sunken)]"}`}
                 ></span>
                 <Youtube className="w-3 h-3 text-[var(--alert)]" />
                 <span>YouTube</span>
@@ -924,7 +924,7 @@ export const SocialAndFansGrowthChart: React.FC<
                 className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
               >
                 <span
-                  className={`w-2 h-2 rounded-full ${selectedChannels.spotify ? "bg-[var(--ok)]" : "bg-[var(--sunken)]"}`}
+                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.spotify ? "bg-[var(--ok)]" : "bg-[var(--sunken)]"}`}
                 ></span>
                 <Music2 className="w-3 h-3 text-[var(--ok)]" />
                 <span>Spotify</span>
@@ -962,7 +962,7 @@ export const SocialAndFansGrowthChart: React.FC<
               className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans cursor-pointer"
             >
               <span
-                className={`w-2 h-2 rounded-full ${selectedChannels.fans ? "bg-[var(--acc)]/60" : "bg-[var(--sunken)]"}`}
+                className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.fans ? "bg-[var(--acc)]/60" : "bg-[var(--sunken)]"}`}
               ></span>
               <Heart className="w-3 h-3 text-[var(--acc)] fill-[var(--acc)]/30" />
               <span>Fans BD (Únete)</span>

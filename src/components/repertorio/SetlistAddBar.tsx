@@ -133,7 +133,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           </div>
           <button
             onClick={() => setSelectedSetlistItemId(null)}
-            className="px-2 py-0.5 rounded-md bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] text-xs whitespace-nowrap cursor-pointer transition-colors"
+            className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] text-xs whitespace-nowrap cursor-pointer transition-colors"
             title="Deseleccionar e insertar al final de la lista"
           >
             ✕ Deseleccionar
@@ -295,7 +295,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                           onChange={(e) => setNewShortcutIcon(e.target.value)}
                           maxLength={2}
                           placeholder="⭐"
-                          className="w-8 bg-[var(--surface)] rounded-md p-1 text-center text-xs focus:outline-none"
+                          className="w-8 bg-[var(--surface)] rounded-[var(--r-s)] p-1 text-center text-xs focus:outline-none"
                         />
                         <input
                           value={newShortcutLabel}
@@ -307,7 +307,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                             if (e.key === "Enter") handleCreateShortcut();
                             if (e.key === "Escape") setIsAddingShortcut(false);
                           }}
-                          className="flex-1 min-w-0 bg-[var(--surface)] rounded-md px-2 py-1 text-xs focus:outline-none"
+                          className="flex-1 min-w-0 bg-[var(--surface)] rounded-[var(--r-s)] px-2 py-1 text-xs focus:outline-none"
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pt-0.5">
@@ -331,7 +331,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                             type="button"
                             onClick={handleCreateShortcut}
                             disabled={!newShortcutLabel.trim()}
-                            className="px-2.5 py-1 rounded-md bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
+                            className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
                           >
                             Guardar
                           </button>

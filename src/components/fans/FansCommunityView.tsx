@@ -307,7 +307,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
       {/* Band Announcements Feed */}
       {announcements.length === 0 && (
         <div className="bg-[var(--surface)]/60 rounded-[var(--r-l)] p-6 text-center space-y-2">
-          <div className="w-10 h-10 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
+          <div className="w-10 h-10 mx-auto rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
             <Megaphone className="w-5 h-5" />
           </div>
           <h4 className="text-[var(--ink)] font-bold text-sm">
@@ -327,7 +327,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         >
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold">
+              <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold">
                 <Pin className="w-4 h-4" />
               </div>
               <div>
@@ -335,7 +335,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   <span className="font-bold text-[var(--ink)] text-sm">
                     {ann.autor}
                   </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)] font-sans font-bold">
+                  <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] font-sans font-bold">
                     Noticia Banda
                   </span>
                 </div>
@@ -417,7 +417,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
         {fans.length === 0 ? (
           <div className="p-12 text-center bg-[var(--surface)] rounded-[var(--r-l)] space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
+            <div className="w-12 h-12 mx-auto rounded-[var(--r-pill)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
               <MessageCircle className="w-6 h-6" />
             </div>
             <h4 className="text-[var(--ink)] font-bold text-sm">
@@ -474,7 +474,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                           {fan.nombre}
                         </span>
                         <span
-                          className={`inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-full font-bold ${badge.bg}`}
+                          className={`inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-bold ${badge.bg}`}
                         >
                           <BadgeIcon className="w-2.5 h-2.5" />
                           <span>{badge.label}</span>

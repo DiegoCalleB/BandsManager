@@ -443,12 +443,12 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => onPlatformClick?.(key, url)}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-all duration-200 ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
               >
                 <IconComp className="w-4 h-4 shrink-0" />
                 <span>{label}</span>
                 {showClickCounts && typeof count === "number" && count > 0 && (
-                  <span className="text-[10px] font-sans px-1.5 py-0.2 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">
+                  <span className="text-[10px] font-sans px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                     {count}
                   </span>
                 )}
@@ -520,7 +520,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
                 {label}
               </span>
               {showClickCounts && typeof count === "number" && count > 0 && (
-                <span className="text-[10px] font-sans px-1.5 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)] shrink-0 ml-auto">
+                <span className="text-[10px] font-sans px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] shrink-0 ml-auto">
                   {count}
                 </span>
               )}

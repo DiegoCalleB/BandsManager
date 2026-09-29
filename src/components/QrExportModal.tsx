@@ -167,7 +167,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                   <FileText className="w-4 h-4 text-[var(--acc)]" />
                   Cartel A4 Completo
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Recomendado
                 </span>
               </div>
@@ -191,7 +191,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                   <FileCode className="w-4 h-4 text-[var(--acc)]" />
                   Vectorial SVG (.svg)
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Imprentas / Lonas
                 </span>
               </div>
@@ -215,7 +215,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                   <ImageIcon className="w-4 h-4 text-[var(--acc)]" />
                   PNG Ultra HD 4K
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--tentative)]/20 text-[var(--acc)] px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-sans font-bold bg-[var(--tentative)]/20 text-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
                   3000 x 3000 px
                 </span>
               </div>
@@ -239,7 +239,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                   <Layers className="w-4 h-4 text-[var(--acc)]" />
                   Pegatina / Stand de Merchan
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ok)] px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ok)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Cuadrado 2400px
                 </span>
               </div>

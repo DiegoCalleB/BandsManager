@@ -238,7 +238,7 @@ export default function Finanzas({
           <span
             className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${"bg-[var(--ok)]/10  text-[var(--ok)]"}`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping shrink-0" />{" "}
+            <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping shrink-0" />{" "}
             Auto-sync
           </span>
         </div>
@@ -681,7 +681,7 @@ export default function Finanzas({
                           </td>
                           <td className="p-3 text-center">
                             <span
-                              className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${alertBadge.bgColor}`}
+                              className={`px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-bold ${alertBadge.bgColor}`}
                             >
                               {alertBadge.label}
                             </span>
@@ -894,7 +894,7 @@ export default function Finanzas({
                     id="finanzas-search-clear"
                     type="button"
                     onClick={() => setSearchTerm("")}
-                    className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                    className={`absolute right-2.5 top-2 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
                     title="Borrar búsqueda"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -1156,10 +1156,10 @@ export default function Finanzas({
                       </span>
                     </div>
                     <div
-                      className={`w-full h-2 rounded-full ${"bg-[var(--surface)]"}`}
+                      className={`w-full h-2 rounded-[var(--r-pill)] ${"bg-[var(--surface)]"}`}
                     >
                       <div
-                        className={`h-2 rounded-full ${item.color}`}
+                        className={`h-2 rounded-[var(--r-pill)] ${item.color}`}
                         style={{
                           width: `${Math.max(percent, totalInCat > 0 ? 3 : 0)}%`,
                         }}

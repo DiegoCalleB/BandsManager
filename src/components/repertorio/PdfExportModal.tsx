@@ -1848,7 +1848,7 @@ export function PdfExportModal({
                 <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)]">
                   <button
                     onClick={() => setHandwritingColor("blue")}
-                    className={`w-5 h-5 rounded-full bg-[var(--tentative)] transition-transform cursor-pointer ${
+                    className={`w-5 h-5 rounded-[var(--r-pill)] bg-[var(--tentative)] transition-transform cursor-pointer ${
                       handwritingColor === "blue"
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
@@ -1857,7 +1857,7 @@ export function PdfExportModal({
                   />
                   <button
                     onClick={() => setHandwritingColor("black")}
-                    className={`w-5 h-5 rounded-full bg-[var(--surface)] transition-transform cursor-pointer ${
+                    className={`w-5 h-5 rounded-[var(--r-pill)] bg-[var(--surface)] transition-transform cursor-pointer ${
                       handwritingColor === "black"
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
@@ -1866,7 +1866,7 @@ export function PdfExportModal({
                   />
                   <button
                     onClick={() => setHandwritingColor("red")}
-                    className={`w-5 h-5 rounded-full bg-[var(--alert)] transition-transform cursor-pointer ${
+                    className={`w-5 h-5 rounded-[var(--r-pill)] bg-[var(--alert)] transition-transform cursor-pointer ${
                       handwritingColor === "red"
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
@@ -1875,7 +1875,7 @@ export function PdfExportModal({
                   />
                   <button
                     onClick={() => setHandwritingColor("purple")}
-                    className={`w-5 h-5 rounded-full bg-[var(--acc)] transition-transform cursor-pointer ${
+                    className={`w-5 h-5 rounded-[var(--r-pill)] bg-[var(--acc)] transition-transform cursor-pointer ${
                       handwritingColor === "purple"
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
@@ -1954,7 +1954,7 @@ export function PdfExportModal({
                 <span className="sm:hidden font-bold text-[var(--ink-2)] shrink-0">
                   {previewPageIndex + 1}/{membersToExport.length}
                 </span>
-                <span className="px-2.5 sm:px-3 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold flex items-center gap-1.5 min-w-0 truncate">
+                <span className="px-2.5 sm:px-3 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold flex items-center gap-1.5 min-w-0 truncate">
                   <span className="truncate">
                     👤 {currentPreviewMember.name}
                   </span>
@@ -1995,7 +1995,7 @@ export function PdfExportModal({
             {/* Authentic Real Stage Paper Sheet */}
             <div
               ref={sheetRef}
-              className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
+              className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 rounded-[var(--r-s)] w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
               style={{
                 width: "210mm",
                 minHeight: "297mm",

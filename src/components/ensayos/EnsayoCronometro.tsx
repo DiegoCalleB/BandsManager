@@ -112,7 +112,7 @@ export function EnsayoCronometro({
     <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] relative overflow-hidden">
       {/* Background soft when running */}
       {isActive && (
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-[var(--r-pill)] blur-3xl pointer-events-none" />
       )}
 
       <div className="flex items-center justify-between gap-3 mb-3">
@@ -133,7 +133,7 @@ export function EnsayoCronometro({
         </div>
 
         {isOvertime && (
-          <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink-2)]">
+          <span className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink-2)]">
             <AlertCircle className="w-3 h-3" /> Tiempo excedido
           </span>
         )}
@@ -193,9 +193,9 @@ export function EnsayoCronometro({
 
       {/* Progress Bar */}
       <div className="mt-3">
-        <div className="w-full h-2 rounded-full bg-[var(--surface)] overflow-hidden">
+        <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-300 ${
+            className={`h-full rounded-[var(--r-pill)] transition-all duration-300 ${
               isOvertime
                 ? "bg-gradient-to-r from-[var(--alert)] to-[var(--alert)]"
                 : progressPct > 80

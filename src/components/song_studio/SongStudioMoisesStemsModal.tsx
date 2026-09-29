@@ -32,7 +32,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
 
   return (
     <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-[var(--surface)] border border-[var(--acc)]/40 rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-[var(--ink)] max-h-[90vh] overflow-y-auto">
+      <div className="bg-[var(--surface)] border border-[var(--acc)]/40 rounded-[var(--r-l)] max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-[var(--ink)] max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
           <div className="flex items-center gap-2 text-[var(--acc)] font-mono font-bold text-sm">
             <Sliders className="w-5 h-5 text-[var(--acc)]" />
@@ -51,7 +51,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('stems')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--ink)] font-black shadow-md' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
@@ -60,7 +60,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('how_it_works')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'how_it_works'
                 ? 'bg-[var(--acc)] text-[var(--ink)] font-black shadow-md'
                 : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
@@ -71,7 +71,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('upload')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--ink)] font-black shadow-md' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
@@ -81,7 +81,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
 
         {moisesTab === 'stems' && (
           <div className="space-y-4 text-xs">
-            <div className="p-3.5 rounded-xl bg-[var(--acc)]/30 border border-[var(--acc)]/30 space-y-1">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 border border-[var(--acc)]/30 space-y-1">
               <p className="font-bold text-[var(--acc)] font-mono">Pista a procesar: {targetIdea.titulo}</p>
               <p className="text-[11px] text-[var(--ink-2)] font-sans">
                 Aislamiento de voz, batería, bajo e instrumentos utilizando red neuronal en la nube.
@@ -100,7 +100,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                       key={presetKey}
                       type="button"
                       onClick={() => setMoisesPreset && setMoisesPreset(presetKey)}
-                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                      className={`p-3 rounded-[var(--r-m)] border text-left transition-all cursor-pointer ${
                         moisesPreset === presetKey
                           ? 'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink)] shadow-md'
                           : 'bg-[var(--surface)]/60 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
@@ -118,7 +118,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
               <button
                 type="button"
                 onClick={() => setShowMoisesStemsModal(null)}
-                className="px-4 py-2 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
               >
                 Cancelar
               </button>
@@ -130,7 +130,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                     setShowMoisesStemsModal(null);
                   }
                 }}
-                className="px-5 py-2 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-mono text-xs font-black flex items-center gap-1.5 shadow-lg cursor-pointer transition-all active:scale-95"
+                className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-mono text-xs font-black flex items-center gap-1.5 shadow-lg cursor-pointer transition-all active:scale-95"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Comenzar Separación</span>
@@ -160,7 +160,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             <input
               type="file"
               accept="audio/*"
-              className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded-xl p-2.5 text-[var(--ink-2)] text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[var(--ok)] file:text-[var(--ink)] hover:file:bg-[var(--ok)]"
+              className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded-[var(--r-m)] p-2.5 text-[var(--ink-2)] text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-[var(--r-m)] file:border-0 file:text-xs file:font-bold file:bg-[var(--ok)] file:text-[var(--ink)] hover:file:bg-[var(--ok)]"
             />
           </div>
         )}

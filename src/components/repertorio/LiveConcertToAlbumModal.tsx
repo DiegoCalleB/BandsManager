@@ -1430,7 +1430,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <h2 className="text-2xl font-black tracking-tight">
                     Live Concert to Album Generator
                   </h2>
-                  <span className="px-2 py-0.5 text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] rounded-full">
+                  <span className="px-2 py-0.5 text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-pill)]">
                     v2.0 Híbrido
                   </span>
                 </div>
@@ -1521,7 +1521,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     onChange={(e) =>
                       setUploadedFile(e.target.files?.[0] || null)
                     }
-                    className={`w-full text-xs text-[var(--ink-2)] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[var(--acc)] file:text-[var(--ink)] hover:file:bg-[var(--acc)]/80 ${"bg-[var(--surface)]"}`}
+                    className={`w-full text-xs text-[var(--ink-2)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:text-xs file:font-semibold file:bg-[var(--acc)] file:text-[var(--ink)] hover:file:bg-[var(--acc)]/80 ${"bg-[var(--surface)]"}`}
                   />
                 </div>
               </div>
@@ -1975,7 +1975,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <div>
                         <div className="font-extrabold text-[var(--ok)]/40 flex items-center gap-1.5">
                           <span>Transcribiendo concierto completo con IA</span>
-                          <span className="text-[10px] bg-[var(--ok)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-full font-sans">
+                          <span className="text-[10px] bg-[var(--ok)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-[var(--r-pill)] font-sans">
                             {transcribeAllProgress.current} /{" "}
                             {transcribeAllProgress.total}
                           </span>
@@ -1988,7 +1988,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         </div>
                       </div>
                     </div>
-                    <div className="w-full sm:w-48 bg-[var(--surface)] h-2.5 rounded-full overflow-hidden">
+                    <div className="w-full sm:w-48 bg-[var(--surface)] h-2.5 rounded-[var(--r-pill)] overflow-hidden">
                       <div
                         className="bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] h-full transition-all duration-300"
                         style={{
@@ -2160,7 +2160,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                             {track.hasApplauseIntro && (
                               <span
-                                className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1"
+                                className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1"
                                 title="Se detectó charla o aplauso antes de la entrada musical"
                               >
                                 👏 Charla previa
@@ -2433,12 +2433,12 @@ export const LiveConcertToAlbumModal: React.FC<
                                   placeholder="120"
                                 />
                                 {track.lyricsWithChords ? (
-                                  <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-[var(--ok)]/20 text-[var(--ok)] flex items-center gap-1">
+                                  <span className="px-2 py-0.5 text-[10px] font-bold rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] flex items-center gap-1">
                                     <Check className="w-3 h-3" /> Cifrado &
                                     Letra Listos
                                   </span>
                                 ) : (
-                                  <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[var(--surface)] text-[var(--ink-2)]">
+                                  <span className="px-2 py-0.5 text-[10px] font-semibold rounded-[var(--r-pill)] bg-[var(--surface)] text-[var(--ink-2)]">
                                     Sin cifrado aún
                                   </span>
                                 )}
@@ -2513,7 +2513,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                       "
                                     </span>
                                   </div>
-                                  <span className="text-[10px] bg-[var(--acc)]/20 text-[var(--acc)]/70 px-2 py-0.5 rounded-md font-sans font-bold shrink-0 flex items-center gap-1">
+                                  <span className="text-[10px] bg-[var(--acc)]/20 text-[var(--acc)]/70 px-2 py-0.5 rounded-[var(--r-s)] font-sans font-bold shrink-0 flex items-center gap-1">
                                     Ver completo ➔
                                   </span>
                                 </div>
@@ -2903,7 +2903,7 @@ export const LiveConcertToAlbumModal: React.FC<
               <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--ok)]/40 to-[var(--surface)] space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">
+                    <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">
                       <Check className="w-6 h-6" />
                     </div>
                     <div>
@@ -3119,7 +3119,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     <div>
                       <h3 className="text-base font-extrabold text-[var(--ink-2)] flex items-center gap-2">
                         <span>Nombrar Temas y Speeches</span>
-                        <span className="text-xs font-sans font-normal px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--ink-2)]">
+                        <span className="text-xs font-sans font-normal px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)] text-[var(--ink-2)]">
                           {tracks.length} cortes
                         </span>
                       </h3>

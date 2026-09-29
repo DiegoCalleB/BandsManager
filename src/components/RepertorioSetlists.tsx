@@ -3659,7 +3659,7 @@ export default function RepertorioSetlists({
                 <span className="hidden sm:inline">Cerebro IA</span>
                 <span className="sm:hidden">IA</span>
                 {aiAnalysisResult?.overallScore && (
-                  <span className="px-1.5 py-0.2 rounded-full bg-[var(--ok)]/20 text-[10px] font-sans font-bold text-[var(--ok)]/80">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[10px] font-sans font-bold text-[var(--ok)]/80">
                     {aiAnalysisResult.overallScore}
                   </span>
                 )}
@@ -4055,28 +4055,28 @@ export default function RepertorioSetlists({
                                   <div className="flex flex-col gap-1 text-[9px] text-[var(--ink)] pt-1">
                                     <span className="flex items-center gap-1.5">
                                       <i
-                                        className="w-2 h-2 rounded-full inline-block"
+                                        className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#0284c7" }}
                                       />
                                       🌙 Balada
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                       <i
-                                        className="w-2 h-2 rounded-full inline-block"
+                                        className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#059669" }}
                                       />
                                       🎵 Media
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                       <i
-                                        className="w-2 h-2 rounded-full inline-block"
+                                        className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#a16207" }}
                                       />
                                       🔥 Alta
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                       <i
-                                        className="w-2 h-2 rounded-full inline-block"
+                                        className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#a21caf" }}
                                       />
                                       💣 Explosiva
@@ -4266,7 +4266,7 @@ export default function RepertorioSetlists({
                                     handleEnergyChartDrag(point, next);
                                 };
                                 const dirBtnClass =
-                                  "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
+                                  "w-8 h-8 rounded-[var(--r-pill)] flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
                                 const reorderBtnClass = `${dirBtnClass} bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 `;
                                 // Antes era un rgba(23,23,23,0.8) fijo — negro casi puro sin importar el tema, por eso
                                 // en Claro los botones de subir/bajar energía salían tan oscuros. var(--sunken) es la
@@ -4340,7 +4340,7 @@ export default function RepertorioSetlists({
  categoría para que el joystick tenga vida propia en vez de ser cuatro
  flechas sueltas. */}
                                       <div
-                                        className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0"
+                                        className="w-9 h-9 rounded-[var(--r-pill)] flex items-center justify-center text-[11px] font-bold shrink-0"
                                         style={
                                           info
                                             ? {
@@ -4432,7 +4432,7 @@ export default function RepertorioSetlists({
                                                 }
                                               >
                                                 <span
-                                                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+                                                  className={`w-4 h-4 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-black shrink-0 ${
                                                     evalPrev?.status === "ok"
                                                       ? "bg-[var(--ok)]/30 text-[var(--ink)]"
                                                       : "bg-[var(--alert)]/30 text-[var(--ink)]"
@@ -4486,7 +4486,7 @@ export default function RepertorioSetlists({
                                                 }
                                               >
                                                 <span
-                                                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+                                                  className={`w-4 h-4 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-black shrink-0 ${
                                                     evalNext?.status === "ok"
                                                       ? "bg-[var(--ok)]/30 text-[var(--ink)]"
                                                       : "bg-[var(--alert)]/30 text-[var(--ink)]"
@@ -4874,7 +4874,7 @@ export default function RepertorioSetlists({
                             e.stopPropagation();
                             playThisSong();
                           }}
-                          className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-[var(--ok)] text-[var(--ink)] sm:bg-transparent sm:group-hover:bg-[var(--ok)] sm:group-hover:text-[var(--ink)]"
+                          className="w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center shrink-0 transition-all cursor-pointer bg-[var(--ok)] text-[var(--ink)] sm:bg-transparent sm:group-hover:bg-[var(--ok)] sm:group-hover:text-[var(--ink)]"
                           title={
                             isPlayingThisRow
                               ? "Sonando ahora"
@@ -4883,9 +4883,9 @@ export default function RepertorioSetlists({
                         >
                           {isPlayingThisRow ? (
                             <div className="flex items-center gap-0.5">
-                              <span className="w-0.5 h-2 bg-[var(--ok)] rounded-full" />
-                              <span className="w-0.5 h-2.5 bg-[var(--ok)]/60 rounded-full delay-75" />
-                              <span className="w-0.5 h-1.5 bg-[var(--ok)] rounded-full delay-150" />
+                              <span className="w-0.5 h-2 bg-[var(--ok)] rounded-[var(--r-pill)]" />
+                              <span className="w-0.5 h-2.5 bg-[var(--ok)]/60 rounded-[var(--r-pill)] delay-75" />
+                              <span className="w-0.5 h-1.5 bg-[var(--ok)] rounded-[var(--r-pill)] delay-150" />
                             </div>
                           ) : (
                             <>
@@ -5614,7 +5614,7 @@ export default function RepertorioSetlists({
 
                         {/* Type Label */}
                         <span
-                          className={`text-[8px] font-sans font-extrabold px-1.5 py-0.5 rounded-sm shrink-0 ${typeConfig.text}`}
+                          className={`text-[8px] font-sans font-extrabold px-1.5 py-0.5 rounded-[var(--r-s)] shrink-0 ${typeConfig.text}`}
                         >
                           {typeConfig.label}
                         </span>
@@ -5798,7 +5798,7 @@ export default function RepertorioSetlists({
                       selectPlayerSongWithQueue(first, true, null);
                     }
                   }}
-                  className="shrink-0 w-12 h-12 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold flex items-center justify-center transition-all cursor-pointer active:scale-95"
+                  className="shrink-0 w-12 h-12 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold flex items-center justify-center transition-all cursor-pointer active:scale-95"
                   title="Reproducir catálogo"
                 >
                   {activePlayerSong &&
@@ -5945,7 +5945,7 @@ export default function RepertorioSetlists({
               )}
 
               {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
-              <div className="rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden bg-[var(--surface)] text-[var(--ink-2)]">
+              <div className="rounded-[var(--r-l)] sm:rounded-[var(--r-xl)] overflow-hidden bg-[var(--surface)] text-[var(--ink-2)]">
                 <div className="p-4 bg-[var(--sunken)]">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <input
@@ -6305,7 +6305,7 @@ export default function RepertorioSetlists({
           }`}
         >
           {statusBanner.type === "loading" && (
-            <span className="w-3.5 h-3.5 border-t-[var(--hair)] rounded-full animate-spin shrink-0" />
+            <span className="w-3.5 h-3.5 border-t-[var(--hair)] rounded-[var(--r-pill)] animate-spin shrink-0" />
           )}
           <span>{statusBanner.text}</span>
         </div>

@@ -625,7 +625,7 @@ export default function Merchan({
                   <button
                     key={c.id}
                     onClick={() => setShirtColor(c.id)}
-                    className={`w-8 h-8 rounded-full transition-transform hover:scale-110 ${shirtColor === c.id ? "ring-2 ring-[var(--acc)] scale-110" : ""}`}
+                    className={`w-8 h-8 rounded-[var(--r-pill)] transition-transform hover:scale-110 ${shirtColor === c.id ? "ring-2 ring-[var(--acc)] scale-110" : ""}`}
                     style={{ backgroundColor: c.id }}
                     title={c.name}
                   />
@@ -693,7 +693,7 @@ export default function Merchan({
             {generatedDesigns.length === 0 && !isGenerating ? (
               <div className="h-full flex flex-col items-center justify-center gap-4 text-center p-10">
                 <div
-                  className={`w-20 h-20 rounded-full flex items-center justify-center ${"bg-[var(--bg)] text-[var(--ink-2)]"}`}
+                  className={`w-20 h-20 rounded-[var(--r-pill)] flex items-center justify-center ${"bg-[var(--bg)] text-[var(--ink-2)]"}`}
                 >
                   <ImageIcon className="w-8 h-8" />
                 </div>
@@ -756,11 +756,11 @@ export default function Merchan({
                               />
                               {bandLogoUrl && (
                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                  <div className="w-3.5 h-3.5 bg-[var(--surface)] rounded-sm flex items-center justify-center overflow-hidden p-0.5">
+                                  <div className="w-3.5 h-3.5 bg-[var(--surface)] rounded-[var(--r-s)] flex items-center justify-center overflow-hidden p-0.5">
                                     <img
                                       src={bandLogoUrl}
                                       alt="Logo"
-                                      className="w-full h-full object-cover rounded-sm"
+                                      className="w-full h-full object-cover rounded-[var(--r-s)]"
                                     />
                                   </div>
                                 </div>
@@ -858,7 +858,7 @@ export default function Merchan({
                       </div>
 
                       <div
-                        className={`absolute bottom-3 left-3 px-2 py-1 rounded-md text-[9px] font-sans font-bold z-20 ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
+                        className={`absolute bottom-3 left-3 px-2 py-1 rounded-[var(--r-s)] text-[9px] font-sans font-bold z-20 ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
                       >
                         {design.type} •{" "}
                         {design.assetType === "custom"
@@ -877,7 +877,7 @@ export default function Merchan({
       {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
       {showClaimModal && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
-          <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)]  overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="relative w-full max-w-2xl rounded-[var(--r-xl)] bg-[var(--surface)]  overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
             <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[var(--sunken)] flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -1065,7 +1065,7 @@ export default function Merchan({
               ) : (
                 /* Pantalla de Confirmación Posterior */
                 <div className="py-8 flex flex-col items-center text-center space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)] animate-bounce">
+                  <div className="w-16 h-16 rounded-[var(--r-pill)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)] animate-bounce">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
 

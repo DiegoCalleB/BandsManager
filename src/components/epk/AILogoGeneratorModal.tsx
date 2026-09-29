@@ -84,24 +84,24 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface)]/80 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="px-6 py-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)] shadow-md">
+            <div className="w-9 h-9 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)] to-[var(--acc)] flex items-center justify-center text-[var(--ink)] shadow-md">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-bold text-base text-[var(--ink)] flex items-center gap-2">
                 Diseñador de Logotipos con IA
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20">
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20">
                   Amateur & Indie
                 </span>
               </h3>
               <p className="text-xs text-[var(--ink-2)]">Genera una identidad visual profesional para {bandName || 'tu banda'}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-lg hover:bg-[var(--surface)] transition">
+          <button onClick={onClose} className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] hover:bg-[var(--surface)] transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -109,7 +109,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
         {/* Content */}
         <div className="p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
           {error && (
-            <div className="p-3 bg-[var(--alert)]/80 border border-[var(--alert)]/50 rounded-xl text-[var(--alert)] text-xs flex items-center gap-2">
+            <div className="p-3 bg-[var(--alert)]/80 border border-[var(--alert)]/50 rounded-[var(--r-m)] text-[var(--alert)] text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
               <span>{error}</span>
             </div>
@@ -128,7 +128,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
                     key={style.id}
                     type="button"
                     onClick={() => setSelectedStyle(style.id)}
-                    className={`p-3 rounded-xl border text-left transition flex items-start gap-2.5 ${
+                    className={`p-3 rounded-[var(--r-m)] border text-left transition flex items-start gap-2.5 ${
                       isSelected
                         ? 'bg-[var(--acc)]/10 border-[var(--acc)]/60 ring-1 ring-[var(--acc)]/40'
                         : 'bg-[var(--surface)]/60 border-[var(--hair)] hover:border-[var(--hair)] hover:bg-[var(--surface)]'
@@ -155,13 +155,13 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
               placeholder="Ej: añadir forma de rayo, tonos dorados y negros, aire psicodélico..."
-              className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-xl px-3 py-2 text-xs text-[var(--ink-2)] outline-none"
+              className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] outline-none"
             />
           </div>
 
           {/* Preview Canvas */}
           {generatedLogo && (
-            <div className="p-4 bg-[var(--surface)]/80 border border-[var(--acc)]/30 rounded-2xl flex flex-col items-center gap-3">
+            <div className="p-4 bg-[var(--surface)]/80 border border-[var(--acc)]/30 rounded-[var(--r-l)] flex flex-col items-center gap-3">
               <div className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-[var(--ok)]" /> Logotipo generado con éxito
               </div>
@@ -169,7 +169,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
                 <img
                   src={generatedLogo}
                   alt="Logo generado con IA"
-                  className="w-44 h-44 rounded-2xl object-contain p-2 bg-[var(--surface)] border-2 border-[var(--acc)]/50 shadow-xl"
+                  className="w-44 h-44 rounded-[var(--r-l)] object-contain p-2 bg-[var(--surface)] border-2 border-[var(--acc)]/50 shadow-xl"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition"
+            className="px-4 py-2 rounded-[var(--r-m)] text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition"
           >
             Cancelar
           </button>
@@ -191,7 +191,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="px-4 py-2.5 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold text-xs flex items-center gap-2 transition disabled:opacity-50 border border-[var(--acc)]/20"
+              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold text-xs flex items-center gap-2 transition disabled:opacity-50 border border-[var(--acc)]/20"
             >
               {isGenerating ? (
                 <>
@@ -212,7 +212,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <button
                 type="button"
                 onClick={handleApplyLogo}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition shadow-lg"
+                className="px-4 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition shadow-lg"
               >
                 <Check className="w-4 h-4" /> Aplicar al EPK
               </button>

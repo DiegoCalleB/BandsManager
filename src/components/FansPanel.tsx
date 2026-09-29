@@ -891,7 +891,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   >
                     <span>{city}</span>
                     <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                      className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-bold ${
                         isSelected
                           ? "bg-[var(--surface)]/20 text-[var(--ink)]"
                           : "bg-[var(--surface)] text-[var(--acc)]"
@@ -902,7 +902,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <button
                       type="button"
                       onClick={(e) => handleRemoveCityTab(city, e)}
-                      className={`p-0.5 rounded-full hover:bg-[var(--alert)]/30 transition opacity-60 group-hover/city:opacity-100 ${
+                      className={`p-0.5 rounded-[var(--r-pill)] hover:bg-[var(--alert)]/30 transition opacity-60 group-hover/city:opacity-100 ${
                         isSelected
                           ? "hover:text-[var(--alert)] text-[var(--ink)]"
                           : "hover:text-[var(--ink-2)] text-[var(--ink-2)]"
@@ -1152,7 +1152,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <div className="flex items-center justify-between text-[10px] font-sans text-[var(--ink-2)] pt-1">
                       <span>Registrado: {fan.fechaCaptura || "Reciente"}</span>
                       {fan.consentimientoRGPD && (
-                        <span className="text-[var(--ok)] font-bold flex items-center gap-1 bg-[var(--ok)]/10 px-2 py-0.5 rounded-full">
+                        <span className="text-[var(--ok)] font-bold flex items-center gap-1 bg-[var(--ok)]/10 px-2 py-0.5 rounded-[var(--r-pill)]">
                           <Check className="w-3 h-3" /> RGPD Ok
                         </span>
                       )}
@@ -1195,7 +1195,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             {city}
                           </span>
                         </div>
-                        <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)]">
                           {count} {count === 1 ? "fan" : "fans"}
                         </span>
                       </div>
@@ -1243,7 +1243,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       >
                         <td className="p-3 font-semibold text-[var(--ink)]">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-[10px]">
+                            <div className="w-6 h-6 rounded-[var(--r-pill)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-[10px]">
                               {fan.nombre.charAt(0)}
                             </div>
                             {fan.nombre}

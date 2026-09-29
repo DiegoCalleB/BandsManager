@@ -23,25 +23,25 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-6 flex flex-col justify-center">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
           <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest mb-2 font-mono">Total Fans Registrados</p>
           <h3 className="text-5xl font-black text-[var(--ink)] font-display">{fans.length}</h3>
         </div>
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-6 flex flex-col justify-center">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
           <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest mb-2 font-mono">Consentimiento RGPD</p>
           <h3 className="text-4xl font-black text-[var(--ok)] font-display flex items-center gap-2">
             <ShieldCheck className="w-8 h-8" />
             100%
           </h3>
         </div>
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-6 flex flex-col justify-center">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
           <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest mb-2 font-mono">Ciudades Activas</p>
           <h3 className="text-4xl font-black text-[var(--acc)] font-display flex items-center gap-2">
             <MapPin className="w-8 h-8" />
             {new Set(fans.map((f) => f.ciudad).filter(Boolean)).size}
           </h3>
         </div>
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-6 flex flex-col justify-center">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
           <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest mb-2 font-mono">Clics Totales en QR & Redes</p>
           <h3 className="text-4xl font-black text-[var(--acc)] font-display flex items-center gap-2">
             <ExternalLink className="w-7 h-7" />
@@ -54,7 +54,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
 
       {/* Breakdown de Clics por Red Social, Métodos de Pago y Dossier */}
       {Object.keys(clickStats).length > 0 && (
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-6 space-y-3">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-6 space-y-3">
           <h4 className="text-xs font-bold text-[var(--acc)] font-mono uppercase tracking-wider flex items-center gap-2">
             <TrendingUp className="w-4 h-4" /> Impacto de Enlaces en FansLanding & QR (Por Canal y Donaciones)
           </h4>
@@ -64,7 +64,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
               .map(([key, count]) => (
                 <div
                   key={key}
-                  className="px-3 py-1.5 rounded-xl bg-[var(--surface)] border border-[var(--hair)] text-xs font-mono flex items-center gap-2"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-xs font-mono flex items-center gap-2"
                 >
                   <span className="font-semibold text-[var(--ink-2)] uppercase">{key}:</span>
                   <span className="font-black text-[var(--acc)]">
@@ -78,7 +78,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Crecimiento Evolutivo de Fans */}
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-6 h-88 flex flex-col">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-6 h-88 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest font-mono flex items-center gap-2">
@@ -87,7 +87,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
               </p>
               <p className="text-[11px] text-[var(--ink-2)] font-mono">Curva acumulativa de la comunidad {effectiveBandName}</p>
             </div>
-            <span className="text-xs font-mono font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-lg border border-[var(--acc)]/20">
+            <span className="text-xs font-mono font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-m)] border border-[var(--acc)]/20">
               Total: {fans.length} fans
             </span>
           </div>
@@ -135,7 +135,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
         </div>
 
         {/* Canal de Origen (Fixed & Visual) */}
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-6 h-88 flex flex-col">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-6 h-88 flex flex-col">
           <div className="mb-2">
             <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest font-mono">Canal de Origen de Fans</p>
             <p className="text-[11px] text-[var(--ink-2)] font-mono">De dónde provienen los registros</p>
@@ -180,10 +180,10 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
                   {originData.map((item, idx) => (
                     <div
                       key={item.name}
-                      className="flex items-center justify-between bg-[var(--surface)] p-2 rounded-xl border border-[var(--hair)]/80 text-xs font-mono"
+                      className="flex items-center justify-between bg-[var(--surface)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]/80 text-xs font-mono"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
+                        <span className="w-3 h-3 rounded-[var(--r-pill)] shrink-0" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
                         <span className="text-[var(--ink-2)] font-bold truncate">{item.name}</span>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">

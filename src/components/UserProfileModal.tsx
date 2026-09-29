@@ -468,7 +468,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           >
             <div className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
+                className="w-10 h-10 rounded-[var(--r-pill)] flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
                 style={{ backgroundColor: avatarColor }}
               >
                 {name.slice(0, 2) || "BK"}
@@ -482,7 +482,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     @{currentUser.username} •{" "}
                     {isAdmin ? "Administrador" : "Músico"}
                   </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/15 text-[var(--acc)]/70">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/15 text-[var(--acc)]/70">
                     <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
                     {currentPlanDef.name}
                   </span>
@@ -607,7 +607,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     key={c}
                     type="button"
                     onClick={() => setAvatarColor(c)}
-                    className={`w-7 h-7 rounded-full transition-transform cursor-pointer ${
+                    className={`w-7 h-7 rounded-[var(--r-pill)] transition-transform cursor-pointer ${
                       avatarColor === c
                         ? "scale-110  ring-2 ring-[var(--ok)]"
                         : " opacity-75 hover:opacity-100"
@@ -653,7 +653,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         {activeBandName || currentUser.bandName || "Tu Banda"}
                       </p>
                       {isPromoUser ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/60 text-[var(--acc)]/70">
                           <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
                           <span>{currentPlanDef.name}</span>
                         </span>
@@ -661,7 +661,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         <button
                           type="button"
                           onClick={() => setShowUpgradeModal(true)}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/60 hover:bg-[var(--acc)]/60 text-[var(--acc)]/70 cursor-pointer transition-colors"
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/60 hover:bg-[var(--acc)]/60 text-[var(--acc)]/70 cursor-pointer transition-colors"
                           title="Cambiar o mejorar suscripción"
                         >
                           <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -979,7 +979,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             {isSelected ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--on-acc)] text-[9px] font-black font-sans">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--on-acc)] text-[9px] font-black font-sans">
                                 <Star className="w-2.5 h-2.5 fill-[var(--ink)]" />
                                 <span>Principal</span>
                               </span>
@@ -1262,7 +1262,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     onClose();
                     onOpenNotificationSettings();
                   }}
-                  className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                  className={`w-full p-2.5 rounded-[var(--r-m)] border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
                     "bg-[var(--ink-3)] border-[var(--hair)] text-[var(--ink)] hover:bg-[var(--ink-3)]"
                   }`}
                 >

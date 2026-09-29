@@ -71,7 +71,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-display tracking-wider truncate">
                 {t('previewModalTitle')}
               </h2>
-              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
+              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
                 <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                 {t('previewProductionSyncBadge')}
               </span>
@@ -276,8 +276,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             {/* Chasis exterior del smartphone */}
             <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)]/80">
               {/* Dynamic Island / Altavoz */}
-              <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-20 h-3 bg-black rounded-full z-30 flex items-center justify-center pointer-events-none opacity-80">
-                <div className="w-2 h-2 rounded-full bg-[var(--surface)]" />
+              <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-20 h-3 bg-black rounded-[var(--r-pill)] z-30 flex items-center justify-center pointer-events-none opacity-80">
+                <div className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)]" />
               </div>
 
               {/* Pantalla del teléfono con altura adaptativa y scroll nativo */}
@@ -298,7 +298,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               </div>
 
               {/* Barra inferior de gestos */}
-              <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-24 h-1 bg-[var(--ink)]/20 rounded-full z-30 pointer-events-none" />
+              <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-24 h-1 bg-[var(--ink)]/20 rounded-[var(--r-pill)] z-30 pointer-events-none" />
             </div>
           </div>
         ) : (
@@ -307,9 +307,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             {/* Barra simulada de navegador */}
             <div className="bg-[var(--surface)] px-4 py-2 flex items-center justify-between gap-3 text-xs font-sans shrink-0">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-[var(--alert)]/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[var(--acc)]/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80" />
+                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--alert)]/80" />
+                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)]/80" />
+                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
               </div>
               <div className="bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1 text-[var(--ink-2)] text-[11px] flex-1 max-w-md text-center truncate font-sans">
                 https://bandmanager.io/unete
@@ -344,7 +344,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       {/* PIE DE PÁGINA INFORMATIVO Y ACCESIBLE */}
       <footer className="w-full bg-[var(--surface)] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-sans text-[var(--ink-2)] shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-2 truncate">
-          <span className="w-2 h-2 rounded-full bg-[var(--ok)] shrink-0 inline-block" />
+          <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0 inline-block" />
           <span className="truncate">{t('previewDisclaimer')}</span>
         </div>
         <button

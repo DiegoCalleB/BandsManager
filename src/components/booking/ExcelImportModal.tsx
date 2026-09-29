@@ -752,7 +752,7 @@ export function ExcelImportModal({
                   <h3 className="text-base sm:text-lg font-bold font-display">
                     Importar Listado de Salas, Ayuntamientos o Bandas
                   </h3>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink-2)]">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink-2)]">
                     Excel / CSV
                   </span>
                 </div>
@@ -787,7 +787,7 @@ export function ExcelImportModal({
           <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 text-xs">
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 {step > 1 ? <Check className="w-3 h-3" /> : "1"}
               </div>
@@ -804,7 +804,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 {step > 2 ? <Check className="w-3 h-3" /> : "2"}
               </div>
@@ -821,7 +821,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 3
               </div>
@@ -868,7 +868,7 @@ export function ExcelImportModal({
                     </strong>{" "}
                     de cualquier hoja de cálculo que use tu banda.
                   </p>
-                  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)]700">
+                  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)]700">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span>
                       Detección automática de salas, ciudades, teléfonos, emails
@@ -1044,7 +1044,7 @@ export function ExcelImportModal({
                   </div>
 
                   {/* Teléfono Móvil (WhatsApp) */}
-                  <div className="p-3 rounded-xl bg-[var(--surface)]/60 border border-[var(--ok)]/40 space-y-1.5">
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--ok)]/40 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <span>📱</span>
                       <span>Teléfono Móvil (WhatsApp)</span>
@@ -1057,7 +1057,7 @@ export function ExcelImportModal({
                           telefono_movil: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-lg bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1069,7 +1069,7 @@ export function ExcelImportModal({
                   </div>
 
                   {/* Teléfono Fijo */}
-                  <div className="p-3 rounded-xl bg-[var(--surface)]/60 border border-[var(--acc)]/40 space-y-1.5">
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--acc)]/40 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <span>☎️</span>
                       <span>Teléfono Fijo</span>
@@ -1082,7 +1082,7 @@ export function ExcelImportModal({
                           telefono_fijo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-lg bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
+                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1325,7 +1325,7 @@ export function ExcelImportModal({
                       {selectedCount} de {parsedRows.length} seleccionados
                     </span>
                     {duplicatesCount > 0 && (
-                      <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         {duplicatesCount} ya registrados en CRM
                       </span>

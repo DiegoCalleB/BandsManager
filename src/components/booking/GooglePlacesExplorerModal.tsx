@@ -1033,7 +1033,7 @@ export function GooglePlacesExplorerModal({
                   <h2 className="text-base font-bold font-display tracking-wider text-[var(--acc)]">
                     Buscador de Salas & Nuevos Leads (Scout Descubridor)
                   </h2>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/70 font-sans font-bold">
+                  <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-sans font-bold">
                     IA + Google Places
                   </span>
                 </div>
@@ -1082,7 +1082,7 @@ export function GooglePlacesExplorerModal({
                         Prospección Masiva de Campaña
                       </span>
                       {activeCampaign && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--ink)] font-sans">
+                        <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans">
                           {activeCampaign.name}
                         </span>
                       )}
@@ -1314,7 +1314,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchMultiSource()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] border border-[var(--acc)]/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] border border-[var(--acc)]/40 font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
                   >
                     <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1325,7 +1325,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchPublicCultural()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] border border-[var(--ok)]/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] border border-[var(--ok)]/40 font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
                   >
                     <Building2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -1336,7 +1336,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearch()}
                     disabled={isSearching}
-                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
                   >
                     {isSearching ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1414,7 +1414,7 @@ export function GooglePlacesExplorerModal({
                       type="button"
                       onClick={() => handleSearchSimilarBands(band)}
                       disabled={isSearching}
-                      className="px-2.5 py-0.5 text-[10px] rounded-lg transition-all cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30 disabled:opacity-50"
+                      className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30 disabled:opacity-50"
                       title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
                     >
                       🔍 {band}
@@ -1424,7 +1424,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
                     disabled={isSearching}
-                    className="px-2.5 py-0.5 text-[10px] rounded-lg font-bold transition-all cursor-pointer bg-gradient-to-r from-[var(--acc)]/20 to-[var(--acc)]/20 hover:from-[var(--acc)]/30 hover:to-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 ml-auto"
+                    className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] font-bold transition-all cursor-pointer bg-gradient-to-r from-[var(--acc)]/20 to-[var(--acc)]/20 hover:from-[var(--acc)]/30 hover:to-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 ml-auto"
                   >
                     ⚡ Rastrear Todas
                   </button>
@@ -1589,7 +1589,7 @@ export function GooglePlacesExplorerModal({
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             {place.rating && (
-                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--acc)] rounded-md text-[10px] font-bold">
+                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--acc)] rounded-[var(--r-s)] text-[10px] font-bold">
                                 <Star className="w-3 h-3 fill-[var(--acc)]" />
                                 <span>{place.rating}</span>
                                 {place.user_ratings_total && (
@@ -1637,7 +1637,7 @@ export function GooglePlacesExplorerModal({
 
                           <div className="flex items-center gap-1.5">
                             {place.genero && (
-                              <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
+                              <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
                                 <Music2 className="w-2.5 h-2.5 shrink-0" />
                                 <span className="truncate max-w-[130px]">
                                   {place.genero}
@@ -1645,7 +1645,7 @@ export function GooglePlacesExplorerModal({
                               </span>
                             )}
                             {place.aforo ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--sunken)] text-[var(--ink-2)] font-sans shrink-0">
+                              <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] font-sans shrink-0">
                                 <Users className="w-2.5 h-2.5 text-[var(--ink-2)]" />
                                 <span>~{place.aforo}</span>
                               </span>
@@ -1722,7 +1722,7 @@ export function GooglePlacesExplorerModal({
                                   handleExtractSingleEmail(place.place_id)
                                 }
                                 disabled={place.extractingEmail}
-                                className="px-2.5 py-1 bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 rounded-md font-bold text-[10px] flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50 shrink-0"
+                                className="px-2.5 py-1 bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 rounded-[var(--r-s)] font-bold text-[10px] flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50 shrink-0"
                                 title="Agente Enriquecedor: Buscar email oficial verificado en la web de esta propuesta"
                               >
                                 {place.extractingEmail ? (

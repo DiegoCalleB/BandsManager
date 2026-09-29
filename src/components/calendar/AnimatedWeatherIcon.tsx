@@ -66,7 +66,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute inset-0 rounded-full bg-[var(--acc)]/60 blur-sm"
+            className="absolute inset-0 rounded-[var(--r-pill)] bg-[var(--acc)]/60 blur-sm"
           />
           {/* Sol girando lentamente a velocidad constante y suave */}
           <motion.div
@@ -169,7 +169,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
           <motion.div
             animate={{ opacity: [0.2, 0.45, 0.2] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full bg-[var(--acc)]/15 blur-sm"
+            className="absolute inset-0 rounded-[var(--r-pill)] bg-[var(--acc)]/15 blur-sm"
           />
           {/* Nube con lluvia */}
           <motion.div
@@ -193,7 +193,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
                   ease: "easeIn",
                   delay: 0.1,
                 }}
-                className="w-0.5 h-1.5 rounded-full bg-[var(--tentative)]/40"
+                className="w-0.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/40"
               />
               <motion.div
                 animate={{
@@ -206,7 +206,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
                   ease: "easeIn",
                   delay: 0.5,
                 }}
-                className="w-0.5 h-1.5 rounded-full bg-[var(--tentative)]"
+                className="w-0.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]"
               />
             </div>
           )}
@@ -230,7 +230,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               times: [0, 0.08, 0.15, 0.22, 1],
               ease: "easeInOut",
             }}
-            className="absolute inset-0 rounded-full bg-[var(--acc)]/80 blur-md"
+            className="absolute inset-0 rounded-[var(--r-pill)] bg-[var(--acc)]/80 blur-md"
           />
           {/* Nube con rayo principal */}
           <motion.div
@@ -263,7 +263,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               opacity: [0.2, 0.5, 0.2],
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full bg-[var(--acc)]/80 blur-sm"
+            className="absolute inset-0 rounded-[var(--r-pill)] bg-[var(--acc)]/80 blur-sm"
           />
           {/* Copo de nieve girando y flotando con suavidad */}
           <motion.div
@@ -429,7 +429,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
     return (
       <motion.div
         whileHover={{ scale: 1.25 }}
-        className={`inline-flex items-center justify-center p-0.5 rounded-md transition-all ${style.bg}`}
+        className={`inline-flex items-center justify-center p-0.5 rounded-[var(--r-s)] transition-all ${style.bg}`}
         title={`${alert.title}: ${alert.shortAdvice}`}
       >
         <AnimatedWeatherIcon

@@ -324,7 +324,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
         </div>
 
         {status.connected && !editing && (
-          <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-full bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-sans">
+          <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-sans">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Conectado</span>
           </div>

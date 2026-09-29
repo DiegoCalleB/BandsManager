@@ -531,7 +531,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
     return (
       <div className="space-y-1.5 pt-1 px-0.5">
-        <div className="flex gap-1 h-1 w-full bg-[var(--surface)]/80 rounded-full overflow-hidden">
+        <div className="flex gap-1 h-1 w-full bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
           <div
             className={`h-full transition-all duration-300 ${score >= 1 ? colors[0] : "bg-transparent"} w-1/3`}
           />
@@ -579,7 +579,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === "plans" ? "max-w-6xl" : "max-w-md space-y-6"}`}
           >
             {/* Soft Golden Background Ambient Glow */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-[var(--acc)]/8 rounded-full blur-[110px] pointer-events-none" />
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-[var(--acc)]/8 rounded-[var(--r-pill)] blur-[110px] pointer-events-none" />
 
             {/* Top Language Switcher */}
             <div className="w-full flex justify-end items-center gap-1.5 mb-1 px-2 z-20">
@@ -640,13 +640,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  LOGIN VIEW
  ========================================= */}
             {view === "login" && (
-              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/95 rounded-3xl animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/95 rounded-[var(--r-xl)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
                 {/* INTEGRATED LOGO INSIDE CARD */}
                 <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[var(--acc)]/12 rounded-full blur-3xl pointer-events-none" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[var(--acc)]/12 rounded-[var(--r-pill)] blur-3xl pointer-events-none" />
 
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
-                    <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[var(--acc)]/45 viabg-[var(--surface)]/60 to-[var(--surface)]/90 transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[var(--acc)] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
+                    <div className="p-1.5 rounded-[var(--r-xl)] bg-gradient-to-b from-[var(--acc)]/45 viabg-[var(--surface)]/60 to-[var(--surface)]/90 transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[var(--acc)] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
                       {videoLoadFailed || skipVideo ? (
                         <img
                           src={LOGIN_POSTER}
@@ -733,7 +733,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <div className="flex items-center justify-between text-xs text-[var(--ink-2)] px-1 pt-0.5">
                     <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors">
                       <div
-                        className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ? "bg-[var(--acc)] text-[var(--ink)]" : "bg-[var(--surface)] "}`}
+                        className={`w-4 h-4 rounded-[var(--r-s)] flex items-center justify-center transition-all duration-200 ${rememberMe ? "bg-[var(--acc)] text-[var(--ink)]" : "bg-[var(--surface)] "}`}
                       >
                         <input
                           type="checkbox"
@@ -767,7 +767,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full animate-spin" />
+                        <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
                         <span>Entrando...</span>
                       </span>
                     ) : (
@@ -830,7 +830,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  RESET PASSWORD VIEW
  ========================================= */}
             {view === "reset-password" && (
-              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 rounded-3xl animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 rounded-[var(--r-xl)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
                 <div className="flex items-center gap-2.5 mb-2">
                   <button
                     type="button"
@@ -892,7 +892,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     >
                       {loading ? (
                         <span className="flex items-center gap-2">
-                          <span className="w-4 h-4 rounded-full animate-spin" />
+                          <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
                           <span>Generando código...</span>
                         </span>
                       ) : (
@@ -994,7 +994,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     >
                       {loading ? (
                         <span className="flex items-center gap-2">
-                          <span className="w-4 h-4 rounded-full animate-spin" />
+                          <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
                           <span>Guardando contraseña...</span>
                         </span>
                       ) : (
@@ -1030,7 +1030,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  REGISTER VIEW
  ========================================= */}
             {view === "register" && (
-              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 rounded-3xl animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 rounded-[var(--r-xl)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
                 <form
                   onSubmit={handleRegisterSubmit}
                   className="w-full space-y-3.5"
@@ -1123,7 +1123,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full animate-spin" />
+                        <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
                         <span>Creando cuenta...</span>
                       </span>
                     ) : (
@@ -1163,7 +1163,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  ACTIVATE ACCOUNT VIEW (NEW!)
  ========================================= */}
             {view === "activate" && (
-              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 rounded-3xl animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+              <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 rounded-[var(--r-xl)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
                 {activateStep === 1 ? (
                   <div className="space-y-4">
                     <div className="text-center space-y-2 mb-4">
@@ -1199,7 +1199,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       >
                         {loading ? (
                           <span className="flex items-center gap-2">
-                            <span className="w-4 h-4 rounded-full animate-spin" />
+                            <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
                             <span>Comprobando...</span>
                           </span>
                         ) : (
@@ -1337,7 +1337,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       >
                         {loading ? (
                           <span className="flex items-center gap-2">
-                            <span className="w-4 h-4 rounded-full animate-spin" />
+                            <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
                             <span>Activando...</span>
                           </span>
                         ) : (

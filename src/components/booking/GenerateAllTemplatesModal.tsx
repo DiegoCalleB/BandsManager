@@ -65,7 +65,7 @@ export function GenerateAllTemplatesModal({
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl border overflow-hidden ${
+        className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl border overflow-hidden ${
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
@@ -77,7 +77,7 @@ export function GenerateAllTemplatesModal({
         >
           <div className="flex items-center gap-2.5">
             <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center font-black shadow-md ${
+              className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-black shadow-md ${
                 isCampaign
                   ? 'bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)] shadow-[var(--acc)]/20'
                   : 'bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)] shadow-[var(--acc)]/20'
@@ -89,7 +89,7 @@ export function GenerateAllTemplatesModal({
               <h3 className="text-base font-bold font-sans flex items-center gap-2">
                 {isCampaign ? 'Generador Multi-Escenario para Campaña' : 'Generador Multi-Escenario IA'}
                 <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold border ${
+                  className={`text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-mono font-bold border ${
                     isCampaign
                       ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
                       : 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30'
@@ -109,7 +109,7 @@ export function GenerateAllTemplatesModal({
             type="button"
             onClick={onClose}
             disabled={isGenerating}
-            className={`p-2 rounded-xl transition-colors cursor-pointer ${
+            className={`p-2 rounded-[var(--r-m)] transition-colors cursor-pointer ${
               'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
             }`}
           >
@@ -120,7 +120,7 @@ export function GenerateAllTemplatesModal({
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1">
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-[var(--alert)]/10 border border-[var(--alert)]/30 text-[var(--alert)] text-xs flex items-center justify-between">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 border border-[var(--alert)]/30 text-[var(--alert)] text-xs flex items-center justify-between">
               <span>{errorMsg}</span>
               <button type="button" onClick={() => setErrorMsg(null)} className="font-bold text-[var(--alert)] hover:text-[var(--ink)]">
                 ✕
@@ -130,7 +130,7 @@ export function GenerateAllTemplatesModal({
 
           {/* Campaign Context Pill (if in campaign mode) */}
           {isCampaign && campaignContext && (
-            <div className="p-3.5 rounded-xl bg-[var(--acc)]/10 border border-[var(--acc)]/25 text-[var(--acc)] text-xs space-y-1.5">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 border border-[var(--acc)]/25 text-[var(--acc)] text-xs space-y-1.5">
               <div className="flex items-center gap-2 font-bold text-[var(--acc)]">
                 <Sparkles className="w-4 h-4 shrink-0" />
                 <span>Contexto de Campaña detectado:</span>
@@ -157,7 +157,7 @@ export function GenerateAllTemplatesModal({
 
           {/* Info pill */}
           <div
-            className={`p-4 rounded-xl border text-xs leading-relaxed space-y-2 ${
+            className={`p-4 rounded-[var(--r-m)] border text-xs leading-relaxed space-y-2 ${
               isCampaign
                 ? 'bg-[var(--acc)]/30 border-[var(--acc)]/20 text-[var(--acc)]'
                 : 'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc-ink)]'
@@ -192,7 +192,7 @@ export function GenerateAllTemplatesModal({
               value={baseProposal}
               onChange={(e) => setBaseProposal(e.target.value)}
               disabled={isGenerating}
-              className={`w-full p-4 rounded-xl text-xs font-sans leading-relaxed focus:outline-none transition-all resize-y ${
+              className={`w-full p-4 rounded-[var(--r-m)] text-xs font-sans leading-relaxed focus:outline-none transition-all resize-y ${
                 'bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)]'
               }`}
               placeholder={
@@ -216,12 +216,12 @@ export function GenerateAllTemplatesModal({
                 return (
                   <div
                     key={idx}
-                    className={`p-2.5 rounded-xl border flex items-start gap-2.5 ${
+                    className={`p-2.5 rounded-[var(--r-m)] border flex items-start gap-2.5 ${
                       'bg-[var(--surface)] border-[var(--hair)]'
                     }`}
                   >
                     <div
-                      className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${
+                      className={`p-1.5 rounded-[var(--r-m)] shrink-0 mt-0.5 ${
                         isCampaign ? 'bg-[var(--acc)]/15 text-[var(--acc)]' : 'bg-[var(--acc)]/10 text-[var(--acc)]'
                       }`}
                     >
@@ -248,7 +248,7 @@ export function GenerateAllTemplatesModal({
             type="button"
             onClick={onClose}
             disabled={isGenerating}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer ${
               'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
             }`}
           >
@@ -259,7 +259,7 @@ export function GenerateAllTemplatesModal({
             type="button"
             onClick={handleSubmit}
             disabled={isGenerating || !baseProposal.trim()}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg hover:brightness-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+            className={`px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 shadow-lg hover:brightness-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
               isCampaign
                 ? 'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] shadow-[var(--acc)]/25'
                 : 'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] shadow-[var(--acc)]/20'

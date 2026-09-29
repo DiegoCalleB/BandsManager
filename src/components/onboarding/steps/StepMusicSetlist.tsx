@@ -99,7 +99,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             Discografía, Canciones & Generador de Setlists
           </h3>
         </div>
-        <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
+        <span className="text-xs px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
           {totalImportedSongsCount}{" "}
           {totalImportedSongsCount === 1
             ? "canción en repertorio"
@@ -431,7 +431,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             </h4>
           </div>
           {createdSetlistName && (
-            <span className="text-[11px] px-2 py-0.5 rounded-md bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
+            <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" /> {createdSetlistName} Creado
             </span>
           )}

@@ -49,7 +49,7 @@ export function GlobalCampaignBar({
     <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--sunken)] via-[var(--bg)] to-[var(--bg)] p-1.5 sm:p-2.5 animate-fade-in relative overflow-hidden">
       {/* Background ambient */}
       <div
-        className="absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-15 pointer-events-none"
+        className="absolute -right-10 -top-10 w-28 h-28 rounded-[var(--r-pill)] blur-3xl opacity-15 pointer-events-none"
         style={{ backgroundColor: campaign.color || "var(--acc)" }}
       />
 
@@ -58,7 +58,7 @@ export function GlobalCampaignBar({
         {/* Left Side: Campaign Badge, Name & Toggle */}
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
           <div
-            className="w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center shrink-0"
+            className="w-6 h-6 sm:w-7 sm:h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0"
             style={{
               backgroundColor: `${campaign.color || "var(--acc)"}25`,
               borderColor: `${campaign.color || "var(--acc)"}50`,
@@ -126,7 +126,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("booking", { campaignFilter: campaign.id })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "booking"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -143,7 +143,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("calendario", { selectedDate: firstTargetDate })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "calendario"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -160,7 +160,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("bandas", { campaignCities: campaign.targetCities })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "bandas"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -176,7 +176,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onOpenManager}
-            className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
+            className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
             title="Gestionar o cambiar campaña activa"
           >
             <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -186,7 +186,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onDeactivate}
-            className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)]/60 hover:border-[var(--alert)]/40 transition-colors shrink-0"
+            className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)]/60 hover:border-[var(--alert)]/40 transition-colors shrink-0"
             title="Desactivar modo campaña (volver a modo general)"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

@@ -1542,7 +1542,7 @@ export default function BookingCRM({
                         Detector y Limpiador de Duplicados
                       </span>
                       {duplicateGroupsCount > 0 ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--on-acc)]">
+                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)] text-[var(--on-acc)]">
                           {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
                         </span>
                       ) : (
@@ -1589,12 +1589,12 @@ export default function BookingCRM({
                         setIsQueueMonitorOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-[var(--ok)]/80 to-[var(--surface)] hover:from-[var(--ok)]/90 hover:to-[var(--surface)] text-[var(--ok)] border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--ok)]/80 to-[var(--surface)] hover:from-[var(--ok)]/90 hover:to-[var(--surface)] text-[var(--ok)] border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--ok)] opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--ok)]"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--ok)] opacity-75"></span>
+                          <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--ok)]"></span>
                         </span>
                         <Activity className="w-4 h-4 text-[var(--ok)]" />
                         <span>Monitor de Cola & Workers en Vivo</span>
@@ -1611,7 +1611,7 @@ export default function BookingCRM({
                           document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 60);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
                         <MessageSquareText className="w-4 h-4 text-[var(--acc)]" />
@@ -1627,7 +1627,7 @@ export default function BookingCRM({
                         setRoadbookModalLead(selectedLead || leads[0] || null);
                         setIsRoadbookModalOpen(true);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-[var(--acc)]" />
@@ -1918,7 +1918,7 @@ export default function BookingCRM({
               <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
                 <span className="text-[10px] font-bold text-[var(--acc)] shrink-0">Filtros:</span>
                 {selectedCityFilter && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     📍 {selectedCityFilter}
                     <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
@@ -1926,7 +1926,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {typeFilter !== 'todos' && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     🏛️ {typeFilter}
                     <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
@@ -1934,7 +1934,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {onlyFavoritesFilter && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     ⭐ Favoritos
                     <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
@@ -1942,7 +1942,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {onlyVerifiedFilter && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] shrink-0">
                     ✔ Verificados
                     <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
@@ -1950,7 +1950,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {minCapacityFilter > 0 && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     &gt;{minCapacityFilter} pax
                     <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
@@ -1958,7 +1958,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {activeSavedFilterId && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/50 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/50 shrink-0">
                     📌 {savedFilters.find((f) => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
                     <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
@@ -2049,7 +2049,7 @@ export default function BookingCRM({
 
             {/* Route Anchor Active Filter Banner */}
             {routeAnchorCity && (
-              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-[var(--acc)]/50 border border-[var(--acc)]/40 text-[var(--acc)] text-xs">
+              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/50 border border-[var(--acc)]/40 text-[var(--acc)] text-xs">
                 <div className="flex items-center gap-2">
                   <Compass className="w-4 h-4 text-[var(--acc)] shrink-0" />
                   <span>
@@ -2604,7 +2604,7 @@ export default function BookingCRM({
           });
           setIsAddingLeadModalOpen(true);
         }}
-        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
+        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
         style={{ animationDuration: '3s' }}
         title="Añadir contacto"
       >

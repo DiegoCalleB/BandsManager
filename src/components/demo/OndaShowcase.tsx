@@ -30,7 +30,7 @@ export const OndaShowcase: React.FC = () => {
       {/* Header */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-[var(--acc)]" />
+          <div className="w-4 h-4 rounded-[var(--r-pill)] bg-[var(--acc)]" />
           <h2 className="text-lg font-bold text-[var(--ink)]">Bolos por semana</h2>
           <Sparkles className="w-4 h-4 text-[var(--acc)] opacity-60" />
         </div>

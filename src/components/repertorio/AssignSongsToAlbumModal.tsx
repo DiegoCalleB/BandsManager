@@ -204,7 +204,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                     >
                       <div className="flex items-center gap-3 truncate pr-2">
                         <div
-                          className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 ${
+                          className={`w-5 h-5 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
                             isSelected ? 'bg-[var(--surface)] text-[var(--ink)]' : 'bg-[var(--surface)]/70 text-[var(--ink-2)]'
                           }`}
                         >

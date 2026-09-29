@@ -119,7 +119,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
             <div className={`p-4 rounded-[var(--r-m)] ${'bg-[var(--bg)]'}`}>
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold text-[var(--ink)]">Salas con información incompleta:</span>
-                <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] font-bold">{incompleteLeads.length}</span>
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] font-bold">{incompleteLeads.length}</span>
               </div>
               <p className="text-[var(--ink-2)] leading-relaxed">
                 El asistente escaneará páginas web oficiales y directorios públicos para completar correos de booking y teléfonos de los

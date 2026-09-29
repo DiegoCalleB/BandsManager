@@ -23,11 +23,11 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
   const channelPlaybooks = growthPlan?.channelPlaybooks || [];
 
   return (
-    <div className="p-5 rounded-2xl bg-[var(--surface)]/95 border borderbg-[var(--surface)]/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/95 border borderbg-[var(--surface)]/90 shadow-sm space-y-4">
       {/* Widget Header */}
       <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
             <Rocket className="w-5 h-5" />
           </div>
           <div>
@@ -35,7 +35,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
                 Guía de Crecimiento & Promoción
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
                 {growthPlan?.horizonDays || 30}D
               </span>
             </div>
@@ -66,7 +66,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
 
       {/* Action Recommendation Banner */}
       {todayBlueprint ? (
-        <div className="p-3.5 rounded-xl bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-transparent border border-[var(--acc)]/30 flex items-start justify-between gap-3">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-transparent border border-[var(--acc)]/30 flex items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] font-mono text-[10px] font-bold uppercase">
@@ -86,7 +86,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <button
                 type="button"
                 onClick={onOpenGuidanceModal}
-                className="mt-2 px-2.5 py-1 rounded-lg bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-[11px] font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                className="mt-2 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-[11px] font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-xs"
               >
                 <span>Detalles</span>
                 <ChevronRight className="w-3 h-3" />
@@ -95,24 +95,24 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
           </div>
         </div>
       ) : (
-        <div className="p-3.5 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] text-xs text-[var(--ink-2)]">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-xs text-[var(--ink-2)]">
           Recomendaciones estratégicas personalizadas para el crecimiento de {activeBandName}.
         </div>
       )}
 
       {/* 3 Pillars / Quick metrics status */}
       <div className="grid grid-cols-3 gap-2.5 pt-1">
-        <div className="p-3 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
           <span className="text-base font-bold font-mono text-[var(--acc)]">{channelPlaybooks.length || 3}</span>
           <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Canales Activos</p>
         </div>
 
-        <div className="p-3 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
           <span className="text-base font-bold font-mono text-[var(--acc)]">{growthPlan?.weeklyBlueprint?.length || 7}</span>
           <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Hitos Semanales</p>
         </div>
 
-        <div className="p-3 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
           <span className="text-base font-bold font-mono text-[var(--ok)]">{totalPillars}</span>
           <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Pilares Clave</p>
         </div>

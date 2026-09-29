@@ -128,7 +128,7 @@ export function TemplateConfigSection({
       {/* Top Header: Category Tabs & Global Action Buttons */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]/10">
         {/* Category Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/5">
+        <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)]/5">
           {CATEGORIES.map((tab) => {
             const isActive = templateTab === tab.id;
             const IconComp = tab.icon;
@@ -141,7 +141,7 @@ export function TemplateConfigSection({
                   onSelectTemplateTab(tab.id);
                   setShowRecommendations(false);
                 }}
-                className={`py-1.5 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                className={`py-1.5 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                   isActive ? 'bg-[var(--acc)] text-[var(--ink)] font-black shadow-md' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
                 }`}
               >
@@ -158,7 +158,7 @@ export function TemplateConfigSection({
             <button
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-[var(--acc)]/20 to-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--acc)]/20 to-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
               title="Genera las 7 plantillas desde una propuesta base"
             >
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -170,7 +170,7 @@ export function TemplateConfigSection({
             id="template-btn-save"
             type="button"
             onClick={onSaveTemplates}
-            className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Guardar</span>
@@ -202,7 +202,7 @@ export function TemplateConfigSection({
           <button
             type="button"
             onClick={() => setShowRecommendations(!showRecommendations)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-bold border transition-all cursor-pointer ${
               showRecommendations
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50'
                 : 'bg-[var(--surface)]/60 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--acc)] hover:border-[var(--acc)]/40'
@@ -216,7 +216,7 @@ export function TemplateConfigSection({
           <button
             type="button"
             onClick={() => setShowExamples(!showExamples)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-bold border transition-all cursor-pointer ${
               showExamples
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50'
                 : 'bg-[var(--surface)]/60 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)] hover:border-[var(--hair)]'
@@ -248,7 +248,7 @@ export function TemplateConfigSection({
 
       {/* Optional Real Example Threads - ONLY shown when requested */}
       {showExamples && (
-        <div className="p-4 rounded-xl bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-3 animate-in fade-in duration-200">
+        <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)]/10 space-y-3 animate-in fade-in duration-200">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
               <MessageSquare className="w-4 h-4" /> Hilos de referencia para {currentCategory.label}
@@ -266,7 +266,7 @@ export function TemplateConfigSection({
 
       {/* Optimization Feedback Message */}
       {optimizationFeedbackMsg && (
-        <div className="p-3 bg-[var(--acc)]/15 border border-[var(--acc)]/30 text-[var(--acc)] text-xs rounded-xl flex items-center justify-between animate-in fade-in">
+        <div className="p-3 bg-[var(--acc)]/15 border border-[var(--acc)]/30 text-[var(--acc)] text-xs rounded-[var(--r-m)] flex items-center justify-between animate-in fade-in">
           <span>{optimizationFeedbackMsg}</span>
           {onClearFeedbackMsg && (
             <button type="button" onClick={onClearFeedbackMsg} className="text-[var(--acc)] font-bold ml-2 hover:text-[var(--ink)]">
@@ -289,7 +289,7 @@ export function TemplateConfigSection({
               value={activeTemplate.subject}
               onChange={(e) => activeTemplate.setSubject(e.target.value)}
               placeholder="Ej: Propuesta de directo: {{nombre_banda}} en {{nombre_sala}}"
-              className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-xl px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none transition-colors"
+              className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none transition-colors"
             />
           </div>
 
@@ -319,7 +319,7 @@ export function TemplateConfigSection({
               rows={8}
               value={activeTemplate.body}
               onChange={(e) => activeTemplate.setBody(e.target.value)}
-              className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-xl p-3 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none leading-relaxed transition-colors font-sans"
+              className="w-full bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] p-3 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none leading-relaxed transition-colors font-sans"
               placeholder="Escribe el cuerpo base de la plantilla usando las etiquetas como {{nombre_sala}}, {{ciudad}}..."
             />
           </div>
@@ -335,7 +335,7 @@ export function TemplateConfigSection({
               rows={2}
               value={activeTemplate.guidelines}
               onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
-              className="w-full bg-[var(--surface)] border border-[var(--acc)]/20 rounded-xl px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none transition-colors"
+              className="w-full bg-[var(--surface)] border border-[var(--acc)]/20 rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:border-[var(--acc)] focus:outline-none transition-colors"
               placeholder="Ej: Mantén el mensaje en menos de 100 palabras, tono cercano, destaca nuestra sección rítmica..."
             />
           </div>
@@ -368,11 +368,11 @@ export function TemplateConfigSection({
         </div>
 
         {/* Right Column: Live Preview Sandbox (5 cols) */}
-        <div className="lg:col-span-5 bg-[var(--surface)] border borderbg-[var(--surface)] rounded-2xl p-4 flex flex-col justify-between min-h-[360px]">
+        <div className="lg:col-span-5 bg-[var(--surface)] border borderbg-[var(--surface)] rounded-[var(--r-l)] p-4 flex flex-col justify-between min-h-[360px]">
           <div className="space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/5">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[var(--acc)] animate-pulse" />
+                <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] animate-pulse" />
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">Vista Previa Simulada</span>
               </div>
               {testPromptResult && (
@@ -388,11 +388,11 @@ export function TemplateConfigSection({
             </div>
 
             {testPromptResult ? (
-              <div className="p-3.5 bg-[var(--sunken)] border border-[var(--hair)]/5 rounded-xl text-xs text-[var(--ink-2)] leading-relaxed whitespace-pre-wrap max-h-[320px] overflow-y-auto select-text font-sans">
+              <div className="p-3.5 bg-[var(--sunken)] border border-[var(--hair)]/5 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] leading-relaxed whitespace-pre-wrap max-h-[320px] overflow-y-auto select-text font-sans">
                 {testPromptResult}
               </div>
             ) : (
-              <div className="py-16 px-4 text-center space-y-2 border border-dashed borderbg-[var(--surface)] rounded-xl">
+              <div className="py-16 px-4 text-center space-y-2 border border-dashed borderbg-[var(--surface)] rounded-[var(--r-m)]">
                 <Eye className="w-6 h-6 text-[var(--ink-2)] mx-auto" />
                 <p className="text-xs text-[var(--ink-2)] font-medium">Ninguna simulación activa</p>
                 <p className="text-[11px] text-[var(--ink-2)] max-w-xs mx-auto">

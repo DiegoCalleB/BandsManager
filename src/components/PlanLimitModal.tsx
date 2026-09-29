@@ -98,7 +98,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               <Lock className="w-7 h-7" />
             </div>
             <div>
-              <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-[var(--r-s)]">
                 Límite de {currentPlanDef.name} alcanzado
               </span>
               <h3 className="text-xl font-bold font-display tracking-wide text-[var(--ink)] mt-1">
@@ -133,7 +133,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                   Plan Recomendado: {targetPlanDef.name}
                 </span>
               </div>
-              <span className="text-xs font-sans text-[var(--ink-2)] font-bold bg-[var(--acc)]/60 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-sans text-[var(--ink-2)] font-bold bg-[var(--acc)]/60 px-2.5 py-0.5 rounded-[var(--r-pill)]">
                 {targetPlanDef.badge}
               </span>
             </div>

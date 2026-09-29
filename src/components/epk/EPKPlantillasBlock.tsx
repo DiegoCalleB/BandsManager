@@ -177,11 +177,11 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span
-                        className={`text-[9px] sm:text-[10px] font-sans font-bold px-1.5 sm:px-2 py-0.5 rounded-md ${tpl.preview.pill}`}
+                        className={`text-[9px] sm:text-[10px] font-sans font-bold px-1.5 sm:px-2 py-0.5 rounded-[var(--r-s)] ${tpl.preview.pill}`}
                       >
                         {tpl.badge}
                       </span>
-                      <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--sunken)]/60" />
+                      <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)]/60" />
                     </div>
                     <div className="space-y-0.5 sm:space-y-1">
                       <div
@@ -191,9 +191,9 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       </div>
                       <div className="flex items-center gap-1 sm:gap-1.5">
                         <div
-                          className={`h-1.5 sm:h-2 w-8 sm:w-12 rounded-sm ${tpl.preview.accent}`}
+                          className={`h-1.5 sm:h-2 w-8 sm:w-12 rounded-[var(--r-s)] ${tpl.preview.accent}`}
                         />
-                        <div className="h-1.5 sm:h-2 w-5 sm:w-8 rounded-sm bg-[var(--sunken)]/50" />
+                        <div className="h-1.5 sm:h-2 w-5 sm:w-8 rounded-[var(--r-s)] bg-[var(--sunken)]/50" />
                       </div>
                     </div>
                   </div>
@@ -210,7 +210,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                         </span>
                       </div>
                       {isSelected && (
-                        <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0">
+                        <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0">
                           <Check className="w-2 sm:w-2.5 h-2 sm:h-2.5 stroke-[3]" />
                         </span>
                       )}
@@ -227,7 +227,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                   {/* BOTÓN DE ESTADO */}
                   <div className="pt-2 sm:pt-3 mt-1.5 sm:mt-2/60">
                     <span
-                      className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-sans transition ${
+                      className={`block w-full py-0.5 sm:py-1 text-center rounded-[var(--r-s)] sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-sans transition ${
                         isSelected
                           ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                           : "bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink)]/80"

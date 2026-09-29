@@ -390,7 +390,7 @@ export const ProfileCompletenessCard: React.FC<
                 Entrenamiento & Preparación de Agentes IA
               </h3>
               <span
-                className={`text-[10px] font-sans px-2 py-0.5 rounded-full font-semibold ${badgeInfo.color}`}
+                className={`text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-semibold ${badgeInfo.color}`}
               >
                 {badgeInfo.label}
               </span>
@@ -438,9 +438,9 @@ export const ProfileCompletenessCard: React.FC<
 
       {/* Progress Bar */}
       <div className="pt-3 space-y-1.5">
-        <div className="w-full h-2 rounded-full bg-[var(--surface)]/80 overflow-hidden relative">
+        <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 overflow-hidden relative">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[var(--ok)] to-[var(--acc)] transition-all duration-500"
+            className="h-full rounded-[var(--r-pill)] bg-gradient-to-r from-[var(--ok)] to-[var(--acc)] transition-all duration-500"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -460,7 +460,7 @@ export const ProfileCompletenessCard: React.FC<
             {pillars.map((p) => (
               <span
                 key={`badge-${p.id}`}
-                className={`inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-md ${
+                className={`inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-s)] ${
                   p.completed
                     ? "bg-[var(--ok-soft)]/20 text-[var(--ok)]"
                     : "bg-[var(--surface)]/80 text-[var(--ink-2)]"

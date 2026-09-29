@@ -29,7 +29,7 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
     if (lead.estado === 'pendiente_aprobacion' || lead.estado === 'aprobado_propuesta') {
       return (
         <span
-          className="inline-flex items-center gap-1 text-[11px] text-[var(--ink-2)] bg-[var(--surface)]/80 px-2 py-0.5 rounded-full border border-[var(--hair)]/50"
+          className="inline-flex items-center gap-1 text-[11px] text-[var(--ink-2)] bg-[var(--surface)]/80 px-2 py-0.5 rounded-[var(--r-pill)] border border-[var(--hair)]/50"
           title="Borrador listo o pendiente de despacho"
         >
           <Clock className={size === 'sm' ? 'w-2.5 h-2.5 text-[var(--ink-2)]' : 'w-3 h-3 text-[var(--ink-2)]'} />
@@ -44,7 +44,7 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   if (hasClicked) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] bg-[var(--acc)]/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-full shadow-xs"
+        className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] bg-[var(--acc)]/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-[var(--r-pill)] shadow-xs"
         title={`¡Leído y clic en EPK! (${lead.clics_epk} clics, ${openCount} aperturas)`}
       >
         <CheckCheck className={size === 'sm' ? 'w-3 h-3 text-[var(--acc)]' : 'w-3.5 h-3.5 text-[var(--acc)]'} />
@@ -60,7 +60,7 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   if (wasOpened) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] bg-[var(--acc)]/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-full shadow-xs"
+        className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] bg-[var(--acc)]/70 border border-[var(--acc)]/40 px-2 py-0.5 rounded-[var(--r-pill)] shadow-xs"
         title={`Email abierto por la sala (${openCount} ${openCount === 1 ? 'vez' : 'veces'})`}
       >
         <CheckCheck className={size === 'sm' ? 'w-3.5 h-3.5 text-[var(--acc)]' : 'w-4 h-4 text-[var(--acc)]'} />
@@ -72,7 +72,7 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   // 3. Enviado pero todavía no abierto (Tick simple gris de WhatsApp)
   return (
     <span
-      className="inline-flex items-center gap-1 text-[11px] text-[var(--ink-2)] bg-[var(--surface)]/90 border border-[var(--hair)]/60 px-2 py-0.5 rounded-full"
+      className="inline-flex items-center gap-1 text-[11px] text-[var(--ink-2)] bg-[var(--surface)]/90 border border-[var(--hair)]/60 px-2 py-0.5 rounded-[var(--r-pill)]"
       title={lead.fecha_envio ? `Enviado el ${lead.fecha_envio}` : 'Enviado a la sala'}
     >
       <Check className={size === 'sm' ? 'w-3 h-3 text-[var(--ink-2)]' : 'w-3.5 h-3.5 text-[var(--ink-2)]'} />

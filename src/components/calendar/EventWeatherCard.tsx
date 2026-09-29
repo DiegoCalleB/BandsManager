@@ -213,7 +213,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
       <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 ">
         <div className="flex items-center gap-2">
           <span
-            className={`p-1 rounded-md ${
+            className={`p-1 rounded-[var(--r-s)] ${
               hasAlerts
                 ? dangerAlertsCount > 0
                   ? "bg-[var(--alert)]/20 text-[var(--alert)]"
@@ -488,7 +488,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                         <button
                           type="button"
                           onClick={() => toggleAlertExpand(alert.id)}
-                          className={`p-1 rounded-md text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
+                          className={`p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
                             isDanger
                               ? "hover:bg-[var(--alert-soft)]"
                               : "hover:bg-[var(--acc-soft)]"

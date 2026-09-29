@@ -644,7 +644,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setSearchQuery("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)] p-0.5 rounded-full transition-colors cursor-pointer"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)] p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer"
               title="Limpiar búsqueda"
             >
               <X className="w-3 h-3" />
@@ -818,7 +818,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                        <span className="px-2 py-0.5 rounded-md bg-[var(--acc)]/10 text-[var(--acc)]/70 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
                           <Disc3 className="w-3 h-3 text-[var(--acc)]" />
                           {album === "Singles / Sin Disco"
                             ? "SENCILLOS & INÉDITAS"
@@ -1120,7 +1120,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
+                  className="mt-3 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/20 text-[var(--ok)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
                 >
                   <X className="w-3.5 h-3.5" />
                   <span>Limpiar búsqueda</span>

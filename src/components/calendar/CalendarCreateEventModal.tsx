@@ -193,26 +193,26 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
     <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
       <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
-          className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
+          className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
           <button
             onClick={() => setShowCreateModal(null)}
-            className="absolute top-4 right-4 p-1 rounded-full text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
           >
             ✕
           </button>
 
           {/* Segmented Event Type Selector */}
-          <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-xl mb-5 border border-[var(--hair)]/5">
+          <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-5 border border-[var(--hair)]/5">
             <button
               type="button"
               onClick={() => {
                 setShowCreateModal('concert');
                 setConcIsPosible(false);
               }}
-              className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'concert' && !concIsPosible
                   ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -224,7 +224,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <button
               type="button"
               onClick={() => setShowCreateModal('rehearsal')}
-              className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'rehearsal'
                   ? 'bg-[var(--ok)] text-[var(--ink)] shadow-md font-black'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -236,7 +236,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <button
               type="button"
               onClick={() => setShowCreateModal('reunion')}
-              className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -249,7 +249,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 setShowCreateModal('concert');
                 setConcIsPosible(true);
               }}
-              className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                 showCreateModal === 'concert' && concIsPosible
                   ? 'bg-[var(--acc)] text-[var(--ink)] shadow-md font-black'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -278,7 +278,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 >
@@ -297,7 +297,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={reuAsunto}
                   onChange={(e) => setReuAsunto(e.target.value)}
                   placeholder="Ej: Repaso de repertorio y presupuestos"
-                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                   required
@@ -311,7 +311,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="text"
                     value={reuHora}
                     onChange={(e) => setReuHora(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -323,7 +323,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={reuLugar}
                     onChange={(e) => setReuLugar(e.target.value)}
                     placeholder="Online (Meet, Zoom, etc)"
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -337,7 +337,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={reuEnlace}
                   onChange={(e) => setReuEnlace(e.target.value)}
                   placeholder="https://meet.google.com/xyz-abc"
-                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 />
@@ -349,7 +349,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={reuNotas}
                   onChange={(e) => setReuNotas(e.target.value)}
                   rows={3}
-                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 />
@@ -365,7 +365,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer shadow-md"
+                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer shadow-md"
                 >
                   Convocar Reunión
                 </button>
@@ -381,7 +381,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 >
@@ -400,7 +400,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="text"
                     value={rehTime}
                     onChange={(e) => setRehTime(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -411,7 +411,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="text"
                     value={rehLugar}
                     onChange={(e) => setRehLugar(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -424,7 +424,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   <select
                     value={rehSetlistId}
                     onChange={(e) => setRehSetlistId(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   >
@@ -444,7 +444,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={rehNotas}
                   onChange={(e) => setRehNotas(e.target.value)}
                   rows={2}
-                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 />
@@ -460,7 +460,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
+                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer shadow-md font-bold"
                 >
                   Guardar Ensayo
                 </button>
@@ -476,7 +476,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <select
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 >
@@ -496,7 +496,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={concCiudad}
                     onChange={(e) => setConcCiudad(e.target.value)}
                     placeholder="Ej: Madrid"
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                     required
@@ -509,7 +509,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={concSala}
                     onChange={(e) => setConcSala(e.target.value)}
                     placeholder="Ej: Sala El Sol"
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                     required
@@ -524,7 +524,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="number"
                     value={concCache}
                     onChange={(e) => setConcCache(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -535,7 +535,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     type="number"
                     value={concAforo}
                     onChange={(e) => setConcAforo(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -548,7 +548,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   <select
                     value={concSetlistId}
                     onChange={(e) => setConcSetlistId(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono border focus:outline-hidden ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   >
@@ -572,7 +572,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className={`px-4 py-1.5 text-[11px] font-mono font-bold rounded-xl transition-all cursor-pointer shadow-md ${
+                  className={`px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-all cursor-pointer shadow-md ${
                     concIsPosible
                       ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'
                       : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'

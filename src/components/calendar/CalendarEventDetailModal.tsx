@@ -272,7 +272,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
           onTouchStart={handleModalTouchStart}
           onTouchMove={handleModalTouchMove}
           onTouchEnd={handleModalTouchEnd}
-          className={`relative w-full max-w-3xl rounded-2xl border-2 shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
+          className={`relative w-full max-w-3xl rounded-[var(--r-l)] border-2 shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
             'bg-[var(--surface)] border-[var(--acc)] text-[var(--ink)]'
           }`}
         >
@@ -286,7 +286,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               type="button"
               onClick={() => goToAdjacentEvent(-1)}
               disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
-              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold border border-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
               title="Evento anterior (←)"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -309,7 +309,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 disabled={
                   allChronologicalEvents.length === 0 || activeChronoIndex < 0 || activeChronoIndex >= allChronologicalEvents.length - 1
                 }
-                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold border border-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                 title="Evento siguiente (→)"
               >
                 <span className="hidden sm:inline">Siguiente</span>
@@ -318,7 +318,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setShowEventFichaModal(false)}
-                className="p-1.5 rounded-lg text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+                className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
                 title="Cerrar (Esc)"
               >
                 ✕
@@ -334,7 +334,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <img
                     src={modalBandInfo.logoUrl}
                     alt={modalBandInfo.name}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-contain bg-[var(--sunken)] p-1 shrink-0 border border-[var(--acc)]/40 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0 border border-[var(--acc)]/40 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
                     onError={(e) => {
                       (e.currentTarget as HTMLElement).style.display = 'none';
                       const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
@@ -343,12 +343,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   />
                 ) : null}
                 <span
-                  className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center text-xl font-black drop-shadow-lg ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
+                  className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-black drop-shadow-lg ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
                 >
                   {modalBandInfo.initials}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 inline-flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 inline-flex items-center gap-1">
                     🎸 {modalBandInfo.name}
                   </span>
                   <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>{selectedEventTitle}</h3>
@@ -375,7 +375,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       if (selectedConcert) setViewingConcert(selectedConcert);
                       if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
                     }}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--surface)] border-[var(--acc)]/40 text-[var(--acc)] hover:bgbg-[var(--surface)] flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--surface)] border-[var(--acc)]/40 text-[var(--acc)] hover:bgbg-[var(--surface)] flex items-center gap-1"
                     title="Editar todos los campos de este evento"
                   >
                     ✎ Editar
@@ -384,7 +384,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--ok)]/40 border-[var(--ok)]/40 text-[var(--ok)] hover:bg-[var(--ok)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--ok)]/40 border-[var(--ok)]/40 text-[var(--ok)] hover:bg-[var(--ok)]/50 flex items-center gap-1"
                     title="Compartir convocatoria por WhatsApp"
                   >
                     <Share2 className="w-3.5 h-3.5" />
@@ -394,7 +394,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--acc)]/40 border-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--acc)]/40 border-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/50 flex items-center gap-1"
                     title="Enviar recordatorio / notificación push a los músicos"
                   >
                     <Bell className="w-3.5 h-3.5" />
@@ -404,7 +404,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
-                    className={`px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
+                    className={`px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer flex items-center gap-1 ${
                       copiedEventModalId === modalEvent.id
                         ? 'bg-[var(--ok)] border-[var(--ok)] text-[var(--ink)]'
                         : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] hover:bgbg-[var(--surface)]'
@@ -418,7 +418,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => setDeletingEventConfirmId(modalEvent.id)}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50 flex items-center gap-1"
                     title="Eliminar este evento del calendario"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -430,7 +430,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
             {/* Panel de Confirmación de Eliminación In-Modal */}
             {isConfirmingDelete && modalEvent && (
-              <div className="p-3.5 rounded-xl border border-[var(--alert)]/50 bg-[var(--alert)]/60 text-[var(--alert)] flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
+              <div className="p-3.5 rounded-[var(--r-m)] border border-[var(--alert)]/50 bg-[var(--alert)]/60 text-[var(--alert)] flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0" />
                   <div>
@@ -446,14 +446,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => setDeletingEventConfirmId(null)}
-                    className="px-3 py-1.5 text-xs font-mono rounded-lg border border-[var(--hair)] bg-[var(--surface)] hover:bgbg-[var(--surface)] text-[var(--ink-2)] transition-colors cursor-pointer"
+                    className="px-3 py-1.5 text-xs font-mono rounded-[var(--r-m)] border border-[var(--hair)] bg-[var(--surface)] hover:bgbg-[var(--surface)] text-[var(--ink-2)] transition-colors cursor-pointer"
                   >
                     Cancelar
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
-                    className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-lg bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-lg transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-lg transition-colors cursor-pointer"
                   >
                     Sí, Eliminar Definitivamente
                   </button>
@@ -479,7 +479,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('resumen')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'resumen'
                     ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -490,7 +490,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('tecnica')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'tecnica'
                     ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -502,7 +502,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('contactos')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'contactos'
                     ? 'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -511,7 +511,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Phone className="w-3.5 h-3.5" />
                 <span>2. Contactos Clave</span>
                 {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-mono">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--sunken)] font-mono">
                     {modalRoadbook.contactosClave.length}
                   </span>
                 )}
@@ -519,7 +519,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('merchan')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'merchan'
                     ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -528,7 +528,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Shirt className="w-3.5 h-3.5" />
                 <span>3. Control Merchandising</span>
                 {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-mono">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--sunken)] font-mono">
                     {modalRoadbook.merchControl.items.length}
                   </span>
                 )}
@@ -536,7 +536,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('postshow')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'postshow'
                     ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -545,13 +545,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Users className="w-3.5 h-3.5" />
                 <span>4. Público & Post-Show</span>
                 {selectedConcert?.es_hito_destacado && (
-                  <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-[var(--acc)] text-[var(--ink)] font-black">⭐ Hito</span>
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[9px] bg-[var(--acc)] text-[var(--ink)] font-black">⭐ Hito</span>
                 )}
               </button>
               <button
                 type="button"
                 onClick={() => setModalActiveTab('cierre')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'cierre'
                     ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -561,7 +561,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <span>5. Cierre Material</span>
                 {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
                   <span
-                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                    className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] font-mono ${
                       modalRoadbook.cierreMaterial.every((i) => i.checked) ? 'bg-[var(--ok)] text-[var(--ink)] font-black' : 'bg-[var(--sunken)]'
                     }`}
                   >
@@ -575,7 +575,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
             {modalActiveTab === 'resumen' && (
               <div className="space-y-4">
                 <div
-                  className={`space-y-3 rounded-xl p-4 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
+                  className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
                 >
                   <div className="flex items-center gap-2 text-[11px]">
                     <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
@@ -621,7 +621,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             href={selectedEventDetails.entradasUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
+                            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
                           >
                             <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                           </a>
@@ -671,7 +671,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                   <div
                     onClick={() => setModalActiveTab('tecnica')}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
+                    className={`p-3 rounded-[var(--r-m)] border transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
                       'bg-[var(--acc-soft)]/70 border-[var(--acc)]'
                     }`}
                   >
@@ -689,7 +689,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                   <div
                     onClick={() => setModalActiveTab('contactos')}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-[var(--ok)]/60 ${
+                    className={`p-3 rounded-[var(--r-m)] border transition-all cursor-pointer hover:border-[var(--ok)]/60 ${
                       'bg-[var(--ok-soft)]/70 border-[var(--ok)]'
                     }`}
                   >
@@ -709,7 +709,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                   <div
                     onClick={() => setModalActiveTab('merchan')}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
+                    className={`p-3 rounded-[var(--r-m)] border transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
                       'bg-[var(--acc-soft)]/70 border-[var(--acc)]'
                     }`}
                   >
@@ -729,7 +729,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                   <div
                     onClick={() => setModalActiveTab('cierre')}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
+                    className={`p-3 rounded-[var(--r-m)] border transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
                       'bg-[var(--acc-soft)]/70 border-[var(--acc)]'
                     }`}
                   >
@@ -755,7 +755,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1 border-b border-[var(--acc)]/20">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
                       Sección 1
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Logística Técnica, Horarios & Rider</h3>
@@ -765,7 +765,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                 {/* Horarios de Producción */}
                 <div
-                  className={`p-4 rounded-xl space-y-3 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
+                  className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5" />
@@ -779,7 +779,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.horaLlegada || '17:00'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaLlegada: e.target.value })}
                         placeholder="17:00"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -791,7 +791,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.horaPruebaSonido || '18:00 - 19:30'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaPruebaSonido: e.target.value })}
                         placeholder="18:00 - 19:30"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -803,7 +803,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.horaAperturaPuertas || '20:30'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaAperturaPuertas: e.target.value })}
                         placeholder="20:30"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -815,7 +815,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.horaShow || '21:30'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaShow: e.target.value })}
                         placeholder="21:30"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border border-[var(--acc)]/50 font-bold ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border border-[var(--acc)]/50 font-bold ${
                           'bg-[var(--acc-soft)] text-[var(--ink)]'
                         }`}
                       />
@@ -827,7 +827,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.horaCierreToque || '01:00'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaCierreToque: e.target.value })}
                         placeholder="01:00"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -837,7 +837,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                 {/* Sonido P.A. & Monitores */}
                 <div
-                  className={`p-4 rounded-xl space-y-3 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
+                  className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Wrench className="w-3.5 h-3.5" />
@@ -853,7 +853,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.paEspecificaciones || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { paEspecificaciones: e.target.value })}
                         placeholder="Ej: Line Array L-Acoustics / D&B, subwoofers estéreo, presión homogénea"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -867,7 +867,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.monitoresTipo || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { monitoresTipo: e.target.value })}
                         placeholder="Ej: In-Ears estéreo de la banda (traemos transmisores) + 2 cuñas de refuerzo"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -882,7 +882,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       value={modalRoadbook.canalesMonitores || ''}
                       onChange={(e) => updateRoadbookField(modalRoadbookKey, { canalesMonitores: e.target.value })}
                       placeholder="Ej: 4 envíos auxiliares XLR independientes a rack de IEMs"
-                      className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                      className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                         'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                       }`}
                     />
@@ -891,7 +891,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                 {/* Backline y Electricidad */}
                 <div
-                  className={`p-4 rounded-xl space-y-3 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
+                  className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Truck className="w-3.5 h-3.5" />
@@ -905,7 +905,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.backlineInfo || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { backlineInfo: e.target.value })}
                         placeholder="Sala aporta: Batería básica. Banda trae: Platos, pedal, guitarras, amplificadores y teclado."
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -919,7 +919,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={modalRoadbook.potenciaElectrica || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { potenciaElectrica: e.target.value })}
                         placeholder="Ej: 2 líneas independientes Schuko 220V 16A limpias (frontal y trasera)"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -929,7 +929,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                 {/* Input List / Rider de Canales */}
                 <div
-                  className={`p-4 rounded-xl space-y-2.5 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
+                  className={`p-4 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
                 >
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
@@ -945,7 +945,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     value={modalRoadbook.inputList || ''}
                     onChange={(e) => updateRoadbookField(modalRoadbookKey, { inputList: e.target.value })}
                     placeholder="1. Bombo (Beta 52)&#10;2. Caja Top (SM57)&#10;3. Bajo (D.I. Radial)&#10;4. Guitarra (e906)&#10;5. Voz (Beta 58)..."
-                    className={`w-full px-3 py-2 rounded-lg text-xs font-mono leading-relaxed border ${
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono leading-relaxed border ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -953,7 +953,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                 {/* Notas de Producción y Carga */}
                 <div
-                  className={`p-4 rounded-xl space-y-2 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
+                  className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)] border border-[var(--hair)]'}`}
                 >
                   <label className={`block text-[10px] font-mono uppercase font-bold ${textSub}`}>
                     Notas de Acceso, Muelle de Carga & Observaciones
@@ -963,7 +963,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     value={modalRoadbook.notasTecnicas || ''}
                     onChange={(e) => updateRoadbookField(modalRoadbookKey, { notasTecnicas: e.target.value })}
                     placeholder="Ej: Acceso por puerta trasera calle peatonal. Se requiere autorización de matrícula para la furgoneta."
-                    className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                    className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
@@ -976,7 +976,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1 border-b border-[var(--ok)]/20 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--ok)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--ok)] text-[var(--ink)]">
                       Sección 2
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Directorio de Contactos Clave de Producción</h3>
@@ -984,7 +984,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => setShowAddContactForm(!showAddContactForm)}
-                    className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                    className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                   >
                     <span>+</span> Añadir Contacto
                   </button>
@@ -994,7 +994,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 {showAddContactForm && (
                   <form
                     onSubmit={(e) => handleAddKeyContact(modalRoadbookKey, e)}
-                    className={`p-4 rounded-xl border space-y-3 animate-in fade-in ${
+                    className={`p-4 rounded-[var(--r-m)] border space-y-3 animate-in fade-in ${
                       'bg-[var(--ok-soft)] border-[var(--ok)]'
                     }`}
                   >
@@ -1010,7 +1010,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           value={newContactNombre}
                           onChange={(e) => setNewContactNombre(e.target.value)}
                           placeholder="Ej: Manuel Producción"
-                          className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                           }`}
                         />
@@ -1020,7 +1020,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <select
                           value={newContactRol}
                           onChange={(e) => setNewContactRol(e.target.value)}
-                          className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                           }`}
                         >
@@ -1044,7 +1044,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           value={newContactTelefono}
                           onChange={(e) => setNewContactTelefono(e.target.value)}
                           placeholder="+34 600 000 000"
-                          className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                           }`}
                         />
@@ -1056,7 +1056,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           value={newContactEmail}
                           onChange={(e) => setNewContactEmail(e.target.value)}
                           placeholder="produccion@sala.com"
-                          className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                           }`}
                         />
@@ -1069,7 +1069,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         value={newContactNotas}
                         onChange={(e) => setNewContactNotas(e.target.value)}
                         placeholder="Ej: Contacto para cobro de taquilla y apertura de puerta muelle"
-                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       />
@@ -1078,13 +1078,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <button
                         type="button"
                         onClick={() => setShowAddContactForm(false)}
-                        className="px-3 py-1.5 text-xs font-mono rounded-lg border border-[var(--hair)] hover:bgbg-[var(--surface)] text-[var(--ink-2)] transition-colors"
+                        className="px-3 py-1.5 text-xs font-mono rounded-[var(--r-m)] border border-[var(--hair)] hover:bgbg-[var(--surface)] text-[var(--ink-2)] transition-colors"
                       >
                         Cancelar
                       </button>
                       <button
                         type="submit"
-                        className="px-4 py-1.5 text-xs font-mono font-bold rounded-lg bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-colors"
+                        className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-colors"
                       >
                         Guardar Contacto
                       </button>
@@ -1105,14 +1105,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     (modalRoadbook.contactosClave || []).map((contact) => (
                       <div
                         key={contact.id}
-                        className={`p-3.5 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                        className={`p-3.5 rounded-[var(--r-m)] border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                           'bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ok)]'
                         }`}
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span className="text-xs font-mono font-bold text-[var(--ink)]">{contact.nombre}</span>
-                            <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/30">
+                            <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[9px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] border border-[var(--ok)]/30">
                               {contact.rol}
                             </span>
                           </div>
@@ -1130,7 +1130,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <button
                             type="button"
                             onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar || 'la sala')}
-                            className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-sm"
+                            className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-sm"
                             title="Abrir WhatsApp directo con mensaje predefinido"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
@@ -1138,7 +1138,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           </button>
                           <a
                             href={`tel:${contact.telefono.replace(/\s+/g, '')}`}
-                            className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold border border-[var(--ok)]/40 text-[var(--ok)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
+                            className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold border border-[var(--ok)]/40 text-[var(--ok)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
                             title="Llamar directamente por teléfono"
                           >
                             <Phone className="w-3.5 h-3.5" />
@@ -1147,7 +1147,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <button
                             type="button"
                             onClick={() => handleDeleteKeyContact(contact.id, modalRoadbookKey)}
-                            className="p-1 rounded-lg text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/30 transition-colors cursor-pointer"
+                            className="p-1 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/30 transition-colors cursor-pointer"
                             title="Eliminar este contacto"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1209,7 +1209,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     {/* Cabecera de la Sección de Merchan */}
                     <div className="flex items-center justify-between pb-1 border-b border-[var(--acc)]/20 flex-wrap gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
+                        <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
                           Sección 3
                         </span>
                         <div>
@@ -1223,7 +1223,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <button
                           type="button"
                           onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
-                          className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
                           title="Copiar arqueo y balance para WhatsApp"
                         >
                           {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
@@ -1232,7 +1232,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <button
                           type="button"
                           onClick={() => setShowAddMerchForm(!showAddMerchForm)}
-                          className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>{showAddMerchForm ? 'Cerrar' : '+ Añadir Producto'}</span>
@@ -1245,7 +1245,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <motion.div
                         initial={{ opacity: 0, y: -6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-2.5 rounded-lg bg-[var(--ok)]/20 border border-[var(--ok)]/40 text-[var(--ok)] text-xs font-mono flex items-center gap-2"
+                        className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 border border-[var(--ok)]/40 text-[var(--ok)] text-xs font-mono flex items-center gap-2"
                       >
                         <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
                         <span>¡Resumen de arqueo y ventas copiado al portapapeles con formato WhatsApp para el grupo de la banda!</span>
@@ -1255,7 +1255,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     {/* KPI Grid: Cuadre y Métricas Principales */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                       <div
-                        className={`p-2.5 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                        className={`p-2.5 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                       >
                         <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
                           <Truck className="w-3 h-3 text-[var(--acc)]" /> Sube a Furgón
@@ -1268,7 +1268,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                        className={`p-2.5 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                       >
                         <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
                           <ShoppingBag className="w-3 h-3 text-[var(--acc)]" /> Stock Final
@@ -1281,7 +1281,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                        className={`p-2.5 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                       >
                         <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
                           <Zap className="w-3 h-3 text-[var(--ok)]" /> Vendidas
@@ -1294,7 +1294,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                        className={`p-2.5 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                       >
                         <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
                           <Calculator className="w-3 h-3 text-[var(--acc)]" /> Venta Teórica
@@ -1307,7 +1307,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                        className={`p-2.5 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                       >
                         <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
                           <Coins className="w-3 h-3 text-[var(--ok)]" /> Cobrado Real
@@ -1320,7 +1320,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
 
                       <div
-                        className={`p-2.5 rounded-xl border ${
+                        className={`p-2.5 rounded-[var(--r-m)] border ${
                           diferenciaCuadre === 0
                             ? 'bg-[var(--ok-soft)] border-[var(--ok)]'
                             : diferenciaCuadre > 0
@@ -1363,7 +1363,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
                           onSubmit={(e) => handleAddMerchItem(modalRoadbookKey, e)}
-                          className={`p-3.5 rounded-xl border space-y-3 ${
+                          className={`p-3.5 rounded-[var(--r-m)] border space-y-3 ${
                             'bg-[var(--acc-soft)]/70 border-[var(--acc)]'
                           }`}
                         >
@@ -1389,7 +1389,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 placeholder="Ej: Camiseta Gira Oficial, Vinilo LP..."
                                 value={newMerchNombre}
                                 onChange={(e) => setNewMerchNombre(e.target.value)}
-                                className={`w-full px-2.5 py-1.5 rounded-lg border outline-none text-xs ${
+                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] border outline-none text-xs ${
                                   'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                                 }`}
                               />
@@ -1400,7 +1400,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               <select
                                 value={newMerchCategoria}
                                 onChange={(e) => setNewMerchCategoria(e.target.value as any)}
-                                className={`w-full px-2 py-1.5 rounded-lg border outline-none text-xs ${
+                                className={`w-full px-2 py-1.5 rounded-[var(--r-m)] border outline-none text-xs ${
                                   'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                                 }`}
                               >
@@ -1419,7 +1419,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 placeholder="Ej: M, L, XL, 12'', Pack..."
                                 value={newMerchTalla}
                                 onChange={(e) => setNewMerchTalla(e.target.value)}
-                                className={`w-full px-2.5 py-1.5 rounded-lg border outline-none text-xs ${
+                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] border outline-none text-xs ${
                                   'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                                 }`}
                               />
@@ -1434,7 +1434,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   min="0"
                                   value={newMerchPrecio}
                                   onChange={(e) => setNewMerchPrecio(Number(e.target.value) || 0)}
-                                  className={`w-full px-2 py-1.5 rounded-lg border outline-none text-xs font-mono ${
+                                  className={`w-full px-2 py-1.5 rounded-[var(--r-m)] border outline-none text-xs font-mono ${
                                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                                   }`}
                                 />
@@ -1446,7 +1446,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   min="0"
                                   value={newMerchStockInicial}
                                   onChange={(e) => setNewMerchStockInicial(Number(e.target.value) || 0)}
-                                  className={`w-full px-2 py-1.5 rounded-lg border outline-none text-xs font-mono ${
+                                  className={`w-full px-2 py-1.5 rounded-[var(--r-m)] border outline-none text-xs font-mono ${
                                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                                   }`}
                                 />
@@ -1457,7 +1457,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <div className="flex justify-end pt-1">
                             <button
                               type="submit"
-                              className="px-4 py-1.5 rounded-lg text-xs font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
+                              className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
                             >
                               <Check className="w-3.5 h-3.5" />
                               <span>Guardar Producto en el Bolo</span>
@@ -1469,7 +1469,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                     {/* Tabla de Artículos: Sube a Furgoneta vs Stock Final Noche */}
                     <div
-                      className={`rounded-xl border overflow-hidden ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                      className={`rounded-[var(--r-m)] border overflow-hidden ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                     >
                       <div className="p-3 border-b borderbg-[var(--surface)]/80 flex items-center justify-between flex-wrap gap-2">
                         <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
@@ -1487,7 +1487,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <button
                             type="button"
                             onClick={() => setShowAddMerchForm(true)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                            className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                           >
                             <Plus className="w-3.5 h-3.5" />
                             <span>Añadir primer producto</span>
@@ -1510,7 +1510,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               >
                                 {/* Datos del producto */}
                                 <div className="flex items-center gap-2.5 min-w-[220px]">
-                                  <div className={`p-2 rounded-lg border shrink-0 ${catConfig.color}`}>{catConfig.icon}</div>
+                                  <div className={`p-2 rounded-[var(--r-m)] border shrink-0 ${catConfig.color}`}>{catConfig.icon}</div>
                                   <div className="min-w-0">
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                       <h4 className={`text-xs font-bold font-sans ${textTitle}`}>{item.nombre}</h4>
@@ -1534,7 +1534,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 items-center flex-1 max-w-lg">
                                   {/* Sube a Furgoneta */}
                                   <div
-                                    className={`p-1.5 rounded-lg border ${'bg-[var(--sunken)] border-[var(--hair)]'}`}
+                                    className={`p-1.5 rounded-[var(--r-m)] border ${'bg-[var(--sunken)] border-[var(--hair)]'}`}
                                   >
                                     <span className="block text-[9px] font-mono text-[var(--ink-2)] mb-1 flex items-center gap-1">
                                       <Truck className="w-2.5 h-2.5 text-[var(--acc)]" /> Sube Furgón
@@ -1580,7 +1580,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                                   {/* Stock Final (Fin de Noche) */}
                                   <div
-                                    className={`p-1.5 rounded-lg border ${'bg-[var(--sunken)] border-[var(--hair)]'}`}
+                                    className={`p-1.5 rounded-[var(--r-m)] border ${'bg-[var(--sunken)] border-[var(--hair)]'}`}
                                   >
                                     <div className="flex items-center justify-between mb-1">
                                       <span className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1">
@@ -1640,7 +1640,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                       <span className="text-xs font-mono font-black text-[var(--acc)]">{vendidas} vendidas</span>
                                       <span className="block text-xs font-mono font-bold text-[var(--ok)]">{subtotal.toFixed(2)} €</span>
                                     </div>
-                                    <div className="w-20 bgbg-[var(--surface)] rounded-full h-1 mt-1 overflow-hidden">
+                                    <div className="w-20 bgbg-[var(--surface)] rounded-[var(--r-pill)] h-1 mt-1 overflow-hidden">
                                       <div
                                         className="h-full bg-[var(--acc)] transition-all duration-300"
                                         style={{ width: `${Math.min(100, pctVendido)}%` }}
@@ -1654,7 +1654,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   <button
                                     type="button"
                                     onClick={() => handleDeleteMerchItem(modalRoadbookKey, item.id)}
-                                    className="p-1.5 rounded-lg text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/30 transition-colors cursor-pointer"
+                                    className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/30 transition-colors cursor-pointer"
                                     title="Eliminar este artículo del bolo"
                                   >
                                     <Trash2 className="w-4 h-4" />
@@ -1669,7 +1669,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                     {/* Módulo de Arqueo de Caja y Cobros (Efectivo & Bizum) */}
                     <div
-                      className={`p-4 rounded-xl border space-y-4 ${
+                      className={`p-4 rounded-[var(--r-m)] border space-y-4 ${
                         'bg-[var(--surface)] border-[var(--hair)]'
                       }`}
                     >
@@ -1685,7 +1685,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {/* Efectivo Recaudado */}
                         <div
-                          className={`p-3 rounded-xl border ${
+                          className={`p-3 rounded-[var(--r-m)] border ${
                             'bg-[var(--surface)] border-[var(--ok)]'
                           }`}
                         >
@@ -1705,7 +1705,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   ingresosEfectivo: Math.max(0, parseFloat(e.target.value) || 0),
                                 })
                               }
-                              className={`w-full px-3 py-1.5 rounded-lg border font-mono font-bold text-sm outline-none ${
+                              className={`w-full px-3 py-1.5 rounded-[var(--r-m)] border font-mono font-bold text-sm outline-none ${
                                 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                               }`}
                             />
@@ -1715,7 +1715,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                         {/* Bizum / TPV Recaudado */}
                         <div
-                          className={`p-3 rounded-xl border ${
+                          className={`p-3 rounded-[var(--r-m)] border ${
                             'bg-[var(--surface)] border-[var(--acc)]'
                           }`}
                         >
@@ -1735,7 +1735,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   ingresosBizum: Math.max(0, parseFloat(e.target.value) || 0),
                                 })
                               }
-                              className={`w-full px-3 py-1.5 rounded-lg border font-mono font-bold text-sm outline-none ${
+                              className={`w-full px-3 py-1.5 rounded-[var(--r-m)] border font-mono font-bold text-sm outline-none ${
                                 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                               }`}
                             />
@@ -1745,7 +1745,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                         {/* Fondo de Caja Inicial */}
                         <div
-                          className={`p-3 rounded-xl border ${
+                          className={`p-3 rounded-[var(--r-m)] border ${
                             'bg-[var(--surface)] border-[var(--acc)]'
                           }`}
                         >
@@ -1765,7 +1765,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   fondoCajaInicial: Math.max(0, parseFloat(e.target.value) || 0),
                                 })
                               }
-                              className={`w-full px-3 py-1.5 rounded-lg border font-mono font-bold text-sm outline-none ${
+                              className={`w-full px-3 py-1.5 rounded-[var(--r-m)] border font-mono font-bold text-sm outline-none ${
                                 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                               }`}
                             />
@@ -1776,7 +1776,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                       {/* Desglose de Caja Total en Mano */}
                       <div
-                        className={`p-3 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                        className={`p-3 rounded-[var(--r-m)] border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                           'bg-[var(--surface)] border-[var(--hair)]'
                         }`}
                       >
@@ -1796,7 +1796,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                         <div className="text-right shrink-0">
                           <span
-                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold border ${
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold border ${
                               diferenciaCuadre === 0
                                 ? 'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40'
                                 : diferenciaCuadre > 0
@@ -1834,7 +1834,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           placeholder="Ej: Encargado de mesa: Andrea. Las camisetas talla L se agotaron antes del bis. Mucha demanda de púas."
                           value={merch.notas || ''}
                           onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, { notas: e.target.value })}
-                          className={`w-full p-2.5 rounded-lg border text-xs font-mono outline-none resize-none ${
+                          className={`w-full p-2.5 rounded-[var(--r-m)] border text-xs font-mono outline-none resize-none ${
                             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                           }`}
                         />
@@ -1849,7 +1849,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1 border-b border-[var(--acc)]/20 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
                       Sección 4
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
@@ -1863,7 +1863,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         setShowEventFichaModal(false);
                         setViewingConcert(selectedConcert);
                       }}
-                      className="px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-colors flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-colors flex items-center gap-1 cursor-pointer"
                     >
                       <Edit className="w-3.5 h-3.5" />
                       <span>Editar Convocatoria / Dictar Nota</span>
@@ -1879,7 +1879,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div
-                    className={`p-3.5 rounded-xl border ${'bg-[var(--acc-soft)]/60 border-[var(--acc)]'}`}
+                    className={`p-3.5 rounded-[var(--r-m)] border ${'bg-[var(--acc-soft)]/60 border-[var(--acc)]'}`}
                   >
                     <div className="text-[10px] font-mono text-[var(--acc)] font-bold uppercase tracking-wider mb-1">
                       👥 Asistencia Propia Estimada
@@ -1892,7 +1892,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </div>
 
                   <div
-                    className={`p-3.5 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                    className={`p-3.5 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                   >
                     <div className="text-[10px] font-mono text-[var(--ink-2)] font-bold uppercase tracking-wider mb-1">
                       🎸 Público de Otros Grupos
@@ -1905,7 +1905,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </div>
 
                   <div
-                    className={`p-3.5 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                    className={`p-3.5 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                   >
                     <div className="text-[10px] font-mono text-[var(--ink-2)] font-bold uppercase tracking-wider mb-1">⭐ Hito de Booking</div>
                     <div className="text-sm font-bold font-mono mt-1">
@@ -1921,7 +1921,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 </div>
 
                 <div
-                  className={`p-4 rounded-xl border space-y-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                  className={`p-4 rounded-[var(--r-m)] border space-y-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Music className="w-3.5 h-3.5" />
@@ -1935,7 +1935,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 </div>
 
                 <div
-                  className={`p-4 rounded-xl border space-y-2 ${'bg-[var(--acc-soft)]/40 border-[var(--acc)]'}`}
+                  className={`p-4 rounded-[var(--r-m)] border space-y-2 ${'bg-[var(--acc-soft)]/40 border-[var(--acc)]'}`}
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5" />
@@ -1960,7 +1960,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1 border-b border-[var(--acc)]/20 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
                       Sección 5
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Checklist de Cierre de Material & Carga de Furgoneta</h3>
@@ -1999,7 +1999,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         </span>
                         <span className={isCompleted ? 'text-[var(--ok)]' : 'text-[var(--acc)]'}>{pct}%</span>
                       </div>
-                      <div className="w-full h-2.5 rounded-full bgbg-[var(--surface)] overflow-hidden">
+                      <div className="w-full h-2.5 rounded-[var(--r-pill)] bgbg-[var(--surface)] overflow-hidden">
                         <div
                           className={`h-full transition-all duration-300 ${
                             isCompleted ? 'bg-[var(--ok)]' : pct > 50 ? 'bg-[var(--acc)]' : 'bg-[var(--acc)]'
@@ -2009,14 +2009,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
 
                       {isCompleted ? (
-                        <div className="p-3 rounded-xl bg-[var(--ok)]/60 border border-[var(--ok)]/50 text-[var(--ok)] text-xs font-mono flex items-center gap-2">
+                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/60 border border-[var(--ok)]/50 text-[var(--ok)] text-xs font-mono flex items-center gap-2">
                           <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
                           <span>
                             ¡TODO EL MATERIAL VERIFICADO! Escenario y camerinos despejados. Furgoneta cerrada y lista para partir.
                           </span>
                         </div>
                       ) : (
-                        <div className="p-3 rounded-xl bg-[var(--acc)]/30 border border-[var(--acc)]/40 text-[var(--acc)] text-xs font-mono flex items-center gap-2">
+                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/30 border border-[var(--acc)]/40 text-[var(--acc)] text-xs font-mono flex items-center gap-2">
                           <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0" />
                           <span>
                             Verifica uno a uno antes de cerrar la furgoneta para garantizar cero olvidos de cables, instrumentos o ropa.
@@ -2041,7 +2041,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   return (
                     <div
                       key={catKey}
-                      className={`p-3.5 rounded-xl border space-y-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                      className={`p-3.5 rounded-[var(--r-m)] border space-y-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                     >
                       <div className="flex items-center justify-between">
                         <h4 className="text-xs font-mono font-bold text-[var(--acc)]">{catLabel}</h4>
@@ -2054,7 +2054,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <div
                             key={item.id}
                             onClick={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
-                            className={`p-2.5 rounded-lg border transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
+                            className={`p-2.5 rounded-[var(--r-m)] border transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
                               item.checked
                                 ? 'bg-[var(--ok)]/30 border-[var(--ok)]/40 text-[var(--ink-2)] line-through'
                                 : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] hover:border-[var(--acc)]'
@@ -2091,14 +2091,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 {/* Formulario para añadir ítem al checklist */}
                 <form
                   onSubmit={(e) => handleAddCierreItem(modalRoadbookKey, e)}
-                  className={`p-3 rounded-xl border flex items-center gap-2 flex-wrap ${
+                  className={`p-3 rounded-[var(--r-m)] border flex items-center gap-2 flex-wrap ${
                     'bg-[var(--sunken)] border-[var(--hair)]'
                   }`}
                 >
                   <select
                     value={newCierreItemCat}
                     onChange={(e) => setNewCierreItemCat(e.target.value as any)}
-                    className={`px-2 py-1.5 rounded-lg text-xs font-mono border ${
+                    className={`px-2 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   >
@@ -2111,14 +2111,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     value={newCierreItemText}
                     onChange={(e) => setNewCierreItemText(e.target.value)}
                     placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)..."
-                    className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                    className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono border ${
                       'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
                   <button
                     type="submit"
                     disabled={!newCierreItemText.trim()}
-                    className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                    className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                   >
                     + Añadir Ítem
                   </button>

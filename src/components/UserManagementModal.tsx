@@ -302,7 +302,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               <div>
                 <h3 className="font-bold font-display tracking-wider text-base flex items-center gap-2">
                   <span>Gestión de Miembros de la Banda</span>
-                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] ">
+                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                     Panel Admin
                   </span>
                 </h3>
@@ -402,7 +402,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <div
-                            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
+                            className="w-10 h-10 rounded-[var(--r-pill)] flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
                             style={{
                               backgroundColor: u.avatarColor || "var(--ok)",
                             }}
@@ -645,7 +645,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                         key={c}
                         type="button"
                         onClick={() => setNewAvatarColor(c)}
-                        className={`w-7 h-7 rounded-full transition-transform ${
+                        className={`w-7 h-7 rounded-[var(--r-pill)] transition-transform ${
                           newAvatarColor === c
                             ? "scale-110  ring-2 ring-[var(--ok)]"
                             : " opacity-75 hover:opacity-100"

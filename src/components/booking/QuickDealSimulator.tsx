@@ -57,14 +57,14 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
   };
 
   return (
-    <div className="rounded-xl border border-[var(--ok)]/30 bg-[var(--surface)] overflow-hidden transition-all shadow-md">
+    <div className="rounded-[var(--r-m)] border border-[var(--ok)]/30 bg-[var(--surface)] overflow-hidden transition-all shadow-md">
       {/* Resumen Compacto (Siempre Visible) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
         className="p-3 bg-gradient-to-r from-[var(--ok)]/40 via-[var(--surface)] to-[var(--surface)]/60 hover:bg-[var(--ok)]/50 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-[var(--ok)]/20 border border-[var(--ok)]/40 flex items-center justify-center shrink-0">
+          <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--ok)]/20 border border-[var(--ok)]/40 flex items-center justify-center shrink-0">
             <Calculator className="w-3.5 h-3.5 text-[var(--ok)]" />
           </div>
           <div>
@@ -103,7 +103,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
       {isExpanded && (
         <div className="p-3.5 border-t border-[var(--hair)] space-y-3 bg-[var(--sunken)] text-xs">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🎟️ Anticipada (€)</label>
               <input
                 type="number"
@@ -113,7 +113,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🚪 Puerta (€)</label>
               <input
                 type="number"
@@ -123,7 +123,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🏢 Alquiler Sala (€)</label>
               <input
                 type="number"
@@ -133,7 +133,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">% Comisión Sala</label>
               <input
                 type="number"
@@ -143,7 +143,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🚐 Gastos Viaje (€)</label>
               <input
                 type="number"
@@ -153,7 +153,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               />
             </div>
 
-            <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hair)] space-y-1">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-1">
               <label className="text-[10px] text-[var(--ink-2)] block font-medium">🎸 Nº Músicos</label>
               <input
                 type="number"
@@ -166,25 +166,25 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
 
           {/* Tarjetas de Resultado Rápido */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-            <div className="p-2.5 rounded-xl bg-[var(--ok)]/30 border border-[var(--ok)]/40 text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 border border-[var(--ok)]/40 text-center">
               <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Punto de Equilibrio</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">{liveBreakEven} tix</span>
               <span className="text-[9px] text-[var(--ink-2)] block">para cubrir costes</span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
               <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">% Aforo Sala</span>
               <span className="text-lg font-bold text-[var(--ink-2)] font-mono block">{liveBreakEvenPct}%</span>
               <span className="text-[9px] text-[var(--ink-2)] block">de {aforo} personas</span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)] text-center">
               <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase block">Margen (80% aforo)</span>
               <span className="text-lg font-bold text-[var(--ok)] font-mono block">+{beneficio80Pct} €</span>
               <span className="text-[9px] text-[var(--ink-2)] block">total banda</span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-[var(--ok)]/40 border border-[var(--ok)]/50 text-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/40 border border-[var(--ok)]/50 text-center">
               <span className="text-[10px] text-[var(--ok)] font-bold uppercase block">Por Músico (80%)</span>
               <span className="text-lg font-extrabold text-[var(--ok)] font-mono block">+{porMusico80Pct} €</span>
               <span className="text-[9px] text-[var(--ok)]/80 block">limpio cada uno</span>

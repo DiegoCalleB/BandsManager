@@ -170,9 +170,9 @@ export const PublicMusiciansLanding: React.FC = () => {
     <div className="min-h-screen bg-[var(--sunken)] text-[var(--ink-2)] font-sans selection:bg-[var(--acc)] selection:text-[var(--ink)]">
       {/* Background Ambient Glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[var(--acc)]/10 rounded-full blur-[120px]" />
-        <div className="absolute top-[40%] right-[-5%] w-[450px] h-[450px] bg-[var(--accent-alt)]/10 rounded-full blur-[140px]" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[var(--accent-alt)]/10 rounded-full blur-[140px]" />
+        <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[var(--acc)]/10 rounded-[var(--r-pill)] blur-[120px]" />
+        <div className="absolute top-[40%] right-[-5%] w-[450px] h-[450px] bg-[var(--accent-alt)]/10 rounded-[var(--r-pill)] blur-[140px]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[var(--accent-alt)]/10 rounded-[var(--r-pill)] blur-[140px]" />
       </div>
 
       {/* Sticky Navigation / Header */}
@@ -260,7 +260,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           {/* Official BandManager Brand Logo */}
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--acc)]/30 via-[var(--acc)]/20 to-[var(--acc)]/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--acc)]/30 via-[var(--acc)]/20 to-[var(--acc)]/30 rounded-[var(--r-xl)] blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-[var(--surface)] p-1 flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
@@ -274,7 +274,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold tracking-wider mt-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold tracking-wider mt-1">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{t.badge}</span>
             </div>
@@ -349,12 +349,12 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* REGISTRATION FORM CARD OR SUCCESS CARD */}
         <section className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-[var(--acc)]/5 via-[var(--acc)]/0 to-transparent rounded-3xl -z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[var(--acc)]/5 via-[var(--acc)]/0 to-transparent rounded-[var(--r-xl)] -z-10" />
 
           {submitted ? (
             /* SUCCESS CONFIRMATION */
             <div className="p-8 sm:p-12 rounded-[var(--r-l)] bg-[var(--surface)] text-center space-y-6 animate-in fade-in zoom-in-95">
-              <div className="w-20 h-20 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mx-auto">
+              <div className="w-20 h-20 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
 

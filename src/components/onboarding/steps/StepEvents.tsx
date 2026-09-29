@@ -202,7 +202,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
           </div>
 
           {/* Opcional: Datos de Afluencia e Impresiones Post-Show */}
-          <div className="sm:col-span-3 p-3 rounded-lg bg-[var(--acc)]/5 border border-[var(--acc)]/20 space-y-2">
+          <div className="sm:col-span-3 p-3 rounded-[var(--r-m)] bg-[var(--acc)]/5 border border-[var(--acc)]/20 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono font-bold text-[var(--acc)]">
                 📊 Éxito / Afluencia Real (Opcional - Contexto para Agente IA)
@@ -229,7 +229,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                     setNewEventAttendancePropia?.(Number(e.target.value))
                   }
                   placeholder="Asistentes propios (ej. 250 espect.)"
-                  className="w-full px-2.5 py-1.5 rounded-lg bg-[var(--surface)] border border-[var(--hair)]/10 text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:border-[var(--acc)]"
+                  className="w-full px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)]/10 text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:border-[var(--acc)]"
                 />
               </div>
               <div>
@@ -238,7 +238,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                   value={newEventSharedBands}
                   onChange={(e) => setNewEventSharedBands?.(e.target.value)}
                   placeholder="Grupos compartidos (ej. La Pegatina)"
-                  className="w-full px-2.5 py-1.5 rounded-lg bg-[var(--surface)] border border-[var(--hair)]/10 text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:border-[var(--acc)]"
+                  className="w-full px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)]/10 text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:border-[var(--acc)]"
                 />
               </div>
             </div>
@@ -250,7 +250,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                   value={newEventPostShowReview}
                   onChange={(e) => setNewEventPostShowReview(e.target.value)}
                   placeholder="Resumen del directo o nota de voz (ej. Lleno absoluto en la sala, respuesta brutal del público)"
-                  className="w-full px-2.5 py-1.5 rounded-lg bg-[var(--surface)] border border-[var(--hair)]/10 text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:border-[var(--acc)]"
+                  className="w-full px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)]/10 text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:border-[var(--acc)]"
                 />
               </div>
             )}

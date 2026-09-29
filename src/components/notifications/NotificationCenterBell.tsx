@@ -98,7 +98,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
             // keep unread until user chooses or marks read
           }
         }}
-        className={`relative p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center ${
+        className={`relative p-2 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-center ${
           isOpen
             ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 shadow-xs'
             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
@@ -110,14 +110,14 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
         {/* Unread badge count */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-[var(--acc)] text-[10px] font-black font-mono text-[var(--ink)] shadow-md animate-pulse">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)] text-[10px] font-black font-mono text-[var(--ink)] shadow-md animate-pulse">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
 
         {/* Small dot indicating status if no unread messages */}
         {unreadCount === 0 && permission === 'granted' && config.enabled && (
-          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[var(--ok)]/80 shadow-xs" />
+          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/80 shadow-xs" />
         )}
       </button>
 
@@ -126,7 +126,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         <div
           className={`absolute ${
             variant === 'mobile' ? 'right-0 top-12 w-[300px] sm:w-[360px]' : 'right-0 md:left-0 top-12 w-[320px] sm:w-[380px]'
-          } z-50 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
+          } z-50 bg-[var(--surface)] border border-[var(--acc)]/30 rounded-[var(--r-l)] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
         >
           {/* Header */}
           <div className="p-3.5 border-b border-[var(--hair)] bg-gradient-to-r from-[var(--acc)]/30 via-[var(--surface)] to-[#141312] flex items-center justify-between">
@@ -134,7 +134,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
               <BellRing className="w-4 h-4 text-[var(--acc)]" />
               <span className="font-bold text-xs text-[var(--ink-2)] font-display">Notificaciones</span>
               {unreadCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[10px] font-mono text-[var(--acc)] font-bold">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[10px] font-mono text-[var(--acc)] font-bold">
                   {unreadCount} nuevas
                 </span>
               )}
@@ -145,7 +145,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 <button
                   type="button"
                   onClick={onMarkAllAsRead}
-                  className="text-[10px] font-mono text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-md hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
+                  className="text-[10px] font-mono text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
                   title="Marcar todas como leídas"
                 >
                   <CheckCheck className="w-3 h-3" />
@@ -158,7 +158,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                   setIsOpen(false);
                   onOpenSettings();
                 }}
-                className="p-1 rounded-lg text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
+                className="p-1 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
                 title="Configuración de Notificaciones"
               >
                 <Settings className="w-3.5 h-3.5" />
@@ -215,7 +215,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     item.read ? 'bg-transparent hover:bg-[var(--surface)]/60 opacity-80' : 'bg-[var(--acc)]/5 hover:bg-[var(--acc)]/10'
                   }`}
                 >
-                  <div className="w-7 h-7 rounded-lg bg-[var(--surface)] border border-[var(--hair)] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] flex items-center justify-center shrink-0 mt-0.5">
                     {renderCategoryIcon(item.category)}
                   </div>
                   <div className="flex-1 min-w-0 space-y-0.5">
@@ -232,7 +232,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                       </span>
                     )}
                   </div>
-                  {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)] shrink-0 mt-2" />}
+                  {!item.read && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] shrink-0 mt-2" />}
                 </div>
               ))
             ) : (

@@ -635,7 +635,7 @@ export function DashboardWidgetGrid({
             >
               {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
               {isEditMode && (
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-xl mb-1 text-xs font-sans text-[var(--ink-2)] gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-[var(--r-m)] mb-1 text-xs font-sans text-[var(--ink-2)] gap-2">
                   <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
                     <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
                     <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">

@@ -282,8 +282,8 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             </div>
 
             {isRecording && (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
-                <span className="w-2 h-2 rounded-full bg-[var(--alert)]" /> REC{" "}
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
+                <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--alert)]" /> REC{" "}
                 {formatTime(recordDuration)}
               </span>
             )}
@@ -306,7 +306,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     return (
                       <div
                         key={i}
-                        className="w-1.5 bg-gradient-to-t from-[var(--alert)] to-[var(--acc)] rounded-full transition-all duration-150"
+                        className="w-1.5 bg-gradient-to-t from-[var(--alert)] to-[var(--acc)] rounded-[var(--r-pill)] transition-all duration-150"
                         style={{ height: `${height}%` }}
                       />
                     );

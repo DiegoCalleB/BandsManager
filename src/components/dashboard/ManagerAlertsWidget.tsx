@@ -139,7 +139,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
             <Bell className="w-3.5 h-3.5" />
             {unreadAlerts.length > 0 && (
               <span
-                className={`absolute -top-0.5 -right-0.5 w-2 h-2 ${'bg-[var(--acc)]'} rounded-full animate-pulse`}
+                className={`absolute -top-0.5 -right-0.5 w-2 h-2 ${'bg-[var(--acc)]'} rounded-[var(--r-pill)] animate-pulse`}
               />
             )}
           </div>
@@ -174,7 +174,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           <button
             id="toggle-expand-alerts-panel-btn"
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`p-1 rounded-lg ${
+            className={`p-1 rounded-[var(--r-m)] ${
               'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
             } transition-colors cursor-pointer`}
             title={isExpanded ? 'Plegar panel' : 'Desplegar panel'}
@@ -219,7 +219,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 }`}
               >
                 <span>Sin Leer</span>
-                {unreadAlerts.length > 0 && <span className="w-2 h-2 rounded-full bg-[var(--ok)]" />}
+                {unreadAlerts.length > 0 && <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]" />}
               </button>
 
               <button
@@ -281,7 +281,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {filteredAlerts.length === 0 ? (
               <div
-                className={`col-span-full py-8 text-center text-xs ${'text-[var(--ink-2)] bg-[var(--surface)]/50 border-[var(--hair)]'} rounded-xl border`}
+                className={`col-span-full py-8 text-center text-xs ${'text-[var(--ink-2)] bg-[var(--surface)]/50 border-[var(--hair)]'} rounded-[var(--r-m)] border`}
               >
                 No hay alertas que coincidan con el filtro seleccionado.
               </div>
@@ -321,10 +321,10 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                       {/* Top status bar */}
                       <div className="flex items-center justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2 flex-wrap">
-                          {!isRead && <span className="w-2 h-2 rounded-full bg-[var(--ok)] shrink-0" title="Sin leer" />}
+                          {!isRead && <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0" title="Sin leer" />}
 
                           <span
-                            className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider border ${badgeStyle}`}
+                            className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider border ${badgeStyle}`}
                           >
                             {alert.category}
                           </span>
@@ -344,7 +344,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           <button
                             id={`toggle-read-alert-${alert.id}`}
                             onClick={(e) => handleToggleRead(alert.id, e)}
-                            className={`p-1 rounded-lg ${'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
+                            className={`p-1 rounded-[var(--r-m)] ${'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title={isRead ? 'Marcar como no leída' : 'Marcar como leída'}
                           >
                             {isRead ? (
@@ -357,7 +357,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           <button
                             id={`dismiss-alert-${alert.id}`}
                             onClick={(e) => handleDismiss(alert.id, e)}
-                            className={`p-1 rounded-lg ${'text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
+                            className={`p-1 rounded-[var(--r-m)] ${'text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title="Descartar alerta"
                           >
                             <X className="w-3.5 h-3.5" />

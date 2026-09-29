@@ -67,17 +67,17 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
-      <div className="bg-[var(--surface)] border borderbg-[var(--surface)] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
+      <div className="bg-[var(--surface)] border borderbg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
         {/* Modal Header */}
         <div className="p-5 border-b borderbg-[var(--surface)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-[var(--acc)]/10">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan Estratégico de Crecimiento & Promoción</h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30">
                   {growthPlan.horizonDays} Días
                 </span>
               </div>
@@ -90,7 +90,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)]/80 transition-all cursor-pointer"
+            className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)]/80 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -101,7 +101,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('blueprint')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'blueprint'
                   ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bgbg-[var(--surface)]/60'
@@ -113,7 +113,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
             <button
               onClick={() => setActiveTab('channels')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'channels'
                   ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bgbg-[var(--surface)]/60'
@@ -125,7 +125,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
             <button
               onClick={() => setActiveTab('pillars')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'pillars'
                   ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bgbg-[var(--surface)]/60'
@@ -146,7 +146,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 1: BLUEPRINT SEMANAL */}
           {activeTab === 'blueprint' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-transparent border border-[var(--acc)]/25 flex items-start gap-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--surface)] to-transparent border border-[var(--acc)]/25 flex items-start gap-3">
                 <Lightbulb className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-[var(--acc)] uppercase tracking-wider font-mono">
@@ -163,10 +163,10 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 {growthPlan.weeklyBlueprint?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)]/90 hover:border-[var(--hair)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)]/90 hover:border-[var(--hair)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                   >
                     <div className="flex items-start sm:items-center gap-3">
-                      <span className="px-2.5 py-1 rounded-lg bg-[var(--surface)] border borderbg-[var(--surface)] text-xs font-mono font-bold text-[var(--acc)] shrink-0 min-w-[75px] text-center">
+                      <span className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-xs font-mono font-bold text-[var(--acc)] shrink-0 min-w-[75px] text-center">
                         {item.day}
                       </span>
                       <div>
@@ -181,7 +181,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 borderbg-[var(--surface)]">
-                      <span className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1 bg-[var(--surface)] px-2 py-1 rounded-lg border borderbg-[var(--surface)]">
+                      <span className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1 bg-[var(--surface)] px-2 py-1 rounded-[var(--r-m)] border borderbg-[var(--surface)]">
                         <Zap className="w-3 h-3 text-[var(--acc)]" />
                         {item.optimalPostingTime}
                       </span>
@@ -203,7 +203,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                     <button
                       key={platform}
                       onClick={() => setSelectedChannel(platform)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer capitalize ${
+                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
                           ? 'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
                           : 'bg-[var(--surface)] border borderbg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -222,7 +222,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               {channelData && (
                 <div className="space-y-4 animate-fade-in">
                   {/* Channel Summary Card */}
-                  <div className="p-4 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
+                  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Estrategia para {channelData.name}</h4>
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30">
@@ -247,14 +247,14 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                           <div
                             key={action.id}
                             onClick={() => toggleAction(action.id)}
-                            className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                            className={`p-3 rounded-[var(--r-m)] border transition-all cursor-pointer flex items-start justify-between gap-3 ${
                               isDone
                                 ? 'bg-[var(--ok)]/20 border-[var(--ok)]/30 opacity-75'
                                 : 'bg-[var(--surface)] borderbg-[var(--surface)] hover:border-[var(--hair)]'
                             }`}
                           >
                             <div className="flex items-start gap-3">
-                              <div className={`p-1 rounded-md mt-0.5 ${isDone ? 'text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}>
+                              <div className={`p-1 rounded-[var(--r-s)] mt-0.5 ${isDone ? 'text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}>
                                 <CheckCircle2 className="w-4 h-4" />
                               </div>
                               <div>
@@ -277,7 +277,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
                   {/* Hook Formulas */}
                   {channelData.hookFormulas && channelData.hookFormulas.length > 0 && (
-                    <div className="p-4 rounded-xl bg-[var(--surface)]/60 border borderbg-[var(--surface)]/80 space-y-2">
+                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/60 border borderbg-[var(--surface)]/80 space-y-2">
                       <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" /> Fórmulas de Gancho Probadas
                       </h5>
@@ -298,7 +298,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 3: DIAGNÓSTICO & PILARES */}
           {activeTab === 'pillars' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
                 <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Resumen Ejecutivo & Diagnóstico</h4>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">{growthPlan.executiveSummary}</p>
               </div>
@@ -309,13 +309,13 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {growthPlan.overallPillars?.map((p, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
+                    <div key={idx} className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-[var(--acc)]">{p.pillar}</span>
                         <span className="text-xs font-mono font-bold text-[var(--ink-2)]">{p.weightPercentage}%</span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-[var(--surface)] overflow-hidden">
-                        <div className="h-full bg-[var(--acc)] rounded-full" style={{ width: `${p.weightPercentage}%` }} />
+                      <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
+                        <div className="h-full bg-[var(--acc)] rounded-[var(--r-pill)]" style={{ width: `${p.weightPercentage}%` }} />
                       </div>
                       <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">{p.description}</p>
                     </div>
@@ -340,7 +340,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   onClose();
                   onNavigate('reels');
                 }}
-                className="px-3 py-1.5 rounded-xl bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer"
               >
                 <span>Ir al Radar de Redes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -350,7 +350,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
               Cerrar & Empezar
             </button>

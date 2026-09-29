@@ -179,9 +179,9 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
   return (
     <div className="space-y-4">
       {/* HEADER DE COPILOTO */}
-      <div className="p-3 bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--ok)]/10 border border-[var(--acc)]/30 rounded-2xl flex items-center justify-between gap-3">
+      <div className="p-3 bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/10 to-[var(--ok)]/10 border border-[var(--acc)]/30 rounded-[var(--r-l)] flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />
           </div>
           <div>
@@ -193,7 +193,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         </div>
 
         {corridorData && (
-          <span className="px-2.5 py-1 rounded-lg bg-[var(--sunken)] border border-[var(--hair)] text-[10px] font-mono text-[var(--acc)] flex items-center gap-1 shrink-0">
+          <span className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] border border-[var(--hair)] text-[10px] font-mono text-[var(--acc)] flex items-center gap-1 shrink-0">
             <Compass className="w-3 h-3 text-[var(--acc)]" />
             {corridorData.info.corridor}
           </span>
@@ -201,7 +201,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 1: CALCULADORA P&L Y PUNTO DE EQUILIBRIO */}
-      <div className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calculator className="w-4 h-4 text-[var(--ok)]" />
@@ -210,7 +210,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             </span>
           </div>
           <span
-            className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+            className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] border ${
               isBreakEvenFeasible
                 ? 'bg-[var(--ok)]/15 border-[var(--ok)]/40 text-[var(--ok)]'
                 : 'bg-[var(--acc)]/15 border-[var(--acc)]/40 text-[var(--acc)]'
@@ -222,7 +222,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
         {/* Inputs de simulación */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-          <div className="bg-[var(--sunken)] p-2 rounded-lg border border-[var(--hair)]">
+          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
             <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
             <select
               value={dealType}
@@ -235,7 +235,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             </select>
           </div>
 
-          <div className="bg-[var(--sunken)] p-2 rounded-lg border border-[var(--hair)]">
+          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
             <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">
               {dealType === 'cache' ? 'Caché Fijo (€)' : 'Precio Entrada (€)'}
             </label>
@@ -251,7 +251,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             />
           </div>
 
-          <div className="bg-[var(--sunken)] p-2 rounded-lg border border-[var(--hair)]">
+          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
             <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
             <input
               type="number"
@@ -261,7 +261,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             />
           </div>
 
-          <div className="bg-[var(--sunken)] p-2 rounded-lg border border-[var(--hair)]">
+          <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
             <label className="text-[9px] font-mono uppercase text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
             <input
               type="number"
@@ -278,19 +278,19 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
         {/* Dashboard de Resultados de Rentabilidad */}
         <div className="grid grid-cols-3 gap-2 pt-1 border-t border-[var(--hair)]/80">
-          <div className="p-2.5 rounded-lg bg-[var(--surface)]/80 border border-[var(--hair)] text-center">
+          <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 border border-[var(--hair)] text-center">
             <span className="text-[9px] text-[var(--ink-2)] font-mono block">Gastos Viaje Estimados</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--alert)]">{totalTourExpenses} €</span>
             <span className="text-[9px] text-[var(--ink-2)] block">Gasolina: ~{estimatedFuelExpense}€</span>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-[var(--surface)]/80 border border-[var(--hair)] text-center">
+          <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 border border-[var(--hair)] text-center">
             <span className="text-[9px] text-[var(--ink-2)] font-mono block">Entradas para Cubrir Costes</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--acc)]">{breakEvenTickets} tickets</span>
             <span className="text-[9px] text-[var(--ink-2)] block">{breakEvenCapacityPercent}% del aforo</span>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-[var(--surface)]/80 border border-[var(--hair)] text-center">
+          <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 border border-[var(--hair)] text-center">
             <span className="text-[9px] text-[var(--ink-2)] font-mono block">Beneficio con Sala Llena</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--ok)]">
               {Math.max(0, Math.round(venueCapacity * revenuePerTicketForBand + guaranteedCache - totalTourExpenses))} €
@@ -301,7 +301,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 2: DEAL CLOSING COPILOT (ANÁLISIS DE RESPUESTAS Y OBJECIONES) */}
-      <div className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
@@ -309,13 +309,13 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
               2. Asistente Táctico de Cierre (Objeciones & Negociación)
             </span>
           </div>
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${sentimentAnalysis.color}`}>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] border ${sentimentAnalysis.color}`}>
             {sentimentAnalysis.label}
           </span>
         </div>
 
         {/* Diagnóstico Táctico */}
-        <div className="p-3 bg-[var(--sunken)] rounded-xl border border-[var(--hair)] space-y-2">
+        <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)] space-y-2">
           <div className="flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
             <div>
@@ -337,7 +337,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 Copiar respuesta
               </button>
             </div>
-            <p className="text-[11px] font-sans text-[var(--ink-2)] bg-[var(--surface)]/90 p-2.5 rounded-lg border border-[var(--hair)] whitespace-pre-wrap leading-relaxed">
+            <p className="text-[11px] font-sans text-[var(--ink-2)] bg-[var(--surface)]/90 p-2.5 rounded-[var(--r-m)] border border-[var(--hair)] whitespace-pre-wrap leading-relaxed">
               {sentimentAnalysis.suggestedDraft}
             </p>
           </div>
@@ -345,7 +345,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
       </div>
 
       {/* BLOQUE 3: GENERADOR INSTANTÁNEO DE ROADBOOK & CONTRATO */}
-      <div className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--hair)] space-y-3 shadow-md">
+      <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 border border-[var(--hair)] space-y-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-[var(--acc)]" />
@@ -358,7 +358,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <button
               type="button"
               onClick={() => onOpenRoadbookModal(lead)}
-              className="px-2.5 py-1 rounded-lg bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 text-[10px] font-bold font-mono flex items-center gap-1 transition-all cursor-pointer"
+              className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 text-[10px] font-bold font-mono flex items-center gap-1 transition-all cursor-pointer"
             >
               <FileText className="w-3 h-3" />
               <span>Exportar PDF / Imprimir</span>
@@ -368,7 +368,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Tarjeta Roadbook */}
-          <div className="p-3 bg-[var(--sunken)] rounded-xl border border-[var(--hair)] space-y-2 flex flex-col justify-between">
+          <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)] space-y-2 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
@@ -394,7 +394,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           {/* Tarjeta Contrato */}
-          <div className="p-3 bg-[var(--sunken)] rounded-xl border border-[var(--hair)] space-y-2 flex flex-col justify-between">
+          <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)] space-y-2 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">

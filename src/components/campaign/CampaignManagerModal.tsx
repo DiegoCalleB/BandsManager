@@ -304,7 +304,7 @@ export function CampaignManagerModal({
             <div>
               <h2 className="text-base sm:text-lg font-bold font-display text-[var(--ink)] flex items-center gap-2">
                 Gestor de Campañas de Booking
-                <span className="text-[10px] font-sans font-bold tracking-wider px-2 py-0.5 rounded-full bg-[var(--hair)]/20 text-[var(--hair)]/80">
+                <span className="text-[10px] font-sans font-bold tracking-wider px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--hair)]/80">
                   {campaigns.length} disponibles
                 </span>
               </h2>
@@ -565,7 +565,7 @@ export function CampaignManagerModal({
                   <button
                     type="button"
                     onClick={() => setIsMultiTemplatesModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-gradient-to-r from-[var(--acc)]/30 to-[var(--acc)]/20 hover:from-[var(--acc)]/50 hover:to-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-[var(--ink)] transition-all shadow-sm active:scale-95 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-gradient-to-r from-[var(--acc)]/30 to-[var(--acc)]/20 hover:from-[var(--acc)]/50 hover:to-[var(--acc)]/30 text-[var(--acc)] border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:text-[var(--ink)] transition-all shadow-sm active:scale-95 cursor-pointer"
                     title="Adapta automáticamente el mensaje y objetivo de esta campaña a las 7 categorías de recintos"
                   >
                     <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -574,7 +574,7 @@ export function CampaignManagerModal({
                 </div>
 
                 {templateGenerationFeedback && (
-                  <div className="p-2.5 rounded-xl bg-[var(--acc)]/10 border border-[var(--acc)]/30 text-[var(--acc)] text-xs flex items-center justify-between">
+                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 border border-[var(--acc)]/30 text-[var(--acc)] text-xs flex items-center justify-between">
                     <span>{templateGenerationFeedback}</span>
                     <button
                       type="button"
@@ -606,7 +606,7 @@ export function CampaignManagerModal({
                         <cat.icon className="w-3 h-3" />
                         {cat.label}
                         {hasContent && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />
+                          <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
                         )}
                       </button>
                     );
@@ -740,14 +740,14 @@ export function CampaignManagerModal({
                         <div className="space-y-1.5 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
-                              className="w-2.5 h-2.5 rounded-full shrink-0"
+                              className="w-2.5 h-2.5 rounded-[var(--r-pill)] shrink-0"
                               style={{ backgroundColor: themeColor }}
                             />
                             <h3 className="text-sm font-bold font-display text-[var(--ink)]">
                               {camp.name}
                             </h3>
                             {isActive ? (
-                              <span className="inline-flex items-center gap-1 text-[9px] font-sans font-extrabold px-2 py-0.5 rounded-full bg-[var(--hair)]/20 text-[var(--hair)]/80">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-sans font-extrabold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--hair)]/80">
                                 <Flame className="w-2.5 h-2.5 text-[var(--acc)]" />
                                 MODO ACTIVO EN LA WEB
                               </span>

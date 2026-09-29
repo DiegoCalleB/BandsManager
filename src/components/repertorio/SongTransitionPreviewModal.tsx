@@ -650,11 +650,11 @@ export function SongTransitionPreviewModal({
                   <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight">
                     Comprobar Unión y Transición
                   </h2>
-                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
                     #{indexA + 1} ➔ #{indexB + 1}
                   </span>
                   <span
-                    className={`hidden sm:inline-flex px-1.5 py-0.2 rounded-full text-[9px] font-bold ${diagnosis.verdict.badgeClass}`}
+                    className={`hidden sm:inline-flex px-1.5 py-0.2 rounded-[var(--r-pill)] text-[9px] font-bold ${diagnosis.verdict.badgeClass}`}
                   >
                     {diagnosis.verdict.badgeLabel} ({diagnosis.scorePercent}%)
                   </span>
@@ -768,7 +768,7 @@ export function SongTransitionPreviewModal({
                 <div>
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60" />
+                      <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60" />
                       #{indexA + 1} Anterior
                     </span>
                     <div className="flex items-center gap-1">
@@ -784,7 +784,7 @@ export function SongTransitionPreviewModal({
                         </span>
                       )}
                       <span
-                        className="text-[9px] font-sans font-bold px-1.5 py-0.2 rounded-full"
+                        className="text-[9px] font-sans font-bold px-1.5 py-0.2 rounded-[var(--r-pill)]"
                         style={{
                           backgroundColor: `${energyInfoA.hexColor}20`,
                           borderColor: `${energyInfoA.hexColor}50`,
@@ -896,7 +896,7 @@ export function SongTransitionPreviewModal({
                   </div>
 
                   {/* VU Meter for Track A */}
-                  <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden800">
+                  <div className="w-full bg-[var(--sunken)] h-1 rounded-[var(--r-pill)] overflow-hidden800">
                     <div
                       className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] transition-all duration-75"
                       style={{ width: `${Math.min(100, liveGainA * 100)}%` }}
@@ -908,7 +908,7 @@ export function SongTransitionPreviewModal({
               {/* Center Bridge Icon */}
               <div className="md:col-span-1 flex flex-col items-center justify-center py-0.5 md:py-0">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
+                  className={`w-7 h-7 rounded-[var(--r-pill)] flex items-center justify-center transition ${
                     currentGains.isCrossfading
                       ? "bg-[var(--acc)] text-[var(--on-acc)] scale-110"
                       : "bg-[var(--surface)] text-[var(--ink-2)]"
@@ -943,7 +943,7 @@ export function SongTransitionPreviewModal({
                 <div>
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />
+                      <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
                       #{indexB + 1} Siguiente
                     </span>
                     <div className="flex items-center gap-1">
@@ -959,7 +959,7 @@ export function SongTransitionPreviewModal({
                         </span>
                       )}
                       <span
-                        className="text-[9px] font-sans font-bold px-1.5 py-0.2 rounded-full"
+                        className="text-[9px] font-sans font-bold px-1.5 py-0.2 rounded-[var(--r-pill)]"
                         style={{
                           backgroundColor: `${energyInfoB.hexColor}20`,
                           borderColor: `${energyInfoB.hexColor}50`,
@@ -1071,7 +1071,7 @@ export function SongTransitionPreviewModal({
                   </div>
 
                   {/* VU Meter for Track B */}
-                  <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden800">
+                  <div className="w-full bg-[var(--sunken)] h-1 rounded-[var(--r-pill)] overflow-hidden800">
                     <div
                       className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] transition-all duration-75"
                       style={{ width: `${Math.min(100, liveGainB * 100)}%` }}
@@ -1094,7 +1094,7 @@ export function SongTransitionPreviewModal({
                         stopPlayback();
                         setPlaybackMode("real");
                       }}
-                      className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
+                      className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
                         playbackMode === "real"
                           ? "bg-[var(--ok)] text-[var(--ink)]"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1109,7 +1109,7 @@ export function SongTransitionPreviewModal({
                         stopPlayback();
                         setPlaybackMode("synth");
                       }}
-                      className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
+                      className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
                         playbackMode === "synth"
                           ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1147,7 +1147,7 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "crossfade" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-semibold transition cursor-pointer ${
                       config.style === "crossfade"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1161,7 +1161,7 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "segue" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-semibold transition cursor-pointer ${
                       config.style === "segue"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1175,7 +1175,7 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "pause" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-semibold transition cursor-pointer ${
                       config.style === "pause"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1268,7 +1268,7 @@ export function SongTransitionPreviewModal({
                     left: `${(currentTime / timeline.totalDurationSec) * 100}%`,
                   }}
                 >
-                  <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[var(--surface)] rounded-full shadow" />
+                  <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[var(--surface)] rounded-[var(--r-pill)] shadow" />
                 </div>
               </div>
 
@@ -1338,8 +1338,8 @@ export function SongTransitionPreviewModal({
                     {timeline.totalDurationSec.toFixed(1)}s
                   </span>
                   {isPlaying && (
-                    <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
-                      <span className="w-1 h-1 rounded-full bg-[var(--ok)]" />
+                    <span className="px-1.5 py-0.5 rounded-[var(--r-pill)] text-[9px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
+                      <span className="w-1 h-1 rounded-[var(--r-pill)] bg-[var(--ok)]" />
                       Sonando
                     </span>
                   )}
@@ -1356,7 +1356,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("pros_cons")}
-                    className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === "pros_cons"
                         ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1372,7 +1372,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("metrics")}
-                    className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === "metrics"
                         ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1384,7 +1384,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("stagecraft")}
-                    className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === "stagecraft"
                         ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"

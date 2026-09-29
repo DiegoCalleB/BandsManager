@@ -967,7 +967,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         <div className="relative rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)]/95 via-[var(--surface)]/90 to-[var(--surface)]/95  p-3.5 sm:p-4 transition-all duration-300 text-left overflow-hidden">
           {/* Halo ambiental sutil */}
           <div
-            className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-full bg-[var(--acc)]/10 blur-2xl"
+            className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-[var(--r-pill)] bg-[var(--acc)]/10 blur-2xl"
             aria-hidden="true"
           />
 
@@ -988,7 +988,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight leading-snug">
                   {label}
                 </h3>
-                <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
+                <span className="text-[9px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
                   {t("revolutBadge") || "Contribución"}
                 </span>
               </div>
@@ -1161,7 +1161,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           )}
 
-          <div className="w-20 h-20 bg-[var(--acc)]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+          <div className="w-20 h-20 bg-[var(--acc)]/10 rounded-[var(--r-pill)] flex items-center justify-center mx-auto mb-2">
             <Heart className="w-10 h-10 text-[var(--acc)]" />
           </div>
 
@@ -1462,7 +1462,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="pt-2 space-y-2">
             {isConcertLink ? (
               <div>
-                <span className="text-[var(--ok)] font-bold px-3.5 py-1.5 bg-[var(--ok)]/10 rounded-full inline-flex items-center gap-1.5 text-xs">
+                <span className="text-[var(--ok)] font-bold px-3.5 py-1.5 bg-[var(--ok)]/10 rounded-[var(--r-pill)] inline-flex items-center gap-1.5 text-xs">
                   <span>
                     {concertName
                       ? t("thanksConcertWithName", {
@@ -1474,7 +1474,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </div>
             ) : (
               <div>
-                <span className="text-[var(--acc)] font-bold px-3.5 py-1.5 bg-[var(--acc)]/60 rounded-full inline-flex items-center gap-1.5 text-xs">
+                <span className="text-[var(--acc)] font-bold px-3.5 py-1.5 bg-[var(--acc)]/60 rounded-[var(--r-pill)] inline-flex items-center gap-1.5 text-xs">
                   <span>{t("thanksSupport")}</span>
                 </span>
               </div>
@@ -1531,16 +1531,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               {/* Animación de ondas de audio */}
               <div className="flex items-center gap-1 h-5 shrink-0 px-2">
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? "h-5" : "h-1.5"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-5" : "h-1.5"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? "h-3 animate-bounce" : "h-2"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-3 animate-bounce" : "h-2"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? "h-4" : "h-1"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-4" : "h-1"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? "h-2 animate-bounce" : "h-2.5"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-2 animate-bounce" : "h-2.5"}`}
                 />
               </div>
             </div>
@@ -1615,7 +1615,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 aria-hidden="true"
               />
               <div
-                className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-500"
+                className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-[var(--r-pill)] bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-500"
                 aria-hidden="true"
               />
               <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/25 to-[var(--alert)]/15 text-[var(--acc)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
@@ -1646,7 +1646,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   {miembros.slice(0, 3).map((m, idx) => (
                     <div
                       key={m.id || idx}
-                      className="w-7 h-7 rounded-full bg-[var(--surface)]/80 flex items-center justify-center text-[10px] font-bold text-[var(--acc)]/70 overflow-hidden"
+                      className="w-7 h-7 rounded-[var(--r-pill)] bg-[var(--surface)]/80 flex items-center justify-center text-[10px] font-bold text-[var(--acc)]/70 overflow-hidden"
                       title={`${m.nombre}${m.rol ? ` (${m.rol})` : ""}`}
                     >
                       {m.fotoUrl ? (
@@ -1663,7 +1663,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     </div>
                   ))}
                   {miembros.length > 3 && (
-                    <div className="w-7 h-7 rounded-full bg-[var(--surface)]/80 flex items-center justify-center text-[9px] font-bold text-[var(--ink-2)]">
+                    <div className="w-7 h-7 rounded-[var(--r-pill)] bg-[var(--surface)]/80 flex items-center justify-center text-[9px] font-bold text-[var(--ink-2)]">
                       +{miembros.length - 3}
                     </div>
                   )}
@@ -1684,7 +1684,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     <Calendar className="w-3.5 h-3.5" />{" "}
                     {t("upcomingShowsTitle") || "Próximos Conciertos"}
                   </span>
-                  <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
+                  <span className="text-[9px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
                     {upcomingConcerts.length}{" "}
                     {upcomingConcerts.length === 1 ? "fecha" : "fechas"}
                   </span>

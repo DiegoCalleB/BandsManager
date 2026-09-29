@@ -84,7 +84,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               <Layers className="w-3.5 h-3.5" />
               <span>Setlists</span>
               <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] ${
                   activeTab === 'setlists' && 'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]'
                 }`}
               >
@@ -103,7 +103,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               <Disc3 className="w-3.5 h-3.5" />
               <span>Discografía</span>
               <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] ${
                   activeTab === 'catalogo' && 'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]'
                 }`}
               >

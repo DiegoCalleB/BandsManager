@@ -600,7 +600,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </h1>
             {isOffline && (
               <span
-                className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 flex items-center gap-1"
+                className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 flex items-center gap-1"
                 title="Modo Escenario Offline Guard activo — Letras y acordes guardados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
@@ -619,7 +619,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 type="button"
                 onClick={() => setModeArchetype("directo")}
-                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
                   modeArchetype === "directo"
                     ? glareMode
                       ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
@@ -634,7 +634,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 type="button"
                 onClick={() => setModeArchetype("ensayo")}
-                className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 cursor-pointer ${
                   modeArchetype === "ensayo"
                     ? "bg-[var(--ok)] text-[var(--ink)]"
                     : glareMode
@@ -663,7 +663,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <span className="hidden sm:inline">Pistas & Repertorio</span>
               <span className="sm:hidden">Temas</span>
               {songsWithIrisCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-sans bg-[var(--ok)]/30 text-[var(--ink-2)]">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] font-sans bg-[var(--ok)]/30 text-[var(--ink-2)]">
                   {songsWithIrisCount}
                 </span>
               )}
@@ -964,7 +964,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             <button
               type="button"
               onClick={() => handleLaunchPractice()}
-              className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold transition-all cursor-pointer ${
                 glareMode
                   ? "bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"
                   : "bg-[var(--ok)]/10 text-[var(--ok)]/30 hover:bg-[var(--ok)]/20"
@@ -980,7 +980,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             currentSong?.estructuraDocumentoUrl &&
             !currentSong?.estructuraVerificada && (
               <span
-                className="font-bold px-1.5 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]"
+                className="font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]"
                 title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
               >
                 ⚠️ sin verificar
@@ -1227,7 +1227,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 key={it.id}
                 onClick={() => setCurrentIndex(i)}
-                className={`shrink-0 transition-all ${it.tipoItem === "bloque" ? "rounded-sm" : "rounded-full"} ${
+                className={`shrink-0 transition-all ${it.tipoItem === "bloque" ? "rounded-[var(--r-s)]" : "rounded-[var(--r-pill)]"} ${
                   i === currentIndex
                     ? "w-5 h-1.5 bg-[var(--acc)]/60"
                     : it.tipoItem === "bloque"
@@ -1393,7 +1393,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
                         <span
-                          className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-sans font-bold shrink-0 ${
+                          className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center text-[11px] font-sans font-bold shrink-0 ${
                             isCurrent
                               ? "bg-[var(--acc)] text-[var(--on-acc)]"
                               : "bg-[var(--sunken)] text-[var(--ink-2)]"
@@ -1422,7 +1422,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       </div>
 
                       {songIrisIdea ? (
-                        <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
                           <Headphones className="w-2.5 h-2.5" />
                           {stemCount > 0 ? `${stemCount} pistas` : "Iris"}
                         </span>

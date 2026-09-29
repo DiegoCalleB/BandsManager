@@ -73,7 +73,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               Nombre del Proyecto Musical & Ubicación
             </h3>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[var(--surface)]/80 text-[11px] text-[var(--ink-2)] font-sans">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[11px] text-[var(--ink-2)] font-sans">
             <Globe className="w-3 h-3 text-[var(--acc)]" />
             <span>
               Idioma:{" "}
@@ -184,7 +184,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span
-                    className={`text-[10px] font-sans font-bold px-2 py-0.5 rounded-full ${
+                    className={`text-[10px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
                       isSelected
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--sunken)] text-[var(--ink-2)]"

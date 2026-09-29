@@ -542,7 +542,7 @@ export function ModoLocalEnVivoTab({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5">
             <div className="space-y-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                <span className="px-2.5 py-0.5 rounded-[var(--r-pill)] text-[10px] sm:text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--acc)]/70">
                   Pista {activeIndex + 1} de {agenda.length}
                 </span>
                 <span className="text-xs font-sans text-[var(--ink-2)]">
@@ -698,7 +698,7 @@ export function ModoLocalEnVivoTab({
                 {Array.from({ length: beatsPerBar }).map((_, bIdx) => (
                   <div
                     key={bIdx}
-                    className={`w-3 h-3 rounded-full transition-all duration-75 ${
+                    className={`w-3 h-3 rounded-[var(--r-pill)] transition-all duration-75 ${
                       isMetronomeActive && currentBeat === bIdx
                         ? bIdx === 0
                           ? "bg-[var(--alert)] scale-125"
@@ -850,7 +850,7 @@ export function ModoLocalEnVivoTab({
               <div className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] font-sans text-xs text-[var(--acc)] font-bold">
                 <span>{bpm} BPM</span>
                 <div
-                  className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  className={`w-2.5 h-2.5 rounded-[var(--r-pill)] transition-all ${
                     isMetronomeActive && currentBeat === 0
                       ? "bg-[var(--alert)] scale-125"
                       : isMetronomeActive
@@ -885,7 +885,7 @@ export function ModoLocalEnVivoTab({
                   <button
                     key={spd}
                     onClick={() => setScrollSpeed(spd)}
-                    className={`px-2 py-1 rounded-md text-[10px] font-sans font-bold cursor-pointer ${
+                    className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer ${
                       scrollSpeed === spd
                         ? "bg-[var(--acc)]/60 text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -1012,7 +1012,7 @@ export function ModoLocalEnVivoTab({
             <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 shrink-0">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold bg-[var(--acc)]/60 text-[var(--acc)]/70">
                     Pista {activeIndex + 1} de {agenda.length}
                   </span>
                   <span className="hidden sm:inline-block text-[10px] font-sans text-[var(--ink-2)]">

@@ -1020,7 +1020,7 @@ export function ReelsMetricsView({
               <div>
                 <h3 className="text-xs font-bold font-display tracking-wider flex items-center gap-2 text-[var(--ink)]">
                   Agente Radar Autónomo & Análisis Multiplataforma
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
+                  <span className="text-[9px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
                     <CheckCircle2 className="w-2.5 h-2.5" /> 0 Tokens IA •
                     Supabase DB
                   </span>
@@ -1065,7 +1065,7 @@ export function ReelsMetricsView({
                 <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
                 {igStatus?.connected ? (
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80" />
+                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
                     Meta API (@{igStatus.account?.username || "..."})
                   </span>
                 ) : (
@@ -1395,7 +1395,7 @@ export function ReelsMetricsView({
                     <span className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
                       Curva de Crecimiento Multiplataforma
                     </span>
-                    <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[var(--tentative)]/10 text-[var(--tentative)]">
+                    <span className="text-[9px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
                       Escala Adaptativa: 0 -{" "}
                       {yAxisDomain[1] >= 1000
                         ? `${(yAxisDomain[1] / 1000).toFixed(1)}k`
@@ -1555,7 +1555,7 @@ export function ReelsMetricsView({
                       }
                     >
                       <span
-                        className={`w-2 h-2 rounded-full ${selectedChannels.instagram ? "bg-[var(--alert)]" : "bg-[var(--ink-2)]/40"}`}
+                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.instagram ? "bg-[var(--alert)]" : "bg-[var(--ink-2)]/40"}`}
                       ></span>
                       <Instagram className="w-3 h-3 text-[var(--alert)]" />
                       <span className="font-bold">Instagram</span>
@@ -1601,7 +1601,7 @@ export function ReelsMetricsView({
                       }
                     >
                       <span
-                        className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ? "bg-[var(--acc)]/80" : "bg-[var(--ink-2)]/40"}`}
+                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.tiktok ? "bg-[var(--acc)]/80" : "bg-[var(--ink-2)]/40"}`}
                       ></span>
                       <Video className="w-3 h-3 text-[var(--acc)]" />
                       <span className="font-bold">TikTok</span>
@@ -1647,7 +1647,7 @@ export function ReelsMetricsView({
                       }
                     >
                       <span
-                        className={`w-2 h-2 rounded-full ${selectedChannels.youtube ? "bg-[var(--alert)]" : "bg-[var(--ink-2)]/40"}`}
+                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.youtube ? "bg-[var(--alert)]" : "bg-[var(--ink-2)]/40"}`}
                       ></span>
                       <Youtube className="w-3 h-3 text-[var(--alert)]" />
                       <span className="font-bold">YouTube</span>
@@ -1693,7 +1693,7 @@ export function ReelsMetricsView({
                       }
                     >
                       <span
-                        className={`w-2 h-2 rounded-full ${selectedChannels.spotify ? "bg-[var(--ok)]" : "bg-[var(--ink-2)]/40"}`}
+                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.spotify ? "bg-[var(--ok)]" : "bg-[var(--ink-2)]/40"}`}
                       ></span>
                       <Music2 className="w-3 h-3 text-[var(--ok)]" />
                       <span className="font-bold">Spotify</span>
@@ -2461,7 +2461,7 @@ export function ReelsMetricsView({
                 <div>
                   <h3 className="text-sm font-bold font-display tracking-wider flex items-center gap-2">
                     Instagram Platform Insights API
-                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--alert)]/20 text-[var(--alert)] font-sans font-normal">
+                    <span className="text-[9px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--alert)] font-sans font-normal">
                       Meta Official
                     </span>
                   </h3>
@@ -2531,7 +2531,7 @@ export function ReelsMetricsView({
                           ? "Instagram Insights Conectado"
                           : "Modo Scraping Autónomo Activo"}
                         {igStatus?.connected && (
-                          <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80" />
+                          <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
                         )}
                       </div>
                       <div className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
@@ -2768,7 +2768,7 @@ export function ReelsMetricsView({
                 <div>
                   <h3 className="text-sm font-bold font-display tracking-wider flex items-center gap-2">
                     Escanear Métricas con Visión IA
-                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--tentative)]/20 text-[var(--tentative)] font-sans font-normal flex items-center gap-1">
+                    <span className="text-[9px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/20 text-[var(--tentative)] font-sans font-normal flex items-center gap-1">
                       <Sparkles className="w-2.5 h-2.5" /> Gemini Multimodal
                     </span>
                   </h3>
@@ -2839,7 +2839,7 @@ export function ReelsMetricsView({
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-2">
                         <span>Captura lista para analizar</span>
-                        <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80" />
+                        <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
                       </div>
                       <div className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
                         Imagen cargada en memoria. Pulsa el botón para que
@@ -2896,7 +2896,7 @@ export function ReelsMetricsView({
                       <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
                       Datos Extraídos con Éxito
                     </div>
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-bold">
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-bold">
                       {scanResult.platform || "Red Social"}
                     </span>
                   </div>

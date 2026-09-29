@@ -105,7 +105,7 @@ export function AddLeadModal({
           {/* Header */}
           <div className="flex items-center justify-between pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[var(--acc)]/15 border border-[var(--acc)]/30 flex items-center justify-center text-[var(--acc)]">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 border border-[var(--acc)]/30 flex items-center justify-center text-[var(--acc)]">
                 {sectionTab === 'medios' ? (
                   <Radio className="w-4 h-4 text-[var(--alert)]" />
                 ) : sectionTab === 'grupos' ? (
@@ -176,16 +176,16 @@ export function AddLeadModal({
 
             {/* Status Messages */}
             {isModalScraping && (
-              <div className="p-2.5 rounded-xl text-xs flex items-center gap-2 animate-pulse bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20">
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-pulse bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/20">
                 <Loader2 className="w-4 h-4 animate-spin shrink-0 text-[var(--acc)]" />
                 <span className="font-medium">{modalScrapeStatus}</span>
               </div>
             )}
             {modalScrapeError && (
-              <div className="p-2.5 rounded-xl text-xs text-[var(--alert)] bg-[var(--alert)]/15 border border-[var(--alert)]/30">⚠️ {modalScrapeError}</div>
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--alert)] bg-[var(--alert)]/15 border border-[var(--alert)]/30">⚠️ {modalScrapeError}</div>
             )}
             {modalScrapeSuccessMsg && (
-              <div className="p-2.5 rounded-xl text-xs text-[var(--ok)] bg-[var(--ok)]/15 border border-[var(--ok)]/30">
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--ok)] bg-[var(--ok)]/15 border border-[var(--ok)]/30">
                 {modalScrapeSuccessMsg}
               </div>
             )}
@@ -216,7 +216,7 @@ export function AddLeadModal({
                   <select
                     value={newLeadData.genero}
                     onChange={(e) => setNewLeadData((prev) => ({ ...prev, genero: e.target.value }))}
-                    className={`w-full rounded-xl px-3 py-2 text-xs focus:outline-none border cursor-pointer ${
+                    className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs focus:outline-none border cursor-pointer ${
                       'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                   >
@@ -230,7 +230,7 @@ export function AddLeadModal({
                   <select
                     value={newLeadData.tipo}
                     onChange={(e) => setNewLeadData((prev) => ({ ...prev, tipo: e.target.value as LeadType }))}
-                    className={`w-full rounded-xl px-3 py-2 text-xs focus:outline-none border cursor-pointer ${
+                    className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs focus:outline-none border cursor-pointer ${
                       'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                   >
@@ -282,7 +282,7 @@ export function AddLeadModal({
                       telefono: val || prev.telefono_fijo || prev.telefono || '',
                     }));
                   }}
-                  className={`w-full rounded-xl px-3 py-2 text-xs focus:outline-none border ${
+                  className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs focus:outline-none border ${
                     'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                   }`}
                 />
@@ -291,7 +291,7 @@ export function AddLeadModal({
 
             {/* Collapsible Advanced Section */}
             <div
-              className={`rounded-2xl border transition-all overflow-hidden ${
+              className={`rounded-[var(--r-l)] border transition-all overflow-hidden ${
                 'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
@@ -321,12 +321,12 @@ export function AddLeadModal({
                           type="button"
                           onClick={handleAutoSearchLogo}
                           disabled={isSearchingLogo || !newLeadData.nombre_sala}
-                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] rounded-lg flex items-center gap-1 font-bold transition-all border border-[var(--acc)]/40 cursor-pointer disabled:opacity-50"
+                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all border border-[var(--acc)]/40 cursor-pointer disabled:opacity-50"
                         >
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
                         </button>
-                        <label className="cursor-pointer px-2.5 py-1 bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-lg flex items-center gap-1 font-bold transition-all border border-[var(--hair)]">
+                        <label className="cursor-pointer px-2.5 py-1 bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all border border-[var(--hair)]">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
                           <input
@@ -349,11 +349,11 @@ export function AddLeadModal({
                     </div>
 
                     {newLeadData.imagen_url ? (
-                      <div className="flex items-center gap-3 p-2 bg-[var(--surface)] rounded-xl border borderbg-[var(--surface)]">
+                      <div className="flex items-center gap-3 p-2 bg-[var(--surface)] rounded-[var(--r-m)] border borderbg-[var(--surface)]">
                         <img
                           src={newLeadData.imagen_url}
                           alt="Logo"
-                          className="w-8 h-8 rounded-lg object-cover border border-[var(--acc)]/50 shrink-0"
+                          className="w-8 h-8 rounded-[var(--r-m)] object-cover border border-[var(--acc)]/50 shrink-0"
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-[10px] text-[var(--ink-2)] font-semibold truncate">{newLeadData.imagen_url}</p>
@@ -373,7 +373,7 @@ export function AddLeadModal({
                             key={emoji}
                             type="button"
                             onClick={() => setNewLeadData((prev) => ({ ...prev, icono: emoji }))}
-                            className={`w-7 h-7 rounded-lg text-xs flex items-center justify-center transition-all cursor-pointer ${
+                            className={`w-7 h-7 rounded-[var(--r-m)] text-xs flex items-center justify-center transition-all cursor-pointer ${
                               newLeadData.icono === emoji
                                 ? 'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105 shadow-xs'
                                 : 'bgbg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
@@ -395,7 +395,7 @@ export function AddLeadModal({
                         placeholder="Calle San Vicente 33"
                         value={newLeadData.direccion || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, direccion: e.target.value }))}
-                        className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
+                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none border ${
                           'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
@@ -407,7 +407,7 @@ export function AddLeadModal({
                         placeholder="Comunidad / Provincia"
                         value={newLeadData.region}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, region: e.target.value }))}
-                        className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
+                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none border ${
                           'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
@@ -423,7 +423,7 @@ export function AddLeadModal({
                         placeholder="promotora@mail.com"
                         value={newLeadData.email_secundario || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, email_secundario: e.target.value }))}
-                        className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
+                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none border ${
                           'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
@@ -442,7 +442,7 @@ export function AddLeadModal({
                             telefono: prev.telefono_movil || val || prev.telefono || '',
                           }));
                         }}
-                        className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
+                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none border ${
                           'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
@@ -457,7 +457,7 @@ export function AddLeadModal({
                       placeholder="Propuesta de fecha, caché o taquilla..."
                       value={newLeadData.pitch_generado}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, pitch_generado: e.target.value }))}
-                      className={`w-full rounded-xl p-2.5 text-xs focus:outline-none border ${
+                      className={`w-full rounded-[var(--r-m)] p-2.5 text-xs focus:outline-none border ${
                         'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                     />
@@ -471,7 +471,7 @@ export function AddLeadModal({
                       placeholder="Programador principal, aforo 300, etc."
                       value={newLeadData.notas}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, notas: e.target.value }))}
-                      className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
+                      className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none border ${
                         'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                     />

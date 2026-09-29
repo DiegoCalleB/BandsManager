@@ -101,7 +101,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               Ejecutivo
             </h3>
             <span
-              className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full ${
+              className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-[var(--r-pill)] ${
                 config.biografia &&
                 config.biografia.trim().length >= 80 &&
                 !config.biografia.toLowerCase().includes("por definir") &&
@@ -186,7 +186,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </h3>
             <div className="flex items-center gap-2">
               <span
-                className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full ${
+                className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-[var(--r-pill)] ${
                   (config.dossierPdfUrl &&
                     config.dossierPdfUrl.trim().length > 5) ||
                   (config.dossierTextoExtra &&
@@ -208,7 +208,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   ? "✓ Listo"
                   : "Mín. 80 car. o PDF"}
               </span>
-              <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-full hidden sm:inline">
+              <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-pill)] hidden sm:inline">
                 Uso Interno
               </span>
             </div>
@@ -252,7 +252,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         </div>
 
         {/* IDENTIDAD SONORA, GÉNERO & BANDAS AFINES (FFO) */}
-        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
+        <div className="bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--hair)] pb-3">
             <div className="flex items-center gap-2">
               <Music2 className="w-5 h-5 text-[var(--acc)]" />
@@ -260,7 +260,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 Identidad Sonora, Género & Bandas Afines (FFO - For Fans Of)
               </h3>
             </div>
-            <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30 font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-[10px] font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30 font-bold uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               Agentes IA & Radar de Booking
             </span>
@@ -280,7 +280,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   setConfig({ ...config, genero: e.target.value })
                 }
                 placeholder="Ej. Mestizaje, Indie Rock, Balkan-Ska, Pop-Rock, Flamenco Fusión..."
-                className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[var(--ink-2)] outline-none"
+                className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3.5 py-2.5 text-xs sm:text-sm text-[var(--ink-2)] outline-none"
               />
               <p className="text-[11px] text-[var(--ink-2)]">
                 Estilo sonoro representativo de vuestro show en vivo.
@@ -293,7 +293,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Visibilidad en el Dossier Público
               </label>
-              <label className="flex items-center gap-3 p-2.5 rounded-xl bg-[var(--surface)]/70 border border-[var(--hair)] cursor-pointer hover:border-[var(--hair)] transition">
+              <label className="flex items-center gap-3 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/70 border border-[var(--hair)] cursor-pointer hover:border-[var(--hair)] transition">
                 <input
                   type="checkbox"
                   checked={config.mostrarBandasSimilares !== false}
@@ -343,7 +343,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </p>
 
             {/* Chip tags list */}
-            <div className="flex flex-wrap items-center gap-2 min-h-[36px] p-2.5 rounded-xl bg-[var(--surface)] border border-[var(--hair)]">
+            <div className="flex flex-wrap items-center gap-2 min-h-[36px] p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)]">
               {!config.bandasSimilares ||
               config.bandasSimilares.length === 0 ? (
                 <span className="text-xs text-[var(--ink-2)] italic">
@@ -354,13 +354,13 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 config.bandasSimilares.map((band, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 shadow-sm"
                   >
                     <span>{band}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveSimilarBand(band)}
-                      className="text-[var(--acc)] hover:text-[var(--alert)] transition cursor-pointer p-0.5 rounded-full hover:bg-[var(--alert)]/20"
+                      className="text-[var(--acc)] hover:text-[var(--alert)] transition cursor-pointer p-0.5 rounded-[var(--r-pill)] hover:bg-[var(--alert)]/20"
                       title={`Eliminar ${band}`}
                     >
                       <X className="w-3 h-3" />
@@ -384,14 +384,14 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     }
                   }}
                   placeholder="Escribe el nombre de un grupo similar (ej. Vetusta Morla, Cala Vento, La Pegatina) y pulsa Enter..."
-                  className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-xl px-3.5 py-2 text-xs sm:text-sm text-[var(--ink-2)] outline-none placeholder:text-[var(--ink-2)] font-sans"
+                  className="w-full bg-[var(--surface)] border border-[var(--hair)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3.5 py-2 text-xs sm:text-sm text-[var(--ink-2)] outline-none placeholder:text-[var(--ink-2)] font-sans"
                 />
               </div>
               <button
                 type="button"
                 onClick={handleAddSimilarBand}
                 disabled={!similarBandInput.trim()}
-                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-sm cursor-pointer shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition shadow-sm cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir</span>

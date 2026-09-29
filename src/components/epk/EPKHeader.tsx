@@ -300,7 +300,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)]">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-sans font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-sans font-bold">
               Kit de Prensa & EPK
             </span>
             <span className="text-[11px] text-[var(--ink-2)] hidden sm:inline">
@@ -383,7 +383,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("archivos")}
-            className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
               health.hasLogo
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -396,7 +396,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("perfil")}
-            className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
               health.hasBio
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -409,7 +409,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("archivos")}
-            className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
               health.hasDossier
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -422,7 +422,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("archivos")}
-            className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
               health.hasRider
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -435,7 +435,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("perfil")}
-            className={`px-2 py-0.5 rounded-md shrink-0 transition ${
+            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition ${
               health.numMiembros > 0
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -450,7 +450,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("musica")}
-            className={`px-2 py-0.5 rounded-md shrink-0 transition ${
+            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition ${
               health.numTemas > 0
                 ? "bg-[var(--acc)]/10 text-[var(--ink-2)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -463,7 +463,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("donaciones")}
-            className={`px-2 py-0.5 rounded-md shrink-0 transition ${
+            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition ${
               health.numTraducciones > 0
                 ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"

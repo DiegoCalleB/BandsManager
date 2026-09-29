@@ -332,14 +332,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
       {selectedEventDetails.type === 'free' ? (
         <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
           {getCampaignsForDate(selectedDateKey).length > 0 ? (
-            <div className="w-full text-left rounded-2xl bg-gradient-to-br from-[var(--acc)]/40 via-[var(--acc)]/20 to-[var(--surface)] border border-[var(--acc)]/50 p-4 shadow-xl shadow-[var(--acc)]/20">
+            <div className="w-full text-left rounded-[var(--r-l)] bg-gradient-to-br from-[var(--acc)]/40 via-[var(--acc)]/20 to-[var(--surface)] border border-[var(--acc)]/50 p-4 shadow-xl shadow-[var(--acc)]/20">
               <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[var(--acc)]/30">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 border border-[var(--acc)]/40 text-[var(--acc)] flex items-center justify-center">
                     <Target className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-full border border-[var(--acc)]/30">
+                    <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-[var(--r-pill)] border border-[var(--acc)]/30">
                       🎯 Fecha Objetivo de Campaña
                     </span>
                     <p className="text-[11px] font-mono text-[var(--ink-2)] font-bold mt-0.5">
@@ -353,7 +353,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <div key={camp.id} className="pt-3 space-y-2">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-bold font-display text-[var(--ink-2)] flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: camp.color || '#8b5cf6' }} />
+                      <span className="w-2 h-2 rounded-[var(--r-pill)]" style={{ backgroundColor: camp.color || '#8b5cf6' }} />
                       {camp.name}
                     </h4>
                     {camp.isActive && (
@@ -375,7 +375,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   </div>
 
                   {camp.notes && (
-                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-xl border borderbg-[var(--surface)]">
+                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border borderbg-[var(--surface)]">
                       &ldquo;{camp.notes}&rdquo;
                     </p>
                   )}
@@ -385,7 +385,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <button
                         type="button"
                         onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
-                        className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--acc)]/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] border border-[var(--acc)]/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                       >
                         <Building2 className="w-3 h-3 text-[var(--acc)]" />
                         <span>Salas CRM</span>
@@ -400,7 +400,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setConcNotas(`Concierto agendado para la campaña "${camp.name}".`);
                         setShowCreateModal('concert');
                       }}
-                      className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Confirmar Concierto</span>
@@ -411,7 +411,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             </div>
           ) : (
             <>
-              <div className={`p-3 rounded-full ${'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
+              <div className={`p-3 rounded-[var(--r-pill)] ${'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
                 <Calendar className="w-6 h-6" />
               </div>
               <div>
@@ -429,7 +429,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
-                  className={`py-1.5 px-3 rounded-xl text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     'bg-[var(--ok)]/15 text-[var(--ok)] hover:bg-[var(--ok)]/25'
                   }`}
                 >
@@ -440,7 +440,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal('concert')}
-                  className={`py-1.5 px-3 rounded-xl text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     'bg-[var(--acc)]/15 text-[var(--acc)] hover:bg-[var(--acc)]/25'
                   }`}
                 >
@@ -513,7 +513,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           }
                         }
                       }}
-                      className={`p-2.5 rounded-xl flex items-start gap-3 transition-all cursor-pointer ${
+                      className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-all cursor-pointer ${
                         evt.type === 'campaña'
                           ? 'bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 border border-[var(--acc)]/30'
                           : 'bg-[var(--surface)] hover:border-[var(--acc)] hover:shadow-sm border border-[var(--hair)]'
@@ -521,7 +521,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     >
                       {/* Custom calendar badge: Day number top, short month bottom */}
                       <div
-                        className={`w-11 h-11 rounded-xl flex flex-col items-center justify-center shrink-0 shadow-sm border ${
+                        className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 shadow-sm border ${
                           evt.type === 'campaña'
                             ? 'bg-[var(--acc)]/30 border-[var(--acc)]/40 text-[var(--acc)]'
                             : 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
@@ -591,7 +591,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
           {/* Day details */}
           <div className={`pb-4 mb-4 flex items-center gap-3 border-b ${'border-[var(--hair)]'}`}>
             <div
-              className={`w-11 h-11 rounded-xl flex flex-col items-center justify-center shrink-0 shadow-sm border ${
+              className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 shadow-sm border ${
                 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
               }`}
             >
@@ -612,7 +612,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   Logística de Ensayos y Conciertos
                 </div>
                 {(selectedConcert || selectedRehearsal) && (
-                  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 shadow-xs flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 shadow-xs flex items-center gap-1">
                     🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
                   </span>
                 )}
@@ -627,7 +627,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
-                  className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer items-center gap-1 ${
+                  className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer items-center gap-1 ${
                     'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Ampliar esta ficha en un modal centrado"
@@ -645,7 +645,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     setReminderErrorMsg(null);
                     setShowReminderModal(true);
                   }}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Enviar un recordatorio por correo/notificación a los convocados"
@@ -657,7 +657,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Editar ficha completa del concierto"
@@ -669,7 +669,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--ok-soft)] border-[var(--ok)] text-[var(--ok)] hover:bg-[var(--ok-soft)]'
                   }`}
                   title="Editar ficha completa del ensayo"
@@ -686,7 +686,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteConcert(selectedConcert.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -700,7 +700,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteRehearsal(selectedRehearsal.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] border transition-colors cursor-pointer bg-[var(--alert)]/40 border-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -719,7 +719,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     key={evt.id}
                     type="button"
                     onClick={() => setSelectedEventId(evt.id)}
-                    className={`px-2 py-1 rounded-full text-[9px] font-mono font-bold border transition-colors cursor-pointer ${
+                    className={`px-2 py-1 rounded-[var(--r-pill)] text-[9px] font-mono font-bold border transition-colors cursor-pointer ${
                       isActive
                         ? evt.kind === 'concert'
                           ? 'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--acc)]'
@@ -753,7 +753,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
           )}
 
           {/* Core Info */}
-          <div className={`space-y-3 mb-6 rounded-lg p-3 ${'bg-[var(--surface)]'}`}>
+          <div className={`space-y-3 mb-6 rounded-[var(--r-m)] p-3 ${'bg-[var(--surface)]'}`}>
             <div className="flex items-center gap-2 text-[10px]">
               <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
               <span className={`font-mono ${textSub}`}>Hora:</span>
@@ -797,7 +797,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     href={selectedEventDetails.entradasUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
                   >
                     <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                   </a>
@@ -881,13 +881,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     </div>
 
                     <div
-                      className={`p-2 rounded-xl border flex items-center gap-2.5 ${
+                      className={`p-2 rounded-[var(--r-m)] border flex items-center gap-2.5 ${
                         'bg-[var(--surface)] border-[var(--hair)] shadow-sm'
                       }`}
                     >
                       <div
                         onClick={() => onNavigate?.('fans', { concertId: selectedConcert.id })}
-                        className="p-1 bg-[var(--surface)] rounded-lg shadow border border-[var(--acc)]/40 shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                        className="p-1 bg-[var(--surface)] rounded-[var(--r-m)] shadow border border-[var(--acc)]/40 shrink-0 cursor-pointer hover:scale-105 transition-transform"
                         title="Haz clic para abrir la configuración del QR"
                       >
                         <QRCode value={targetQrUrl} size={58} level="M" />
@@ -944,13 +944,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <Video className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
                     <span>Detalles de la Reunión:</span>
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
                     🤝 Coordinación
                   </span>
                 </div>
 
                 <div
-                  className={`p-2.5 rounded-xl border space-y-2 ${
+                  className={`p-2.5 rounded-[var(--r-m)] border space-y-2 ${
                     'bg-[var(--surface)] border-[var(--hair)] shadow-sm'
                   }`}
                 >
@@ -971,7 +971,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 shadow-md shadow-[var(--acc)]/20 transition-all cursor-pointer"
+                        className="flex-1 px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 shadow-md shadow-[var(--acc)]/20 transition-all cursor-pointer"
                       >
                         <Video className="w-3.5 h-3.5" />
                         <span>Unirse a Videollamada</span>
@@ -1008,7 +1008,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onUpdateRehearsal(selectedRehearsal.id, { setlistId: val });
                     }
                   }}
-                  className={`w-full text-[10px] font-mono p-1.5 rounded-lg focus:outline-none cursor-pointer ${
+                  className={`w-full text-[10px] font-mono p-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
                     'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 >
@@ -1029,7 +1029,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
                         setActiveStageSetlist(assignedSetlist);
                       }}
-                      className="flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-[var(--acc)]/20 transition-all cursor-pointer"
+                      className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-[var(--acc)]/20 transition-all cursor-pointer"
                       title="Lanzar Modo Escenario / Vista de Directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--ink)]" />
@@ -1143,7 +1143,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                 return (
                   <div className="space-y-3">
-                    <div className={`p-3 rounded-lg space-y-2 ${'bg-[var(--surface)]'}`}>
+                    <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
                       <div className="flex items-center justify-between">
                         <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--acc)]'}`}>
                           📞 Contacto Producción & Hotel
@@ -1191,7 +1191,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       </div>
                     </div>
 
-                    <div className={`p-3 rounded-lg space-y-1.5 ${'bg-[var(--surface)]'}`}>
+                    <div className={`p-3 rounded-[var(--r-m)] space-y-1.5 ${'bg-[var(--surface)]'}`}>
                       <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--acc)]'}`}>
                         🎸 Input List / Rider de Canales
                       </span>
@@ -1309,7 +1309,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
  `);
                         printWindow.document.close();
                       }}
-                      className={`w-full py-2 px-3 rounded-xl font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
+                      className={`w-full py-2 px-3 rounded-[var(--r-m)] font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
                         'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)]'
                       }`}
                     >
@@ -1327,7 +1327,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2.5">
                     <div
-                      className={`p-2.5 rounded-lg border ${'bg-[var(--acc-soft)]/70 border-[var(--acc)]'}`}
+                      className={`p-2.5 rounded-[var(--r-m)] border ${'bg-[var(--acc-soft)]/70 border-[var(--acc)]'}`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-bold flex items-center gap-1 text-[var(--acc)] font-mono uppercase text-[10px]">
@@ -1375,7 +1375,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('tecnica');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Wrench className="w-3 h-3" />
                       <span>Abrir Logística Técnica Completa</span>
@@ -1413,7 +1413,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         {contacts.map((c) => (
                           <div
                             key={c.id}
-                            className={`p-2 rounded-lg border flex items-center justify-between gap-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+                            className={`p-2 rounded-[var(--r-m)] border flex items-center justify-between gap-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                           >
                             <div className="min-w-0">
                               <div className="font-bold truncate text-[10px]">{c.nombre}</div>
@@ -1457,7 +1457,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('contactos');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Añadir Contactos Clave</span>
@@ -1562,7 +1562,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('merchan');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Shirt className="w-3 h-3" />
                       <span>Control Merchandising Completo</span>
@@ -1590,7 +1590,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         {progress}%
                       </span>
                     </div>
-                    <div className="w-full bgbg-[var(--surface)] rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bgbg-[var(--surface)] rounded-[var(--r-pill)] h-1.5 overflow-hidden">
                       <div
                         className={`h-full transition-all duration-300 ${progress === 100 ? 'bg-[var(--ok)]' : 'bg-[var(--acc)]'}`}
                         style={{ width: `${progress}%` }}
@@ -1626,7 +1626,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('cierre');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <ShieldCheck className="w-3 h-3" />
                       <span>Checklist Cierre Completo</span>
@@ -1705,7 +1705,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         <div
                           key={item.id}
                           onClick={() => handleToggleRunOfShow(item.id)}
-                          className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
+                          className={`p-2 rounded-[var(--r-s)] flex items-center gap-2.5 cursor-pointer transition-colors group ${
                             isItemDone
                               ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
                               : 'bg-[var(--surface)] text-[var(--ink)] hover:-indigo-300'
@@ -1742,7 +1742,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <div
                         key={item.id}
                         onClick={() => handleToggleGear(item.id)}
-                        className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
+                        className={`p-2 rounded-[var(--r-s)] flex items-center gap-2.5 cursor-pointer transition-colors group ${
                           isChecked
                             ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
                             : 'bg-[var(--surface)] text-[var(--ink)] hover:-indigo-300'

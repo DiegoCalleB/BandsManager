@@ -22,7 +22,7 @@ export function TemplateRecommendationsCard({
 
   return (
     <div
-      className={`rounded-xl border p-4 transition-all duration-200 ${
+      className={`rounded-[var(--r-m)] border p-4 transition-all duration-200 ${
         'bg-[var(--acc-soft)]/70 border-[var(--acc)] text-[var(--ink)] shadow-sm'
       }`}
     >
@@ -30,7 +30,7 @@ export function TemplateRecommendationsCard({
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className={`p-1.5 rounded-lg flex items-center justify-center shrink-0 ${
+            className={`p-1.5 rounded-[var(--r-m)] flex items-center justify-center shrink-0 ${
               'bg-[var(--acc)] text-[var(--ink)] font-bold'
             }`}
           >
@@ -40,7 +40,7 @@ export function TemplateRecommendationsCard({
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-extrabold uppercase tracking-wide text-[var(--acc)]">Recomendaciones del Agente</span>
               <span
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-[var(--r-pill)] ${
                   'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
                 }`}
               >
@@ -56,7 +56,7 @@ export function TemplateRecommendationsCard({
             type="button"
             onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
             disabled={isOptimizing}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer active:scale-95 disabled:opacity-50 ${
+            className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer active:scale-95 disabled:opacity-50 ${
               'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-extrabold'
             }`}
             title="Aplica la recomendación del agente y re-redacta la plantilla y pautas con IA"
@@ -69,7 +69,7 @@ export function TemplateRecommendationsCard({
             <button
               type="button"
               onClick={onClose}
-              className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+              className={`p-1.5 rounded-[var(--r-m)] text-xs transition-colors cursor-pointer ${
                 'hover:bg-[var(--acc-soft)] text-[var(--ink-2)]'
               }`}
               title="Cerrar recomendaciones"
@@ -85,7 +85,7 @@ export function TemplateRecommendationsCard({
         <div className="mt-4 pt-3.5 border-t border-[var(--acc)]/20 space-y-3.5 animate-in fade-in duration-200">
           {/* Quick AI Tip / Secret */}
           <div
-            className={`p-2.5 rounded-lg flex items-start gap-2 text-[11px] leading-relaxed ${
+            className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-2 text-[11px] leading-relaxed ${
               'bg-[var(--surface)] text-[var(--ink)] border border-[var(--acc)]'
             }`}
           >
@@ -100,7 +100,7 @@ export function TemplateRecommendationsCard({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* DOs */}
             <div
-              className={`p-3 rounded-lg border space-y-1.5 ${
+              className={`p-3 rounded-[var(--r-m)] border space-y-1.5 ${
                 'bg-[var(--ok-soft)]/70 border-[var(--ok)]'
               }`}
             >
@@ -120,7 +120,7 @@ export function TemplateRecommendationsCard({
 
             {/* DON'Ts */}
             <div
-              className={`p-3 rounded-lg border space-y-1.5 ${
+              className={`p-3 rounded-[var(--r-m)] border space-y-1.5 ${
                 'bg-[var(--alert)]/12 border-[var(--alert)]'
               }`}
             >
@@ -142,7 +142,7 @@ export function TemplateRecommendationsCard({
           {/* Formula Blocks: Opening, Hooks, Call to Action */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px]">
             <div
-              className={`p-2.5 rounded-lg border space-y-1 ${
+              className={`p-2.5 rounded-[var(--r-m)] border space-y-1 ${
                 'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
@@ -153,7 +153,7 @@ export function TemplateRecommendationsCard({
             </div>
 
             <div
-              className={`p-2.5 rounded-lg border space-y-1 ${
+              className={`p-2.5 rounded-[var(--r-m)] border space-y-1 ${
                 'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
@@ -169,7 +169,7 @@ export function TemplateRecommendationsCard({
             </div>
 
             <div
-              className={`p-2.5 rounded-lg border space-y-1 ${
+              className={`p-2.5 rounded-[var(--r-m)] border space-y-1 ${
                 'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >

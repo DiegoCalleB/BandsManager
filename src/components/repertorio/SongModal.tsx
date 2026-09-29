@@ -122,14 +122,14 @@ export function SongModal({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
         <div
-          className={`w-full max-w-lg p-5 sm:p-6 rounded-3xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
+          className={`w-full max-w-lg p-5 sm:p-6 rounded-[var(--r-xl)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
             'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
           }`}
         >
           {/* Header */}
           <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[var(--ok)]/15 border border-[var(--ok)]/30 flex items-center justify-center text-[var(--ok)]">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--ok)]/15 border border-[var(--ok)]/30 flex items-center justify-center text-[var(--ok)]">
                 <Music className="w-4 h-4" />
               </div>
               <div>
@@ -151,13 +151,13 @@ export function SongModal({
             <div className="space-y-4 overflow-y-auto pr-1 flex-1 pb-2">
               {/* Audio Upload Area (Compact & Clean) */}
               <div
-                className={`p-3 rounded-2xl border transition-all ${
+                className={`p-3 rounded-[var(--r-l)] border transition-all ${
                   'bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ok)]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
                       <Upload className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
@@ -184,7 +184,7 @@ export function SongModal({
                   className="hidden"
                 />
                 {audioFileName && (
-                  <div className="mt-2 text-xs text-[var(--ok)] flex items-center gap-1.5 font-medium bg-[var(--ok)]/10 p-2 rounded-xl border border-[var(--ok)]/20">
+                  <div className="mt-2 text-xs text-[var(--ok)] flex items-center gap-1.5 font-medium bg-[var(--ok)]/10 p-2 rounded-[var(--r-m)] border border-[var(--ok)]/20">
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
                     <span className="truncate">{audioFileName}</span>
                   </div>
@@ -246,7 +246,7 @@ export function SongModal({
                       value={customAlbumInput}
                       onChange={(e) => setCustomAlbumInput(e.target.value)}
                       placeholder="Nombre del nuevo disco..."
-                      className={`w-full mt-2 px-3 py-2 rounded-xl focus:outline-none border border-[var(--ok)]/50 ${
+                      className={`w-full mt-2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none border border-[var(--ok)]/50 ${
                         'bg-[var(--surface)] text-[var(--ink)]'
                       }`}
                     />
@@ -262,7 +262,7 @@ export function SongModal({
                       min="0"
                       value={minutos}
                       onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
-                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-[var(--ok)] ${
+                      className={`w-1/2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none border text-center font-bold text-[var(--ok)] ${
                         'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                       placeholder="3"
@@ -275,7 +275,7 @@ export function SongModal({
                       max="59"
                       value={segundos}
                       onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
-                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-[var(--ok)] ${
+                      className={`w-1/2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none border text-center font-bold text-[var(--ok)] ${
                         'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                       placeholder="30"
@@ -292,7 +292,7 @@ export function SongModal({
                     name="tonalidad"
                     type="text"
                     defaultValue={editingSong?.tonalidad || ''}
-                    className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                    className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border ${
                       'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                     placeholder="ej. Am"
@@ -305,7 +305,7 @@ export function SongModal({
                     name="bpm"
                     type="number"
                     defaultValue={editingSong?.bpm || 120}
-                    className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                    className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border ${
                       'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                     placeholder="120"
@@ -329,7 +329,7 @@ export function SongModal({
 
               {/* Collapsible Accordion: Advanced Options & Notes */}
               <div
-                className={`rounded-2xl border transition-all overflow-hidden ${
+                className={`rounded-[var(--r-l)] border transition-all overflow-hidden ${
                   'bg-[var(--surface)] border-[var(--hair)]'
                 }`}
               >
@@ -362,7 +362,7 @@ export function SongModal({
                           name="genero"
                           type="text"
                           defaultValue={editingSong?.genero || ''}
-                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border ${
                             'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="ej. Rock, Rumba"
@@ -374,7 +374,7 @@ export function SongModal({
                         <select
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
-                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border cursor-pointer ${
                             'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                         >
@@ -392,7 +392,7 @@ export function SongModal({
                         <select
                           name="estadoTema"
                           defaultValue={editingSong?.estadoTema || 'listo'}
-                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border cursor-pointer ${
                             'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                         >
@@ -409,7 +409,7 @@ export function SongModal({
                           name="cantantePrincipal"
                           type="text"
                           defaultValue={editingSong?.cantantePrincipal || ''}
-                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border ${
                             'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="Cantante"
@@ -425,7 +425,7 @@ export function SongModal({
                           name="afinacion"
                           type="text"
                           defaultValue={editingSong?.afinacion || 'E Standard'}
-                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border ${
                             'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="E Standard"
@@ -438,7 +438,7 @@ export function SongModal({
                           name="enlaceAcordes"
                           type="url"
                           defaultValue={editingSong?.enlaceAcordes || ''}
-                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border ${
                             'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="https://drive.google.com/..."
@@ -453,7 +453,7 @@ export function SongModal({
                         name="notasInternas"
                         rows={2}
                         defaultValue={editingSong?.notasInternas || ''}
-                        className={`w-full p-2.5 rounded-xl focus:outline-none border text-xs ${
+                        className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none border text-xs ${
                           'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                         placeholder="ej. Entrar directos tras el solo de batería..."
@@ -487,7 +487,7 @@ export function SongModal({
                               type="text"
                               defaultValue={editingSong?.notasRepertorio || ''}
                               placeholder="ej. Parón en seco antes del último coro"
-                              className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
+                              className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border text-xs ${
                                 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                               }`}
                             />
@@ -499,7 +499,7 @@ export function SongModal({
                               <div key={member.id || member.name} className="space-y-0.5">
                                 <span className="text-[10px] font-medium text-[var(--ink-2)] flex items-center gap-1">
                                   <span
-                                    className="w-1.5 h-1.5 rounded-full inline-block"
+                                    className="w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block"
                                     style={{ backgroundColor: member.avatarColor || '#6366f1' }}
                                   />
                                   {member.name} <span className="text-[var(--ink-2)] font-normal">({member.instrument})</span>
@@ -509,7 +509,7 @@ export function SongModal({
                                   value={memberNotesState[memberKey] || ''}
                                   onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
                                   placeholder={`Notas para ${member.name}...`}
-                                  className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
+                                  className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none border text-xs ${
                                     'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                                   }`}
                                 />

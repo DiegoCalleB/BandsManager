@@ -508,13 +508,13 @@ export function CalendarWidget({
                   <div className="flex items-center gap-0.5 mt-1">
                     {hasConcert && (
                       <span
-                        className={`w-1.5 h-1.5 rounded-full ${"bg-[var(--acc)]"} shadow-xs`}
+                        className={`w-1.5 h-1.5 rounded-[var(--r-pill)] ${"bg-[var(--acc)]"} shadow-xs`}
                         title="Concierto"
                       />
                     )}
                     {hasRehearsal && (
                       <span
-                        className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] shadow-xs"
+                        className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] shadow-xs"
                         title="Ensayo"
                       />
                     )}

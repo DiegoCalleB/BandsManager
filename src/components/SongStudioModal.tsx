@@ -3824,7 +3824,7 @@ export default function SongStudioModal({
                   >
                     {formatSongTitle(song.titulo)}
                   </h2>
-                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold">
+                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold">
                     {song.estadoTema || 'componiendo'}
                   </span>
                   {song.favoritoGeneral && (
@@ -4549,7 +4549,7 @@ export default function SongStudioModal({
                                         duration: 0.6,
                                         ease: 'easeInOut',
                                       }}
-                                      className="w-1 bg-[var(--ok)]/80 rounded-full"
+                                      className="w-1 bg-[var(--ok)]/80 rounded-[var(--r-pill)]"
                                     />
                                     <motion.span
                                       animate={{
@@ -4560,7 +4560,7 @@ export default function SongStudioModal({
                                         duration: 0.7,
                                         ease: 'easeInOut',
                                       }}
-                                      className="w-1 bg-[var(--ok)]/80 rounded-full"
+                                      className="w-1 bg-[var(--ok)]/80 rounded-[var(--r-pill)]"
                                     />
                                     <motion.span
                                       animate={{
@@ -4571,7 +4571,7 @@ export default function SongStudioModal({
                                         duration: 0.5,
                                         ease: 'easeInOut',
                                       }}
-                                      className="w-1 bg-[var(--ok)]/80 rounded-full"
+                                      className="w-1 bg-[var(--ok)]/80 rounded-[var(--r-pill)]"
                                     />
                                   </div>
                                 )}
@@ -4601,7 +4601,7 @@ export default function SongStudioModal({
                             <button
                               type="button"
                               onClick={(e) => handleDeleteIdea(e, idea.id)}
-                              className="p-2 rounded-xl bg-[var(--ink)]/5 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] border border-[var(--hair)]/10 hover:border-[var(--alert)]/30 transition-all cursor-pointer"
+                              className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] border border-[var(--hair)]/10 hover:border-[var(--alert)]/30 transition-all cursor-pointer"
                               title="Eliminar idea"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -4828,9 +4828,9 @@ export default function SongStudioModal({
                               <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)] pt-1">
                                 <span className="text-[var(--ink-2)] font-bold flex items-center gap-1.5">
                                   {isPlaying ? (
-                                    <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80 animate-ping" />
+                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]/80 animate-ping" />
                                   ) : (
-                                    <span className="w-2 h-2 rounded-full bg-[var(--surface)]0" />
+                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)]0" />
                                   )}
                                   {isPlaying ? 'Reproduciendo...' : 'Detenido'}
                                 </span>
@@ -5114,7 +5114,7 @@ export default function SongStudioModal({
                                                     >
                                                       <Sliders className="w-2.5 h-2.5 text-[var(--tentative)]/80" />
                                                       {(tr.desfaseMs || 0) !== 0 && (
-                                                        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 ring-1 ring-[var(--ink)]" />
+                                                        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 ring-1 ring-[var(--ink)]" />
                                                       )}
                                                     </button>
                                                   </div>
@@ -5399,7 +5399,7 @@ export default function SongStudioModal({
                                                     {newTrackName.trim() || `Pista ${tracks.length + 1}`}
                                                   </span>
                                                   <span className="px-2 py-0.5 rounded bg-[var(--alert)]/80 text-[var(--ink)] font-sans text-[10px] font-extrabold tracking-wider flex items-center gap-1 shadow">
-                                                    <span className="w-2 h-2 rounded-full bg-[var(--surface)] animate-ping" /> GRABANDO
+                                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] animate-ping" /> GRABANDO
                                                     ONDAS EN DIRECTO...
                                                   </span>
                                                 </div>
@@ -5820,7 +5820,7 @@ export default function SongStudioModal({
                 <button
                   type="button"
                   onClick={() => togglePlayIdea(activeIdea)}
-                  className={`p-2.5 rounded-full flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0 ${
+                  className={`p-2.5 rounded-[var(--r-pill)] flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0 ${
                     isPlaying ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--on-acc)]'
                   }`}
                   title="Play / Pausa"

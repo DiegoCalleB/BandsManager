@@ -800,15 +800,15 @@ export const AgentAutonomySettingsModal: React.FC<
                   <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink)]">
                     Panel de Control de Agentes IA
                   </h3>
-                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/70 font-bold">
+                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-bold">
                     {bandName}
                   </span>
                   {isAdmin ? (
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--ok)]/10 text-[var(--ink-2)] flex items-center gap-1 font-bold">
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ink-2)] flex items-center gap-1 font-bold">
                       <ShieldCheck className="w-3 h-3" /> Mánager / Admin
                     </span>
                   ) : (
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--ink-3)]/60 text-[var(--ink-2)]600 flex items-center gap-1 font-bold">
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ink-3)]/60 text-[var(--ink-2)]600 flex items-center gap-1 font-bold">
                       <Lock className="w-3 h-3" /> Modo Lectura (Músico)
                     </span>
                   )}
@@ -870,7 +870,7 @@ export const AgentAutonomySettingsModal: React.FC<
               <Mail className="w-4 h-4 text-[var(--ink-2)]" />
               <span>3. Email & Buzón</span>
               {emailAccountConnected && (
-                <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80 inline-block"></span>
+                <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]/80 inline-block"></span>
               )}
             </button>
 
@@ -912,7 +912,7 @@ export const AgentAutonomySettingsModal: React.FC<
               <Activity className="w-4 h-4 text-[var(--ok)]" />
               <span>6. Auditoría</span>
               {auditLogs.length > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-[var(--ok)]/20 text-[var(--ink-2)] font-sans">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[9px] bg-[var(--ok)]/20 text-[var(--ink-2)] font-sans">
                   {auditLogs.length}
                 </span>
               )}
@@ -962,7 +962,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           {emailAccountConnected ? (
                             <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
                           ) : (
-                            <span className="w-3.5 h-3.5 rounded-full shrink-0" />
+                            <span className="w-3.5 h-3.5 rounded-[var(--r-pill)] shrink-0" />
                           )}
                           Conectar el buzón de la banda
                         </span>
@@ -983,7 +983,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           {startupChecklist.toneTrained ? (
                             <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
                           ) : (
-                            <span className="w-3.5 h-3.5 rounded-full shrink-0" />
+                            <span className="w-3.5 h-3.5 rounded-[var(--r-pill)] shrink-0" />
                           )}
                           Entrenar el ADN de voz de la banda
                         </span>
@@ -1004,7 +1004,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           {startupChecklist.templateCustomized ? (
                             <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
                           ) : (
-                            <span className="w-3.5 h-3.5 rounded-full shrink-0" />
+                            <span className="w-3.5 h-3.5 rounded-[var(--r-pill)] shrink-0" />
                           )}
                           Personalizar al menos una plantilla de categoría
                         </span>
@@ -1650,13 +1650,13 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* 4. Control de Estado de Lectura en Bandeja (Agente Lector) */}
-                <div className="p-4 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
                   <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
                     <Mail className="w-4 h-4" /> 4. Control de Estado en Bandeja
                     de Entrada (Agente Lector)
                   </h4>
 
-                  <div className="p-3.5 rounded-xl bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
+                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"
@@ -1905,7 +1905,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 {day.short}
                               </span>
                               <span
-                                className={`w-2 h-2 rounded-full ${isSelected ? "bg-[var(--acc)]/60" : "bg-[var(--surface)]/70"}`}
+                                className={`w-2 h-2 rounded-[var(--r-pill)] ${isSelected ? "bg-[var(--acc)]/60" : "bg-[var(--surface)]/70"}`}
                               />
                             </div>
                             <span className="text-[11px] font-sans font-medium leading-tight truncate">
@@ -2030,7 +2030,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80" />
+                        <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
                         <div>
                           <div className="text-xs font-sans font-bold text-[var(--ink)]">
                             Agente Scout (Búsqueda)
@@ -2047,7 +2047,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                     <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80" />
+                        <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
                         <div>
                           <div className="text-xs font-sans font-bold text-[var(--ink)]">
                             Agente Redactor (Gemini)
@@ -2065,7 +2065,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
                         <span
-                          className={`w-2.5 h-2.5 rounded-full ${horasEnviador.length > 0 && diasEnviador.length > 0 ? "bg-[var(--ok)]/80" : "bg-[var(--acc)]/60"}`}
+                          className={`w-2.5 h-2.5 rounded-[var(--r-pill)] ${horasEnviador.length > 0 && diasEnviador.length > 0 ? "bg-[var(--ok)]/80" : "bg-[var(--acc)]/60"}`}
                         />
                         <div>
                           <div className="text-xs font-sans font-bold text-[var(--ink)]">
@@ -2086,7 +2086,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                     <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[var(--tentative)]" />
+                        <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--tentative)]" />
                         <div>
                           <div className="text-xs font-sans font-bold text-[var(--ink)]">
                             Agente Lector (Clasificador)
@@ -2534,7 +2534,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       key={f.id}
                       type="button"
                       onClick={() => setAuditAgentFilter(f.id)}
-                      className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
+                      className={`px-2.5 py-0.5 rounded-[var(--r-pill)] transition-all cursor-pointer font-bold ${
                         auditAgentFilter === f.id
                           ? "bg-[var(--ok)]/20 text-[var(--ink-2)]/50"
                           : "bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink-2)]"

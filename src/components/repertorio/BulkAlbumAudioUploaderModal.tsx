@@ -795,9 +795,9 @@ export function BulkAlbumAudioUploaderModal({
                   {uploadProgress.currentName}
                 </span>
               </div>
-              <div className="w-full h-2 bg-[var(--surface)]/80 rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
                 <div
-                  className="h-full bg-[var(--surface)] transition-all duration-300 rounded-full"
+                  className="h-full bg-[var(--surface)] transition-all duration-300 rounded-[var(--r-pill)]"
                   style={{
                     width: `${(uploadProgress.current / Math.max(1, uploadProgress.total)) * 100}%`,
                   }}

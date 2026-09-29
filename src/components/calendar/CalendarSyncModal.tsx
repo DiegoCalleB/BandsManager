@@ -33,13 +33,13 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
   return (
     <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-fade-in">
       <div
-        className={`max-w-lg w-full rounded-2xl border p-5 shadow-2xl relative ${
+        className={`max-w-lg w-full rounded-[var(--r-l)] border p-5 shadow-2xl relative ${
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
         <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-[var(--acc)]/10 text-[var(--acc)]">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">
               <Calendar className="w-5 h-5" />
             </div>
             <div>
@@ -56,7 +56,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
         <div className="py-4 space-y-4 text-xs">
           <div
-            className={`p-3 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
+            className={`p-3 rounded-[var(--r-m)] border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
           >
             <label className="block text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] mb-1 font-bold">
               URL de Suscripción iCal (Privada)
@@ -66,14 +66,14 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
                 type="text"
                 readOnly
                 value={rutaFeed}
-                className={`flex-1 p-2 text-xs rounded-xl border outline-none font-mono ${
+                className={`flex-1 p-2 text-xs rounded-[var(--r-m)] border outline-none font-mono ${
                   'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                 }`}
               />
               <button
                 type="button"
                 onClick={handleCopy}
-                className="px-3 py-2 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition-all cursor-pointer shrink-0"
               >
                 {copiedSyncUrl ? (
                   <>
@@ -95,7 +95,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webCalFeed)}`}
               target="_blank"
               rel="noreferrer"
-              className="p-3 rounded-xl bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 border border-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Calendar className="w-4 h-4 text-[var(--acc)]" />
               <span>Añadir a Google Calendar</span>
@@ -103,14 +103,14 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
             <a
               href={webCalFeed}
-              className="p-3 rounded-xl bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 border border-[var(--ok)]/30 text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 border border-[var(--ok)]/30 text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Radio className="w-4 h-4 text-[var(--ok)]" />
               <span>Suscribir en iPhone / Mac</span>
             </a>
           </div>
 
-          <div className="p-3 rounded-xl bg-[var(--surface)]/60 border border-[var(--hair)]/5 space-y-1.5 text-[11px] text-[var(--ink-2)]">
+          <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 border border-[var(--hair)]/5 space-y-1.5 text-[11px] text-[var(--ink-2)]">
             <p className="font-bold text-[var(--ink-2)]">Pasos en Google Calendar (1 minuto):</p>
             <ol className="list-decimal list-inside space-y-1 text-[var(--ink-2)]">
               <li>
@@ -136,7 +136,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           </a>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bgbg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-m)] bgbg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
           >
             Cerrar
           </button>

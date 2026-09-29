@@ -728,9 +728,9 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   )}
                 </div>
                 {zipProgress.total > 0 && (
-                  <div className="w-full h-2 bg-[var(--surface)] rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-[var(--surface)] rounded-[var(--r-pill)] overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] transition-all duration-300 rounded-full"
+                      className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] transition-all duration-300 rounded-[var(--r-pill)]"
                       style={{
                         width: `${Math.round((zipProgress.current / zipProgress.total) * 100)}%`,
                       }}
