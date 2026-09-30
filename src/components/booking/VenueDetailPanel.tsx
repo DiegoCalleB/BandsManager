@@ -3018,7 +3018,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 onClick={() => {
                   const draft = generateFollowupTemplate(
                     selectedLead,
-                    bandName || "Bakandeya",
+                    bandName || "la banda",
                   );
                   setEditedPitch(draft);
                   setIsEditingPitch(true);
@@ -3883,7 +3883,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 onClick={() => {
                   const draft = generateFollowupTemplate(
                     selectedLead,
-                    bandName || "Bakandeya",
+                    bandName || "la banda",
                   );
                   setEditedPitch(draft);
                   setIsEditingPitch(true);
@@ -3930,7 +3930,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       }
                     >
                       {msg.remitente_nombre} (
-                      {msg.remitente === "sala" ? "Programador" : "Bakandeya"})
+                      {msg.remitente === "sala" ? "Programador" : (bandName || "La banda")})
                     </span>
                     {msg.remitente === "sala" && msg.sentimiento && (
                       <span

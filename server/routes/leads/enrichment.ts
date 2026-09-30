@@ -517,7 +517,7 @@ router.post("/scrape-contact", requireAuth, async (req, res) => {
   }
 
   try {
-    const prompt = `Eres el Agente Scout de Bakandeya, encargado de recabar información VERIFICABLE de salas de concierto en España.
+    const prompt = `Eres el Agente Scout de BandManager, encargado de recabar información VERIFICABLE de salas de concierto en España.
 Buscamos información de la siguiente sala:
 - Nombre: ${nombre_sala}
 - Ciudad: ${ciudad || "No especificada"}
@@ -1093,8 +1093,8 @@ router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, a
 
     const state = loadState();
     const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "Bakandeya";
-    const bandGenre = band?.genero || lead.genero || "Mestizaje / World Music";
+    const bandName = band?.nombre || "la banda";
+    const bandGenre = band?.genero || lead.genero || "música en directo";
 
     const spotifyDemand = await calculateSpotifyCityDemand(
       bandName,
@@ -1250,8 +1250,8 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
 
     const state = loadState();
     const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "Bakandeya";
-    const bandGenre = band?.genero || lead.genero || "Mestizaje / World Music";
+    const bandName = band?.nombre || "la banda";
+    const bandGenre = band?.genero || lead.genero || "música en directo";
 
     const [
       spotifyRes,
@@ -1597,7 +1597,7 @@ router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requir
 
     const state = loadState();
     const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "Bakandeya";
+    const bandName = band?.nombre || "la banda";
 
     const result = await findLocalPressAndMedia(lead.ciudad || "Madrid", lead.nombre_sala, bandName);
     const updatedLead: Lead = {

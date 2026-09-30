@@ -41,7 +41,7 @@ export async function findVenuesBySimilarArtists(params: {
   targetCities?: string[];
   limit?: number;
 }): Promise<SimilarVenueMatchResult> {
-  const bandName = params.bandName || "Bakandeya";
+  const bandName = params.bandName || "la banda";
   const genre = params.genre || "World Music / Mestizaje / Reggae / Afrobeat / Fusion";
   const similarArtists = params.similarArtists?.length ? params.similarArtists : ["Macaco", "Ojos de Brujo", "Green Valley", "La Pegatina", "Bomba Estéreo", "Txarango"];
   const cities = params.targetCities?.length ? params.targetCities : ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao", "Granada"];

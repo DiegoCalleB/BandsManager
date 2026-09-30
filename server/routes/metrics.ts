@@ -625,7 +625,7 @@ Analiza con precisión milimétrica esta captura de pantalla de un teléfono mó
 Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válido con esta estructura:
 {
   "platform": "instagram" | "tiktok" | "youtube" | "spotify" | "facebook" | "otra",
-  "account_handle": "nombre de usuario con @ si es visible, ej: @bakandeya" o null,
+  "account_handle": "nombre de usuario con @ si es visible, ej: @tu_banda" o null,
   "account_name": "nombre visible de la cuenta o banda" o null,
   "followers": número entero de seguidores, suscriptores o oyentes mensuales (ej: 1573, o si pone 1.5K pon 1500) o null,
   "following": número entero de cuentas seguidas o null,
@@ -637,7 +637,7 @@ Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válid
   "plays_or_views": reproducciones totales de reels/vídeos/canciones si aparecen o null,
   "confidence": "high" | "medium" | "low",
   "detected_date": "YYYY-MM-DD" o null,
-  "summary": "Resumen conciso en 1 frase de lo extraído (ej: 'Perfil de Instagram de @bakandeya con 1.573 seguidores y 67 posts')"
+  "summary": "Resumen conciso en 1 frase de lo extraído (ej: 'Perfil de Instagram de @tu_banda con 1.573 seguidores y 67 posts')"
 }`;
 
     const response = await generateContentWithFallback(ai, {

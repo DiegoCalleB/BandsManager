@@ -257,11 +257,11 @@ export default function ReelsCenter({
   const nombreBanda = (bandName || "").trim() || "tu banda";
 
   // Band Tone Analysis State
-  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] =
+  const [isBandToneModalOpen, setIsBandToneModalOpen] =
     useState(false);
-  const [bakandeyaToneData, setBakandeyaToneData] =
+  const [bandToneData, setBandToneData] =
     useState<ToneAnalysisData | null>(null);
-  const [isAnalyzingBakandeyaTone, setIsAnalyzingBakandeyaTone] =
+  const [isAnalyzingBandTone, setIsAnalyzingBandTone] =
     useState(false);
   // Si el backend confirmó que guardó el ADN de tono en Supabase (y no solo en esta pantalla).
   // El usuario preguntó explícitamente si esto se guardaba: antes no había forma de saberlo.
@@ -272,22 +272,22 @@ export default function ReelsCenter({
   // consultarlo, se lo pisaba con un resultado nuevo de la IA y perdía sus correcciones a mano.
   // Ahora primero se mira qué hay ya guardado; solo se lanza la IA si no hay nada todavía.
   const handleOpenToneModal = async () => {
-    setIsBakandeyaToneModalOpen(true);
-    setIsAnalyzingBakandeyaTone(true);
+    setIsBandToneModalOpen(true);
+    setIsAnalyzingBandTone(true);
     try {
       const res = await apiFetch("/api/bands/tone-dna");
       const json = res as any;
       if (json?.success && json.data) {
-        setBakandeyaToneData(json.data);
+        setBandToneData(json.data);
         setToneAnalysisSaved(true);
-        setIsAnalyzingBakandeyaTone(false);
+        setIsAnalyzingBandTone(false);
         return;
       }
     } catch (err) {
       console.error("Error cargando el ADN de tono guardado:", err);
     }
     // Sin nada guardado todavía: se cae al análisis con IA de siempre.
-    await handleAnalyzeBakandeyaTone();
+    await handleAnalyzeBandTone();
   };
 
   // Refresca solo lo guardado en Supabase (incluidas las reglas de Self-Refining Tone DNA
@@ -297,7 +297,7 @@ export default function ReelsCenter({
       const res = await apiFetch("/api/bands/tone-dna");
       const json = res as any;
       if (json?.success && json.data) {
-        setBakandeyaToneData(json.data);
+        setBandToneData(json.data);
         setToneAnalysisSaved(true);
       }
     } catch (err) {
@@ -308,7 +308,7 @@ export default function ReelsCenter({
   // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
   // usando la app: el botón"Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
   // Instagram del fundador en vez de la suya propia.
-  const handleAnalyzeBakandeyaTone = async () => {
+  const handleAnalyzeBandTone = async () => {
     // El backend ya rastrea Instagram, TikTok, YouTube y Facebook (lee el EPK real de la banda),
     // así que exigir Instagram en concreto bloqueaba a cualquier banda que solo tuviera, por
     // ejemplo, TikTok configurado.
@@ -318,8 +318,8 @@ export default function ReelsCenter({
       );
       return;
     }
-    setIsAnalyzingBakandeyaTone(true);
-    setIsBakandeyaToneModalOpen(true);
+    setIsAnalyzingBandTone(true);
+    setIsBandToneModalOpen(true);
     setToneAnalysisSaved(false);
     try {
       const res = await apiFetch("/api/bands/analyze-tone", {
@@ -336,15 +336,15 @@ export default function ReelsCenter({
       });
       const json = res as any;
       if (json?.success && json.data) {
-        setBakandeyaToneData(json.data);
+        setBandToneData(json.data);
         // El backend guarda el ADN en Supabase de forma automática cuando is_sender es true;
         // savedPermanently confirma que la escritura no falló, para poder decírselo al usuario.
         setToneAnalysisSaved(Boolean(json.savedPermanently));
       }
     } catch (err) {
-      console.error("Error analyzing Bakandeya tone:", err);
+      console.error("Error analyzing band tone:", err);
     } finally {
-      setIsAnalyzingBakandeyaTone(false);
+      setIsAnalyzingBandTone(false);
     }
   };
 
@@ -4055,8 +4055,8 @@ export default function ReelsCenter({
 
       {/* Modal de Tono de Expresión de la banda activa */}
       <BandToneModal
-        isOpen={isBakandeyaToneModalOpen}
-        onClose={() => setIsBakandeyaToneModalOpen(false)}
+        isOpen={isBandToneModalOpen}
+        onClose={() => setIsBandToneModalOpen(false)}
         band={{
           id: instagramHandle || "",
           nombre_banda: bandName || "Tu Banda",
@@ -4065,15 +4065,15 @@ export default function ReelsCenter({
           estado_relacion: "colegas_aliados",
           ultimo_contacto: "Hoy",
         }}
-        toneData={bakandeyaToneData}
-        isLoading={isAnalyzingBakandeyaTone}
+        toneData={bandToneData}
+        isLoading={isAnalyzingBandTone}
         isSaved={toneAnalysisSaved}
         editable
         onSaved={(data) => {
-          setBakandeyaToneData(data);
+          setBandToneData(data);
           setToneAnalysisSaved(true);
         }}
-        onReAnalyze={handleAnalyzeBakandeyaTone}
+        onReAnalyze={handleAnalyzeBandTone}
         onRefreshLearnedRules={handleRefreshLearnedRules}
       />
 

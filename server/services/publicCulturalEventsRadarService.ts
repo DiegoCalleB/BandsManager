@@ -47,7 +47,7 @@ export async function searchPublicCulturalOpportunities(params: {
 }): Promise<PublicCulturalRadarResult> {
   const region = params.provinciaOrRegion || "Madrid / Castilla-La Mancha / Andalucía";
   const estilo = params.estiloMusical || "World Music, Fusion, Mestizaje, Pop/Rock, Folk";
-  const bandName = params.bandName || "Bakandeya";
+  const bandName = params.bandName || "la banda";
   const limit = Math.max(1, Math.min(20, params.limit || 8));
 
   const leadsPublicos: PublicCulturalLead[] = [];

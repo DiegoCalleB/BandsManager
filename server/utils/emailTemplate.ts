@@ -47,10 +47,6 @@ export function buildServerEmailHtml(params: {
 }): { html: string; text: string; cleanPitch: string } {
   const { pitchText, bandName, bandId, epkConfig, lead } = params;
 
-  const isBakandeya = bandName.toLowerCase().includes('bakandeya') || bandId.includes('bakandeya');
-  const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${bandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
-  const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';
-
   const cleanPitch = cleanTrailingPitchSignature(pitchText || '');
   const isAlreadyHtml = cleanPitch.startsWith('<') || cleanPitch.startsWith('<!DOCTYPE');
 
@@ -73,15 +69,15 @@ export function buildServerEmailHtml(params: {
   const remitenteNombre =
     firma.nombreRemitente ||
     booking.nombre ||
-    (isBakandeya ? 'Bakandeya Management' : 'Equipo de Booking');
+    `${bandName} Management`;
 
   const cargo = firma.cargo || `Booking & Management | ${bandName}`;
-  const textoPie = firma.textoPie || (isBakandeya ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica' : '');
-  const telefono = firma.telefono || booking.telefono || defaultPhone;
-  const email = firma.email || booking.email || defaultEmail;
+  const textoPie = firma.textoPie || '';
+  const telefono = firma.telefono || booking.telefono || '';
+  const email = firma.email || booking.email || '';
 
-  const dossierPdfName = epkConfig?.dossierPdfName || epkConfig?.dossier_pdf_name || 'Dossier Bakandeya.pdf';
-  const logoUrl = epkConfig?.logoUrl || epkConfig?.logo_url || (isBakandeya ? 'https://bandmanager.io/logo_bakandeya_bueno_sin_fondo.png' : '');
+  const dossierPdfName = epkConfig?.dossierPdfName || epkConfig?.dossier_pdf_name || `Dossier ${bandName}.pdf`;
+  const logoUrl = epkConfig?.logoUrl || epkConfig?.logo_url || '';
 
   const appBaseUrl = process.env.APP_URL || 'https://bandmanager.io';
   const rawWebEpkUrl = getHashedPublicEpkUrl(bandId, appBaseUrl);

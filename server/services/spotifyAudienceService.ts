@@ -28,9 +28,9 @@ export async function calculateSpotifyCityDemand(
   city: string,
   venueCapacity: number = 300
 ): Promise<SpotifyCityDemandResult> {
-  const cleanBand = bandName?.trim() || "Bakandeya";
+  const cleanBand = bandName?.trim() || "la banda";
   const cleanCity = city?.trim() || "Madrid";
-  const cleanGenre = genre?.trim() || "Mestizaje / World Music / Rock";
+  const cleanGenre = genre?.trim() || "música en directo";
   const capacity = Math.max(50, venueCapacity || 300);
 
   try {

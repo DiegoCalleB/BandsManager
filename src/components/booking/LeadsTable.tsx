@@ -1332,7 +1332,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           e.stopPropagation();
                           const nudgeText = generateFollowupTemplate(
                             lead,
-                            effectiveBandName || "Bakandeya",
+                            effectiveBandName || "la banda",
                           );
                           onSelectLead(lead, {
                             tab: "emails",
@@ -1806,7 +1806,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               const nudgeText = generateFollowupTemplate(
                                 lead,
-                                effectiveBandName || "Bakandeya",
+                                effectiveBandName || "la banda",
                               );
                               onSelectLead(lead, {
                                 tab: "emails",
