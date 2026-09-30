@@ -118,6 +118,11 @@ const CHECKS = {
     pattern: /(?<![\w-])(?:[a-z0-9-]+:)*text-\[var\(--[a-z0-9-]+\)\]\/(?:[1-5]\d|60|[1-9])(?![\d])/g,
     severity: 'error',
   },
+  claseHuerfana: {
+    description: 'clase Tailwind rota: fragmento suelto tipo "-neutral-200", "hover:-[var(--acc)]/40" (resto de un border/ring borrado) o doble opacidad "/5/20" — no genera CSS y engaña al lector',
+    pattern: /(?<![\w:\[\]-])(?:(?:hover:|focus:|group-hover:)?-(?:neutral|slate|zinc|gray|stone|indigo|blue|red|green|amber|emerald|purple|pink|orange|yellow|rose|cyan|teal|sky|violet|fuchsia)-\d{2,3}(?:\/\d+)?|(?:hover:|focus:)?-\[(?:#[0-9a-fA-F]+|var\([^\]]*\))\](?:\/\d+)?)(?![\w-])|\]\/\d+\/\d+(?!\d)/g,
+    severity: 'error',
+  },
   textoSobreRelleno: {
     description: 'texto que no es --on-* sobre un relleno sólido de acento/estado (bg-[var(--acc|ok|alert)] + text-[var(--ink|ink-2|acc-ink|mismo tono)]) — contraste insuficiente (en Oscuro, invisible); usa text-[var(--on-acc|on-ok|on-alert)]',
     pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w\/-])/g,

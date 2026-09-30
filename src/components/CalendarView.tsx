@@ -2286,7 +2286,7 @@ export default function CalendarView({
                 </button>
                 <button
                   onClick={handleGoToday}
-                  className="text-xs font-sans font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/50/25 transition-ui cursor-pointer shrink-0"
+                  className="text-xs font-sans font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/50 transition-ui cursor-pointer shrink-0"
                   title="Ir al mes y día actual"
                 >
                   Hoy
@@ -2876,7 +2876,7 @@ export default function CalendarView({
                                 selectedConcert.estado_pago === 'pagado'
                                   ? 'bg-[var(--ok)]/20 text-[var(--ink)]'
                                   : selectedConcert.estado_pago === 'anticipo'
-                                    ? 'bg-[var(--tentative)]/50/20 text-[var(--acc)]/80'
+                                    ? 'bg-[var(--tentative)]/50 text-[var(--acc)]/80'
                                     : 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
                               }`}
                             >
@@ -3021,7 +3021,7 @@ export default function CalendarView({
                   return (
                     <div
                       className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${
-                        isReu ? 'bg-[var(--tentative)]/10/40' : 'bg-[var(--ok-soft)]/40'
+                        isReu ? 'bg-[var(--tentative)]/10' : 'bg-[var(--ok-soft)]/40'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3 flex-wrap">

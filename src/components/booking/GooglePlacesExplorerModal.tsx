@@ -1543,7 +1543,7 @@ export function GooglePlacesExplorerModal({
                       className={`p-3.5 rounded-[var(--r-m)] transition-ui flex flex-col justify-between space-y-2.5 ${
                         place.selected
                           ? "bg-[var(--bg)]/50"
-                          : "bg-[var(--bg)]/60/80 opacity-70"
+                          : "bg-[var(--bg)]/60 opacity-70"
                       }`}
                     >
                       <div className="space-y-2">

@@ -2183,8 +2183,8 @@ export default function ReelsCenter({
                             onClick={() => setSelectedPostInPhone(post)}
                             className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-ui space-y-1.5 bg-[var(--surface)] ${
                               selectedPostInPhone?.id === post.id
-                                ? "-[var(--acc)]"
-                                : " hover:-indigo-300"
+                                ? ""
+                                : ""
                             }`}
                           >
                             <div className="flex justify-between items-start gap-1">
@@ -2343,7 +2343,7 @@ export default function ReelsCenter({
                             className={` rounded-[var(--r-s)] p-2.5 cursor-pointer transition-ui space-y-1.5 bg-[var(--surface)] ${
                               selectedPostInPhone?.id === post.id
                                 ? ""
-                                : " hover:-emerald-300"
+                                : ""
                             }`}
                           >
                             <div className="flex justify-between items-start gap-1">
@@ -2545,7 +2545,7 @@ export default function ReelsCenter({
                         ? " bg-[var(--acc)]/5 scale-[1.01]"
                         : selectedFile
                           ? " bg-[var(--ok)]/[0.02]"
-                          : "-[#99907c]/25 hover:-[var(--acc)]/40 bg-[var(--surface)]/50"
+                          : " bg-[var(--surface)]/50"
                     }`}
                   >
                     <input
@@ -2671,7 +2671,7 @@ export default function ReelsCenter({
                       )}
 
                       {!isFetchingMeta && metaError && (
-                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -[var(--acc)]/20 text-micro text-[var(--acc-ink)] font-sans text-left flex items-start gap-2">
+                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-micro text-[var(--acc-ink)] font-sans text-left flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                           <span>
                             {metaError} Puedes analizarlo igualmente, pero los
@@ -2897,7 +2897,7 @@ export default function ReelsCenter({
                 {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
  presentaban como si los hubiera elegido el modelo. */}
                 {!analysisError && analysisNotice && (
-                  <div className="p-3 bg-[var(--acc)]/10 -[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs flex gap-2 items-start">
+                  <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs flex gap-2 items-start">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>{analysisNotice}</span>
                   </div>
@@ -3050,8 +3050,8 @@ export default function ReelsCenter({
                           onClick={() => handleSelectHighlight(index)}
                           className={` rounded-[var(--r-m)] p-3.5 cursor-pointer transition-ui space-y-3 relative group overflow-hidden ${
                             isSelected
-                              ? "-[var(--acc)] bg-[var(--acc)]/5"
-                              : "-neutral-200 bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50"
+                              ? " bg-[var(--acc)]/5"
+                              : " bg-[var(--surface)] hover:bg-[var(--bg)]/50"
                           }`}
                         >
                           {/* Simulated miniature video thumbnail track design */}
@@ -3176,7 +3176,7 @@ export default function ReelsCenter({
                                   ),
                                 );
                               }}
-                              className={`w-full bg-transparent text-xs font-bold font-sans -dashed focus:-[var(--acc)] focus:outline-none py-0.5 ${textTitle}`}
+                              className={`w-full bg-transparent text-xs font-bold font-sans -dashed focus:outline-none py-0.5 ${textTitle}`}
                               placeholder="Escribe un título para este corte…"
                             />
                           </div>
@@ -3560,8 +3560,8 @@ export default function ReelsCenter({
                                 }}
                                 className={`py-2 px-2 rounded-[var(--r-pill)] text-micro font-sans text-center transition-ui cursor-pointer ${
                                   selectedPlatform === plat.id
-                                    ? "bg-[var(--acc)] -[var(--acc)] text-[var(--on-acc)] font-bold"
-                                    : " hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]"
+                                    ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                                    : " bg-[var(--surface)] text-[var(--ink-2)]"
                                 }`}
                               >
                                 {plat.name}
@@ -3806,7 +3806,7 @@ export default function ReelsCenter({
                           </div>
                         )}
                         {scheduleWarnings.length > 0 && (
-                          <div className="p-2.5 bg-[var(--acc)]/10 -[var(--acc)]/30 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs font-sans mt-2 space-y-1">
+                          <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs font-sans mt-2 space-y-1">
                             {scheduleWarnings.map((aviso) => (
                               <div
                                 key={aviso}

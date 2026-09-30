@@ -1263,7 +1263,7 @@ ${myBandName}`;
                   <th className="p-3">Fecha registro</th>
                   <th className="p-3">Estado cuenta</th>
                   <th className="p-3">Notas</th>
-                  <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10/20">
+                  <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10">
                     user_id
                   </th>
                   <th className="p-3 text-right text-[var(--acc-ink)] bg-[var(--acc)]/10 /20 font-bold">
@@ -1321,7 +1321,7 @@ ${myBandName}`;
                       <td className="p-3 text-[var(--ink-2)] max-w-xs truncate">
                         {band.notas || "—"}
                       </td>
-                      <td className="p-3 text-left font-bold text-[var(--acc)]/80 bg-[var(--acc)]/5/20 font-sans">
+                      <td className="p-3 text-left font-bold text-[var(--acc)]/80 bg-[var(--acc)]/5 font-sans">
                         {band.user_id || "—"}
                       </td>
                       <td className="p-3 text-right font-bold text-[var(--acc-ink)] bg-[var(--acc)]/5 /20 font-sans">
@@ -1538,7 +1538,7 @@ ${myBandName}`;
                     className={`p-5 rounded-[var(--r-l)] transition-ui flex flex-col justify-between space-y-4 ${colors.card} group relative overflow-hidden ${
                       isSelected
                         ? "ring-2 ring-[var(--acc)]/70 bg-[var(--surface)]"
-                        : "hover:-[var(--acc)]/40"
+                        : ""
                     }`}
                   >
                     <div className="space-y-3">

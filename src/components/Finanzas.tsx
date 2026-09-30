@@ -1028,7 +1028,7 @@ export default function Finanzas({
                         className={`px-2.5 py-1 text-micro font-sans rounded font-bold transition-ui flex items-center gap-1 cursor-pointer active:scale-[0.97] ${
                           p.estado === "pagado"
                             ? "bg-[var(--ok)]/10 text-[var(--ok)]"
-                            : "bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/15"
+                            : "bg-[var(--acc)]/10 text-[var(--acc-ink)] hover:bg-[var(--acc)]/15"
                         }`}
                         title="Hacer clic para cambiar el estado de pago"
                       >

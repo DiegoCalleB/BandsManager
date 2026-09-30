@@ -39,7 +39,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
           >
             <div className="flex items-center gap-3">
               <div
-                className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${"bg-[var(--acc)]/15 text-[var(--acc-ink)] -[var(--acc)]/20"}`}
+                className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${"bg-[var(--acc)]/15 text-[var(--acc-ink)]"}`}
               >
                 <Type className="w-5 h-5" />
               </div>
@@ -90,7 +90,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                   className={`p-4 rounded-[var(--r-m)] transition-ui cursor-pointer relative group ${
                     isSelected
                       ? "bg-[var(--acc)]/10 ring-2 ring-[var(--acc)]/20"
-                      : "bg-[var(--bg)] hover:-neutral-300 hover:bg-[var(--sunken)]/80"
+                      : "bg-[var(--bg)] hover:bg-[var(--sunken)]/80"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3 mb-2">
@@ -108,7 +108,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                               ? "bg-[var(--surface)]/15 text-[var(--ok)] "
                               : preset.isSoft
                                 ? "bg-[var(--acc)]/15 text-[var(--ink)] "
-                                : "bg-[var(--acc)]/15 text-[var(--acc-ink)] -[var(--acc)]/25"
+                                : "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
                           }`}
                         >
                           {preset.badge}

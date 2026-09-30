@@ -1972,7 +1972,7 @@ export default function Chatbot({
                     );
 
                     return (
-                      <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 ${'-indigo-100 bg-[var(--tentative)]/5/20'}`}>
+                      <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 ${' bg-[var(--tentative)]/5'}`}>
                         <div className="flex items-center justify-between gap-1.5">
                           <div className={`flex items-center gap-1.5 ${'text-[var(--tentative)]'}`}>
                             <Sparkles className="w-3.5 h-3.5" />
@@ -2024,7 +2024,7 @@ export default function Chatbot({
                                         <>
                                           <audio controls src={audioState.url} onError={(e) => e.preventDefault()} className="w-full h-9" />
                                           {audioState.savedToSong ? (
-                                            <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 -emerald-500/10 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
+                                            <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
                                               <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
                                             </div>
                                           ) : songPicker[audioKey] ? (
@@ -2145,7 +2145,7 @@ export default function Chatbot({
                                             <Download className="w-3.5 h-3.5" /> Descargar .mid
                                           </button>
                                           {audioState.savedToSong ? (
-                                            <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 -emerald-500/10 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
+                                            <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
                                               <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
                                             </div>
                                           ) : songPicker[audioKey] ? (
@@ -2247,7 +2247,7 @@ export default function Chatbot({
                                   </button>
                                 </div>
                               ) : actStatus === 'applied' ? (
-                                <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 -emerald-500/10 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
+                                <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
                                   <CheckCircle className="w-3.5 h-3.5" /> Aprobado e insertado
                                 </div>
                               ) : (
@@ -2283,7 +2283,7 @@ export default function Chatbot({
 
         {activeRun && (
           <div
-            className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 animate-in slide-in-from-bottom-2 fade-in duration-300 ${'-indigo-100 bg-[var(--surface)] text-[var(--ink)]'}`}
+            className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 animate-in slide-in-from-bottom-2 fade-in duration-300 ${' bg-[var(--surface)] text-[var(--ink)]'}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-micro font-sans font-bold">
@@ -2299,7 +2299,7 @@ export default function Chatbot({
               </IconButton>
             </div>
 
-            <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)] -neutral-200/60'}`}>
+            <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}>
               <div className="flex items-center justify-between">
                 <span className="text-micro font-sans text-[var(--ink-2)]">Estado</span>
                 {activeRun.status === 'queued' && (
@@ -2308,22 +2308,22 @@ export default function Chatbot({
                   </span>
                 )}
                 {activeRun.status === 'fetching' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink)] -indigo-500/20">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink)]">
                     <ShowIcon inline emoji="🔄" />Despachando
                   </span>
                 )}
                 {activeRun.status === 'in_progress' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)] -cyan-500/20">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]">
                     <ShowIcon inline emoji="⚙️" />Ejecutando…
                   </span>
                 )}
                 {activeRun.status === 'completed' && activeRun.conclusion === 'success' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--surface)]/15 text-[var(--ok)]">
                     <ShowIcon inline emoji="✅" />Éxito
                   </span>
                 )}
                 {activeRun.status === 'completed' && activeRun.conclusion === 'failure' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink)] -rose-500/20">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink)]">
                     <ShowIcon inline emoji="❌" />Fallido
                   </span>
                 )}
@@ -2550,7 +2550,7 @@ export default function Chatbot({
                 }, {});
 
                 return (
-                  <div className="p-3.5 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] space-y-2.5 animate-in fade-in duration-300 select-text">
+                  <div className="p-3.5 bg-[var(--ok)]/10 rounded-[var(--r-m)] space-y-2.5 animate-in fade-in duration-300 select-text">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
                       <span className="text-xs text-[var(--ok)] font-bold">¡Búsqueda Finalizada!</span>
@@ -2561,10 +2561,10 @@ export default function Chatbot({
                       actualizado en tiempo real.
                     </p>
 
-                    <div className=" -emerald-500/20 pt-2.5 mt-2 space-y-2">
+                    <div className=" pt-2.5 mt-2 space-y-2">
                       <div className="flex justify-between items-center text-micro font-sans">
                         <span className="text-[var(--ok)]/80 text-micro">Nuevos contactos añadidos:</span>
-                        <span className="px-2 py-0.5 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold font-sans -emerald-500/30">
+                        <span className="px-2 py-0.5 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold font-sans">
                           {detectedLeads.length} contactos
                         </span>
                       </div>
@@ -2607,7 +2607,7 @@ export default function Chatbot({
               })()}
 
             {activeRun.status === 'completed' && activeRun.conclusion === 'failure' && (
-              <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300">
+              <div className="p-3 bg-[var(--alert)]/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300">
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-[var(--alert)] font-bold flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />

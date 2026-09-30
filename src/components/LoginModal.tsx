@@ -721,7 +721,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       aria-label={
                         showPassword ? "Ocultar contraseña" : "Ver contraseña"
                       }
-                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--ink)] transition-colors cursor-pointer z-10 touch-manipulation"
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-[var(--ink-2)] hover:text-[var(--ink)] active:text-[var(--ink)] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showPassword ? (
                         <EyeOff className="w-4 h-4" />
@@ -938,7 +938,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                               ? "Ocultar contraseña"
                               : "Ver contraseña"
                           }
-                          className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
+                          className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-[var(--ink-2)] hover:text-[var(--ink)] active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
                         >
                           {showResetNewPassword ? (
                             <EyeOff className="w-4 h-4" />
@@ -1099,7 +1099,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                             ? "Ocultar contraseña"
                             : "Ver contraseña"
                         }
-                        className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
+                        className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-[var(--ink-2)] hover:text-[var(--ink)] active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
                       >
                         {showRegPassword ? (
                           <EyeOff className="w-4 h-4" />
@@ -1304,7 +1304,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                               ? "Ocultar contraseña"
                               : "Ver contraseña"
                           }
-                          className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
+                          className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-[var(--ink-2)] hover:text-[var(--ink)] active:text-[var(--acc)] transition-colors cursor-pointer z-10 touch-manipulation"
                         >
                           {showActivatePassword ? (
                             <EyeOff className="w-4 h-4" />

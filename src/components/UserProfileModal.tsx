@@ -550,7 +550,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       onClick={() => setShowUpgradeModal(true)}
                       className="items-center gap-1.5 shrink-0"
                     >
-                      <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
+                      <Sparkles className="w-3.5 h-3.5 fill-[var(--on-acc)]" />
                       <span>Upgrade</span>
                     </Button>
                   )}
@@ -1670,7 +1670,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 }}
                                 className="items-center gap-1"
                               >
-                                <Sparkles className="w-3 h-3 fill-neutral-950" />
+                                <Sparkles className="w-3 h-3 fill-[var(--on-acc)]" />
                                 <span>Seleccionar {plan.name}</span>
                               </Button>
                             )}

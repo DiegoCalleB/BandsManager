@@ -760,7 +760,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               </div>
             )}
             {!isPromoPlan && selectedEventDetails.type === 'concert' && (
-              <div className={`flex items-center gap-2 text-micro pt-2 mt-1 ${'-slate-100'}`}>
+              <div className={`flex items-center gap-2 text-micro pt-2 mt-1 ${''}`}>
                 <span className={`font-mono ${textSub}`}>Compensación:</span>
                 <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
               </div>
@@ -791,7 +791,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             )}
             {selectedEventDetails.notes && (
               <div
-                className={`text-micro font-sans italic pt-2 leading-relaxed ${'-slate-100 text-[var(--ink-2)]'}`}
+                className={`text-micro font-sans italic pt-2 leading-relaxed ${' text-[var(--ink-2)]'}`}
               >
                 &ldquo;{selectedEventDetails.notes}&rdquo;
               </div>
@@ -960,7 +960,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
             {/* REPERTORIO / SETLIST ASIGNADO */}
             {(!isPromoPlan || hasModuleAccess(currentUser?.plan, 'repertorio')) && (selectedConcert || selectedRehearsal) && (
-              <div className={` pt-2.5 mt-2.5 ${'-slate-100'}`}>
+              <div className={` pt-2.5 mt-2.5 ${''}`}>
                 <div className="flex items-center justify-between gap-2 mb-1.5">
                   <div className="flex items-center gap-1.5 text-micro font-mono font-bold text-[var(--acc)]">
                     <Disc3 className="w-3.5 h-3.5 shrink-0 animate-spin-slow" />
@@ -1681,7 +1681,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           className={`p-2 rounded-[var(--r-s)] flex items-center gap-2.5 cursor-pointer transition-colors group ${
                             isItemDone
                               ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
-                              : 'bg-[var(--surface)] text-[var(--ink)] hover:-indigo-300'
+                              : 'bg-[var(--surface)] text-[var(--ink)]'
                           }`}
                         >
                           <span
@@ -1720,7 +1720,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         className={`p-2 rounded-[var(--r-s)] flex items-center gap-2.5 cursor-pointer transition-colors group ${
                           isChecked
                             ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
-                            : 'bg-[var(--surface)] text-[var(--ink)] hover:-indigo-300'
+                            : 'bg-[var(--surface)] text-[var(--ink)]'
                         }`}
                       >
                         <input
@@ -1728,7 +1728,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           checked={isChecked}
                           onChange={() => {}} // handled by div click
                           className={`rounded focus:ring-0 cursor-pointer h-3.5 w-3.5 ${
-                            '-slate-300 text-[var(--acc)] bg-[var(--sunken)]'
+                            ' text-[var(--acc)] bg-[var(--sunken)]'
                           }`}
                         />
                         <p className="text-micro font-sans leading-normal flex-1">{item.label}</p>
@@ -1755,7 +1755,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
       {/* Footer info */}
       <div
         className={` pt-4 mt-6 flex justify-between items-center text-micro font-mono ${
-          '-slate-100 text-[var(--ink-2)]'
+          ' text-[var(--ink-2)]'
         }`}
       >
         <span>Huso horario: Madrid (UTC+2)</span>

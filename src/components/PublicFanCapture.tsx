@@ -146,7 +146,7 @@ export const PublicFanCapture: React.FC = () => {
               </div>
             )}
             <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--on-acc)] p-1.5 rounded-[var(--r-pill)]">
-              <Heart className="w-4 h-4 fill-neutral-950" />
+              <Heart className="w-4 h-4 fill-[var(--on-acc)]" />
             </span>
           </div>
 

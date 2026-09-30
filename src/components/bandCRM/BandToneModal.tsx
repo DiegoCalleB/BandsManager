@@ -1108,7 +1108,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 ambos (refineAllToneDnaCategoriesForBand refina las dos bolsas de una vez). */}
                   {editable && (
                     <div
-                      className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--bg)]/20/40"}`}
+                      className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--bg)]/20"}`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-micro font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
