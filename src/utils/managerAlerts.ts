@@ -80,7 +80,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'seasonal_festivals_window',
         type: 'seasonal_festival',
-        title: '🎪 Ventana Abierta: Booking de Festivales de Verano',
+        title: 'Ventana Abierta: Booking de Festivales de Verano',
         description:
           'Estamos en el periodo clave (octubre - febrero) donde los directores artísticos cierran el 80% de los carteles de festivales de verano. Es el momento de enviar la propuesta de festival.',
         severity: 'urgent',
@@ -109,7 +109,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'seasonal_tour_window',
         type: 'seasonal_tour',
-        title: '🏟️ Cierre de Agenda de Salas & Clubes',
+        title: 'Cierre de Agenda de Salas & Clubes',
         description:
           'Las salas de conciertos están cuadrando sus programaciones del próximo trimestre. Lanza las propuestas con la lista de retén de fechas resguardo.',
         severity: 'info',
@@ -139,7 +139,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'seasonal_towns_window',
         type: 'seasonal_towns',
-        title: '🏛️ Cierre de Presupuestos de Fiestas Mayores & Ayuntamientos',
+        title: 'Cierre de Presupuestos de Fiestas Mayores & Ayuntamientos',
         description:
           'Las concejalías de cultura y comisiones de fiestas rematan la contratación estival. Asegúrate de presentar la garantía de gestión legal y facturación.',
         severity: 'warning',
@@ -447,7 +447,7 @@ export function generateManagerAlerts(
         alerts.push({
           id: 'ensayos_missing_before_show',
           type: 'rehearsal_missing',
-          title: '🥁 Próximo Bolo en <14 Días sin Ensayos Agendados',
+          title: 'Próximo Bolo en <14 Días sin Ensayos Agendados',
           description: `Tenéis concierto en ${showsSoon[0].ciudad || 'breve'} y no consta ningún ensayo programado en la agenda esta semana.`,
           severity: 'warning',
           category: 'Ensayos & Shows',
@@ -482,7 +482,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'epk_incomplete_alert',
         type: 'epk_incomplete',
-        title: '📋 Dossier Oficial (EPK) Incompleto',
+        title: 'Dossier Oficial (EPK) Incompleto',
         description: `Para maximizar la conversión en salas y medios, completa: ${missing.join(', ')}.`,
         severity: 'info',
         category: 'Prensa & EPK',

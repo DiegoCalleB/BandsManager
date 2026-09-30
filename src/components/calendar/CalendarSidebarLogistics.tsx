@@ -458,7 +458,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
           >
             <div className="flex items-center justify-between gap-1 flex-wrap">
               <div
-                className={`flex items-center gap-1.5 text-xs font-mono font-bold ${'text-[var(--acc)]'}`}
+                className="flex items-center gap-1.5 text-xs font-semibold text-[var(--ink)]"
               >
                 <MapPin className="w-3.5 h-3.5" />
                 <span>Próximas Fechas ({upcomingCalendarEvents.length})</span>
@@ -474,10 +474,10 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   <button
                     key={f.id}
                     onClick={() => setUpcomingFilter(f.id as any)}
-                    className={`px-1.5 py-0.5 rounded text-micro font-mono font-bold transition-ui cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition-ui cursor-pointer ${
                       upcomingFilter === f.id
-                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                        ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                     }`}
                   >
                     {f.label}
@@ -514,59 +514,35 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           }
                         }
                       }}
-                      className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-ui cursor-pointer ${
-                        evt.type === 'campaña'
-                          ? 'bg-[var(--acc)]/20 '
-                          : 'bg-[var(--sunken)] '
-                      } hover:brightness-95`}
+                      className="p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-ui cursor-pointer bg-[var(--sunken)] hover:bg-[var(--hair)]"
                     >
-                      {/* Custom calendar badge: Day number top, short month bottom */}
-                      <div
-                        className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 ${
-                          evt.type === 'campaña'
-                            ? 'bg-[var(--acc)]/30 text-[var(--acc)]'
-                            : 'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
-                      >
-                        <span
-                          className={`text-base font-mono font-black leading-none ${
-                            evt.type === 'campaña' ? 'text-[var(--acc)]' : 'text-[var(--acc)]'
-                          }`}
-                        >
-                          {evt.day}
-                        </span>
-                        <span
-                          className={`text-micro font-mono font-extrabold mt-0.5 ${
-                            evt.type === 'campaña' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
-                          }`}
-                        >
-                          {evt.month}
-                        </span>
+                      {/* Insignia de calendario: día arriba, mes abajo */}
+                      <div className="w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 bg-[var(--surface)]">
+                        <span className="text-base font-bold leading-none tabular-nums text-[var(--ink)]">{evt.day}</span>
+                        <span className="text-micro font-semibold mt-0.5 text-[var(--acc-ink)]">{evt.month}</span>
                       </div>
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span
-                            className={`text-micro px-1.5 py-0.5 rounded font-mono font-bold ${
-                              evt.type === 'concierto'
-                                ? 'bg-[var(--acc)]/15 text-[var(--acc)]'
-                                : evt.type === 'campaña'
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
-                                  : 'bg-[var(--ok-soft)] text-[var(--ok)]'
+                            className={`text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-semibold capitalize ${
+                              evt.type === 'ensayo'
+                                ? 'bg-[var(--ok-soft)] text-[var(--ok)]'
+                                : 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
                             }`}
                           >
-                            {evt.type === 'campaña' ? 'Posible Bolo' : evt.type}
+                            {evt.type === 'campaña' ? 'Posible bolo' : evt.type}
                           </span>
                           {evt.bandName && (
                             <span
-                              className="text-micro px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--sunken)]/80 text-[var(--acc)] truncate max-w-[100px]"
+                              className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-semibold bg-[var(--surface)] text-[var(--ink-2)] truncate max-w-[110px]"
                               title={evt.bandName}
                             >
                               {evt.bandName}
                             </span>
                           )}
                         </div>
-                        <div className="text-xs sm:text-sm font-bold font-display text-[var(--ink-2)] mt-1 truncate">{evt.title}</div>
+                        <div className="text-xs sm:text-sm font-semibold text-[var(--ink)] mt-1 line-clamp-2">{evt.title}</div>
                         {evt.direccion && <p className={`text-micro font-sans ${textSub} mt-0.5`}><ShowIcon inline emoji="📍" />{evt.direccion}</p>}
                         {evt.type !== 'campaña' ? (
                           <div className="mt-1 flex justify-center">
@@ -578,7 +554,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             />
                           </div>
                         ) : (
-                          <p className="text-micro font-mono text-[var(--acc)]/80 mt-0.5">{evt.salaOrLugar}</p>
+                          <p className="text-micro text-[var(--ink-3)] mt-0.5 line-clamp-2">{evt.salaOrLugar}</p>
                         )}
                       </div>
                     </div>

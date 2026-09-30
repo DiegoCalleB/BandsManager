@@ -2115,10 +2115,9 @@ export default function CalendarView({
             {/* Top title & Action buttons */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0">
-                <h4 className={`text-micro font-sans ${'text-[var(--acc)]'}`}>
-                  Calendario de Directos, Ensayos y Reuniones
-                </h4>
-                <div className="flex items-center gap-1.5 text-micro font-sans font-bold mt-1 overflow-x-auto shrink-0 no-scrollbar pb-0.5 max-w-full">
+                <h4 className="page-title">Calendario</h4>
+                <p className="text-xs text-[var(--ink-2)] mt-0.5">Directos, ensayos y reuniones</p>
+                <div className="flex items-center gap-1.5 text-micro font-sans font-bold mt-2 flex-wrap max-w-full">
                   <span
                     className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1"
                     title="Eventos visibles vs Total"
@@ -2280,7 +2279,7 @@ export default function CalendarView({
           </div>
 
           {/* Month Navigation & Band Selector */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mt-3 pt-2">
+          <div className="flex flex-col 2xl:flex-row 2xl:items-center justify-between gap-3 mt-3 pt-2">
             {/* Left: Navigation Buttons + Month/Period Title (Rock-solid, never jumps) */}
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="flex items-center gap-1 shrink-0">
@@ -2344,7 +2343,7 @@ export default function CalendarView({
             </div>
 
             {/* Right: View Switchers + Band Filter */}
-            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-between lg:justify-end shrink-0">
+            <div className="flex items-center gap-2 flex-wrap justify-between 2xl:justify-end min-w-0">
               {/* Vistas estilo Google Calendar: 1M | 2M | Semana | Agenda + Configuración */}
               <div className="relative inline-flex items-center shrink-0" ref={viewConfigRef}>
                 <div className={`flex items-center rounded-[var(--r-s)] p-0.5 ${'bg-[var(--sunken)]'}`}>
