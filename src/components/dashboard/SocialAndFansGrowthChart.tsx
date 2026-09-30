@@ -9,8 +9,6 @@ import {
   TrendingUp,
   Users,
   Radio,
-  Eye,
-  EyeOff,
   RefreshCw,
   SlidersHorizontal,
   ArrowUpRight,
@@ -24,7 +22,8 @@ import {
   Clock,
 } from "lucide-react";
 import { CurveSeries } from "../ui/CurveSeries";
-import { ShowIcon } from '../ui/ShowIcon';
+import { ChannelChip } from "../ui/ChannelChip";
+import { CANAL_COLOR, type Canal } from "../../utils/canalColor";
 import { Button } from '../ui';
 
 export type TimePeriod = "7d" | "30d" | "90d" | "1y" | "all";
@@ -50,6 +49,24 @@ interface SocialAndFansGrowthChartProps {
   bandName?: string;
   bandId?: string;
   onNavigate?: (view: any, options?: any) => void;
+}
+
+function ChannelKpi({ canal, label, tag, value, sub }: { canal: Canal; label: string; tag: string; value: number; sub: string }) {
+  return (
+    <div className="flex flex-col justify-between rounded-[var(--r-m)] bg-[var(--surface)] p-3">
+      <div className="flex items-center justify-between gap-2 text-micro">
+        <span className="flex items-center gap-1.5 font-semibold text-[var(--ink)]">
+          <span aria-hidden className="size-2 rounded-full" style={{ background: CANAL_COLOR[canal] }} />
+          {label}
+        </span>
+        <span className="text-[var(--ink-2)]">{tag}</span>
+      </div>
+      <div className="my-1.5">
+        <div className="font-display text-xl font-bold tabular-nums text-[var(--ink)]">{value.toLocaleString("es-ES")}</div>
+        <div className="mt-0.5 text-micro text-[var(--ink-2)]">{sub}</div>
+      </div>
+    </div>
+  );
 }
 
 export const SocialAndFansGrowthChart: React.FC<
@@ -477,11 +494,11 @@ export const SocialAndFansGrowthChart: React.FC<
       return parts.length === 3 ? `${parts[2]}/${parts[1]}` : f;
     };
     const canales: { key: "instagram" | "tiktok" | "youtube" | "spotify" | "fans"; label: string; color: string }[] = [
-      { key: "fans", label: "Fans registrados", color: "var(--acc)" },
-      { key: "instagram", label: "Instagram", color: "var(--ok)" },
-      { key: "tiktok", label: "TikTok", color: "var(--ink)" },
-      { key: "youtube", label: "YouTube", color: "var(--tentative)" },
-      { key: "spotify", label: "Spotify", color: "var(--ink-3)" },
+      { key: "fans", label: "Fans registrados", color: CANAL_COLOR.fans },
+      { key: "instagram", label: "Instagram", color: CANAL_COLOR.instagram },
+      { key: "tiktok", label: "TikTok", color: CANAL_COLOR.tiktok },
+      { key: "youtube", label: "YouTube", color: CANAL_COLOR.youtube },
+      { key: "spotify", label: "Spotify", color: CANAL_COLOR.spotify },
     ];
     return canales
       .filter((c) => selectedChannels[c.key])
@@ -580,154 +597,63 @@ export const SocialAndFansGrowthChart: React.FC<
         </div>
       </div>
 
-      {/* 5 KPI Metric Cards Bar (Instagram, TikTok, YouTube, Spotify, and Fans Registrados) */}
+      {/* KPIs por canal: el color es el de su curva, el resto es tinta */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
-        {/* Card 1: Instagram */}
         {hasInstagram && (
-          <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-ui ${"bg-[var(--surface)]/60"}`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-micro font-sans font-bold text-[var(--alert)] flex items-center gap-1">
-                <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />{" "}
-                Instagram
-              </span>
-              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)] font-sans">
-                Seguidores
-              </span>
-            </div>
-            <div className="my-1.5">
-              <div className="text-xl font-display font-bold text-[var(--ink)]">
-                {countInstagram.toLocaleString()}
-              </div>
-              <div className="text-micro font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
-                <span>
-                  {latestMetric?.instagram_engagement_rate
-                    ? `${latestMetric.instagram_engagement_rate}% ER`
-                    : "Audiencia activa"}
-                </span>
-              </div>
-            </div>
-          </div>
+          <ChannelKpi
+            canal="instagram"
+            label="Instagram"
+            tag="Seguidores"
+            value={countInstagram}
+            sub={latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}% ER` : "Audiencia activa"}
+          />
         )}
-
-        {/* Card 2: TikTok */}
         {hasTikTok && (
-          <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-ui ${"bg-[var(--surface)]/60"}`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1">
-                <Video className="w-3.5 h-3.5 text-[var(--acc)]" /> TikTok
-              </span>
-              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)] font-sans">
-                Comunidad
-              </span>
-            </div>
-            <div className="my-1.5">
-              <div className="text-xl font-display font-bold text-[var(--ink)]">
-                {countTikTok.toLocaleString()}
-              </div>
-              <div className="text-micro font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
-                <span>
-                  {latestMetric?.tiktok_total_likes
-                    ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes`
-                    : "Contenido viral"}
-                </span>
-              </div>
-            </div>
-          </div>
+          <ChannelKpi
+            canal="tiktok"
+            label="TikTok"
+            tag="Comunidad"
+            value={countTikTok}
+            sub={latestMetric?.tiktok_total_likes ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes` : "Contenido viral"}
+          />
         )}
-
-        {/* Card 3: YouTube */}
         {hasYouTube && (
-          <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-ui ${"bg-[var(--surface)]/60"}`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-micro font-sans font-bold text-[var(--alert)] flex items-center gap-1">
-                <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" /> YouTube
-              </span>
-              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)] font-sans">
-                Suscriptores
-              </span>
-            </div>
-            <div className="my-1.5">
-              <div className="text-xl font-display font-bold text-[var(--ink)]">
-                {countYouTube.toLocaleString()}
-              </div>
-              <div className="text-micro font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
-                <span>
-                  {latestMetric?.youtube_total_views
-                    ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views`
-                    : "Canal oficial"}
-                </span>
-              </div>
-            </div>
-          </div>
+          <ChannelKpi
+            canal="youtube"
+            label="YouTube"
+            tag="Suscriptores"
+            value={countYouTube}
+            sub={latestMetric?.youtube_total_views ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views` : "Canal oficial"}
+          />
         )}
-
-        {/* Card 4: Spotify */}
         {hasSpotify && (
-          <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-ui ${"bg-[var(--surface)]/60"}`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-micro font-sans font-bold text-[var(--ok)] flex items-center gap-1">
-                <Music2 className="w-3.5 h-3.5 text-[var(--ok)]" /> Spotify
-              </span>
-              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ink-2)] font-sans">
-                Oyentes/mes
-              </span>
-            </div>
-            <div className="my-1.5">
-              <div className="text-xl font-display font-bold text-[var(--ink)]">
-                {countSpotify.toLocaleString()}
-              </div>
-              <div className="text-micro font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
-                <span>
-                  {latestMetric?.spotify_followers
-                    ? `${latestMetric.spotify_followers} seguidores`
-                    : "Streaming mensual"}
-                </span>
-              </div>
-            </div>
-          </div>
+          <ChannelKpi
+            canal="spotify"
+            label="Spotify"
+            tag="Oyentes/mes"
+            value={countSpotify}
+            sub={latestMetric?.spotify_followers ? `${latestMetric.spotify_followers} seguidores` : "Streaming mensual"}
+          />
         )}
 
-        {/* Card 5: Fans Registrados en Base de Datos (Formulario Únete) */}
-        <div
-          className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-ui col-span-2 sm:col-span-1 ${"bg-[var(--accent-alt)]/10"}`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1">
-              <Heart className="w-3.5 h-3.5 text-[var(--acc)] fill-[var(--acc)]/20" />{" "}
-              Fans BBDD
+        {/* Fans registrados: la métrica propia, la única que rellena con el acento */}
+        <div className="col-span-2 flex flex-col justify-between rounded-[var(--r-m)] bg-[var(--acc-soft)] p-3 sm:col-span-1">
+          <div className="flex items-center justify-between gap-2 text-micro">
+            <span className="flex items-center gap-1.5 font-semibold text-[var(--acc-ink)]">
+              <Heart aria-hidden className="size-3.5" /> Fans
             </span>
-            <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-sans font-bold">
-              Formulario Únete
-            </span>
+            <span className="text-[var(--acc-ink)]">Formulario Únete</span>
           </div>
-          <div className="my-1.5">
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-display font-black text-[var(--acc)]">
-                {totalFans}
-              </span>
-              <span className="text-micro font-sans text-[var(--acc)]/70">
-                fans totales
-              </span>
-            </div>
-            <div className="text-micro font-sans text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1  pt-1">
-              <span className="text-[var(--acc)]/70 font-bold">
-                <ShowIcon inline emoji="✨" />{uneteFans} vía Únete
-              </span>
-              {directoFans > 0 && (
-                <span className="text-[var(--ink-2)]">
-                  <ShowIcon inline emoji="🎤" />{directoFans} directo
-                </span>
-              )}
-              <span className="text-[var(--ok)] font-bold">✓ RGPD</span>
-            </div>
+          <div className="my-1.5 flex items-baseline gap-2">
+            <span className="font-display text-2xl font-bold tabular-nums text-[var(--ink)]">{totalFans}</span>
+            <span className="text-micro text-[var(--ink-2)]">fans totales</span>
+          </div>
+          <div className="flex items-center justify-between gap-2 text-micro text-[var(--ink-2)]">
+            <span>{uneteFans} vía Únete</span>
+            {directoFans > 0 && <span>{directoFans} en directo</span>}
+            <span className="flex items-center gap-1 text-[var(--ink)]">
+              <ShieldCheck aria-hidden className="size-3" /> RGPD
+            </span>
           </div>
         </div>
       </div>
@@ -802,198 +728,19 @@ export const SocialAndFansGrowthChart: React.FC<
             del Gráfico:
           </span>
 
-          {/* Instagram Chip */}
           {hasInstagram && (
-            <div
-              className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                selectedChannels.instagram
-                  ? "bg-[var(--alert)]/15 text-[var(--ink)]"
-                  : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => toggleChannel("instagram")}
-                className="px-2 py-1 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-              >
-                <span
-                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.instagram ? "bg-[var(--alert)]" : "bg-[var(--sunken)]"}`}
-                ></span>
-                <Instagram className="w-3 h-3 text-[var(--alert)]" />
-                <span>Instagram</span>
-                <span className="text-micro px-1 py-0.2 rounded bg-[var(--alert)]/15 font-sans font-bold">
-                  {countInstagram.toLocaleString()}
-                </span>
-                {selectedChannels.instagram ? (
-                  <Eye className="w-3 h-3 text-[var(--alert)]" />
-                ) : (
-                  <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => selectOnlyChannel("instagram")}
-                className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
-                title="Aislar sólo Instagram"
-              >
-                Solo
-              </button>
-            </div>
+            <ChannelChip canal="instagram" label="Instagram" icon={Instagram} value={countInstagram} active={selectedChannels.instagram} onToggle={() => toggleChannel("instagram")} onSolo={() => selectOnlyChannel("instagram")} />
           )}
-
-          {/* TikTok Chip */}
           {hasTikTok && (
-            <div
-              className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                selectedChannels.tiktok
-                  ? "bg-[var(--tentative)]/15 text-[var(--acc-ink)]"
-                  : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => toggleChannel("tiktok")}
-                className="px-2 py-1 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-              >
-                <span
-                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.tiktok ? "bg-[var(--acc)]" : "bg-[var(--sunken)]"}`}
-                ></span>
-                <Video className="w-3 h-3 text-[var(--acc)]" />
-                <span>TikTok</span>
-                <span className="text-micro px-1 py-0.2 rounded bg-[var(--acc)]/15 font-sans font-bold">
-                  {countTikTok.toLocaleString()}
-                </span>
-                {selectedChannels.tiktok ? (
-                  <Eye className="w-3 h-3 text-[var(--acc)]" />
-                ) : (
-                  <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => selectOnlyChannel("tiktok")}
-                className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
-                title="Aislar sólo TikTok"
-              >
-                Solo
-              </button>
-            </div>
+            <ChannelChip canal="tiktok" label="TikTok" icon={Video} value={countTikTok} active={selectedChannels.tiktok} onToggle={() => toggleChannel("tiktok")} onSolo={() => selectOnlyChannel("tiktok")} />
           )}
-
-          {/* YouTube Chip */}
           {hasYouTube && (
-            <div
-              className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                selectedChannels.youtube
-                  ? "bg-[var(--alert)] text-[var(--on-alert)]"
-                  : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => toggleChannel("youtube")}
-                className="px-2 py-1 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-              >
-                <span
-                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.youtube ? "bg-[var(--alert)]" : "bg-[var(--sunken)]"}`}
-                ></span>
-                <Youtube className="w-3 h-3 text-[var(--alert)]" />
-                <span>YouTube</span>
-                <span className="text-micro px-1 py-0.2 rounded bg-[var(--alert)]/15 font-sans font-bold">
-                  {countYouTube.toLocaleString()}
-                </span>
-                {selectedChannels.youtube ? (
-                  <Eye className="w-3 h-3 text-[var(--alert)]" />
-                ) : (
-                  <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => selectOnlyChannel("youtube")}
-                className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
-                title="Aislar sólo YouTube"
-              >
-                Solo
-              </button>
-            </div>
+            <ChannelChip canal="youtube" label="YouTube" icon={Youtube} value={countYouTube} active={selectedChannels.youtube} onToggle={() => toggleChannel("youtube")} onSolo={() => selectOnlyChannel("youtube")} />
           )}
-
-          {/* Spotify Chip */}
           {hasSpotify && (
-            <div
-              className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                selectedChannels.spotify
-                  ? "bg-[var(--ok-soft)]/40 text-[var(--ink-2)]"
-                  : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => toggleChannel("spotify")}
-                className="px-2 py-1 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-              >
-                <span
-                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.spotify ? "bg-[var(--ok)]" : "bg-[var(--sunken)]"}`}
-                ></span>
-                <Music2 className="w-3 h-3 text-[var(--ok)]" />
-                <span>Spotify</span>
-                <span className="text-micro px-1 py-0.2 rounded bg-[var(--ok)]/15 font-sans font-bold">
-                  {countSpotify.toLocaleString()}
-                </span>
-                {selectedChannels.spotify ? (
-                  <Eye className="w-3 h-3 text-[var(--ok)]" />
-                ) : (
-                  <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => selectOnlyChannel("spotify")}
-                className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--ok)]/20 text-[var(--ok)] cursor-pointer"
-                title="Aislar sólo Spotify"
-              >
-                Solo
-              </button>
-            </div>
+            <ChannelChip canal="spotify" label="Spotify" icon={Music2} value={countSpotify} active={selectedChannels.spotify} onToggle={() => toggleChannel("spotify")} onSolo={() => selectOnlyChannel("spotify")} />
           )}
-
-          {/* Fans Registrados (BD / Únete) Chip */}
-          <div
-            className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-              selectedChannels.fans
-                ? "bg-[var(--acc-soft)]  text-[var(--ink)] font-bold"
-                : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
-            }`}
-          >
-            <button
-              type="button"
-              onClick={() => toggleChannel("fans")}
-              className="px-2 py-1 flex items-center gap-1.5 text-micro font-sans cursor-pointer"
-            >
-              <span
-                className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.fans ? "bg-[var(--acc)]" : "bg-[var(--sunken)]"}`}
-              ></span>
-              <Heart className="w-3 h-3 text-[var(--acc)] fill-[var(--acc)]/30" />
-              <span>Fans BD (Únete)</span>
-              <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold">
-                {totalFans}
-              </span>
-              {selectedChannels.fans ? (
-                <Eye className="w-3 h-3 text-[var(--acc)]" />
-              ) : (
-                <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={() => selectOnlyChannel("fans")}
-              className="px-1.5 py-1 text-micro font-sans  hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 cursor-pointer font-bold"
-              title="Aislar y ver sólo la curva de Fans registrados"
-            >
-              Solo
-            </button>
-          </div>
+          <ChannelChip canal="fans" label="Fans registrados" icon={Heart} value={totalFans} active={selectedChannels.fans} onToggle={() => toggleChannel("fans")} onSolo={() => selectOnlyChannel("fans")} />
         </div>
       </div>
 

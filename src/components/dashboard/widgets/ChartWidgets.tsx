@@ -10,6 +10,7 @@ import {
 import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from "../../../types";
 import { getEnergyInfo } from "../../../utils/energyPacingUtils";
 import { Onda, OndaSeries } from "../../ui/Onda";
+import { CurveSeries } from "../../ui/CurveSeries";
 import { EnergyCurve } from "./EnergyCurve";
 import { api } from "../../../services/api";
 import { Select } from '../../ui';
@@ -608,23 +609,12 @@ export function SocialFansGrowthWidget({
             Aún no hay fans registrados. Pon el QR en la mesa de merchan y esto empieza a moverse.
           </p>
         ) : (
-        <Onda
-          data={growthData.map((d) => ({
-            label: d.mes,
-            value: d.fans,
-            color: "var(--acc)",
-          }))}
-          height={
-            heightMode === "compact" ? 140 : heightMode === "tall" ? 300 : 200
-          }
-          barWidth={
-            heightMode === "compact" ? 12 : heightMode === "tall" ? 18 : 14
-          }
-          gap={heightMode === "compact" ? 6 : heightMode === "tall" ? 10 : 8}
-          showLabels={true}
-          animated={true}
-          tooltipFormatter={(val) => `${val} fans acumulados`}
+        <CurveSeries
           className="w-full"
+          height={heightMode === "compact" ? 140 : heightMode === "tall" ? 300 : 200}
+          area
+          formatValue={(v) => `${v.toLocaleString("es-ES")} fans`}
+          series={[{ label: "Fans acumulados", color: "var(--acc)", data: growthData.map((d) => ({ label: d.mes, value: d.fans })) }]}
         />
         )}
       </div>

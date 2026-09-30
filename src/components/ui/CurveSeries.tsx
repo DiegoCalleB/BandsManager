@@ -15,11 +15,11 @@ export interface CurveSeriesProps {
 const PAD = { top: 12, right: 14, bottom: 24, left: 44 };
 const nf = new Intl.NumberFormat('es-ES', { notation: 'compact', maximumFractionDigits: 1 });
 
-/** «Bonito» techo del eje Y: 1, 2, 2,5, 5 × 10ⁿ. */
-function niceMax(v: number) {
-  if (v <= 0) return 10;
-  const pow = Math.pow(10, Math.floor(Math.log10(v)));
-  for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10]) if (m * pow >= v) return m * pow;
+/** Paso «bonito» de eje: 1, 2, 2,5 o 5 × 10ⁿ, para que los rótulos sean 0, 10, 20… y no 12,5. */
+function niceStep(rawStep: number) {
+  if (rawStep <= 0) return 1;
+  const pow = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  for (const m of [1, 2, 2.5, 5, 10]) if (m * pow >= rawStep) return m * pow;
   return 10 * pow;
 }
 
@@ -50,7 +50,9 @@ export function CurveSeries({ series, height = 220, className, formatValue, area
   const geo = useMemo(() => {
     const innerW = width - PAD.left - PAD.right;
     const innerH = height - PAD.top - PAD.bottom;
-    const max = niceMax(Math.max(...series.flatMap((s) => s.data.map((d) => d.value)), 1));
+    const dataMax = Math.max(...series.flatMap((s) => s.data.map((d) => d.value)), 1);
+    const tickStep = niceStep(dataMax / 4);
+    const max = Math.ceil(dataMax / tickStep) * tickStep;
     const xOf = (i: number) => PAD.left + (n <= 1 ? innerW / 2 : (i / (n - 1)) * innerW);
     const yOf = (v: number) => PAD.top + innerH - (v / max) * innerH;
     const base = PAD.top + innerH;
@@ -60,11 +62,11 @@ export function CurveSeries({ series, height = 220, className, formatValue, area
       const areaPath = pts.length > 1 ? `${line} L${pts[pts.length - 1].x},${base} L${pts[0].x},${base} Z` : '';
       return { pts, line, areaPath };
     });
-    return { max, xOf, yOf, base, lines, innerW };
+    return { max, tickStep, xOf, yOf, base, lines, innerW, xStep: n <= 1 ? innerW : innerW / (n - 1) };
   }, [series, width, height, n]);
 
   if (n === 0) return null;
-  const ticks = [0, 0.25, 0.5, 0.75, 1].map((f) => f * geo.max);
+  const ticks = Array.from({ length: Math.round(geo.max / geo.tickStep) + 1 }, (_, i) => i * geo.tickStep);
   const step = Math.max(1, Math.ceil(n / Math.max(1, Math.floor(geo.innerW / 52))));
 
   const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
@@ -125,7 +127,7 @@ export function CurveSeries({ series, height = 220, className, formatValue, area
           ))}
 
         {series[0].data.map((d, i) =>
-          i % step === 0 || i === n - 1 ? (
+          i === n - 1 || (i % step === 0 && (n - 1 - i) * geo.xStep >= 52) ? (
             <text key={i} x={geo.xOf(i)} y={height - 6} textAnchor={i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'} fontSize={11} fill="var(--ink-2)" className="tabular-nums">
               {d.label}
             </text>

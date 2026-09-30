@@ -44,3 +44,5 @@ export type { LinkButtonProps } from './LinkButton';
 
 export { CurveSeries } from './CurveSeries';
 export type { CurveSeriesProps } from './CurveSeries';
+export { ChannelChip } from './ChannelChip';
+export type { ChannelChipProps } from './ChannelChip';

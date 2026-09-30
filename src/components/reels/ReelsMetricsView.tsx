@@ -20,7 +20,6 @@ import {
   Radio,
   Music2,
   Eye,
-  EyeOff,
   ThumbsUp,
   Layers,
   CheckCircle2,
@@ -46,6 +45,8 @@ import {
   Heart,
 } from "lucide-react";
 import { CurveSeries } from "../ui/CurveSeries";
+import { ChannelChip } from "../ui/ChannelChip";
+import { CANAL_COLOR } from "../../utils/canalColor";
 import { api } from "../../services/api";
 import {
   getDeterministicGrowthPlan,
@@ -941,10 +942,10 @@ export function ReelsMetricsView({
       return parts.length === 3 ? `${parts[2]}/${parts[1]}` : f;
     };
     const canales = [
-      { key: "instagram", on: hasInstagram && selectedChannels.instagram, label: "Instagram", color: "var(--acc)" },
-      { key: "tiktok", on: hasTikTok && selectedChannels.tiktok, label: "TikTok", color: "var(--ink)" },
-      { key: "youtube", on: hasYouTube && selectedChannels.youtube, label: "YouTube", color: "var(--tentative)" },
-      { key: "spotify", on: hasSpotify && selectedChannels.spotify, label: "Spotify", color: "var(--ok)" },
+      { key: "instagram", on: hasInstagram && selectedChannels.instagram, label: "Instagram", color: CANAL_COLOR.instagram },
+      { key: "tiktok", on: hasTikTok && selectedChannels.tiktok, label: "TikTok", color: CANAL_COLOR.tiktok },
+      { key: "youtube", on: hasYouTube && selectedChannels.youtube, label: "YouTube", color: CANAL_COLOR.youtube },
+      { key: "spotify", on: hasSpotify && selectedChannels.spotify, label: "Spotify", color: CANAL_COLOR.spotify },
     ];
     return canales
       .filter((c) => c.on)
@@ -1469,272 +1470,82 @@ export function ReelsMetricsView({
                 </div>
               </div>
 
-              {/* Period Summary Stats Badge if available */}
+              {/* Balance del periodo: una cifra por canal, con el color de su curva */}
               {periodSummaryStats && (
-                <div
-                  className={`mb-3 px-3 py-1.5 rounded-[var(--r-s)] text-micro font-sans flex items-center justify-between flex-wrap gap-2 ${"bg-[var(--tentative)]/20 text-[var(--tentative)]"}`}
-                >
-                  <div className="flex items-center gap-1.5">
-                    <TrendingUp className="w-3 h-3 text-[var(--tentative)]" />
-                    <span className="font-bold">
-                      Balance {currentPeriodOption.label}:
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-[var(--r-s)] bg-[var(--sunken)] px-3 py-2 text-micro text-[var(--ink-2)]">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <span className="flex items-center gap-1.5 font-medium text-[var(--ink)]">
+                      <TrendingUp aria-hidden className="size-3.5" />
+                      Balance {currentPeriodOption.label}
                     </span>
-                    {hasInstagram && (
-                      <span className="ml-1">
-                        IG:{" "}
-                        <b
-                          className={
-                            periodSummaryStats.diffIg >= 0
-                              ? "text-[var(--alert)]"
-                              : "text-[var(--ink-2)]"
-                          }
-                        >
-                          {periodSummaryStats.diffIg >= 0
-                            ? `+${periodSummaryStats.diffIg}`
-                            : periodSummaryStats.diffIg}
-                        </b>
-                      </span>
-                    )}
-                    {hasTikTok && (
-                      <span className="ml-2">
-                        TikTok:{" "}
-                        <b
-                          className={
-                            periodSummaryStats.diffTk >= 0
-                              ? "text-[var(--acc)]"
-                              : "text-[var(--ink-2)]"
-                          }
-                        >
-                          {periodSummaryStats.diffTk >= 0
-                            ? `+${periodSummaryStats.diffTk}`
-                            : periodSummaryStats.diffTk}
-                        </b>
-                      </span>
-                    )}
-                    {hasYouTube && (
-                      <span className="ml-2">
-                        YT:{" "}
-                        <b
-                          className={
-                            periodSummaryStats.diffYt >= 0
-                              ? "text-[var(--acc)]"
-                              : "text-[var(--ink-2)]"
-                          }
-                        >
-                          {periodSummaryStats.diffYt >= 0
-                            ? `+${periodSummaryStats.diffYt}`
-                            : periodSummaryStats.diffYt}
-                        </b>
-                      </span>
-                    )}
-                    {hasSpotify && (
-                      <span className="ml-2">
-                        Spotify:{" "}
-                        <b
-                          className={
-                            periodSummaryStats.diffSp >= 0
-                              ? "text-[var(--ok)]"
-                              : "text-[var(--ink-2)]"
-                          }
-                        >
-                          {periodSummaryStats.diffSp >= 0
-                            ? `+${periodSummaryStats.diffSp}`
-                            : periodSummaryStats.diffSp}
-                        </b>
-                      </span>
-                    )}
+                    {([
+                      { on: hasInstagram, label: "Instagram", canal: "instagram", diff: periodSummaryStats.diffIg },
+                      { on: hasTikTok, label: "TikTok", canal: "tiktok", diff: periodSummaryStats.diffTk },
+                      { on: hasYouTube, label: "YouTube", canal: "youtube", diff: periodSummaryStats.diffYt },
+                      { on: hasSpotify, label: "Spotify", canal: "spotify", diff: periodSummaryStats.diffSp },
+                    ] as const)
+                      .filter((c) => c.on)
+                      .map((c) => (
+                        <span key={c.canal} className="flex items-center gap-1.5">
+                          <span aria-hidden className="size-2 rounded-full" style={{ background: CANAL_COLOR[c.canal] }} />
+                          {c.label}
+                          <b className="font-semibold tabular-nums text-[var(--ink)]">
+                            {c.diff.toLocaleString("es-ES", { signDisplay: "exceptZero" })}
+                          </b>
+                        </span>
+                      ))}
                   </div>
-                  <div className="text-[var(--ink-2)]">
-                    {periodSummaryStats.startDate} →{" "}
-                    {periodSummaryStats.endDate}
+                  <div className="tabular-nums">
+                    {periodSummaryStats.startDate} → {periodSummaryStats.endDate}
                   </div>
                 </div>
               )}
 
               {/* Interactive Channel Filter Chips */}
               <div className="flex flex-wrap gap-2 mb-4 pb-3 ">
-                {/* Instagram Chip */}
                 {hasInstagram && (
-                  <div
-                    className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                      selectedChannels.instagram
-                        ? "bg-[var(--acc)]/15 text-[var(--ink)]"
-                        : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100"
-                    }`}
-                  >
-                    <button
-                      onClick={() => toggleChannel("instagram")}
-                      className="px-2.5 py-1.5 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-                      title={
-                        selectedChannels.instagram
-                          ? "Ocultar Instagram del gráfico"
-                          : "Mostrar Instagram en el gráfico"
-                      }
-                    >
-                      <span
-                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.instagram ? "bg-[var(--acc)]" : "bg-[var(--ink-2)]/40"}`}
-                      ></span>
-                      <Instagram className="w-3 h-3 text-[var(--acc)]" />
-                      <span className="font-bold">Instagram</span>
-                      <span className="text-micro px-1 py-0.2 rounded bg-[var(--acc)]/15 font-sans">
-                        {(
-                          latestMetric?.instagram_followers ||
-                          latestMetric?.instagram ||
-                          0
-                        ).toLocaleString()}
-                      </span>
-                      {selectedChannels.instagram ? (
-                        <Eye className="w-3 h-3 text-[var(--acc)] ml-0.5" />
-                      ) : (
-                        <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => selectOnlyChannel("instagram")}
-                      className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
-                      title="Aislar y ver sólo Instagram dimensionado"
-                    >
-                      Solo
-                    </button>
-                  </div>
+                  <ChannelChip
+                    canal="instagram"
+                    label="Instagram"
+                    icon={Instagram}
+                    value={latestMetric?.instagram_followers || latestMetric?.instagram || 0}
+                    active={selectedChannels.instagram}
+                    onToggle={() => toggleChannel("instagram")}
+                    onSolo={() => selectOnlyChannel("instagram")}
+                  />
                 )}
-
-                {/* TikTok Chip */}
                 {hasTikTok && (
-                  <div
-                    className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                      selectedChannels.tiktok
-                        ? "bg-[var(--tentative)]/15 text-[var(--acc-ink)]"
-                        : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100"
-                    }`}
-                  >
-                    <button
-                      onClick={() => toggleChannel("tiktok")}
-                      className="px-2.5 py-1.5 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-                      title={
-                        selectedChannels.tiktok
-                          ? "Ocultar TikTok del gráfico"
-                          : "Mostrar TikTok en el gráfico"
-                      }
-                    >
-                      <span
-                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.tiktok ? "bg-[var(--acc)]" : "bg-[var(--ink-2)]/40"}`}
-                      ></span>
-                      <Video className="w-3 h-3 text-[var(--acc)]" />
-                      <span className="font-bold">TikTok</span>
-                      <span className="text-micro px-1 py-0.2 rounded bg-[var(--acc)]/15 font-sans">
-                        {(
-                          latestMetric?.tiktok_followers ||
-                          latestMetric?.tiktok ||
-                          0
-                        ).toLocaleString()}
-                      </span>
-                      {selectedChannels.tiktok ? (
-                        <Eye className="w-3 h-3 text-[var(--acc)] ml-0.5" />
-                      ) : (
-                        <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => selectOnlyChannel("tiktok")}
-                      className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
-                      title="Aislar y ver sólo TikTok dimensionado"
-                    >
-                      Solo
-                    </button>
-                  </div>
+                  <ChannelChip
+                    canal="tiktok"
+                    label="TikTok"
+                    icon={Video}
+                    value={latestMetric?.tiktok_followers || latestMetric?.tiktok || 0}
+                    active={selectedChannels.tiktok}
+                    onToggle={() => toggleChannel("tiktok")}
+                    onSolo={() => selectOnlyChannel("tiktok")}
+                  />
                 )}
-
-                {/* YouTube Chip */}
                 {hasYouTube && (
-                  <div
-                    className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                      selectedChannels.youtube
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100"
-                    }`}
-                  >
-                    <button
-                      onClick={() => toggleChannel("youtube")}
-                      className="px-2.5 py-1.5 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-                      title={
-                        selectedChannels.youtube
-                          ? "Ocultar YouTube del gráfico"
-                          : "Mostrar YouTube en el gráfico"
-                      }
-                    >
-                      <span
-                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.youtube ? "bg-[var(--acc)]" : "bg-[var(--ink-2)]/40"}`}
-                      ></span>
-                      <Youtube className="w-3 h-3 text-[var(--acc)]" />
-                      <span className="font-bold">YouTube</span>
-                      <span className="text-micro px-1 py-0.2 rounded bg-[var(--acc)]/15 font-sans">
-                        {(
-                          latestMetric?.youtube_subscribers ||
-                          latestMetric?.youtube ||
-                          0
-                        ).toLocaleString()}
-                      </span>
-                      {selectedChannels.youtube ? (
-                        <Eye className="w-3 h-3 text-[var(--acc)] ml-0.5" />
-                      ) : (
-                        <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => selectOnlyChannel("youtube")}
-                      className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
-                      title="Aislar y ver sólo YouTube dimensionado"
-                    >
-                      Solo
-                    </button>
-                  </div>
+                  <ChannelChip
+                    canal="youtube"
+                    label="YouTube"
+                    icon={Youtube}
+                    value={latestMetric?.youtube_subscribers || latestMetric?.youtube || 0}
+                    active={selectedChannels.youtube}
+                    onToggle={() => toggleChannel("youtube")}
+                    onSolo={() => selectOnlyChannel("youtube")}
+                  />
                 )}
-
-                {/* Spotify Chip */}
                 {hasSpotify && (
-                  <div
-                    className={`flex items-center rounded-[var(--r-s)] transition-ui ${
-                      selectedChannels.spotify
-                        ? "bg-[var(--ok-soft)]/40 text-[var(--ink-2)]"
-                        : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100"
-                    }`}
-                  >
-                    <button
-                      onClick={() => toggleChannel("spotify")}
-                      className="px-2.5 py-1.5 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
-                      title={
-                        selectedChannels.spotify
-                          ? "Ocultar Spotify del gráfico"
-                          : "Mostrar Spotify en el gráfico"
-                      }
-                    >
-                      <span
-                        className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.spotify ? "bg-[var(--ok)]" : "bg-[var(--ink-2)]/40"}`}
-                      ></span>
-                      <Music2 className="w-3 h-3 text-[var(--ok)]" />
-                      <span className="font-bold">Spotify</span>
-                      <span className="text-micro px-1 py-0.2 rounded bg-[var(--ok)]/15 font-sans">
-                        {(
-                          latestMetric?.spotify_monthly_listeners ||
-                          latestMetric?.spotify ||
-                          0
-                        ).toLocaleString()}
-                      </span>
-                      {selectedChannels.spotify ? (
-                        <Eye className="w-3 h-3 text-[var(--ok)] ml-0.5" />
-                      ) : (
-                        <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => selectOnlyChannel("spotify")}
-                      className="px-1.5 py-1 text-micro font-sans/20 hover:bg-[var(--ok)]/20 text-[var(--ok)] cursor-pointer"
-                      title="Aislar y ver sólo Spotify dimensionado"
-                    >
-                      Solo
-                    </button>
-                  </div>
+                  <ChannelChip
+                    canal="spotify"
+                    label="Spotify"
+                    icon={Music2}
+                    value={latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0}
+                    active={selectedChannels.spotify}
+                    onToggle={() => toggleChannel("spotify")}
+                    onSolo={() => selectOnlyChannel("spotify")}
+                  />
                 )}
               </div>
 

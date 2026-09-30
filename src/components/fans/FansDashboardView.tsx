@@ -1,7 +1,7 @@
 import React from 'react';
-import { ShieldCheck, MapPin, ExternalLink, TrendingUp } from 'lucide-react';
+import { ShieldCheck, MapPin, ExternalLink, TrendingUp, Users } from 'lucide-react';
 import { Fan } from '../../types';
-import { Onda } from '../ui/Onda';
+import { CurveSeries } from '../ui/CurveSeries';
 
 export interface FansDashboardViewProps {
   fans: Fan[];
@@ -25,32 +25,21 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-          <p className="text-xs font-semibold text-[var(--ink-2)] mb-2">Fans registrados</p>
-          <h3 className="text-5xl font-black text-[var(--ink)] font-display tabular-nums">{fans.length}</h3>
-        </div>
-        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-          <p className="text-xs font-semibold text-[var(--ink-2)] mb-2">Consentimiento RGPD</p>
-          <h3 className="text-4xl font-black text-[var(--ok)] font-display flex items-center gap-2">
-            <ShieldCheck className="w-8 h-8" />
-            100%
-          </h3>
-        </div>
-        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-          <p className="text-xs font-semibold text-[var(--ink-2)] mb-2">Ciudades activas</p>
-          <h3 className="text-4xl font-black text-[var(--acc)] font-display flex items-center gap-2 tabular-nums">
-            <MapPin className="w-8 h-8" />
-            {new Set(fans.map((f) => f.ciudad).filter(Boolean)).size}
-          </h3>
-        </div>
-        <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-          <p className="text-xs font-semibold text-[var(--ink-2)] mb-2">Clics en QR y redes</p>
-          <h3 className="text-4xl font-black text-[var(--acc)] font-display flex items-center gap-2 tabular-nums">
-            <ExternalLink className="w-7 h-7" />
-            {totalClicks}
-          </h3>
-        </div>
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
+        {[
+          { label: 'Fans registrados', value: fans.length.toLocaleString('es-ES'), icon: Users },
+          { label: 'Consentimiento RGPD', value: '100%', icon: ShieldCheck },
+          { label: 'Ciudades activas', value: new Set(fans.map((f) => f.ciudad).filter(Boolean)).size.toLocaleString('es-ES'), icon: MapPin },
+          { label: 'Clics en QR y redes', value: totalClicks.toLocaleString('es-ES'), icon: ExternalLink },
+        ].map(({ label, value, icon: Icon }) => (
+          <div key={label} className="flex flex-col justify-center rounded-[var(--r-l)] bg-[var(--surface)] p-4 md:p-6">
+            <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-[var(--ink-2)]">
+              <Icon aria-hidden className="size-3.5 shrink-0" />
+              {label}
+            </p>
+            <p className="font-display text-3xl font-bold tabular-nums text-[var(--ink)] md:text-4xl">{value}</p>
+          </div>
+        ))}
       </div>
 
       {/* Clics por canal: redes, métodos de pago y dossier */}
@@ -92,16 +81,17 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
           </div>
 
           <div className="flex-1 min-h-0 flex items-end">
-            <Onda
-              className="w-full"
-              data={evolutionaryGrowthData.map((d) => ({ label: String(d.date), value: Number(d.total || 0) }))}
-              height={180}
-              barWidth={evolutionaryGrowthData.length <= 8 ? 44 : 22}
-              gap={12}
-              showValues={evolutionaryGrowthData.length <= 8}
-              tooltipFormatter={(v) => `${v} fans acumulados`}
-              emptyText="La sala está vacía. Vamos a llenarla."
-            />
+            {evolutionaryGrowthData.length === 0 ? (
+              <p className="w-full self-center text-center text-xs text-[var(--ink-2)]">La sala está vacía. Vamos a llenarla.</p>
+            ) : (
+              <CurveSeries
+                className="w-full"
+                height={200}
+                area
+                formatValue={(v) => `${v.toLocaleString('es-ES')} fans`}
+                series={[{ label: 'Fans acumulados', color: 'var(--acc)', data: evolutionaryGrowthData.map((d) => ({ label: String(d.date), value: Number(d.total || 0) })) }]}
+              />
+            )}
           </div>
         </div>
 
