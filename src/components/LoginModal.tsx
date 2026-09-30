@@ -778,15 +778,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   </button>
                 </form>
 
-                <div className="relative mt-5 mb-1">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full h-px bg-[var(--hair)]"></div>
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">
-                      O continuar con
-                    </span>
-                  </div>
+                <div className="flex items-center gap-3 mt-5 mb-1 text-xs font-medium text-[var(--ink-2)]">
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                  <span>O continuar con</span>
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
                 <SocialButtons />
@@ -1134,15 +1129,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   </button>
                 </form>
 
-                <div className="relative mt-6 mb-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full h-px bg-[var(--hair)]"></div>
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
-                      O regístrate con
-                    </span>
-                  </div>
+                <div className="flex items-center gap-3 mt-6 mb-2 text-xs font-medium text-[var(--ink-2)]">
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                  <span>O regístrate con</span>
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
                 <SocialButtons />
@@ -1231,16 +1221,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       </div>
                     )}
 
-                    <div className="relative mt-5 mb-2">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full h-px bg-[var(--hair)]"></div>
-                      </div>
-                      <div className="relative flex justify-center text-xs">
-                        <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
-                          O comprobar con
-                        </span>
-                      </div>
-                    </div>
+                    <div className="flex items-center gap-3 mt-5 mb-2 text-xs font-medium text-[var(--ink-2)]">
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                  <span>O comprobar con</span>
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                </div>
 
                     <SocialButtons />
                   </div>
@@ -1348,16 +1333,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       </button>
                     </form>
 
-                    <div className="relative mt-5 mb-2">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full h-px bg-[var(--hair)]"></div>
-                      </div>
-                      <div className="relative flex justify-center text-xs">
-                        <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
-                          O activar con tu cuenta de Google
-                        </span>
-                      </div>
-                    </div>
+                    <div className="flex items-center gap-3 mt-5 mb-2 text-xs font-medium text-[var(--ink-2)]">
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                  <span>O activar con tu cuenta de Google</span>
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                </div>
 
                     <SocialButtons />
                   </div>

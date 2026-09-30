@@ -63,7 +63,7 @@ export function buildServerEmailHtml(params: {
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
-          return `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #1e293b; font-size: 15px;">${escaped.replace(/\n/g, '<br>')}</p>`;
+          return `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #2A2E35; font-size: 15px;">${escaped.replace(/\n/g, '<br>')}</p>`;
         })
         .join('');
 
@@ -138,7 +138,7 @@ export function buildServerEmailHtml(params: {
     website: {
       iconSvg: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
       label: 'Web Oficial',
-      color: '#475569',
+      color: '#5A626E',
       bg: '#f1f5f9'
     }
   };
@@ -174,16 +174,16 @@ export function buildServerEmailHtml(params: {
 <head>
   <meta charset="utf-8">
 </head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; color: #1e293b; line-height: 1.6; background-color: #ffffff; margin: 0; padding: 12px;">
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; color: #2A2E35; line-height: 1.6; background-color: #ffffff; margin: 0; padding: 12px;">
   <div style="max-width: 620px; margin: 0 auto; background: #ffffff;">
     
     <!-- PITCH TEXT (SIN DOBLE FIRMA) -->
-    <div style="font-size: 15px; color: #1e293b; line-height: 1.6;">
+    <div style="font-size: 15px; color: #2A2E35; line-height: 1.6;">
       ${htmlBodyParagraphs}
     </div>
 
     <!-- FIRMA ÚNICA CON DOSSIER Y REDES OFICIALES -->
-    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #DDE1E6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
       
       ${adjuntarDossier ? `
       <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
@@ -205,16 +205,16 @@ export function buildServerEmailHtml(params: {
             <div style="font-weight: 700; font-size: 14px; color: #0f172a; line-height: 1.3;">
               ${remitenteNombre}
             </div>
-            <div style="color: #475569; font-size: 12px; font-weight: 500; margin-top: 2px;">
+            <div style="color: #5A626E; font-size: 12px; font-weight: 500; margin-top: 2px;">
               ${cargo}
             </div>
             ${textoPie ? `
-            <div style="color: #64748b; font-size: 11px; margin-top: 3px; font-style: italic;">
+            <div style="color: #5A626E; font-size: 11px; margin-top: 3px; font-style: italic;">
               ${textoPie}
             </div>
             ` : ''}
-            <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
-              ${telefono ? `<span><a href="tel:${telefono.replace(/\s+/g, '')}" style="color: #475569; text-decoration: none;">${telefono}</a></span>` : ''}
+            <div style="font-size: 12px; color: #5A626E; margin-top: 6px;">
+              ${telefono ? `<span><a href="tel:${telefono.replace(/\s+/g, '')}" style="color: #5A626E; text-decoration: none;">${telefono}</a></span>` : ''}
               ${telefono && email ? ` &nbsp;•&nbsp; ` : ''}
               ${email ? `<span><a href="mailto:${email}" style="color: #0284c7; text-decoration: none;">${email}</a></span>` : ''}
             </div>
@@ -300,7 +300,7 @@ export function buildBandNotificationEmailHtml(params: {
     eventLabel.toLowerCase() === 'concierto'
       ? '#ef4444'
       : eventLabel.toLowerCase() === 'ensayo'
-      ? '#3b82f6'
+      ? '#2158DC'
       : '#8b5cf6';
 
   const memberListText = recipientMembers.length > 0 ? recipientMembers.join(', ') : 'Toda la banda';
@@ -313,15 +313,15 @@ export function buildBandNotificationEmailHtml(params: {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recordatorio BandManager - ${bandName}</title>
 </head>
-<body style="font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; padding: 0;">
-  <div style="max-width: 600px; margin: 24px auto; background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+<body style="font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #101216; color: #E3E7EC; margin: 0; padding: 0;">
+  <div style="max-width: 600px; margin: 24px auto; background-color: #191C21; border: 1px solid #2A2F36; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
     
     <!-- HEADER BRANDING -->
-    <div style="background: linear-gradient(135deg, #18181b 0%, #09090b 100%); padding: 24px; text-align: center; border-bottom: 1px solid #27272a;">
+    <div style="background: linear-gradient(135deg, #191C21 0%, #101216 100%); padding: 24px; text-align: center; border-bottom: 1px solid #2A2F36;">
       <div style="font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
-        BandManager<span style="color: #3b82f6;">.io</span>
+        BandManager<span style="color: #2158DC;">.io</span>
       </div>
-      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #71717a; margin-top: 4px; font-family: monospace;">
+      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #98A0AC; margin-top: 4px; font-family: monospace;">
         Notificación de Calendario & Ensayos
       </div>
     </div>
@@ -349,27 +349,27 @@ export function buildBandNotificationEmailHtml(params: {
 
       <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #d4d4d8;">
         <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; width: 130px; color: #a1a1aa; font-weight: 600;">📅 Fecha:</td>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #ffffff; font-weight: 700;">${eventDate}${eventTime ? ` a las <span style="color: #60a5fa;">${eventTime}</span>` : ''}</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; width: 130px; color: #A6AEB9; font-weight: 600;">📅 Fecha:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #ffffff; font-weight: 700;">${eventDate}${eventTime ? ` a las <span style="color: #60a5fa;">${eventTime}</span>` : ''}</td>
         </tr>
         <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600;">📍 Lugar / Ubicación:</td>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #f4f4f5;">${eventLocation || 'Por determinar'}</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #A6AEB9; font-weight: 600;">📍 Lugar / Ubicación:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #E3E7EC;">${eventLocation || 'Por determinar'}</td>
         </tr>
         <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600;">👥 Convocados:</td>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #f4f4f5;">${memberListText}</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #A6AEB9; font-weight: 600;">👥 Convocados:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #E3E7EC;">${memberListText}</td>
         </tr>
         ${customNotes ? `
         <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600; vertical-align: top;">📝 Notas / Tareas:</td>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #fde047; font-weight: 500; line-height: 1.5;">${customNotes.replace(/\n/g, '<br>')}</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #A6AEB9; font-weight: 600; vertical-align: top;">📝 Notas / Tareas:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #fde047; font-weight: 500; line-height: 1.5;">${customNotes.replace(/\n/g, '<br>')}</td>
         </tr>
         ` : ''}
         ${setlistSummary ? `
         <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600; vertical-align: top;">🎵 Repertorio / Setlist:</td>
-          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #38bdf8; font-weight: 500;">${setlistSummary}</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #A6AEB9; font-weight: 600; vertical-align: top;">🎵 Repertorio / Setlist:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #2A2F36; color: #38bdf8; font-weight: 500;">${setlistSummary}</td>
         </tr>
         ` : ''}
       </table>
@@ -384,9 +384,9 @@ export function buildBandNotificationEmailHtml(params: {
     </div>
 
     <!-- FOOTER NO-REPLY -->
-    <div style="background-color: #09090b; padding: 16px 24px; text-align: center; font-size: 11px; color: #71717a; border-top: 1px solid #27272a;">
+    <div style="background-color: #101216; padding: 16px 24px; text-align: center; font-size: 11px; color: #98A0AC; border-top: 1px solid #2A2F36;">
       Notificación automática del sistema para los miembros de <strong>${bandName}</strong>.<br>
-      Correo enviado desde <span style="color: #a1a1aa;">no-reply@bandmanager.io</span>. Por favor no respondas a este correo.
+      Correo enviado desde <span style="color: #A6AEB9;">no-reply@bandmanager.io</span>. Por favor no respondas a este correo.
     </div>
 
   </div>

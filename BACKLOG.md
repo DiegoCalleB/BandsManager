@@ -106,6 +106,12 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   * **Riesgo de alcance:** acordes complejos (7maj9, sus4, inversiones, jazz) son mucho más difíciles de acertar que triadas simples. MVP recomendado: tónica + mayor/menor por compás (cubre la mayoría de rock/pop/indie), dejar acordes extendidos para una v2.
 * **Estado:** idea capturada, sin prototipar. Siguiente paso si se retoma: probar `essentia.js` contra un stem de guitarra ya separado por Iris y medir precisión real antes de comprometer tiempo de desarrollo en la UI.
 
+### Deuda de diseño: lo que queda tras las fases F3–F9
+* **Qué:** las primitivas (`Input`, `Textarea`, `Select`, `Field`, `Switch`, `Card`, `EmptyState`, `Button`) ya cubren los campos (≈650 migrados; los que quedan llevan `data-raw` con motivo) y unas 400 píldoras/alternancias. Quedan ~1.500 `<button>` escritos a mano: pestañas, filas de menú, iconos sueltos y tarjetas pulsables.
+* **Siguiente paso:** primitivas `Tabs` / `Segmented` (aspecto activo/inactivo único), `MenuItem` (filas de ⋮) y `IconButton` con `aria-label` obligatorio; después un codemod por patrón y pasar `botonSinPrimitiva` de aviso a error en `design-audit`.
+* **Revisión con datos reales:** falta revisar con la banda real (Ruta 66) la tabla de Booking (chips «12 lib.», Fiabilidad), Merchandising y Agente Mánager en oscuro; la semilla no reproduce esos volúmenes.
+* **Estado:** F3, F5, F6, F8 hechas; F4 al ~40 % de los botones; F7 y F9 hechas salvo lo que exige datos reales.
+
 ### Deuda: datos de bandas concretas (Bakandeya, Ruta 66, Master of Prompts…) todavía en código
 * **Qué:** auditoría de octubre 2026. Ya limpiado (fase 1): pitches y firmas de BandCRM, asunto del Chatbot, redes de ejemplo en FansLanding, logos y nombres por defecto y hoja de ruta / material de ejemplo del Calendario, texto del rider en Booking, líneas inventadas del dossier PDF, géneros por defecto (“Balkan Ska”) y etiqueta “Balkan Hype”.
 * **Pendiente (fase 1b — solo afecta a la propia banda demo):** `RepertorioSetlists.tsx` (`BAKANDEYA_DEMO_MEMBERS`, `DEFAULT_SONGS`, `DEFAULT_SETLISTS`, ramas `isBakandeya` / `isMasterOfPrompts`), `Merchan.tsx` (álbumes y catálogo demo), `EPKManager.tsx` (`DEFAULT_EPK_CONFIG`), `ReelsCenter.tsx` (nombres de variables “Bakandeya…”). Mover a semillas del servidor y que el componente lea solo de la API.

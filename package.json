@@ -27,7 +27,8 @@
     "design:fix": "node scripts/design-fixer.js && npm run typecheck && npm run build",
     "audit:paleta": "python3 scripts/paleta-audit.py",
     "audit:emojis": "node scripts/emojis-ui.mjs",
-    "audit:contraste": "node scripts/contraste-clases.mjs"
+    "audit:contraste": "node scripts/contraste-clases.mjs",
+    "audit:diseno": "node scripts/design-audit.js && node scripts/superficies-check.mjs && node scripts/emojis-ui.mjs && node scripts/contraste-clases.mjs && python3 scripts/paleta-audit.py"
   },
   "dependencies": {
     "@distube/ytdl-core": "^4.16.12",
@@ -102,6 +103,7 @@
   },
   "lint-staged": {
     "**/*.{ts,tsx}": "eslint --fix",
+    "src/**/*.{ts,tsx,css}": "node scripts/design-audit.js",
     "{AGENTS,CLAUDE,TOOL_COMPATIBILITY,AI_STUDIO_SUPABASE_GUIDE}.md": "node scripts/verify-docs-refs.cjs",
     "skills/**/*.md": "node scripts/verify-docs-refs.cjs"
   }

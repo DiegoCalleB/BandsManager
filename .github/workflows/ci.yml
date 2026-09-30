@@ -56,6 +56,9 @@ jobs:
             exit 1
           fi
 
+      - name: Guardarraíles de diseño (Espectro)
+        run: npm run audit:diseno
+
       - name: Build check (bundle con esbuild)
         run: npm run lint
 

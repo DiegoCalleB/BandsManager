@@ -442,13 +442,10 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   </button>
                 </form>
 
-                <div className="relative mt-3 mb-1">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full h-px bg-[var(--hair)]"></div>
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O continuar con</span>
-                  </div>
+                <div className="flex items-center gap-3 mt-3 mb-1 text-xs font-medium text-[var(--ink-2)]">
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                  <span>O continuar con</span>
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
                 <Button
@@ -574,13 +571,10 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   </button>
                 </form>
 
-                <div className="relative mt-3 mb-1">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full h-px bg-[var(--hair)]"></div>
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="px-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-medium">O registrarme con</span>
-                  </div>
+                <div className="flex items-center gap-3 mt-3 mb-1 text-xs font-medium text-[var(--ink-2)]">
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
+                  <span>O registrarme con</span>
+                  <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
                 <Button
