@@ -2,6 +2,7 @@ import React from 'react';
 import { ToastNotification } from '../hooks/useNotificationSystem';
 import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
 import { ShowIcon } from './ui/ShowIcon';
+import { IconButton } from './ui';
 
 interface NotificationToastContainerProps {
   notifications: ToastNotification[];
@@ -38,13 +39,14 @@ export const NotificationToastContainer: React.FC<NotificationToastContainerProp
               <h4 className="text-xs font-semibold leading-tight">{toast.title}</h4>
               {toast.message && <p className="text-xs opacity-80 mt-0.5 line-clamp-2">{toast.message}</p>}
             </div>
-            <button
+            <IconButton
+              label="Cerrar notificación"
+              size="icon-xs"
               onClick={() => onDismiss(toast.id)}
-              className="p-1 hover:bg-[var(--ink)]/10 rounded-[var(--r-pill)] transition-colors text-[var(--ink)] hover:text-[var(--ink)] shrink-0"
-              aria-label="Cerrar notificación"
+              className="shrink-0"
             >
               <X className="w-3.5 h-3.5" />
-            </button>
+            </IconButton>
           </div>
         );
       })}

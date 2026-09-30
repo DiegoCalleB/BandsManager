@@ -69,7 +69,7 @@ import { encodeBandIdClient } from "../utils/bandHash";
 import { ShowIcon } from './ui/ShowIcon';
 
 import { FansDashboardView } from "./fans/FansDashboardView";
-import { Button, Input, Select, Textarea } from './ui';
+import { Button, IconButton, Input, Select, Textarea } from './ui';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -1112,18 +1112,18 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           </p>
                         </div>
                       </div>
-                      <button
+                      <IconButton
+                        label="Eliminar Fan"
+                        variant="danger"
                         type="button"
                         onClick={() => {
                           if (confirm(`¿Eliminar fan ${fan.nombre}?`)) {
                             onDeleteFan(fan.id);
                           }
                         }}
-                        className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)]/20 hover:text-[var(--alert)] rounded-[var(--r-pill)] transition cursor-pointer"
-                        title="Eliminar Fan"
                       >
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </IconButton>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs font-sans pt-2 ">
@@ -1277,16 +1277,18 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           )}
                         </td>
                         <td className="p-3 text-right">
-                          <button aria-label="Eliminar"
+                          <IconButton
+                            label="Eliminar"
+                            variant="danger"
                             onClick={() => {
                               if (confirm(`¿Eliminar fan ${fan.nombre}?`)) {
                                 onDeleteFan(fan.id);
                               }
                             }}
-                            className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)] hover:text-[var(--ink)] rounded transition opacity-0 group-hover:opacity-100 cursor-pointer"
+                            className="opacity-0"
                           >
                             <Trash2 className="w-4 h-4" />
-                          </button>
+                          </IconButton>
                         </td>
                       </tr>
                     ))
@@ -1397,14 +1399,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <Printer className="w-4 h-4" /> Cartel A4 / PDF
               </button>
               <div className="relative shrink-0">
-                <button
+                <IconButton
+                  label="Más opciones: SVG, PNG 4K, tarjetas, compartir, previsualizar el formulario…"
+                  size="icon"
                   type="button"
                   onClick={() => setShowQrMoreMenu((v) => !v)}
-                  title="Más opciones: SVG, PNG 4K, tarjetas, compartir, previsualizar el formulario…"
-                  className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
                 >
                   <MoreHorizontal className="w-4 h-4" />
-                </button>
+                </IconButton>
                 {showQrMoreMenu && (
                   <>
                     <div

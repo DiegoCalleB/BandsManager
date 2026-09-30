@@ -58,7 +58,7 @@ import {
   WHATSAPP_WINDOW_NAME,
 } from "../utils/whatsapp";
 import { decodeBandIdClient } from "../utils/bandHash";
-import { Button, Input, Textarea } from './ui';
+import { Button, IconButton, Input, Textarea } from './ui';
 
 export interface FansLandingProps {
   currentBandId?: string;
@@ -2076,12 +2076,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm">
                 <Shield className="w-5 h-5" /> {t("privacyModalTitle")}
               </div>
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
+                size="icon-xs"
                 onClick={() => setShowPrivacyModal(false)}
-                className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
 
             <div className="text-xs text-[var(--ink-2)] font-sans space-y-3 leading-relaxed">

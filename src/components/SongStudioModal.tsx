@@ -97,7 +97,7 @@ import {
   GripVertical,
   Zap,
 } from 'lucide-react';
-import { Button, Input, Select, Textarea } from './ui';
+import { Button, IconButton, Input, Select, Textarea } from './ui';
 
 // Live microphone waveform visualization component for Cubase-style real-time recording
 const LiveMicWaveformCanvas: React.FC<{
@@ -4049,13 +4049,13 @@ export default function SongStudioModal({
                 )}
               </button>
 
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
@@ -4095,9 +4095,9 @@ export default function SongStudioModal({
                       <h4 className="text-sm font-bold text-[var(--ink-2)] font-sans flex items-center gap-2">
                         <Mic className="w-4 h-4 text-[var(--ok)]" /> Aportar idea o arreglo de audio
                       </h4>
-                      <button aria-label="Cerrar" type="button" onClick={() => setShowAddIdea(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
+                      <IconButton label="Cerrar" type="button" onClick={() => setShowAddIdea(false)}>
                         <X className="w-4 h-4" />
-                      </button>
+                      </IconButton>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -4605,27 +4605,26 @@ export default function SongStudioModal({
                               {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
                             </button>
 
-                            <button
+                            <IconButton
+                              label="Eliminar idea"
+                              variant="danger"
                               type="button"
                               onClick={(e) => handleDeleteIdea(e, idea.id)}
-                              className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] transition-ui cursor-pointer"
-                              title="Eliminar idea"
                             >
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                            </IconButton>
 
                             <div className="relative">
-                              <button
+                              <IconButton
+                                label="Más opciones"
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setOpenIdeaActionsMenuId(openIdeaActionsMenuId === idea.id ? null : idea.id);
                                 }}
-                                className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
-                                title="Más opciones"
                               >
                                 <MoreVertical className="w-4 h-4" />
-                              </button>
+                              </IconButton>
 
                               {openIdeaActionsMenuId === idea.id && (
                                 <div className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
@@ -4729,14 +4728,15 @@ export default function SongStudioModal({
                                     />
                                     <span>{isSeparatingStemsAi ? 'Separando...' : 'Separar con Iris'}</span>
                                   </button>
-                                  <button
+                                  <IconButton
+                                    label="Elegir pistas y motor de separación (Iris Studio, Iris Cloud o Iris Básico)"
+                                    variant="soft"
                                     type="button"
                                     onClick={() => setShowMoisesStemsModal(idea)}
-                                    className="px-2 py-1.5 /60 hover:bg-[var(--acc)]/60/30 text-[var(--on-acc)] transition-ui cursor-pointer flex items-center"
-                                    title="Elegir pistas y motor de separación (Iris Studio, Iris Cloud o Iris Básico)"
+                                    className="flex"
                                   >
                                     <Sliders className="w-3.5 h-3.5" />
-                                  </button>
+                                  </IconButton>
                                 </div>
                               )}
 
@@ -4781,14 +4781,13 @@ export default function SongStudioModal({
                                   </button>
 
                                   {/* Stop / Rewind to 0:00 */}
-                                  <button
+                                  <IconButton
+                                    label="Detener e ir al inicio (Atajo: 0 / Home)"
                                     type="button"
                                     onClick={() => handleStopIdea(idea)}
-                                    className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] transition-ui cursor-pointer"
-                                    title="Detener e ir al inicio (Atajo: 0 / Home)"
                                   >
                                     <Square className="w-4 h-4 fill-current text-[var(--alert)]" />
-                                  </button>
+                                  </IconButton>
 
                                   {/* Loop Toggle */}
                                   {(() => {
@@ -5037,30 +5036,32 @@ export default function SongStudioModal({
                                                           className="w-full min-w-0"
                                                           autoFocus
                                                         />
-                                                        <button aria-label="Confirmar"
+                                                        <IconButton
+                                                          label="Confirmar"
+                                                          size="icon-xs"
                                                           type="button"
                                                           onClick={() => handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                                          className="p-0.5 text-[var(--ok)] hover:text-[var(--ink-2)] shrink-0"
+                                                          className="shrink-0"
                                                         >
                                                           <Check className="w-3 h-3" />
-                                                        </button>
+                                                        </IconButton>
                                                       </div>
                                                     ) : (
                                                       <div className="flex items-center gap-1 min-w-0 flex-1">
                                                         <span className="text-xs font-bold text-[var(--ink)] font-sans truncate">
                                                           {tr.nombre}
                                                         </span>
-                                                        <button
+                                                        <IconButton
+                                                          label="Editar nombre de pista"
                                                           type="button"
                                                           onClick={() => {
                                                             setEditingTrackId(tr.id);
                                                             setEditingTrackName(tr.nombre);
                                                           }}
-                                                          className="text-[var(--ink-2)] hover:text-[var(--ink-2)] shrink-0"
-                                                          title="Editar nombre de pista"
+                                                          className="shrink-0"
                                                         >
                                                           <Edit2 className="w-2.5 h-2.5" />
-                                                        </button>
+                                                        </IconButton>
                                                       </div>
                                                     )}
                                                   </div>
@@ -5361,24 +5362,22 @@ export default function SongStudioModal({
                                                 <div className="flex items-center justify-between/10 pt-2">
                                                   <div className="flex items-center gap-1">
                                                     <span className="text-[var(--ink-2)] font-bold mr-1">Orden:</span>
-                                                    <button
+                                                    <IconButton
+                                                      label="Subir pista"
                                                       type="button"
                                                       onClick={() => handleMoveTrack(idea, tr.id, 'up')}
                                                       disabled={idx === 0}
-                                                      className="px-1.5 py-1 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-ui"
-                                                      title="Subir pista"
                                                     >
                                                       <ChevronUp className="w-3.5 h-3.5" />
-                                                    </button>
-                                                    <button
+                                                    </IconButton>
+                                                    <IconButton
+                                                      label="Bajar pista"
                                                       type="button"
                                                       onClick={() => handleMoveTrack(idea, tr.id, 'down')}
                                                       disabled={idx === tracks.length - 1}
-                                                      className="px-1.5 py-1 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-ui"
-                                                      title="Bajar pista"
                                                     >
                                                       <ChevronDown className="w-3.5 h-3.5" />
-                                                    </button>
+                                                    </IconButton>
                                                   </div>
                                                   <Button
                                                     variant="danger"
@@ -5465,13 +5464,13 @@ export default function SongStudioModal({
                                     <Radio className="w-4 h-4 text-[var(--ink-2)]" />
                                     Añadir Nueva Pista (Overdub / Superponer Audio)
                                   </span>
-                                  <button aria-label="Cerrar"
+                                  <IconButton
+                                    label="Cerrar"
                                     type="button"
                                     onClick={() => setAddingTrackIdeaId(null)}
-                                    className="text-[var(--ink-2)] hover:text-[var(--ink)]"
                                   >
                                     <X className="w-3.5 h-3.5" />
-                                  </button>
+                                  </IconButton>
                                 </div>
 
                                 <div className="p-3 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-2">
@@ -5740,14 +5739,15 @@ export default function SongStudioModal({
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0">
                                       <span className="text-micro font-sans text-[var(--ink-2)]">{comm.fecha}</span>
-                                      <button
+                                      <IconButton
+                                        label="Borrar comentario"
+                                        variant="danger"
+                                        size="icon-xs"
                                         type="button"
                                         onClick={() => handleDeleteComment(idea, comm.id)}
-                                        className="text-[var(--ink-2)] hover:text-[var(--alert)] p-1 cursor-pointer transition-colors"
-                                        title="Borrar comentario"
                                       >
                                         <Trash2 className="w-3 h-3" />
-                                      </button>
+                                      </IconButton>
                                     </div>
                                   </div>
                                 ))}
@@ -5780,7 +5780,6 @@ export default function SongStudioModal({
                                       }))
                                     }
                                     title="Referir este comentario a una pista concreta"
-                                    
                                   >
                                     <option value="">General</option>
                                     {getIdeaTracks(idea).map((tr) => (
@@ -5806,13 +5805,13 @@ export default function SongStudioModal({
                                   className="flex-1"
                                 />
 
-                                <button aria-label="Enviar"
+                                <IconButton
+                                  label="Enviar"
                                   type="button"
                                   onClick={() => handleAddComment(idea)}
-                                  className="p-2 rounded-[var(--r-pill)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] cursor-pointer"
                                 >
                                   <Send className="w-3.5 h-3.5" />
-                                </button>
+                                </IconButton>
                               </div>
                             </div>
                           </>
@@ -5885,13 +5884,14 @@ export default function SongStudioModal({
         {showCubaseHelp && (
           <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4">
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] relative">
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 type="button"
                 onClick={() => setShowCubaseHelp(false)}
-                className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+                className="absolute top-4 right-4"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
 
               <div className="flex items-center gap-3/20 pb-4">
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]">
@@ -6020,7 +6020,6 @@ export default function SongStudioModal({
                     setConfirmDeleteModal(null);
                     action();
                   }}
-                  
                 >
                   Sí, Eliminar
                 </Button>

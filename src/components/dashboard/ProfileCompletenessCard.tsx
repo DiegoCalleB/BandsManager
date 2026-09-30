@@ -34,7 +34,7 @@ import {
   Key,
 } from "lucide-react";
 import { api } from "../../services/api";
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface ProfileCompletenessCardProps {
   epkConfig?: Partial<EPKConfig>;
@@ -598,12 +598,13 @@ export const ProfileCompletenessCard: React.FC<
                 </div>
               </div>
 
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
+                size="icon-xs"
                 onClick={() => setShowAuditModal(false)}
-                className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
 
             <div className="space-y-3 text-xs text-[var(--ink-2)] font-sans leading-relaxed">
@@ -667,7 +668,6 @@ export const ProfileCompletenessCard: React.FC<
                 variant="primary"
                 size="sm"
                 onClick={() => setShowAuditModal(false)}
-                
               >
                 Entendido
               </Button>

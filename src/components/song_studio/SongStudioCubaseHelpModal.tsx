@@ -2,7 +2,7 @@ import React from 'react';
 import { X, Keyboard } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface SongStudioCubaseHelpModalProps {
   onClose: () => void;
@@ -13,13 +13,14 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] relative my-auto max-h-[90vh] overflow-y-auto">
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+            className="absolute top-4 right-4"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
 
           <div className="flex items-center gap-3/20 pb-4">
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]">
@@ -108,7 +109,6 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
               size="sm"
               type="button"
               onClick={onClose}
-              
             >
               Entendido
             </Button>

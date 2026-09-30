@@ -11,7 +11,7 @@ import {
   Search,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input } from '../ui';
+import { Button, IconButton, Input } from '../ui';
 
 interface BookingCampaignPanelProps {
   onCampaignChange: (campaign: BookingCampaign | null) => void;
@@ -135,12 +135,12 @@ export default function BookingCampaignPanel({
           <h3 className="font-semibold text-lg flex items-center gap-2">
             <Target className="w-5 h-5" /> Configurar campaña
           </h3>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             onClick={() => setIsEditing(false)}
-            className="text-[var(--ink-2)] hover:text-[var(--ink-2)]"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
@@ -232,7 +232,10 @@ export default function BookingCampaignPanel({
                     className="text-xs font-semibold text-[var(--ink)] bg-transparent p-0 focus:ring-0 cursor-pointer"
                     title="Haz clic para modificar esta fecha"
                   />
-                  <button
+                  <IconButton
+                    label="Eliminar esta fecha"
+                    variant="danger"
+                    size="icon-xs"
                     type="button"
                     onClick={() => {
                       const newDates = [...(campaignForm.targetDates || [])];
@@ -242,11 +245,10 @@ export default function BookingCampaignPanel({
                         targetDates: newDates,
                       });
                     }}
-                    className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 rounded transition-colors ml-0.5"
-                    title="Eliminar esta fecha"
+                    className="ml-0.5"
                   >
                     <X className="w-3.5 h-3.5" />
-                  </button>
+                  </IconButton>
                 </div>
               ))}
               <div className="flex items-center gap-1.5 bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/10 text-[var(--tentative)] px-3 py-1.5 rounded-[var(--r-s)] transition-colors">
@@ -354,13 +356,13 @@ export default function BookingCampaignPanel({
   return (
     <div className="mb-6 bg-[var(--sunken)] text-[var(--ink)] rounded-[var(--r-m)] overflow-hidden relative">
       <div className="absolute top-0 right-0 p-4">
-        <button
+        <IconButton
+          label="Desactivar campaña"
+          size="icon-xs"
           onClick={handleClear}
-          className="text-[var(--ink)] hover:text-[var(--ink)] bg-[var(--ink)]/10 rounded-[var(--r-pill)] p-1"
-          title="Desactivar campaña"
         >
           <X className="w-4 h-4" />
-        </button>
+        </IconButton>
       </div>
       <div className="p-5">
         <div className="flex items-center gap-2 mb-1">

@@ -11,7 +11,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Textarea } from '../ui';
+import { Button, IconButton, Input, Textarea } from '../ui';
 
 interface SongStudioAiMusicModalProps {
   isOpen: boolean;
@@ -108,13 +108,13 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-xs text-[var(--ink)] space-y-1">

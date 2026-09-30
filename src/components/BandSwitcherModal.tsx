@@ -41,7 +41,7 @@ import {
 import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Input } from './ui';
+import { Button, IconButton, Input } from './ui';
 
 // Fase beta: crear una banda nueva desde aquí va directa al plan Promo, sin pasar por la
 // parrilla de planes de pago (mismo criterio que SimplePromoLoginModal.tsx). El selector de
@@ -743,28 +743,28 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <div className="hidden sm:flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                           {array.length > 1 && (
                             <>
-                              <button
+                              <IconButton
+                                label="Mover a la izquierda"
+                                size="icon-xs"
                                 type="button"
                                 disabled={index === 0}
                                 onClick={(e) =>
                                   handleMoveBand(band.band_id, "left", e)
                                 }
-                                className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
-                                title="Mover a la izquierda"
                               >
                                 <ArrowLeft className="w-3 h-3" />
-                              </button>
-                              <button
+                              </IconButton>
+                              <IconButton
+                                label="Mover a la derecha"
+                                size="icon-xs"
                                 type="button"
                                 disabled={index === array.length - 1}
                                 onClick={(e) =>
                                   handleMoveBand(band.band_id, "right", e)
                                 }
-                                className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
-                                title="Mover a la derecha"
                               >
                                 <ArrowRightIcon className="w-3 h-3" />
-                              </button>
+                              </IconButton>
                             </>
                           )}
                         </div>
@@ -785,7 +785,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           <Settings className="w-3.5 h-3.5" />
                         </button>
 
-                        <button
+                        <IconButton
+                          label="Eliminar esta banda de mi usuario"
+                          variant="danger"
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -793,11 +795,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             handleRequestLeaveBand(band.band_id, band.bandName);
                           }}
                           disabled={!!leavingBandId}
-                          className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--surface)] hover:bg-[var(--alert-soft)] transition-ui cursor-pointer"
-                          title="Eliminar esta banda de mi usuario"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
                       </div>
                     </div>
 
@@ -960,13 +960,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </p>
                   </div>
                 </div>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
                   type="button"
                   onClick={() => setSelectedBandForSettings(null)}
-                  className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
-                </button>
+                </IconButton>
               </div>
 
               {/* Logo Upload Section */}
@@ -1154,13 +1154,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         </p>
                       </div>
                     </div>
-                    <button aria-label="Cerrar"
+                    <IconButton
+                      label="Cerrar"
                       type="button"
                       onClick={() => setShowCreateBandModal(false)}
-                      className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
-                    </button>
+                    </IconButton>
                   </div>
 
                   <form onSubmit={handleStep1Submit} className="space-y-4">
@@ -1289,14 +1289,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       <ArrowLeft className="w-3.5 h-3.5" />
                       <span>Volver a datos de la banda</span>
                     </Button>
-                    <button aria-label="Cerrar"
+                    <IconButton
+                      label="Cerrar"
                       type="button"
                       onClick={() => setShowCreateBandModal(false)}
                       disabled={isCreatingBand}
-                      className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
-                    </button>
+                    </IconButton>
                   </div>
 
                   <div className="text-center space-y-2">
@@ -1772,12 +1772,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         </p>
                       </div>
                     </div>
-                    <button aria-label="Cerrar"
+                    <IconButton
+                      label="Cerrar"
+                      size="icon-xs"
                       onClick={() => setShowUpgradeModal(false)}
-                      className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
-                    </button>
+                    </IconButton>
                   </div>
 
                   <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">

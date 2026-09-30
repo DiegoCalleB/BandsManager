@@ -1,7 +1,7 @@
 import React from "react";
 import { Video, Youtube, Plus, Trash2, Award } from "lucide-react";
 import { EPKVideo } from "../../../types";
-import { Button, Input, Select } from '../../ui';
+import { Button, IconButton, Input, Select } from '../../ui';
 
 interface StepVideosProps {
   videos: EPKVideo[];
@@ -100,14 +100,14 @@ export const StepVideos: React.FC<StepVideosProps> = ({
                 >
                   <Award className="w-4 h-4" />
                 </button>
-                <button
+                <IconButton
+                  label="Eliminar vídeo"
+                  variant="danger"
                   type="button"
                   onClick={() => onRemoveVideo(vid.id)}
-                  className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
-                  title="Eliminar vídeo"
                 >
                   <Trash2 className="w-4 h-4" />
-                </button>
+                </IconButton>
               </div>
             </div>
           ))}

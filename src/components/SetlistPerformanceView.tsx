@@ -49,7 +49,7 @@ import { cacheActiveStageSetlist } from "../utils/stageOfflineCache";
 import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button } from './ui';
+import { Button, IconButton } from './ui';
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
@@ -1092,22 +1092,22 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  siga acertando. */}
       <div className="relative flex-1 min-h-0">
         {!isFirst && (
-          <button
+          <IconButton
+            label="← Anterior"
             onClick={handlePrev}
-            className="absolute left-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex items-center justify-start pl-2 bg-gradient-to-r from-black/50 to-transparent opacity-40 hover:opacity-100 active:opacity-100 transition-opacity cursor-pointer"
-            title="← Anterior"
+            className="absolute left-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex opacity-40"
           >
             <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 text-[var(--ink)]" />
-          </button>
+          </IconButton>
         )}
         {!isLast && (
-          <button
+          <IconButton
+            label="Siguiente →"
             onClick={handleNext}
-            className="absolute right-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex items-center justify-end pr-2 bg-gradient-to-l from-black/50 to-transparent opacity-40 hover:opacity-100 active:opacity-100 transition-opacity cursor-pointer"
-            title="Siguiente →"
+            className="absolute right-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex opacity-40"
           >
             <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 text-[var(--ink)]" />
-          </button>
+          </IconButton>
         )}
 
         {isBlock ? (
@@ -1330,12 +1330,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   </p>
                 </div>
               </div>
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 onClick={() => setShowSongListDrawer(false)}
-                className="p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
 
             {/* Drawer List */}

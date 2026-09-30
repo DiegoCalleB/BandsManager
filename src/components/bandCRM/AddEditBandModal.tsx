@@ -2,7 +2,7 @@ import React from 'react';
 import { Music, X, Sparkles, Loader2, Upload, Check } from 'lucide-react';
 import { BandRelationshipStatus, BandContact } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 export interface AddEditBandModalProps {
   isOpen: boolean;
@@ -109,9 +109,9 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
             </h3>
           </div>
-          <button aria-label="Cerrar" onClick={() => onClose()} className="p-1 hover:bg-[var(--sunken)] rounded-[var(--r-pill)] transition-colors">
+          <IconButton label="Cerrar" size="icon-xs" onClick={() => onClose()}>
             <X className="w-5 h-5 text-[var(--ink-2)]" />
-          </button>
+          </IconButton>
         </div>
 
         <form onSubmit={handleSaveBand} className="space-y-4">
@@ -161,9 +161,9 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {aiError && (
               <div className="md:col-span-2 p-3 bg-[var(--alert)]/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--ink)] font-mono">
                 <span><ShowIcon inline emoji="⚠️" />{aiError}</span>
-                <button aria-label="Cerrar" type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert)]/50 rounded">
+                <IconButton label="Cerrar" variant="danger" size="icon-xs" type="button" onClick={() => setAiError(null)}>
                   <X className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               </div>
             )}
 
@@ -184,14 +184,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <Check className="w-3.5 h-3.5" />
                       <span>Aplicar todo</span>
                     </Button>
-                    <button
+                    <IconButton
+                      label="Descartar propuesta"
+                      size="icon-xs"
                       type="button"
                       onClick={() => setAiProposal(null)}
-                      className="p-1 hover:bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                      title="Descartar propuesta"
                     >
                       <X className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
                 </div>
 
@@ -548,7 +548,6 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               size="xs"
               type="button"
               onClick={() => onClose()}
-              
             >
               Cancelar
             </Button>
@@ -556,7 +555,6 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               variant="neutral"
               size="xs"
               type="submit"
-              
             >
               {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
             </Button>

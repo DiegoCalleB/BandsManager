@@ -133,7 +133,7 @@ import {
   getDetailedDateInfo,
 } from './calendar/calendarTypes';
 import { useCalendarRoadbook } from './calendar/useCalendarRoadbook';
-import { Button } from './ui';
+import { Button, IconButton } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -2246,14 +2246,15 @@ export default function CalendarView({
                   }`}
                 />
                 {calendarSearchTerm && (
-                  <button
+                  <IconButton
+                    label="Borrar búsqueda"
+                    size="icon-xs"
                     type="button"
                     onClick={() => setCalendarSearchTerm('')}
-                    className="p-1 mr-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                    title="Borrar búsqueda"
+                    className="mr-2"
                   >
                     <X className="w-3.5 h-3.5" />
-                  </button>
+                  </IconButton>
                 )}
               </div>
               {calendarSearchTerm && (

@@ -258,7 +258,7 @@ interface BookingCRMProps {
 
 import { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
-import { Button, Input } from './ui';
+import { Button, IconButton, Input } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1484,13 +1484,14 @@ export default function BookingCRM({
                       <Wrench className="w-3.5 h-3.5" />
                       Herramientas e inteligencia artificial
                     </span>
-                    <button aria-label="Cerrar"
+                    <IconButton
+                      label="Cerrar"
+                      size="icon-xs"
                       type="button"
                       onClick={() => setIsMobileToolsOpen(false)}
-                      className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
@@ -1706,15 +1707,16 @@ export default function BookingCRM({
                       className={`w-full pl-9 ${searchTerm ? "pr-8" : "pr-3"}`}
                     />
                     {searchTerm && (
-                      <button
+                      <IconButton
+                        label="Borrar búsqueda"
+                        size="icon-xs"
                         id="crm-search-clear"
                         type="button"
                         onClick={() => setSearchTerm('')}
-                        className="absolute right-2.5 top-2.5 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
-                        title="Borrar búsqueda"
+                        className="absolute right-2.5 top-2.5"
                       >
                         <X className="w-3.5 h-3.5" />
-                      </button>
+                      </IconButton>
                     )}
                   </div>
 
@@ -1883,13 +1885,14 @@ export default function BookingCRM({
                   />
                   <span>{enrichStatusMsg}</span>
                 </div>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
+                  size="icon-xs"
                   type="button"
                   onClick={() => setEnrichStatusMsg('')}
-                  className="p-0.5 rounded-[var(--r-s)] hover:opacity-75 cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               </div>
             )}
 
@@ -1936,49 +1939,49 @@ export default function BookingCRM({
                 {selectedCityFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="📍" />{selectedCityFilter}
-                    <button aria-label="Cerrar" type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-[var(--ink)] cursor-pointer">
+                    <IconButton label="Cerrar" type="button" onClick={() => setSelectedCityFilter('')}>
                       <X className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   </span>
                 )}
                 {typeFilter !== 'todos' && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="🏛️" />{typeFilter}
-                    <button aria-label="Cerrar" type="button" onClick={() => setTypeFilter('todos')} className="hover:text-[var(--ink)] cursor-pointer">
+                    <IconButton label="Cerrar" type="button" onClick={() => setTypeFilter('todos')}>
                       <X className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   </span>
                 )}
                 {onlyFavoritesFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="⭐" />Favoritos
-                    <button aria-label="Cerrar" type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <IconButton label="Cerrar" type="button" onClick={() => setOnlyFavoritesFilter(false)}>
                       <X className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   </span>
                 )}
                 {onlyVerifiedFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     <ShowIcon inline emoji="✔" />Verificados
-                    <button aria-label="Cerrar" type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <IconButton label="Cerrar" type="button" onClick={() => setOnlyVerifiedFilter(false)}>
                       <X className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   </span>
                 )}
                 {minCapacityFilter > 0 && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     &gt;{minCapacityFilter} pax
-                    <button aria-label="Cerrar" type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <IconButton label="Cerrar" type="button" onClick={() => setMinCapacityFilter(0)}>
                       <X className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   </span>
                 )}
                 {activeSavedFilterId && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="📌" />{savedFilters.find((f) => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
-                    <button aria-label="Cerrar" type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <IconButton label="Cerrar" type="button" onClick={() => setActiveSavedFilterId(null)}>
                       <X className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   </span>
                 )}
                 <button

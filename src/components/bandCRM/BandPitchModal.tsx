@@ -3,7 +3,7 @@ import { BandContact } from '../../types';
 import { Repeat, X, Check, Copy, MessageCircle, Send } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
-import { Input } from '../ui';
+import { IconButton, Input } from '../ui';
 
 interface BandPitchModalProps {
   isOpen: boolean;
@@ -55,9 +55,9 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 Generador de pitch Date Swap: {myBandName} x {band.nombre_banda}
               </h3>
             </div>
-            <button aria-label="Cerrar" onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer">
+            <IconButton label="Cerrar" size="icon-xs" onClick={onClose}>
               <X className="w-5 h-5 text-[var(--ink-2)]" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Config Fields */}

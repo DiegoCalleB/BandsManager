@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { NotificationHistoryItem, NotificationPermissionStatus, BrowserNotificationConfig } from '../../types/browserNotifications';
 import { ShowIcon } from '../ui/ShowIcon';
+import { IconButton } from '../ui';
 
 interface NotificationCenterBellProps {
   permission: NotificationPermissionStatus;
@@ -153,17 +154,17 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                   <span>Leídas</span>
                 </button>
               )}
-              <button
+              <IconButton
+                label="Configuración de notificaciones"
+                size="icon-xs"
                 type="button"
                 onClick={() => {
                   setIsOpen(false);
                   onOpenSettings();
                 }}
-                className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
-                title="Configuración de notificaciones"
               >
                 <Settings className="w-3.5 h-3.5" />
-              </button>
+              </IconButton>
             </div>
           </div>
 

@@ -20,7 +20,7 @@ import { EPKConfig, BandMember } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Textarea } from '../ui';
+import { Button, IconButton, Input, Textarea } from '../ui';
 
 interface EPKPerfilBlockProps {
   config: EPKConfig;
@@ -418,7 +418,6 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               size="xs"
               type="button"
               onClick={anadirMiembro}
-              
             >
               + Añadir miembro
             </Button>
@@ -498,14 +497,15 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       className="w-full"
                     />
                   </div>
-                  <button
+                  <IconButton
+                    label="Quitar músico"
+                    variant="danger"
                     type="button"
                     onClick={() => quitarMiembro(m.id)}
-                    className="shrink-0 p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] transition cursor-pointer"
-                    title="Quitar músico"
+                    className="shrink-0"
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </div>
                 <div className="space-y-1">
                   <label className="text-micro font-semibold text-[var(--ink-2)] block">

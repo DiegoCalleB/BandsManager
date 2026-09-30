@@ -2,7 +2,7 @@ import React from 'react';
 import { Filter, X, Building2, Radio, Briefcase, LayoutGrid, List, Map as MapIcon, BookmarkCheck, RefreshCw } from 'lucide-react';
 import { Lead } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 export interface BookingFiltersPanelProps {
   isOpen: boolean;
@@ -82,9 +82,9 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <Filter className="w-3.5 h-3.5" />
           Filtros y búsquedas avanzadas
         </span>
-        <button aria-label="Cerrar" type="button" onClick={() => onClose()} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] cursor-pointer">
+        <IconButton label="Cerrar" size="icon-xs" type="button" onClick={() => onClose()}>
           <X className="w-4 h-4" />
-        </button>
+        </IconButton>
       </div>
 
       {/* 0. Filter drawer Category and View Mode Selectors */}
@@ -263,9 +263,9 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
             />
             {minCapacityFilter > 0 && (
-              <button aria-label="Cerrar" type="button" onClick={() => setMinCapacityFilter(0)} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+              <IconButton label="Cerrar" type="button" onClick={() => setMinCapacityFilter(0)}>
                 <X className="w-3 h-3" />
-              </button>
+              </IconButton>
             )}
           </div>
 
@@ -336,14 +336,15 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                       <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-[var(--ink)]">&gt;{sf.minCapacityFilter}</span>
                     ) : null}
                   </button>
-                  <button
+                  <IconButton
+                    label="Eliminar filtro guardado"
+                    variant="danger"
+                    size="icon-xs"
                     type="button"
                     onClick={(e) => handleDeleteSavedFilter(sf.id, e)}
-                    className="pr-2 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors p-0.5 rounded-[var(--r-pill)] cursor-pointer"
-                    title="Eliminar filtro guardado"
                   >
                     <X className="w-3 h-3" />
-                  </button>
+                  </IconButton>
                 </div>
               );
             })}

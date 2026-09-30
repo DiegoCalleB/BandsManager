@@ -45,7 +45,7 @@ import {
 } from "../../utils/chordUtils";
 import { SongChordsViewerModal } from "../SongChordsViewerModal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -985,12 +985,12 @@ export function ModoLocalEnVivoTab({
                 <span>
                   Diagramas de Acordes de este Tema ({uniqueChords.length})
                 </span>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
                   onClick={() => setShowChordDiagrams(false)}
-                  className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
                 {uniqueChords.map((chord, cIdx) => (

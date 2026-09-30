@@ -28,7 +28,7 @@ import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils'
 import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { usePlayer } from '../context/PlayerContext';
-import { Select } from './ui';
+import { IconButton, Select } from './ui';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -666,14 +666,13 @@ export default function SpotifyPlayerBar({
 
             {/* Center: Centered Controls (focal point) */}
             <div className="flex items-center gap-2 justify-center shrink-0 md:gap-3">
-              <button
+              <IconButton
+                label="Canción anterior"
                 type="button"
                 onClick={() => handlePrev()}
-                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-[0.97]"
-                title="Canción anterior"
               >
                 <SkipBack className="w-4 h-4 fill-current" />
-              </button>
+              </IconButton>
 
               <button
                 type="button"
@@ -688,36 +687,34 @@ export default function SpotifyPlayerBar({
                 )}
               </button>
 
-              <button
+              <IconButton
+                label="Siguiente canción"
                 type="button"
                 onClick={() => handleNext(false)}
-                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-[0.97]"
-                title="Siguiente canción"
               >
                 <SkipForward className="w-4 h-4 fill-current" />
-              </button>
+              </IconButton>
 
-              <button
+              <IconButton
+                label="Expandir reproductor"
                 type="button"
                 onClick={() => setIsMinimized(false)}
-                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer ml-2"
-                title="Expandir reproductor"
+                className="ml-2"
               >
                 <ChevronUp className="w-5 h-5 text-[var(--ok)]" />
-              </button>
+              </IconButton>
 
-              <button
+              <IconButton
+                label="Cerrar reproductor"
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   onClosePlayer();
                 }}
-                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
-                title="Cerrar reproductor"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
         ) : (
@@ -834,13 +831,13 @@ export default function SpotifyPlayerBar({
                 </button>
 
                 {/* Prev Song */}
-                <button
+                <IconButton
+                  label="Canción anterior"
+                  size="icon-xs"
                   onClick={() => handlePrev()}
-                  className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
-                  title="Canción anterior"
                 >
                   <SkipBack className="w-5 h-5 fill-current" />
-                </button>
+                </IconButton>
 
                 {/* Play / Pause - Authentic Spotify Green Circle */}
                 <button
@@ -852,13 +849,13 @@ export default function SpotifyPlayerBar({
                 </button>
 
                 {/* Next Song */}
-                <button
+                <IconButton
+                  label="Siguiente canción"
+                  size="icon-xs"
                   onClick={() => handleNext(false)}
-                  className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
-                  title="Siguiente canción"
                 >
                   <SkipForward className="w-5 h-5 fill-current" />
-                </button>
+                </IconButton>
 
                 {/* Crossfade Toggle — fundido real de 5s al pasar al siguiente tema de la cola */}
                 <button
@@ -876,7 +873,6 @@ export default function SpotifyPlayerBar({
                   size="sm"
                   value={playbackRate}
                   onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-                  
                   title="Velocidad de reproducción"
                 >
                   <option value={0.5}>0.5x</option>
@@ -891,7 +887,6 @@ export default function SpotifyPlayerBar({
                   size="sm"
                   value={transposeSemitones}
                   onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
-                  
                   title="Trasposición de tono"
                 >
                   {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
@@ -986,18 +981,18 @@ export default function SpotifyPlayerBar({
               </div>
 
               {/* Close Player */}
-              <button
+              <IconButton
+                label="Cerrar reproductor"
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   onClosePlayer();
                 }}
-                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui ml-1"
-                title="Cerrar reproductor"
+                className="ml-1"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
         )}

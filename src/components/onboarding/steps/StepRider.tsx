@@ -8,7 +8,7 @@ import {
   Trash2,
   Check,
 } from "lucide-react";
-import { Input, Textarea } from '../../ui';
+import { IconButton, Input, Textarea } from '../../ui';
 
 interface StepRiderProps {
   riderTecnicoText: string;
@@ -173,16 +173,18 @@ export const StepRider: React.FC<StepRiderProps> = ({
               >
                 Cambiar
               </button>
-              <button aria-label="Eliminar"
+              <IconButton
+                label="Eliminar"
+                variant="danger"
+                size="icon-xs"
                 type="button"
                 onClick={() => {
                   setRiderPdfUrl("");
                   setRiderPdfName("");
                 }}
-                className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)]"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
         ) : (

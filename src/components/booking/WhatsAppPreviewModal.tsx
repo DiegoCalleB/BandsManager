@@ -23,7 +23,7 @@ import {
   copyToClipboard,
 } from '../../utils/whatsappUtils';
 import { ModalPortal } from '../common/ModalPortal';
-import { Button, Input, Textarea } from '../ui';
+import { Button, IconButton, Input, Textarea } from '../ui';
 
 interface WhatsAppPreviewModalProps {
   isOpen: boolean;
@@ -159,12 +159,12 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Body */}

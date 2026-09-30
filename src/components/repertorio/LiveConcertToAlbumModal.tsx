@@ -50,7 +50,7 @@ import { Song, ThemeColors } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 export interface TrackCutItem {
   index: number;
@@ -1778,7 +1778,6 @@ export const LiveConcertToAlbumModal: React.FC<
                         type="text"
                         value={albumTitle}
                         onChange={(e) => setAlbumTitle(e.target.value)}
-                        
                       />
                     </div>
 
@@ -2087,7 +2086,6 @@ export const LiveConcertToAlbumModal: React.FC<
                                   );
                                 }
                               }}
-                              
                               title="Haz clic para alternar entre canción y speech/Presentación"
                             >
                               <option value="musica">
@@ -2243,31 +2241,32 @@ export const LiveConcertToAlbumModal: React.FC<
                                 </button>
                               )}
 
-                              <button
+                              <IconButton
+                                label="Mover arriba"
+                                size="icon-xs"
                                 onClick={() =>
                                   handleMoveTrack(track.index, "up")
                                 }
-                                className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-2)]"
-                                title="Mover arriba"
                               >
                                 <ArrowUp className="w-3.5 h-3.5" />
-                              </button>
-                              <button
+                              </IconButton>
+                              <IconButton
+                                label="Mover abajo"
+                                size="icon-xs"
                                 onClick={() =>
                                   handleMoveTrack(track.index, "down")
                                 }
-                                className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-2)]"
-                                title="Mover abajo"
                               >
                                 <ArrowDown className="w-3.5 h-3.5" />
-                              </button>
-                              <button
+                              </IconButton>
+                              <IconButton
+                                label="Eliminar corte"
+                                variant="danger"
+                                size="icon-xs"
                                 onClick={() => handleDeleteTrack(track.index)}
-                                className="p-1 rounded hover:bg-[var(--alert)]/20 text-[var(--alert)]"
-                                title="Eliminar corte"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+                              </IconButton>
                             </div>
                           </div>
                         </div>
@@ -2308,16 +2307,17 @@ export const LiveConcertToAlbumModal: React.FC<
                                 }
                               />
                               {track.title && (
-                                <button
+                                <IconButton
+                                  label="Limpiar nombre"
+                                  size="icon-xs"
                                   type="button"
                                   onClick={() =>
                                     handleUpdateTrack(track.index, "title", "")
                                   }
-                                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink-2)] p-0.5"
-                                  title="Limpiar nombre"
+                                  className="absolute right-2.5 top-1/2"
                                 >
                                   <X className="w-3.5 h-3.5" />
-                                </button>
+                                </IconButton>
                               )}
                             </div>
                           </div>
@@ -2722,13 +2722,13 @@ export const LiveConcertToAlbumModal: React.FC<
                                     </span>
                                   </button>
 
-                                  <button
+                                  <IconButton
+                                    label="Cerrar reproductor"
+                                    size="icon-xs"
                                     onClick={() => setActiveSnippet(null)}
-                                    className="p-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                                    title="Cerrar reproductor"
                                   >
                                     <X className="w-4 h-4" />
-                                  </button>
+                                  </IconButton>
                                 </div>
                               </div>
 
@@ -3012,12 +3012,13 @@ export const LiveConcertToAlbumModal: React.FC<
                       </p>
                     </div>
                   </div>
-                  <button aria-label="Cerrar"
+                  <IconButton
+                    label="Cerrar"
+                    size="icon-xs"
                     onClick={() => setCookieModalOpen(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)]"
                   >
                     <X className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </div>
 
                 {cookieSuccessMsg ? (
@@ -3101,7 +3102,6 @@ export const LiveConcertToAlbumModal: React.FC<
                           variant="neutral"
                           size="sm"
                           onClick={() => setCookieModalOpen(false)}
-                          
                         >
                           Cancelar
                         </Button>
@@ -3149,12 +3149,13 @@ export const LiveConcertToAlbumModal: React.FC<
                       </p>
                     </div>
                   </div>
-                  <button aria-label="Cerrar"
+                  <IconButton
+                    label="Cerrar"
+                    size="icon-xs"
                     onClick={() => setShowQuickNamingModal(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition-colors"
                   >
                     <X className="w-5 h-5" />
-                  </button>
+                  </IconButton>
                 </div>
 
                 {/* Tabs */}
@@ -3289,15 +3290,16 @@ export const LiveConcertToAlbumModal: React.FC<
                               className="w-full"
                             />
                             {tr.title && (
-                              <button aria-label="Cerrar"
+                              <IconButton
+                                label="Cerrar"
                                 type="button"
                                 onClick={() =>
                                   handleUpdateTrack(tr.index, "title", "")
                                 }
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
+                                className="absolute right-2 top-1/2"
                               >
                                 <X className="w-3 h-3" />
-                              </button>
+                              </IconButton>
                             )}
                           </div>
 
@@ -3476,7 +3478,6 @@ export const LiveConcertToAlbumModal: React.FC<
                     size="sm"
                     type="button"
                     onClick={() => setShowQuickNamingModal(false)}
-                    
                   >
                     Listo / cerrar
                   </Button>

@@ -14,6 +14,7 @@ import {
   getStoredFontPreset,
 } from "../utils/typography";
 import { ModalPortal } from "./common/ModalPortal";
+import { IconButton } from './ui';
 
 interface FontSelectorModalProps {
   onClose: () => void;
@@ -55,12 +56,12 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
               </div>
             </div>
 
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Informative banner */}

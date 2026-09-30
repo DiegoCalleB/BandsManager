@@ -14,7 +14,7 @@ import { apiFetch } from "../../utils/api";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { LeadAvatar } from "./LeadAvatar";
 import { ModalPortal } from "../common/ModalPortal";
-import { Button, Input } from '../ui';
+import { Button, IconButton, Input } from '../ui';
 
 interface ChangeLeadImageModalProps {
   lead: Lead | null;
@@ -179,12 +179,12 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Current Preview */}
@@ -295,7 +295,6 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                     type="button"
                     onClick={handleSaveCustomUrl}
                     disabled={!customUrl.trim()}
-                    
                   >
                     Guardar
                   </Button>

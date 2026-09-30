@@ -27,7 +27,7 @@ import { CalendarWeatherBadge } from './AnimatedWeatherIcon';
 import { WeatherAlert } from '../../services/weatherService';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 export interface CalendarViewsContainerProps {
   calendarViewMode: '1m' | '2m' | 'week' | 'agenda';
@@ -384,17 +384,18 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                       })()}
                       {isToday && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] animate-ping shrink-0" />}
                     </div>
-                    <button
+                    <IconButton
+                      label="Añadir evento a este día"
+                      size="icon-xs"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedDate(d);
                         setShowCreateModal('concert');
                       }}
-                      title="Añadir evento a este día"
-                      className="p-1 rounded hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer shrink-0"
+                      className="shrink-0"
                     >
                       <Plus className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   </div>
 
                   {/* Lista de eventos del día */}
@@ -746,16 +747,16 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         </span>
                       )}
                     </div>
-                    <button
+                    <IconButton
+                      label="Añadir a esta fecha"
+                      size="icon-xs"
                       onClick={() => {
                         setSelectedDate(d);
                         setShowCreateModal('concert');
                       }}
-                      className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-ui cursor-pointer"
-                      title="Añadir a esta fecha"
                     >
                       <Plus className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
 
                   <div className="flex flex-col gap-2">

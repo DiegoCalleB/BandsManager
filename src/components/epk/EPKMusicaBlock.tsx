@@ -10,7 +10,7 @@ import {
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface EPKMusicaBlockProps {
   config: EPKConfig;
@@ -280,7 +280,6 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               size="xs"
               type="button"
               onClick={anadirVideo}
-              
             >
               + Añadir vídeo
             </Button>
@@ -326,14 +325,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     placeholder="Título (ej. Directo en Sala Caracol, 2026)"
                     className="flex-1"
                   />
-                  <button
+                  <IconButton
+                    label="Quitar vídeo"
+                    variant="danger"
                     type="button"
                     onClick={() => quitarVideo(v.id)}
-                    className="shrink-0 p-2 text-[var(--ink-2)] hover:text-[var(--alert)] transition cursor-pointer"
-                    title="Quitar vídeo"
+                    className="shrink-0"
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </div>
                 <Input
                   size="sm"

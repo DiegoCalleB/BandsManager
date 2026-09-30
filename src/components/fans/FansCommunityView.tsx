@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Fan, Concert, ThemeColors } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface BandAnnouncement {
   id: string;
@@ -435,7 +435,6 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
               variant="primary"
               size="sm"
               onClick={onOpenAddModal}
-              
             >
               Registrar primer fan
             </Button>
@@ -530,7 +529,9 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       <Mail className="w-3.5 h-3.5" />
                     </a>
                     {onDeleteFan && (
-                      <button
+                      <IconButton
+                        label="Eliminar Fan"
+                        variant="danger"
                         onClick={() => {
                           if (
                             confirm(`¿Eliminar a ${fan.nombre} del Fan Club?`)
@@ -538,11 +539,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                             onDeleteFan(fan.id);
                           }
                         }}
-                        className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--sunken)] hover:bg-[var(--alert)]/10 rounded-[var(--r-s)] transition opacity-60 group-hover:opacity-100"
-                        title="Eliminar Fan"
+                        className="opacity-60"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      </IconButton>
                     )}
                   </div>
                 </div>
@@ -658,7 +658,6 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                           });
                         }
                       }}
-                      
                     >
                       <option value="fiel">Oyente Fiel</option>
                       <option value="superfan">Superfan</option>
@@ -726,7 +725,6 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   size="sm"
                   type="button"
                   onClick={() => setShowNewPostModal(false)}
-                  
                 >
                   Cancelar
                 </Button>

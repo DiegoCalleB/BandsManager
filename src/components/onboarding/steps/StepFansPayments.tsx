@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard } from 'lucide-react';
-import { Input } from '../../ui';
+import { IconButton, Input } from '../../ui';
 
 interface StepFansPaymentsProps {
   fanCallToAction: string;
@@ -147,16 +147,18 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 >
                   Cambiar
                 </button>
-                <button aria-label="Eliminar"
+                <IconButton
+                  label="Eliminar"
+                  variant="danger"
+                  size="icon-xs"
                   type="button"
                   onClick={() => {
                     setFanRewardLink('');
                     setLeadMagnetFileName('');
                   }}
-                  className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)]"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               </div>
             </div>
           ) : (

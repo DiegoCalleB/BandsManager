@@ -19,7 +19,7 @@ import {
 import { SpotifyAlbum, SpotifyTrack, ManualSongItem } from "../types";
 import { Song } from "../../../types";
 import { ShowIcon } from '../../ui/ShowIcon';
-import { Button, Input, Textarea } from '../../ui';
+import { Button, IconButton, Input, Textarea } from '../../ui';
 
 interface StepMusicSetlistProps {
   musicSubTab: "spotify" | "upload" | "manual";
@@ -413,13 +413,14 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                   <div className="flex items-center gap-3 text-[var(--ink-2)]">
                     {s.tonalidad && <span>{s.tonalidad}</span>}
                     {s.duracion && <span>{s.duracion}</span>}
-                    <button aria-label="Eliminar"
+                    <IconButton
+                      label="Eliminar"
+                      variant="danger"
                       type="button"
                       onClick={() => onRemoveManualSong(s.id)}
-                      className="text-[var(--ink-2)] hover:text-[var(--alert)]"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
                 </div>
               ))}

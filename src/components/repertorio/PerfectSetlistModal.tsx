@@ -3,7 +3,7 @@ import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Textarea } from '../ui';
+import { Button, IconButton, Textarea } from '../ui';
 
 /** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
@@ -278,9 +278,9 @@ export function PerfectSetlistModal({
                   <ShowIcon inline emoji="↩️" />Deshacer
                 </Button>
               )}
-              <button aria-label="Cerrar" onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition">
+              <IconButton label="Cerrar" onClick={onClose}>
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
 

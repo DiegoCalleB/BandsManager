@@ -3,7 +3,7 @@ import { Lead } from '../../types';
 import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface CRMContactEnricherModalProps {
   isOpen: boolean;
@@ -107,13 +107,14 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
                 <p className="text-xs text-[var(--ink-2)]">Búsqueda automática de emails, teléfonos e Instagram</p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
+              size="icon-xs"
               onClick={onClose}
               disabled={isProcessing}
-              className="p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <div className="my-5 space-y-4 text-xs">

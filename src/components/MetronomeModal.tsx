@@ -13,7 +13,7 @@ import {
 import { Song, ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Select } from './ui';
+import { Button, IconButton, Select } from './ui';
 
 interface MetronomeModalProps {
   isOpen: boolean;
@@ -236,12 +236,12 @@ export function MetronomeModal({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Content */}

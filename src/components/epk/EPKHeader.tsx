@@ -13,7 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from "./epkBlocks";
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface EPKHeaderProps {
   activeBlock: EPKBlockId;
@@ -255,15 +255,14 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
       {/* SELECTOR ERGONÓMICO DE BLOQUES EN MÓVIL (< sm) */}
       <div className="sm:hidden flex items-center justify-between gap-1.5 bg-[var(--surface)] p-1 rounded-[var(--r-m)]">
-        <button
+        <IconButton
+          label="Bloque anterior"
           type="button"
           onClick={() => prevBlock && onSelectBlock(prevBlock.id)}
           disabled={!prevBlock}
-          className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
-          title="Bloque anterior"
         >
           <ChevronLeft className="w-4 h-4" />
-        </button>
+        </IconButton>
 
         <div className="relative flex-1">
           <select data-raw
@@ -286,15 +285,14 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <ChevronDown className="w-3.5 h-3.5 text-[var(--acc)] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
 
-        <button
+        <IconButton
+          label="Siguiente bloque"
           type="button"
           onClick={() => nextBlock && onSelectBlock(nextBlock.id)}
           disabled={!nextBlock}
-          className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
-          title="Siguiente bloque"
         >
           <ChevronRight className="w-4 h-4" />
-        </button>
+        </IconButton>
       </div>
 
       {/* ============================================================ */}

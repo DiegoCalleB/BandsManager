@@ -46,7 +46,7 @@ import { Sparkles,
   Zap,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 export interface CalendarEventDetailModalProps {
   showEventFichaModal: boolean;
@@ -1153,14 +1153,15 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             <Phone className="w-3.5 h-3.5" />
                             <span className="hidden sm:inline">Llamar</span>
                           </a>
-                          <button
+                          <IconButton
+                            label="Eliminar este contacto"
+                            variant="danger"
+                            size="icon-xs"
                             type="button"
                             onClick={() => handleDeleteKeyContact(contact.id, modalRoadbookKey)}
-                            className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/30 transition-colors cursor-pointer"
-                            title="Eliminar este contacto"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          </IconButton>
                         </div>
                       </div>
                     ))
@@ -1654,14 +1655,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                                 {/* Acciones */}
                                 <div className="flex items-center justify-end">
-                                  <button
+                                  <IconButton
+                                    label="Eliminar este artículo del bolo"
+                                    variant="danger"
                                     type="button"
                                     onClick={() => handleDeleteMerchItem(modalRoadbookKey, item.id)}
-                                    className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/30 transition-colors cursor-pointer"
-                                    title="Eliminar este artículo del bolo"
                                   >
                                     <Trash2 className="w-4 h-4" />
-                                  </button>
+                                  </IconButton>
                                 </div>
                               </div>
                             );
@@ -2069,17 +2070,18 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               />
                               <span className="text-xs font-mono font-medium">{item.item}</span>
                             </div>
-                            <button
+                            <IconButton
+                              label="Eliminar este ítem"
+                              variant="danger"
+                              size="icon-xs"
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleDeleteCierreItem(item.id, modalRoadbookKey);
                               }}
-                              className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors cursor-pointer"
-                              title="Eliminar este ítem"
                             >
                               <Trash2 className="w-3 h-3" />
-                            </button>
+                            </IconButton>
                           </div>
                         ))}
                       </div>

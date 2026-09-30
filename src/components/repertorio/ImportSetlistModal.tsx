@@ -10,7 +10,7 @@ import {
 import { Song, Setlist, SetlistItem } from "../../types";
 import { getAuthHeaders } from "../../services/api";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { IconButton, Input, Select } from '../ui';
 
 type SongAction = "link_matched" | "link_other" | "create_new" | "discard";
 
@@ -260,12 +260,12 @@ export function ImportSetlistModal({
               Importar repertorio de foto/PDF
             </h2>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             onClick={handleClose}
-            className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition"
           >
             <X className="w-4 h-4" />
-          </button>
+          </IconButton>
         </div>
 
         <div className="p-4 space-y-4">
@@ -379,7 +379,6 @@ export function ImportSetlistModal({
                               action: e.target.value as SongAction,
                             })
                           }
-                          
                         >
                           {it.matchedSongId && (
                             <option value="link_matched">

@@ -94,7 +94,7 @@ import {
   Settings,
   Eye,
 } from "lucide-react";
-import { Button } from './ui';
+import { Button, IconButton } from './ui';
 
 export type NavigationOptions = {
   sectionTab?: "salas" | "medios" | "grupos";
@@ -824,12 +824,13 @@ export default function Dashboard({
                   <span className="text-xs font-semibold text-[var(--ink-2)] block">
                     Ajustes del Dashboard
                   </span>
-                  <button aria-label="Cerrar"
+                  <IconButton
+                    label="Cerrar"
+                    size="icon-xs"
                     onClick={() => setIsDashboardSettingsOpen(false)}
-                    className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
-                  </button>
+                  </IconButton>
                 </div>
 
                 <button

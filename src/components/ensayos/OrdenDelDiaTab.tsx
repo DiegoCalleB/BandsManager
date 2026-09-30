@@ -41,7 +41,7 @@ import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface OrdenDelDiaTabProps {
   rehearsal: Rehearsal;
@@ -518,13 +518,15 @@ export function OrdenDelDiaTab({
                         {obj.texto}
                       </span>
                     </button>
-                    <button aria-label="Eliminar"
+                    <IconButton
+                      label="Eliminar"
+                      variant="danger"
+                      size="icon-xs"
                       type="button"
                       onClick={() => handleDeleteObjetivo(obj.id)}
-                      className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
                 ))
               )}
@@ -637,7 +639,6 @@ export function OrdenDelDiaTab({
                     setSelectedSongIds([]);
                     setShowAddSongModal(true);
                   }}
-                  
                 >
                   + Añadir canciones del repertorio
                 </Button>
@@ -806,35 +807,35 @@ export function OrdenDelDiaTab({
 
                         {/* Move Up / Down Buttons */}
                         <div className="flex items-center">
-                          <button
+                          <IconButton
+                            label="Subir posición"
+                            size="icon-xs"
                             type="button"
                             disabled={idx === 0}
                             onClick={() => handleMoveItem(idx, "up")}
-                            className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-[var(--ink-2)] cursor-pointer"
-                            title="Subir posición"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
-                          </button>
-                          <button
+                          </IconButton>
+                          <IconButton
+                            label="Bajar posición"
+                            size="icon-xs"
                             type="button"
                             disabled={idx === agenda.length - 1}
                             onClick={() => handleMoveItem(idx, "down")}
-                            className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-[var(--ink-2)] cursor-pointer"
-                            title="Bajar posición"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
-                          </button>
+                          </IconButton>
                         </div>
 
                         {/* Delete */}
-                        <button
+                        <IconButton
+                          label="Eliminar de la agenda"
+                          variant="danger"
                           type="button"
                           onClick={() => handleDeleteAgendaItem(item.id)}
-                          className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                          title="Eliminar de la agenda"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
                       </div>
                     </div>
                   </div>
@@ -866,13 +867,14 @@ export function OrdenDelDiaTab({
                     </p>
                   </div>
                 </div>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
+                  size="icon-xs"
                   type="button"
                   onClick={() => setShowAddSongModal(false)}
-                  className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                 >
                   <X className="w-5 h-5" />
-                </button>
+                </IconButton>
               </div>
 
               <div className="pt-3 space-y-2 shrink-0">
@@ -893,7 +895,6 @@ export function OrdenDelDiaTab({
                     size="sm"
                     value={selectedAlbumFilter}
                     onChange={(e) => setSelectedAlbumFilter(e.target.value)}
-                    
                   >
                     {albumsList.map((alb) => (
                       <option key={alb} value={alb}>
@@ -922,7 +923,6 @@ export function OrdenDelDiaTab({
                     size="xs"
                     type="button"
                     onClick={selectAllFiltered}
-                    
                   >
                     Seleccionar todo ({filteredSongs.length})
                   </Button>
@@ -933,7 +933,6 @@ export function OrdenDelDiaTab({
                       size="xs"
                       type="button"
                       onClick={clearSelection}
-                      
                     >
                       Vaciar selección
                     </Button>
@@ -1065,13 +1064,14 @@ export function OrdenDelDiaTab({
                     Cargar repertorio al ensayo
                   </h3>
                 </div>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
+                  size="icon-xs"
                   type="button"
                   onClick={() => setShowImportSetlistModal(false)}
-                  className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                 >
                   <X className="w-5 h-5" />
-                </button>
+                </IconButton>
               </div>
 
               <div className="py-4 space-y-3">
@@ -1155,13 +1155,13 @@ export function OrdenDelDiaTab({
                     Añadir bloque de sesión
                   </h4>
                 </div>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
                   type="button"
                   onClick={() => setShowAddBlockModal(false)}
-                  className="text-[var(--ink-2)] hover:text-[var(--ink)]"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </IconButton>
               </div>
 
               <div className="p-4 space-y-3.5">
@@ -1250,7 +1250,6 @@ export function OrdenDelDiaTab({
                   variant="primary"
                   size="xs"
                   type="submit"
-                  
                 >
                   Añadir bloque
                 </Button>

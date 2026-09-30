@@ -3,7 +3,7 @@ import { BarChart3, Quote, Plus, Trash2 } from "lucide-react";
 import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
-import { Input, Textarea } from '../ui';
+import { IconButton, Input, Textarea } from '../ui';
 
 interface EPKPrensaBlockProps {
   config: EPKConfig;
@@ -191,7 +191,9 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                     placeholder="Texto exacto de la reseña o cita…"
                     className="flex-1"
                   />
-                  <button
+                  <IconButton
+                    label="Quitar reseña"
+                    variant="danger"
                     type="button"
                     onClick={() => {
                       const nuevas = (config.resenasPrensa?.citas || []).filter(
@@ -205,11 +207,10 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                         },
                       });
                     }}
-                    className="shrink-0 p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] transition cursor-pointer"
-                    title="Quitar reseña"
+                    className="shrink-0"
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </div>
                 <Input
                   size="sm"

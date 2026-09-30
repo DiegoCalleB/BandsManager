@@ -6,6 +6,7 @@ import {
   cleanToNormalText,
 } from "../../utils/bandNameStyler";
 import { ShowIcon } from '../ui/ShowIcon';
+import { IconButton } from '../ui';
 
 interface BandNameStylerHelperProps {
   value: string;
@@ -81,13 +82,14 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                   </p>
                 </div>
               </div>
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
+                size="icon-xs"
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
 
             {/* Notification Badge */}

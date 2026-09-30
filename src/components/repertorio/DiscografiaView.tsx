@@ -43,7 +43,7 @@ import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input } from '../ui';
+import { Button, IconButton, Input } from '../ui';
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -646,14 +646,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             className="w-full pl-8 pr-7"
           />
           {searchQuery && (
-            <button
+            <IconButton
+              label="Limpiar búsqueda"
+              size="icon-xs"
               type="button"
               onClick={() => setSearchQuery("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)] p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer"
-              title="Limpiar búsqueda"
+              className="absolute right-2 top-1/2"
             >
               <X className="w-3 h-3" />
-            </button>
+            </IconButton>
           )}
         </div>
 
@@ -928,16 +929,17 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     {onRequestDeleteAlbum &&
                       album !== "Singles / Sin Disco" && (
-                        <button
+                        <IconButton
+                          label="Eliminar álbum"
+                          variant="danger"
                           type="button"
                           onClick={() =>
                             onRequestDeleteAlbum(album, sortedAlbumSongs.length)
                           }
-                          className="p-1.5 rounded-[var(--r-pill)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors cursor-pointer shrink-0"
-                          title="Eliminar álbum"
+                          className="shrink-0"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
                       )}
 
                     {/* Expand / Collapse Toggle Button */}

@@ -22,7 +22,7 @@ import { Lead, LeadType } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface ExcelImportModalProps {
   isOpen: boolean;
@@ -776,13 +776,13 @@ export function ExcelImportModal({
                 <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>Plantilla ejemplo</span>
               </Button>
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
@@ -1521,14 +1521,15 @@ export function ExcelImportModal({
                             {row.aforo > 0 ? `${row.aforo} pax` : "-"}
                           </td>
                           <td className="p-2.5 text-right">
-                            <button
+                            <IconButton
+                              label="Eliminar de la importación"
+                              variant="danger"
+                              size="icon-xs"
                               type="button"
                               onClick={() => handleRowDelete(row.id)}
-                              className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors cursor-pointer"
-                              title="Eliminar de la importación"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
                           </td>
                         </tr>
                       ))}

@@ -28,7 +28,7 @@ import {
 import { formatTime } from "./EnsayoCronometro";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface GrabacionActaTabProps {
   rehearsal: Rehearsal;
@@ -348,13 +348,11 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     placeholder="Título de la toma (ej. Riff nuevo tema 2)…"
                     value={recordingTitle}
                     onChange={(e) => setRecordingTitle(e.target.value)}
-                    
                   />
                   <Select
                     size="sm"
                     value={recordingTag}
                     onChange={(e) => setRecordingTag(e.target.value as any)}
-                    
                   >
                     <option value="toma_completa">Toma completa</option>
                     <option value="riff">Riff / idea nueva</option>
@@ -446,12 +444,14 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                       <span className="text-micro font-sans text-[var(--ink-2)]">
                         {formatTime(rec.duracionSegundos)}
                       </span>
-                      <button aria-label="Eliminar"
+                      <IconButton
+                        label="Eliminar"
+                        variant="danger"
+                        size="icon-xs"
                         onClick={() => handleDeleteRecording(rec.id)}
-                        className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      </IconButton>
                     </div>
                   </div>
 

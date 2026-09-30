@@ -19,7 +19,7 @@ import {
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface QueueJobItem {
   id: string;
@@ -197,22 +197,21 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
             </div>
 
             <div className="flex items-center gap-2">
-              <button
+              <IconButton
+                label="Refrescar métricas"
                 type="button"
                 onClick={() => fetchMetrics(true)}
                 disabled={refreshing}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer disabled:opacity-50"
-                title="Refrescar métricas"
               >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-[var(--acc)]' : ''}`} />
-              </button>
-              <button aria-label="Cerrar"
+              </IconButton>
+              <IconButton
+                label="Cerrar"
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
 

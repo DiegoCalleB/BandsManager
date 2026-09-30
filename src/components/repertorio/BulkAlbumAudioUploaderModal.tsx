@@ -20,7 +20,7 @@ import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
-import { Input, Select } from '../ui';
+import { IconButton, Input, Select } from '../ui';
 
 interface BulkAlbumAudioUploaderModalProps {
   isOpen: boolean;
@@ -663,14 +663,14 @@ export function BulkAlbumAudioUploaderModal({
             </div>
           </div>
 
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             type="button"
             onClick={onClose}
             disabled={isUploading}
-            className="p-2.5 rounded-[var(--r-l)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition cursor-pointer disabled:opacity-50"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         {/* Modal Body */}

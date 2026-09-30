@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from "lucide-react";
 import { ThemeColors } from "../../types";
+import { IconButton } from '../ui';
 
 interface EnsayoCronometroProps {
   totalEstimatedMin?: number;
@@ -181,13 +182,12 @@ export function EnsayoCronometro({
             )}
           </button>
 
-          <button
+          <IconButton
+            label="Reiniciar cronómetro"
             onClick={resetTimer}
-            className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-            title="Reiniciar cronómetro"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-          </button>
+          </IconButton>
         </div>
       </div>
 

@@ -21,7 +21,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input } from '../ui';
+import { Button, IconButton, Input } from '../ui';
 
 interface MultiModelPitchComparatorModalProps {
   isOpen: boolean;
@@ -249,12 +249,12 @@ export const MultiModelPitchComparatorModal: React.FC<
               </div>
             </div>
 
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* CONTROLS & VENUE BAR */}

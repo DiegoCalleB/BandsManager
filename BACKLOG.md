@@ -107,7 +107,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Estado:** idea capturada, sin prototipar. Siguiente paso si se retoma: probar `essentia.js` contra un stem de guitarra ya separado por Iris y medir precisión real antes de comprometer tiempo de desarrollo en la UI.
 
 ### Deuda de diseño: lo que queda tras las fases F3–F9
-* **Qué:** las primitivas (`Input`, `Textarea`, `Select`, `Field`, `Switch`, `Card`, `EmptyState`, `Button`) ya cubren los campos (≈650 migrados; los que quedan llevan `data-raw` con motivo) y unas 400 píldoras/alternancias. Quedan ~1.500 `<button>` escritos a mano: pestañas (~110), filas de menú (~100), iconos (todos ya con `aria-label`) y otros; visualmente coherentes, pero sin primitiva.
+* **Qué:** las primitivas (`Input`, `Textarea`, `Select`, `Field`, `Switch`, `Card`, `EmptyState`, `Button`) ya cubren los campos (≈650 migrados; los que quedan llevan `data-raw` con motivo), unas 400 píldoras/alternancias y ≈240 botones de solo icono (`IconButton`, con nombre accesible obligatorio). Quedan ~1.300 `<button>` escritos a mano: pestañas (~110), filas de menú (~100) y de texto suelto; visualmente coherentes, pero sin primitiva.
 * **Siguiente paso:** primitivas `Tabs` / `Segmented` (aspecto activo/inactivo único), `MenuItem` (filas de ⋮) y `IconButton` con `aria-label` obligatorio; después un codemod por patrón y pasar `botonSinPrimitiva` de aviso a error en `design-audit`.
 * **Revisión con datos reales:** falta revisar con la banda real (Ruta 66) la tabla de Booking (chips «12 lib.», Fiabilidad), Merchandising y Agente Mánager en oscuro; la semilla no reproduce esos volúmenes.
 * **Estado:** F3, F5, F6, F8 hechas; F4 al ~40 % de los botones; F7 y F9 hechas salvo lo que exige datos reales.

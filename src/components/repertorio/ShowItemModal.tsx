@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface ShowItemModalProps {
   isOpen: boolean;
@@ -84,15 +84,16 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               </p>
             </div>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
+            size="icon-xs"
             onClick={() => {
               onClose();
               setEditingShowItem(null);
             }}
-            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--sunken)] cursor-pointer"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">

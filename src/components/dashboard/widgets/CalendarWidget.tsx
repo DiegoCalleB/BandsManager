@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Concert, Rehearsal, ThemeColors } from "../../../types";
 import { CalendarWidgetViewMode } from "../../../types/dashboardWidgets";
-import { Button } from '../../ui';
+import { Button, IconButton } from '../../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -427,23 +427,23 @@ export function CalendarWidget({
         <div className="space-y-3">
           {/* Calendar Controls */}
           <div className="flex items-center justify-between bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)]">
-            <button aria-label="Anterior"
+            <IconButton
+              label="Anterior"
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
-            </button>
+            </IconButton>
             <span className="text-sm font-bold capitalize text-[var(--ink-2)]">
               {fullMonthName}
             </span>
-            <button aria-label="Siguiente"
+            <IconButton
+              label="Siguiente"
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month + 1, 1))}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Grid of days */}

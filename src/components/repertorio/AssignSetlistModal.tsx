@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { ThemeColors, Setlist, Concert, Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+import { IconButton } from '../ui';
 
 interface AssignSetlistModalProps {
   assigningSetlist: Setlist | null;
@@ -33,9 +34,9 @@ export function AssignSetlistModal({
         <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] space-y-4 my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
           <div className="flex justify-between items-center pb-3">
             <h3 className={`text-sm font-bold font-sans ${colors.text}`}>Asignar repertorio a concierto / ensayo</h3>
-            <button aria-label="Cerrar" onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
+            <IconButton label="Cerrar" onClick={onClose}>
               <X className="w-4 h-4" />
-            </button>
+            </IconButton>
           </div>
 
           <p className="text-micro text-[var(--ink-2)] font-sans">

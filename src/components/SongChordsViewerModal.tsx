@@ -39,7 +39,7 @@ import {
   parseRootNote,
 } from "../utils/chordUtils";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Input, Textarea } from './ui';
+import { Button, IconButton, Input, Textarea } from './ui';
 
 interface SongChordsViewerModalProps {
   song: Song;
@@ -440,32 +440,29 @@ export function SongChordsViewerModal({
               </Button>
 
               {/* Secondary actions — icon-only to keep the header clean */}
-              <button
+              <IconButton
+                label="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
                 type="button"
                 onClick={() => setShowStructureUploadModal(true)}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] transition cursor-pointer"
-                title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
               >
                 <Upload className="w-4 h-4" />
-              </button>
+              </IconButton>
 
-              <button
+              <IconButton
+                label="Compartir canción y acordes por WhatsApp o App"
                 type="button"
                 onClick={() => setShowShareModal(true)}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
-                title="Compartir canción y acordes por WhatsApp o App"
               >
                 <MessageSquare className="w-4 h-4" />
-              </button>
+              </IconButton>
 
-              <button
+              <IconButton
+                label="Imprimir cifrado"
                 type="button"
                 onClick={() => window.print()}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
-                title="Imprimir cifrado"
               >
                 <Printer className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
@@ -539,14 +536,14 @@ export function SongChordsViewerModal({
 
                   {audioUrl ? (
                     <>
-                      <button
+                      <IconButton
+                        label="Reiniciar desde el inicio (0:00)"
+                        size="icon-xs"
                         type="button"
                         onClick={handleRestartAudio}
-                        className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
-                        title="Reiniciar desde el inicio (0:00)"
                       >
                         <RotateCcw className="w-3 h-3" />
-                      </button>
+                      </IconButton>
 
                       <span className="text-xs text-[var(--acc-ink)] font-mono min-w-[32px] text-right font-semibold">
                         {formatAudioTime(audioCurrentTime)}
@@ -601,14 +598,15 @@ export function SongChordsViewerModal({
                     +1
                   </button>
                   {transpose !== 0 && (
-                    <button
+                    <IconButton
+                      label="Restablecer tono original"
+                      size="icon-xs"
                       type="button"
                       onClick={() => setTranspose(0)}
-                      className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--acc)] transition cursor-pointer ml-1"
-                      title="Restablecer tono original"
+                      className="ml-1"
                     >
                       <RotateCcw className="w-3 h-3" />
-                    </button>
+                    </IconButton>
                   )}
                 </div>
 

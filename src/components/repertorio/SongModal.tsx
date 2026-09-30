@@ -6,7 +6,7 @@ import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -142,9 +142,9 @@ export function SongModal({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar" onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer p-1">
+            <IconButton label="Cerrar" size="icon-xs" onClick={onClose}>
               <X className="w-4 h-4" />
-            </button>
+            </IconButton>
           </div>
 
           <form onSubmit={onSave} className="space-y-3 text-micro font-sans flex flex-col flex-1 overflow-hidden pt-3">
@@ -522,7 +522,6 @@ export function SongModal({
                 variant="neutral"
                 size="sm"
                 type="submit"
-                
               >
                 Guardar canción
               </Button>

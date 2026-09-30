@@ -2,7 +2,7 @@ import React from 'react';
 import { Sliders, X, Sparkles, Upload, Info } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from '../SongStudioModal';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface SongStudioMoisesStemsModalProps {
   showMoisesStemsModal: SongAudioIdea | null;
@@ -39,13 +39,14 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             <Sliders className="w-5 h-5 text-[var(--acc)]" />
             <span>Iris Espectro — Separador de Pistas con IA</span>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
+            size="icon-xs"
             type="button"
             onClick={() => setShowMoisesStemsModal(null)}
-            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 cursor-pointer"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">

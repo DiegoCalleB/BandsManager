@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Wand2, RefreshCw, Music, CheckCircle2, Check } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Textarea } from '../ui';
+import { Button, IconButton, Textarea } from '../ui';
 
 interface SongStudioAiTrackGenModalProps {
   showAiTrackGenModal: SongAudioIdea | null;
@@ -41,17 +41,18 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           <div className="flex items-center gap-2.5 text-[var(--acc)] font-mono font-bold text-sm">
             <span>Generador de pista de acompañamiento IA</span>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
+            size="icon-xs"
             type="button"
             onClick={() => {
               setShowAiTrackGenModal(null);
               setAiTrackGenPreview(null);
               setAiTrackGenError(null);
             }}
-            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 cursor-pointer"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         <div className="space-y-4 text-xs">

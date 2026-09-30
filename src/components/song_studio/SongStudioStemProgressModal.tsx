@@ -17,7 +17,7 @@ import {
   Maximize2,
   Copy,
 } from 'lucide-react';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 const IrisPrismBanner: React.FC = () => {
   return (
@@ -149,14 +149,14 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
               <p className="text-xs text-[var(--ink-2)] font-mono">{stemProgressModal.ideaTitle || 'Pista de Audio'}</p>
             </div>
           </div>
-          <button
+          <IconButton
+            label="Minimizar a segundo plano"
+            size="icon-xs"
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
-            className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--ink)]/10 transition-colors"
-            title="Minimizar a segundo plano"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         <div className="space-y-4 text-xs font-mono">
@@ -221,7 +221,6 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
             size="sm"
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
-            
           >
             Seguir en segundo plano
           </Button>
@@ -230,7 +229,6 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
             size="sm"
             type="button"
             onClick={() => setStemProgressModal(null)}
-            
           >
             Cerrar
           </Button>

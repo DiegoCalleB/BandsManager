@@ -65,7 +65,7 @@ import {
 } from "./booking/BulkProgressModal";
 import { AddEditBandModal } from "./bandCRM/AddEditBandModal";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Input, Select } from './ui';
+import { Button, IconButton, Input, Select } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1352,12 +1352,13 @@ ${myBandName}`;
                   className="w-full pl-9 pr-3"
                 />
                 {searchTerm && (
-                  <button aria-label="Cerrar"
+                  <IconButton
+                    label="Cerrar"
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)]"
+                    className="absolute right-3 top-1/2"
                   >
                     <X className="w-3.5 h-3.5" />
-                  </button>
+                  </IconButton>
                 )}
               </div>
 
@@ -1736,24 +1737,23 @@ ${myBandName}`;
                         </button>
 
                         {/* Edit */}
-                        <button
+                        <IconButton
+                          label="Editar banda"
                           onClick={() => handleOpenEditModal(band)}
-                          className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                          title="Editar banda"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
 
                         {/* Delete */}
-                        <button
+                        <IconButton
+                          label="Eliminar banda"
+                          variant="danger"
                           onClick={() =>
                             handleDeleteBand(band.id, band.nombre_banda)
                           }
-                          className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--ink)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                          title="Eliminar banda"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
                       </div>
                     </div>
                   </div>
@@ -1939,23 +1939,22 @@ ${myBandName}`;
                               <span>Pitch</span>
                             </button>
 
-                            <button
+                            <IconButton
+                              label="Editar"
                               onClick={() => handleOpenEditModal(band)}
-                              className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                              title="Editar"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
 
-                            <button
+                            <IconButton
+                              label="Eliminar"
+                              variant="danger"
                               onClick={() =>
                                 handleDeleteBand(band.id, band.nombre_banda)
                               }
-                              className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--ink)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                              title="Eliminar"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
                           </div>
                         </td>
                       </tr>

@@ -5,7 +5,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { formatSongTitle } from "../../utils/formatSongTitle";
-import { Input, Select } from '../ui';
+import { IconButton, Input, Select } from '../ui';
 
 interface AddSongsToSetlistModalProps {
   isOpen: boolean;
@@ -105,12 +105,13 @@ export function AddSongsToSetlistModal({
                 Añadir varias canciones al repertorio
               </h3>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
+              size="icon-xs"
               onClick={onClose}
-              className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <div className="pt-3 space-y-2 shrink-0">
@@ -131,7 +132,6 @@ export function AddSongsToSetlistModal({
                 size="sm"
                 value={albumFilter}
                 onChange={(e) => setAlbumFilter(e.target.value)}
-                
               >
                 {albumsList.map((alb) => (
                   <option key={alb} value={alb}>

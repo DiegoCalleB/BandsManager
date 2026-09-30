@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import type { TemplateCategory } from "./TemplateConfigSection";
-import { Input, Select, Textarea } from '../ui';
+import { IconButton, Input, Select, Textarea } from '../ui';
 
 interface ThreadMessage {
   rol: "banda" | "sala";
@@ -224,28 +224,29 @@ export function ExampleThreadsSection({
                 </span>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button
+                <IconButton
+                  label="Ver / editar este hilo"
+                  size="icon-xs"
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleEdit(t);
                   }}
-                  className="p-1 text-[var(--ink-2)] hover:text-[var(--acc)] cursor-pointer"
-                  title="Ver / editar este hilo"
                 >
                   <Pencil className="w-3.5 h-3.5" />
-                </button>
-                <button
+                </IconButton>
+                <IconButton
+                  label="Borrar este hilo de ejemplo"
+                  variant="danger"
+                  size="icon-xs"
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(t.id);
                   }}
-                  className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] cursor-pointer"
-                  title="Borrar este hilo de ejemplo"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               </div>
             </div>
           ))}
@@ -299,13 +300,16 @@ export function ExampleThreadsSection({
                 className="flex-1"
               />
               {mensajes.length > 1 && (
-                <button aria-label="Eliminar"
+                <IconButton
+                  label="Eliminar"
+                  variant="danger"
+                  size="icon-xs"
                   type="button"
                   onClick={() => handleRemoveMessageRow(idx)}
-                  className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] cursor-pointer shrink-0"
+                  className="shrink-0"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               )}
             </div>
           ))}

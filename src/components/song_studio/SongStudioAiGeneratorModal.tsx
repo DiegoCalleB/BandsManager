@@ -3,7 +3,7 @@ import { Wand2, X, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { SongAudioIdea, DrumPatternStyle } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface SongStudioAiGeneratorModalProps {
   // Solo se usa como"hay idea seleccionada o no", pero el estado real es la idea completa.
@@ -59,9 +59,9 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                 <p className="text-xs text-[var(--acc)] font-sans">Sintetizador web audio de referencia</p>
               </div>
             </div>
-            <button aria-label="Cerrar" type="button" onClick={onClose} className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]">
+            <IconButton label="Cerrar" type="button" onClick={onClose}>
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-xs text-[var(--ink)] space-y-1">

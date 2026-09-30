@@ -1,7 +1,7 @@
 import React from 'react';
 import { Award, Plus, Trash2, Radio, Users, CheckCircle2, TrendingUp } from 'lucide-react';
 import { PressQuoteItem } from '../types';
-import { Button, Input } from '../../ui';
+import { Button, IconButton, Input } from '../../ui';
 
 interface StepPressProofProps {
   pressQuotes: PressQuoteItem[];
@@ -119,13 +119,15 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
                   <p className="text-[var(--ink)] italic mb-1">"{q.texto}"</p>
                   <span className="text-[var(--acc)] font-semibold">— {q.medio}</span>
                 </div>
-                <button aria-label="Eliminar"
+                <IconButton
+                  label="Eliminar"
+                  variant="danger"
+                  size="icon-xs"
                   type="button"
                   onClick={() => onRemoveQuote(q.id)}
-                  className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)]"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               </div>
             ))}
           </div>

@@ -32,6 +32,7 @@ import { ModuleTutorialConfig, ModuleTutorialId } from "../../types/tutorial";
 import { MODULE_TUTORIALS } from "../../config/moduleTutorials";
 import { ModalPortal } from "./ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { IconButton } from '../ui';
 
 interface ModuleTutorialModalProps {
   moduleId: ModuleTutorialId;
@@ -472,15 +473,14 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 ))}
               </div>
 
-              <button
+              <IconButton
+                label="Cerrar guía (Esc)"
                 id={`tutorial-close-btn-${moduleId}`}
                 type="button"
                 onClick={() => onClose(dontShowAgain)}
-                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
-                title="Cerrar guía (Esc)"
               >
                 <X className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
+              </IconButton>
             </div>
           </div>
 

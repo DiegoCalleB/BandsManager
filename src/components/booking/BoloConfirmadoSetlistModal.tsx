@@ -16,7 +16,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { IconButton, Input } from '../ui';
 
 interface BoloConfirmadoSetlistModalProps {
   isOpen: boolean;
@@ -206,12 +206,13 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 {lead.ciudad} {lead.region ? `• ${lead.region}` : ""}
               </p>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
+              size="icon-xs"
               onClick={onClose}
-              className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Quick Details Form (Fecha y Duración pactada) */}

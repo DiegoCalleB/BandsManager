@@ -13,7 +13,7 @@ import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { AILogoGeneratorModal } from "./AILogoGeneratorModal";
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface EPKArchivosBlockProps {
   config: EPKConfig;
@@ -132,7 +132,6 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     variant="neutral"
                     type="button"
                     onClick={() => setConfig({ ...config, logoUrl: "" })}
-                    
                     title="Eliminar logo"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -191,7 +190,9 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   </div>
                 </div>
 
-                <button
+                <IconButton
+                  label="Eliminar dossier"
+                  variant="danger"
                   type="button"
                   onClick={() =>
                     setConfig({
@@ -200,11 +201,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       dossierPdfName: "",
                     })
                   }
-                  className="p-2 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] transition shrink-0 cursor-pointer"
-                  title="Eliminar dossier"
+                  className="shrink-0"
                 >
                   <Trash2 className="w-4 h-4" />
-                </button>
+                </IconButton>
               </div>
 
               <div className="flex items-center gap-2 pt-1 ">
@@ -326,7 +326,9 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       </p>
                     </div>
                   </div>
-                  <button
+                  <IconButton
+                    label="Eliminar PDF"
+                    variant="danger"
                     type="button"
                     onClick={() =>
                       setConfig({
@@ -335,11 +337,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         riderPdfName: "",
                       })
                     }
-                    className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] transition shrink-0 cursor-pointer"
-                    title="Eliminar PDF"
+                    className="shrink-0"
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </div>
                 <div className="flex items-center gap-2 pt-1 ">
                   <a
@@ -631,14 +632,15 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
-                    <button
+                    <IconButton
+                      label="Quitar foto"
+                      variant="danger"
                       type="button"
                       onClick={() => quitarFotoGaleria(url)}
-                      className="absolute top-1.5 right-1.5 p-1.5 bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] opacity-0 group-hover:opacity-100 transition cursor-pointer"
-                      title="Quitar foto"
+                      className="absolute top-1.5 right-1.5 opacity-0"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
                 ))}
             </div>

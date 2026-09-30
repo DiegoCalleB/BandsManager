@@ -31,7 +31,7 @@ import { api } from "../../services/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 export interface PlaceResult {
   place_id: string;
@@ -1060,12 +1060,12 @@ export function GooglePlacesExplorerModal({
                 </button>
               )}
 
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 onClick={onClose}
-                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
@@ -1184,12 +1184,14 @@ export function GooglePlacesExplorerModal({
                   <Ban className="w-4 h-4 text-[var(--alert)] shrink-0" />
                   <span>{discardToast}</span>
                 </div>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
+                  variant="danger"
+                  size="icon-xs"
                   onClick={() => setDiscardToast("")}
-                  className="text-[var(--alert)] hover:text-[var(--ink)] p-1 cursor-pointer"
                 >
                   <X className="w-3 h-3" />
-                </button>
+                </IconButton>
               </div>
             )}
 
@@ -1252,13 +1254,13 @@ export function GooglePlacesExplorerModal({
                     className="w-full pl-9 pr-7"
                   />
                   {selectedCity && (
-                    <button
+                    <IconButton
+                      label="Limpiar ciudad"
                       onClick={() => setSelectedCity("")}
-                      className="absolute right-2.5 top-2.5 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                      title="Limpiar ciudad"
+                      className="absolute right-2.5 top-2.5"
                     >
                       <X className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   )}
                 </div>
 
@@ -1608,14 +1610,15 @@ export function GooglePlacesExplorerModal({
                               </div>
                             )}
 
-                            <button
+                            <IconButton
+                              label="Marcar como no deseada (descartar para futuras búsquedas)"
+                              variant="danger"
+                              size="icon-xs"
                               type="button"
                               onClick={() => handleDiscardPlace(place)}
-                              className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/15 transition-ui cursor-pointer"
-                              title="Marcar como no deseada (descartar para futuras búsquedas)"
                             >
                               <Ban className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
                           </div>
                         </div>
 
@@ -1779,12 +1782,13 @@ export function GooglePlacesExplorerModal({
                       Sugerencias No Deseadas ({discardedList.length})
                     </h3>
                   </div>
-                  <button aria-label="Cerrar"
+                  <IconButton
+                    label="Cerrar"
+                    size="icon-xs"
                     onClick={() => setShowDiscardedModal(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
                   >
                     <X className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-2">

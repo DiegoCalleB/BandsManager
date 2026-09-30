@@ -18,6 +18,7 @@ import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
 } from "../../context/LanguageContext";
+import { IconButton } from '../ui';
 
 interface MusicianOnboardingModalProps {
   isOpen: boolean;
@@ -66,14 +67,14 @@ export const MusicianOnboardingModal: React.FC<
 
         {/* Header */}
         <div className="p-5 sm:p-6 pb-4 relative shrink-0">
-          <button
+          <IconButton
+            label="Cerrar guía"
             type="button"
             onClick={handleDismiss}
-            className="absolute top-5 right-5 p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-            title="Cerrar guía"
+            className="absolute top-5 right-5"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
 
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-sans font-bold">

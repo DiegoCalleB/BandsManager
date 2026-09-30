@@ -61,7 +61,7 @@ import {
 } from "../../utils/audioCueDetector";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Select } from '../ui';
+import { Button, IconButton, Select } from '../ui';
 
 interface SongTransitionPreviewModalProps {
   isOpen: boolean;
@@ -667,7 +667,9 @@ export function SongTransitionPreviewModal({
               {/* Previous / Next navigation */}
               {onNavigateTransition && (
                 <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-s)] p-0.5">
-                  <button
+                  <IconButton
+                    label="Transición anterior en el repertorio"
+                    size="icon-xs"
                     type="button"
                     disabled={!canGoPrev}
                     onClick={() => {
@@ -676,15 +678,15 @@ export function SongTransitionPreviewModal({
                         onNavigateTransition(indexA - 1, indexA);
                       }
                     }}
-                    className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
-                    title="Transición anterior en el repertorio"
                   >
                     <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
+                  </IconButton>
                   <span className="text-micro font-sans px-1.5 text-[var(--ink-2)]">
                     {indexA + 1}/{totalItemsCount || indexB + 1}
                   </span>
-                  <button
+                  <IconButton
+                    label="Siguiente transición en el repertorio"
+                    size="icon-xs"
                     type="button"
                     disabled={!canGoNext}
                     onClick={() => {
@@ -693,21 +695,20 @@ export function SongTransitionPreviewModal({
                         onNavigateTransition(indexB, indexB + 1);
                       }
                     }}
-                    className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
-                    title="Siguiente transición en el repertorio"
                   >
                     <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
+                  </IconButton>
                 </div>
               )}
 
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
+                size="icon-xs"
                 type="button"
                 onClick={onClose}
-                className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
@@ -1282,14 +1283,14 @@ export function SongTransitionPreviewModal({
                     )}
                   </button>
 
-                  <button
+                  <IconButton
+                    label="Rebobinar al inicio del enlace"
+                    size="icon-xs"
                     type="button"
                     onClick={handleRestart}
-                    className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition cursor-pointer"
-                    title="Rebobinar al inicio del enlace"
                   >
                     <RotateCcw className="w-3 h-3" />
-                  </button>
+                  </IconButton>
 
                   {/* Volume Slider */}
                   <div className="flex items-center gap-1 pl-1">

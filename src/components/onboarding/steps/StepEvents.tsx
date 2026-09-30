@@ -2,7 +2,7 @@ import React from "react";
 import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from "lucide-react";
 import { QuickEventItem } from "../types";
 import { ShowIcon } from '../../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../../ui';
 
 interface StepEventsProps {
   events: QuickEventItem[];
@@ -121,13 +121,14 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                 </div>
               </div>
 
-              <button aria-label="Eliminar"
+              <IconButton
+                label="Eliminar"
+                variant="danger"
                 type="button"
                 onClick={() => onRemoveEvent(ev.id)}
-                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           ))}
         </div>

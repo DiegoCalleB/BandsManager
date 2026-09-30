@@ -24,7 +24,7 @@ import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Input } from './ui';
+import { Button, IconButton, Input } from './ui';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -829,17 +829,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             {view === "reset-password" && (
               <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 rounded-[var(--r-xl)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
                 <div className="flex items-center gap-2.5 mb-2">
-                  <button
+                  <IconButton
+                    label="Volver al inicio de sesión"
                     type="button"
                     onClick={() => {
                       setError(null);
                       setView("login");
                     }}
-                    className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer shrink-0"
-                    title="Volver al inicio de sesión"
+                    className="shrink-0"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                   <div>
                     <h2 className="text-base font-bold text-[var(--ink-2)]">
                       Restablecer contraseña

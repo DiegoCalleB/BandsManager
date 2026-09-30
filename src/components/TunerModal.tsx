@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
-import { Button } from './ui';
+import { Button, IconButton } from './ui';
 
 interface TunerModalProps {
   isOpen: boolean;
@@ -502,16 +502,16 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={() => {
                 stopTuner();
                 stopReferenceTone();
                 onClose();
               }}
-              className="p-1.5 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Content Body */}

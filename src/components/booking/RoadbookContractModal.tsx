@@ -22,7 +22,7 @@ import {
   Info,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface RoadbookContractModalProps {
   isOpen: boolean;
@@ -182,13 +182,13 @@ Firmado en conformidad por ambas partes.`;
               </div>
             </div>
 
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               type="button"
               onClick={onClose}
-              className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* BARRA DE SELECTOR DE SALA Y PESTAÑAS */}

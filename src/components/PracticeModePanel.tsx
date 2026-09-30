@@ -27,6 +27,7 @@ import { apiFetch } from '../utils/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { transposeChordToken } from '../utils/chordUtils';
 import { ShowIcon } from './ui/ShowIcon';
+import { IconButton } from './ui';
 
 const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 
@@ -677,12 +678,13 @@ export default function PracticeModePanel({
                   <span className="hidden sm:inline">Modo Studio</span>
                 </button>
               )}
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 onClick={onClose}
-                className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] shrink-0 cursor-pointer"
+                className="shrink-0"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
           </div>
 

@@ -3,7 +3,7 @@ import { X, MessageSquare, Share2, Copy, Check, Mail, Phone, Edit3, Sparkles, Mu
 import { ThemeColors } from '../types';
 import { shareViaWhatsApp, shareViaWebShare, copyToClipboard, shareViaEmail, SharePayload } from '../utils/shareUtils';
 import { ModalPortal } from './common/ModalPortal';
-import { Input, Textarea } from './ui';
+import { IconButton, Input, Textarea } from './ui';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -101,13 +101,12 @@ export function ShareModal({
                 {subtitle && <p className="text-xs text-[var(--ink-2)]">{subtitle}</p>}
               </div>
             </div>
-            <button
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-colors"
-              title="Cerrar"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Body Content */}

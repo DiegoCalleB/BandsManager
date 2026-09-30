@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, FolderMinus, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { IconButton } from '../ui';
 
 export interface ConfirmDeleteAlbumData {
   albumName: string;
@@ -31,13 +32,13 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
                 <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">"{data.albumName}"</p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <p className="text-xs text-[var(--ink-2)] leading-relaxed bg-[var(--surface)]/80 p-3 rounded-[var(--r-m)]">

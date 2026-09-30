@@ -105,7 +105,7 @@ import {
 } from "../../utils/whatsapp";
 import { WhatsAppPreviewModal } from "./WhatsAppPreviewModal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1309,12 +1309,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="flex items-center gap-2">
             <span>{feedbackBoloMsg}</span>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             onClick={() => setFeedbackBoloMsg(null)}
-            className="text-[var(--ok)] hover:text-[var(--ink)] cursor-pointer"
           >
             <X className="w-4 h-4" />
-          </button>
+          </IconButton>
         </div>
       )}
 
@@ -1405,13 +1405,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               }
               size="md"
             />
-            <button
+            <IconButton
+              label="Editar ficha completa"
               onClick={handleStartEdit}
-              className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
-              title="Editar ficha completa"
             >
               <Edit3 className="w-4 h-4" />
-            </button>
+            </IconButton>
             {onDeleteLead && (
               <Button
                 variant="danger"
@@ -1424,13 +1423,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <Trash2 className="w-4 h-4 text-[var(--alert)]" />
               </Button>
             )}
-            <button
+            <IconButton
+              label="Cerrar panel"
               onClick={onClose}
-              className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
-              title="Cerrar panel"
             >
               <X className="w-4 h-4" />
-            </button>
+            </IconButton>
           </div>
         </div>
 
@@ -5469,14 +5467,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <span className="text-[var(--ink-2)] font-sans">
                         {log.fecha}
                       </span>
-                      <button
+                      <IconButton
+                        label="Borrar entrada"
+                        variant="danger"
+                        size="icon-xs"
                         type="button"
                         onClick={() => handleDeleteInteractionLog(log.id)}
-                        className="text-[var(--ink-2)] hover:text-[var(--alert)] opacity-0 group-hover:opacity-100 transition-opacity p-0.5 cursor-pointer"
-                        title="Borrar entrada"
+                        className="opacity-0"
                       >
                         <Trash2 className="w-3 h-3" />
-                      </button>
+                      </IconButton>
                     </div>
                   </div>
 

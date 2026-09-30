@@ -46,7 +46,7 @@ import { BandSchedule } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { EmailAccountConfig } from "../EmailAccountConfig";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
   salas: "🏛️ Salas",
@@ -822,12 +822,12 @@ export const AgentAutonomySettingsModal: React.FC<
               </div>
             </div>
 
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Tab Navigation */}

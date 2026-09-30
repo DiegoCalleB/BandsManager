@@ -27,7 +27,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface LeadDuplicatesModalProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -532,7 +532,9 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               <span>Conservar y fusionar aquí</span>
                             </button>
 
-                            <button
+                            <IconButton
+                              label="Eliminar solo este registro individual"
+                              variant="danger"
                               type="button"
                               disabled={isProcessing}
                               onClick={() =>
@@ -541,11 +543,9 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                   lead.nombre_sala,
                                 )
                               }
-                              className="p-1.5 rounded-[var(--r-pill)] text-[var(--alert)] hover:bg-[var(--alert)]/20 hover:text-[var(--ink-2)] transition cursor-pointer"
-                              title="Eliminar solo este registro individual"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
                           </div>
                         </div>
                       );

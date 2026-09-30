@@ -48,7 +48,7 @@ import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
 import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Select, Textarea } from './ui';
+import { Button, IconButton, Select, Textarea } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -2290,14 +2290,13 @@ export default function Chatbot({
                 <Activity className={`w-3.5 h-3.5 ${'text-[var(--tentative)]'}`} />
                 <span>Monitoreando {activeRun.agentName}</span>
               </div>
-              <button
+              <IconButton
+                label="Cerrar monitor"
                 type="button"
                 onClick={() => setActiveRun(null)}
-                className="text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
-                title="Cerrar monitor"
               >
                 <X className="w-3.5 h-3.5" />
-              </button>
+              </IconButton>
             </div>
 
             <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)] -neutral-200/60'}`}>

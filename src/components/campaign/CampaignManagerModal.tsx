@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Textarea } from '../ui';
+import { Button, IconButton, Input, Textarea } from '../ui';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -316,12 +316,12 @@ export function CampaignManagerModal({
               </p>
             </div>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             onClick={onClose}
-            className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         {/* Content Body */}
@@ -402,13 +402,15 @@ export function CampaignManagerModal({
                     >
                       <MapPin className="w-3 h-3 text-[var(--ink-2)]" />
                       {city}
-                      <button aria-label="Cerrar"
+                      <IconButton
+                        label="Cerrar"
+                        variant="danger"
                         type="button"
                         onClick={() => handleRemoveCity(city)}
-                        className="hover:text-[var(--alert)] ml-1"
+                        className="ml-1"
                       >
                         <X className="w-3 h-3" />
-                      </button>
+                      </IconButton>
                     </span>
                   ))}
                 </div>
@@ -499,14 +501,15 @@ export function CampaignManagerModal({
                             }}
                             className="bg-transparent text-xs font-sans font-bold text-[var(--ink)] p-0 focus:ring-0 cursor-pointer"
                           />
-                          <button
+                          <IconButton
+                            label="Eliminar fecha"
+                            variant="danger"
                             type="button"
                             onClick={() => handleRemoveDate(idx)}
-                            className="text-[var(--ink-2)] hover:text-[var(--alert)] ml-1"
-                            title="Eliminar fecha"
+                            className="ml-1"
                           >
                             <X className="w-3.5 h-3.5" />
-                          </button>
+                          </IconButton>
                         </div>
                         <HolidayDateWarning date={date} compact />
                       </div>
@@ -842,16 +845,17 @@ export function CampaignManagerModal({
                             </Button>
                           )}
 
-                          <button
+                          <IconButton
+                            label="Editar campaña"
                             type="button"
                             onClick={() => handleStartEdit(camp)}
-                            className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors"
-                            title="Editar campaña"
                           >
                             <Edit3 className="w-4 h-4" />
-                          </button>
+                          </IconButton>
 
-                          <button
+                          <IconButton
+                            label="Eliminar campaña"
+                            variant="danger"
                             type="button"
                             onClick={() => {
                               if (
@@ -862,11 +866,9 @@ export function CampaignManagerModal({
                                 onDeleteCampaign(camp.id);
                               }
                             }}
-                            className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors"
-                            title="Eliminar campaña"
                           >
                             <Trash2 className="w-4 h-4" />
-                          </button>
+                          </IconButton>
                         </div>
                       </div>
                     </div>

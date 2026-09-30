@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ThemeColors, Payment } from '../../types';
 import { X, Plus } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
-import { Input, Select } from '../ui';
+import { IconButton, Input, Select } from '../ui';
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -60,13 +60,14 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
             color: colors.text,
           }}
         >
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             id="close-add-transaction-modal"
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+            className="absolute top-4 right-4"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
 
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
             <Plus className="w-5 h-5 text-[var(--tentative)]" />

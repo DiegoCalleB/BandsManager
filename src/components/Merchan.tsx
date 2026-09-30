@@ -30,7 +30,7 @@ import { ThemeColors, ThemeName } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Input } from './ui';
+import { Button, IconButton, Input } from './ui';
 
 const ResolvedBgImage: React.FC<{
   url: string;
@@ -900,14 +900,13 @@ export default function Merchan({
                 </div>
               </div>
 
-              <button
+              <IconButton
+                label="Cerrar ventana"
                 type="button"
                 onClick={() => setShowClaimModal(false)}
-                className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                title="Cerrar ventana"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
 
             {/* Modal Content */}

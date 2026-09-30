@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { Rehearsal, ThemeColors, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface ConvocarEnsayoModalProps {
   isOpen: boolean;
@@ -131,12 +131,12 @@ export function ConvocarEnsayoModal({
                 <p className="text-xs text-[var(--ink-2)] font-sans">Sincronizado automáticamente con tu Calendario</p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Form Content */}
@@ -294,13 +294,16 @@ export function ConvocarEnsayoModal({
                             <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] shrink-0" />
                             <span className="truncate">{obj.texto}</span>
                           </div>
-                          <button aria-label="Cerrar"
+                          <IconButton
+                            label="Cerrar"
+                            variant="danger"
+                            size="icon-xs"
                             type="button"
                             onClick={() => handleRemoveObjetivo(obj.id)}
-                            className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 shrink-0"
+                            className="shrink-0"
                           >
                             <X className="w-3.5 h-3.5" />
-                          </button>
+                          </IconButton>
                         </div>
                       ))}
                     </div>
@@ -360,7 +363,6 @@ export function ConvocarEnsayoModal({
                 variant="primary"
                 size="sm"
                 type="submit"
-                
               >
                 {isEditing ? 'Guardar Cambios' : 'Convocar Ensayo'}
               </Button>

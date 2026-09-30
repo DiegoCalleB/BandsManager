@@ -25,7 +25,7 @@ import { GrabacionActaTab } from "./GrabacionActaTab";
 import { ConvocarEnsayoModal } from "./ConvocarEnsayoModal";
 import { api } from "../../services/api";
 import { SAMPLER_SONGS, SAMPLER_SETLISTS } from "../../config/sampleRepertoire";
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface EnsayosManagerProps {
   rehearsals: Rehearsal[];
@@ -264,16 +264,15 @@ export function EnsayosManager({
 
               {/* Edit Rehearsal */}
               {currentRehearsal && (
-                <button
+                <IconButton
+                  label="Editar datos de este ensayo"
                   onClick={() => {
                     setEditingRehearsal(currentRehearsal);
                     setShowConvocarModal(true);
                   }}
-                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                  title="Editar datos de este ensayo"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
-                </button>
+                </IconButton>
               )}
             </div>
 

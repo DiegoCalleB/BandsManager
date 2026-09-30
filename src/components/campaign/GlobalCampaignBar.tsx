@@ -17,6 +17,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
+import { IconButton } from '../ui';
 
 interface GlobalCampaignBarProps {
   campaign: BookingCampaign;
@@ -174,24 +175,27 @@ export function GlobalCampaignBar({
           </button>
 
           {/* Settings / Switcher button */}
-          <button
+          <IconButton
+            label="Gestionar o cambiar campaña activa"
+            size="icon-xs"
             type="button"
             onClick={onOpenManager}
-            className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
-            title="Gestionar o cambiar campaña activa"
+            className="shrink-0"
           >
             <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-          </button>
+          </IconButton>
 
           {/* Deactivate button */}
-          <button
+          <IconButton
+            label="Desactivar modo campaña (volver a modo general)"
+            variant="danger"
+            size="icon-xs"
             type="button"
             onClick={onDeactivate}
-            className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors shrink-0"
-            title="Desactivar modo campaña (volver a modo general)"
+            className="shrink-0"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-          </button>
+          </IconButton>
         </div>
       </div>
 

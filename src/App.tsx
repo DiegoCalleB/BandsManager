@@ -187,7 +187,7 @@ import {
   Sun,
   Moon,
 } from "lucide-react";
-import { Button } from './components/ui';
+import { Button, IconButton } from './components/ui';
 
 export default function App() {
   const { t, language, isTranslating, refreshTranslation } = useLanguage();
@@ -1449,12 +1449,12 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                <button aria-label="Cerrar"
+                <IconButton
+                  label="Cerrar"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--sunken)] cursor-pointer"
                 >
                   <X className="w-5 h-5" />
-                </button>
+                </IconButton>
               </div>
 
               {/* Drawer Nav */}
@@ -1662,16 +1662,16 @@ export default function App() {
                       </span>
                     </div>
                   </div>
-                  <button
+                  <IconButton
+                    label="Cerrar Sesión"
+                    variant="danger"
                     onClick={() => {
                       handleLogout();
                       setIsMobileMenuOpen(false);
                     }}
-                    className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
-                    title="Cerrar Sesión"
                   >
                     <LogOut className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </div>
               </div>
             </div>
@@ -1994,13 +1994,13 @@ export default function App() {
                   }
                   variant="desktop"
                 />
-                <button
+                <IconButton
+                  label="Cerrar Sesión"
+                  variant="danger"
                   onClick={handleLogout}
-                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
-                  title="Cerrar Sesión"
                 >
                   <LogOut className="w-4 h-4" />
-                </button>
+                </IconButton>
               </div>
             </div>
           </div>

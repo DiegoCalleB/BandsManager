@@ -3,7 +3,7 @@ import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -66,9 +66,9 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 <p className="text-xs text-[var(--ink-2)] font-normal">Configura los detalles principales de tu setlist</p>
               </div>
             </div>
-            <button aria-label="Cerrar" onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+            <IconButton label="Cerrar" size="icon-xs" onClick={onClose}>
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-sans">

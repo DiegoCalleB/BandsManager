@@ -8,7 +8,7 @@ import { ThemeColors } from '../../types';
 import { SUBTITLE_STYLES } from './ViralGrowthStudio';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 export interface ReelsPhoneMockupProps {
   colors: ThemeColors;
@@ -155,15 +155,15 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             {isPreviewMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
           </button>
 
-          <button
+          <IconButton
+            label="Ver a pantalla completa"
             id="btn-maximize-preview"
             type="button"
             onClick={() => setIsExpandedPreview(true)}
-            className="w-7 h-7 rounded-full bg-[var(--sunken)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] flex items-center justify-center transition-ui cursor-pointer"
-            title="Ver a pantalla completa"
+            className="w-7 flex"
           >
             <Maximize2 className="w-3.5 h-3.5" />
-          </button>
+          </IconButton>
         </div>
       </div>
 

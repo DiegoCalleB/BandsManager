@@ -17,7 +17,7 @@ import {
   downloadQrAsHighResPng,
   printHighQualityFlyer,
 } from "../utils/qrExport";
-import { Input } from './ui';
+import { IconButton, Input } from './ui';
 
 interface QrExportModalProps {
   isOpen: boolean;
@@ -139,13 +139,13 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               </p>
             </div>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             type="button"
             onClick={onClose}
-            className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         {/* Selector de Formato de Exportación */}

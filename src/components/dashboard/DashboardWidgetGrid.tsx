@@ -68,7 +68,7 @@ import { hasModuleAccess } from "../../utils/planPermissions";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -773,35 +773,36 @@ export function DashboardWidgetGrid({
 
                     {/* Order buttons */}
                     <div className="flex items-center gap-0.5">
-                      <button
+                      <IconButton
+                        label="Mover arriba"
+                        size="icon-xs"
                         type="button"
                         onClick={() => handleMoveWidget(index, "up")}
                         disabled={index === 0}
-                        className="p-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
-                        title="Mover arriba"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
-                      </button>
-                      <button
+                      </IconButton>
+                      <IconButton
+                        label="Mover abajo"
+                        size="icon-xs"
                         type="button"
                         onClick={() => handleMoveWidget(index, "down")}
                         disabled={index === visibleWidgets.length - 1}
-                        className="p-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
-                        title="Mover abajo"
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
-                      </button>
+                      </IconButton>
                     </div>
 
                     {/* Remove */}
-                    <button
+                    <IconButton
+                      label="Quitar widget"
+                      variant="danger"
+                      size="icon-xs"
                       type="button"
                       onClick={() => handleRemoveWidget(widget.id)}
-                      className="p-1 rounded bg-[var(--alert)]/15 text-[var(--ink)] hover:bg-[var(--alert)]/30 cursor-pointer"
-                      title="Quitar widget"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
                 </div>
               )}
@@ -855,13 +856,13 @@ export function DashboardWidgetGrid({
                 </div>
               </div>
 
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
 
             {/* Category Filter Pills — shrink-0 es la parte que importa: esta fila es hija de un

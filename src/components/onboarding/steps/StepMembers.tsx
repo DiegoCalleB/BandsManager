@@ -9,7 +9,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { WizardMemberItem } from "../types";
-import { Button, Input } from '../../ui';
+import { Button, IconButton, Input } from '../../ui';
 
 interface StepMembersProps {
   members: WizardMemberItem[];
@@ -90,14 +90,14 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             </div>
 
             {!m.isLeader && (
-              <button
+              <IconButton
+                label="Quitar miembro"
+                variant="danger"
                 type="button"
                 onClick={() => onRemoveMember(m.id)}
-                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
-                title="Quitar miembro"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
+              </IconButton>
             )}
           </div>
         ))}
@@ -117,7 +117,6 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberName}
             onChange={(e) => setNewMemberName(e.target.value)}
             placeholder="Nombre y Apellidos *"
-            
           />
 
           <Input
@@ -126,7 +125,6 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberRole}
             onChange={(e) => setNewMemberRole(e.target.value)}
             placeholder="Instrumento / Rol (ej. Batería, Bajo, Teclados) *"
-            
           />
 
           <Input
@@ -135,7 +133,6 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberEmail}
             onChange={(e) => setNewMemberEmail(e.target.value)}
             placeholder="Email (para invitarle a acceder al panel)"
-            
           />
 
           <Input
@@ -144,7 +141,6 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberInstagram}
             onChange={(e) => setNewMemberInstagram(e.target.value)}
             placeholder="Instagram (ej. @nombremusico)"
-            
           />
         </div>
 

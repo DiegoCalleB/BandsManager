@@ -54,7 +54,7 @@ import {
 import { SocialGrowthPlanView } from "./SocialGrowthPlanView";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input } from '../ui';
+import { Button, IconButton, Input } from '../ui';
 
 interface ReelsMetricsViewProps {
   colors: ThemeColors;
@@ -2274,16 +2274,19 @@ export function ReelsMetricsView({
                               </td>
                               <td className="py-3 text-center">
                                 <div className="flex justify-center items-center gap-1.5">
-                                  <button
+                                  <IconButton
+                                    label="Editar snapshot"
+                                    size="icon-xs"
                                     type="button"
                                     onClick={() => handleEditMetricClick(m)}
-                                    className="p-1 hover:text-[var(--tentative)] transition-colors cursor-pointer bg-transparent text-[var(--ink-2)]"
-                                    title="Editar snapshot"
                                   >
                                     <Edit className="w-3.5 h-3.5" />
-                                  </button>
+                                  </IconButton>
                                   {onDeleteMetric && (
-                                    <button
+                                    <IconButton
+                                      label="Eliminar snapshot"
+                                      variant="danger"
+                                      size="icon-xs"
                                       type="button"
                                       onClick={async () => {
                                         if (
@@ -2294,11 +2297,9 @@ export function ReelsMetricsView({
                                           await onDeleteMetric(m.id);
                                         }
                                       }}
-                                      className="p-1 hover:text-[var(--alert)] transition-colors cursor-pointer bg-transparent text-[var(--ink-2)]"
-                                      title="Eliminar snapshot"
                                     >
                                       <Trash2 className="w-3.5 h-3.5" />
-                                    </button>
+                                    </IconButton>
                                   )}
                                 </div>
                               </td>
@@ -2340,12 +2341,12 @@ export function ReelsMetricsView({
                   </p>
                 </div>
               </div>
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 onClick={() => setShowIgModal(false)}
-                className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
 
             {/* Modal Body */}
@@ -2648,12 +2649,12 @@ export function ReelsMetricsView({
                   </p>
                 </div>
               </div>
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
                 onClick={() => setShowScanModal(false)}
-                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
 
             {/* Modal Body */}

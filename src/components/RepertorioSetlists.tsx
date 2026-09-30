@@ -92,7 +92,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
-import { Button, Chip, Input, Select, ShowIcon } from './ui';
+import { Button, Chip, IconButton, Input, Select, ShowIcon } from './ui';
 import { RepertorioNavBar } from "./repertorio/RepertorioNavBar";
 import { SetlistAddBar } from "./repertorio/SetlistAddBar";
 import SongStudioModal from "./SongStudioModal";
@@ -3934,16 +3934,16 @@ export default function RepertorioSetlists({
                         )}
                         {showEnergyMap && (
                           <div className="relative">
-                            <button
+                            <IconButton
+                              label="Ajustes del gráfico (leyenda de colores, curva ideal)"
+                              size="icon-xs"
                               type="button"
                               onClick={() =>
                                 setShowChartSettingsMenu((v) => !v)
                               }
-                              className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-ui cursor-pointer"
-                              title="Ajustes del gráfico (leyenda de colores, curva ideal)"
                             >
                               <Sliders className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
                             {showChartSettingsMenu && (
                               <>
                                 <div
@@ -5180,17 +5180,17 @@ export default function RepertorioSetlists({
                         )}
 
                         {/* Studio button */}
-                        <button
+                        <IconButton
+                          label="Abrir Studio de grabación multipista y pistas"
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleOpenStudioModal(song);
                           }}
-                          className="shrink-0 cursor-pointer rounded-[var(--r-pill)] p-1.5 text-[var(--ink-2)] transition-ui hover:bg-[var(--sunken)] hover:text-[var(--ok)] active:scale-[0.97]"
-                          title="Abrir Studio de grabación multipista y pistas"
+                          className="shrink-0"
                         >
                           <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
-                        </button>
+                        </IconButton>
 
                         {/* Probar unión con tema anterior con indicador de calidad (✓ o ✕) */}
                         {index > 0 &&
@@ -5229,18 +5229,18 @@ export default function RepertorioSetlists({
                           })()}
 
                         {/* Edit song button */}
-                        <button
+                        <IconButton
+                          label="Editar canción"
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             setEditingSong(song);
                             setShowSongModal(true);
                           }}
-                          className="shrink-0 cursor-pointer rounded-[var(--r-pill)] p-1.5 text-[var(--ink-2)] transition-ui hover:bg-[var(--sunken)] hover:text-[var(--acc)] active:scale-[0.97]"
-                          title="Editar canción"
+                          className="shrink-0"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
 
                         {/* Expand button for details */}
                         <button
@@ -5263,13 +5263,14 @@ export default function RepertorioSetlists({
                           )}
                         </button>
 
-                        <button
+                        <IconButton
+                          label="Quitar del setlist"
+                          variant="danger"
                           onClick={() => handleRemoveSetlistItem(it.id)}
-                          className="shrink-0 cursor-pointer rounded-[var(--r-pill)] p-1.5 text-[var(--ink-2)] transition-ui hover:bg-[var(--sunken)] hover:text-[var(--alert)] active:scale-[0.97]"
-                          title="Quitar del setlist"
+                          className="shrink-0"
                         >
                           <X className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
                       </div>
 
                       {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
@@ -5642,23 +5643,25 @@ export default function RepertorioSetlists({
                         )}
 
                         {/* Controls */}
-                        <button
+                        <IconButton
+                          label="Editar detalles"
+                          size="icon-xs"
                           onClick={() => {
                             setEditingShowItem(it);
                             setShowShowItemModal(true);
                           }}
-                          className="p-0.5 text-[var(--ink-2)] hover:bg-[var(--surface)]/80 rounded transition-colors shrink-0"
-                          title="Editar detalles"
+                          className="shrink-0"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
+                        </IconButton>
+                        <IconButton
+                          label="Quitar del setlist"
+                          variant="danger"
                           onClick={() => handleRemoveSetlistItem(it.id)}
-                          className="shrink-0 cursor-pointer rounded-[var(--r-pill)] p-1.5 text-[var(--ink-2)] transition-ui hover:bg-[var(--sunken)] hover:text-[var(--alert)] active:scale-[0.97]"
-                          title="Quitar del setlist"
+                          className="shrink-0"
                         >
                           <X className="w-3.5 h-3.5" />
-                        </button>
+                        </IconButton>
                       </div>
 
                       {/* SHOW NOTES IF EXIST */}
@@ -5803,7 +5806,6 @@ export default function RepertorioSetlists({
                   size="sm"
                   value={catalogAlbumFilter}
                   onChange={(e) => setCatalogAlbumFilter(e.target.value)}
-                  
                 >
                   <option value="todos">Todos los discos</option>
                   {albumsList
@@ -5850,16 +5852,16 @@ export default function RepertorioSetlists({
                 </Button>
 
                 {/* More actions menu */}
-                <button
+                <IconButton
+                  label="Más opciones"
                   type="button"
-                  title="Más opciones"
                   onClick={() =>
                     setShowCatalogActionsMenu(!showCatalogActionsMenu)
                   }
-                  className="relative p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
+                  className="relative"
                 >
                   <MoreHorizontal className="w-5 h-5" />
-                </button>
+                </IconButton>
 
                 {showCatalogActionsMenu && (
                   <div className="absolute right-0 top-full mt-2 bg-[var(--surface)] rounded-[var(--r-m)] py-2 z-50 min-w-[200px]">

@@ -24,7 +24,7 @@ import {
 import { apiFetch } from "../../utils/api";
 import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { IconButton, Input } from '../ui';
 
 interface SpotifyTrack {
   id: string;
@@ -350,13 +350,13 @@ export const SpotifyDiscographyModal: React.FC<
             </div>
           </div>
 
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             type="button"
             onClick={onClose}
-            className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         {/* Search & URL Input Bar */}

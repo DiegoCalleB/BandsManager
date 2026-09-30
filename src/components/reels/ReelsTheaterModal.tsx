@@ -7,7 +7,7 @@ import {
 import { ThemeColors } from '../../types';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 export interface ReelsTheaterModalProps {
   isOpen: boolean;
@@ -175,14 +175,14 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <span className="text-micro font-mono text-[var(--ink-2)] font-bold ">MODO CINE ACTIVO</span>
           </div>
 
-          <button
+          <IconButton
+            label="Cerrar modo cine"
             id="btn-close-theater-mobile"
             onClick={onClose}
-            className="absolute top-3 right-4 z-50 p-2.5 rounded-full bg-[var(--sunken)]/80 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer lg:hidden"
-            title="Cerrar modo cine"
+            className="absolute top-3 right-4 z-50 lg:hidden"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
 
           {/* Physical phone mock wrapper */}
           <div className="relative w-full max-w-[320px] aspect-[9/16] rounded-[36px] overflow-hidden bg-[var(--sunken)] shadow-black flex flex-col justify-between p-4 pt-10 pb-5">
@@ -375,14 +375,13 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 </h2>
               </div>
               
-              <button
+              <IconButton
+                label="Cerrar modo cine"
                 id="btn-close-theater"
                 onClick={onClose}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)]/50 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
-                title="Cerrar modo cine"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </IconButton>
             </div>
 
             {/* Virality Card & Reason */}

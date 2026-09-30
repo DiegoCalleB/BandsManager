@@ -34,7 +34,7 @@ import {
   Target,
 } from "lucide-react";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, Input, Select } from './ui';
+import { Button, IconButton, Input, Select } from './ui';
 
 interface TourManagerProps {
   colors: ThemeColors;
@@ -877,20 +877,19 @@ export default function TourManager({
                         </div>
                       </div>
                       <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                        <button
+                        <IconButton
+                          label="Editar"
                           onClick={() => handleOpenEditModal(tour)}
-                          className="p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
-                          title="Editar"
                         >
                           <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button
+                        </IconButton>
+                        <IconButton
+                          label="Eliminar"
+                          variant="danger"
                           onClick={() => handleDelete(tour.id, tour.nombre)}
-                          className="p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--alert)]/15 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors cursor-pointer"
-                          title="Eliminar"
                         >
                           <Trash2 className="w-4 h-4" />
-                        </button>
+                        </IconButton>
                       </div>
                     </div>
 
@@ -1519,14 +1518,15 @@ export default function TourManager({
                             key={stop.id || `form-stop-${idx}`}
                             className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/60 relative group"
                           >
-                            <button
+                            <IconButton
+                              label="Eliminar parada"
+                              variant="danger"
                               type="button"
                               onClick={() => removeStop(idx)}
-                              className="absolute top-3 right-3 p-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--ink)] hover:bg-[var(--alert)]/40 transition-colors cursor-pointer"
-                              title="Eliminar parada"
+                              className="absolute top-3 right-3"
                             >
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                            </IconButton>
 
                             <div className="text-xs font-bold text-[var(--ink-2)] font-sans mb-3 flex items-center gap-2">
                               <span>PARADA #{idx + 1}</span>

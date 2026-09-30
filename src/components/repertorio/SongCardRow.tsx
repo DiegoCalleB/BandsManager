@@ -24,6 +24,7 @@ import {
   Cpu,
 } from 'lucide-react';
 import { hasIrisStems } from '../../utils/irisTracks';
+import { IconButton } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -366,24 +367,24 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           {/* Reorder Buttons (alternative to drag & drop) */}
           {showReorder && (
             <div className="hidden sm:flex flex-col">
-              <button
+              <IconButton
+                label="Subir orden"
+                size="icon-xs"
                 type="button"
                 disabled={!canMoveUp}
                 onClick={onMoveUp}
-                className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 cursor-pointer disabled:cursor-default"
-                title="Subir orden"
               >
                 <ArrowUp className="w-3 h-3" />
-              </button>
-              <button
+              </IconButton>
+              <IconButton
+                label="Bajar orden"
+                size="icon-xs"
                 type="button"
                 disabled={!canMoveDown}
                 onClick={onMoveDown}
-                className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 cursor-pointer disabled:cursor-default"
-                title="Bajar orden"
               >
                 <ArrowDown className="w-3 h-3" />
-              </button>
+              </IconButton>
             </div>
           )}
 

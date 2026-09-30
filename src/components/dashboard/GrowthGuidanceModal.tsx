@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { GrowthPlan, ActionItem } from '../../utils/growthPlanEngine';
 import { ThemeColors } from '../../types';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface GrowthGuidanceModalProps {
   isOpen: boolean;
@@ -88,13 +88,13 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             </div>
           </div>
 
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             type="button"
             onClick={onClose}
-            className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         {/* Modal Navigation Tabs */}

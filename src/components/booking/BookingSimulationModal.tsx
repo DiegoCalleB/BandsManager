@@ -3,7 +3,7 @@ import { Lead, ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { Bot, Sparkles, X, CheckCircle2 } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
-import { Input, Select, Textarea } from '../ui';
+import { IconButton, Input, Select, Textarea } from '../ui';
 
 interface BookingSimulationModalProps {
   colors: ThemeColors;
@@ -82,12 +82,12 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                 <p className="text-xs text-[var(--ink-2)]">Genera una respuesta realista con IA para probar el flujo de hilo de correos</p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <div className="p-6 overflow-y-auto space-y-4 text-xs">

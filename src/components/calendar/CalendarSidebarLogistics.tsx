@@ -87,7 +87,7 @@ import { EventWeatherCard } from './EventWeatherCard';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 export interface CalendarSidebarLogisticsProps {
   colors: ThemeColors;
@@ -1694,14 +1694,16 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             {item.time}
                           </span>
                           <p className="text-micro font-sans leading-normal flex-1">{item.activity}</p>
-                          <button
+                          <IconButton
+                            label="Eliminar"
+                            variant="danger"
+                            size="icon-xs"
                             type="button"
                             onClick={(e) => handleDeleteRunOfShow(item.id, e)}
-                            className="opacity-0 group-hover:opacity-100 p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity"
-                            title="Eliminar"
+                            className="opacity-0"
                           >
                             <Trash2 className="w-3 h-3" />
-                          </button>
+                          </IconButton>
                         </div>
                       );
                     })
@@ -1730,14 +1732,16 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           }`}
                         />
                         <p className="text-micro font-sans leading-normal flex-1">{item.label}</p>
-                        <button
+                        <IconButton
+                          label="Eliminar"
+                          variant="danger"
+                          size="icon-xs"
                           type="button"
                           onClick={(e) => handleDeleteGear(item.id, e)}
-                          className="opacity-0 group-hover:opacity-100 p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity"
-                          title="Eliminar"
+                          className="opacity-0"
                         >
                           <Trash2 className="w-3 h-3" />
-                        </button>
+                        </IconButton>
                       </div>
                     );
                   })

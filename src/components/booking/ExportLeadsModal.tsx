@@ -9,7 +9,7 @@ import {
   CheckSquare,
 } from "lucide-react";
 import { Lead } from "../../types";
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface ExportLeadsModalProps {
   isOpen: boolean;
@@ -161,12 +161,12 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               </p>
             </div>
           </div>
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             onClick={onClose}
-            className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
           >
             <X className="w-4 h-4" />
-          </button>
+          </IconButton>
         </div>
 
         {/* 1. Scope selection */}
@@ -347,7 +347,6 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             size="sm"
             type="button"
             onClick={onClose}
-            
           >
             Cancelar
           </Button>

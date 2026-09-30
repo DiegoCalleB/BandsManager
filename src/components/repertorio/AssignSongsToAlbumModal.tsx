@@ -4,7 +4,7 @@ import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
-import { Input, Select, Textarea } from '../ui';
+import { IconButton, Input, Select, Textarea } from '../ui';
 
 interface AssignSongsToAlbumModalProps {
   isOpen: boolean;
@@ -93,9 +93,9 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                 {albumName ? `Editar Disco: ${albumName}` : 'Crear Nuevo Disco / Lanzamiento'}
               </h3>
             </div>
-            <button aria-label="Cerrar" onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+            <IconButton label="Cerrar" size="icon-xs" onClick={onClose}>
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <form onSubmit={handleSave} className="flex flex-col flex-1 overflow-hidden space-y-4 pt-4">

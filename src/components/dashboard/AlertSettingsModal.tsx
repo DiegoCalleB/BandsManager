@@ -17,7 +17,7 @@ import {
   Save,
   Check,
 } from 'lucide-react';
-import { Button, Input } from '../ui';
+import { Button, IconButton, Input } from '../ui';
 
 interface AlertSettingsModalProps {
   isOpen: boolean;
@@ -289,13 +289,13 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             </div>
           </div>
 
-          <button aria-label="Cerrar"
+          <IconButton
+            label="Cerrar"
             id="close-alert-settings-modal-btn"
             onClick={onClose}
-            className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </div>
 
         {/* Tab Navigation */}

@@ -53,7 +53,7 @@ import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ModalPortal } from "./common/ModalPortal";
 import { AgentAutonomySettingsModal } from "./dashboard/AgentAutonomySettingsModal";
 import { textOnColor } from '../utils/contrastText';
-import { Button, Input } from './ui';
+import { Button, IconButton, Input } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -490,12 +490,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Form Body */}
@@ -764,13 +764,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <p className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <span>Crear nuevo proyecto o banda</span>
                     </p>
-                    <button aria-label="Cerrar"
+                    <IconButton
+                      label="Cerrar"
+                      size="icon-xs"
                       type="button"
                       onClick={() => setShowCreateBandSection(false)}
-                      className="text-[var(--ink-2)] hover:text-[var(--ink-2)] p-1 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
 
                   <div className="space-y-2">
@@ -1442,12 +1443,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       </p>
                     </div>
                   </div>
-                  <button aria-label="Cerrar"
+                  <IconButton
+                    label="Cerrar"
+                    size="icon-xs"
                     onClick={() => setShowUpgradeModal(false)}
-                    className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                   >
                     <X className="w-5 h-5" />
-                  </button>
+                  </IconButton>
                 </div>
 
                 <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">

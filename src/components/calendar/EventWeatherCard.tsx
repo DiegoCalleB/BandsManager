@@ -17,7 +17,7 @@ import {
   WeatherAlert,
 } from "../../services/weatherService";
 import { AnimatedWeatherIcon } from "./AnimatedWeatherIcon";
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface EventWeatherCardProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -274,16 +274,16 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
           >
             <span>Prueba (18:00)</span>
           </button>
-          <button
+          <IconButton
+            label="Actualizar previsión"
+            size="icon-xs"
             type="button"
             onClick={loadWeather}
-            title="Actualizar previsión"
-            className="p-1 text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
           >
             <RefreshCw
               className={`w-3 h-3 ${isLoading ? "animate-spin text-[var(--acc)]" : ""}`}
             />
-          </button>
+          </IconButton>
           {collapsible && (
             <button
               type="button"

@@ -3,7 +3,7 @@ import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } fro
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, SongAudioIdea } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { IconButton, Input, Select, Textarea } from '../ui';
 
 interface SongStudioAiComposerModalProps {
   isOpen: boolean;
@@ -129,13 +129,13 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                 <p className="text-xs text-[var(--acc)] font-sans">Aporta arreglos, riffs y creatividad como un músico de sesión real</p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-xs text-[var(--ink)] space-y-1">

@@ -96,7 +96,7 @@ import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ViralGrowthStudio, SUBTITLE_STYLES } from "./reels/ViralGrowthStudio";
 import { ReelsPhoneMockup } from "./reels/ReelsPhoneMockup";
 import { ReelsTheaterModal } from "./reels/ReelsTheaterModal";
-import { Button, Input, Select, Textarea } from './ui';
+import { Button, IconButton, Input, Select, Textarea } from './ui';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
@@ -3902,7 +3902,10 @@ export default function ReelsCenter({
                             Responsable:{" "}
                             {post.responsable || "Community Manager"}
                           </span>
-                          <button
+                          <IconButton
+                            label="Eliminar del calendario"
+                            variant="danger"
+                            size="icon-xs"
                             id={`delete-post-${post.id}`}
                             onClick={async () => {
                               if (
@@ -3918,11 +3921,9 @@ export default function ReelsCenter({
                                 );
                               }
                             }}
-                            className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors bg-transparent -none cursor-pointer"
-                            title="Eliminar del calendario"
                           >
                             <Trash2 className="w-4 h-4" />
-                          </button>
+                          </IconButton>
                         </div>
                       </div>
                     ))}
@@ -4085,12 +4086,13 @@ export default function ReelsCenter({
       {showConnectModal && (
         <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-[var(--sunken)] w-full max-w-md rounded-[var(--r-m)] p-6 space-y-5 text-left relative">
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={() => setShowConnectModal(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
+              className="absolute top-4 right-4"
             >
               <X className="w-4 h-4" />
-            </button>
+            </IconButton>
 
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[var(--acc-ink)]">

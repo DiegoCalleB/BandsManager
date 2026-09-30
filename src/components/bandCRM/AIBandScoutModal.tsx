@@ -13,7 +13,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { BandContact, BookingCampaign } from "../../types";
 import { apiFetch } from "../../utils/api";
-import { Button, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface AIBandScoutModalProps {
   isOpen: boolean;
@@ -134,12 +134,12 @@ export function AIBandScoutModal({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-2 hover:bg-[var(--sunken)] rounded-[var(--r-pill)] transition-colors text-[var(--ink-2)] hover:text-[var(--ink-2)]"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <div className="p-5 flex-1 overflow-y-auto">

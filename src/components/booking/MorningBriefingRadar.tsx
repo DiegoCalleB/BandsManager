@@ -28,7 +28,7 @@ import {
   Briefcase,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Select } from '../ui';
+import { Button, IconButton, Select } from '../ui';
 
 interface MorningBriefingRadarProps {
   leads: Lead[];
@@ -426,14 +426,13 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
                         <div className="flex items-center gap-1.5">
                           {onOpenRoadbookModal && (
-                            <button
+                            <IconButton
+                              label="Ver / imprimir roadbook y contrato"
                               type="button"
                               onClick={() => onOpenRoadbookModal(lead)}
-                              className="p-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs transition-colors cursor-pointer"
-                              title="Ver / imprimir roadbook y contrato"
                             >
                               <FileText className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
                           )}
 
                           <button

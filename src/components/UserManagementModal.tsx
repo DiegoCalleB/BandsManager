@@ -24,7 +24,7 @@ import {
 } from "../config/stemInstruments";
 import { uploadFileToServer } from "../utils/audioStorage";
 import { textOnColor } from '../utils/contrastText';
-import { Input, Select } from './ui';
+import { IconButton, Input, Select } from './ui';
 
 interface UserManagementModalProps {
   currentUser: User;
@@ -380,12 +380,12 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Tab Selection */}
@@ -647,7 +647,6 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 ? "No puedes cambiar tu propio rol desde aquí"
                                 : "Cambiar rol del usuario"
                             }
-                            
                           >
                             <option
                               value="member"
@@ -682,14 +681,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                           </button>
 
                           {!isSelf && (
-                            <button
+                            <IconButton
+                              label="Eliminar usuario"
+                              variant="danger"
                               type="button"
                               onClick={() => handleDeleteUser(u.id, u.username)}
-                              className="p-1.5 rounded-[var(--r-pill)] text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
-                              title="Eliminar usuario"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            </IconButton>
                           )}
                         </div>
                       </div>

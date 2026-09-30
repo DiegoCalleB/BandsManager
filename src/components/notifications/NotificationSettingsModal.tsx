@@ -19,7 +19,7 @@ import {
 import { ModalPortal } from '../common/ModalPortal';
 import { BrowserNotificationConfig, NotificationPermissionStatus } from '../../types/browserNotifications';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface NotificationSettingsModalProps {
   isOpen: boolean;
@@ -76,12 +76,12 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <p className="text-xs text-[var(--ink-2)]">Configura los avisos en tiempo real para leads, respuestas y agentes</p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Body */}
@@ -306,7 +306,6 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               size="sm"
               type="button"
               onClick={onClose}
-              
             >
               Guardar y cerrar
             </Button>

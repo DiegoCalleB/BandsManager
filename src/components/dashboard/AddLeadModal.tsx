@@ -3,7 +3,7 @@ import { LeadType } from "../../types";
 import { Plus, X } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface AddLeadModalProps {
   isOpen: boolean;
@@ -62,12 +62,12 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             <h3 className="text-sm font-bold font-display text-[var(--ink)] flex items-center gap-1.5">
               <Plus className="w-4 h-4" /> Agregar nueva sala a la hoja
             </h3>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
-            </button>
+            </IconButton>
           </div>
 
           <form
@@ -234,7 +234,6 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 id="btn-add-cancel"
                 type="button"
                 onClick={onClose}
-                
               >
                 Cancelar
               </Button>
@@ -243,7 +242,6 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 size="xs"
                 id="btn-add-submit"
                 type="submit"
-                
               >
                 Confirmar registro
               </Button>

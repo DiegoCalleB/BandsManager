@@ -24,7 +24,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Select } from '../ui';
+import { IconButton, Select } from '../ui';
 
 interface ExportAlbumSongsModalProps {
   isOpen: boolean;
@@ -509,14 +509,14 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
               </div>
             </div>
 
-            <button
+            <IconButton
+              label="Cerrar"
               type="button"
               onClick={onClose}
-              className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer shrink-0"
-              title="Cerrar"
+              className="shrink-0"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Body content */}

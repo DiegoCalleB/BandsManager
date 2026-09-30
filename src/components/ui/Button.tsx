@@ -40,6 +40,8 @@ export const buttonVariants = cva(
         /** Botón de solo icono: cuadrado, zona táctil de 40 px. */
         icon: 'size-10 p-0',
         'icon-sm': 'size-9 p-0',
+        /** Icono en filas densas (28 px); en táctil el área de pulsación se amplía sola. */
+        'icon-xs': 'size-7 p-0',
       },
     },
     defaultVariants: { variant: 'neutral', size: 'md' },
@@ -56,3 +58,20 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ),
 );
 Button.displayName = 'Button';
+
+export interface IconButtonProps extends Omit<ButtonProps, 'aria-label' | 'children' | 'size'> {
+  /** Nombre accesible (y tooltip). Obligatorio: un botón de solo icono sin nombre no existe para un lector de pantalla. */
+  label: string;
+  size?: 'icon' | 'icon-sm' | 'icon-xs';
+  children: React.ReactNode;
+}
+
+/** Botón de solo icono: `Button` cuadrado con `aria-label` y `title` obligatorios. Por defecto discreto (ghost). */
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  ({ label, size = 'icon-sm', variant = 'ghost', children, ...props }, ref) => (
+    <Button ref={ref} variant={variant} size={size} aria-label={label} title={label} {...props}>
+      {children}
+    </Button>
+  ),
+);
+IconButton.displayName = 'IconButton';

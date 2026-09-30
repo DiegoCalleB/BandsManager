@@ -14,7 +14,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { isImageDocument, isPdfDocument } from "../../utils/documentType";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface SongStudioStructureUploadModalProps {
   song: Song;
@@ -241,16 +241,16 @@ export const SongStudioStructureUploadModal: React.FC<
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               type="button"
               onClick={() => {
                 stopCamera();
                 onClose();
               }}
-              className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Messages */}

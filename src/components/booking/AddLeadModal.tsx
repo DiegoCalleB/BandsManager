@@ -4,7 +4,7 @@ import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { IconButton, Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -127,12 +127,13 @@ export function AddLeadModal({
                 <p className="text-xs text-[var(--ink-2)] font-normal">Añade un contacto a tu pipeline CRM de booking</p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
+              size="icon-xs"
               onClick={onClose}
-              className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-3.5 text-xs font-sans">

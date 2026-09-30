@@ -40,7 +40,7 @@ import {
   getPlanDefinition,
 } from "../utils/planPermissions";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button } from './ui';
+import { Button, IconButton } from './ui';
 
 interface PlanesProps {
   colors?: ThemeColors;
@@ -640,14 +640,13 @@ export const Planes: React.FC<PlanesProps> = ({
               >
                 <span>Probar ahora</span>
               </Button>
-              <button
+              <IconButton
+                label="Cerrar aviso"
                 type="button"
                 onClick={() => setShowBanner(false)}
-                className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                title="Cerrar aviso"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
         </div>

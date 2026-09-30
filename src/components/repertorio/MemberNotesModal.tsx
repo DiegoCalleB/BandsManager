@@ -14,7 +14,7 @@ import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
-import { Button, Input, Textarea } from '../ui';
+import { Button, IconButton, Input, Textarea } from '../ui';
 
 interface MemberNotesModalProps {
   isOpen: boolean;
@@ -210,12 +210,12 @@ export function MemberNotesModal({
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <IconButton
+              label="Cerrar"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           </div>
 
           {/* Resumen de preparación de la banda con esta canción — de un vistazo, quién falta */}
@@ -331,7 +331,6 @@ export function MemberNotesModal({
                       size="sm"
                       type="button"
                       onClick={handleAddCustomMember}
-                      
                     >
                       Añadir
                     </Button>

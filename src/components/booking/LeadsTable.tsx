@@ -55,7 +55,7 @@ import {
   generateFollowupTemplate,
 } from "../../utils/bookingFollowup";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Chip } from '../ui';
+import { Button, Chip, IconButton } from '../ui';
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -1367,17 +1367,18 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <span>{hasIntelligence ? "Copiloto" : "Ficha"}</span>
                     </button>
                     {onDeleteLead && (
-                      <button
+                      <IconButton
+                        label="Eliminar y guardar en lista negra"
+                        variant="danger"
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           onDeleteLead(lead.id, lead.nombre_sala);
                         }}
-                        className="p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-ui cursor-pointer min-h-[38px] flex items-center justify-center"
-                        title="Eliminar y guardar en lista negra"
+                        className="flex"
                       >
                         <Trash2 className="w-4 h-4 text-[var(--alert)]" />
-                      </button>
+                      </IconButton>
                     )}
                   </div>
                 </div>

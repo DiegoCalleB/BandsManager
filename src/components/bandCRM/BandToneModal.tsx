@@ -31,7 +31,7 @@ import { api } from "../../services/api";
 import { ExampleThreadsSection } from "../booking/ExampleThreadsSection";
 import type { TemplateCategory } from "../booking/TemplateConfigSection";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Textarea } from '../ui';
+import { Button, IconButton, Input, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -376,29 +376,28 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             </div>
             <div className="flex items-center gap-1.5">
               {editable && !isLoading && toneData && !isEditing && (
-                <button
+                <IconButton
+                  label="Volver a rastrear redes con IA (sustituye lo que haya, incluidas ediciones a mano)"
                   onClick={onReAnalyze}
-                  className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
-                  title="Volver a rastrear redes con IA (sustituye lo que haya, incluidas ediciones a mano)"
                 >
                   <RefreshCw className="w-4 h-4" />
-                </button>
+                </IconButton>
               )}
               {editable && !isLoading && toneData && !isEditing && (
-                <button
+                <IconButton
+                  label="Editar a mano"
                   onClick={handleStartEdit}
-                  className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
-                  title="Editar a mano"
                 >
                   <Pencil className="w-4 h-4" />
-                </button>
+                </IconButton>
               )}
-              <button aria-label="Cerrar"
+              <IconButton
+                label="Cerrar"
+                size="icon-xs"
                 onClick={onClose}
-                className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5 text-[var(--ink-2)]" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
