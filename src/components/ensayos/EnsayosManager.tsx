@@ -26,6 +26,7 @@ import { ConvocarEnsayoModal } from "./ConvocarEnsayoModal";
 import { api } from "../../services/api";
 import { SAMPLER_SONGS, SAMPLER_SETLISTS } from "../../config/sampleRepertoire";
 import { Button, IconButton } from '../ui';
+import { Tabs } from "../ui/Tabs";
 
 interface EnsayosManagerProps {
   rehearsals: Rehearsal[];
@@ -327,52 +328,17 @@ export function EnsayosManager({
         </div>
 
         {/* Master Navigation Tabs - 100% Mobile Responsive */}
-        <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--sunken)] rounded-[var(--r-l)]">
-          <button
-            onClick={() => setActiveTab("orden_del_dia")}
-            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
-              activeTab === "orden_del_dia"
-                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
-            }`}
-          >
-            <ListOrdered className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-xs leading-tight font-bold">
-              1. Agenda
-            </span>
-            <span className="hidden sm:inline">1. Orden del Día</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("modo_local")}
-            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
-              activeTab === "modo_local"
-                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
-            }`}
-          >
-            <Radio className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-xs leading-tight font-bold">
-              2. En Vivo
-            </span>
-            <span className="hidden sm:inline">2. Modo local en vivo</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("grabacion_acta")}
-            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
-              activeTab === "grabacion_acta"
-                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
-            }`}
-          >
-            <Mic className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-xs leading-tight font-bold">
-              3. Acta IA
-            </span>
-            <span className="hidden sm:inline">3. Grabación y Acta</span>
-          </button>
-        </div>
+        <Tabs<typeof activeTab>
+          layout="fill"
+          aria-label="Fases del ensayo"
+          value={activeTab}
+          onChange={setActiveTab}
+          items={[
+            { id: "orden_del_dia", icon: ListOrdered, label: <><span className="sm:hidden">1. Agenda</span><span className="hidden sm:inline">1. Orden del día</span></> },
+            { id: "modo_local", icon: Radio, label: <><span className="sm:hidden">2. En vivo</span><span className="hidden sm:inline">2. Modo local en vivo</span></> },
+            { id: "grabacion_acta", icon: Mic, label: <><span className="sm:hidden">3. Acta IA</span><span className="hidden sm:inline">3. Grabación y acta</span></> },
+          ]}
+        />
       </div>
 
       {/* Tab Content */}

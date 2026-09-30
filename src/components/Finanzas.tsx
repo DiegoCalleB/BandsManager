@@ -34,6 +34,7 @@ import { ShowIcon } from './ui/ShowIcon';
 import { Button, Input, Select, Textarea } from './ui';
 
 import { formatEur } from '../utils/formatMoney';
+import { Tabs } from "./ui/Tabs";
 interface FinanzasProps {
   colors: ThemeColors;
   payments: Payment[];
@@ -342,38 +343,16 @@ export default function Finanzas({
       <div
         className={`flex flex-col md:flex-row md:items-center justify-between pb-4 mb-2 gap-4 ${""}`}
       >
-        <div className="flex gap-2 flex-wrap">
-          <button
-            onClick={() => setActiveTab("rentabilidad")}
-            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
-              activeTab === "rentabilidad"
-                ? colors.primary
-                : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
-            }`}
-          >
-            <Calculator className="w-3.5 h-3.5" /> Rentabilidad por bolo
-          </button>
-          <button
-            onClick={() => setActiveTab("ledger")}
-            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-              activeTab === "ledger"
-                ? colors.primary
-                : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
-            }`}
-          >
-            Libro diario (Historial)
-          </button>
-          <button
-            onClick={() => setActiveTab("analytics")}
-            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-              activeTab === "analytics"
-                ? colors.primary
-                : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
-            }`}
-          >
-            Análisis de costes (Categorías)
-          </button>
-        </div>
+        <Tabs<typeof activeTab>
+          aria-label="Vistas de finanzas"
+          value={activeTab}
+          onChange={setActiveTab}
+          items={[
+            { id: "rentabilidad", icon: Calculator, label: "Rentabilidad por bolo" },
+            { id: "ledger", label: "Libro diario" },
+            { id: "analytics", label: "Costes por categoría" },
+          ]}
+        />
 
         <button
           onClick={() => setIsAddOpen(true)}

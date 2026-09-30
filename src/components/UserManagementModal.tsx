@@ -25,6 +25,7 @@ import {
 import { uploadFileToServer } from "../utils/audioStorage";
 import { textOnColor } from '../utils/contrastText';
 import { Button, IconButton, Input, Select } from './ui';
+import { Tabs } from "./ui/Tabs";
 
 interface UserManagementModalProps {
   currentUser: User;
@@ -389,68 +390,22 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </div>
 
           {/* Tab Selection */}
-          <div className={`px-6 pt-3 flex gap-2 shrink-0 overflow-x-auto bg-[var(--bg)]/50`}>
-            <button
-              onClick={() => {
-                setActiveTab("band_info");
-                setError(null);
-                setSuccessMsg(null);
-              }}
-              className={`px-4 py-2 text-xs font-bold font-mono transition-ui flex items-center gap-1.5 shrink-0 ${
-                activeTab === "band_info"
-                  ? "text-[var(--acc-ink)] border-b-2 border-[var(--hair)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
-            >
-              <ImageIcon className="w-3.5 h-3.5" />
-              <span>Info y logo de banda</span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab("list");
-                setError(null);
-                setSuccessMsg(null);
-              }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 ${
-                activeTab === "list"
-                  ? " text-[var(--tentative)]"
-                  : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-              }`}
-            >
-              <Users className="w-3.5 h-3.5" />
-              <span>Lista de Miembros ({users.length})</span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab("create");
-                setError(null);
-                setSuccessMsg(null);
-              }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 ${
-                activeTab === "create"
-                  ? " text-[var(--tentative)]"
-                  : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-              }`}
-            >
-              <UserPlus className="w-3.5 h-3.5" />
-              <span>+ Nuevo músico</span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab("associate");
-                setError(null);
-                setSuccessMsg(null);
-              }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 ${
-                activeTab === "associate"
-                  ? "text-[var(--tentative)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-              }`}
-            >
-              <Link2 className="w-3.5 h-3.5" />
-              <span>Asociar músico</span>
-            </button>
-          </div>
+          <Tabs<typeof activeTab>
+            className="px-6 pt-3"
+            aria-label="Gestión de la banda"
+            value={activeTab}
+            onChange={(id) => {
+              setActiveTab(id);
+              setError(null);
+              setSuccessMsg(null);
+            }}
+            items={[
+              { id: "band_info", icon: ImageIcon, label: "Info y logo de banda" },
+              { id: "list", icon: Users, label: `Lista de miembros (${users.length})` },
+              { id: "create", icon: UserPlus, label: "Nuevo músico" },
+              { id: "associate", icon: Link2, label: "Asociar músico" },
+            ]}
+          />
 
           {/* Messages */}
           <div className="px-6 pt-3">

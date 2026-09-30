@@ -399,7 +399,7 @@ export function ModoLocalEnVivoTab({
           Orden del día vacío: añade lo que vais a tocar
         </h3>
         <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
-          Ve a la pestaña “1. Orden del Día” para añadir canciones y bloques
+          Ve a la pestaña “1. Orden del día” para añadir canciones y bloques
           antes de activar el modo local.
         </p>
       </div>

@@ -46,6 +46,7 @@ import {
 } from "lucide-react";
 import { CurveSeries } from "../ui/CurveSeries";
 import { ChannelChip } from "../ui/ChannelChip";
+import { Tabs } from "../ui/Tabs";
 import { CANAL_COLOR } from "../../utils/canalColor";
 import { api } from "../../services/api";
 import {
@@ -978,34 +979,15 @@ export function ReelsMetricsView({
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Primary Module Navigation Tabs: Analytics Radar vs AI Growth Plan */}
       <div className="flex items-center justify-between gap-3  pb-3 flex-wrap">
-        <div className="flex items-center gap-2 p-1 bg-[var(--surface)]/80 rounded-[var(--r-m)]">
-          <button
-            type="button"
-            onClick={() => setActiveMainSection("metrics")}
-            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-2 cursor-pointer ${
-              activeMainSection === "metrics"
-                ? "bg-[var(--surface)] text-[var(--tentative)]"
-                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-            }`}
-          >
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>Panel de métricas y radar</span>
-          </button>
-
-          <Button
-            variant={activeMainSection === "growth_plan" ? "primary" : "ghost"}
-            size="sm"
-            type="button"
-            onClick={() => setActiveMainSection("growth_plan")}
-            className="items-center gap-2"
-          >
-            <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
-            <span>Plan y recomendaciones de crecimiento</span>
-            <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)] font-normal">
-              IA
-            </span>
-          </Button>
-        </div>
+        <Tabs<typeof activeMainSection>
+          aria-label="Vistas de métricas"
+          value={activeMainSection}
+          onChange={setActiveMainSection}
+          items={[
+            { id: "metrics", icon: BarChart3, label: "Panel de métricas y radar" },
+            { id: "growth_plan", icon: Compass, label: <>Plan y recomendaciones de crecimiento <span className="rounded-[var(--r-pill)] bg-[var(--acc)] px-1.5 py-0.5 text-micro font-medium text-[var(--on-acc)]">IA</span></> },
+          ]}
+        />
 
         {activeMainSection === "growth_plan" && (
           <div className="flex items-center gap-2">

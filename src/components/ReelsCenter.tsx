@@ -97,6 +97,7 @@ import { ViralGrowthStudio, SUBTITLE_STYLES } from "./reels/ViralGrowthStudio";
 import { ReelsPhoneMockup } from "./reels/ReelsPhoneMockup";
 import { ReelsTheaterModal } from "./reels/ReelsTheaterModal";
 import { Button, IconButton, Input, LinkButton, Select, Textarea } from './ui';
+import { Tabs } from "./ui/Tabs";
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
@@ -2119,30 +2120,16 @@ export default function ReelsCenter({
       )}
 
       {/* Dynamic Segment Tab Selector */}
-      <div className={`flex pb-4 mb-2 flex-wrap gap-3 `}>
-        <button
-          id="tab-btn-pipeline"
-          onClick={() => setActiveTab("pipeline")}
-          className={`px-5 py-2.5 font-sans text-micro transition-ui duration-300 rounded-[var(--r-pill)] cursor-pointer ${
-            activeTab === "pipeline"
-              ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold/10"
-              : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
-          }`}
-        >
-          Pipeline y redactor de copy
-        </button>
-        <button
-          id="tab-btn-analyzer"
-          onClick={() => setActiveTab("analyzer")}
-          className={`px-5 py-2.5 font-sans text-micro transition-ui duration-300 rounded-[var(--r-pill)] flex items-center gap-1.5 cursor-pointer ${
-            activeTab === "analyzer"
-              ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold/10"
-              : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
-          }`}
-        >
-          <Sparkles className="w-3.5 h-3.5" /> Analizador de vídeos IA
-        </button>
-      </div>
+      <Tabs<typeof activeTab>
+        className="mb-4"
+        aria-label="Herramientas de Reels"
+        value={activeTab}
+        onChange={setActiveTab}
+        items={[
+          { id: "pipeline", domId: "tab-btn-pipeline", label: "Pipeline y redactor de copy" },
+          { id: "analyzer", domId: "tab-btn-analyzer", icon: Sparkles, label: "Analizador de vídeos IA" },
+        ]}
+      />
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
         {/* LEFT COLUMN: ACTIVE WORKSPACE TAB (8 columns) */}

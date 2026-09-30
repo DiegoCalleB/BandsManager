@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { Input, Textarea, Select, Field, Switch, Card, EmptyState, Button } from '..';
+import { Input, Textarea, Select, Field, Switch, Card, EmptyState, Button, Tabs, CurveSeries, ChannelChip } from '..';
+import { Heart } from 'lucide-react';
 
 const html = (el: React.ReactElement) => renderToStaticMarkup(el);
 
@@ -78,5 +79,41 @@ describe('primitivas de formulario (Espectro)', () => {
     expect(out).toContain('La sala está vacía.');
     expect(out).toContain('Añadir');
     expect(out).toContain('<svg');
+  });
+});
+
+describe('Tabs, CurveSeries y ChannelChip', () => {
+  const items = [
+    { id: 'a', label: 'Uno' },
+    { id: 'b', label: 'Dos', hidden: true },
+    { id: 'c', label: 'Tres' },
+  ];
+
+  it('Tabs: rol tablist/tab, solo la activa entra en el orden de tabulación y las ocultas no se pintan', () => {
+    const out = html(<Tabs aria-label="Secciones" items={items} value="a" onChange={() => {}} />);
+    expect(out).toContain('role="tablist"');
+    expect(out.match(/role="tab"/g)).toHaveLength(2);
+    expect(out).toContain('aria-selected="true"');
+    expect(out).toContain('tabindex="-1"');
+    expect(out).not.toContain('Dos');
+    expect(out).not.toMatch(/\bborder\b/);
+  });
+
+  it('CurveSeries: curva por serie con su color y etiqueta accesible', () => {
+    const out = html(
+      <CurveSeries
+        series={[{ label: 'Fans', color: 'var(--acc)', data: [{ label: 'ene', value: 1 }, { label: 'feb', value: 5 }, { label: 'mar', value: 9 }] }]}
+      />,
+    );
+    expect(out).toContain('aria-label="Evolución de Fans"');
+    expect(out).toContain('stroke="var(--acc)"');
+    expect(out).toContain('<path');
+  });
+
+  it('ChannelChip: pressed según estado y "Solo" como acción aparte', () => {
+    const out = html(<ChannelChip canal="spotify" label="Spotify" icon={Heart} value={3755} active onToggle={() => {}} onSolo={() => {}} />);
+    expect(out).toContain('aria-pressed="true"');
+    expect(out).toContain('Solo');
+    expect(out).toContain('var(--ok)');
   });
 });

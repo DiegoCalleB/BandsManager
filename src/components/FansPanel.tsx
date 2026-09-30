@@ -45,6 +45,7 @@ import * as XLSX from "xlsx";
 import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from "../types";
 import { THEMES } from "../utils/theme";
 import { Onda } from "./ui/Onda";
+import { Tabs } from "./ui/Tabs";
 import { ReelsMetricsView } from "./reels/ReelsMetricsView";
 import { FansCommunityView } from "./fans/FansCommunityView";
 import {
@@ -793,43 +794,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         </div>
       </div>
 
-      {/* Tabs (metrics tab hidden for Promo) */}
-      <div className="flex overflow-x-auto shrink-0 hide-scrollbar gap-1">
-        {!isPromo && (
-          <button
-            id="tab-btn-fans-metrics"
-            onClick={() => setActiveTab("metrics")}
-            className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "metrics" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
-          >
-            <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento
-            y métricas de redes
-          </button>
-        )}
-        <button
-          id="tab-btn-fans-qr"
-          onClick={() => setActiveTab("qr")}
-          className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "qr" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
-        >
-          <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "1" : "2"}
-          . Captura en Vivo y QR
-        </button>
-        <button
-          id="tab-btn-fans-dashboard"
-          onClick={() => setActiveTab("dashboard")}
-          className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "dashboard" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
-        >
-          <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "2" : "3"}.
-          Dashboard y Analítica
-        </button>
-        <button
-          id="tab-btn-fans-directory"
-          onClick={() => setActiveTab("fans")}
-          className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "fans" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
-        >
-          <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "3" : "4"}.
-          Comunidad y Red Social ({fans.length})
-        </button>
-      </div>
+      <Tabs<typeof activeTab>
+        aria-label="Secciones de fans"
+        value={activeTab}
+        onChange={setActiveTab}
+        items={[
+          { id: "metrics", domId: "tab-btn-fans-metrics", icon: TrendingUp, label: "1. Seguimiento y métricas de redes", hidden: isPromo },
+          { id: "qr", domId: "tab-btn-fans-qr", icon: QrCode, label: `${isPromo ? 1 : 2}. Captura en Vivo y QR` },
+          { id: "dashboard", domId: "tab-btn-fans-dashboard", icon: Heart, label: `${isPromo ? 2 : 3}. Dashboard y Analítica` },
+          { id: "fans", domId: "tab-btn-fans-directory", icon: Users, label: `${isPromo ? 3 : 4}. Comunidad y Red Social (${fans.length})` },
+        ]}
+      />
 
       {activeTab === "dashboard" && (
         <FansDashboardView

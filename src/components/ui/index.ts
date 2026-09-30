@@ -46,3 +46,5 @@ export { CurveSeries } from './CurveSeries';
 export type { CurveSeriesProps } from './CurveSeries';
 export { ChannelChip } from './ChannelChip';
 export type { ChannelChipProps } from './ChannelChip';
+export { Tabs } from './Tabs';
+export type { TabsProps, TabItem } from './Tabs';
