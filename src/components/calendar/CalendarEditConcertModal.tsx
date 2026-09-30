@@ -82,12 +82,14 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
-          <button
+          <Button
+            variant="ghost"
+            size="xs"
             onClick={() => setViewingConcert(null)}
-            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4"
           >
             ✕
-          </button>
+          </Button>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
             <span className="text-[var(--acc)]"><ShowIcon inline emoji="🎸" />Editar concierto</span>
@@ -233,18 +235,18 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 </button>
               )}
               <div className="flex gap-2 ml-auto">
-                <button
+                <Button
+                  variant="ghost"
+                  size="xs"
                   type="button"
                   onClick={() => setViewingConcert(null)}
-                  className="px-2 py-1 text-micro font-mono rounded-[var(--r-pill)] text-[var(--ink-2)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                 >
                   Cancelar
-                </button>
+                </Button>
                 <Button
                   variant="primary"
                   size="xs"
                   type="submit"
-                  
                 >
                   Guardar cambios
                 </Button>

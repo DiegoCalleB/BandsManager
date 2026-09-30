@@ -3,7 +3,7 @@ import { Lead, ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { Bot, Sparkles, X, CheckCircle2 } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
-import { IconButton, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface BookingSimulationModalProps {
   colors: ThemeColors;
@@ -182,14 +182,16 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             >
               Cancelar
             </button>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={handleCommit}
               disabled={!simulationMessage}
-              className="px-5 py-2 rounded-[var(--r-pill)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 transition-ui flex items-center gap-2"
+              className="items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
               Registrar en hilo de emails
-            </button>
+            </Button>
           </div>
         </div>
       </div>

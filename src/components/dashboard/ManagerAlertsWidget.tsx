@@ -159,29 +159,28 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
         <div className="flex items-center gap-1.5">
           {unreadAlerts.length > 0 && (
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               id="mark-all-read-alerts-btn"
               onClick={handleMarkAllRead}
-              className={`px-2 py-1 rounded-[var(--r-pill)] ${
-                'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]'
-              } text-xs font-medium transition-ui flex items-center gap-1 cursor-pointer`}
+              className="items-center gap-1"
               title="Marcar todas como leídas"
             >
               <Check className="w-3 h-3 text-[var(--ok)]" />
               <span className="hidden sm:inline">Leídas</span>
-            </button>
+            </Button>
           )}
 
-          <button
+          <Button
+            variant="ghost"
+            size="xs"
             id="toggle-expand-alerts-panel-btn"
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`p-1 rounded-[var(--r-pill)] ${
-              'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
-            } transition-colors cursor-pointer`}
             title={isExpanded ? 'Plegar panel' : 'Desplegar panel'}
           >
             {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -246,17 +245,14 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 Booking y CRM
               </Button>
 
-              <button
+              <Button
+                variant={filterMode === 'finanzas' ? "soft" : "ghost"}
+                size="xs"
                 id="filter-alerts-finanzas"
                 onClick={() => setFilterMode('finanzas')}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs cursor-pointer ${
-                  filterMode === 'finanzas'
-                    ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-semibold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
-                }`}
               >
                 Finanzas
-              </button>
+              </Button>
             </div>
 
             {dismissedIds.length > 0 && (
@@ -300,9 +296,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
                 const actionBtnStyle = isUrgent
                   ? 'bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)]'
-                  : isWarning
-                    ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'
-                    : 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)]';
+                  : 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]';
 
                 return (
                   <div
@@ -334,10 +328,11 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
                         {/* Card controls (Mark read / Dismiss) */}
                         <div className="flex items-center gap-1">
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="xs"
                             id={`toggle-read-alert-${alert.id}`}
                             onClick={(e) => handleToggleRead(alert.id, e)}
-                            className={`p-1 rounded-[var(--r-pill)] ${'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title={isRead ? 'Marcar como no leída' : 'Marcar como leída'}
                           >
                             {isRead ? (
@@ -345,16 +340,17 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                             ) : (
                               <Eye className={`w-3.5 h-3.5 ${'text-[var(--acc)]'}`} />
                             )}
-                          </button>
+                          </Button>
 
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="xs"
                             id={`dismiss-alert-${alert.id}`}
                             onClick={(e) => handleDismiss(alert.id, e)}
-                            className={`p-1 rounded-[var(--r-pill)] ${'text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title="Descartar alerta"
                           >
                             <X className="w-3.5 h-3.5" />
-                          </button>
+                          </Button>
                         </div>
                       </div>
 

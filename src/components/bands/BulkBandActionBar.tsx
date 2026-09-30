@@ -152,14 +152,16 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             </div>
 
             {/* Quick close on mobile */}
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               type="button"
               onClick={onDeselectAll}
-              className={`md:hidden p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+              className="md:hidden"
               title="Cerrar selección"
             >
               <X className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
 
           {/* Right section: Gmail-Style Action Buttons */}
@@ -217,37 +219,42 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             </div>
 
             {/* AI Date Swap Generator */}
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={onBulkGeneratePitch}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)]"}`}
+              className="items-center gap-1.5"
               title="Redactar propuestas de intercambio (date swaps) con IA"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span className="hidden sm:inline">Swaps IA</span>
               <span className="sm:hidden">Swaps</span>
-            </button>
+            </Button>
 
             {/* Favorite toggle */}
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               type="button"
               onClick={() => onBulkToggleFavorite(true)}
-              className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc-ink)]"}`}
               title="Marcar bandas como favoritas"
             >
               <Star className="w-4 h-4 fill-[var(--acc)]/30 text-[var(--acc)]" />
-            </button>
+            </Button>
 
             {/* Export CSV */}
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               type="button"
               onClick={onBulkExportCsv}
-              className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-semibold transition-ui flex items-center gap-1 cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+              className="items-center gap-1"
               title="Exportar bandas seleccionadas a CSV"
             >
               <Download className="w-3.5 h-3.5" />
               <span className="hidden lg:inline">CSV</span>
-            </button>
+            </Button>
 
             {/* Delete button */}
             <Button
@@ -261,14 +268,16 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             </Button>
 
             {/* Deselect Close Button (Desktop) */}
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               type="button"
               onClick={onDeselectAll}
-              className={`hidden md:flex p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+              className="hidden"
               title="Deseleccionar todo"
             >
               <X className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -92,13 +92,13 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               </span>
             </Button>
 
-            <button
+            <Button
+              variant={activeTab === 'catalogo' ? "soft" : "ghost"}
+              size="xs"
               id="tab-btn-catalogo"
               type="button"
               onClick={() => setActiveTab('catalogo')}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs flex items-center gap-1.5 transition-ui cursor-pointer font-medium ${
-                activeTab === 'catalogo' ? 'bg-[var(--acc)]/12 text-[var(--acc-ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <Disc3 className="w-3.5 h-3.5" />
               <span>Discografía</span>
@@ -109,7 +109,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               >
                 {songCount}
               </span>
-            </button>
+            </Button>
           </nav>
         </div>
       </div>
@@ -209,14 +209,15 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 <span className="hidden xs:inline">Nuevo Setlist</span>
               </Button>
 
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 type="button"
                 onClick={onImportSetlist}
-                className={`p-1.5 rounded-[var(--r-pill)] transition cursor-pointer ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
                 title="Importar repertorio desde foto o PDF impreso"
               >
                 <ImagePlus className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </>
         )}
@@ -225,32 +226,28 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
           <div className="flex items-center justify-between w-full gap-2">
             {/* Sub-view switcher inside Catálogo */}
             <div className={`hidden md:flex items-center gap-1 p-0.5 rounded-[var(--r-m)] shrink-0 ${'bg-[var(--sunken)]'}`}>
-              <button
+              <Button
+                variant={catalogoViewMode === 'albumes' ? "soft" : "ghost"}
+                size="xs"
                 id="btn-subtab-albumes"
                 type="button"
                 onClick={() => setCatalogoViewMode('albumes')}
-                className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
-                  catalogoViewMode === 'albumes'
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
+                className="items-center gap-1.5"
               >
                 <Disc3 className="w-3.5 h-3.5" />
                 <span>Por Álbumes / EPs ({albumCount})</span>
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={catalogoViewMode === 'canciones' ? "soft" : "ghost"}
+                size="xs"
                 id="btn-subtab-canciones"
                 type="button"
                 onClick={() => setCatalogoViewMode('canciones')}
-                className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
-                  catalogoViewMode === 'canciones'
-                    ? 'bg-[var(--ok)]/20 text-[var(--ink)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
+                className="items-center gap-1.5"
               >
                 <Music className="w-3.5 h-3.5" />
                 <span>Todas las Canciones ({songCount})</span>
-              </button>
+              </Button>
             </div>
 
             {/* Mobile indicator for quick context */}
@@ -273,15 +270,17 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Nueva canción</span>
               </Button>
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 id="btn-add-album"
                 type="button"
                 onClick={onOpenNewAlbumModal}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                className="items-center gap-1 sm:gap-1.5 shrink-0"
               >
                 <Disc3 className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span className="hidden xs:inline">Nuevo álbum</span>
-              </button>
+              </Button>
             </div>
           </div>
         )}

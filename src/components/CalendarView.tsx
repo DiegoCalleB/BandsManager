@@ -2101,16 +2101,18 @@ export default function CalendarView({
 
                 {/* Unified Add Event Button (Prevents button clutter) */}
                 <div className="relative inline-block text-left">
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     id="create-event-unified-btn"
                     onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
-                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold'}`}
+                    className="items-center justify-center gap-1.5"
                     title="Añadir concierto, ensayo o reunión"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>+ Evento</span>
                     <ChevronDown className="w-3 h-3 ml-0.5 opacity-80" />
-                  </button>
+                  </Button>
 
                   {showAddEventDropdown && (
                     <>
@@ -2270,27 +2272,31 @@ export default function CalendarView({
             {/* Left: Navigation Buttons + Month/Period Title (Rock-solid, never jumps) */}
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="flex items-center gap-1 shrink-0">
-                <button
+                <Button
+                  variant="neutral"
+                  size="xs"
                   onClick={handlePrevMonth}
-                  className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'}`}
                   title="Meses anteriores (o desliza a la derecha)"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="neutral"
+                  size="xs"
                   onClick={handleNextMonth}
-                  className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'}`}
                   title="Meses siguientes (o desliza a la izquierda)"
                 >
                   <ChevronRight className="w-4 h-4" />
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="soft"
+                  size="xs"
                   onClick={handleGoToday}
-                  className="text-xs font-sans font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/50 transition-ui cursor-pointer shrink-0"
+                  className="shrink-0"
                   title="Ir al mes y día actual"
                 >
                   Hoy
-                </button>
+                </Button>
               </div>
 
               <h2 className={`text-base sm:text-lg lg:text-xl font-bold font-display truncate min-w-0 ${textTitle}`}>
@@ -2793,20 +2799,24 @@ export default function CalendarView({
 
             {/* Botones de acción rápida para la fecha seleccionada */}
             <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
-              <button
+              <Button
+                variant="soft"
+                size="xs"
                 type="button"
                 onClick={() => setShowCreateModal('concert')}
-                className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
+                className="items-center gap-1"
               >
                 <span><ShowIcon inline emoji="🎸" /></span> + Concierto
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="soft"
+                size="xs"
                 type="button"
                 onClick={() => setShowCreateModal('rehearsal')}
-                className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
+                className="items-center gap-1"
               >
                 <span><ShowIcon inline emoji="🥁" /></span> + Ensayo
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -2912,18 +2922,20 @@ export default function CalendarView({
                             <Wrench className="w-3 h-3" />
                             <span>1. Técnica</span>
                           </button>
-                          <button
+                          <Button
+                            variant="soft"
+                            size="xs"
                             type="button"
                             onClick={() => {
                               setModalActiveTab('contactos');
                               setShowEventFichaModal(true);
                             }}
-                            className="px-2 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
+                            className="items-center gap-1"
                             title="2. Contactos clave y WhatsApp directo"
                           >
                             <Phone className="w-3 h-3" />
                             <span>2. Contactos</span>
-                          </button>
+                          </Button>
                           <button
                             type="button"
                             onClick={() => {

@@ -1442,12 +1442,11 @@ export const LiveConcertToAlbumModal: React.FC<
                 </p>
               </div>
             </div>
-            <button aria-label="Cerrar"
+            <Button variant="ghost" size="sm" aria-label="Cerrar"
               onClick={onClose}
-              className={`p-2 rounded-[var(--r-pill)] transition-colors ${"hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
             >
               <X className="w-5 h-5" />
-            </button>
+            </Button>
           </div>
 
           {/* Modal Body */}
@@ -1669,15 +1668,17 @@ export const LiveConcertToAlbumModal: React.FC<
                         <ExternalLink className="w-3 h-3 ml-0.5 opacity-70" />
                       </a>
 
-                      <button
+                      <Button
+                        variant="primary"
+                        size="sm"
                         onClick={handleLoadDemoAudio}
                         disabled={isLinkingLocalFile}
-                        className="px-3 py-2 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui text-xs disabled:opacity-50"
+                        className="items-center gap-1.5"
                         title="Cargar audio de ensayo demo instantáneamente para probar muestras y transcripciones"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-[var(--ink)]" />
                         <span>Cargar demo</span>
-                      </button>
+                      </Button>
 
                       <label className="px-3.5 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-s)] cursor-pointer flex items-center justify-center gap-1.5 transition-ui text-xs">
                         <Upload className="w-4 h-4" />
@@ -1842,10 +1843,12 @@ export const LiveConcertToAlbumModal: React.FC<
                         : "Auto-Clasificar (Música/Diálogo)"}
                     </button>
 
-                    <button
+                    <Button
+                      variant="soft"
+                      size="xs"
                       onClick={handleTranscribeAllConcert}
                       disabled={isTranscribingAll || tracks.length === 0}
-                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--ok)]/30 text-[var(--ink)] hover:bg-[var(--ok)]/50 flex items-center gap-1.5 transition-ui disabled:opacity-50"
+                      className="items-center gap-1.5"
                       title="Transcribir automáticamente todo el concierto (letras, acordes y speeches) usando Gemini IA"
                     >
                       <Sparkles
@@ -1856,7 +1859,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         : selectedIndices.length > 0
                           ? `🎤 Transcribir Seleccionadas (${selectedIndices.length})`
                           : "Transcribir Todo el Concierto"}
-                    </button>
+                    </Button>
 
                     <Button
                       variant="primary"
@@ -2458,14 +2461,16 @@ export const LiveConcertToAlbumModal: React.FC<
                               </div>
 
                               <div className="flex items-center gap-2">
-                                <button
+                                <Button
+                                  variant="soft"
+                                  size="xs"
                                   onClick={() =>
                                     handleTranscribeSongChordsAndLyrics(track)
                                   }
                                   disabled={
                                     transcribingChordsIndex === track.index
                                   }
-                                  className="px-2.5 py-1 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/40 flex items-center gap-1.5 transition-ui"
+                                  className="items-center gap-1.5"
                                   title="Generar o actualizar automáticamente letra transcrita con cifrado de acordes con Gemini AI"
                                 >
                                   <Sparkles
@@ -2474,7 +2479,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   {transcribingChordsIndex === track.index
                                     ? "Transcribiendo..."
                                     : "Re-Transcribir Letra y Acordes"}
-                                </button>
+                                </Button>
 
                                 <button
                                   onClick={() =>

@@ -32,7 +32,7 @@ import { ModuleTutorialConfig, ModuleTutorialId } from "../../types/tutorial";
 import { MODULE_TUTORIALS } from "../../config/moduleTutorials";
 import { ModalPortal } from "./ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { IconButton } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface ModuleTutorialModalProps {
   moduleId: ModuleTutorialId;
@@ -426,7 +426,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
             <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Toggle Floating Tour Card / Centered Card - Only on Desktop */}
               {isDesktop && (
-                <button
+                <Button
+                  variant="ghost"
+                  size="xs"
                   type="button"
                   onClick={() => {
                     const nextMode = !isFloatingMode;
@@ -435,7 +437,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                       setTimeout(() => locateTargetElement(true), 150);
                     }
                   }}
-                  className="p-1.5 px-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-xs font-sans"
+                  className="items-center gap-1"
                   title={
                     isFloatingMode
                       ? "Expandir a tarjeta centrada"
@@ -453,7 +455,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                       <span>Flotante</span>
                     </>
                   )}
-                </button>
+                </Button>
               )}
 
               {/* Dots navigation */}
@@ -647,7 +649,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
             {/* Nav buttons */}
             <div className="flex items-center gap-2 shrink-0">
               {!isFirstStep && (
-                <button
+                <button data-raw
                   id={`tutorial-prev-btn-${moduleId}`}
                   type="button"
                   onClick={handlePrev}

@@ -24,7 +24,7 @@ import {
 } from "../config/stemInstruments";
 import { uploadFileToServer } from "../utils/audioStorage";
 import { textOnColor } from '../utils/contrastText';
-import { IconButton, Input, Select } from './ui';
+import { Button, IconButton, Input, Select } from './ui';
 
 interface UserManagementModalProps {
   currentUser: User;
@@ -662,7 +662,9 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             </option>
                           </Select>
 
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="xs"
                             type="button"
                             onClick={() => {
                               if (isEditingThisUser) {
@@ -672,13 +674,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 setChangePasswordValue("");
                               }
                             }}
-                            className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
+                            className="items-center gap-1"
                           >
                             <Key className="w-3 h-3 text-[var(--acc)]" />
                             <span>
                               {isEditingThisUser ? "Cancelar" : "Contraseña"}
                             </span>
-                          </button>
+                          </Button>
 
                           {!isSelf && (
                             <IconButton
@@ -706,15 +708,17 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             placeholder="Nueva contraseña secreta…"
                             className="flex-1"
                           />
-                          <button
+                          <Button
+                            variant="primary"
+                            size="xs"
                             type="button"
                             onClick={() => handleChangePassword(u.id)}
                             disabled={loading}
-                            className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs transition-colors flex items-center gap-1"
+                            className="items-center gap-1"
                           >
                             <Check className="w-3.5 h-3.5" />
                             <span>Guardar</span>
-                          </button>
+                          </Button>
                         </div>
                       )}
                     </div>
@@ -937,12 +941,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
           {/* Modal Footer */}
           <div className={`px-6 py-3 text-right bg-[var(--bg)]`}>
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
             >
               Cerrar panel
-            </button>
+            </Button>
           </div>
         </div>
       </div>

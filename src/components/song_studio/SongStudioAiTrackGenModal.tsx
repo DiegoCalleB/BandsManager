@@ -133,12 +133,13 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             Cancelar
           </button>
           {aiTrackGenPreview && (
-            <button
+            <Button
+              variant="primary"
               type="button"
-              className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-mono text-xs font-bold flex items-center gap-2 cursor-pointer transition-ui active:scale-[0.97]"
+              className="items-center gap-2"
             >
               <Check className="w-4 h-4" /> Añadir a la mezcla
-            </button>
+            </Button>
           )}
           <Button
             variant="primary"

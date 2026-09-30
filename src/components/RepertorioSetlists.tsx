@@ -3747,14 +3747,15 @@ export default function RepertorioSetlists({
               </Button>
 
               <div className="relative shrink-0">
-                <button
+                <Button
+                  variant="ghost"
+                  size="xs"
                   type="button"
                   onClick={() => setShowSetlistActionsMenu((v) => !v)}
-                  className={`p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:"}`}
                   title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
                 >
                   <MoreHorizontal className="w-4 h-4" />
-                </button>
+                </Button>
                 {showSetlistActionsMenu && (
                   <>
                     <div
@@ -4156,13 +4157,15 @@ export default function RepertorioSetlists({
                                     ? ` — ${motivos.join(", ")}.`
                                     : "."}
                                 </span>
-                                <button
+                                <Button
+                                  variant="primary"
+                                  size="xs"
                                   type="button"
                                   onClick={insertSuggestedChapa}
-                                  className="px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--on-ok)] transition-ui cursor-pointer font-medium shrink-0"
+                                  className="shrink-0"
                                 >
                                   <ShowIcon inline emoji="➕" />Insertar aquí
-                                </button>
+                                </Button>
                                 <button
                                   type="button"
                                   onClick={() => setChapaSuggestion(null)}
@@ -4839,7 +4842,7 @@ export default function RepertorioSetlists({
                         </div>
 
                         {/* Index / Play */}
-                        <button
+                        <button data-raw
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -5241,13 +5244,15 @@ export default function RepertorioSetlists({
                         </IconButton>
 
                         {/* Expand button for details */}
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="xs"
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleExpand();
                           }}
-                          className="shrink-0 cursor-pointer rounded-[var(--r-pill)] p-1.5 text-[var(--ink-2)] transition-ui hover:bg-[var(--sunken)] hover:text-[var(--acc)] active:scale-[0.97]"
+                          className="shrink-0"
                           title={
                             isExpanded
                               ? "Ocultar detalles"
@@ -5259,7 +5264,7 @@ export default function RepertorioSetlists({
                           ) : (
                             <ChevronDown className="w-3.5 h-3.5" />
                           )}
-                        </button>
+                        </Button>
 
                         <IconButton
                           label="Quitar del setlist"
@@ -5898,18 +5903,20 @@ export default function RepertorioSetlists({
                     {selectedCatalogIds.size} canciones seleccionadas
                   </span>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() =>
                         handleBulkAddSelectedToSetlist(
                           Array.from(selectedCatalogIds),
                         )
                       }
-                      className="px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] cursor-pointer transition-ui flex items-center gap-1.5"
+                      className="items-center gap-1.5"
                     >
                       <ListPlus className="w-3.5 h-3.5" />
                       <span>Añadir a repertorio…</span>
-                    </button>
+                    </Button>
                     <button
                       type="button"
                       onClick={() =>

@@ -451,24 +451,28 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   Técnico de sonido en directo
                 </span>
                 <div className="flex gap-2">
-                  <button
+                  <Button
+                    variant={!config.datosContratacion?.tieneTecnicoSonidoPropio ? "soft" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() =>
                       editarDatoContratacion("tieneTecnicoSonidoPropio", false)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${!config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className="flex-1"
                   >
                     De la sala / casa
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={config.datosContratacion?.tieneTecnicoSonidoPropio ? "soft" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() =>
                       editarDatoContratacion("tieneTecnicoSonidoPropio", true)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--ok)]/20 text-[var(--ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className="flex-1"
                   >
                     Propio de la banda
-                  </button>
+                  </Button>
                 </div>
                 <p className="text-xs text-[var(--ink-2)]">
                   El agente no prometerá técnico propio si marcáis “De la sala”.
@@ -480,24 +484,28 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   Merchandising físico en bolos
                 </span>
                 <div className="flex gap-2">
-                  <button
+                  <Button
+                    variant={!config.datosContratacion?.tieneMerchandising ? "soft" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() =>
                       editarDatoContratacion("tieneMerchandising", false)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${!config.datosContratacion?.tieneMerchandising ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className="flex-1"
                   >
                     No disponemos
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={config.datosContratacion?.tieneMerchandising ? "soft" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() =>
                       editarDatoContratacion("tieneMerchandising", true)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.tieneMerchandising ? "bg-[var(--ok)]/20 text-[var(--ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className="flex-1"
                   >
                     Sí (tenemos stock)
-                  </button>
+                  </Button>
                 </div>
                 {config.datosContratacion?.tieneMerchandising && (
                   <Input
@@ -523,7 +531,9 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   Transporte y Logística
                 </span>
                 <div className="flex gap-2">
-                  <button
+                  <Button
+                    variant={config.datosContratacion?.transportePropio ? "soft" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() =>
                       editarDatoContratacion(
@@ -531,13 +541,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         !config.datosContratacion?.transportePropio,
                       )
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.transportePropio ? "bg-[var(--ok)]/20 text-[var(--ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className="flex-1"
                   >
                     {config.datosContratacion?.transportePropio
                       ? "Furgoneta propia"
                       : "Sin furgoneta"}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={config.datosContratacion?.hospedajeRequerido ? "soft" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() =>
                       editarDatoContratacion(
@@ -545,12 +557,12 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         !config.datosContratacion?.hospedajeRequerido,
                       )
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.hospedajeRequerido ? "bg-[var(--ok)]/20 text-[var(--ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className="flex-1"
                   >
                     {config.datosContratacion?.hospedajeRequerido
                       ? "Pide hotel"
                       : "Hotel no obligatorio"}
-                  </button>
+                  </Button>
                 </div>
                 <p className="text-xs text-[var(--ink-2)]">
                   Ayuda a calcular cachés y viabilidad de kilometraje.

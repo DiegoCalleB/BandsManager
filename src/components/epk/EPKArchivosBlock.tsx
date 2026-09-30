@@ -72,13 +72,15 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <ImageIcon className="w-5 h-5" /> Logo oficial de la banda
             </h3>
-            <button
+            <Button
+              variant="soft"
+              size="xs"
               type="button"
               onClick={() => setShowAiLogoModal(true)}
-              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:text-[var(--acc)] rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+              className="items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" /> Generar con IA
-            </button>
+            </Button>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -486,7 +488,9 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     Microfonía / DIs
                   </label>
                   <div className="flex gap-1.5 pt-0.5">
-                    <button
+                    <Button
+                      variant={!config.riderConfig?.microfoniaPropia ? "soft" : "neutral"}
+                      size="xs"
                       type="button"
                       onClick={() =>
                         setConfig({
@@ -497,11 +501,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                      className="flex-1"
                     >
                       De la sala
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant={config.riderConfig?.microfoniaPropia ? "soft" : "neutral"}
+                      size="xs"
                       type="button"
                       onClick={() =>
                         setConfig({
@@ -512,10 +518,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ink)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                      className="flex-1"
                     >
                       Propia
-                    </button>
+                    </Button>
                   </div>
                   <p className="text-micro text-[var(--ink-2)]">
                     Informa al técnico de la casa.

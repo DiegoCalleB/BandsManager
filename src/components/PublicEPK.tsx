@@ -805,7 +805,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </div>
           {validPhotos.length > 1 && (
             <>
-              <button
+              <button data-raw
                 type="button"
                 onClick={() =>
                   galeriaScrollRef.current?.scrollBy({
@@ -818,7 +818,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               >
                 ‹
               </button>
-              <button
+              <button data-raw
                 type="button"
                 onClick={() =>
                   galeriaScrollRef.current?.scrollBy({
@@ -1170,7 +1170,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0">
-              <button
+              <button data-raw
                 onClick={() => setStickyPlayerDismissed(true)}
                 title={t("playerCerrar")}
                 className="p-1.5 opacity-60 hover:opacity-100 rounded-[var(--r-pill)] hover:bg-[var(--sunken)] transition"

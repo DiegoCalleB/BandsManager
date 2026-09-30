@@ -1654,12 +1654,11 @@ export function PdfExportModal({
                 </span>
                 <span className="sm:hidden">Imprimir</span>
               </button>
-              <button aria-label="Cerrar"
+              <Button variant="ghost" size="sm" aria-label="Cerrar"
                 onClick={onClose}
-                className={`p-2 rounded-[var(--r-pill)] transition-colors active:scale-[0.97] cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
               >
                 <X className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
           </div>
 

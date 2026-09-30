@@ -690,12 +690,14 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 : 'Usa el botón "Añadir Evento", cambia el filtro a Todos o ajusta la búsqueda por palabras clave.'}
             </p>
             {agendaFilterPast !== 'all' && (
-              <button
+              <Button
+                variant="soft"
+                size="xs"
                 onClick={() => setAgendaFilterPast('all')}
-                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition-ui "
+                className="mt-3"
               >
                 Ver todos los eventos
-              </button>
+              </Button>
             )}
           </div>
         ) : (
@@ -856,7 +858,9 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                             )}
 
                             {/* Botón directo de Editar para ver y editar conciertos pasados o futuros */}
-                            <button
+                            <Button
+                              variant="soft"
+                              size="xs"
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -866,12 +870,12 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   setViewingRehearsal(r);
                                 }
                               }}
-                              className="px-2 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] flex items-center gap-1 transition-ui cursor-pointer"
+                              className="items-center gap-1"
                               title={isPast ? 'Editar datos, notas o caché del bolo realizado' : 'Editar evento'}
                             >
                               <Edit className="w-3 h-3" />
                               <span>Editar</span>
-                            </button>
+                            </Button>
 
                             <ChevronRight className="w-4 h-4 text-[var(--ink-2)]" />
                           </div>

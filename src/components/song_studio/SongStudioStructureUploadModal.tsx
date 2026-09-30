@@ -305,13 +305,14 @@ export const SongStudioStructureUploadModal: React.FC<
                         />
                       </div>
                       <div className="flex gap-2">
-                        <button
+                        <Button
+                          variant="primary"
                           onClick={handleCameraCapture}
-                          className="flex-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-sm font-semibold transition"
+                          className="flex-1"
                         >
                           <ShowIcon inline emoji="📸" />Capturar foto
-                        </button>
-                        <button
+                        </Button>
+                        <button data-raw
                           onClick={stopCamera}
                           className="flex-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
                         >
@@ -388,7 +389,7 @@ export const SongStudioStructureUploadModal: React.FC<
                       </div>
 
                       <div className="flex gap-2">
-                        <button
+                        <button data-raw
                           onClick={() => {
                             setSelectedFile(null);
                             setPreview(null);

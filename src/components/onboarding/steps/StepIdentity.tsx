@@ -18,7 +18,7 @@ import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
 } from "../../../context/LanguageContext";
-import { Input } from '../../ui';
+import { Button, Input } from '../../ui';
 
 interface StepIdentityProps {
   localBandName: string;
@@ -298,17 +298,19 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               className="hidden"
             />
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant="soft"
+                size="sm"
                 type="button"
                 onClick={() => logoInputRef.current?.click()}
                 disabled={isUploadingLogo}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] text-xs font-semibold transition-colors cursor-pointer"
+                className="items-center gap-2"
               >
                 <Upload className="w-3.5 h-3.5" />
                 {logoUrl
                   ? "Cambiar Imagen / Logo"
                   : "Subir Imagen desde el dispositivo"}
-              </button>
+              </Button>
             </div>
             <Input
               size="sm"

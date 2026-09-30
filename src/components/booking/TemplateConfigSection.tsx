@@ -156,15 +156,17 @@ export function TemplateConfigSection({
         {/* Global Toolbar Actions */}
         <div className="flex items-center gap-2 shrink-0">
           {onGenerateAllTemplates && (
-            <button
+            <Button
+              variant="soft"
+              size="xs"
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
-              className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer hover:brightness-95"
+              className="items-center gap-1.5"
               title="Genera las 7 plantillas desde una propuesta base"
             >
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Generar las 7 con IA</span>
-            </button>
+            </Button>
           )}
 
           <Button
@@ -346,15 +348,17 @@ export function TemplateConfigSection({
           {/* Form Actions (Only 2 clear buttons) */}
           <div className="flex items-center gap-2 pt-1">
             {onOptimizeTemplate && (
-              <button
+              <Button
+                variant="soft"
+                size="sm"
                 type="button"
                 onClick={() => onOptimizeTemplate()}
                 disabled={isOptimizingTemplate}
-                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                className="items-center gap-1.5"
               >
                 <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
                 <span>{isOptimizingTemplate ? 'Optimizando...' : 'Optimizar con IA'}</span>
-              </button>
+              </Button>
             )}
 
             <button

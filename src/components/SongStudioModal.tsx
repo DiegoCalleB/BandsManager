@@ -4465,14 +4465,15 @@ export default function SongStudioModal({
                       >
                         Cancelar
                       </button>
-                      <button
+                      <Button
+                        variant="primary"
+                        size="sm"
                         type="button"
                         onClick={handleSaveIdea}
                         disabled={isUploading}
-                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-110 disabled:opacity-50 text-[var(--on-ok)] font-bold text-xs"
                       >
                         {isUploading ? 'Guardando en Servidor...' : 'Guardar Idea'}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
@@ -4597,18 +4598,16 @@ export default function SongStudioModal({
 
                           {/* Únicas acciones siempre visibles: escuchar, eliminar directo y el menú de más opciones */}
                           <div className="flex items-center gap-1.5 shrink-0">
-                            <button
+                            <Button
+                              variant={isPlaying ? "primary" : "primary"}
+                              size="sm"
                               type="button"
                               onClick={() => togglePlayIdea(idea)}
-                              className={`p-2 rounded-[var(--r-pill)] flex items-center justify-center transition-ui active:scale-[0.97] cursor-pointer ${
-                                isPlaying
-                                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                                  : 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-acc)]'
-                              }`}
+                              className="items-center justify-center"
                               title="Play / pausa"
                             >
                               {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
-                            </button>
+                            </Button>
 
                             <IconButton
                               label="Eliminar idea"
@@ -4774,19 +4773,17 @@ export default function SongStudioModal({
                                 {/* Playback Controls */}
                                 <div className="flex items-center gap-2 w-full sm:w-auto">
                                   {/* Play / Pause Toggle */}
-                                  <button
+                                  <Button
+                                    variant={isPlaying ? "primary" : "primary"}
+                                    size="sm"
                                     type="button"
                                     onClick={() => togglePlayIdea(idea)}
-                                    className={`px-4 py-2 rounded-[var(--r-pill)] flex items-center gap-2 font-bold text-xs transition-ui active:scale-[0.97] cursor-pointer ${
-                                      isPlaying
-                                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                                        : 'bg-[var(--ok)] hover:brightness-110 text-[var(--on-ok)]'
-                                    }`}
+                                    className="items-center gap-2"
                                     title="Play / pausa (Espacio)"
                                   >
                                     {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
                                     <span>{isPlaying ? 'Pausa' : 'Reproducir'}</span>
-                                  </button>
+                                  </Button>
 
                                   {/* Stop / Rewind to 0:00 */}
                                   <IconButton
@@ -5200,19 +5197,17 @@ export default function SongStudioModal({
                                                   </div>
 
                                                   {/* Clean Noise Filter Button */}
-                                                  <button
+                                                  <Button
+                                                    variant={cleaningTrackId === tr.id ? "soft" : "soft"}
+                                                    size="xs"
                                                     type="button"
                                                     onClick={() => handleCleanTrackAudio(idea, tr)}
                                                     disabled={cleaningTrackId === tr.id}
-                                                    className={`px-2 py-1 rounded-[var(--r-pill)] font-bold cursor-pointer transition-ui shrink-0 flex items-center gap-1 ${
-                                                      cleaningTrackId === tr.id
-                                                        ? 'bg-[var(--acc)]/30 text-[var(--ink)] /50'
-                                                        : 'bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20'
-                                                    }`}
+                                                    className="shrink-0 items-center gap-1"
                                                     title="Limpiar ruido de fondo y zumbidos de esta pista con Filtro Studio DSP (High-Pass 80Hz + Notch)"
                                                   >
                                                     <span>{cleaningTrackId === tr.id ? 'Limpiando...' : 'Filtro Zumbidos'}</span>
-                                                  </button>
+                                                  </Button>
                                                 </div>
 
                                                 {/* Row 2: 3-Band EQ */}
@@ -5845,16 +5840,15 @@ export default function SongStudioModal({
             const dur = durationMap[activeIdea.id] || 0;
             return (
               <div className=" bg-[var(--bg)]/95 px-3 sm:px-4 py-2 flex items-center gap-3">
-                <button
+                <Button
+                  variant={isPlaying ? "primary" : "primary"}
                   type="button"
                   onClick={() => togglePlayIdea(activeIdea)}
-                  className={`p-2.5 rounded-[var(--r-pill)] flex items-center justify-center transition-ui active:scale-[0.97] cursor-pointer shrink-0 ${
-                    isPlaying ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-acc)]'
-                  }`}
+                  className="items-center justify-center shrink-0"
                   title="Play / pausa"
                 >
                   {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
-                </button>
+                </Button>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-[var(--ink)] truncate">{activeIdea.titulo}</p>
                   <p className="text-micro font-sans text-[var(--ink-2)]">

@@ -425,21 +425,20 @@ export function MemberNotesModal({
 
           {/* Footer actions */}
           <div className="pt-3.5 mt-2 flex justify-end items-center gap-2.5 shrink-0">
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
             >
               Cancelar
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={savedSuccess ? "primary" : "neutral"}
+              size="sm"
               type="button"
               onClick={handleSave}
-              className={`px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-[0.97] cursor-pointer ${
-                savedSuccess
-                  ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                  : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"
-              }`}
+              className="items-center gap-1.5"
             >
               {savedSuccess ? (
                 <Check className="w-4 h-4" />
@@ -447,7 +446,7 @@ export function MemberNotesModal({
                 <Save className="w-4 h-4" />
               )}
               {savedSuccess ? "¡Guardado!" : "Guardar Notas"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

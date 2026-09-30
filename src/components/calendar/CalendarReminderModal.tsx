@@ -158,13 +158,14 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
         </div>
 
         <div className="pt-3 border-t border-[var(--hair)] flex items-center justify-end gap-2">
-          <button
+          <Button
+            variant="ghost"
+            size="xs"
             type="button"
             onClick={onClose}
-            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--sunken)] font-mono cursor-pointer"
           >
             Cancelar
-          </button>
+          </Button>
           <Button
             variant="primary"
             size="xs"

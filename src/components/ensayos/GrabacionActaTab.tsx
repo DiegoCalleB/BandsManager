@@ -372,13 +372,14 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   >
                     Descartar
                   </button>
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     type="button"
                     onClick={handleSaveRecording}
-                    className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-xs font-sans font-bold cursor-pointer"
                   >
                     Guardar grabación
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -505,9 +506,11 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             </Button>
 
             {acta && (
-              <button
+              <Button
+                variant="soft"
+                size="sm"
                 onClick={handleCopyToWhatsApp}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] hover:bg-[var(--ok)]/30 text-xs font-sans font-bold transition-ui cursor-pointer"
+                className="items-center gap-1.5"
                 title="Copiar formato listo para WhatsApp"
               >
                 {copied ? (
@@ -516,7 +519,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   <Copy className="w-3.5 h-3.5" />
                 )}
                 <span>{copied ? "¡Copiado!" : "Copiar para WhatsApp"}</span>
-              </button>
+              </Button>
             )}
           </div>
         </div>

@@ -1133,30 +1133,30 @@ ${myBandName}`;
             </Button>
 
             {registeredBands.length > 0 && (
-              <button
+              <Button
+                variant={subTab === "registered_bands" ? "soft" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => {
                   setSubTab("registered_bands");
                   fetchRegisteredBands();
                 }}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium transition-ui cursor-pointer flex items-center gap-1.5 ${
-                  subTab === "registered_bands"
-                    ? "bg-[var(--ok)]/20 text-[var(--ink)]"
-                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
+                className="items-center gap-1.5"
               >
                 <span>Registro</span>
                 <span className="text-micro px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--ok)]/30 text-[var(--ink)] font-bold">
                   {registeredBands.length}
                 </span>
-              </button>
+              </Button>
             )}
           </div>
         </div>
 
         {/* Derecha: Acciones rápidas en una sola fila */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
-          <button
+          <Button
+            variant="soft"
+            size="xs"
             id="band-btn-[#date-swap-pitch]"
             type="button"
             onClick={() => {
@@ -1169,22 +1169,24 @@ ${myBandName}`;
                 );
               }
             }}
-            className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--tentative)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+            className="items-center gap-1.5"
             title="Generar pitch de intercambio de fechas (date swap)"
           >
             <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
             <span>Date Swap</span>
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="soft"
+            size="xs"
             type="button"
             onClick={() => setIsScoutModalOpen(true)}
-            className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+            className="items-center gap-1.5"
             title="Scout IA: Buscar bandas para co-booking"
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
             <span>Scout IA</span>
-          </button>
+          </Button>
 
           <Button
             variant="primary"
@@ -1713,28 +1715,32 @@ ${myBandName}`;
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
                         {/* Analyze Tone */}
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           onClick={() => handleAnalyzeTone(band)}
-                          className="py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1"
+                          className="items-center justify-center gap-1"
                           title="Analizar forma de expresarse y tono en redes sociales con IA Grounding"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                           <span>Tono redes</span>
-                        </button>
+                        </Button>
 
                         {/* Generate Pitch */}
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           onClick={() => {
                             setCustomPitchText("");
                             setSelectedPitchBand(band);
                             setIsPitchModalOpen(true);
                           }}
-                          className="flex-1 py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5"
+                          className="flex-1 items-center justify-center gap-1.5"
                           title="Generar pitch de date swap"
                         >
                           <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                           <span>Pitch de intercambio de fechas</span>
-                        </button>
+                        </Button>
 
                         {/* Edit */}
                         <IconButton
@@ -1918,26 +1924,30 @@ ${myBandName}`;
                         </td>
                         <td className="py-2 px-3 text-right align-middle whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
-                            <button
+                            <Button
+                              variant="soft"
+                              size="xs"
                               onClick={() => handleAnalyzeTone(band)}
-                              className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro transition-ui cursor-pointer flex items-center gap-1"
+                              className="items-center gap-1"
                               title="Analizar forma de expresarse"
                             >
                               <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                               <span>Tono</span>
-                            </button>
+                            </Button>
 
-                            <button
+                            <Button
+                              variant="soft"
+                              size="xs"
                               onClick={() => {
                                 setCustomPitchText("");
                                 setSelectedPitchBand(band);
                                 setIsPitchModalOpen(true);
                               }}
-                              className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] rounded-[var(--r-pill)] text-micro transition-ui cursor-pointer flex items-center gap-1"
+                              className="items-center gap-1"
                             >
                               <Repeat className="w-3 h-3 text-[var(--ink-2)]" />
                               <span>Pitch</span>
-                            </button>
+                            </Button>
 
                             <IconButton
                               label="Editar"

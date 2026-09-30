@@ -511,13 +511,14 @@ export function SongModal({
 
             {/* Actions Bar */}
             <div className="pt-3 border-t border-[var(--hair)]/10 flex justify-end gap-2.5 shrink-0">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 type="button"
                 onClick={onClose}
-                className="px-3 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
               >
                 Cancelar
-              </button>
+              </Button>
               <Button
                 variant="neutral"
                 size="sm"

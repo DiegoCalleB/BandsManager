@@ -556,15 +556,17 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   )}
 
                   {onOpenProfileWizard && (
-                    <button
+                    <Button
+                      variant="soft"
+                      size="xs"
                       type="button"
                       onClick={onOpenProfileWizard}
-                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="items-center gap-1.5 shrink-0"
                       title="Abrir asistente de inicio / onboarding"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>Guía de inicio</span>
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -872,11 +874,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       >
                         Cancelar
                       </button>
-                      <button
+                      <Button
+                        variant="primary"
+                        size="xs"
                         type="button"
                         onClick={handleCreateBandInProfile}
                         disabled={isCreatingBand || !createBandName.trim()}
-                        className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        className="items-center gap-1.5"
                       >
                         {isCreatingBand ? (
                           <>
@@ -889,7 +893,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                             <span>Crear proyecto</span>
                           </>
                         )}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -1410,12 +1414,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </span>
             )}
 
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               Cerrar
-            </button>
+            </Button>
           </div>
         </div>
 

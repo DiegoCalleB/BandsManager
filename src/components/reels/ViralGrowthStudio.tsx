@@ -324,16 +324,18 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
         {/* 1-Click God Mode Autopilot Button & Tabs */}
         <div className="flex flex-wrap items-center gap-2">
           {onTriggerMagicAutopilot && (
-            <button
+            <Button
+              variant="soft"
+              size="xs"
               id="btn-magic-autopilot"
               type="button"
               onClick={onTriggerMagicAutopilot}
-              className="px-3 py-1.5 rounded-[var(--r-pill)] hover:brightness-110 active:scale-[0.97] text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-ui select-none bg-[var(--acc)]/10"
+              className="items-center gap-1.5"
               title="Aplica automáticamente el combo óptimo: Mejor hook, punch-in zoom, beat-drop, subtítulos oro y sincronía con gira"
             >
               <Sparkles className="w-3.5 h-3.5 fill-[var(--ink-3)] animate-spin" />
               <span>{magicAppliedNotification ? '¡COMBO VIRAL APLICADO!' : 'AUTO-DIRECTOR MÁGICO (1-CLICK)'}</span>
-            </button>
+            </Button>
           )}
 
           {/* Tab Buttons */}
@@ -914,18 +916,16 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                 </p>
               </div>
 
-              <button
+              <Button
+                variant={showSafeZone ? "soft" : "neutral"}
+                size="sm"
                 type="button"
                 onClick={onToggleSafeZone}
-                className={`py-2 px-3 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center justify-center gap-2 transition-ui cursor-pointer ${
-                  showSafeZone
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                }`}
+                className="items-center justify-center gap-2"
               >
                 <Shield className="w-3.5 h-3.5" />
                 <span>{showSafeZone ? '✓ Safe-Zone Visible en Preview' : 'Activar Cuadrícula Safe-Zone'}</span>
-              </button>
+              </Button>
             </div>
 
           </div>

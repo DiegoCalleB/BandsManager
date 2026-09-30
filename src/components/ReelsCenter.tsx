@@ -2047,14 +2047,16 @@ export default function ReelsCenter({
           </p>
         </div>
         <div className="flex gap-2.5 items-center flex-wrap">
-          <button
+          <Button
+            variant="soft"
+            size="xs"
             onClick={handleOpenToneModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] transition-ui cursor-pointer"
+            className="items-center gap-1.5"
             title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Tono de voz en redes</span>
-          </button>
+          </Button>
 
           <button
             id="sync-reels-excel-btn"
@@ -3303,19 +3305,17 @@ export default function ReelsCenter({
                             >
                               Solo este corte
                             </button>
-                            <button
+                            <Button
+                              variant={clipFeedbackScope === "global" ? "soft" : "ghost"}
+                              size="xs"
                               type="button"
                               onClick={() => setClipFeedbackScope("global")}
-                              className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui flex items-center gap-1 ${
-                                clipFeedbackScope === "global"
-                                  ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold"
-                                  : "bg-transparent text-[var(--ink-2)] hover:text-[var(--ink)]"
-                              }`}
+                              className="items-center gap-1"
                               title="La IA recordará esta corrección también para futuros Reels de la banda"
                             >
                               <Sparkles className="w-3 h-3" /> Recordar para
                               siempre
-                            </button>
+                            </Button>
                           </div>
 
                           {reanalyzeSuccessMsg && (
@@ -3478,14 +3478,12 @@ export default function ReelsCenter({
                                   </span>
                                 ))}
                             </div>
-                            <button
+                            <Button
+                              variant={copiedNotification ? "primary" : "soft"}
+                              size="xs"
                               type="button"
                               onClick={handleCopyFormattedPost}
-                              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center gap-1.5 transition-ui cursor-pointer shrink-0 ${
-                                copiedNotification
-                                  ? "bg-[var(--ok)] text-[var(--on-ok)] font-bold scale-105"
-                                  : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--acc-ink)] bg-[var(--acc)]/10"
-                              }`}
+                              className="items-center gap-1.5 shrink-0"
                               title="Copia el gancho, el copy y los hashtags formateados listos para pegar en Instagram o TikTok"
                             >
                               {copiedNotification ? (
@@ -3499,7 +3497,7 @@ export default function ReelsCenter({
                                   <span>1-Click copiar formato</span>
                                 </>
                               )}
-                            </button>
+                            </Button>
                           </div>
                         </div>
 
@@ -3698,14 +3696,12 @@ export default function ReelsCenter({
                           </button>
 
                           <div className="grid grid-cols-2 gap-2">
-                            <button
+                            <Button
+                              variant={thumbnailCapturedSuccess ? "soft" : "neutral"}
+                              size="sm"
                               type="button"
                               onClick={handleCaptureThumbnail}
-                              className={`py-2 px-3 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                                thumbnailCapturedSuccess
-                                  ? "bg-[var(--ok)]/20 text-[var(--ink)] "
-                                  : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] "
-                              }`}
+                              className="items-center justify-center gap-1.5"
                               title="Captura el fotograma actual en alta resolución para usar de portada"
                             >
                               <Camera className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
@@ -3714,7 +3710,7 @@ export default function ReelsCenter({
                                   ? "¡Portada Guardada!"
                                   : "Guardar Portada"}
                               </span>
-                            </button>
+                            </Button>
 
                             <Button
                               variant="neutral"

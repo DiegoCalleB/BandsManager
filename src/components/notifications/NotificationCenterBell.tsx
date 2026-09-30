@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { NotificationHistoryItem, NotificationPermissionStatus, BrowserNotificationConfig } from '../../types/browserNotifications';
 import { ShowIcon } from '../ui/ShowIcon';
-import { IconButton, LinkButton } from '../ui';
+import { Button, IconButton, LinkButton } from '../ui';
 
 interface NotificationCenterBellProps {
   permission: NotificationPermissionStatus;
@@ -92,7 +92,9 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       {/* Bell Button */}
-      <button
+      <Button
+        variant={isOpen ? "soft" : "ghost"}
+        size="sm"
         type="button"
         onClick={() => {
           setIsOpen((prev) => !prev);
@@ -100,11 +102,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
             // keep unread until user chooses or marks read
           }
         }}
-        className={`relative p-2 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center ${
-          isOpen
-            ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] shadow-xs'
-            : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
-        }`}
+        className="relative items-center justify-center"
         title="Centro de notificaciones push"
         aria-label="Notificaciones"
       >
@@ -121,7 +119,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         {unreadCount === 0 && permission === 'granted' && config.enabled && (
           <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] shadow-xs" />
         )}
-      </button>
+      </Button>
 
       {/* Dropdown Panel */}
       {isOpen && (
@@ -144,7 +142,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
             <div className="flex items-center gap-1.5">
               {unreadCount > 0 && (
-                <button
+                <button data-raw
                   type="button"
                   onClick={onMarkAllAsRead}
                   className="text-micro font-mono text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-pill)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"

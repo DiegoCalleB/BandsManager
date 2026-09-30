@@ -599,19 +599,17 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       <span>{fanReactions.likes}</span>
                     </button>
 
-                    <button
+                    <Button
+                      variant={fanUserReactions.fire ? "soft" : "neutral"}
+                      size="xs"
                       type="button"
                       onClick={() => handleReactFan(fan.id, "fire")}
-                      className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer ${
-                        fanUserReactions.fire
-                          ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold"
-                          : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
-                      }`}
+                      className="items-center gap-1.5"
                       title="Fuego / Brutal"
                     >
                       <span><ShowIcon inline emoji="🔥" /></span>
                       <span>{fanReactions.fire}</span>
-                    </button>
+                    </Button>
 
                     <button
                       type="button"
@@ -627,19 +625,17 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       <span>{fanReactions.guitars}</span>
                     </button>
 
-                    <button
+                    <Button
+                      variant={fanUserReactions.applause ? "soft" : "neutral"}
+                      size="xs"
                       type="button"
                       onClick={() => handleReactFan(fan.id, "applause")}
-                      className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer ${
-                        fanUserReactions.applause
-                          ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
-                          : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
-                      }`}
+                      className="items-center gap-1.5"
                       title="Aplausos"
                     >
                       <span><ShowIcon inline emoji="👏" /></span>
                       <span>{fanReactions.applause}</span>
-                    </button>
+                    </Button>
                   </div>
 
                   {/* Level Switcher */}

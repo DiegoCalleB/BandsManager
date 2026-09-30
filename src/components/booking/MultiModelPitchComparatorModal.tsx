@@ -490,11 +490,12 @@ export const MultiModelPitchComparatorModal: React.FC<
                           </div>
                         </div>
 
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="xs"
                           type="button"
                           onClick={() => handleCopyText(prop.text, idx)}
                           disabled={prop.status === "error"}
-                          className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
                           title="Copiar propuesta"
                         >
                           {isCopied ? (
@@ -502,7 +503,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
-                        </button>
+                        </Button>
                       </div>
 
                       {/* Cost & Economics Card Banner */}

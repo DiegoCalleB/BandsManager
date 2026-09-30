@@ -4,7 +4,7 @@ import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
-import { IconButton, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -147,11 +147,13 @@ export function AddLeadModal({
                       ? 'Nombre de la Entidad / Contacto *'
                       : 'Nombre de la Sala / Festival *'}
                 </label>
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={onModalScrape}
                   disabled={isModalScraping || !newLeadData.nombre_sala}
-                  className={`px-2 py-1 text-micro font-sans rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] disabled:opacity-50'}`}
+                  className="items-center gap-1.5"
                   title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
                 >
                   {isModalScraping ? (
@@ -160,7 +162,7 @@ export function AddLeadModal({
                     <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                   )}
                   <span>{isModalScraping ? 'Buscando...' : 'Autocompletar con IA'}</span>
-                </button>
+                </Button>
               </div>
               <Input
                 size="sm"
@@ -320,15 +322,17 @@ export function AddLeadModal({
                     <div className="flex items-center justify-between gap-2">
                       <label className="text-xs font-semibold text-[var(--ink-2)]">Logo o icono</label>
                       <div className="flex items-center gap-2">
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           type="button"
                           onClick={handleAutoSearchLogo}
                           disabled={isSearchingLogo || !newLeadData.nombre_sala}
-                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro rounded-[var(--r-pill)] flex items-center gap-1 font-bold transition-ui cursor-pointer disabled:opacity-50"
+                          className="items-center gap-1"
                         >
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
-                        </button>
+                        </Button>
                         <label className="cursor-pointer px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-micro rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-ui ">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
@@ -485,12 +489,13 @@ export function AddLeadModal({
               >
                 Cancelar
               </button>
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 type="submit"
-                className={`px-4 py-2 rounded-[var(--r-pill)] font-sans text-micro font-bold transition-ui cursor-pointer ${'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'}`}
               >
                 {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
-              </button>
+              </Button>
             </div>
           </form>
         </div>

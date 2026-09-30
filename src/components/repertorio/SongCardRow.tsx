@@ -24,7 +24,7 @@ import {
   Cpu,
 } from 'lucide-react';
 import { hasIrisStems } from '../../utils/irisTracks';
-import { IconButton, MenuItem } from '../ui';
+import { Button, IconButton, MenuItem } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -351,17 +351,17 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               )}
             </button>
           ) : onOpenChords ? (
-            <button
+            <Button
+              variant="soft"
+              size="xs"
               type="button"
               onClick={onOpenChords}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] '
-              }`}
+              className="items-center gap-1.5"
               title="Ver cifrado de acordes, armonía y letra"
             >
               <FileText className="w-3.5 h-3.5" />
               <span className="hidden xs:inline text-xs">Acordes</span>
-            </button>
+            </Button>
           ) : null}
 
           {/* Reorder Buttons (alternative to drag & drop) */}

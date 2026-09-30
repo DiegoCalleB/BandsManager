@@ -1,6 +1,6 @@
 import React from "react";
 import { FileText, Sparkles, Clock, Users } from "lucide-react";
-import { Input, Textarea } from '../../ui';
+import { Button, Input, Textarea } from '../../ui';
 
 interface StepBioProps {
   slogan: string;
@@ -62,14 +62,16 @@ export const StepBio: React.FC<StepBioProps> = ({
           <label className="text-xs font-medium text-[var(--ink-2)]">
             Biografía / resumen de prensa
           </label>
-          <button
+          <Button
+            variant="soft"
+            size="xs"
             type="button"
             onClick={onGenerateBioAI}
-            className="inline-flex items-center gap-1.5 text-xs text-[var(--acc-ink)] hover:text-[var(--acc)]/70 font-medium px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-colors"
+            className="items-center gap-1.5"
           >
             <Sparkles className="w-3.5 h-3.5" />
             Redactar con IA / sugerencia
-          </button>
+          </Button>
         </div>
         <Textarea
           rows={5}

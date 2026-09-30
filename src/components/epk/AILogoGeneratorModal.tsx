@@ -181,13 +181,14 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-[var(--hair)] bg-[var(--surface)]/50 flex items-center justify-between gap-3">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition"
           >
             Cancelar
-          </button>
+          </Button>
 
           <div className="flex items-center gap-2">
             <Button

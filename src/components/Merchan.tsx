@@ -836,18 +836,20 @@ export default function Merchan({
 
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-[var(--surface)]/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 z-30">
-                        <button
+                        <Button
+                          variant="primary"
+                          size="sm"
                           onClick={() => {
                             const link = document.createElement("a");
                             link.download = `merchan-${cleanBand || "banda"}-${design.id}.png`;
                             link.href = displayGraphic;
                             link.click();
                           }}
-                          className={`px-4 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 transition ${"bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--surface)]"}`}
+                          className="items-center gap-2"
                         >
                           <Download className="w-4 h-4" />
                           Descargar gráfico
-                        </button>
+                        </Button>
                         <Button
                           variant="danger"
                           size="sm"

@@ -18,7 +18,7 @@ import {
   AlertTriangle,
   Sparkles,
 } from 'lucide-react';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface DealAndLogisticsCopilotProps {
   lead: Lead;
@@ -357,14 +357,16 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           {onOpenRoadbookModal && (
-            <button
+            <Button
+              variant="soft"
+              size="xs"
               type="button"
               onClick={() => onOpenRoadbookModal(lead)}
-              className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro font-bold font-mono flex items-center gap-1 transition-ui cursor-pointer"
+              className="items-center gap-1"
             >
               <FileText className="w-3 h-3" />
               <span>Exportar PDF / imprimir</span>
-            </button>
+            </Button>
           )}
         </div>
 

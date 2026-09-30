@@ -285,7 +285,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               'bg-[var(--surface)]/95'
             }`}
           >
-            <button
+            <button data-raw
               type="button"
               onClick={() => goToAdjacentEvent(-1)}
               disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
@@ -318,14 +318,15 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <span className="hidden sm:inline">Siguiente</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
-              <button
+              <Button
+                variant="ghost"
+                size="xs"
                 type="button"
                 onClick={() => setShowEventFichaModal(false)}
-                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                 title="Cerrar (Esc)"
               >
                 ✕
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -387,39 +388,41 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </Button>
 
                   <div className="hidden sm:flex flex-wrap items-center gap-1.5">
-                  <button
+                  <Button
+                    variant="soft"
+                    size="xs"
                     type="button"
                     onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--ok)]/40 text-[var(--ink)] hover:bg-[var(--ok)]/50 flex items-center gap-1"
+                    className="items-center gap-1"
                     title="Compartir convocatoria por WhatsApp"
                   >
                     <Share2 className="w-3.5 h-3.5" />
                     <span className="hidden xs:inline">WhatsApp</span>
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant="soft"
+                    size="xs"
                     type="button"
                     onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--acc)]/40 text-[var(--ink)] hover:bg-[var(--acc)]/50 flex items-center gap-1"
+                    className="items-center gap-1"
                     title="Enviar recordatorio / notificación push a los músicos"
                   >
                     <Bell className="w-3.5 h-3.5" />
                     <span className="hidden xs:inline">Notificar</span>
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant={copiedEventModalId === modalEvent.id ? "primary" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
-                    className={`px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
-                      copiedEventModalId === modalEvent.id
-                        ? 'bg-[var(--ok)] text-[var(--on-ok)]'
-                        : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-110'
-                    }`}
+                    className="items-center gap-1"
                     title="Copiar texto de convocatoria al portapapeles"
                   >
                     {copiedEventModalId === modalEvent.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                     <span className="hidden xs:inline">{copiedEventModalId === modalEvent.id ? 'Copiado' : 'Copiar'}</span>
-                  </button>
+                  </Button>
 
                   <button
                     type="button"
@@ -539,14 +542,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Wrench className="w-3.5 h-3.5" />
                 <span>1. Logística técnica</span>
               </Button>
-              <button
+              <Button
+                variant={modalActiveTab === 'contactos' ? "primary" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('contactos')}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  modalActiveTab === 'contactos'
-                    ? 'bg-[var(--ok)] text-[var(--on-ok)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                }`}
+                className="shrink-0 items-center gap-1.5"
               >
                 <Phone className="w-3.5 h-3.5" />
                 <span>2. Contactos clave</span>
@@ -555,7 +556,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     {modalRoadbook.contactosClave.length}
                   </span>
                 )}
-              </button>
+              </Button>
               <Button
                 variant={modalActiveTab === 'merchan' ? "primary" : "neutral"}
                 size="xs"
@@ -996,13 +997,15 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Directorio de contactos clave de producción</h3>
                   </div>
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     type="button"
                     onClick={() => setShowAddContactForm(!showAddContactForm)}
-                    className="px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
+                    className="items-center gap-1"
                   >
                     <span>+</span> Añadir contacto
-                  </button>
+                  </Button>
                 </div>
 
                 {/* Formulario de Nuevo Contacto */}
@@ -1084,19 +1087,21 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="xs"
                         type="button"
                         onClick={() => setShowAddContactForm(false)}
-                        className="px-3 py-1.5 text-xs font-mono rounded-[var(--r-pill)] hover:bg-[var(--sunken)] text-[var(--ink-2)] transition-colors"
                       >
                         Cancelar
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="xs"
                         type="submit"
-                        className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-colors"
                       >
                         Guardar contacto
-                      </button>
+                      </Button>
                     </div>
                   </form>
                 )}
@@ -1136,15 +1141,17 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                         {/* Botones de acción rápida: WhatsApp directo, llamada, eliminar */}
                         <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
-                          <button
+                          <Button
+                            variant="primary"
+                            size="xs"
                             type="button"
                             onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar || 'la sala')}
-                            className="px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
+                            className="items-center gap-1"
                             title="Abrir WhatsApp directo con mensaje predefinido"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                             <span>WhatsApp</span>
-                          </button>
+                          </Button>
                           <a
                             href={`tel:${contact.telefono.replace(/\s+/g, '')}`}
                             className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ok)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
@@ -1230,15 +1237,17 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           type="button"
                           onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
-                          className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
+                          className="items-center gap-1"
                           title="Copiar arqueo y balance para WhatsApp"
                         >
                           {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
                           <span>{merchCopiedToast ? '¡Copiado!' : 'Copiar Arqueo (WhatsApp)'}</span>
-                        </button>
+                        </Button>
                         <Button
                           variant="primary"
                           size="xs"
@@ -1490,14 +1499,16 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <div className="p-8 text-center space-y-2">
                           <Shirt className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
                           <p className={`text-xs font-mono ${textSub}`}>Sin merchan apuntado para este bolo.</p>
-                          <button
+                          <Button
+                            variant="soft"
+                            size="xs"
                             type="button"
                             onClick={() => setShowAddMerchForm(true)}
-                            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                            className="items-center gap-1.5"
                           >
                             <Plus className="w-3.5 h-3.5" />
                             <span>Añadir primer producto</span>
-                          </button>
+                          </Button>
                         </div>
                       ) : (
                         <div className="divide-y divide-[var(--hair)]">

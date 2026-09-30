@@ -1329,16 +1329,18 @@ export function GooglePlacesExplorerModal({
                     <span>Radar multi-Fuente (wegow/Songkick/TM)</span>
                   </Button>
 
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     type="button"
                     onClick={() => handleSearchPublicCultural()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--ok)] hover:bg-[var(--ok)]/90 text-[var(--on-ok)] font-semibold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="items-center justify-center gap-1.5"
                     title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
                   >
                     <Building2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span>Radar cultural público</span>
-                  </button>
+                  </Button>
 
                   <Button
                     variant="primary"
@@ -1418,25 +1420,28 @@ export function GooglePlacesExplorerModal({
                     Efecto Espejo (Dossier):
                   </span>
                   {similarBands.map((band, idx) => (
-                    <button
+                    <Button
+                      variant="soft"
+                      size="xs"
                       key={idx}
                       type="button"
                       onClick={() => handleSearchSimilarBands(band)}
                       disabled={isSearching}
-                      className="px-2.5 py-0.5 text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] disabled:opacity-50"
                       title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
                     >
                       <ShowIcon inline emoji="🔍" />{band}
-                    </button>
+                    </Button>
                   ))}
-                  <button
+                  <Button
+                    variant="soft"
+                    size="xs"
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
                     disabled={isSearching}
-                    className="px-2.5 py-0.5 text-micro rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] ml-auto"
+                    className="ml-auto"
                   >
                     <ShowIcon inline emoji="⚡" />Rastrear todas
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
@@ -1520,10 +1525,12 @@ export function GooglePlacesExplorerModal({
                       <span><ShowIcon inline emoji="⚡" />Agente Enriquecedor ({selectedCount})</span>
                     </Button>
 
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       onClick={handleImportToCRM}
                       disabled={isImporting || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                      className="items-center gap-1.5"
                     >
                       {isImporting ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1531,7 +1538,7 @@ export function GooglePlacesExplorerModal({
                         <PlusCircle className="w-3.5 h-3.5" />
                       )}
                       <span><ShowIcon inline emoji="📥" />Incluir en mis Leads ({selectedCount})</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -1818,15 +1825,17 @@ export function GooglePlacesExplorerModal({
                             {new Date(item.discarded_at).toLocaleDateString()}
                           </p>
                         </div>
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           type="button"
                           onClick={() => handleRestorePlace(item.nombre_sala)}
-                          className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-ui"
+                          className="items-center gap-1 shrink-0"
                           title="Volver a permitir en sugerencias futuras"
                         >
                           <RotateCcw className="w-3 h-3" />
                           <span>Restaurar</span>
-                        </button>
+                        </Button>
                       </div>
                     ))
                   )}

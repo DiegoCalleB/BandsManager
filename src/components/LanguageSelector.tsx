@@ -5,6 +5,7 @@ import {
   SupportedLanguage,
 } from "../context/LanguageContext";
 import { Globe, ChevronDown, Check } from "lucide-react";
+import { Button } from './ui';
 
 interface LanguageSelectorProps {
   compact?: boolean;
@@ -41,14 +42,12 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       className={`relative inline-block text-left ${className}`}
       ref={dropdownRef}
     >
-      <button
+      <Button
+        variant={isOpen ? "soft" : "neutral"}
+        size="xs"
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-medium transition-ui duration-200 cursor-pointer active:scale-[0.97] ${
-          isOpen
-            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
-            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]"
-        }`}
+        className="items-center gap-2"
         title="Cambiar idioma / Change language"
       >
         <span className="text-sm leading-none">{currentLangObj.flag}</span>
@@ -63,7 +62,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         <ChevronDown
           className={`w-3.5 h-3.5 text-[var(--ink-2)] transition-transform duration-200 ${isOpen ? "rotate-180 text-[var(--acc)]" : ""}`}
         />
-      </button>
+      </Button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-44 rounded-[var(--r-m)] bg-[var(--surface)] z-50 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">

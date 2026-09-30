@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from "lucide-react";
 import { ThemeColors } from "../../types";
-import { IconButton } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface EnsayoCronometroProps {
   totalEstimatedMin?: number;
@@ -90,13 +90,10 @@ export function EnsayoCronometro({
         >
           {formatTime(seconds)}
         </span>
-        <button
+        <Button
+          variant={isActive ? "soft" : "soft"}
+          size="xs"
           onClick={toggleTimer}
-          className={`p-1 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-            isActive
-              ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30"
-              : "bg-[var(--ok)]/20 text-[var(--ink)] hover:bg-[var(--ok)]/30"
-          }`}
           title={isActive ? "Pausar Cronómetro" : "Iniciar Cronómetro"}
         >
           {isActive ? (
@@ -104,7 +101,7 @@ export function EnsayoCronometro({
           ) : (
             <Play className="w-3 h-3 fill-current" />
           )}
-        </button>
+        </Button>
       </div>
     );
   }
@@ -161,13 +158,11 @@ export function EnsayoCronometro({
 
         {/* Action Controls */}
         <div className="flex items-center gap-1.5">
-          <button
+          <Button
+            variant={isActive ? "primary" : "primary"}
+            size="sm"
             onClick={toggleTimer}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
-              isActive
-                ? "bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60"
-                : "bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)]"
-            }`}
+            className="items-center gap-1.5"
           >
             {isActive ? (
               <>
@@ -180,7 +175,7 @@ export function EnsayoCronometro({
                 <span>Iniciar</span>
               </>
             )}
-          </button>
+          </Button>
 
           <IconButton
             label="Reiniciar cronómetro"

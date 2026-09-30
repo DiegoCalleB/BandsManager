@@ -4,7 +4,7 @@ import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
-import { IconButton, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface AssignSongsToAlbumModalProps {
   isOpen: boolean;
@@ -244,13 +244,14 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
             </div>
 
             <div className="pt-3 flex justify-end gap-2 shrink-0">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
               >
                 Cancelar
-              </button>
+              </Button>
               <button
                 type="submit"
                 className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"

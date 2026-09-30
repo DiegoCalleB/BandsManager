@@ -521,15 +521,17 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
       {/* Action Buttons: Exportar + Nuevo Disco */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-        <button
+        <Button
+          variant="neutral"
+          size="xs"
           type="button"
           onClick={() => setExportModalData({ isOpen: true, albumName: "all" })}
-          className={`px-3.5 py-1.5 rounded-[var(--r-pill)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-ui ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+          className="items-center gap-1.5"
           title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
         >
           <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
           <span>Exportar</span>
-        </button>
+        </Button>
 
         <div className="relative">
           <Button
@@ -692,10 +694,11 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           {/* Action Icons: Fold/Unfold & Dynamics */}
           <div className="flex items-center gap-1.5 shrink-0 ml-auto">
             {filteredAlbums.length > 0 && (
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 type="button"
                 onClick={toggleAllAlbums}
-                className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
                 title={
                   areAllExpanded
                     ? "Plegar todos los discos"
@@ -703,17 +706,19 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 }
               >
                 <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
-              </button>
+              </Button>
             )}
 
             {/* Analizar Dinámica Button (Compact & Discreet) */}
             {songsPendingDynamicsAnalysis.length > 0 && (
               <div className="relative inline-flex flex-col items-end">
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={handleAnalyzeAllDynamics}
                   disabled={dynamicsAnalysis?.running}
-                  className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink)] hover:text-[var(--ok)] font-bold text-xs font-sans flex items-center gap-1 cursor-pointer transition-ui"
+                  className="items-center gap-1"
                   title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
                 >
                   {dynamicsAnalysis?.running ? (
@@ -730,7 +735,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       <span>({songsPendingDynamicsAnalysis.length})</span>
                     </>
                   )}
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -856,10 +861,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     onClick={(e) => e.stopPropagation()}
                   >
                     {sortedAlbumSongs.length > 0 && onSelectSong && (
-                      <button
+                      <Button
+                        variant="primary"
+                        size="xs"
                         type="button"
                         onClick={handlePlayAlbum}
-                        className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-medium text-xs flex items-center gap-1 transition-ui cursor-pointer"
+                        className="items-center gap-1"
                         title={
                           isPlayingAlbum ? "Pausar disco" : "Reproducir disco"
                         }
@@ -875,19 +882,21 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                             <span className="hidden xs:inline">Play</span>
                           </>
                         )}
-                      </button>
+                      </Button>
                     )}
 
                     {onEditAlbum && (
-                      <button
+                      <Button
+                        variant="neutral"
+                        size="xs"
                         type="button"
                         onClick={() => onEditAlbum(album)}
-                        className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                        className="items-center gap-1.5"
                         title="Gestionar las canciones de este álbum"
                       >
                         <Edit3 className="w-3.5 h-3.5 text-[var(--acc)]" />
                         <span className="hidden xs:inline">Gestionar</span>
-                      </button>
+                      </Button>
                     )}
 
                     {/* Per-Album Export Button */}
@@ -911,7 +920,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     {/* Bulk Audio Master Uploader Button */}
                     {sortedAlbumSongs.length > 0 && (
-                      <button
+                      <Button
+                        variant="soft"
+                        size="xs"
                         type="button"
                         onClick={() =>
                           setBulkUploadAlbum({
@@ -919,12 +930,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                             songs: sortedAlbumSongs,
                           })
                         }
-                        className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${"bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"}`}
+                        className="items-center gap-1.5"
                         title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
                       >
                         <FolderUp className="w-3.5 h-3.5" />
                         <span className="hidden md:inline">Subir audios</span>
-                      </button>
+                      </Button>
                     )}
 
                     {onRequestDeleteAlbum &&

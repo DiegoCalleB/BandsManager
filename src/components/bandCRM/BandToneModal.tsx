@@ -662,14 +662,15 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   )}
 
                   <div className="flex items-center gap-2 pt-1">
-                    <button
+                    <Button
+                      variant="primary"
                       onClick={handleSaveEdit}
                       disabled={isSaving}
-                      className="flex-1 py-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 text-[var(--on-ok)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
+                      className="flex-1 items-center justify-center gap-2"
                     >
                       <Save className="w-3.5 h-3.5" />{" "}
                       {isSaving ? "Guardando..." : "Guardar cambios"}
-                    </button>
+                    </Button>
                     <Button
                       variant="neutral"
                       onClick={handleCancelEdit}

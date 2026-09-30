@@ -894,14 +894,16 @@ export function ExcelImportModal({
                       </p>
                     </div>
                   </div>
-                  <button
+                  <Button
+                    variant="soft"
+                    size="sm"
                     type="button"
                     onClick={handleDownloadTemplate}
-                    className="px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] flex items-center gap-1.5 shrink-0 transition-ui cursor-pointer"
+                    className="items-center gap-1.5 shrink-0"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Descargar plantilla</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -1575,22 +1577,24 @@ export function ExcelImportModal({
               )}
 
               {step === 2 && (
-                <button
+                <Button
+                  variant="primary"
                   type="button"
                   onClick={buildParsedRows}
-                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer"
+                  className="items-center gap-1.5"
                 >
                   <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                </Button>
               )}
 
               {step === 3 && (
-                <button
+                <Button
+                  variant="primary"
                   type="button"
                   disabled={isImporting || selectedCount === 0}
                   onClick={handleExecuteImport}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="items-center gap-2"
                 >
                   {isImporting ? (
                     <>
@@ -1605,7 +1609,7 @@ export function ExcelImportModal({
                       </span>
                     </>
                   )}
-                </button>
+                </Button>
               )}
             </div>
           </div>

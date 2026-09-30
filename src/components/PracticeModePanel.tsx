@@ -27,7 +27,7 @@ import { apiFetch } from '../utils/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { transposeChordToken } from '../utils/chordUtils';
 import { ShowIcon } from './ui/ShowIcon';
-import { IconButton } from './ui';
+import { Button, IconButton } from './ui';
 
 const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 
@@ -668,15 +668,17 @@ export default function PracticeModePanel({
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {onOpenStudio && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={onOpenStudio}
-                  className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                  className="items-center gap-1.5"
                   title="Abrir Studio multipista completo de este tema"
                 >
                   <Sliders className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Modo Studio</span>
-                </button>
+                </Button>
               )}
               <IconButton
                 label="Cerrar"
@@ -1095,13 +1097,15 @@ export default function PracticeModePanel({
             <div className={`rounded-[var(--r-m)] p-3 space-y-2 ${cardBg}`}>
               <span className="text-xs font-sans font-semibold text-[var(--ink-2)]">Descargar para escuchar offline</span>
               <div className="flex flex-wrap gap-2">
-                <button
+                <Button
+                  variant="soft"
+                  size="sm"
                   onClick={() => handleExport('sin-mi-pista')}
                   disabled={!myTrack || isExporting !== null}
-                  className="flex items-center gap-1.5 text-xs font-sans px-3 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
+                  className="items-center gap-1.5"
                 >
                   <Download className="w-3.5 h-3.5" /> {isExporting === 'sin-mi-pista' ? 'Generando…' : 'Sin mi pista'}
-                </button>
+                </Button>
                 <button
                   onClick={() => handleExport('solo-mi-pista')}
                   disabled={!myTrack || isExporting !== null}

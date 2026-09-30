@@ -291,14 +291,15 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                           <span>min</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <button
+                          <Button
+                            variant="primary"
+                            size="xs"
                             type="button"
                             onClick={handleCreateShortcut}
                             disabled={!newShortcutLabel.trim()}
-                            className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-medium text-xs disabled:opacity-40 cursor-pointer"
                           >
                             Guardar
-                          </button>
+                          </Button>
                           <button
                             type="button"
                             onClick={() => setIsAddingShortcut(false)}

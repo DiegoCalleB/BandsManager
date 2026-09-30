@@ -1049,19 +1049,20 @@ export function ReelsMetricsView({
 
             <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
               {/* AI Multimodal Screenshot Scanner Button */}
-              <button
+              <Button
+                variant="soft"
                 onClick={() => {
                   setScanError(null);
                   setScanSuccess(null);
                   setScanResult(null);
                   setShowScanModal(true);
                 }}
-                className="px-3.5 py-2.5 rounded-[var(--r-pill)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui bg-[var(--acc-soft)]/40 text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]/60"
+                className="items-center justify-center gap-2"
                 title="Sube una captura de pantalla de tu Instagram, TikTok o Spotify y Gemini extraerá todas las métricas al instante"
               >
                 <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span>Escanear captura IA</span>
-              </button>
+              </Button>
 
               {/* Instagram OAuth / Meta Graph API Button */}
               <button
@@ -1455,14 +1456,16 @@ export function ReelsMetricsView({
                     </div>
                   </div>
 
-                  <button
+                  <Button
+                    variant="neutral"
+                    size="xs"
                     onClick={selectAllChannels}
-                    className={`text-micro font-sans px-2.5 py-1 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1 ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                    className="items-center gap-1"
                     title="Mostrar todos los canales disponibles"
                   >
                     <RefreshCw className="w-2.5 h-2.5" />
                     <span>Mostrar todos</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -2613,12 +2616,13 @@ export function ReelsMetricsView({
                 <ExternalLink className="w-3 h-3" />{" "}
                 developers.facebook.com/documentation/instagram-platform/insights
               </a>
-              <button
+              <Button
+                variant="neutral"
+                size="sm"
                 onClick={() => setShowIgModal(false)}
-                className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 Cerrar
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -2851,16 +2855,17 @@ export function ReelsMetricsView({
               <span className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1">
                 OCR y Visión Asistida por Gemini 2.5
               </span>
-              <button
+              <Button
+                variant="neutral"
+                size="sm"
                 onClick={() => {
                   setShowScanModal(false);
                   setScanImageBase64(null);
                   setScanResult(null);
                 }}
-                className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 Cerrar
-              </button>
+              </Button>
             </div>
           </div>
         </div>

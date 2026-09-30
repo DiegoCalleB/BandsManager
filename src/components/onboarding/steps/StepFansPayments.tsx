@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard } from 'lucide-react';
-import { IconButton, Input, LinkButton } from '../../ui';
+import { Button, IconButton, Input, LinkButton } from '../../ui';
 
 interface StepFansPaymentsProps {
   fanCallToAction: string;
@@ -163,15 +163,17 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             </div>
           ) : (
             <div className="flex gap-2">
-              <button
+              <Button
+                variant="soft"
+                size="sm"
                 type="button"
                 onClick={() => leadMagnetInputRef.current?.click()}
                 disabled={isUploadingLeadMagnet}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] text-xs font-medium transition-colors"
+                className="items-center gap-1.5"
               >
                 {isUploadingLeadMagnet ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                 Subir archivo de regalo
-              </button>
+              </Button>
               <Input
                 size="sm"
                 type="text"

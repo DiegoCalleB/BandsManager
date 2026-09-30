@@ -18,10 +18,12 @@ const stats = { primary: 0, soft: 0, neutral: 0, danger: 0, dyn: 0, skipped: 0 }
 
 function variantOf(cls, requirePill = true) {
   if (requirePill && !/rounded-\[var\(--r-pill\)\]/.test(cls)) return null;
-  if (/(^|\s)bg-\[var\(--acc\)\](\s|$)/.test(cls) && /text-\[var\(--on-acc\)\]/.test(cls)) return 'primary';
-  if (/(^|\s)bg-\[var\(--acc-soft\)\](\s|$)/.test(cls)) return 'soft';
+  if (/(^|\s)bg-\[var\(--(acc|ok)\)\](\s|$)/.test(cls) && /text-\[var\(--on-(acc|ok)\)\]/.test(cls)) return 'primary';
+  if (/(^|\s)bg-\[var\(--ok(-soft)?\)\](\/\d+)?(\s|$)/.test(cls)) return 'soft';
+  if (/(^|\s)bg-\[var\(--acc-soft\)\](\/\d+)?(\s|$)/.test(cls) || /(^|\s)bg-\[var\(--acc\)\]\/(1\d|2\d|3\d|40)(\s|$)/.test(cls)) return 'soft';
   if (/(^|\s)bg-\[var\(--sunken\)\](\s|$)/.test(cls)) return 'neutral';
   if (/(^|\s)bg-\[var\(--alert(-soft)?\)\](\s|$)/.test(cls)) return 'danger';
+  if (requirePill && !/(^|\s)bg-\[/.test(cls) && /(^|\s)hover:bg-\[var\(--(sunken|surface)\)\]/.test(cls) && /(^|\s)text-\[var\(--(ink-2|ink)\)\]/.test(cls)) return 'ghost';
   if (!requirePill && /(^|\s)(text-\[var\(--ink-2\)\]|hover:bg-\[var\(--sunken\)\])/.test(cls) && !/(^|\s)bg-\[/.test(cls)) return 'ghost';
   return null;
 }
@@ -70,6 +72,11 @@ for (const rel of files) {
       // plantilla con UN ternario de literales que decide el aspecto (activo/inactivo) y el resto estático
       const t = clsAttr.initializer.expression;
       const spans = t.templateSpans;
+      if (spans.every((sp) => ts.isStringLiteral(sp.expression) || ts.isNoSubstitutionTemplateLiteral(sp.expression))) {
+        // plantilla cuyas partes variables son literales fijas (restos de ternarios de tema ya resueltos): es una clase estática
+        cls = t.head.text + spans.map((sp) => sp.expression.text + sp.literal.text).join('');
+        variantExpr = null;
+      } else {
       const cond = spans.filter((sp) => ts.isConditionalExpression(sp.expression) && ts.isStringLiteral(sp.expression.whenTrue) && ts.isStringLiteral(sp.expression.whenFalse));
       if (cond.length !== 1 || spans.length !== 1) { stats.skipped++; return; }
       const ce = cond[0].expression;
@@ -78,6 +85,7 @@ for (const rel of files) {
       if (!vt || !vf || !/rounded-\[var\(--r-pill\)\]/.test(base + ce.whenTrue.text + ce.whenFalse.text)) { stats.skipped++; return; }
       cls = base + ' ' + ce.whenTrue.text + ' ' + ce.whenFalse.text; // para size/layout
       variantExpr = `{${ce.condition.getText(sf)} ? "${vt}" : "${vf}"}`;
+      }
     } else return;
     const variant = variantExpr ? 'dyn' : variantOf(cls);
     if (!variant || hasStyle) { stats.skipped++; return; }

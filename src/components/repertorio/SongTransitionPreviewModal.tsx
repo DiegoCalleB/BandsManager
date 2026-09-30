@@ -1092,21 +1092,19 @@ export function SongTransitionPreviewModal({
                 {/* Mode Selector & Auto-CUE toggle */}
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <div className="flex items-center p-0.5 bg-[var(--surface)] rounded-[var(--r-s)]">
-                    <button
+                    <Button
+                      variant={playbackMode === "real" ? "primary" : "ghost"}
+                      size="xs"
                       type="button"
                       onClick={() => {
                         stopPlayback();
                         setPlaybackMode("real");
                       }}
-                      className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
-                        playbackMode === "real"
-                          ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                          : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                      }`}
+                      className="items-center gap-1"
                     >
                       <Disc3 className="w-3 h-3" />
                       <span>Audio real</span>
-                    </button>
+                    </Button>
                     <Button
                       variant={playbackMode === "synth" ? "primary" : "ghost"}
                       size="xs"
@@ -1550,18 +1548,20 @@ export function SongTransitionPreviewModal({
           <div className="flex flex-wrap items-center justify-between gap-1.5 px-3.5 py-2 bg-[var(--sunken)] shrink-0">
             <div className="flex flex-wrap items-center gap-1.5">
               {onInsertInterludio && itemA && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => {
                     stopPlayback();
                     onInsertInterludio(itemA.id);
                     onClose();
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="items-center gap-1"
                 >
                   <MessageSquarePlus className="w-3 h-3" />
                   <span>Insertar chapa</span>
-                </button>
+                </Button>
               )}
 
               {onSwapSongs && (

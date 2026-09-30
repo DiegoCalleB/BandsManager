@@ -123,6 +123,12 @@ const CHECKS = {
     pattern: /(?<![\w:\[\]-])(?:(?:hover:|focus:|group-hover:)?-(?:neutral|slate|zinc|gray|stone|indigo|blue|red|green|amber|emerald|purple|pink|orange|yellow|rose|cyan|teal|sky|violet|fuchsia)-\d{2,3}(?:\/\d+)?|(?:hover:|focus:)?-\[(?:#[0-9a-fA-F]+|var\([^\]]*\))\](?:\/\d+)?)(?![\w-])|\]\/\d+\/\d+(?!\d)/g,
     severity: 'error',
   },
+  botonPildoraSinPrimitiva: {
+    description: '<button> con forma de píldora y relleno de acento/suave/hundido escrito a mano — es un <Button variant> de components/ui (primary · soft · neutral · ghost · danger; xs · sm · md · lg). Una cuarta variante a mano es la deriva que esta regla evita',
+    pattern: /<button\b(?!(?:[^>]|=>)*?data-raw)(?:[^>]|=>)*?className="[^"]*rounded-\[var\(--r-pill\)\][^"]*(?:bg-\[var\(--(?:acc|acc-soft|sunken)\)\])[^"]*"/g,
+    severity: 'error',
+    skipUi: true,
+  },
   textoSobreRelleno: {
     description: 'texto que no es --on-* sobre un relleno sólido de acento/estado (bg-[var(--acc|ok|alert)] + text-[var(--ink|ink-2|acc-ink|mismo tono)]) — contraste insuficiente (en Oscuro, invisible); usa text-[var(--on-acc|on-ok|on-alert)]',
     pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w\/-])/g,

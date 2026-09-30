@@ -331,17 +331,15 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           <span>YouTube ({ytSubs.toLocaleString()})</span>
         </Button>
 
-        <button
+        <Button
+          variant={selectedTab === "spotify" ? "primary" : "ghost"}
+          size="xs"
           onClick={() => setSelectedTab("spotify")}
-          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-            selectedTab === "spotify"
-              ? "bg-[var(--ok)] text-[var(--on-ok)] shadow"
-              : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
-          }`}
+          className="items-center gap-1.5 whitespace-nowrap"
         >
           <Music2 className="w-3.5 h-3.5 text-[var(--ok)]" />
           <span>Spotify y Streaming</span>
-        </button>
+        </Button>
       </div>
 
       {/* 3. Tab Content */}
@@ -697,9 +695,11 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                         <p className="text-xs font-sans text-[var(--ink-2)] italic">
                           {hook}
                         </p>
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="xs"
                           onClick={() => copyToClipboard(hook, `hook-${hIdx}`)}
-                          className="p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui shrink-0 cursor-pointer"
+                          className="shrink-0"
                           title="Copiar gancho"
                         >
                           {copiedHook === `hook-${hIdx}` ? (
@@ -707,7 +707,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
-                        </button>
+                        </Button>
                       </div>
                     ))}
                   </div>

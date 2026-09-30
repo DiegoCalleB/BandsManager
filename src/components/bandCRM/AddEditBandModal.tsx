@@ -120,11 +120,13 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             <div className="space-y-1 md:col-span-2">
               <div className="flex items-center justify-between">
                 <label className="block text-micro font-mono text-[var(--ink-2)]">Nombre de la banda / artista *</label>
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={handleAiLookup}
                   disabled={isAiSearching || !formName.trim()}
-                  className="flex items-center gap-1.5 text-micro font-mono font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui disabled:opacity-50 cursor-pointer"
+                  className="items-center gap-1.5"
                 >
                   {isAiSearching ? (
                     <>
@@ -137,7 +139,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <span>Buscar con IA (Autorellenar)</span>
                     </>
                   )}
-                </button>
+                </Button>
               </div>
               <Input
                 size="sm"

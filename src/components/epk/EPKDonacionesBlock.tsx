@@ -269,7 +269,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                   Método preferente
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  <button
+                  <Button variant={(config.donacionRevolut?.metodoPorDefecto ||
+                        "revolut") === "revolut" ? "soft" : "neutral"} size="sm"
                     type="button"
                     onClick={() =>
                       setConfig({
@@ -280,16 +281,11 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         },
                       })
                     }
-                    className={`p-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
-                      (config.donacionRevolut?.metodoPorDefecto ||
-                        "revolut") === "revolut"
-                        ? "bg-[var(--acc)]/20 text-[var(--ink)]"
-                        : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center justify-center gap-2"
                   >
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--tentative)]" />
                     Revolut
-                  </button>
+                  </Button>
                   <button
                     type="button"
                     onClick={() =>
@@ -310,7 +306,9 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
                     PayPal
                   </button>
-                  <button
+                  <Button
+                    variant={config.donacionRevolut?.metodoPorDefecto === "bizum" ? "soft" : "neutral"}
+                    size="sm"
                     type="button"
                     onClick={() =>
                       setConfig({
@@ -321,15 +319,11 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         },
                       })
                     }
-                    className={`p-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
-                      config.donacionRevolut?.metodoPorDefecto === "bizum"
-                        ? "bg-[var(--ok)]/20 text-[var(--ink)]"
-                        : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center justify-center gap-2"
                   >
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]" />
                     Bizum
-                  </button>
+                  </Button>
                 </div>
               </div>
 

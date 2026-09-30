@@ -501,26 +501,30 @@ Firmado en conformidad por ambas partes.`;
 
             <div className="flex items-center gap-2 ml-auto">
               {activeTab === 'roadbook' && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ink)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                  className="items-center gap-1.5"
                   title="Copiar texto formateado listo para WhatsApp"
                 >
                   {copiedWhatsApp ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedWhatsApp ? '¡Copiado para WhatsApp!' : 'Copiar para WhatsApp'}</span>
-                </button>
+                </Button>
               )}
 
               {activeTab === 'contract' && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--ink)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                  className="items-center gap-1.5"
                 >
                   {copiedContract ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedContract ? '¡Contrato Copiado!' : 'Copiar Contrato'}</span>
-                </button>
+                </Button>
               )}
 
               <button

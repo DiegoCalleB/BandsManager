@@ -313,12 +313,13 @@ export function PerfectSetlistModal({
               <p className="text-xs text-[var(--ink-2)] mb-6">
                 No se toca este setlist: en cuanto se genere el plan, se trabaja sobre una copia nueva.
               </p>
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={() => onGenerate()}
-                className="bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
               >
                 Generar plan
-              </button>
+              </Button>
             </div>
           )}
 
@@ -464,29 +465,28 @@ export function PerfectSetlistModal({
                 >
                   Solo este plan
                 </button>
-                <button
+                <Button
+                  variant={feedbackScope === 'global' ? "soft" : "ghost"}
+                  size="xs"
                   type="button"
                   onClick={() => setFeedbackScope('global')}
-                  className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui flex items-center gap-1 ${
-                    feedbackScope === 'global'
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold'
-                      : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                  }`}
+                  className="items-center gap-1"
                   title="La IA recordará esta corrección también para futuros setlists de la banda"
                 >
                   <Sparkles className="w-3 h-3" /> Recordar para siempre
-                </button>
+                </Button>
               </div>
             </div>
 
             <div className="flex gap-3">
-              <button
+              <Button
+                variant="primary"
                 onClick={() => handleGenerateWithFeedback()}
                 title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
-                className="flex-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm"
+                className="flex-1"
               >
                 <ShowIcon inline emoji="🔄" />Regenerar
-              </button>
+              </Button>
               <button
                 onClick={() => handleGenerateWithFeedback(true)}
                 title="Crea una copia nueva desde cero en vez de reutilizar la actual"

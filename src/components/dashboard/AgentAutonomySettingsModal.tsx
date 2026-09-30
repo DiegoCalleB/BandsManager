@@ -2471,7 +2471,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         {strategiesFeedback}
                       </span>
                     )}
-                    <button
+                    <button data-raw
                       type="button"
                       onClick={handleSaveResponseStrategies}
                       disabled={isSavingStrategies}
@@ -2508,16 +2508,18 @@ export const AgentAutonomySettingsModal: React.FC<
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
+                    <Button
+                      variant="soft"
+                      size="xs"
                       type="button"
                       onClick={handleExportAuditLogsCSV}
                       disabled={auditLogs.length === 0}
-                      className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="items-center gap-1.5"
                       title="Descargar historial de auditoría en formato CSV"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>Exportar CSV</span>
-                    </button>
+                    </Button>
                     <Button
                       variant="neutral"
                       size="xs"

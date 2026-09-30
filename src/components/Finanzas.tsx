@@ -842,7 +842,6 @@ export default function Finanzas({
                     variant="neutral"
                     size="sm"
                     onClick={() => setEditingConcertId(null)}
-                    
                   >
                     Cancelar
                   </Button>
@@ -865,7 +864,6 @@ export default function Finanzas({
                       }
                       setEditingConcertId(null);
                     }}
-                    
                   >
                     Guardar gastos
                   </Button>
@@ -897,15 +895,17 @@ export default function Finanzas({
                   className={`w-full pl-9 ${searchTerm ? "pr-8" : "pr-3"}`}
                 />
                 {searchTerm && (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="xs"
                     id="finanzas-search-clear"
                     type="button"
                     onClick={() => setSearchTerm("")}
-                    className={`absolute right-2.5 top-2 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                    className="absolute right-2.5 top-2"
                     title="Borrar búsqueda"
                   >
                     <X className="w-3.5 h-3.5" />
-                  </button>
+                  </Button>
                 )}
               </div>
 
@@ -915,7 +915,6 @@ export default function Finanzas({
                   size="sm"
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value as any)}
-                  
                 >
                   <option value="todos">Tipo: Todos</option>
                   <option value="ingreso">Ingreso (+)</option>
@@ -927,7 +926,6 @@ export default function Finanzas({
                   size="sm"
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  
                 >
                   <option value="todos">Categoría: Todas</option>
                   {categories.map((cat) => (
@@ -942,7 +940,6 @@ export default function Finanzas({
                   size="sm"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as any)}
-                  
                 >
                   <option value="todos">Estado: Todos</option>
                   <option value="pendiente">Pendiente</option>

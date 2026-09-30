@@ -28,7 +28,7 @@ import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils'
 import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { usePlayer } from '../context/PlayerContext';
-import { IconButton, Select } from './ui';
+import { Button, IconButton, Select } from './ui';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -674,7 +674,7 @@ export default function SpotifyPlayerBar({
                 <SkipBack className="w-4 h-4 fill-current" />
               </IconButton>
 
-              <button
+              <button data-raw
                 type="button"
                 onClick={togglePlayPause}
                 className="w-9 h-9 md:w-10 md:h-10 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition active:scale-[0.97]"
@@ -858,15 +858,13 @@ export default function SpotifyPlayerBar({
                 </IconButton>
 
                 {/* Crossfade Toggle — fundido real de 5s al pasar al siguiente tema de la cola */}
-                <button
+                <Button
+                  variant={crossfadeEnabled ? "soft" : "ghost"}
                   onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
-                  className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer text-sm ${
-                    crossfadeEnabled ? 'text-[var(--ink)] bg-[var(--ok)]/15' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                  }`}
                   title={crossfadeEnabled ? 'Fundido entre temas activado (5s)' : 'Activar fundido entre temas (5s)'}
                 >
                   <ShowIcon inline emoji="🔀" />
-                </button>
+                </Button>
 
                 {/* Speed multiplier selector */}
                 <Select
@@ -942,24 +940,28 @@ export default function SpotifyPlayerBar({
               )}
 
               {/* Studio / Arreglos Button */}
-              <button
+              <Button
+                variant="soft"
+                size="xs"
                 onClick={() => onOpenStudio(song)}
-                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/25 hover:bg-[var(--ok)]/35 text-[var(--ink)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="items-center gap-1.5"
                 title="Abrir estudio de arreglos e ideas"
               >
                 <Sliders className="w-3.5 h-3.5" />
                 <span className="text-xs">Estudio</span>
-              </button>
+              </Button>
 
               {/* Iris Stem Separator Button */}
-              <button
+              <Button
+                variant="soft"
+                size="xs"
                 onClick={() => (onOpenIris ? onOpenIris(song) : onOpenStudio(song))}
-                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/25 hover:bg-[var(--acc)]/35 text-[var(--ink)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="items-center gap-1.5"
                 title="Procesar y separar voces e instrumentos con iris (IA stems)"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span className="hidden sm:inline text-xs">Iris</span>
-              </button>
+              </Button>
 
               {/* Volume */}
               <div className="hidden sm:flex items-center gap-1.5 pl-2">

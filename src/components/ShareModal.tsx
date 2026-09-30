@@ -3,7 +3,7 @@ import { X, MessageSquare, Share2, Copy, Check, Mail, Phone, Edit3, Sparkles, Mu
 import { ThemeColors } from '../types';
 import { shareViaWhatsApp, shareViaWebShare, copyToClipboard, shareViaEmail, SharePayload } from '../utils/shareUtils';
 import { ModalPortal } from './common/ModalPortal';
-import { IconButton, Input, LinkButton, Textarea } from './ui';
+import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -206,13 +206,15 @@ export function ShareModal({
               >
                 Cancelar
               </button>
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={handleWhatsApp}
-                className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-colors flex items-center gap-1.5"
+                className="items-center gap-1.5"
               >
                 <Send className="w-3.5 h-3.5" />
                 Enviar a WhatsApp
-              </button>
+              </Button>
             </div>
           </div>
         </div>

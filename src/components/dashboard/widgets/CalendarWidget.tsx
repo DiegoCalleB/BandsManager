@@ -325,17 +325,14 @@ export function CalendarWidget({
             >
               Bolos
             </Button>
-            <button
+            <Button
+              variant={filterType === "ensayo" ? "soft" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSetFilterType("ensayo")}
-              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer ${
-                filterType === "ensayo"
-                  ? "bg-[var(--ok-soft)] text-[var(--ok)] font-semibold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
             >
               Ensayos
-            </button>
+            </Button>
           </div>
 
           {/* Nav to full calendar */}

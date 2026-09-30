@@ -414,7 +414,7 @@ export const ProfileCompletenessCard: React.FC<
             </button>
           )}
 
-          <button
+          <button data-raw
             onClick={() => setShowAuditModal(true)}
             className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
           >
@@ -422,7 +422,7 @@ export const ProfileCompletenessCard: React.FC<
             <span>Info</span>
           </button>
 
-          <button
+          <button data-raw
             onClick={() => setIsExpanded(!isExpanded)}
             className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--acc)] text-xs font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer active:scale-[0.97]"
             title="Expandir/colapsar checklist"

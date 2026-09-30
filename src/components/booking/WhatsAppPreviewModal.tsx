@@ -212,13 +212,14 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                     placeholder="Ej. +34 612 345 678"
                     className="flex-1"
                   />
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     type="button"
                     onClick={handleSavePhone}
-                    className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] rounded-[var(--r-pill)] font-bold text-xs cursor-pointer"
                   >
                     Guardar
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="flex items-center justify-between bg-[var(--sunken)] px-3 py-2 rounded-[var(--r-m)] ">
@@ -267,14 +268,16 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {detectedDates.map((dateStr) => (
-                    <button
+                    <Button
+                      variant="soft"
+                      size="xs"
                       key={dateStr}
                       type="button"
                       onClick={() => insertDateInMessage(dateStr)}
-                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro font-mono font-bold transition-ui cursor-pointer flex items-center gap-1"
+                      className="items-center gap-1"
                     >
                       <span>+ {dateStr}</span>
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -349,7 +352,9 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               </Button>
 
               {onLogInteraction && (
-                <button
+                <Button
+                  variant={interactionLogged ? "primary" : "neutral"}
+                  size="sm"
                   type="button"
                   onClick={() => {
                     onLogInteraction(lead.id, {
@@ -360,16 +365,12 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                     setInteractionLogged(true);
                   }}
                   disabled={interactionLogged}
-                  className={`px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                    interactionLogged
-                      ? 'bg-[var(--ok)] text-[var(--on-ok)] opacity-80'
-                      : 'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] '
-                  }`}
+                  className="items-center gap-1.5"
                   title="Guarda la interacción en la bitácora del lead"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>{interactionLogged ? 'En Bitácora ✓' : 'Anotar en Bitácora'}</span>
-                </button>
+                </Button>
               )}
             </div>
 
@@ -382,20 +383,18 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 Cerrar
               </button>
 
-              <button
+              <Button
+                variant={hasValidPhone ? "primary" : "neutral"}
+                size="sm"
                 type="button"
                 onClick={handleOpenWhatsApp}
                 disabled={!hasValidPhone}
-                className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer ${
-                  hasValidPhone
-                    ? 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-extrabold/20'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed'
-                }`}
+                className="items-center gap-2"
               >
                 <MessageCircle className="w-4 h-4 fill-current" />
                 <span>Abrir en WhatsApp</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>

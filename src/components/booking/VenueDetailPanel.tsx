@@ -1850,7 +1850,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
                 </div>
 
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => {
                     const current =
@@ -1868,12 +1870,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       }
                     }
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors shrink-0 shadow-2xs"
+                  className="items-center gap-1 shrink-0"
                   title="Inserta este hito histórico en el pitch para dar credibilidad de taquilla a la sala"
                 >
                   <TrendingUp className="w-3 h-3 text-[var(--acc)]" />
                   <span>+ Citar hito en pitch</span>
-                </button>
+                </Button>
               </div>
             );
           })()}
@@ -2155,7 +2157,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </p>
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="button"
                   disabled={isCreatingDraft}
                   onClick={async () => {
@@ -2198,7 +2202,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       setIsCreatingDraft(false);
                     }
                   }}
-                  className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-pill)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="shrink-0 items-center gap-1.5"
                   title="Forzar el despacho inmediato de este correo por el agente enviador"
                 >
                   {isCreatingDraft ? (
@@ -2209,7 +2213,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span>
                     {isCreatingDraft ? "Enviando..." : "Despachar Ahora"}
                   </span>
-                </button>
+                </Button>
               </div>
             );
           }
@@ -2299,10 +2303,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span>{selectedLead.telefono}</span>
                 </span>
               )}
-            <button
+            <Button
+              variant="soft"
+              size="xs"
               onClick={handleEnrichLead}
               disabled={isEnrichingLead}
-              className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] text-micro rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+              className="items-center gap-1.5"
               title="Scout Enriquecedor: Completa emails, webs y datos faltantes sin alucinaciones"
             >
               <Sparkles
@@ -2311,7 +2317,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <span>
                 {isEnrichingLead ? "Completando..." : "Scout Enriquecedor"}
               </span>
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -2540,17 +2546,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       Icono o logo del medio / sala
                     </label>
                     <div className="flex items-center gap-2">
-                      <button
+                      <Button
+                        variant="soft"
+                        size="xs"
                         type="button"
                         onClick={handleAutoSearchLogo}
                         disabled={isSearchingLogo}
-                        className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro rounded-[var(--r-pill)] flex items-center gap-1.5 font-bold transition-ui cursor-pointer disabled:opacity-50"
+                        className="items-center gap-1.5"
                       >
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                         <span>
                           {isSearchingLogo ? "Buscando..." : "Buscar Logo"}
                         </span>
-                      </button>
+                      </Button>
                       {onLeadLogoUpload && (
                         <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-micro rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all700">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
@@ -4007,13 +4015,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                     {!msg.sentimiento && (
                       <div className="flex justify-end pt-1">
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           type="button"
                           onClick={() =>
                             handleAnalyzeMessageSentiment(msg.id, msg.mensaje)
                           }
                           disabled={isAnalyzingMessageSentiment === msg.id}
-                          className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                          className="items-center gap-1.5"
                         >
                           {isAnalyzingMessageSentiment === msg.id ? (
                             <>
@@ -4026,7 +4036,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                               <span>Analizar sentimiento e intención</span>
                             </>
                           )}
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -5113,17 +5123,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="button"
                   onClick={() => handleRecalculateFinancial()}
                   disabled={isRecalculatingFinancial}
-                  className="px-3 py-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                  className="items-center gap-1.5"
                 >
                   <RefreshCw
                     className={`w-3.5 h-3.5 ${isRecalculatingFinancial ? "animate-spin" : ""}`}
                   />
                   <span>Recalcular y guardar P&L</span>
-                </button>
+                </Button>
               </div>
             </div>
 

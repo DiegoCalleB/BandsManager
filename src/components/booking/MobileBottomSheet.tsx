@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Lead, LeadStatus, Concert } from "../../types";
 import { VenueDetailPanel } from "./VenueDetailPanel";
 import { X, Building2 } from "lucide-react";
+import { Button } from '../ui';
 
 interface MobileBottomSheetProps {
   selectedLead: Lead | null;
@@ -75,15 +76,17 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
             </span>
           </div>
 
-          <button
+          <Button
+            variant="soft"
+            size="xs"
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition-colors cursor-pointer text-xs font-bold shrink-0 gap-1"
+            className="items-center justify-center shrink-0 gap-1"
             title="Cerrar ficha"
           >
             <X className="w-4 h-4" />
             <span>Cerrar</span>
-          </button>
+          </Button>
         </div>
 
         {/* Content Panel - Scrollable container */}

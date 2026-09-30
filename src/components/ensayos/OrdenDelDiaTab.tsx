@@ -432,15 +432,17 @@ export function OrdenDelDiaTab({
               </span>
             )}
             {historyStack.length > 0 && (
-              <button
+              <Button
+                variant="soft"
+                size="xs"
                 type="button"
                 onClick={handleUndoReorder}
-                className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/25 transition-colors flex items-center gap-1 cursor-pointer"
+                className="items-center gap-1"
                 title="Deshacer el último cambio de orden o añadido"
               >
                 <Undo2 className="w-3 h-3" />
                 <span>Deshacer</span>
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -903,20 +905,18 @@ export function OrdenDelDiaTab({
                     ))}
                   </Select>
 
-                  <button
+                  <Button
+                    variant={onlyFavorites ? "soft" : "neutral"}
+                    size="xs"
                     type="button"
                     onClick={() => setOnlyFavorites((p) => !p)}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer transition-colors ${
-                      onlyFavorites
-                        ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
-                        : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center gap-1.5"
                   >
                     <Star
                       className={`w-3 h-3 ${onlyFavorites ? "fill-[var(--acc)] text-[var(--acc)]" : ""}`}
                     />
                     <span>Solo favoritos</span>
-                  </button>
+                  </Button>
 
                   <Button
                     variant="neutral"

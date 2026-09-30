@@ -3,6 +3,7 @@ import { Sparkles, CheckCircle2, XCircle, Lightbulb, Compass, MessageSquarePlus,
 import type { TemplateCategory } from './TemplateConfigSection';
 import { CATEGORY_RECOMMENDATIONS } from '../../data/templateRecommendations';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface TemplateRecommendationsCardProps {
   category: TemplateCategory;
@@ -53,18 +54,18 @@ export function TemplateRecommendationsCard({
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             type="button"
             onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
             disabled={isOptimizing}
-            className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50 ${
-              'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-extrabold'
-            }`}
+            className="items-center gap-1.5"
             title="Aplica la recomendación del agente y re-redacta la plantilla y pautas con IA"
           >
             <Wand2 className={`w-3.5 h-3.5 ${isOptimizing ? 'animate-spin' : ''}`} />
             <span>{isOptimizing ? 'Mejorando...' : 'Aplicar recomendación con IA'}</span>
-          </button>
+          </Button>
 
           {onClose && (
             <button

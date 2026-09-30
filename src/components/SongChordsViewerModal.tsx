@@ -511,14 +511,12 @@ export function SongChordsViewerModal({
               <div className="flex flex-wrap items-center gap-3">
                 {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
                 <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
-                  <button
+                  <Button
+                    variant={isPlayingAudio ? "primary" : "soft"}
+                    size="xs"
                     type="button"
                     onClick={handleToggleAudio}
-                    className={`p-1.5 rounded-[var(--r-pill)] font-bold flex items-center justify-center transition cursor-pointer ${
-                      isPlayingAudio
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] "
-                    }`}
+                    className="items-center justify-center"
                     title={
                       isPlayingAudio
                         ? "Pausar audio de la canción"
@@ -532,7 +530,7 @@ export function SongChordsViewerModal({
                     ) : (
                       <Play className="w-3.5 h-3.5 fill-current pl-0.5" />
                     )}
-                  </button>
+                  </Button>
 
                   {audioUrl ? (
                     <>
@@ -859,14 +857,16 @@ export function SongChordsViewerModal({
                         <Edit3 className="w-4 h-4 text-[var(--acc)]" />
                         Editor de cifrado y ficha
                       </h3>
-                      <button
+                      <Button
+                        variant="primary"
+                        size="sm"
                         type="button"
                         onClick={handleSaveEdits}
-                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        className="items-center gap-1.5"
                       >
                         <Save className="w-4 h-4" />
                         <span>Guardar cambios</span>
-                      </button>
+                      </Button>
                     </div>
 
                     <div>

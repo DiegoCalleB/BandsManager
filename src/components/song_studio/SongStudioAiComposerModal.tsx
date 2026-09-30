@@ -3,7 +3,7 @@ import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } fro
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, SongAudioIdea } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { IconButton, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface SongStudioAiComposerModalProps {
   isOpen: boolean;
@@ -293,14 +293,16 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   >
                     <ShowIcon inline emoji="🔄" />Probar otra idea
                   </button>
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     type="button"
                     onClick={handleAcceptAndAddIdea}
-                    className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                    className="items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Añadir como nueva idea al tema</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

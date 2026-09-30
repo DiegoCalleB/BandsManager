@@ -997,30 +997,34 @@ export default function TourManager({
                   {/* Acciones de Sincronización */}
                   <div className="pt-4 mt-4 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <button
+                      <Button
+                        variant="soft"
+                        size="xs"
                         type="button"
                         onClick={() => handleVolcarEnFinanzas(tour)}
-                        className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
+                        className="items-center gap-1.5"
                         title="Registra los cachés y gastos logísticos calculados en el libro diario de Finanzas"
                       >
                         <DollarSign className="w-3.5 h-3.5" />
                         <span>Volcar en Finanzas</span>
-                      </button>
+                      </Button>
 
                       {onNavigate && (
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           type="button"
                           onClick={() =>
                             onNavigate("calendario", {
                               selectedDate: tour.fechaInicio,
                             })
                           }
-                          className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] transition-ui flex items-center gap-1.5 cursor-pointer"
+                          className="items-center gap-1.5"
                           title="Abrir agenda y ver paradas de la gira en el calendario"
                         >
                           <Calendar className="w-3.5 h-3.5" />
                           <span>Ver en Calendario</span>
-                        </button>
+                        </Button>
                       )}
                     </div>
 
@@ -1054,12 +1058,13 @@ export default function TourManager({
                     y sincronización automática.
                   </p>
                 </div>
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setIsModalOpen(false)}
-                  className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors text-xl leading-none cursor-pointer"
                 >
                   &times;
-                </button>
+                </Button>
               </div>
 
               {/* Modal Body */}
@@ -1273,13 +1278,15 @@ export default function TourManager({
                           </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <button
+                          <Button
+                            variant="soft"
+                            size="xs"
                             type="button"
                             onClick={() => handleAddVehicle(0)}
-                            className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer"
+                            className="items-center gap-1.5"
                           >
                             <Plus className="w-3.5 h-3.5" /> Añadir vehículo
-                          </button>
+                          </Button>
                           <button
                             type="button"
                             onClick={() => recalculateAllFuelStops()}
@@ -1495,13 +1502,15 @@ export default function TourManager({
                           la banda con sus gastos logísticos y convocatoria.
                         </p>
                       </div>
-                      <button
+                      <Button
+                        variant="soft"
+                        size="xs"
                         type="button"
                         onClick={addStop}
-                        className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="items-center gap-1.5"
                       >
                         <Plus className="w-3.5 h-3.5" /> Añadir parada
-                      </button>
+                      </Button>
                     </div>
 
                     <div className="space-y-4">

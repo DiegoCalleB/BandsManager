@@ -111,13 +111,14 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
             </div>
 
             <div className="pt-3 flex justify-end gap-2">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
               >
                 Cancelar
-              </button>
+              </Button>
               <Button
                 variant="primary"
                 size="sm"

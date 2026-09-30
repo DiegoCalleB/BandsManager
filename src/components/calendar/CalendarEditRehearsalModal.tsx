@@ -3,7 +3,7 @@ import { Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { Music, Trash2 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface CalendarEditRehearsalModalProps {
   viewingRehearsal: Rehearsal | null;
@@ -62,12 +62,14 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
-          <button
+          <Button
+            variant="ghost"
+            size="xs"
             onClick={() => setViewingRehearsal(null)}
-            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4"
           >
             ✕
-          </button>
+          </Button>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
             {isReunion ? (
@@ -210,19 +212,21 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 </button>
               )}
               <div className="flex gap-2 ml-auto">
-                <button
+                <Button
+                  variant="ghost"
+                  size="xs"
                   type="button"
                   onClick={() => setViewingRehearsal(null)}
-                  className="px-2 py-1 text-micro font-mono rounded-[var(--r-pill)] text-[var(--ink-2)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                 >
                   Cancelar
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="submit"
-                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-ui cursor-pointer font-bold"
                 >
                   Guardar cambios
-                </button>
+                </Button>
               </div>
             </div>
           </form>

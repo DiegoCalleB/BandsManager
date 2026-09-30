@@ -677,13 +677,11 @@ export function ModoLocalEnVivoTab({
           {/* Metronome Embedded Strip (100% Mobile Responsive) */}
           <div className="p-3 sm:p-4 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 sm:gap-3">
-              <button
+              <Button
+                variant={isMetronomeActive ? "danger" : "primary"}
+                size="sm"
                 onClick={() => setIsMetronomeActive(!isMetronomeActive)}
-                className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-pill)] font-sans font-bold text-xs transition-ui cursor-pointer ${
-                  isMetronomeActive
-                    ? "bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)]"
-                    : "bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)]"
-                }`}
+                className="items-center gap-2"
               >
                 {isMetronomeActive ? (
                   <VolumeX className="w-4 h-4" />
@@ -691,7 +689,7 @@ export function ModoLocalEnVivoTab({
                   <Volume2 className="w-4 h-4" />
                 )}
                 <span>{isMetronomeActive ? "Parar Clic" : "Activar Clic"}</span>
-              </button>
+              </Button>
 
               {/* Visual Beat Indicator Dots */}
               <div className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]">
@@ -761,17 +759,15 @@ export function ModoLocalEnVivoTab({
                 Evaluación:
               </span>
 
-              <button
+              <Button
+                variant={currentItem?.evaluacion === "bordada" ? "primary" : "soft"}
+                size="sm"
                 onClick={() => handleSetEvaluation("bordada")}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                  currentItem?.evaluacion === "bordada"
-                    ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                    : "bg-[var(--ok)]/15 text-[var(--ink)] hover:bg-[var(--ok)]/25"
-                }`}
+                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
               >
                 <span><ShowIcon inline emoji="🟢" /></span>
                 <span>Bordada</span>
-              </button>
+              </Button>
 
               <Button
                 variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
@@ -830,13 +826,10 @@ export function ModoLocalEnVivoTab({
           <div className="p-2 sm:p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] flex flex-wrap items-center justify-between gap-2 shrink-0">
             {/* Left: Metronome click & Tempo pulse */}
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant={isMetronomeActive ? "danger" : "primary"}
+                size="sm"
                 onClick={() => setIsMetronomeActive(!isMetronomeActive)}
-                className={`p-2 rounded-[var(--r-pill)] font-sans text-xs font-bold cursor-pointer transition-ui ${
-                  isMetronomeActive
-                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
-                    : "bg-[var(--ok)] text-[var(--on-ok)]"
-                }`}
                 title="Metrónomo clic"
               >
                 {isMetronomeActive ? (
@@ -844,7 +837,7 @@ export function ModoLocalEnVivoTab({
                 ) : (
                   <Volume2 className="w-4 h-4" />
                 )}
-              </button>
+              </Button>
 
               {/* Visual Flash */}
               <div className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] font-sans text-xs text-[var(--acc)] font-bold">
@@ -1044,16 +1037,14 @@ export function ModoLocalEnVivoTab({
             {/* Bottom Bar inside Atril: 1-Tap Evaluation & Quick Next/Previous */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 shrink-0">
               <div className="flex items-center gap-1.5 w-full sm:w-auto">
-                <button
+                <Button
+                  variant={currentItem?.evaluacion === "bordada" ? "primary" : "soft"}
+                  size="xs"
                   onClick={() => handleSetEvaluation("bordada")}
-                  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                    currentItem?.evaluacion === "bordada"
-                      ? "bg-[var(--ok)] text-[var(--on-ok)] font-bold"
-                      : "bg-[var(--ok)]/15 text-[var(--ink)]"
-                  }`}
+                  className="flex-1 sm:flex-none items-center justify-center gap-1"
                 >
                   <span><ShowIcon inline emoji="🟢" />Bordada</span>
-                </button>
+                </Button>
 
                 <Button
                   variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}

@@ -6,7 +6,7 @@ import {
   cleanToNormalText,
 } from "../../utils/bandNameStyler";
 import { ShowIcon } from '../ui/ShowIcon';
-import { IconButton } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface BandNameStylerHelperProps {
   value: string;
@@ -46,15 +46,17 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
   return (
     <div className={`relative inline-block ${className}`}>
       {/* Trigger Button */}
-      <button
+      <Button
+        variant="soft"
+        size="xs"
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] transition-ui cursor-pointer active:scale-[0.97]"
+        className="items-center gap-1.5"
         title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
       >
         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
         <span>Estilos Rock y KoЯn</span>
-      </button>
+      </Button>
 
       {/* Floating Popover / Helper Modal */}
       {isOpen && (

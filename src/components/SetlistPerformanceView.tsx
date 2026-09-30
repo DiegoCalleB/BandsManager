@@ -674,21 +674,19 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
             {/* Quick action: Ensayo con pistas Iris */}
             {!isBlock && currentSong && irisStemIdea && (
-              <button
+              <Button
+                variant={glareMode ? "soft" : "soft"}
+                size="xs"
                 id="btn-stage-practice-mode"
                 type="button"
                 onClick={() => handleLaunchPractice()}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
-                  glareMode
-                    ? "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)]"
-                    : "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)]"
-                }`}
+                className="items-center gap-1.5 shrink-0"
                 title="Modo Ensayo: practica este tema con pistas separadas por Iris (silenciar/aislar pistas, tempo, bucle A/B)"
               >
                 <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span className="hidden sm:inline">Ensayo Iris</span>
                 <span className="sm:hidden">Ensayo</span>
-              </button>
+              </Button>
             )}
 
             {/* Quick action: Separar con Iris si no tiene pistas */}
@@ -964,19 +962,17 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           )}
 
           {!isBlock && irisStemIdea && (
-            <button
+            <Button
+              variant={glareMode ? "soft" : "soft"}
+              size="xs"
               type="button"
               onClick={() => handleLaunchPractice()}
-              className={`flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-bold transition-ui cursor-pointer ${
-                glareMode
-                  ? "bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"
-                  : "bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"
-              }`}
+              className="items-center gap-1"
               title="Pistas separadas por Iris disponibles. Clic para abrir el Modo Ensayo"
             >
               <Headphones className="w-2.5 h-2.5 text-[var(--ok)]" />
               <span>Pistas Iris ({getIdeaTracks(irisStemIdea).length})</span>
-            </button>
+            </Button>
           )}
 
           {!isBlock &&
@@ -1026,14 +1022,16 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
             {irisStemIdea ? (
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 type="button"
                 onClick={() => handleLaunchPractice()}
-                className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs flex items-center gap-1 transition active:scale-[0.97] cursor-pointer"
+                className="items-center gap-1"
               >
                 <Headphones className="w-3.5 h-3.5" />
                 <span>Abrir sala de ensayo</span>
-              </button>
+              </Button>
             ) : (
               <button
                 type="button"
@@ -1440,18 +1438,20 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
                     <div className="flex items-center gap-1.5 pt-1">
                       {songIrisIdea ? (
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           type="button"
                           onClick={() => {
                             setShowSongListDrawer(false);
                             handleLaunchPractice(song, songIrisIdea);
                           }}
-                          className="flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
+                          className="flex-1 items-center justify-center gap-1"
                           title="Modo Ensayo individual con las pistas aisladas de este tema"
                         >
                           <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
                           <span>Modo ensayo</span>
-                        </button>
+                        </Button>
                       ) : (
                         <button
                           type="button"
@@ -1839,14 +1839,12 @@ const ChordSheetPage: React.FC<{
             className={`shrink-0 flex items-center justify-between gap-3 px-4 py-2 ${borderClass} ${glareMode ? "bg-[var(--sunken)]" : "bg-[var(--surface)]/90"}`}
           >
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant={isTeleprompterPlaying ? "primary" : "primary"}
+                size="xs"
                 type="button"
                 onClick={onToggleTeleprompterPlay}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  isTeleprompterPlaying
-                    ? "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
-                    : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)]"
-                }`}
+                className="items-center gap-1.5"
                 title="Pausar o reanudar teleprompter (o pulsar Espacio)"
               >
                 {isTeleprompterPlaying ? (
@@ -1860,7 +1858,7 @@ const ChordSheetPage: React.FC<{
                     <span>Rodar (Espacio)</span>
                   </>
                 )}
-              </button>
+              </Button>
 
               <button
                 type="button"

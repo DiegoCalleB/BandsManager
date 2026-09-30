@@ -84,14 +84,11 @@ export const StepVideos: React.FC<StepVideosProps> = ({
               </div>
 
               <div className="flex items-center gap-1">
-                <button
+                <Button
+                  variant={vid.destacado ? "soft" : "ghost"}
+                  size="xs"
                   type="button"
                   onClick={() => onToggleHighlightVideo(vid.id)}
-                  className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-colors ${
-                    vid.destacado
-                      ? "text-[var(--acc-ink)] bg-[var(--acc)]/10"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                  }`}
                   title={
                     vid.destacado
                       ? "Quitar destacado"
@@ -99,7 +96,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
                   }
                 >
                   <Award className="w-4 h-4" />
-                </button>
+                </Button>
                 <IconButton
                   label="Eliminar vídeo"
                   variant="danger"

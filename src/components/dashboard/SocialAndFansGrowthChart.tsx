@@ -563,16 +563,18 @@ export const SocialAndFansGrowthChart: React.FC<
                 <span>Muro y Base de Fans ({totalFans})</span>
               </button>
 
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 type="button"
                 onClick={() => onNavigate("reels")}
-                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"}`}
+                className="items-center gap-1.5"
                 title="Abrir el panel completo de métricas y sincronización"
               >
                 <Activity className="w-3.5 h-3.5" />
                 <span>Radar Multiplataforma</span>
                 <ArrowUpRight className="w-3.5 h-3.5 ml-0.5" />
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -779,15 +781,17 @@ export const SocialAndFansGrowthChart: React.FC<
           )}
         </div>
 
-        <button
+        <Button
+          variant="neutral"
+          size="xs"
           type="button"
           onClick={selectAllChannels}
-          className={`text-micro font-sans px-2.5 py-1 rounded-[var(--r-pill)] transition-ui flex items-center gap-1 self-end md:self-auto cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+          className="items-center gap-1 self-end md:self-auto"
           title="Restaurar y mostrar todos los canales disponibles"
         >
           <RefreshCw className="w-2.5 h-2.5" />
           <span>Mostrar todos</span>
-        </button>
+        </Button>
       </div>
 
       {/* Interactive Channel Filters & Toggles */}

@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { ThemeColors, Setlist, Concert, Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
-import { IconButton } from '../ui';
+import { Button, IconButton } from '../ui';
 
 interface AssignSetlistModalProps {
   assigningSetlist: Setlist | null;
@@ -118,13 +118,14 @@ export function AssignSetlistModal({
             <button onClick={onClose} className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-micro font-sans">
               Cancelar
             </button>
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               onClick={onSave}
               disabled={!selectedConcertToAssign}
-              className={`px-2 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold disabled:opacity-40 ${'bg-[var(--acc)] text-[var(--on-acc)]'}`}
             >
               Guardar Asignación
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -2238,13 +2238,14 @@ export default function Chatbot({
                                   >
                                     ✓ Aprobar esta
                                   </button>
-                                  <button
+                                  <Button
+                                    variant="neutral"
+                                    size="sm"
                                     id={`dismiss-proposal-btn-${msg.id}-${aIdx}`}
                                     onClick={() => handleDismissAction(msg.id, realIdx, act)}
-                                    className={`px-3 py-2 text-micro font-sans rounded-[var(--r-pill)] transition-colors cursor-pointer active:scale-[0.97] active:opacity-90 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                                   >
                                     Descartar
-                                  </button>
+                                  </Button>
                                 </div>
                               ) : actStatus === 'applied' ? (
                                 <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
@@ -2655,16 +2656,14 @@ export default function Chatbot({
         >
           <Mic className="w-4 h-4" />
         </Button>
-        <button aria-label="Enviar"
+        <Button variant={inputText.trim() ? "primary" : "neutral"} aria-label="Enviar"
           id="chatbot-send-btn"
           type="submit"
           disabled={!inputText.trim() || isLoading}
-          className={`p-2.5 rounded-[var(--r-pill)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 ${
-            inputText.trim() ? 'bg-[var(--ok)] text-[var(--on-ok)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
-          }`}
+          className="items-center justify-center shrink-0 mb-0.5"
         >
           <Send className={`w-4 h-4 ${inputText.trim() ? 'text-[var(--ink)]' : 'text-[var(--ink-2)]'}`} />
-        </button>
+        </Button>
       </form>
 
       {/* MODAL CONFIGURACIÓN NIVELES DE AUTONOMÍA (SOLO ADMINISTRADORES) */}

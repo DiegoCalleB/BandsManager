@@ -568,15 +568,17 @@ export function CampaignManagerModal({
                     )}
                   </label>
 
-                  <button
+                  <Button
+                    variant="soft"
+                    size="xs"
                     type="button"
                     onClick={() => setIsMultiTemplatesModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--ink)] hover:text-[var(--ink)] transition-ui active:scale-[0.97] cursor-pointer"
+                    className="items-center gap-1.5"
                     title="Adapta automáticamente el mensaje y objetivo de esta campaña a las 7 categorías de recintos"
                   >
                     <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                     <span>Generar las 7 con IA</span>
-                  </button>
+                  </Button>
                 </div>
 
                 {templateGenerationFeedback && (
@@ -599,22 +601,20 @@ export function CampaignManagerModal({
                     ).trim();
                     const isSelected = activePitchCategory === cat.id;
                     return (
-                      <button
+                      <Button
+                        variant={isSelected ? "soft" : "neutral"}
+                        size="xs"
                         key={cat.id}
                         type="button"
                         onClick={() => setActivePitchCategory(cat.id)}
-                        className={`inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-[var(--r-pill)] transition-colors ${
-                          isSelected
-                            ? "bg-[var(--acc)]/30 text-[var(--ink)]"
-                            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:"
-                        }`}
+                        className="items-center gap-1"
                       >
                         <cat.icon className="w-3 h-3" />
                         {cat.label}
                         {hasContent && (
                           <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
                         )}
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>
@@ -671,12 +671,14 @@ export function CampaignManagerModal({
                     Campañas registradas
                   </span>
                 </div>
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   onClick={handleStartCreate}
-                  className="px-3 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-2)] rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97]"
+                  className="items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" /> + Nueva campaña
-                </button>
+                </Button>
               </div>
 
               {/* General Mode Button (No active filter) */}

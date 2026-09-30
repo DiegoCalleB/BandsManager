@@ -415,14 +415,16 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
                       {/* Botones de acción rápida */}
                       <div className="pt-2 border-t border-[var(--hair)]/80 flex items-center justify-between gap-2">
-                        <button
+                        <Button
+                          variant="soft"
+                          size="xs"
                           type="button"
                           onClick={() => onSelectLead(lead, { tab: 'copilot' })}
-                          className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer"
+                          className="items-center gap-1"
                         >
                           <TrendingUp className="w-3 h-3" />
                           <span>Copiloto</span>
-                        </button>
+                        </Button>
 
                         <div className="flex items-center gap-1.5">
                           {onOpenRoadbookModal && (

@@ -260,13 +260,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
               </div>
             </div>
 
-            <button aria-label="Cerrar"
+            <Button variant="ghost" size="sm" aria-label="Cerrar"
               type="button"
               onClick={onClose}
-              className={`p-2 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
             >
               <X className="w-5 h-5" />
-            </button>
+            </Button>
           </div>
 
           {/* Success Banner */}

@@ -186,14 +186,16 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             </div>
 
             {/* Quick close / deselect on mobile */}
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               type="button"
               onClick={onDeselectAll}
-              className={`md:hidden p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+              className="md:hidden"
               title="Cerrar selección"
             >
               <X className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
 
           {/* Right section: Gmail-Style Action Buttons */}
@@ -251,49 +253,56 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             </div>
 
             {/* AI Pitch Mass Generator */}
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={onBulkGeneratePitches}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)]"}`}
+              className="items-center gap-1.5"
               title="Generar propuestas de pitch con IA para todos los seleccionados"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span className="hidden sm:inline">Pitches IA</span>
               <span className="sm:hidden">Pitch</span>
-            </button>
+            </Button>
 
             {/* AI Contact Enrichment */}
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={onBulkEnrich}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)]"}`}
+              className="items-center gap-1.5"
               title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
             >
               <Search className="w-3.5 h-3.5 text-[var(--ink-2)]" />
               <span className="hidden sm:inline">Enriquecer IA</span>
               <span className="sm:hidden">Enriquecer</span>
-            </button>
+            </Button>
 
             {/* Favorite toggle */}
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               type="button"
               onClick={() => onBulkToggleFavorite(true)}
-              className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc-ink)]"}`}
               title="Marcar como favoritos"
             >
               <Star className="w-4 h-4 fill-[var(--acc)]/30 text-[var(--acc)]" />
-            </button>
+            </Button>
 
             {/* Export CSV */}
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               type="button"
               onClick={onBulkExportCsv}
-              className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-semibold transition-ui flex items-center gap-1 cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+              className="items-center gap-1"
               title="Exportar selección a CSV"
             >
               <Download className="w-3.5 h-3.5" />
               <span className="hidden lg:inline">CSV</span>
-            </button>
+            </Button>
 
             {/* Delete button */}
             <Button
@@ -307,14 +316,16 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             </Button>
 
             {/* Deselect Close Button (Desktop) */}
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               type="button"
               onClick={onDeselectAll}
-              className={`hidden md:flex p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+              className="hidden"
               title="Deseleccionar todo"
             >
               <X className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>

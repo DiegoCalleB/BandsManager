@@ -352,13 +352,14 @@ export function ConvocarEnsayoModal({
 
             {/* Footer Buttons */}
             <div className="flex items-center justify-end gap-2.5 pt-3">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
               >
                 Cancelar
-              </button>
+              </Button>
               <Button
                 variant="primary"
                 size="sm"

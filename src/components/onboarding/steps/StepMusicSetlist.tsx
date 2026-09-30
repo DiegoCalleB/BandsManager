@@ -451,15 +451,17 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         </p>
 
         <div className="flex flex-wrap gap-2 pt-1">
-          <button
+          <Button
+            variant="soft"
+            size="xs"
             type="button"
             onClick={() => onGenerateSetlist(60)}
             disabled={isCreatingSetlist || totalImportedSongsCount === 0}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-xs font-medium transition-colors disabled:opacity-50"
+            className="items-center gap-1.5"
           >
             <Layers className="w-3.5 h-3.5" />
             Crear Setlist directo (60 min)
-          </button>
+          </Button>
 
           <Button
             variant="neutral"

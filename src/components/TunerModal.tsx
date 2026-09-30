@@ -536,7 +536,9 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                       };
                       const isCatSelected = selectedCategory === cat;
                       return (
-                        <button
+                        <Button
+                          variant={isCatSelected ? "primary" : "ghost"}
+                          size="xs"
                           key={cat}
                           onClick={() => {
                             setSelectedCategory(cat);
@@ -554,14 +556,9 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                               }
                             }
                           }}
-                          className={`px-2 py-1 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer ${
-                            isCatSelected
-                              ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                              : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
-                          }`}
                         >
                           {labels[cat]}
-                        </button>
+                        </Button>
                       );
                     },
                   )}

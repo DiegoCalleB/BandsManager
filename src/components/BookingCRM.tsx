@@ -1655,17 +1655,18 @@ export default function BookingCRM({
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
                     </button>
 
-                    <button
+                    <Button
+                      variant="soft"
                       type="button"
                       onClick={() => {
                         setIsMobileToolsOpen(false);
                         setIsExportLeadsOpen(true);
                       }}
-                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="items-center justify-center gap-1.5"
                     >
                       <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
                       <span>Exportar leads (A la vista / todos / Excel)</span>
-                    </button>
+                    </Button>
 
                     <Button
                       variant="neutral"
@@ -2593,7 +2594,7 @@ export default function BookingCRM({
       <ModuleTutorialModal isOpen={bookingTutorial.isOpen} onClose={bookingTutorial.closeTutorial} moduleId="booking" />
 
       {/* MOBILE FLOATING ACTION BUTTON (FAB) FOR ZERO-FRICTION CREATION */}
-      <button
+      <button data-raw
         id="mobile-fab-add-lead"
         type="button"
         onClick={() => {

@@ -261,7 +261,6 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               size="sm"
               value={activeSetlistId}
               onChange={(e) => setActiveSetlistId(e.target.value)}
-              
             >
               {setlists.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -393,19 +392,17 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               </div>
 
               {/* Bluetooth Pedal Indicator & Info */}
-              <button
+              <Button
+                variant={showPedalShortcuts ? "soft" : "neutral"}
+                size="sm"
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
-                className={`p-2 rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer ${
-                  showPedalShortcuts
-                    ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
-                    : "bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]"
-                }`}
+                className="items-center gap-1"
                 title="Atajos de teclado / pedal bluetooth para pasar canciones sin manos"
               >
                 <Footprints className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span className="hidden sm:inline">Pedal</span>
-              </button>
+              </Button>
 
               {/* Heart Favorite Button (Spotify Style) */}
               {currentStageSong && (
@@ -454,7 +451,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
             {/* Minimalist Circular Playback Controls */}
             <div className="flex items-center gap-3">
               {/* Previous Track */}
-              <button
+              <button data-raw
                 onClick={handleStagePrev}
                 className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center justify-center transition-ui active:scale-[0.97] cursor-pointer"
                 title="Pista anterior"
@@ -463,7 +460,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               </button>
 
               {/* Play / Pause Circular Main Button */}
-              <button
+              <button data-raw
                 onClick={toggleStagePlayPause}
                 className="w-12 h-12 sm:w-14 sm:h-14 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold flex items-center justify-center/25 cursor-pointer active:scale-[0.97] transition-ui"
                 title={stageIsPlaying ? "Pausar show" : "Iniciar directo"}
@@ -479,7 +476,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               </button>
 
               {/* Next Track */}
-              <button
+              <button data-raw
                 onClick={handleStageNext}
                 className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center justify-center transition-ui active:scale-[0.97] cursor-pointer"
                 title="Pista siguiente"
@@ -632,18 +629,16 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           {/* Quick Stage Actions: Pedal Helper & Live Lyrics/Chords Teleprompter */}
           <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant={showPedalShortcuts ? "soft" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
-                className={`text-xs font-sans px-3 py-1.5 rounded-[var(--r-pill)] flex items-center gap-1.5 transition-colors cursor-pointer ${
-                  showPedalShortcuts
-                    ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
-                    : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
+                className="items-center gap-1.5"
               >
                 <Footprints className="w-3.5 h-3.5" />
                 <span>Pedal Bluetooth</span>
-              </button>
+              </Button>
 
               <button
                 type="button"

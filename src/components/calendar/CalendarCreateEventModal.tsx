@@ -199,12 +199,14 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
-          <button
+          <Button
+            variant="ghost"
+            size="xs"
             onClick={() => setShowCreateModal(null)}
-            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4"
           >
             ✕
-          </button>
+          </Button>
 
           {/* Segmented Event Type Selector */}
           <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-5 ">
@@ -221,18 +223,16 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <span><ShowIcon inline emoji="🎸" /></span>
               <span>Concierto</span>
             </Button>
-            <button
+            <Button
+              variant={showCreateModal === 'rehearsal' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setShowCreateModal('rehearsal')}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
-                showCreateModal === 'rehearsal'
-                  ? 'bg-[var(--ok)] text-[var(--on-ok)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-              }`}
+              className="flex-1 items-center justify-center gap-1"
             >
               <span><ShowIcon inline emoji="🎙️" /></span>
               <span>Ensayo</span>
-            </button>
+            </Button>
             <Button
               variant={showCreateModal === 'reunion' ? "primary" : "ghost"}
               size="xs"
@@ -438,12 +438,13 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="submit"
-                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-ui cursor-pointer font-bold"
                 >
                   Guardar ensayo
-                </button>
+                </Button>
               </div>
             </form>
           )}

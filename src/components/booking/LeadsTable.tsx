@@ -1786,15 +1786,17 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
                         {(lead.estado === "pendiente_aprobacion" ||
                           lead.estado === "nuevo") && (
-                          <button
+                          <Button
+                            variant="soft"
+                            size="xs"
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}
-                            className="px-2 py-1 bg-[var(--ok-soft)] hover:brightness-95 text-[var(--ok)] rounded-[var(--r-pill)] text-micro font-bold transition-colors cursor-pointer inline-flex items-center gap-1"
+                            className="items-center gap-1"
                             title="Aprobar pitch directamente"
                           >
                             <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
                             <span>Aprobar</span>
-                          </button>
+                          </Button>
                         )}
 
                         {isLeadNeedsFollowup(lead) && (

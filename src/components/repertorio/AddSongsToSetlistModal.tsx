@@ -5,7 +5,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { formatSongTitle } from "../../utils/formatSongTitle";
-import { IconButton, Input, Select } from '../ui';
+import { Button, IconButton, Input, Select } from '../ui';
 
 interface AddSongsToSetlistModalProps {
   isOpen: boolean;
@@ -249,13 +249,14 @@ export function AddSongsToSetlistModal({
                 : "Ninguna canción seleccionada"}
             </span>
             <div className="flex gap-2">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
               >
                 Cancelar
-              </button>
+              </Button>
               <button
                 type="button"
                 disabled={selectedIds.length === 0}

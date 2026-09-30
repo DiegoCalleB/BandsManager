@@ -558,15 +558,12 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             {/* BOTONES DE COPIADO DE FIRMA */}
             <div className="pt-2 space-y-2.5">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                <button
+                <Button
+                  variant={copiadoFirma === "rich" ? "primary" : "primary"}
                   type="button"
                   id="copy-rich-signature-btn"
                   onClick={handleCopyRichSignature}
-                  className={`flex-1 px-4 py-2.5 rounded-[var(--r-pill)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer ${
-                    copiadoFirma === "rich"
-                      ? "bg-[var(--ok)] text-[var(--on-ok)] ring-2 ring-[var(--ok)]"
-                      : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
-                  }`}
+                  className="flex-1 items-center justify-center gap-2"
                   title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
                 >
                   {copiadoFirma === "rich" ? (
@@ -580,18 +577,15 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <span>Copiar firma formateada (Gmail / Outlook)</span>
                     </>
                   )}
-                </button>
+                </Button>
 
                 <div className="flex items-center gap-1.5">
-                  <button
+                  <Button
+                    variant={copiadoFirma === "html" ? "soft" : "neutral"}
                     type="button"
                     id="copy-html-signature-btn"
                     onClick={handleCopyHtmlCode}
-                    className={`px-3 py-2.5 rounded-[var(--r-pill)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                      copiadoFirma === "html"
-                        ? "bg-[var(--ok)]/20 text-[var(--ink)]"
-                        : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center justify-center gap-1.5"
                     title="Copiar el código fuente HTML puro de la firma"
                   >
                     {copiadoFirma === "html" ? (
@@ -602,17 +596,14 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     <span>
                       {copiadoFirma === "html" ? "¡HTML Copiado!" : "HTML"}
                     </span>
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant={copiadoFirma === "text" ? "soft" : "neutral"}
                     type="button"
                     id="copy-plain-signature-btn"
                     onClick={handleCopyPlainText}
-                    className={`px-3 py-2.5 rounded-[var(--r-pill)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                      copiadoFirma === "text"
-                        ? "bg-[var(--ok)]/20 text-[var(--ink)]"
-                        : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center justify-center gap-1.5"
                     title="Copiar versión en texto plano"
                   >
                     {copiadoFirma === "text" ? (
@@ -623,7 +614,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     <span>
                       {copiadoFirma === "text" ? "¡Texto Copiado!" : "Texto"}
                     </span>
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -686,39 +677,30 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   <div className="mt-2 p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3 text-xs text-[var(--ink-2)] animate-fadeIn">
                     {/* Tabs de clientes */}
                     <div className="flex items-center gap-1.5 pb-2">
-                      <button
+                      <Button
+                        variant={instructionTab === "gmail" ? "soft" : "ghost"}
+                        size="xs"
                         type="button"
                         onClick={() => setInstructionTab("gmail")}
-                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
-                          instructionTab === "gmail"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
-                            : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                        }`}
                       >
                         <ShowIcon inline emoji="🔴" />Gmail
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant={instructionTab === "outlook" ? "soft" : "ghost"}
+                        size="xs"
                         type="button"
                         onClick={() => setInstructionTab("outlook")}
-                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
-                          instructionTab === "outlook"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
-                            : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                        }`}
                       >
                         <ShowIcon inline emoji="🔵" />Outlook / Microsoft 365
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant={instructionTab === "apple" ? "soft" : "ghost"}
+                        size="xs"
                         type="button"
                         onClick={() => setInstructionTab("apple")}
-                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
-                          instructionTab === "apple"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
-                            : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                        }`}
                       >
                         <ShowIcon inline emoji="⚪" />Apple Mail / Mac
-                      </button>
+                      </Button>
                     </div>
 
                     {/* Contenido según tab */}

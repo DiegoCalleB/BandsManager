@@ -383,14 +383,16 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                   <div className="pt-2 flex flex-col sm:flex-row gap-2">
                     {onNavigate && (
-                      <button
+                      <Button
+                        variant="soft"
+                        size="xs"
                         type="button"
                         onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
-                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--ink)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
+                        className="flex-1 items-center justify-center gap-1.5"
                       >
                         <Building2 className="w-3 h-3 text-[var(--acc)]" />
                         <span>Salas CRM</span>
-                      </button>
+                      </Button>
                     )}
 
                     <Button
@@ -429,27 +431,27 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
-                  className={`py-1.5 px-3 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                    'bg-[var(--ok)]/15 text-[var(--ink)] hover:bg-[var(--ok)]/25'
-                  }`}
+                  className="items-center justify-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>+ Agendar ensayo</span>
-                </button>
+                </Button>
 
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => setShowCreateModal('concert')}
-                  className={`py-1.5 px-3 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                    'bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/25'
-                  }`}
+                  className="items-center justify-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>+ Agendar concierto</span>
-                </button>
+                </Button>
               </div>
             </>
           )}
@@ -600,20 +602,22 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             </div>
             <div className="flex flex-col gap-1.5 shrink-0 self-start">
               {(selectedConcert || selectedRehearsal) && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
-                  className={`hidden lg:flex px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer items-center gap-1 ${
-                    'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
-                  }`}
+                  className="hidden items-center gap-1"
                   title="Ampliar esta ficha en un modal centrado"
                 >
                   <Maximize2 className="w-3 h-3" />
                   Ampliar
-                </button>
+                </Button>
               )}
               {(selectedConcert || selectedRehearsal) && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => {
                     setReminderNotes('');
@@ -621,37 +625,35 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     setReminderErrorMsg(null);
                     setShowReminderModal(true);
                   }}
-                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
-                  }`}
+                  className="items-center gap-1"
                   title="Enviar un recordatorio por correo/notificación a los convocados"
                 >
                   <ShowIcon inline emoji="🔔" />Notificar banda
-                </button>
+                </Button>
               )}
               {selectedConcert && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
-                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
-                  }`}
+                  className="items-center gap-1"
                   title="Editar ficha completa del concierto"
                 >
                   ✎ Editar ficha
-                </button>
+                </Button>
               )}
               {selectedRehearsal && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}
-                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
-                    'bg-[var(--ok-soft)] text-[var(--ok)] hover:bg-[var(--ok-soft)]'
-                  }`}
+                  className="items-center gap-1"
                   title="Editar ficha completa del ensayo"
                 >
                   ✎ Editar ficha
-                </button>
+                </Button>
               )}
               {selectedConcert && onDeleteConcert && (
                 <button

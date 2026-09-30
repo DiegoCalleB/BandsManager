@@ -1,6 +1,7 @@
 import React from 'react';
 import { Guitar, Sliders, X } from 'lucide-react';
 import { ChatMessage } from '../Chatbot';
+import { Button } from '../ui';
 
 export interface ChatbotHeaderProps {
   isStitchLight: boolean;
@@ -86,12 +87,12 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
 
       <div className="flex items-center gap-3">
         {isAdmin ? (
-          <button
+          <Button
+            variant="soft"
+            size="xs"
             type="button"
             onClick={onOpenAutonomyModal}
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-semibold transition-ui cursor-pointer active:scale-[0.97] ${
-              'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] '
-            }`}
+            className="hidden items-center gap-1.5"
             title="Configurar niveles de autonomía de los agentes (solo administradores)"
           >
             <Sliders className="w-3 h-3 text-[var(--acc)]" />
@@ -99,7 +100,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
               Autonomía: {dispatchLabel} • Min {minCache}€
             </span>
             <span className="px-1 py-0.2 text-micro rounded font-bold bg-[var(--acc)]/40 text-[var(--ink)] ml-0.5">ADMIN</span>
-          </button>
+          </Button>
         ) : (
           <div
             className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-semibold opacity-80 ${

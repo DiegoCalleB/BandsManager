@@ -96,18 +96,16 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <FileText className="w-3.5 h-3.5" />
               <span>{t('previewTabForm')}</span>
             </Button>
-            <button
+            <Button
+              variant={previewScreen === 'success' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setPreviewScreen('success')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                previewScreen === 'success'
-                  ? 'bg-[var(--ok)] text-[var(--on-ok)] font-extrabold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>{t('previewTabSuccess')}</span>
-            </button>
+            </Button>
           </div>
 
           {/* Selector de Dispositivo */}
@@ -140,20 +138,17 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <div className="flex items-center bg-[var(--sunken)] rounded-[var(--r-m)] p-1 gap-1">
             <Globe2 className="w-3 h-3 text-[var(--ink-2)] ml-1 mr-0.5" />
             {FAN_FORM_LANGUAGES.map((l) => (
-              <button
+              <Button
+                variant={selectedLanguage === l.code ? "soft" : "ghost"}
+                size="xs"
                 key={l.code}
                 type="button"
                 onClick={() => setSelectedLanguage(l.code)}
-                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-sans transition-ui cursor-pointer ${
-                  selectedLanguage === l.code
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)] opacity-75 hover:opacity-100'
-                }`}
                 title={l.label}
               >
                 <span>{l.flag}</span>
                 <span className="ml-1 text-micro">{l.code}</span>
-              </button>
+              </Button>
             ))}
           </div>
 

@@ -187,16 +187,17 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
           </div>
 
           <div className="flex justify-end gap-2 pt-3 border-t border-[var(--hair)]">
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
               onClick={() => {
                 onClose();
                 setEditingShowItem(null);
               }}
-              className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold text-[var(--ink-2)] hover:bg-[var(--sunken)] cursor-pointer"
             >
               Cancelar
-            </button>
+            </Button>
             <Button
               variant="primary"
               size="sm"

@@ -107,16 +107,13 @@ export function GenerateAllTemplatesModal({
               </p>
             </div>
           </div>
-          <button aria-label="Cerrar"
+          <Button variant="ghost" size="sm" aria-label="Cerrar"
             type="button"
             onClick={onClose}
             disabled={isGenerating}
-            className={`p-2 rounded-[var(--r-pill)] transition-colors cursor-pointer ${
-              'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
-            }`}
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
 
         {/* Content */}
@@ -242,16 +239,15 @@ export function GenerateAllTemplatesModal({
             'bg-[var(--sunken)] '
           }`}
         >
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             type="button"
             onClick={onClose}
             disabled={isGenerating}
-            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
-              'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-            }`}
           >
             Cancelar
-          </button>
+          </Button>
 
           <Button
             variant={isCampaign ? "primary" : "primary"}
