@@ -104,6 +104,20 @@ export function useAuth() {
     }
   }, [authToken, syncSessionCookie]);
 
+  // Las preferencias de interfaz (p. ej. la disposición del dashboard) se guardan desde los
+  // componentes: aquí se reflejan en el usuario en memoria para que no reaparezca la versión antigua.
+  useEffect(() => {
+    const onPrefsSaved = (e: Event) => {
+      const prefs = (e as CustomEvent).detail;
+      if (!prefs || typeof prefs !== 'object') return;
+      setCurrentUser((prev) =>
+        prev ? { ...prev, ui_preferences: { ...(prev.ui_preferences || {}), ...prefs } } : prev
+      );
+    };
+    window.addEventListener('bm:ui-preferences-saved', onPrefsSaved);
+    return () => window.removeEventListener('bm:ui-preferences-saved', onPrefsSaved);
+  }, []);
+
   // Initial verification on mount
   useEffect(() => {
     if (authToken) {

@@ -1304,6 +1304,15 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
           if (su.band_id) state.users[idx].band_id = su.band_id;
           if (su.bandName) state.users[idx].bandName = su.bandName;
           if (su.main_band_id) state.users[idx].main_band_id = su.main_band_id;
+          // Las preferencias de interfaz (disposición del dashboard...) viven también en Supabase:
+          // tras un redeploy el estado local arranca vacío y, sin esto, /auth/me devolvía el
+          // usuario sin ellas y el panel volvía al de por defecto. Lo local manda por clave.
+          if (su.ui_preferences && Object.keys(su.ui_preferences).length > 0) {
+            state.users[idx].ui_preferences = {
+              ...su.ui_preferences,
+              ...(state.users[idx].ui_preferences || {}),
+            };
+          }
         } else {
           state.users.push(su);
         }

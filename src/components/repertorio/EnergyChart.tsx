@@ -109,7 +109,7 @@ interface EnergyChartProps {
 }
 
 /** Curva suave que nunca sobrepasa los datos (interpolación monótona, Fritsch–Carlson). */
-function monotonePath(pts: { x: number; y: number }[]): string {
+export function monotonePath(pts: { x: number; y: number }[]): string {
   const n = pts.length;
   if (n === 0) return "";
   if (n === 1) return `M${pts[0].x},${pts[0].y}`;

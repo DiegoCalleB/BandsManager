@@ -10,6 +10,7 @@ import {
 import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from "../../../types";
 import { getEnergyInfo } from "../../../utils/energyPacingUtils";
 import { Onda, OndaSeries } from "../../ui/Onda";
+import { EnergyCurve } from "./EnergyCurve";
 import { api } from "../../../services/api";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
@@ -115,7 +116,7 @@ export function RepertorioEnergyChartWidget({
         num: idx + 1,
         title:
           (itemAny.title as string) || matchedSong?.titulo || `Tema ${idx + 1}`,
-        energy: energyVal,
+        energy: energyInfo.score,
         bpm: (itemAny.bpm as number) || matchedSong?.bpm || 120,
         keyStr: (itemAny.tonalidad as string) || matchedSong?.tonalidad || "Am",
         label: energyInfo.label,
@@ -139,7 +140,7 @@ export function RepertorioEnergyChartWidget({
       return {
         num: idx + 1,
         title: (songAny.titulo as string) || `Canción ${idx + 1}`,
-        energy: energyVal,
+        energy: energyInfo.score,
         bpm: (songAny.bpm as number) || 120,
         keyStr: (songAny.tonalidad as string) || "C",
         label: energyInfo.label,
@@ -205,16 +206,11 @@ export function RepertorioEnergyChartWidget({
     0,
   );
 
-  // Height container class based on heightMode
-  const minHeightClass =
-    heightMode === "compact"
-      ? "h-[220px]"
-      : heightMode === "tall"
-        ? "h-[380px]"
-        : "h-[290px]";
+  const chartHeight =
+    heightMode === "compact" ? 150 : heightMode === "tall" ? 300 : 220;
 
   return (
-    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full min-w-0 overflow-hidden">
       {/* Repertorio/Setlist Selector - Above the chart */}
       <div className="flex flex-col gap-2 pb-3">
         <label className="text-micro font-semibold text-[var(--ink-2)]">
@@ -298,20 +294,15 @@ export function RepertorioEnergyChartWidget({
         </div>
       </div>
 
-      {/* Energía del setlist como Onda: una barra por tema, altura = energía, color = nivel de energía */}
-      <div className={`w-full ${minHeightClass} pt-2 flex items-end`}>
-        <Onda
-          className="w-full"
+      {/* Energía del setlist como curva (la misma línea del Mapa de Energía), medida al ancho de la tarjeta */}
+      <div className="w-full min-w-0 pt-2">
+        <EnergyCurve
           data={chartData.map((d) => ({
-            label: `${d.num}. ${d.title}`,
-            value: d.energy,
-            color: d.hexColor,
+            num: d.num,
+            title: d.title,
+            energy: d.energy,
           }))}
-          height={heightMode === "compact" ? 150 : heightMode === "tall" ? 300 : 220}
-          barWidth={22}
-          gap={6}
-          showLabels={false}
-          tooltipFormatter={(v) => `${v}/20`}
+          height={chartHeight}
         />
       </div>
     </div>

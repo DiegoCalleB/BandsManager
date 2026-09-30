@@ -141,32 +141,43 @@ export function DashboardWidgetGrid({
   // debajo del todo de este componente).
   const hadDuplicatesOnLoadRef = React.useRef(false);
 
-  const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(() => {
-    const initial =
-      Array.isArray(savedWidgets) && savedWidgets.length > 0
-        ? savedWidgets
-        : DEFAULT_DASHBOARD_WIDGETS;
-    const withModuleAccess = initial.filter((w) => {
+  // Quita lo que el plan no permite y los tipos duplicados. Un tipo de widget solo puede estar
+  // una vez en el panel — de guardados anteriores pueden quedar duplicados ("Añadir Otro" lo
+  // permitía a propósito): se mantiene la primera aparición de cada tipo, en el orden guardado.
+  const sanitizeLayout = (list: DashboardWidgetConfig[]) => {
+    const withModuleAccess = list.filter((w) => {
       const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === w.type);
       if (meta && meta.requiredModule) {
         return hasModuleAccess(userPlan, meta.requiredModule);
       }
       return true;
     });
-    // Un tipo de widget solo puede estar una vez en el panel — de guardados anteriores a este
-    // cambio pueden quedar duplicados ("Añadir Otro" lo permitía a propósito). Se mantiene solo
-    // la primera aparición de cada tipo, en el orden guardado.
     const seenTypes = new Set<string>();
     const deduped = withModuleAccess.filter((w) => {
       if (seenTypes.has(w.type)) return false;
       seenTypes.add(w.type);
       return true;
     });
-    if (deduped.length !== withModuleAccess.length) {
-      hadDuplicatesOnLoadRef.current = true;
-    }
+    return { deduped, hadDuplicates: deduped.length !== withModuleAccess.length };
+  };
+
+  const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(() => {
+    const initial =
+      Array.isArray(savedWidgets) && savedWidgets.length > 0
+        ? savedWidgets
+        : DEFAULT_DASHBOARD_WIDGETS;
+    const { deduped, hadDuplicates } = sanitizeLayout(initial);
+    if (hadDuplicates) hadDuplicatesOnLoadRef.current = true;
     return deduped;
   });
+
+  // true en cuanto el panel es del usuario (ya guardado antes, o tocado en esta sesión): la vista
+  // «Esencial» solo recorta el panel por defecto. Antes recortaba también lo que el usuario había
+  // montado a mano, y al pulsar «Finalizar edición» los widgets añadidos desaparecían — parecía
+  // que los cambios no se guardaban.
+  const [layoutCustomized, setLayoutCustomized] = useState(
+    Array.isArray(savedWidgets) && savedWidgets.length > 0,
+  );
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   useScrollLock(isAddModalOpen);
@@ -179,16 +190,45 @@ export function DashboardWidgetGrid({
   const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
   const [dragOverWidgetId, setDragOverWidgetId] = useState<string | null>(null);
 
-  // Sync to database
+  const [saveError, setSaveError] = useState(false);
+  const pendingSavesRef = React.useRef(0);
+  // Tras guardar algo en este montaje, lo local manda: una sesión refrescada que estuviera en
+  // vuelo (y por tanto sin el último cambio) no debe deshacerlo.
+  const hasSavedRef = React.useRef(false);
+  const widgetsRef = React.useRef(widgets);
+  widgetsRef.current = widgets;
+
+  // Sync to database — y al usuario en caché (estado de la app + localStorage), para que al salir
+  // del dashboard y volver, o al recargar antes de que la sesión se refresque, no reaparezca el
+  // panel antiguo.
   const saveLayoutToDb = async (newLayout: DashboardWidgetConfig[]) => {
     setIsSaving(true);
+    setSaveError(false);
+    pendingSavesRef.current += 1;
+    hasSavedRef.current = true;
     try {
-      await api.saveUiPreferences({ dashboard_widgets: newLayout });
+      const res = await api.saveUiPreferences({ dashboard_widgets: newLayout });
+      const prefs = res?.ui_preferences ?? { dashboard_widgets: newLayout };
+      try {
+        const cached = localStorage.getItem("bakandeya_user");
+        if (cached) {
+          const user = JSON.parse(cached);
+          user.ui_preferences = { ...(user.ui_preferences || {}), ...prefs };
+          localStorage.setItem("bakandeya_user", JSON.stringify(user));
+        }
+      } catch {
+        /* sin localStorage: la copia del servidor sigue siendo la buena */
+      }
+      window.dispatchEvent(
+        new CustomEvent("bm:ui-preferences-saved", { detail: prefs }),
+      );
       setSaveSuccessMsg(true);
       setTimeout(() => setSaveSuccessMsg(false), 2000);
     } catch (err) {
       console.error("Error al guardar disposición de widgets:", err);
+      setSaveError(true);
     } finally {
+      pendingSavesRef.current -= 1;
       setIsSaving(false);
     }
   };
@@ -196,8 +236,23 @@ export function DashboardWidgetGrid({
   const updateAndSaveWidgets = (newWidgets: DashboardWidgetConfig[]) => {
     const ordered = newWidgets.map((w, idx) => ({ ...w, order: idx }));
     setWidgets(ordered);
+    setLayoutCustomized(true);
     saveLayoutToDb(ordered);
   };
+
+  // Si el usuario llega con un panel más reciente que el que se pintó al montar (sesión refrescada
+  // en segundo plano, otro dispositivo), se adopta — salvo en plena edición o con un guardado en
+  // vuelo, que ya son lo último que el usuario ha hecho.
+  React.useEffect(() => {
+    if (!Array.isArray(savedWidgets) || savedWidgets.length === 0) return;
+    if (isEditMode || hasSavedRef.current || pendingSavesRef.current > 0) return;
+    const { deduped } = sanitizeLayout(savedWidgets);
+    if (JSON.stringify(deduped) !== JSON.stringify(widgetsRef.current)) {
+      setWidgets(deduped);
+      setLayoutCustomized(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedWidgets]);
 
   // Si la carga inicial tuvo que quitar duplicados (guardados antes de este cambio), persiste
   // la limpieza una sola vez — si no, el duplicado seguiría reapareciendo en cada recarga hasta
@@ -496,7 +551,7 @@ export function DashboardWidgetGrid({
 
   // In clean view, limit to essential operational widgets (max 4 core widgets) to prevent information overload
   const visibleWidgets =
-    viewDensityMode === "clean" && !isEditMode
+    viewDensityMode === "clean" && !isEditMode && !layoutCustomized
       ? allVisibleWidgets
           .filter((w) =>
             [
@@ -536,9 +591,18 @@ export function DashboardWidgetGrid({
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
+            {saveError && (
+              <button
+                type="button"
+                onClick={() => saveLayoutToDb(widgets)}
+                className="text-xs text-[var(--alert)] bg-[var(--sunken)] px-2.5 py-1 rounded-[var(--r-pill)] flex items-center gap-1 cursor-pointer"
+              >
+                No se pudo guardar · Reintentar
+              </button>
+            )}
             {saveSuccessMsg && (
               <span className="text-xs text-[var(--ok)] bg-[var(--ok-soft)] px-2.5 py-1 rounded-[var(--r-pill)] flex items-center gap-1 animate-fade-in">
-                <Check className="w-3.5 h-3.5" /> Guardado en BBDD
+                <Check className="w-3.5 h-3.5" /> Guardado
               </span>
             )}
 
