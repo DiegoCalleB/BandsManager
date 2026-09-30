@@ -4721,7 +4721,7 @@ export default function RepertorioSetlists({
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <PublicoSilhouette opacity={0.12} size="medium" />
                 <p className="mt-6 font-medium text-[var(--ink)] text-sm">
-                  No hay canciones en este repertorio
+                  Setlist vacío. Añade el primer tema.
                 </p>
                 <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
                   Usa la barra superior para añadir temas o eventos.

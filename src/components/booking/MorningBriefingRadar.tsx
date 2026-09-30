@@ -245,7 +245,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold text-[var(--ink)] font-display flex items-center gap-1.5">
-                Morning Briefing • Radar del Mánager
+                Briefing de la mañana · Radar del mánager
               </h3>
               {totalActionCount > 0 && (
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-bold font-mono">

@@ -177,7 +177,7 @@ export function AddSongsToSetlistModal({
               <div className="flex flex-col items-center justify-center py-12">
                 <PublicoSilhouette opacity={0.12} size="small" />
                 <p className="mt-4 font-medium text-[var(--ink)] text-xs">
-                  No hay canciones disponibles
+                  No queda ninguna canción por añadir
                 </p>
                 <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs">
                   Ajusta los filtros o crea nuevas canciones en tu repertorio.

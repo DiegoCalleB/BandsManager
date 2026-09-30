@@ -54,7 +54,7 @@ export const Onda: React.FC<OndaProps> = ({
         className={className}
         style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-2)', fontSize: 12 }}
       >
-        {emptyText || 'Sin datos'}
+        {emptyText || 'Aún no hay cifras'}
       </div>
     );
   }

@@ -800,7 +800,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)] my-4">
         <Sparkles className="w-8 h-8 text-[var(--acc-ink)] mx-auto mb-2 opacity-60" />
         <p className="text-[var(--ink-2)] font-bold text-sm">
-          No se encontraron medios o espacios
+          Con esos filtros no sale ninguna sala
         </p>
         <p className="text-[var(--ink-2)] text-xs mt-1">
           Prueba a cambiar los filtros o los términos de búsqueda.

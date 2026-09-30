@@ -283,7 +283,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <div
                 className={`col-span-full py-8 text-center text-xs ${'text-[var(--ink-2)] bg-[var(--sunken)]/50 '} rounded-[var(--r-m)] `}
               >
-                No hay alertas que coincidan con el filtro seleccionado.
+                Nada que mirar con ese filtro.
               </div>
             ) : (
               (isCompactView ? filteredAlerts.slice(0, 2) : filteredAlerts).map((alert) => {

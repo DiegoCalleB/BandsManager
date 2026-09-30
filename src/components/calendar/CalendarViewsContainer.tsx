@@ -679,7 +679,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
         {dateKeys.length === 0 ? (
           <div className="p-8 text-center rounded-[var(--r-l)] border-dashed bg-[var(--surface)]/40">
             <Calendar className="w-8 h-8 text-[var(--ink-2)] mx-auto mb-2" />
-            <p className="text-sm font-bold text-[var(--ink-2)]">No hay eventos en este periodo</p>
+            <p className="text-sm font-bold text-[var(--ink-2)]">Nada apuntado en este periodo</p>
             <p className="text-xs text-[var(--ink-2)] mt-1">
               {agendaFilterPast === 'past'
                 ? 'No se han encontrado conciertos pasados registrados.'

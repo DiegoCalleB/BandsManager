@@ -492,7 +492,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 if (upcomingFilter === 'campañas') return evt.type === 'campaña';
                 return true;
               }).length === 0 ? (
-                <p className={`text-micro italic text-center py-4 ${textMuted}`}>No hay próximas fechas con el filtro seleccionado.</p>
+                <p className={`text-micro italic text-center py-4 ${textMuted}`}>Ninguna fecha con ese filtro.</p>
               ) : (
                 upcomingCalendarEvents
                   .filter((evt) => {
@@ -1382,7 +1382,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       </button>
                     </div>
                     {contacts.length === 0 ? (
-                      <p className={`text-micro italic text-center py-3 ${textMuted}`}>No hay contactos clave agregados.</p>
+                      <p className={`text-micro italic text-center py-3 ${textMuted}`}>Sin contactos clave: apunta quién abre la sala.</p>
                     ) : (
                       <div className="space-y-1.5">
                         {contacts.map((c) => (
@@ -1672,7 +1672,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
                 {activeTab === 'runofshow' ? (
                   currentRunOfShow.length === 0 ? (
-                    <p className={`text-micro italic text-center py-4 ${textMuted}`}>No hay horarios registrados para este día.</p>
+                    <p className={`text-micro italic text-center py-4 ${textMuted}`}>Sin horarios: apunta prueba de sonido, puertas y salida.</p>
                   ) : (
                     currentRunOfShow.map((item) => {
                       const isItemDone = item.done;
@@ -1709,7 +1709,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     })
                   )
                 ) : currentGear.length === 0 ? (
-                  <p className={`text-micro italic text-center py-4 ${textMuted}`}>No hay material registrado para este día.</p>
+                  <p className={`text-micro italic text-center py-4 ${textMuted}`}>Sin material apuntado: backline, cables y merchan.</p>
                 ) : (
                   currentGear.map((item) => {
                     const isChecked = item.checked;

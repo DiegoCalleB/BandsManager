@@ -395,7 +395,7 @@ export function ModoLocalEnVivoTab({
       <div className="p-8 sm:p-12 text-center bg-[var(--surface)] rounded-[var(--r-l)] space-y-4">
         <Disc3 className="w-12 h-12 text-[var(--ink-2)] mx-auto animate-spin-slow" />
         <h3 className="text-base font-bold text-[var(--ink)]">
-          No hay temas en el orden del día
+          Orden del día vacío: añade lo que vais a tocar
         </h3>
         <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
           Ve a la pestaña "1. Orden del Día" para añadir canciones y bloques

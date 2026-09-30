@@ -425,7 +425,7 @@ export function CalendarWidget({
             <div className="p-8 text-center bg-[var(--sunken)] rounded-[var(--r-m)]">
               <Calendar className="w-8 h-8 text-[var(--ink-2)] mx-auto mb-2 opacity-60" />
               <p className="text-sm font-semibold text-[var(--ink-2)]">
-                Todavía no hay nada en la agenda
+                La agenda está vacía. Vamos a llenarla.
               </p>
               <p className="text-xs text-[var(--ink-2)] mt-1">
                 Añade un bolo o un ensayo y aquí aparece lo próximo.
@@ -579,7 +579,7 @@ export function CalendarWidget({
                 ))
               ) : (
                 <p className="text-[var(--ink-2)] italic">
-                  No hay eventos programados para este día.
+                  Nada programado para este día.
                 </p>
               )}
             </div>

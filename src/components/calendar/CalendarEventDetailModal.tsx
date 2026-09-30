@@ -1095,7 +1095,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <div className="space-y-2.5">
                   {(modalRoadbook.contactosClave || []).length === 0 ? (
                     <div className="text-center py-6 text-[var(--ink-2)] font-mono text-xs">
-                      No hay contactos clave registrados para este concierto.
+                      Sin contactos clave para este concierto.
                       <p className="text-micro mt-1 text-[var(--ok)]">
                         Pulsa en &ldquo;+ Añadir Contacto&rdquo; para registrar promotor, técnico de sonido o producción.
                       </p>
@@ -1482,7 +1482,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       {items.length === 0 ? (
                         <div className="p-8 text-center space-y-2">
                           <Shirt className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
-                          <p className={`text-xs font-mono ${textSub}`}>Aún no has registrado productos para este bolo.</p>
+                          <p className={`text-xs font-mono ${textSub}`}>Sin merchan apuntado para este bolo.</p>
                           <button
                             type="button"
                             onClick={() => setShowAddMerchForm(true)}

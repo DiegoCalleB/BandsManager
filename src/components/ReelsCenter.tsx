@@ -2231,7 +2231,7 @@ export default function ReelsCenter({
                         <div className="flex flex-col items-center justify-center py-8 gap-2">
                           <PublicoSilhouette opacity={0.1} size="small" />
                           <p className="text-xs text-[var(--ink-2)]">
-                            No hay borradores
+                            Nada en borrador. Graba algo en el próximo ensayo.
                           </p>
                         </div>
                       )}
@@ -2315,7 +2315,7 @@ export default function ReelsCenter({
                         <div className="flex flex-col items-center justify-center py-8 gap-2">
                           <PublicoSilhouette opacity={0.1} size="small" />
                           <p className="text-xs text-[var(--ink-2)]">
-                            No hay reels en edición
+                            Nada en edición todavía.
                           </p>
                         </div>
                       )}
@@ -2391,7 +2391,7 @@ export default function ReelsCenter({
                         <div className="flex flex-col items-center justify-center py-8 gap-2">
                           <PublicoSilhouette opacity={0.1} size="small" />
                           <p className="text-xs text-[var(--ink-2)]">
-                            No hay publicaciones completadas
+                            Aún no has publicado ninguno.
                           </p>
                         </div>
                       )}
