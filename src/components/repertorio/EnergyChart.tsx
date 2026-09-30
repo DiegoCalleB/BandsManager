@@ -164,7 +164,7 @@ export function EnergyChart({
   expandedWidthPx,
   belowChartSlot,
 }: EnergyChartProps) {
-  const fontSize = compact ? 8 : 9;
+  const fontSize = 11;
   // Tres velocidades de animación según el motivo del cambio — nunca la misma para las tres,
   // porque cada una pide algo distinto:
   // -'entrance': la PRIMERÍSIMA vez que este gráfico se pinta en esta visita a Repertorio (el
@@ -683,7 +683,7 @@ export function EnergyChart({
                   const ok = tr.status === "ok";
                   return (
                     <text key={`tb-${d.id}`} x={xAt(d.xPos + 0.5)} y={TOP_PAD - 4} textAnchor="middle" fontWeight={900}
-                      fontSize={compact ? (ok ? 9 : 10) : ok ? 11 : 12} fill={ok ? "var(--ok)" : "var(--alert)"}>
+                      fontSize={ok ? 11 : 12} fill={ok ? "var(--ok)" : "var(--alert)"}>
                       {ok ? "✓" : "✕"}
                     </text>
                   );
@@ -742,7 +742,7 @@ export function EnergyChart({
                       <span className="relative rounded-[var(--r-pill)]" style={{ width: r * 2, height: r * 2, background: "var(--acc)", opacity: isDraggingThis ? 0.5 : isSelected || isHighlighted || isPlaying ? 1 : 0.75 }} />
                     </button>
                     {showTonalidad && d.tonalidad && (() => {
-                      const fs = compact ? 7.5 : 9;
+                      const fs = 11;
                       const abajo = y - r - 6 - fs < TOP_PAD;
                       return (
                         <span className="absolute pointer-events-none -translate-x-1/2 rounded-[var(--r-pill)] bg-[var(--surface)] px-1.5 font-mono font-semibold text-[var(--ink)] leading-[1.35]"

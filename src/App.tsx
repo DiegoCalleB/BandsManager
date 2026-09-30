@@ -15,6 +15,7 @@ import { PlayerProvider } from "./context/PlayerContext";
 import { GlobalPlayer } from "./components/GlobalPlayer";
 import Dashboard from "./components/Dashboard";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { textOnColor } from "./utils/contrastText";
 // Vistas grandes cargadas bajo demanda: sin esto, visitar /unete o abrir cualquier pestaña
 // metía en el mismo bundle inicial el CRM, calendario, reels, repertorio, etc. — un fan que
 // solo quiere donar por Revolut/PayPal pagaba el peso entero de todo el panel interno.
@@ -1157,6 +1158,7 @@ export default function App() {
     );
   }
 
+  const grupoActivo = findNavGroupIdForItem(currentView);
   return (
     <PlayerProvider>
       <div
@@ -1264,7 +1266,7 @@ export default function App() {
  Resumen/Calendario navegan directo; Música/Promoción abren un sheet con sus
  sub-módulos; Más abre el drawer completo (Contactos, Negocio, Herramientas,
  Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.tsx. */}
-        <nav className="lg:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[var(--surface)]">
+        <nav data-grupo={grupoActivo} className="lg:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[var(--surface)]">
           {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
             let isActive = false;
             if (openGroupSheetId) {
@@ -1411,7 +1413,7 @@ export default function App() {
               onClick={() => setIsMobileMenuOpen(false)}
             />
             {/* Drawer panel */}
-            <div className="relative w-[280px] max-w-[85vw] bg-[var(--surface)] flex flex-col h-full z-10 overflow-y-auto">
+            <div data-grupo={grupoActivo} className="relative w-[280px] max-w-[85vw] bg-[var(--surface)] flex flex-col h-full z-10 overflow-y-auto">
               {/* Drawer Header */}
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -1623,6 +1625,7 @@ export default function App() {
                         style={{
                           backgroundColor:
                             currentUser.avatarColor || "var(--acc)",
+                          color: textOnColor(currentUser.avatarColor || "var(--acc)"),
                         }}
                       >
                         {currentUser.name ? currentUser.name.slice(0, 2) : "US"}
@@ -1672,7 +1675,7 @@ export default function App() {
           </div>
         )}
 
-        <aside className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
+        <aside data-grupo={grupoActivo} className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
           {/* Brand Header (Clickable Netflix Style Switcher) */}
           <div
             onClick={() => setShowBandSwitcherModal(true)}
@@ -1841,7 +1844,7 @@ export default function App() {
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <div
-                    className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? "bg-[var(--acc)]/25 text-[var(--on-acc)]" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
+                    className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? "bg-[var(--acc)]/25 text-[var(--ink)]" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
                   >
                     <Target className="w-3.5 h-3.5" />
                   </div>
@@ -1856,7 +1859,7 @@ export default function App() {
                     </span>
                   </div>
                 </div>
-                <span className="text-micro font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] shrink-0">
+                <span className="text-micro font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                   {activeCampaign ? "Activa" : "Elegir"}
                 </span>
               </button>
@@ -1935,7 +1938,7 @@ export default function App() {
                   <div
                     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform "
                     style={{
-                      backgroundColor: currentUser.avatarColor || "var(--acc)",
+                      backgroundColor: currentUser.avatarColor || "var(--acc)", color: textOnColor(currentUser.avatarColor || "var(--acc)"),
                     }}
                   >
                     {currentUser.name ? currentUser.name.slice(0, 2) : "US"}
@@ -2017,7 +2020,7 @@ export default function App() {
 
           {/* Sync warning if backend fails */}
           {syncStatus === "error" && (
-            <div className="mb-4 p-3 bg-[var(--alert)]/10 rounded-lg text-[var(--alert)]/60 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+            <div className="mb-4 p-3 bg-[var(--alert)]/10 rounded-lg text-[var(--alert)] text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
               <div className="flex gap-2 items-center">
                 <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
                 <span>
@@ -2027,7 +2030,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => fetchState()}
-                className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)]/60 font-sans text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer whitespace-nowrap active:scale-[0.97]"
+                className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] font-sans text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer whitespace-nowrap active:scale-[0.97]"
               >
                 Reintentar Conexión
               </button>
@@ -2474,10 +2477,10 @@ export default function App() {
                       <Guitar className="w-5 h-5" />
                     )}
                     <span
-                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--acc)]/80 animate-ping" : "bg-[var(--ok)]/60 animate-ping"}`}
+                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--acc)] animate-ping" : "bg-[var(--ok)] animate-ping"}`}
                     />
                     <span
-                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--tentative)]/50" : "bg-[var(--ok)]"}`}
+                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--tentative)]" : "bg-[var(--ok)]"}`}
                     />
                   </div>
                   <span className="text-xs font-sans font-bold hidden sm:inline-block pr-1">

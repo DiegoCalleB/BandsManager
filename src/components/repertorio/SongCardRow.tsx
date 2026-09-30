@@ -400,7 +400,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               <div
                 ref={popRef}
                 style={{ position: 'fixed', top: menuPos?.top ?? 0, right: menuPos?.right ?? 8 }}
-                className={`z-[10000] max-h-[70vh] overflow-y-auto w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
+                className={`menu-pop z-[10000] max-h-[70vh] overflow-y-auto w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
               >
                 <div className="py-1 space-y-0.5">
                   {/* Acordes */}

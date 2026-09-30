@@ -13,6 +13,7 @@ import {
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { textOnColor } from '../../utils/contrastText';
 
 interface MemberNotesModalProps {
   isOpen: boolean;
@@ -358,7 +359,7 @@ export function MemberNotesModal({
                         <div
                           className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-[var(--ink)]"
                           style={{
-                            backgroundColor: member.avatarColor || "var(--acc)",
+                            backgroundColor: member.avatarColor || "var(--acc)", color: textOnColor(member.avatarColor || "var(--acc)"),
                           }}
                         >
                           {member.name.charAt(0)}

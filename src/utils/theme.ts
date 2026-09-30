@@ -7,7 +7,7 @@ import { ThemeName, ThemeColors } from "../types";
  */
 export function getEspectroColors(): ThemeColors {
   const fallbacks = {
-    acc: "#2563EB",
+    acc: "#2158DC",
     accSoft: "#DBEAFE",
     accInk: "#1D4ED8",
     ok: "#17998C",

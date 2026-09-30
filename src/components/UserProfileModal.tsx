@@ -52,6 +52,7 @@ import {
 import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ModalPortal } from "./common/ModalPortal";
 import { AgentAutonomySettingsModal } from "./dashboard/AgentAutonomySettingsModal";
+import { textOnColor } from '../utils/contrastText';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -469,7 +470,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-[var(--r-pill)] flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
-                style={{ backgroundColor: avatarColor }}
+                style={{ backgroundColor: avatarColor, color: textOnColor(avatarColor) }}
               >
                 {name.slice(0, 2) || "BK"}
               </div>

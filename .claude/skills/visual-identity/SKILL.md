@@ -14,7 +14,7 @@ Esta skill es **la autoridad estética del repositorio** (qué se ve). Cómo se 
 ## ⚖️ 1. Las dos leyes
 
 > ## 1 · Un borde solo existe si significa algo. La separación es luz y espacio.
-> ## 2 · Un solo acento (el azul). El resto es gris. Los módulos se distinguen por icono y título, no por color.
+> ## 2 · Un solo acento (el azul) en el contenido. El resto es gris. Solo el menú lateral se tiñe por grupo.
 
 **Los músicos pasan de 4 a 6 horas seguidas dentro de la app.** La fatiga visual es la restricción que manda sobre cualquier consideración estética. Las seis causas reales, todas medibles:
 
@@ -79,13 +79,25 @@ La silueta del público con los brazos en alto es la única parte del logo con c
 
 | Token | Claro | Oscuro | Para qué |
 |---|---|---|---|
-| `--acc` / `--acc-soft` / `--acc-ink` | `#2563EB` / `#DBEAFE` / `#1D4ED8` | `#60A5FA` / `#1E3A5F` / `#60A5FA` | El único acento: acciones, selección, datos destacados |
+| `--acc` / `--acc-soft` / `--acc-ink` | `#2158DC` / `#DBEAFE` / `#1D4ED8` | `#60A5FA` / `#1E3A5F` / `#60A5FA` | El único acento: acciones, selección, datos destacados |
 | `--ok` | `#0D7A70` | `#4FC7B8` | Estado positivo (teal, análogo del azul) |
 | `--alert` | `#B3453C` | `#E27A70` | Solo errores reales |
 | `--tentative` | `#4F5F86` | `#A9B6D6` | «Posible»: gris azulado de la familia del azul |
 
 - **`--acc` y `--acc-ink` no son intercambiables.** `--acc` es para rellenos y elementos gráficos; `--acc-ink` es la versión que pasa AA para texto sobre claro. Blanco sobre `--acc` da 5,2:1.
 - **Armonía = pocos tonos.** Un acento, un estado positivo, un estado de error y neutros fríos. Si necesitas distinguir cosas, usa forma, peso, posición o icono antes que un color nuevo. `python3 scripts/paleta-audit.py` falla si vuelve un override de `--acc` por módulo, si un estado tiene más croma que el acento o si «posible» sale de la familia del azul.
+### El menú se tiñe por grupo (excepción acotada a la segunda ley)
+**Decisión de Diego (2026-09-30):** «que el menú de la izquierda cambie un poco los tonos según el grupo (en Música, el verde): da sensación de saber dónde estás solo con el color». Se aplica **solo** al menú lateral, a la barra inferior y al cajón móvil, con `data-grupo` (lo pone `App.tsx` desde `findNavGroupIdForItem(currentView)`). El contenido no cambia: sigue en el azul único.
+
+| Grupo | Claro `--acc` | Oscuro `--acc` |
+|---|---|---|
+| Directorio · Herramientas · pinned | azul (`#2158DC`) | `#60A5FA` |
+| Música | `#108846` (verde Spotify, calibrado AA) | `#1DB954` (verde Spotify) |
+| Promoción | `#7F53AC` | `#CBA1FA` |
+| Negocio | `#008192` | `#4CC4D2` |
+
+Reglas: luminosidad pareja (≈ L 0,53–0,55 en claro), croma moderado, AA en `--on-acc` y `--acc-ink` (`paleta-audit.py` lo comprueba). **No** añadir un grupo nuevo con un naranja/ámbar (Diego lo rechazó) ni llevar el tinte al contenido. Clásico no tiñe el menú.
+
 - `data-modulo` se conserva como gancho (tests, futuro) pero **ya no cambia colores**. Clásico sigue con su ámbar de marca y es lo que hace reversible todo esto.
 - Historia, para no repetirla: ámbar de marca (dorado+negro leía a bróker) → terracota (paleta segura de diseño generado) → naranja quemado → un color por módulo → **un solo azul**.
 

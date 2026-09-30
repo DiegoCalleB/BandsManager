@@ -2265,7 +2265,7 @@ export default function CalendarView({
                   {showCalMoreMenu && (
                     <>
                       <div className="fixed inset-0 z-[9998]" onClick={() => setShowCalMoreMenu(false)} />
-                      <div className="absolute right-0 mt-1.5 w-52 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 z-[9999] ring-1 ring-[var(--line)]">
+                      <div className="menu-pop absolute right-0 mt-1.5 w-52 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 z-[9999] border border-[var(--line)]">
                         <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowCalMoreMenu(false); openTutorial(); }}>
                           <HelpCircle className="w-4 h-4 text-[var(--ink-2)]" /> Guía rápida
                         </button>

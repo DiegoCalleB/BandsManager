@@ -43,7 +43,7 @@
 
   /* Tinta — #2A2E35 sobre #F6F7F9 da 12,4:1. Cómodo, no agresivo. */
   --ink:      #2A2E35;
-  --ink-2:    #646C78;
+  --ink-2:    #5A626E;
   --ink-3:    #5D6A7A;
   --ink-rgb:  42, 46, 53;
   --hair:     rgba(42, 46, 53, 0.065);
@@ -52,9 +52,9 @@
   --ring:        rgb(42, 46, 53);          /* anillo de foco de teclado */
 
   /* Estado — sin semántica verde-sube/rojo-baja: eso es lenguaje de bolsa */
-  --ok:       #0D7A70;
+  --ok:       #0B7167;
   --ok-soft:  #E4F5F2;
-  --ok-rgb:   13, 122, 112;
+  --ok-rgb:   11, 113, 103;
   --on-ok:    #FFFFFF;
   --alert:    #B3453C;
   --alert-soft: #FAE7E5;
@@ -67,14 +67,14 @@
      saturado y azul puro (hue~225°) que el azul apagado de Finanzas
      (--acc #3C7EA8, hue~200°, mucho menos saturado) para que no se
      confundan al cambiar de módulo. */
-  --acc:      #2563EB;
+  --acc:      #2158DC;
   --acc-soft: #DBEAFE;
   --acc-ink:  #1D4ED8;
   --on-acc:   #FFFFFF;
 
   /* Efectos — glows y sombras semi-transparentes para visualizaciones */
-  --ok-glow:    rgba(13, 122, 112, 0.1);   /* --ok con 10% opacidad */
-  --acc-glow:   rgba(37, 99, 235, 0.1);    /* --acc con 10% opacidad */
+  --ok-glow:    rgba(11, 113, 103, 0.1);   /* --ok con 10% opacidad */
+  --acc-glow:   rgba(33, 88, 220, 0.1);    /* --acc con 10% opacidad */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Sombra / divisor en patrones */
   --shadow-soft: rgba(0, 0, 0, 0.15);      /* Sombra muy suave (playhead, etc.) */
   --scrim:      #000000;                   /* Velo tras un modal — siempre oscuro, no cambia con el tema */
@@ -125,7 +125,7 @@
   --sunken:   #0B0D10;
 
   --ink:      #E3E7EC;
-  --ink-2:    #99A1AC;
+  --ink-2:    #A6AEB9;
   --ink-3:    #6B7380;
   --ink-rgb:  227, 231, 236;
   --hair:     rgba(227, 231, 236, 0.08);
@@ -242,6 +242,21 @@
    · «Posible» (--tentative) vive en la familia del azul, en gris azulado: pendiente, no protagonista.
    · --acc para rellenos, --acc-ink para texto (AA). Blanco sobre --acc ≥ 5:1.
    · El atributo data-modulo se conserva como gancho (tests, futuro) pero YA NO cambia colores.  */
+
+/* ═══════════ TINTE DEL MENÚ POR GRUPO ═══════════
+   Decisión de Diego (2026-09-30): «me gustaba que el menú de la izquierda cambiara un poco los tonos según
+   el grupo —en Música, el verde—: da sensación de saber dónde estás solo con el color».
+   Se tiñe SOLO el menú lateral y la barra inferior (data-grupo va en <aside> y <nav>); el contenido sigue en el
+   azul único. Directorio y Herramientas conservan el azul. Todos con la misma luminosidad y croma moderado
+   (≈ L 0,53 / C 0,14 en claro): ningún grupo grita más que otro. Música usa el verde de Spotify.       */
+[data-grupo="musica"]    { --acc:#108846; --acc-soft:#DEF6E3; --acc-ink:#00702F; --on-acc:#FFFFFF; }
+[data-grupo="promocion"] { --acc:#7F53AC; --acc-soft:#F4E9FF; --acc-ink:#6E4199; --on-acc:#FFFFFF; }
+[data-grupo="negocio"]   { --acc:#008192; --acc-soft:#D4F6FA; --acc-ink:#006E80; --on-acc:#FFFFFF; }
+[data-theme="dark"] [data-grupo="musica"]    { --acc:#1DB954; --acc-soft:#10301B; --acc-ink:#1DB954; --on-acc:#06180C; }
+[data-theme="dark"] [data-grupo="promocion"] { --acc:#CBA1FA; --acc-soft:#2C2138; --acc-ink:#CBA1FA; --on-acc:#191221; }
+[data-theme="dark"] [data-grupo="negocio"]   { --acc:#4CC4D2; --acc-soft:#0B2E33; --acc-ink:#4CC4D2; --on-acc:#04191C; }
+/* Clásico no tiñe el menú: es el diseño de antes. */
+[data-theme="classic"] [data-grupo] { --acc:#F2CA50; --acc-soft:#2C2310; --acc-ink:#F2CA50; --on-acc:#2C2200; }
 
 /* Clásico ignora el color por módulo a propósito: es el diseño de antes,
    y antes no había color por módulo. Cambiarlo sería no conservarlo. */

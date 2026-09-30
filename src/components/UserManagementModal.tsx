@@ -23,6 +23,7 @@ import {
   NON_STEM_ROLES,
 } from "../config/stemInstruments";
 import { uploadFileToServer } from "../utils/audioStorage";
+import { textOnColor } from '../utils/contrastText';
 
 interface UserManagementModalProps {
   currentUser: User;
@@ -588,7 +589,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                           <div
                             className="w-10 h-10 rounded-[var(--r-pill)] flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
                             style={{
-                              backgroundColor: u.avatarColor || "var(--ok)",
+                              backgroundColor: u.avatarColor || "var(--ok)", color: textOnColor(u.avatarColor || "var(--ok)"),
                             }}
                           >
                             {u.name.slice(0, 2)}

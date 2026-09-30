@@ -5,6 +5,7 @@ import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../u
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
+import { textOnColor } from '../../utils/contrastText';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -500,7 +501,7 @@ export function SongModal({
                                 <span className="text-micro font-medium text-[var(--ink-2)] flex items-center gap-1">
                                   <span
                                     className="w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block"
-                                    style={{ backgroundColor: member.avatarColor || '#6366f1' }}
+                                    style={{ backgroundColor: member.avatarColor || '#6366f1', color: textOnColor(member.avatarColor || '#6366f1') }}
                                   />
                                   {member.name} <span className="text-[var(--ink-2)] font-normal">({member.instrument})</span>
                                 </span>

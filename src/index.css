@@ -390,6 +390,16 @@ button:where(:not([data-no-hit]))::after {
 }
 
 /* Movimiento reducido: se quita el movimiento, no la información (opacidad y color se quedan). */
+/* MENÚS Y POPOVERS — «origin-aware» (Emil Kowalski): un menú no aparece de la nada ni escala desde el centro;
+   crece desde el botón que lo abre. 150 ms, solo transform y opacity, sin salida animada. Cada menú declara
+   su origen con --menu-origin (por defecto arriba a la derecha, que es donde cuelgan casi todos).            */
+@keyframes menu-pop { from { opacity: 0; transform: scale(0.95) translateY(-2px); } to { opacity: 1; transform: none; } }
+.menu-pop {
+  transform-origin: var(--menu-origin, top right);
+  animation: menu-pop var(--dur-hover) var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) { .menu-pop { animation: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
