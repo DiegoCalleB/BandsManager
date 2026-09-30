@@ -26,7 +26,8 @@
     "design:audit:strict": "node scripts/design-audit.js --strict",
     "design:fix": "node scripts/design-fixer.js && npm run typecheck && npm run build",
     "audit:paleta": "python3 scripts/paleta-audit.py",
-    "audit:emojis": "node scripts/emojis-ui.mjs"
+    "audit:emojis": "node scripts/emojis-ui.mjs",
+    "audit:contraste": "node scripts/contraste-clases.mjs"
   },
   "dependencies": {
     "@distube/ytdl-core": "^4.16.12",

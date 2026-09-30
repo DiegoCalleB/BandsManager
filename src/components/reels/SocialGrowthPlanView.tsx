@@ -169,7 +169,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   onClick={() => setSelectedHorizon(h)}
                   className={`px-2.5 py-1 text-micro font-sans rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                     selectedHorizon === h
-                      ? "bg-[var(--tentative)]/80 text-[var(--ink)] font-bold shadow"
+                      ? "bg-[var(--tentative)] text-[var(--on-tentative)] font-bold shadow"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -185,7 +185,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               }
               className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer ${
                 isGeneratingAI
-                  ? "bg-[var(--tentative)]/50 text-[var(--tentative)]/50 cursor-wait"
+                  ? "bg-[var(--tentative)] text-[var(--on-tentative)] cursor-wait"
                   : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] "
               }`}
             >
@@ -278,7 +278,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           onClick={() => setSelectedTab("overview")}
           className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "overview"
-              ? "bg-[var(--tentative)]/80 text-[var(--ink)] shadow"
+              ? "bg-[var(--tentative)] text-[var(--on-tentative)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
@@ -290,7 +290,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           onClick={() => setSelectedTab("weekly")}
           className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "weekly"
-              ? "bg-[var(--tentative)]/80 text-[var(--ink)] shadow"
+              ? "bg-[var(--tentative)] text-[var(--on-tentative)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
@@ -314,7 +314,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           onClick={() => setSelectedTab("tiktok")}
           className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "tiktok"
-              ? "bg-[var(--tentative)] text-[var(--ink)] shadow"
+              ? "bg-[var(--tentative)] text-[var(--on-tentative)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
@@ -387,12 +387,12 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               ).length;
               const channelColor =
                 channel.platform === "instagram"
-                  ? "text-[var(--alert)]/20 bg-[var(--alert)]/5"
+                  ? "text-[var(--alert)] bg-[var(--alert)]/5"
                   : channel.platform === "tiktok"
-                    ? "text-[var(--acc)]/20 bg-[var(--acc)]/5"
+                    ? "text-[var(--acc-ink)] bg-[var(--acc)]/5"
                     : channel.platform === "youtube"
-                      ? "text-[var(--alert)]/20 bg-[var(--alert)]/5"
-                      : "text-[var(--ok)]/20 bg-[var(--ok)]/5";
+                      ? "text-[var(--alert)] bg-[var(--alert)]/5"
+                      : "text-[var(--ok)] bg-[var(--ok)]/5";
 
               return (
                 <div
@@ -623,10 +623,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     const isDone = completedActions[action.id];
                     const impactColor =
                       action.impact === "critico"
-                        ? "bg-[var(--alert)]/10 text-[var(--alert)]/20"
+                        ? "bg-[var(--alert)]/10 text-[var(--alert)]"
                         : action.impact === "alto"
-                          ? "bg-[var(--acc)]/10 text-[var(--acc)] "
-                          : "bg-[var(--tentative)]/50 text-[var(--acc)]/20";
+                          ? "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
+                          : "bg-[var(--tentative)] text-[var(--on-tentative)]";
 
                     return (
                       <div
@@ -738,7 +738,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                             <p className="text-xs font-sans text-[var(--ink-2)]">
                               {v.concept}
                             </p>
-                            <div className="text-micro font-sans text-[var(--acc)]/70 bg-[var(--sunken)] p-1.5 rounded">
+                            <div className="text-micro font-sans text-[var(--acc-ink)] bg-[var(--sunken)] p-1.5 rounded">
                               <b>Gancho:</b> {v.hook}
                             </div>
                             <div className="text-micro font-sans text-[var(--ok)]">
@@ -751,7 +751,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   )}
 
                 {/* Errores Críticos a Evitar (Don'ts) */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)]/90 space-y-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)] space-y-3">
                   <h4 className="text-xs font-sans font-bold text-[var(--alert)] flex items-center gap-1.5">
                     <AlertCircle className="w-4 h-4" />
                     Errores Típicos de Músicos a Evitar

@@ -74,10 +74,10 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
               <span
                 className={`text-micro font-sans font-bold px-1.5 py-0.2 rounded ${
                   isViable
-                    ? 'bg-[var(--ok)]/20 text-[var(--ok)] '
+                    ? 'bg-[var(--ok)]/20 text-[var(--ink)] '
                     : isAjustado
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
-                      : 'bg-[var(--alert)]/20 text-[var(--alert)] '
+                      ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                      : 'bg-[var(--alert)]/20 text-[var(--ink)] '
                 }`}
               >
                 {isViable ? '🟢 Muy Viable' : isAjustado ? '🟡 Ajustado' : '🔴 Exigente'}

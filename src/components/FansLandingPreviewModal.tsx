@@ -63,7 +63,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       <header className="w-full bg-[var(--surface)] px-3 sm:px-5 py-2.5 shrink-0 z-30 flex items-center justify-between gap-2">
         {/* Lado Izquierdo: Título y Estado */}
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
+          <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
             <Eye className="w-4 h-4" />
           </div>
           <div className="min-w-0">
@@ -71,7 +71,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-display truncate">
                 {t('previewModalTitle')}
               </h2>
-              <span className="hidden md:inline-flex items-center gap-1 text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
+              <span className="hidden md:inline-flex items-center gap-1 text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold">
                 {t('previewProductionSyncBadge')}
               </span>
             </div>
@@ -117,7 +117,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               type="button"
               onClick={() => setDeviceMode('mobile')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                deviceMode === 'mobile' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                deviceMode === 'mobile' ? 'bg-[var(--surface)]/80 text-[var(--acc-ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title={t('previewMobile')}
             >
@@ -128,7 +128,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               type="button"
               onClick={() => setDeviceMode('desktop')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                deviceMode === 'desktop' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                deviceMode === 'desktop' ? 'bg-[var(--surface)]/80 text-[var(--acc-ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title={t('previewDesktop')}
             >
@@ -147,7 +147,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
                 onClick={() => setSelectedLanguage(l.code)}
                 className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-sans transition-ui cursor-pointer ${
                   selectedLanguage === l.code
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
+                    ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] opacity-75 hover:opacity-100'
                 }`}
                 title={l.label}
@@ -234,7 +234,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             type="button"
             onClick={() => setDeviceMode('mobile')}
             className={`p-1 rounded text-xs transition-ui ${
-              deviceMode === 'mobile' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)]'
+              deviceMode === 'mobile' ? 'bg-[var(--surface)]/80 text-[var(--acc-ink)]' : 'text-[var(--ink-2)]'
             }`}
           >
             <Smartphone className="w-3.5 h-3.5" />
@@ -243,7 +243,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             type="button"
             onClick={() => setDeviceMode('desktop')}
             className={`p-1 rounded text-xs transition-ui ${
-              deviceMode === 'desktop' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)]'
+              deviceMode === 'desktop' ? 'bg-[var(--surface)]/80 text-[var(--acc-ink)]' : 'text-[var(--ink-2)]'
             }`}
           >
             <Monitor className="w-3.5 h-3.5" />
@@ -258,7 +258,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               type="button"
               onClick={() => setSelectedLanguage(l.code)}
               className={`px-1.5 py-0.5 rounded text-xs font-sans ${
-                selectedLanguage === l.code ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold' : 'text-[var(--ink-2)] opacity-60'
+                selectedLanguage === l.code ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold' : 'text-[var(--ink-2)] opacity-60'
               }`}
             >
               {l.flag}
@@ -306,9 +306,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             {/* Barra simulada de navegador */}
             <div className="bg-[var(--sunken)] px-4 py-2 flex items-center justify-between gap-3 text-xs font-sans shrink-0">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--alert)]/80" />
-                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)]/80" />
-                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
+                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--alert)]" />
+                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)]" />
+                <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
               </div>
               <div className="bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1 text-[var(--ink-2)] text-xs flex-1 max-w-md text-center truncate font-sans">
                 https://bandmanager.io/unete

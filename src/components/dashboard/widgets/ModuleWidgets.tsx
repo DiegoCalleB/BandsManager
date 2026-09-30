@@ -119,7 +119,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc-ink)]">
             <Music className="w-5 h-5" />
           </div>
           <div>
@@ -147,7 +147,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
             <p className="text-xs font-sans text-[var(--ink-2)]">Temas guardados en catálogo</p>
           </div>
         </div>
-        <span className="text-micro font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">Iris IA activo</span>
+        <span className="text-micro font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold">Iris IA activo</span>
       </div>
     </div>
   );
@@ -161,7 +161,7 @@ export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = fals
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ok)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ink)]">
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
@@ -203,7 +203,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
             <Users className="w-5 h-5" />
           </div>
           <div>
@@ -231,7 +231,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
         <button
           type="button"
           onClick={() => onNavigate && onNavigate('fans')}
-          className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-ui flex flex-col items-center justify-center cursor-pointer"
+          className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui flex flex-col items-center justify-center cursor-pointer"
         >
           <QrCode className={`w-5 h-5 ${'text-[var(--acc)]'} mb-1`} />
           <span className="text-xs font-sans font-bold">Generar QR concierto</span>
@@ -247,7 +247,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc-ink)]">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -276,7 +276,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }
           href="/epk"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-sans text-xs font-bold hover:bg-[var(--tentative)]/30 transition-ui"
+          className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)] font-sans text-xs font-bold hover:bg-[var(--tentative)]/30 transition-ui"
         >
           Ver EPK Vivo <ShowIcon inline emoji="↗" />
         </a>
@@ -293,7 +293,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
             <Bot className="w-5 h-5" />
           </div>
           <div>
@@ -318,7 +318,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
           <span className="text-lg font-sans font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
           <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">Pendientes de Aprobación Humana</p>
         </div>
-        <span className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-micro font-sans font-bold">● Activo</span>
+        <span className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] text-micro font-sans font-bold">● Activo</span>
       </div>
     </div>
   );
@@ -330,7 +330,7 @@ export function TourStatusWidget({ tours = [], onNavigate, isStitchLight = false
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink-2)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)]">
             <Truck className="w-5 h-5" />
           </div>
           <div>

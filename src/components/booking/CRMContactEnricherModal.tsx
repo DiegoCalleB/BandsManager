@@ -98,7 +98,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
         >
           <div className="flex items-center justify-between pb-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]">
+              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
@@ -119,7 +119,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
             <div className={`p-4 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}>
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold text-[var(--ink)]">Salas con información incompleta:</span>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] font-bold">{incompleteLeads.length}</span>
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] font-bold">{incompleteLeads.length}</span>
               </div>
               <p className="text-[var(--ink-2)] leading-relaxed">
                 El asistente escaneará páginas web oficiales y directorios públicos para completar correos de booking y teléfonos de los
@@ -128,7 +128,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
             </div>
 
             {statusMessage && (
-              <div className="p-3 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 flex items-center gap-2">
+              <div className="p-3 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)] flex items-center gap-2">
                 {isProcessing ? (
                   <Loader2 className="w-4 h-4 animate-spin shrink-0" />
                 ) : (

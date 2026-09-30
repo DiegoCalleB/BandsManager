@@ -106,8 +106,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 config.biografia.trim().length >= 80 &&
                 !config.biografia.toLowerCase().includes("por definir") &&
                 !config.biografia.includes("Propuesta musical en directo")
-                  ? "bg-[var(--ok)]/10 text-[var(--ok)]/30"
-                  : "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
+                  ? "bg-[var(--ok)]/10 text-[var(--ok)]"
+                  : "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
               }`}
             >
               {config.biografia &&
@@ -194,8 +194,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     !config.dossierTextoExtra
                       .toLowerCase()
                       .includes("por definir"))
-                    ? "bg-[var(--ok)]/10 text-[var(--ok)]/30"
-                    : "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
+                    ? "bg-[var(--ok)]/10 text-[var(--ok)]"
+                    : "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
                 }`}
               >
                 {(config.dossierPdfUrl &&
@@ -208,7 +208,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   ? "✓ Listo"
                   : "Mín. 80 car. o PDF"}
               </span>
-              <span className="text-micro font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-pill)] hidden sm:inline">
+              <span className="text-micro font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-pill)] hidden sm:inline">
                 Uso Interno
               </span>
             </div>
@@ -219,7 +219,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             estilo, hitos, prensa, etc.) para enriquecer la documentación del
             proyecto.
           </p>
-          <p className="text-xs text-[var(--acc)]/90 font-semibold bg-[var(--acc)]/5 rounded-[var(--r-s)] px-3 py-2">
+          <p className="text-xs text-[var(--acc-ink)] font-semibold bg-[var(--acc)]/5 rounded-[var(--r-s)] px-3 py-2">
             Nota: Este texto es para uso interno del equipo y no se muestra en
             la página pública del EPK.
           </p>
@@ -260,7 +260,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 Identidad Sonora, Género & Bandas Afines (FFO - For Fans Of)
               </h3>
             </div>
-            <span className="text-micro font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] font-bold flex items-center gap-1.5">
+            <span className="text-micro font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] font-bold flex items-center gap-1.5">
               Agentes IA y radar de Booking
             </span>
           </div>
@@ -353,7 +353,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 config.bandasSimilares.map((band, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] "
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc-ink)] "
                   >
                     <span>{band}</span>
                     <button
@@ -611,7 +611,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   <Globe className="w-4 h-4 text-[var(--acc)]" /> Sitio web
                   oficial propio de la banda (Opcional)
                 </label>
-                <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
+                <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)]">
                   Dossier EPK + fans landing
                 </span>
               </div>

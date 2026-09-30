@@ -25,7 +25,7 @@ export const EMAIL_TEMPLATES = [
     title: "1. Proposal Inicial a Sala de Conciertos (Aforo 200 - 600 pax)",
     type: "Booking directo",
     icon: Building2,
-    badgeColor: "bg-[var(--acc)]/20 text-[var(--acc)]/70 ",
+    badgeColor: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
     subject: "Propuesta de Concierto - {bandName} en {nombre_sala} (Gira 2026)",
     body: `Hola team de {nombre_sala},
 
@@ -49,7 +49,7 @@ Mánager Virtual & Booking Team de {bandName}`,
     title: "2. Propuesta de Intercambio de Fechas entre Bandas (Co-headlining)",
     type: "Intercambio de bolos",
     icon: MessageSquareCode,
-    badgeColor: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
+    badgeColor: "bg-[var(--tentative)]/20 text-[var(--tentative)]",
     subject:
       "Propuesta de bolo conjunto e intercambio de sala - {bandName} x {nombre_banda_amiga}",
     body: `¡Hola compas de {nombre_banda_amiga}!
@@ -72,7 +72,7 @@ Si os motiva la idea, decidnos y os pasamos un par de fechas que tenemos pre-res
     title: "3. Nota de Prensa & Estreno a Medios y Radios (Radio 3 / Prensa)",
     type: "Prensa & Radios",
     icon: Radio,
-    badgeColor: "bg-[var(--alert)]/20 text-[var(--ink-2)]/30",
+    badgeColor: "bg-[var(--alert)]/20 text-[var(--ink)]",
     subject:
       "NOTA DE PRENSA: {bandName} estrena nuevo sencillo y anuncia fechas de gira",
     body: `A la atención del equipo de {nombre_medio},
@@ -95,7 +95,7 @@ Prensa & Comunicación - {bandName}`,
     title: "4. Recordatorio Educado a Sala sin Respuesta (A los 7-10 días)",
     type: "Seguimiento",
     icon: RefreshCw,
-    badgeColor: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
+    badgeColor: "bg-[var(--acc)]/20 text-[var(--ink)]",
     subject: "Re: Propuesta de Concierto - {bandName} en {nombre_sala}",
     body: `Hola de nuevo, equipo de {nombre_sala},
 
@@ -139,7 +139,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
           {/* Modal Header */}
           <div className="p-5 bg-[var(--sunken)] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)]">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
@@ -174,7 +174,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                     onClick={() => setSelectedTemplate(tpl.id)}
                     className={`p-3 rounded-[var(--r-m)] text-left transition-ui flex flex-col justify-between gap-2 cursor-pointer ${
                       isSelected
-                        ? "bg-[var(--acc)]/20  text-[var(--acc)]/70"
+                        ? "bg-[var(--acc)]/20  text-[var(--acc-ink)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]"
                     }`}
                   >
@@ -250,7 +250,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-xs flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs flex items-center gap-2">
               <span>
                 <strong>Consejo de Agentes AI:</strong> El Agente Redactor
                 utiliza este mismo estilo directo y conciso al generar

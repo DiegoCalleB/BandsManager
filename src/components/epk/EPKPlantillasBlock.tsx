@@ -128,7 +128,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2/80">
             <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
                 <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
               <div>
@@ -229,7 +229,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     <span
                       className={`block w-full py-0.5 sm:py-1 text-center rounded-[var(--r-s)] sm:rounded-[var(--r-s)] text-micro sm:text-xs font-bold font-sans transition ${
                         isSelected
-                          ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                          ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                           : "bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
                       }`}
                     >
@@ -246,7 +246,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2/80">
             <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
                 <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
               <div>
@@ -265,7 +265,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
               <button
                 type="button"
                 onClick={handleResetDefaultOrder}
-                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 rounded-[var(--r-pill)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
+                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)] rounded-[var(--r-pill)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
                 title="Restablecer el orden estándar de fábrica"
               >
                 <RotateCcw className="w-3 h-3 text-[var(--ink-2)]" />
@@ -283,7 +283,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
               <button
                 type="button"
                 onClick={handlePresetPromoterFirst}
-                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--acc)]/70 rounded-[var(--r-pill)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
+                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
                 title="Poner datos de contratación, contacto y requisitos primero"
               >
                 <Briefcase className="w-3 h-3 text-[var(--acc)]" />
@@ -316,7 +316,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     <div
                       className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
                         item.isVisible
-                          ? "bg-[var(--acc)]/10  text-[var(--acc)]"
+                          ? "bg-[var(--acc)]/10  text-[var(--acc-ink)]"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                       }`}
                     >
@@ -350,8 +350,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       onClick={() => handleToggleVisibility(item.id)}
                       className={`p-1.5 rounded-[var(--r-pill)] text-xs transition cursor-pointer ${
                         item.isVisible
-                          ? "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80"
-                          : "bg-[var(--alert-soft)] text-[var(--alert)]/60 hover:bg-[var(--alert-soft)]"
+                          ? "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]"
+                          : "bg-[var(--alert-soft)] text-[var(--alert)] hover:bg-[var(--alert-soft)]"
                       }`}
                       title={
                         item.isVisible
@@ -374,7 +374,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       className={`p-1.5 rounded-[var(--r-pill)] text-xs transition ${
                         isFirst
                           ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-2)]"
-                          : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] cursor-pointer"
+                          : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                       }`}
                       title="Subir posición"
                     >
@@ -389,7 +389,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       className={`p-1.5 rounded-[var(--r-pill)] text-xs transition ${
                         isLast
                           ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-2)]"
-                          : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] cursor-pointer"
+                          : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                       }`}
                       title="Bajar posición"
                     >

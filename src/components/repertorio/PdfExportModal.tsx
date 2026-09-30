@@ -1607,7 +1607,7 @@ export function PdfExportModal({
             className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 ${"bg-[var(--sunken)]"}`}
           >
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <div className="hidden sm:flex p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] shrink-0">
+              <div className="hidden sm:flex p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)] shrink-0">
                 <Zap className="w-5 h-5" />
               </div>
               <div className="min-w-0">
@@ -1819,7 +1819,7 @@ export function PdfExportModal({
                   Títulos:
                 </span>
                 <span
-                  className="px-2.5 py-1 rounded text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                  className="px-2.5 py-1 rounded text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                   title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio (mínimo ideal 17pt; solo baja a 15pt como último recurso si eso evita saltar a una hoja extra)."
                 >
                   <ShowIcon inline emoji="⚡" />Automático
@@ -1955,7 +1955,7 @@ export function PdfExportModal({
                 <span className="sm:hidden font-bold text-[var(--ink-2)] shrink-0">
                   {previewPageIndex + 1}/{membersToExport.length}
                 </span>
-                <span className="px-2.5 sm:px-3 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold flex items-center gap-1.5 min-w-0 truncate">
+                <span className="px-2.5 sm:px-3 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] font-bold flex items-center gap-1.5 min-w-0 truncate">
                   <span className="truncate">
                     <ShowIcon inline emoji="👤" />{currentPreviewMember.name}
                   </span>

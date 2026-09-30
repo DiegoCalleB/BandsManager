@@ -368,7 +368,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               <div>
                 <h3 className="font-bold font-display text-base flex items-center gap-2">
                   <span>Gestión de miembros de la banda</span>
-                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink-2)] ">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] ">
                     Panel Admin
                   </span>
                 </h3>
@@ -507,7 +507,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       )}
 
                       {isUploadingLogo && (
-                        <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1.5 z-20">
+                        <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--on-scrim)] gap-1.5 z-20">
                           <Loader2 className="w-6 h-6 animate-spin text-[var(--acc-ink)]" />
                           <span className="text-micro font-mono text-[var(--acc-ink)] font-bold ">
                             Subiendo
@@ -602,12 +602,12 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 @{u.username}
                               </span>
                               {isLeader ? (
-                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/30 flex items-center gap-1">
+                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc-ink)] -[var(--acc)]/30 flex items-center gap-1">
                                   <Shield className="w-2.5 h-2.5" />
                                   <span>Admin</span>
                                 </span>
                               ) : (
-                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] ">
+                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink)] ">
                                   Miembro
                                 </span>
                               )}
@@ -646,7 +646,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             }
                             className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-ui ${
                               u.role === "leader"
-                                ? "bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/40 hover:bg-[var(--acc)]/25"
+                                ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] -[var(--acc)]/40 hover:bg-[var(--acc)]/25"
                                 : "bg-[var(--surface)] text-[var(--acc)]/80 hover:bg-[var(--surface)]/80"
                             } ${isSelf ? "opacity-70 cursor-not-allowed" : ""}`}
                           >
@@ -914,7 +914,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 <button
                   type="submit"
                   disabled={loading || !assocEmail.trim()}
-                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
+                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--on-tentative)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
                 >
                   {loading ? (
                     <span>Asociando músico…</span>

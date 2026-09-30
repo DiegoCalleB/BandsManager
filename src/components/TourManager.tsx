@@ -802,7 +802,7 @@ export default function TourManager({
                             {tour.nombre}
                           </h3>
                           {isCurrentUserConvocado ? (
-                            <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
+                            <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink)]">
                               ✓ Convocado
                             </span>
                           ) : (
@@ -836,8 +836,8 @@ export default function TourManager({
                           <span
                             className={`text-micro px-2 py-0.5 rounded font-sans flex items-center gap-1 ${
                               isFormacionParcial
-                                ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80"
-                                : "bg-[var(--ok)]/10 text-[var(--ink-2)]/20"
+                                ? "bg-[var(--tentative)]/10 text-[var(--tentative)]"
+                                : "bg-[var(--ok)]/10 text-[var(--ink-2)]"
                             }`}
                             title={
                               tour.convocados_nombres?.join(", ") ||
@@ -856,7 +856,7 @@ export default function TourManager({
                           )}
                           {vehiclesCount > 1 ? (
                             <span
-                              className="text-micro text-[var(--acc)]/70 bg-[var(--acc)]/10 px-2 py-0.5 rounded font-sans flex items-center gap-1"
+                              className="text-micro text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2 py-0.5 rounded font-sans flex items-center gap-1"
                               title={tour.vehiculos
                                 ?.map((v) => v.nombre)
                                 .join(" + ")}
@@ -865,7 +865,7 @@ export default function TourManager({
                               {vehiclesCount} vehículos
                             </span>
                           ) : tour.vehiculo ? (
-                            <span className="text-micro text-[var(--acc)]/70 bg-[var(--acc)]/10 px-2 py-0.5 rounded font-sans flex items-center gap-1">
+                            <span className="text-micro text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2 py-0.5 rounded font-sans flex items-center gap-1">
                               <Truck className="w-3 h-3" />
                               {tour.vehiculo}
                             </span>
@@ -997,7 +997,7 @@ export default function TourManager({
                       <button
                         type="button"
                         onClick={() => handleVolcarEnFinanzas(tour)}
-                        className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
+                        className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
                         title="Registra los cachés y gastos logísticos calculados en el libro diario de Finanzas"
                       >
                         <DollarSign className="w-3.5 h-3.5" />
@@ -1012,7 +1012,7 @@ export default function TourManager({
                               selectedDate: tour.fechaInicio,
                             })
                           }
-                          className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] transition-ui flex items-center gap-1.5 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] transition-ui flex items-center gap-1.5 cursor-pointer"
                           title="Abrir agenda y ver paradas de la gira en el calendario"
                         >
                           <Calendar className="w-3.5 h-3.5" />
@@ -1279,7 +1279,7 @@ export default function TourManager({
                           <button
                             type="button"
                             onClick={() => handleAddVehicle(0)}
-                            className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink-2)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer"
+                            className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer"
                           >
                             <Plus className="w-3.5 h-3.5" /> Añadir vehículo
                           </button>
@@ -1304,7 +1304,7 @@ export default function TourManager({
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink-2)] text-micro font-sans font-bold">
+                                <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)] text-micro font-sans font-bold">
                                   Vehículo #{vIdx + 1}
                                 </span>
                                 <span className="text-xs font-semibold text-[var(--ink)]">
@@ -1501,7 +1501,7 @@ export default function TourManager({
                       <button
                         type="button"
                         onClick={addStop}
-                        className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" /> Añadir parada
                       </button>
@@ -1523,7 +1523,7 @@ export default function TourManager({
                             <button
                               type="button"
                               onClick={() => removeStop(idx)}
-                              className="absolute top-3 right-3 p-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--ink-2)] hover:bg-[var(--alert)]/40 transition-colors cursor-pointer"
+                              className="absolute top-3 right-3 p-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--ink)] hover:bg-[var(--alert)]/40 transition-colors cursor-pointer"
                               title="Eliminar parada"
                             >
                               <Trash2 className="w-4 h-4" />

@@ -46,7 +46,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-medium transition-ui duration-200 cursor-pointer active:scale-[0.97] ${
           isOpen
-            ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
+            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]"
         }`}
         title="Cambiar idioma / Change language"
@@ -89,7 +89,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs font-sans text-left transition-colors cursor-pointer ${
                     isSelected
-                      ? "bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold"
+                      ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold"
                       : "text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
                   }`}
                 >

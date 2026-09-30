@@ -557,7 +557,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   {config.bandasSimilares.map((band, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 text-[var(--acc)] "
+                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 text-[var(--acc-ink)] "
                     >
                       {band}
                     </span>
@@ -583,7 +583,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <div className="space-y-2.5 pt-2 text-sm">
               <div className="flex items-center gap-2.5 font-medium">
                 <span
-                  className={`w-2 h-2 rounded-[var(--r-pill)] ${styles.accentBtn.includes("fuchsia") ? "bg-[var(--tentative)]/80" : styles.accentBtn.includes("orange") ? "bg-[var(--acc)]/80" : "bg-[var(--acc)]/60"} shrink-0`}
+                  className={`w-2 h-2 rounded-[var(--r-pill)] ${styles.accentBtn.includes("fuchsia") ? "bg-[var(--tentative)]" : styles.accentBtn.includes("orange") ? "bg-[var(--acc)]" : "bg-[var(--acc)]"} shrink-0`}
                 ></span>
                 <span>
                   {config.contactoBooking?.nombre || t("managerPorDefecto")}

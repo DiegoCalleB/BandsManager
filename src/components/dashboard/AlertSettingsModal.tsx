@@ -272,13 +272,13 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
         {/* Modal Header */}
         <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]/50">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] ">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
               <Bell className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-[var(--ink-2)] tracking-tight flex items-center gap-2">
                 Configuración del radar de alertas
-                <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+                <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
                   Mánager Pro
                 </span>
               </h2>
@@ -304,7 +304,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             onClick={() => setActiveTab('rules')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-ui border-b-2 flex items-center gap-2 ${
               activeTab === 'rules'
-                ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
+                ? 'text-[var(--acc-ink)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
             }`}
           >
@@ -317,7 +317,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             onClick={() => setActiveTab('channels')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-ui border-b-2 flex items-center gap-2 ${
               activeTab === 'channels'
-                ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
+                ? 'text-[var(--acc-ink)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
             }`}
           >
@@ -330,7 +330,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             onClick={() => setActiveTab('plan')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-ui border-b-2 flex items-center gap-2 ${
               activeTab === 'plan'
-                ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
+                ? 'text-[var(--acc-ink)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
             }`}
           >
@@ -380,7 +380,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                           )}
 
                           {rule.targetRoleOnly && (
-                            <span className="px-2 py-0.5 rounded text-micro font-mono font-semibold bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded text-micro font-mono font-semibold bg-[var(--acc)]/15 text-[var(--acc-ink)] flex items-center gap-1">
                               <ShieldCheck className="w-3 h-3" />
                               Solo mánager
                             </span>
@@ -403,7 +403,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                                 onChange={(e) => handleUpdateThreshold(rule.id, parseInt(e.target.value, 10))}
                                 className="w-28 accent-amber-500 cursor-pointer"
                               />
-                              <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+                              <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
                                 {rule.daysThreshold} días
                               </span>
                             </div>
@@ -432,7 +432,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                               onClick={() => handleToggleRuleChannel(rule.id, 'notifyInApp')}
                               className={`px-2 py-1 rounded text-micro font-mono font-semibold transition-ui flex items-center gap-1 ${
                                 rule.notifyInApp
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)] '
                               }`}
                               title="Notificar dentro de la app (In-App)"
@@ -446,7 +446,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                               onClick={() => handleToggleRuleChannel(rule.id, 'notifyEmail')}
                               className={`px-2 py-1 rounded text-micro font-mono font-semibold transition-ui flex items-center gap-1 ${
                                 rule.notifyEmail
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)] '
                               }`}
                               title="Notificar por correo electrónico (Email)"
@@ -498,7 +498,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                           onClick={() => setConfig((prev) => ({ ...prev, digestFrequency: f.id as any }))}
                           className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
                             config.digestFrequency === f.id
-                              ? 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
+                              ? 'bg-[var(--acc)]/15 text-[var(--ink)]'
                               : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                           }`}
                         >

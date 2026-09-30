@@ -60,7 +60,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
               <button
                 type="button"
                 onClick={() => onRemovePhoto(idx)}
-                className="p-1.5 rounded-[var(--r-pill)] bg-[var(--alert)]/80 hover:bg-[var(--alert)] text-[var(--ink)] transition-colors"
+                className="p-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] transition-colors"
                 title="Eliminar foto"
               >
                 <Trash2 className="w-4 h-4" />

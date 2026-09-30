@@ -288,7 +288,7 @@ export const PLATFORM_CONFIG: Record<
   facebook: {
     label: "Facebook",
     colorClass: "text-[var(--acc)]",
-    bgClass: "bg-[var(--tentative)]/50",
+    bgClass: "bg-[var(--tentative)]",
     borderClass: "",
     hoverClass:
       "hover:bg-[var(--tentative)]/50 hover:text-[var(--acc)]/80",

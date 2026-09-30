@@ -83,7 +83,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           onClick={() => setLlevaMicrofoniaPropia(!llevaMicrofoniaPropia)}
           className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
             llevaMicrofoniaPropia
-              ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
+              ? "bg-[var(--acc)]/10  text-[var(--acc-ink)]"
               : "bg-[var(--bg)] text-[var(--ink-2)] "
           } hover:brightness-95`}
         >
@@ -103,7 +103,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           onClick={() => setLlevaInEars(!llevaInEars)}
           className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
             llevaInEars
-              ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
+              ? "bg-[var(--acc)]/10  text-[var(--acc-ink)]"
               : "bg-[var(--bg)] text-[var(--ink-2)] "
           } hover:brightness-95`}
         >
@@ -121,7 +121,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           onClick={() => setNecesitaBacklineBateria(!necesitaBacklineBateria)}
           className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
             necesitaBacklineBateria
-              ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
+              ? "bg-[var(--acc)]/10  text-[var(--acc-ink)]"
               : "bg-[var(--bg)] text-[var(--ink-2)] "
           } hover:brightness-95`}
         >

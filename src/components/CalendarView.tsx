@@ -2123,14 +2123,14 @@ export default function CalendarView({
                 <p className="hidden sm:block text-xs text-[var(--ink-2)] mt-0.5">Directos, ensayos y reuniones</p>
                 <div className="hidden sm:flex items-center gap-1.5 text-micro font-sans font-bold mt-2 flex-wrap max-w-full">
                   <span
-                    className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1"
+                    className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] flex items-center gap-1"
                     title="Eventos visibles vs Total"
                   >
                     <Calendar className="w-3 h-3" /> {filteredConcerts.length + filteredRehearsals.length}/
                     {concerts.length + rehearsals.length}
                   </span>
                   <span
-                    className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] flex items-center gap-1"
+                    className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink)] flex items-center gap-1"
                     title="Directos y conciertos públicos"
                   >
                     <Mic className="w-3 h-3 text-[var(--ok)]" /> {filteredConcerts.length} directos
@@ -2234,7 +2234,7 @@ export default function CalendarView({
                   <button
                     id="export-ics-btn"
                     onClick={() => setShowSyncModal(true)}
-                    className={`hidden sm:inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'}`}
+                    className={`hidden sm:inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc-ink)]'}`}
                     title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
                   >
                     <Radio className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -2312,7 +2312,7 @@ export default function CalendarView({
                 )}
               </div>
               {calendarSearchTerm && (
-                <div className="text-xs font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] ">
+                <div className="text-xs font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
                   {filteredConcerts.length + filteredRehearsals.length} resultados
                 </div>
               )}
@@ -2340,7 +2340,7 @@ export default function CalendarView({
                 </button>
                 <button
                   onClick={handleGoToday}
-                  className="text-xs font-sans font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] hover:bg-[var(--acc)]/50/25 transition-ui cursor-pointer shrink-0"
+                  className="text-xs font-sans font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/50/25 transition-ui cursor-pointer shrink-0"
                   title="Ir al mes y día actual"
                 >
                   Hoy
@@ -2488,7 +2488,7 @@ export default function CalendarView({
                   >
                     <div className="flex items-center justify-between pb-2.5 mb-310">
                       <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]">
+                        <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
                           <Settings className="w-3.5 h-3.5" />
                         </div>
                         <div>
@@ -2511,7 +2511,7 @@ export default function CalendarView({
                         onClick={() => setSelectedConfigDevice('mobile')}
                         className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                           selectedConfigDevice === 'mobile'
-                            ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70'
+                            ? 'bg-[var(--surface)]/80 text-[var(--acc-ink)]'
                             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                         }`}
                       >
@@ -2526,7 +2526,7 @@ export default function CalendarView({
                         onClick={() => setSelectedConfigDevice('desktop')}
                         className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                           selectedConfigDevice === 'desktop'
-                            ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70'
+                            ? 'bg-[var(--surface)]/80 text-[var(--acc-ink)]'
                             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                         }`}
                       >
@@ -2610,7 +2610,7 @@ export default function CalendarView({
 
                     {/* Toast feedback */}
                     {configToast && (
-                      <div className="mt-3 p-2 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] text-micro font-sans flex items-center gap-1.5 animate-in fade-in">
+                      <div className="mt-3 p-2 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink)] text-micro font-sans flex items-center gap-1.5 animate-in fade-in">
                         <Check className="w-3.5 h-3.5 shrink-0" />
                         <span>{configToast}</span>
                       </div>
@@ -2713,7 +2713,7 @@ export default function CalendarView({
         )}
         {syncErrorMessage && (
           <div
-            className={`mb-4 p-2 px-3 rounded-[var(--r-s)] text-micro flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${'bg-[var(--alert)]/15 text-[var(--alert)]'}`}
+            className={`mb-4 p-2 px-3 rounded-[var(--r-s)] text-micro flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${'bg-[var(--alert)]/15 text-[var(--ink)]'}`}
           >
             <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
             <span className="flex-1 font-sans text-micro">{syncErrorMessage}</span>
@@ -2814,7 +2814,7 @@ export default function CalendarView({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-310">
             <div className="flex items-center gap-3">
               <div
-                className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-bold shrink-0 ${'bg-[var(--acc)]/15 /40 text-[var(--acc)]/70'}`}
+                className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-bold shrink-0 ${'bg-[var(--acc)]/15 /40 text-[var(--acc-ink)]'}`}
               >
                 <span className="text-sm leading-none">{selectedDate.getDate()}</span>
                 <span className="text-micro mt-0.5 opacity-80">{monthNames[selectedDate.getMonth()]?.slice(0, 3)}</span>
@@ -2830,7 +2830,7 @@ export default function CalendarView({
                     })}
                   </h4>
                   {dayEventsList.length > 0 && (
-                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
                       {dayEventsList.length} {dayEventsList.length === 1 ? 'evento' : 'eventos'}
                     </span>
                   )}
@@ -2854,14 +2854,14 @@ export default function CalendarView({
               <button
                 type="button"
                 onClick={() => setShowCreateModal('concert')}
-                className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
+                className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
               >
                 <span><ShowIcon inline emoji="🎸" /></span> + Concierto
               </button>
               <button
                 type="button"
                 onClick={() => setShowCreateModal('rehearsal')}
-                className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
+                className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
               >
                 <span><ShowIcon inline emoji="🥁" /></span> + Ensayo
               </button>
@@ -2925,17 +2925,17 @@ export default function CalendarView({
                               {bandInfo.name}
                             </span>
                             {selectedConcert.cache ? (
-                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold text-[var(--acc)]/70 bg-[var(--acc)]/10">
+                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10">
                                 <ShowIcon inline emoji="💰" />{selectedConcert.cache.toLocaleString('es-ES')} €
                               </span>
                             ) : null}
                             <span
                               className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold ${
                                 selectedConcert.estado_pago === 'pagado'
-                                  ? 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
+                                  ? 'bg-[var(--ok)]/20 text-[var(--ink)]'
                                   : selectedConcert.estado_pago === 'anticipo'
                                     ? 'bg-[var(--tentative)]/50/20 text-[var(--acc)]/80'
-                                    : 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
+                                    : 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
                               }`}
                             >
                               {selectedConcert.estado_pago === 'pagado'
@@ -3043,7 +3043,7 @@ export default function CalendarView({
                         <button
                           type="button"
                           onClick={() => setViewingConcert(selectedConcert)}
-                          className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc-ink)] flex items-center gap-1 cursor-pointer"
                         >
                           <Edit className="w-3 h-3 text-[var(--acc)]" />
                           <span>Editar concierto</span>
@@ -3085,7 +3085,7 @@ export default function CalendarView({
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span
                               className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-black ${
-                                isReu ? 'bg-[var(--tentative)] text-[var(--ink)]' : 'bg-[var(--ok)] text-[var(--on-ok)]'
+                                isReu ? 'bg-[var(--tentative)] text-[var(--on-tentative)]' : 'bg-[var(--ok)] text-[var(--on-ok)]'
                               }`}
                             >
                               {isReu ? 'Reunión' : 'Ensayo'}
@@ -3118,8 +3118,8 @@ export default function CalendarView({
                           onClick={() => setShowEventFichaModal(true)}
                           className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-black flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97] ${
                             isReu
-                              ? 'bg-[var(--tentative)] hover:bg-[var(--tentative)]/80 text-[var(--ink)]/20'
-                              : 'bg-[var(--ok)] hover:brightness-95 text-[var(--ink)]/20'
+                              ? 'bg-[var(--tentative)] hover:bg-[var(--tentative)]/80 text-[var(--on-tentative)]'
+                              : 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)]'
                           }`}
                         >
                           <Maximize2 className="w-3.5 h-3.5" />

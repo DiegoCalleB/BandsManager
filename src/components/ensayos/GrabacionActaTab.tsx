@@ -268,7 +268,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
+              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
                 <Mic className="w-5 h-5" />
               </div>
               <div>
@@ -283,7 +283,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             </div>
 
             {isRecording && (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink)]">
                 <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--alert)]" /> REC{" "}
                 {formatTime(recordDuration)}
               </span>
@@ -327,7 +327,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               <button
                 type="button"
                 onClick={startRecording}
-                className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 cursor-pointer active:scale-[0.97] transition-ui"
+                className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-xs flex items-center gap-2 cursor-pointer active:scale-[0.97] transition-ui"
               >
                 <Mic className="w-4 h-4" />
                 <span>Iniciar grabación con micrófono</span>
@@ -433,7 +433,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                       <span className="text-xs font-bold text-[var(--ink)] truncate">
                         {rec.titulo}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-micro font-sans bg-[var(--surface)]/80 text-[var(--acc)]/70">
+                      <span className="px-2 py-0.5 rounded text-micro font-sans bg-[var(--surface)]/80 text-[var(--acc-ink)]">
                         {rec.tipo.replace("_", " ")}
                       </span>
                     </div>
@@ -464,7 +464,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--acc)]">
+              <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)]">
                 <Sparkles className="w-4 h-4" />
               </span>
               <h3 className="text-sm font-sans font-bold text-[var(--ink)]">
@@ -481,7 +481,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             <button
               onClick={handleGenerateAIActa}
               disabled={isGeneratingActa}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-ui cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-ui cursor-pointer"
             >
               {isGeneratingActa ? (
                 <>
@@ -501,7 +501,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {acta && (
               <button
                 onClick={handleCopyToWhatsApp}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 text-xs font-sans font-bold transition-ui cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] hover:bg-[var(--ok)]/30 text-xs font-sans font-bold transition-ui cursor-pointer"
                 title="Copiar formato listo para WhatsApp"
               >
                 {copied ? (

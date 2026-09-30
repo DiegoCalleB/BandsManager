@@ -175,7 +175,7 @@ export function EnsayosManager({
   if (rehearsals.length === 0) {
     return (
       <div className="p-6 sm:p-12 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-        <div className="w-16 h-16 rounded-[var(--r-xl)] bg-[var(--acc)]/60 flex items-center justify-center text-[var(--acc)] mx-auto">
+        <div className="w-16 h-16 rounded-[var(--r-xl)] bg-[var(--acc)] flex items-center justify-center text-[var(--on-acc)] mx-auto">
           <Mic className="w-8 h-8" />
         </div>
 
@@ -195,7 +195,7 @@ export function EnsayosManager({
             setEditingRehearsal(null);
             setShowConvocarModal(true);
           }}
-          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-bold text-sm hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
+          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-sm hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
         >
           <Plus className="w-4 h-4" />
           <span>Convocar primer ensayo</span>
@@ -248,9 +248,9 @@ export function EnsayosManager({
               <span
                 className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold ${
                   currentRehearsal?.estado === "completado"
-                    ? "bg-[var(--ok)]/15 text-[var(--ink-2)]/30"
+                    ? "bg-[var(--ok)]/15 text-[var(--ink)]"
                     : currentRehearsal?.estado === "en_curso"
-                      ? "bg-[var(--acc)]/60 text-[var(--acc)]/70 "
+                      ? "bg-[var(--acc)] text-[var(--on-acc)] "
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 }`}
               >
@@ -316,7 +316,7 @@ export function EnsayosManager({
                 setEditingRehearsal(null);
                 setShowConvocarModal(true);
               }}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
+              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ Convocar ensayo</span>
@@ -330,7 +330,7 @@ export function EnsayosManager({
             onClick={() => setActiveTab("orden_del_dia")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
               activeTab === "orden_del_dia"
-                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-bold"
+                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
@@ -345,7 +345,7 @@ export function EnsayosManager({
             onClick={() => setActiveTab("modo_local")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
               activeTab === "modo_local"
-                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-bold"
+                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
@@ -360,7 +360,7 @@ export function EnsayosManager({
             onClick={() => setActiveTab("grabacion_acta")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
               activeTab === "grabacion_acta"
-                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-bold"
+                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >

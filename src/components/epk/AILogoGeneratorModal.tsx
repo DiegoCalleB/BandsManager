@@ -95,7 +95,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
             <div>
               <h3 className="font-bold text-base text-[var(--ink)] flex items-center gap-2">
                 Diseñador de Logotipos con IA
-                <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] ">
+                <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] ">
                   Amateur & Indie
                 </span>
               </h3>
@@ -110,7 +110,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
         {/* Content */}
         <div className="p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
           {error && (
-            <div className="p-3 bg-[var(--alert)]/80 rounded-[var(--r-m)] text-[var(--alert)] text-xs flex items-center gap-2">
+            <div className="p-3 bg-[var(--alert)] rounded-[var(--r-m)] text-[var(--on-alert)] text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
               <span>{error}</span>
             </div>

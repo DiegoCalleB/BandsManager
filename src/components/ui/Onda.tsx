@@ -188,14 +188,20 @@ export const OndaSeries: React.FC<OndaSeriesProps> = ({
       {showLabels && (
         <>
           <div style={{ display: 'flex', gap: gap * 2, justifyContent: 'center', marginTop: 8 }}>
-            {labels.map((label) => (
-              <div
-                key={`x-${label}`}
-                style={{ width: series.length * barWidth + (series.length - 1) * gap, textAlign: 'center', fontSize: 11, color: 'var(--ink-2)' }}
-              >
-                {label}
-              </div>
-            ))}
+            {labels.map((label, i) => {
+              // Etiqueta cada k grupos: con 10 fechas de ~28px de ancho por grupo, todas juntas se pisan
+              // (31/0804/0908/09…). Se pinta 1 de cada k y el resto conserva su hueco vacío.
+              const ancho = series.length * barWidth + (series.length - 1) * gap;
+              const k = Math.max(1, Math.ceil(44 / (ancho + gap * 2)));
+              return (
+                <div
+                  key={`x-${label}-${i}`}
+                  style={{ width: ancho, textAlign: 'center', fontSize: 11, color: 'var(--ink-2)', whiteSpace: 'nowrap', overflow: 'visible', fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {i % k === 0 ? label : ''}
+                </div>
+              );
+            })}
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 12, fontSize: 12 }}>
             {series.map((s) => (

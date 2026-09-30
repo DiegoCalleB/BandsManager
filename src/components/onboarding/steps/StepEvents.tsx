@@ -88,8 +88,8 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                 <div
                   className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-bold text-xs ${
                     ev.tipo === "ensayo"
-                      ? "bg-[var(--acc)]/10 text-[var(--acc)]"
-                      : "bg-[var(--acc)]/10 text-[var(--acc)]"
+                      ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                      : "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                   }`}
                 >
                   <span className="text-micro font-semibold">
@@ -209,7 +209,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                 <ShowIcon inline emoji="📊" />Éxito / Afluencia Real (Opcional - Contexto para Agente IA)
               </span>
               {setNewEventIsMilestone && (
-                <label className="flex items-center gap-1.5 cursor-pointer text-micro font-mono text-[var(--acc)] font-bold bg-[var(--acc)]/20 px-2 py-0.5 rounded ">
+                <label className="flex items-center gap-1.5 cursor-pointer text-micro font-mono text-[var(--acc-ink)] font-bold bg-[var(--acc)]/20 px-2 py-0.5 rounded ">
                   <input
                     type="checkbox"
                     checked={newEventIsMilestone}

@@ -396,7 +396,7 @@ export function CampaignManagerModal({
                   {formData.targetCities?.map((city) => (
                     <span
                       key={city}
-                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink-2)]"
+                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)]"
                     >
                       <MapPin className="w-3 h-3 text-[var(--ink-2)]" />
                       {city}
@@ -520,7 +520,7 @@ export function CampaignManagerModal({
                           handleAddDate(e.target.value);
                           e.target.value = "";
                         }}
-                        className="bg-transparent text-xs font-sans text-[var(--acc)]/40 p-0 focus:ring-0 cursor-pointer"
+                        className="bg-transparent text-xs font-sans text-[var(--acc-ink)] p-0 focus:ring-0 cursor-pointer"
                       />
                     </div>
                   </div>
@@ -565,7 +565,7 @@ export function CampaignManagerModal({
                   <button
                     type="button"
                     onClick={() => setIsMultiTemplatesModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] hover:text-[var(--ink)] transition-ui active:scale-[0.97] cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--ink)] hover:text-[var(--ink)] transition-ui active:scale-[0.97] cursor-pointer"
                     title="Adapta automáticamente el mensaje y objetivo de esta campaña a las 7 categorías de recintos"
                   >
                     <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -574,7 +574,7 @@ export function CampaignManagerModal({
                 </div>
 
                 {templateGenerationFeedback && (
-                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs flex items-center justify-between">
+                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs flex items-center justify-between">
                     <span>{templateGenerationFeedback}</span>
                     <button
                       type="button"
@@ -599,7 +599,7 @@ export function CampaignManagerModal({
                         onClick={() => setActivePitchCategory(cat.id)}
                         className={`inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-[var(--r-pill)] transition-colors ${
                           isSelected
-                            ? "bg-[var(--acc)]/30 text-[var(--acc)]/40"
+                            ? "bg-[var(--acc)]/30 text-[var(--ink)]"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:"
                         }`}
                       >
@@ -684,7 +684,7 @@ export function CampaignManagerModal({
                   <div
                     className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
                       !activeCampaign
-                        ? "bg-[var(--acc)]/60 text-[var(--acc)]/70"
+                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                     }`}
                   >
@@ -696,7 +696,7 @@ export function CampaignManagerModal({
                         Modo general (Sin filtro de campaña)
                       </span>
                       {!activeCampaign && (
-                        <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                        <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)]">
                           ACTIVO
                         </span>
                       )}

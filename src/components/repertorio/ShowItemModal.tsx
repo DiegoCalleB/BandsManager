@@ -73,7 +73,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
       <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card} bg-[var(--acc)]/10`}>
         <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)]"><ShowIcon inline emoji="⚡" /></span>
+            <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded-[var(--r-m)]"><ShowIcon inline emoji="⚡" /></span>
             <div>
               <h3 className={`text-sm font-extrabold font-mono ${colors.text}`}>
                 {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}

@@ -1982,7 +1982,7 @@ export default function Chatbot({
                           {pendingActions.length > 1 && (
                             <button
                               onClick={() => handleConfirmAllActions(msg.id, msg.proposedActions || [])}
-                              className={`text-micro font-bold font-sans px-2 py-1 rounded-[var(--r-pill)] transition-ui active:scale-[0.97] ${'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]'}`}
+                              className={`text-micro font-bold font-sans px-2 py-1 rounded-[var(--r-pill)] transition-ui active:scale-[0.97] ${'bg-[var(--tentative)] text-[var(--on-tentative)] hover:bg-[var(--tentative)]'}`}
                             >
                               <ShowIcon inline emoji="⚡" />Aprobar Todos ({pendingActions.length})
                             </button>
@@ -2012,7 +2012,7 @@ export default function Chatbot({
                                   return (
                                     <div className="space-y-2">
                                       <div
-                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc)]'}`}
+                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc-ink)]'}`}
                                       >
                                         <span>{acc.bpm} BPM</span>
                                         <span>· Tono {acc.keyName}</span>
@@ -2054,7 +2054,7 @@ export default function Chatbot({
                                                   handleSaveAccompanimentToSong(audioKey, acc, songPicker[audioKey].selectedId)
                                                 }
                                                 disabled={!songPicker[audioKey].selectedId || audioState.saving}
-                                                className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                                className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]'}`}
                                               >
                                                 {audioState.saving ? (
                                                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2092,7 +2092,7 @@ export default function Chatbot({
                                           type="button"
                                           onClick={() => handleGenerateAccompanimentAudio(audioKey, acc)}
                                           disabled={audioState?.loading}
-                                          className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                          className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]'}`}
                                         >
                                           {audioState?.loading ? (
                                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2123,7 +2123,7 @@ export default function Chatbot({
                                   return (
                                     <div className="space-y-2">
                                       <div
-                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc)]'}`}
+                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc-ink)]'}`}
                                       >
                                         <span>{instrumentLabels[idea.instrument]}</span>
                                         <span>· {idea.bpm} BPM</span>
@@ -2172,7 +2172,7 @@ export default function Chatbot({
                                                 type="button"
                                                 onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea, songPicker[audioKey].selectedId)}
                                                 disabled={!songPicker[audioKey].selectedId || audioState.saving}
-                                                className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                                className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]'}`}
                                               >
                                                 {audioState.saving ? (
                                                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2210,7 +2210,7 @@ export default function Chatbot({
                                           type="button"
                                           onClick={() => handleGenerateMelodicIdeaAudio(audioKey, idea)}
                                           disabled={audioState?.loading}
-                                          className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                          className={`w-full flex items-center justify-center gap-1.5 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]'}`}
                                         >
                                           {audioState?.loading ? (
                                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2231,7 +2231,7 @@ export default function Chatbot({
                                   <button
                                     id={`confirm-proposal-btn-${msg.id}-${aIdx}`}
                                     onClick={() => handleConfirmAction(msg.id, realIdx, act)}
-                                    className={`flex-1 text-micro font-bold font-sans py-2 rounded-[var(--r-pill)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                    className={`flex-1 text-micro font-bold font-sans py-2 rounded-[var(--r-pill)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 ${'bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]'}`}
                                   >
                                     ✓ Aprobar esta
                                   </button>
@@ -2301,17 +2301,17 @@ export default function Chatbot({
               <div className="flex items-center justify-between">
                 <span className="text-micro font-sans text-[var(--ink-2)]">Estado</span>
                 {activeRun.status === 'queued' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)]">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc-ink)]">
                     <ShowIcon inline emoji="🕒" />En Cola
                   </span>
                 )}
                 {activeRun.status === 'fetching' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/20">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink)] -indigo-500/20">
                     <ShowIcon inline emoji="🔄" />Despachando
                   </span>
                 )}
                 {activeRun.status === 'in_progress' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -cyan-500/20">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)] -cyan-500/20">
                     <ShowIcon inline emoji="⚙️" />Ejecutando…
                   </span>
                 )}
@@ -2321,7 +2321,7 @@ export default function Chatbot({
                   </span>
                 )}
                 {activeRun.status === 'completed' && activeRun.conclusion === 'failure' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--alert)] -rose-500/20">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink)] -rose-500/20">
                     <ShowIcon inline emoji="❌" />Fallido
                   </span>
                 )}
@@ -2353,7 +2353,7 @@ export default function Chatbot({
                         dotColor = 'bg-[var(--alert)]';
                         textColor = 'text-[var(--alert)] font-bold';
                       } else if (isStepRunning) {
-                        dotColor = 'bg-[var(--acc)]/80 animate-ping';
+                        dotColor = 'bg-[var(--acc)] animate-ping';
                         textColor = 'text-[var(--acc)] font-bold';
                       }
 
@@ -2578,7 +2578,7 @@ export default function Chatbot({
                                 {items.map((item, iIdx) => (
                                   <div
                                     key={iIdx}
-                                    className={`p-1.5 rounded text-micro font-sans flex flex-col gap-0.5 ${'bg-[var(--ink)]/60 -neutral-200/50 text-[var(--ink-2)]'}`}
+                                    className={`p-1.5 rounded text-micro font-sans flex flex-col gap-0.5 ${'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
                                   >
                                     <div className="flex justify-between items-start">
                                       <strong className={`${'text-[var(--ink)]'} font-semibold truncate`}>{item.nombre_sala}</strong>
@@ -2659,7 +2659,7 @@ export default function Chatbot({
           type="submit"
           disabled={!inputText.trim() || isLoading}
           className={`p-2.5 rounded-[var(--r-pill)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 ${
-            inputText.trim() ? 'bg-[var(--ok)]/80 text-[var(--ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+            inputText.trim() ? 'bg-[var(--ok)] text-[var(--on-ok)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
           }`}
         >
           <Send className={`w-4 h-4 ${inputText.trim() ? 'text-[var(--ink)]' : 'text-[var(--ink-2)]'}`} />

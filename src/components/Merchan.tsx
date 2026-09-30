@@ -372,12 +372,12 @@ export default function Merchan({
       {hasGiftPending && (
         <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/20   flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
-            <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)] text-[var(--on-acc)] flex items-center justify-center shrink-0">
               <Gift className="w-6 h-6 stroke-[2.5]" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)]">
+                <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)]">
                   Regalo de bienvenida · plan de Gira
                 </span>
                 <span className="text-micro font-sans text-[var(--acc)]/70 font-bold">
@@ -428,7 +428,7 @@ export default function Merchan({
                 onClick={() => setProductType("camiseta")}
                 className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-ui ${
                   productType === "camiseta"
-                    ? "bg-[var(--acc)] text-[var(--ink)]/10"
+                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -439,7 +439,7 @@ export default function Merchan({
                 onClick={() => setProductType("pegatina")}
                 className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-ui ${
                   productType === "pegatina"
-                    ? "bg-[var(--acc)] text-[var(--ink)]/10"
+                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -460,7 +460,7 @@ export default function Merchan({
                 onClick={() => setAssetType("logo")}
                 className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "logo"
-                    ? "bg-[var(--acc)]/15 text-[var(--acc)]/30"
+                    ? "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -471,7 +471,7 @@ export default function Merchan({
                 onClick={() => setAssetType("portada")}
                 className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "portada"
-                    ? "bg-[var(--acc)]/15 text-[var(--acc)]/30"
+                    ? "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -485,7 +485,7 @@ export default function Merchan({
                 }}
                 className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "custom"
-                    ? "bg-[var(--acc)]/15 text-[var(--acc)]/30"
+                    ? "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -659,7 +659,7 @@ export default function Merchan({
               isGenerating
                 ? "opacity-70 cursor-not-allowed"
                 : ""
-            } ${"bg-[var(--acc)]  text-[var(--ink)]/10"}`}
+            } ${"bg-[var(--acc)]  text-[var(--on-acc)]"}`}
           >
             {isGenerating ? (
               <>
@@ -849,7 +849,7 @@ export default function Merchan({
                         </button>
                         <button
                           onClick={() => handleDelete(design.id)}
-                          className="px-4 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 bg-[var(--alert)]/90 text-[var(--ink)] hover:bg-[var(--alert)] transition"
+                          className="px-4 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)] transition"
                         >
                           <Trash2 className="w-4 h-4" />
                           Eliminar
@@ -880,13 +880,13 @@ export default function Merchan({
             {/* Modal Header */}
             <div className="p-5 bg-[var(--sunken)]  flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] flex items-center justify-center font-bold">
                   <Gift className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold font-display text-[var(--ink)] flex items-center gap-2">
                     <span>Canjear pack de pegatinas gratis</span>
-                    <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                    <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)]">
                       100 uds
                     </span>
                   </h3>
@@ -920,7 +920,7 @@ export default function Merchan({
                     <div className="p-4 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col sm:flex-row items-center gap-5">
                       {/* Sticker Preview visual */}
                       <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] p-2 flex flex-col items-center justify-center transform -rotate-3">
-                        <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold flex items-center justify-center text-lg font-display mb-1">
+                        <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-bold flex items-center justify-center text-lg font-display mb-1">
                           {bandInitials}
                         </div>
                         <span className="text-micro font-bold font-display text-[var(--ink)]">
@@ -1064,7 +1064,7 @@ export default function Merchan({
               ) : (
                 /* Pantalla de Confirmación Posterior */
                 <div className="py-8 flex flex-col items-center text-center space-y-4">
-                  <div className="w-16 h-16 rounded-[var(--r-pill)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)] animate-bounce">
+                  <div className="w-16 h-16 rounded-[var(--r-pill)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ink)] animate-bounce">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
 

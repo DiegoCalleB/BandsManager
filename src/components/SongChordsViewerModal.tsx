@@ -364,12 +364,12 @@ export function SongChordsViewerModal({
                     {formatSongTitle(song.titulo)}
                   </h2>
                   {song.esVersionCovers && (
-                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
+                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)] text-[var(--on-tentative)]">
                       Cover
                     </span>
                   )}
                   {isPlayingAudio && (
-                    <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-full bg-[var(--ok)]/80 text-[var(--ok)]">
+                    <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-full bg-[var(--ok)] text-[var(--on-ok)]">
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]"></span>
                       En reproducción
                     </span>
@@ -429,7 +429,7 @@ export function SongChordsViewerModal({
                 }
               >
                 <Wand2
-                  className={`w-4 h-4 text-[var(--acc)]/40 ${isGeneratingAi ? "animate-spin" : ""}`}
+                  className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
                 />
                 <span>{isGeneratingAi ? "Generando..." : "IA Cifrado"}</span>
               </button>
@@ -438,7 +438,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={() => setShowStructureUploadModal(true)}
-                className="p-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ok)] transition cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] transition cursor-pointer"
                 title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
               >
                 <Upload className="w-4 h-4" />
@@ -634,7 +634,7 @@ export function SongChordsViewerModal({
                     className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1 transition cursor-pointer ${
                       isAutoScrolling
                         ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                        : "bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)]"
+                        : "bg-[var(--ink)]/10 text-[var(--ink)] hover:text-[var(--ink)]"
                     }`}
                     title="Iniciar/Pausar Desfile Automático"
                   >
@@ -659,7 +659,7 @@ export function SongChordsViewerModal({
                           className={`w-5 h-5 rounded text-micro font-bold flex items-center justify-center transition cursor-pointer ${
                             scrollSpeed === v
                               ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                              : "bg-[var(--ink)]/10 text-[var(--ink-2)]"
+                              : "bg-[var(--ink)]/10 text-[var(--ink)]"
                           }`}
                         >
                           {v}x
@@ -675,7 +675,7 @@ export function SongChordsViewerModal({
                   onClick={() => setShowChordDiagrams(!showChordDiagrams)}
                   className={`px-2.5 py-1 rounded-[var(--r-pill)] font-bold transition cursor-pointer ${
                     showChordDiagrams
-                      ? "bg-[var(--acc)]/90 text-[var(--tentative)]/80"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -704,7 +704,7 @@ export function SongChordsViewerModal({
             <div
               className={` px-4 py-2 text-xs font-sans flex items-center justify-between animate-in fade-in ${
                 aiSuccessMsg.startsWith("⚠️")
-                  ? "bg-[var(--acc-soft)] text-[var(--acc)]/70"
+                  ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
                   : "bg-[var(--ok-soft)]/40 text-[var(--ink-2)]"
               }`}
             >
@@ -768,7 +768,7 @@ export function SongChordsViewerModal({
               {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
               {activeTab === "substitute" && (
                 <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
-                  <div className="bg-[var(--acc)]/60 p-6 rounded-[var(--r-l)] space-y-5">
+                  <div className="bg-[var(--acc)] p-6 rounded-[var(--r-l)] space-y-5">
                     <div className="flex items-center gap-3/30 pb-4">
                       <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)]">
                         <UserCheck className="w-6 h-6" />
@@ -840,7 +840,7 @@ export function SongChordsViewerModal({
                       <button
                         type="button"
                         onClick={() => setActiveTab("edit")}
-                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
+                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
                       >
                         <Edit3 className="w-4 h-4" />
                         <span>Editar esta Ficha de Sustitución</span>
@@ -1072,7 +1072,7 @@ function renderFormattedChordSheet(text: string) {
           key={idx}
           className="text-[var(--acc)] font-bold text-base my-2 pt-2 flex items-center gap-2"
         >
-          <span className="px-2.5 py-0.5 rounded bg-[var(--acc)]/90 text-[var(--tentative)]/80">
+          <span className="px-2.5 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)]">
             {line.trim()}
           </span>
         </div>

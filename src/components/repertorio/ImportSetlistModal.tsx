@@ -285,7 +285,7 @@ export function ImportSetlistModal({
               {file && (
                 <button
                   onClick={handleAnalyze}
-                  className="bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
+                  className="bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
                 >
                   Analizar
                 </button>
@@ -301,7 +301,7 @@ export function ImportSetlistModal({
           )}
 
           {error && (
-            <div className="bg-[var(--alert)]/80 rounded-[var(--r-s)] p-4 flex gap-3">
+            <div className="bg-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
               <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
               <p className="text-sm text-[var(--alert)]/60">{error}</p>
             </div>
@@ -439,7 +439,7 @@ export function ImportSetlistModal({
             <button
               onClick={handleCreate}
               disabled={creating || !setlistName.trim()}
-              className="flex-1 bg-[var(--tentative)] hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm flex items-center justify-center gap-1.5"
+              className="flex-1 bg-[var(--tentative)] hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--on-tentative)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm flex items-center justify-center gap-1.5"
             >
               {creating ? (
                 <Loader className="w-4 h-4 animate-spin" />

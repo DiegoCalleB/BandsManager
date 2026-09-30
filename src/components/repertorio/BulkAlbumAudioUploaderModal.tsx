@@ -743,7 +743,7 @@ export function BulkAlbumAudioUploaderModal({
               className="hidden"
             />
 
-            <div className="w-14 h-14 rounded-[var(--r-l)] bg-[var(--ink)]/10 flex items-center justify-center text-[var(--ok)]">
+            <div className="w-14 h-14 rounded-[var(--r-l)] bg-[var(--ink)]/10 flex items-center justify-center text-[var(--ink)]">
               {isProcessingFiles ? (
                 <RefreshCw className="w-7 h-7 animate-spin" />
               ) : (
@@ -843,7 +843,7 @@ export function BulkAlbumAudioUploaderModal({
                           className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-ui cursor-pointer ${
                             isPlaying
                               ? "bg-[var(--surface)] text-[var(--ink)]"
-                              : "bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]"
+                              : "bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink)]"
                           }`}
                           title={isPlaying ? "Pausar audio" : "Escuchar previo"}
                         >
@@ -950,8 +950,8 @@ export function BulkAlbumAudioUploaderModal({
                             <span
                               className={`px-2 py-1 rounded text-xs font-sans flex items-center gap-1 ${
                                 item.chordsSource === "plantilla_generica"
-                                  ? "bg-[var(--acc)]/20 text-[var(--acc)]"
-                                  : "bg-[var(--ok)]/20 text-[var(--ok)]"
+                                  ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                                  : "bg-[var(--ok)]/20 text-[var(--ink)]"
                               }`}
                               title={
                                 item.chordsSource === "plantilla_generica"
@@ -977,7 +977,7 @@ export function BulkAlbumAudioUploaderModal({
                             </span>
                           )}
                           {item.status === "transcribing" && (
-                            <span className="px-2 py-1 rounded bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-xs font-sans flex items-center gap-1">
+                            <span className="px-2 py-1 rounded bg-[var(--tentative)]/10 text-[var(--tentative)] text-xs font-sans flex items-center gap-1">
                               <RefreshCw className="w-3.5 h-3.5 animate-spin" />{" "}
                               Analizando acordes (IA)
                             </span>

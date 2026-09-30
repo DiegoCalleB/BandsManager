@@ -21,13 +21,13 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
           </button>
 
           <div className="flex items-center gap-3/20 pb-4">
-            <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]">
               <Keyboard className="w-6 h-6" />
             </div>
             <div>
               <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
                 Atajos de Teclado Tipo Cubase DAW
-                <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--acc)]/40">Modo Studio</span>
+                <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--ink)]">Modo Studio</span>
               </h3>
               <p className="text-xs text-[var(--ink-2)]">
                 Controla la reproducción y grabación multipista directamente con tu teclado en tiempo real.
@@ -43,7 +43,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
               <span className="text-[var(--ink-2)]">Pausar Mantenida</span>
-              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">P</kbd>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc-ink)] font-bold shadow">P</kbd>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
@@ -58,7 +58,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
               <span className="text-[var(--ink-2)]">Fijar Cue In (Inicio Bucle)</span>
-              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/50 font-bold shadow">I</kbd>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)] font-bold shadow">I</kbd>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
@@ -88,12 +88,12 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
               <span className="text-[var(--ink-2)]">Alternar Silencio (Mute)</span>
-              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">M</kbd>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc-ink)] font-bold shadow">M</kbd>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
               <span className="text-[var(--ink-2)]">Alternar solo</span>
-              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">S</kbd>
+              <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc-ink)] font-bold shadow">S</kbd>
             </div>
           </div>
 

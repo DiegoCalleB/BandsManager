@@ -340,16 +340,16 @@ export const ProfileCompletenessCard: React.FC<
     if (percentage >= 85)
       return {
         label: "Entrenamiento Completo (100% Agéntico)",
-        color: "bg-[var(--ok)]/15 text-[var(--ok)]/30",
+        color: "bg-[var(--ok)]/15 text-[var(--ink)]",
       };
     if (percentage >= 50)
       return {
         label: "Entrenamiento Intermedio",
-        color: "bg-[var(--acc)]/15 text-[var(--acc)]/70 ",
+        color: "bg-[var(--acc)]/15 text-[var(--acc-ink)] ",
       };
     return {
       label: "Entrenamiento Inicial",
-      color: "bg-[var(--alert)]/15 text-[var(--ink-2)]/30",
+      color: "bg-[var(--alert)]/15 text-[var(--ink)]",
     };
   };
 
@@ -380,7 +380,7 @@ export const ProfileCompletenessCard: React.FC<
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3/60">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)] flex items-center justify-center shrink-0 font-sans font-bold text-sm">
+          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] flex items-center justify-center shrink-0 font-sans font-bold text-sm">
             {percentage}%
           </div>
           <div>
@@ -406,7 +406,7 @@ export const ProfileCompletenessCard: React.FC<
           {onOpenAutonomyModal && (
             <button
               onClick={() => onOpenAutonomyModal()}
-              className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
+              className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)] text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
             >
               <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span className="hidden xs:inline">Autonomía y caché</span>
@@ -581,7 +581,7 @@ export const ProfileCompletenessCard: React.FC<
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-[var(--acc)]/20 rounded-[var(--r-m)] text-[var(--acc)]">
+                <div className="p-2.5 bg-[var(--acc)]/20 rounded-[var(--r-m)] text-[var(--acc-ink)]">
                   <Bot className="w-6 h-6" />
                 </div>
                 <div>

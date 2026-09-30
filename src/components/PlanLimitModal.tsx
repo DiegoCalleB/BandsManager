@@ -93,11 +93,11 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
 
           {/* Header */}
           <div className="flex items-start gap-4">
-            <div className="p-3 rounded-[var(--r-l)] bg-[var(--acc)]/15 text-[var(--acc)] shrink-0">
+            <div className="p-3 rounded-[var(--r-l)] bg-[var(--acc)]/15 text-[var(--acc-ink)] shrink-0">
               <Lock className="w-7 h-7" />
             </div>
             <div>
-              <span className="text-micro font-sans font-bold text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-[var(--r-s)]">
+              <span className="text-micro font-sans font-bold text-[var(--on-acc)] bg-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
                 Límite de {currentPlanDef.name} alcanzado
               </span>
               <h3 className="text-xl font-bold font-display tracking-wide text-[var(--ink)] mt-1">
@@ -131,7 +131,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                   Plan Recomendado: {targetPlanDef.name}
                 </span>
               </div>
-              <span className="text-xs font-sans text-[var(--ink-2)] font-bold bg-[var(--acc)]/60 px-2.5 py-0.5 rounded-[var(--r-pill)]">
+              <span className="text-xs font-sans text-[var(--on-acc)] font-bold bg-[var(--acc)] px-2.5 py-0.5 rounded-[var(--r-pill)]">
                 {targetPlanDef.badge}
               </span>
             </div>
@@ -181,7 +181,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 onClose();
                 onNavigateToPlanes();
               }}
-              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc-ink)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
             >
               <span>Ver Comparativa Completa</span>
               <ExternalLink className="w-3.5 h-3.5" />

@@ -106,7 +106,7 @@ export function AddLeadModal({
           {/* Header */}
           <div className="flex items-center justify-between pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)]">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)]">
                 {sectionTab === 'medios' ? (
                   <Radio className="w-4 h-4 text-[var(--alert)]" />
                 ) : sectionTab === 'grupos' ? (
@@ -149,7 +149,7 @@ export function AddLeadModal({
                   type="button"
                   onClick={onModalScrape}
                   disabled={isModalScraping || !newLeadData.nombre_sala}
-                  className={`px-2 py-1 text-micro font-sans rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'}`}
+                  className={`px-2 py-1 text-micro font-sans rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] disabled:opacity-50'}`}
                   title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
                 >
                   {isModalScraping ? (
@@ -177,16 +177,16 @@ export function AddLeadModal({
 
             {/* Status Messages */}
             {isModalScraping && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 bg-[var(--acc)]/10 text-[var(--acc)] ">
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 bg-[var(--acc)]/10 text-[var(--acc-ink)] ">
                 <Loader2 className="w-4 h-4 animate-spin shrink-0 text-[var(--acc)]" />
                 <span className="font-medium">{modalScrapeStatus}</span>
               </div>
             )}
             {modalScrapeError && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--alert)] bg-[var(--alert)]/15 "><ShowIcon inline emoji="⚠️" />{modalScrapeError}</div>
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--ink)] bg-[var(--alert)]/15 "><ShowIcon inline emoji="⚠️" />{modalScrapeError}</div>
             )}
             {modalScrapeSuccessMsg && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--ok)] bg-[var(--ok)]/15 ">
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--ink)] bg-[var(--ok)]/15 ">
                 {modalScrapeSuccessMsg}
               </div>
             )}
@@ -322,7 +322,7 @@ export function AddLeadModal({
                           type="button"
                           onClick={handleAutoSearchLogo}
                           disabled={isSearchingLogo || !newLeadData.nombre_sala}
-                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro rounded-[var(--r-pill)] flex items-center gap-1 font-bold transition-ui cursor-pointer disabled:opacity-50"
+                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro rounded-[var(--r-pill)] flex items-center gap-1 font-bold transition-ui cursor-pointer disabled:opacity-50"
                         >
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>

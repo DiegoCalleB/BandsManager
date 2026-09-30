@@ -883,8 +883,8 @@ export function EnergyChart({
                         <span
                           className={`w-3.5 h-3.5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-black shrink-0 ${
                             d.transitionFromPrev.status === "ok"
-                              ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
-                              : "bg-[var(--alert)]/20 text-[var(--ink-2)]"
+                              ? "bg-[var(--ok)]/20 text-[var(--ink)]"
+                              : "bg-[var(--alert)]/20 text-[var(--ink)]"
                           }`}
                         >
                           <ShowIcon inline emoji={d.transitionFromPrev.icon} />

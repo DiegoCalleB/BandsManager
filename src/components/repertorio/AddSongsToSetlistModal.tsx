@@ -142,7 +142,7 @@ export function AddSongsToSetlistModal({
                 onClick={() => setOnlyFavoritos((p) => !p)}
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer transition-colors ${
                   onlyFavoritos
-                    ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                    ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                     : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >

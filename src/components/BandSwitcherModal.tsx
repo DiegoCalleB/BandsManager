@@ -620,7 +620,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
           {/* Top Header */}
           <div className="flex flex-col items-center mb-6 md:mb-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs font-sans font-bold mb-3">
               <span>Perfil y selección de banda</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black font-display text-[var(--ink)]">
@@ -650,13 +650,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           </div>
 
           {errorMessage && (
-            <div className="mb-4 p-3 bg-[var(--alert)]/15 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] font-medium">
+            <div className="mb-4 p-3 bg-[var(--alert)]/15 text-[var(--ink)] text-xs rounded-[var(--r-m)] font-medium">
               {errorMessage}
             </div>
           )}
 
           {successMessage && (
-            <div className="mb-4 p-3 bg-[var(--ok)]/15 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] font-medium flex items-center justify-center gap-2">
+            <div className="mb-4 p-3 bg-[var(--ok)]/15 text-[var(--ink)] text-xs rounded-[var(--r-m)] font-medium flex items-center justify-center gap-2">
               <Check className="w-4 h-4 text-[var(--ok)]" />
               <span>{successMessage}</span>
             </div>
@@ -721,7 +721,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           disabled={isMain || !!settingMainBandId}
                           className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center z-30 ${
                             isMain
-                              ? "text-[var(--acc)] bg-[var(--acc)]/60"
+                              ? "text-[var(--on-acc)] bg-[var(--acc)]"
                               : "text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-[var(--surface)] hover:bg-[var(--surface)]/80 "
                           }`}
                           title={
@@ -812,7 +812,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <div className="w-full h-full rounded-[var(--r-m)] bg-[var(--acc)]/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
+                        <div className="w-full h-full rounded-[var(--r-m)] bg-[var(--acc)]/15 flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1">
                           <Guitar className="w-8 h-8 opacity-80" />
                           <span className="text-xs font-bold font-sans text-[var(--ink-2)]">
                             {band.bandName.slice(0, 2).toUpperCase()}
@@ -822,7 +822,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       {/* Loading Spinner Overlay */}
                       {(isSwitching || isSettingMain || isLeavingThis) && (
-                        <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--acc)] gap-1 z-30">
+                        <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--on-scrim)] gap-1 z-30">
                           <Loader2 className="w-5 h-5 animate-spin text-[var(--acc)]" />
                           <span className="text-micro font-sans text-[var(--acc)] font-bold">
                             {isSettingMain
@@ -889,7 +889,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     {/* Active Status Badge */}
                     <div className="mt-1.5 flex items-center justify-center h-5 shrink-0">
                       {isActive && (
-                        <span className="inline-flex items-center gap-1 text-micro font-sans font-bold px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)]">
+                        <span className="inline-flex items-center gap-1 text-micro font-sans font-bold px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink)]">
                           <Check className="w-2.5 h-2.5 stroke-[3]" />
                           <span>Activa</span>
                         </span>
@@ -1013,7 +1013,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     })()}
 
                     {uploadingBandId === selectedBandForSettings.band_id && (
-                      <div className="absolute inset-0 bg-[var(--scrim)]/80 flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1">
+                      <div className="absolute inset-0 bg-[var(--scrim)]/80 flex flex-col items-center justify-center text-[var(--on-scrim)] gap-1">
                         <Loader2 className="w-5 h-5 animate-spin text-[var(--acc-ink)]" />
                         <span className="text-micro font-mono text-[var(--acc-ink)] ">
                           Subiendo
@@ -1133,7 +1133,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                 <div className="space-y-5">
                   <div className="flex items-center justify-between pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
+                      <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
                         <Guitar className="w-6 h-6" />
                       </div>
                       <div>
@@ -1305,7 +1305,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         onClick={() => setNewBandFeatureCategory("all")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "all"
-                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -1316,7 +1316,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         onClick={() => setNewBandFeatureCategory("booking")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "booking"
-                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -1327,7 +1327,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         onClick={() => setNewBandFeatureCategory("media")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "media"
-                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -1338,7 +1338,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         onClick={() => setNewBandFeatureCategory("finance")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "finance"
-                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -1527,7 +1527,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         </p>
                       </div>
 
-                      <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center gap-1.5 text-micro font-sans text-[var(--acc)]/70 font-bold">
+                      <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center gap-1.5 text-micro font-sans text-[var(--acc-ink)] font-bold">
                         <span>500 pegatinas gratis</span>
                       </div>
 
@@ -1685,7 +1685,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-150">
             <div className="w-full max-w-sm rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-2)] p-5 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/15 flex items-center justify-center text-[var(--alert)] shrink-0">
+                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/15 flex items-center justify-center text-[var(--ink)] shrink-0">
                   <Trash2 className="w-5 h-5" />
                 </div>
                 <div>
@@ -1754,7 +1754,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
             return (
               <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200 text-left">
                 <div className="w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-2)] overflow-hidden flex flex-col">
-                  <div className="px-6 py-4 bg-[var(--acc)]/60 flex justify-between items-center">
+                  <div className="px-6 py-4 bg-[var(--acc)] flex justify-between items-center">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center">
                         <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1801,7 +1801,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                     {plan.name}
                                   </span>
                                   {isCurrent && (
-                                    <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                                    <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">
                                       Plan actual
                                     </span>
                                   )}
@@ -1832,7 +1832,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                     : "Cambio de plan inmediato"}
                                 </span>
                                 {isCurrent ? (
-                                  <span className="text-micro font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
+                                  <span className="text-micro font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center gap-1">
                                     <Check className="w-3 h-3 text-[var(--acc)]" />
                                     <span>Activo</span>
                                   </span>

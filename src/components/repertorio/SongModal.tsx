@@ -130,7 +130,7 @@ export function SongModal({
           {/* Header */}
           <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--ok)]/15 flex items-center justify-center text-[var(--ok)]">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--ok)]/15 flex items-center justify-center text-[var(--ink)]">
                 <Music className="w-4 h-4" />
               </div>
               <div>

@@ -2048,7 +2048,7 @@ export default function ReelsCenter({
         <div className="flex gap-2.5 items-center flex-wrap">
           <button
             onClick={handleOpenToneModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-ui cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] transition-ui cursor-pointer"
             title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -2062,7 +2062,7 @@ export default function ReelsCenter({
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isSyncingReels
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
-                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] "
+                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] "
             }`}
             title="Sincronizar todas las publicaciones de redes sociales"
           >
@@ -2190,9 +2190,9 @@ export default function ReelsCenter({
                               <span
                                 className={`text-micro font-sans px-1.5 py-0.5 rounded font-bold ${
                                   post.plataforma === "Instagram"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                     : post.plataforma === "TikTok"
-                                      ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                      ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                       : "bg-[var(--surface)]/80 text-[var(--ink)]"
                                 }`}
                               >
@@ -2265,9 +2265,9 @@ export default function ReelsCenter({
                               <span
                                 className={`text-micro font-sans px-1.5 py-0.5 rounded font-bold ${
                                   post.plataforma === "Instagram"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                     : post.plataforma === "TikTok"
-                                      ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                      ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                       : "bg-[var(--surface)]/80 text-[var(--ink)]"
                                 }`}
                               >
@@ -2349,9 +2349,9 @@ export default function ReelsCenter({
                               <span
                                 className={`text-micro font-sans px-1.5 py-0.5 rounded font-bold ${
                                   post.plataforma === "Instagram"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                     : post.plataforma === "TikTok"
-                                      ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                      ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                       : "bg-[var(--surface)]/80 text-[var(--ink)]"
                                 }`}
                               >
@@ -2598,7 +2598,7 @@ export default function ReelsCenter({
                     ) : (
                       <div className="space-y-3">
                         <div
-                          className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc)]`}
+                          className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
                         >
                           <Upload className="w-5 h-5" />
                         </div>
@@ -2622,7 +2622,7 @@ export default function ReelsCenter({
                   >
                     <div className="space-y-4 max-w-xl mx-auto text-center">
                       <div
-                        className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc)]`}
+                        className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
                       >
                         <Youtube className="w-5 h-5" />
                       </div>
@@ -2675,7 +2675,7 @@ export default function ReelsCenter({
                       )}
 
                       {!isFetchingMeta && metaError && (
-                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -[var(--acc)]/20 text-micro text-[var(--acc)]/70 font-sans text-left flex items-start gap-2">
+                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -[var(--acc)]/20 text-micro text-[var(--acc-ink)] font-sans text-left flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                           <span>
                             {metaError} Puedes analizarlo igualmente, pero los
@@ -2710,7 +2710,7 @@ export default function ReelsCenter({
                               )}
                               {videoMeta.durationKnown ? (
                                 <span
-                                  className={`px-1.5 py-0.5 rounded font-bold bg-[var(--acc)]/10 text-[var(--acc)]`}
+                                  className={`px-1.5 py-0.5 rounded font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
                                 >
                                   {formatTime(videoMeta.duration)}
                                 </span>
@@ -2832,7 +2832,7 @@ export default function ReelsCenter({
                     }
                     className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                       (inputType === "file" ? selectedFile : youtubeUrl)
-                        ? "bg-[var(--acc)] text-[var(--acc-ink)]/10 "
+                        ? "bg-[var(--acc)] text-[var(--on-acc)] "
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                     }`}
                   >
@@ -2898,7 +2898,7 @@ export default function ReelsCenter({
                 {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
  presentaban como si los hubiera elegido el modelo. */}
                 {!analysisError && analysisNotice && (
-                  <div className="p-3 bg-[var(--acc)]/10 -[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc)]/70 text-xs flex gap-2 items-start">
+                  <div className="p-3 bg-[var(--acc)]/10 -[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs flex gap-2 items-start">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>{analysisNotice}</span>
                   </div>
@@ -3182,7 +3182,7 @@ export default function ReelsCenter({
                             />
                           </div>
                           <span
-                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 bg-[var(--acc)]/10 text-[var(--acc)]`}
+                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
                           >
                             {highlights[selectedHighlightIndex]?.range}
                           </span>
@@ -3308,7 +3308,7 @@ export default function ReelsCenter({
                               onClick={() => setClipFeedbackScope("global")}
                               className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui flex items-center gap-1 ${
                                 clipFeedbackScope === "global"
-                                  ? "bg-[var(--acc)]/20 text-[var(--acc)] font-bold"
+                                  ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold"
                                   : "bg-transparent text-[var(--ink-2)] hover:text-[var(--ink)]"
                               }`}
                               title="La IA recordará esta corrección también para futuros Reels de la banda"
@@ -3702,7 +3702,7 @@ export default function ReelsCenter({
                               onClick={handleCaptureThumbnail}
                               className={`py-2 px-3 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                                 thumbnailCapturedSuccess
-                                  ? "bg-[var(--ok)]/20 text-[var(--ok)] "
+                                  ? "bg-[var(--ok)]/20 text-[var(--ink)] "
                                   : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] "
                               }`}
                               title="Captura el fotograma actual en alta resolución para usar de portada"
@@ -3803,7 +3803,7 @@ export default function ReelsCenter({
                           </div>
                         )}
                         {scheduleWarnings.length > 0 && (
-                          <div className="p-2.5 bg-[var(--acc)]/10 -[var(--acc)]/30 rounded-[var(--r-s)] text-[var(--acc)] text-xs font-sans mt-2 space-y-1">
+                          <div className="p-2.5 bg-[var(--acc)]/10 -[var(--acc)]/30 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs font-sans mt-2 space-y-1">
                             {scheduleWarnings.map((aviso) => (
                               <div
                                 key={aviso}
@@ -3868,9 +3868,9 @@ export default function ReelsCenter({
                             <span
                               className={`text-micro font-sans px-2 py-0.5 rounded font-bold ${
                                 post.plataforma === "Instagram"
-                                  ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                  ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                   : post.plataforma === "TikTok"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
                                     : "bg-[var(--surface)]/80 text-[var(--ink)]"
                               }`}
                             >

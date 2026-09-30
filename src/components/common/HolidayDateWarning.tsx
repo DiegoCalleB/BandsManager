@@ -19,7 +19,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({ date, ci
     if (audit.riskLevel === 'opportunity') {
       return (
         <span
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] ${className}`}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink)] ${className}`}
           title={`${audit.title}: ${audit.advice}`}
         >
           <span>Víspera Festivo ({audit.holidayName})</span>
@@ -30,7 +30,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({ date, ci
     if (audit.riskLevel === 'high_risk') {
       return (
         <span
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)] ${className}`}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink)] ${className}`}
           title={`${audit.title}: ${audit.advice}`}
         >
           <AlertTriangle className="w-3 h-3 text-[var(--alert)] shrink-0" />
@@ -41,7 +41,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({ date, ci
 
     return (
       <span
-        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 ${className}`}
+        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] ${className}`}
         title={`${audit.title}: ${audit.advice}`}
       >
         <AlertTriangle className="w-3 h-3 text-[var(--acc)] shrink-0" />

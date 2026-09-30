@@ -346,7 +346,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
           {/* Header */}
           <div className="flex items-center justify-between pb-3 /10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)]">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
@@ -432,7 +432,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
           {activeModalTab === "threads" ? (
             <div className="space-y-4 animate-in fade-in duration-150">
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans space-y-1">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs font-sans space-y-1">
                 <div className="font-bold flex items-center gap-1.5 text-[var(--acc)]">
                   <Brain className="w-4 h-4" /> Aprendizaje Few-Shot con
                   Conversaciones Reales
@@ -487,7 +487,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               {/* Loading State */}
               {isLoading ? (
                 <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center">
-                  <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] animate-spin">
+                  <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] animate-spin">
                     <Radio className="w-6 h-6" />
                   </div>
                   <div className="space-y-1">
@@ -762,7 +762,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         toneData.vocabulario_clave.map((word, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-1 rounded-[var(--r-s)] text-micro font-mono bg-[var(--acc)]/10 text-[var(--acc)] "
+                            className="px-2 py-1 rounded-[var(--r-s)] text-micro font-mono bg-[var(--acc)]/10 text-[var(--acc-ink)] "
                           >
                             #{word}
                           </span>
@@ -857,7 +857,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {/* 3. Pitch Recommendation & Connection Points */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-micro">
                     <div
-                      className={`p-3 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--acc)]/50 text-[var(--acc)]"}`}
+                      className={`p-3 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--acc)] text-[var(--on-acc)]"}`}
                     >
                       <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                         <Flame className="w-3 h-3" /> Punto de Conexión con
@@ -870,7 +870,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </div>
 
                     <div
-                      className={`p-3 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--acc)]/50 text-[var(--acc)]"}`}
+                      className={`p-3 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--acc)] text-[var(--on-acc)]"}`}
                     >
                       <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                         <HeartHandshake className="w-3 h-3" /> Recomendación de
@@ -912,7 +912,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         readOnly
                         rows={6}
                         value={toneData.pitch_personalizado_ejemplo}
-                        className={`w-full p-3 rounded-[var(--r-m)] font-mono text-micro leading-relaxed focus:outline-none ${"bg-[var(--ink-3)] text-[var(--ink)]"}`}
+                        className={`w-full p-3 rounded-[var(--r-m)] font-mono text-micro leading-relaxed focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                       />
 
                       {onUseTailoredPitch && (
@@ -935,7 +935,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {/* 5. Self-Refining Tone DNA: reglas aprendidas automáticamente de correcciones del mánager */}
                   {editable && (
                     <div
-                      className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--acc)]/50 "}`}
+                      className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--acc)] "}`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-micro font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
@@ -945,7 +945,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         <button
                           onClick={handleTrainToneDna}
                           disabled={isTraining}
-                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] font-mono text-micro font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] font-mono text-micro font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                           title="Fuerza el análisis de tus correcciones acumuladas ahora mismo, en vez de esperar al refinamiento automático"
                         >
                           {isTraining ? (
@@ -1085,7 +1085,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                         savingManual ||
                                         !(newRuleText[manualKey] || "").trim()
                                       }
-                                      className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                                      className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
                                     >
                                       {savingManual ? "..." : "Añadir"}
                                     </button>
@@ -1133,7 +1133,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         <button
                           onClick={handleTrainToneDna}
                           disabled={isTraining}
-                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] font-mono text-micro font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] font-mono text-micro font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                           title="Fuerza el análisis de tus correcciones acumuladas ahora mismo (pitches y respuestas), en vez de esperar al refinamiento automático"
                         >
                           {isTraining ? (
@@ -1265,7 +1265,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       savingManual ||
                                       !(newRuleText[manualKey] || "").trim()
                                     }
-                                    className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                                    className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
                                   >
                                     {savingManual ? "..." : "Añadir"}
                                   </button>

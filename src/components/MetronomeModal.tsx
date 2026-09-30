@@ -220,13 +220,13 @@ export function MetronomeModal({
           {/* Header */}
           <div className="p-4 flex items-center justify-between bg-[var(--ink)]/5">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
+              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)]">
                 <Clock className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-1.5">
                   Metrónomo Pro
-                  <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                  <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
                     WebAudio API
                   </span>
                 </h3>
@@ -348,7 +348,7 @@ export function MetronomeModal({
                       className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-sans font-bold text-sm transition-ui duration-75 ${
                         isActive
                           ? isAccent
-                            ? "bg-[var(--acc)]/60 text-[var(--ink)] scale-105"
+                            ? "bg-[var(--acc)] text-[var(--on-acc)] scale-105"
                             : "bg-[var(--ok)] text-[var(--on-ok)] scale-105"
                           : "bg-[var(--ink)]/5 text-[var(--ink-2)]"
                       }`}
@@ -416,7 +416,7 @@ export function MetronomeModal({
                     onClick={() => setBpm(p.val)}
                     className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium cursor-pointer transition-colors ${
                       bpm === p.val
-                        ? "bg-[var(--acc)]/20  text-[var(--acc)]/70 font-bold"
+                        ? "bg-[var(--acc)]/20  text-[var(--acc-ink)] font-bold"
                         : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
                     }`}
                   >

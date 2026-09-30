@@ -529,7 +529,7 @@ export const SocialAndFansGrowthChart: React.FC<
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 ">
         <div className="flex items-center gap-3">
           <div
-            className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${"bg-[var(--acc)]/20 text-[var(--acc)]"}`}
+            className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${"bg-[var(--acc)]/20 text-[var(--acc-ink)]"}`}
           >
             <TrendingUp className="w-5 h-5" />
           </div>
@@ -538,7 +538,7 @@ export const SocialAndFansGrowthChart: React.FC<
               className={`text-sm font-bold font-display flex items-center gap-2 ${"text-[var(--ink)]"}`}
             >
               Evolución de redes sociales y base de fans en BBDD
-              <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
+              <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink)] font-sans font-normal flex items-center gap-1">
                 <CheckCircle2 className="w-2.5 h-2.5" /> Supabase Conectada
               </span>
             </h3>
@@ -555,7 +555,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <button
                 type="button"
                 onClick={() => onNavigate("fans")}
-                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70"}`}
+                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc-ink)]"}`}
                 title="Ir al gestor de comunidad, muro y capturas de fans"
               >
                 <Heart className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -589,7 +589,7 @@ export const SocialAndFansGrowthChart: React.FC<
                 <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />{" "}
                 Instagram
               </span>
-              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]/60 font-sans">
+              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)] font-sans">
                 Seguidores
               </span>
             </div>
@@ -617,7 +617,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <span className="text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1">
                 <Video className="w-3.5 h-3.5 text-[var(--acc)]" /> TikTok
               </span>
-              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/80 font-sans">
+              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)] font-sans">
                 Comunidad
               </span>
             </div>
@@ -645,7 +645,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <span className="text-micro font-sans font-bold text-[var(--alert)] flex items-center gap-1">
                 <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" /> YouTube
               </span>
-              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]/60 font-sans">
+              <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)] font-sans">
                 Suscriptores
               </span>
             </div>
@@ -701,7 +701,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <Heart className="w-3.5 h-3.5 text-[var(--acc)] fill-[var(--acc)]/20" />{" "}
               Fans BBDD
             </span>
-            <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans font-bold">
+            <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-sans font-bold">
               Formulario Únete
             </span>
           </div>
@@ -763,7 +763,7 @@ export const SocialAndFansGrowthChart: React.FC<
           {/* Period Summary Indicator */}
           {periodGrowthSummary && (
             <div
-              className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-micro font-sans ${"bg-[var(--ok-soft)] text-[var(--ink-2)]/20"}`}
+              className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-micro font-sans ${"bg-[var(--ok-soft)] text-[var(--ink-2)]"}`}
             >
               <TrendingUp className="w-3 h-3 text-[var(--ok)]" />
               <span>
@@ -805,7 +805,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <div
               className={`flex items-center rounded-[var(--r-s)] transition-ui ${
                 selectedChannels.instagram
-                  ? "bg-[var(--alert)]/15 text-[var(--alert)]/60"
+                  ? "bg-[var(--alert)]/15 text-[var(--ink)]"
                   : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
               }`}
             >
@@ -844,7 +844,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <div
               className={`flex items-center rounded-[var(--r-s)] transition-ui ${
                 selectedChannels.tiktok
-                  ? "bg-[var(--tentative)]/15 text-[var(--acc)]/80"
+                  ? "bg-[var(--tentative)]/15 text-[var(--acc-ink)]"
                   : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
               }`}
             >
@@ -854,7 +854,7 @@ export const SocialAndFansGrowthChart: React.FC<
                 className="px-2 py-1 flex items-center gap-1.5 text-micro font-sans font-medium cursor-pointer"
               >
                 <span
-                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.tiktok ? "bg-[var(--acc)]/80" : "bg-[var(--sunken)]"}`}
+                  className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.tiktok ? "bg-[var(--acc)]" : "bg-[var(--sunken)]"}`}
                 ></span>
                 <Video className="w-3 h-3 text-[var(--acc)]" />
                 <span>TikTok</span>
@@ -883,7 +883,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <div
               className={`flex items-center rounded-[var(--r-s)] transition-ui ${
                 selectedChannels.youtube
-                  ? "bg-[var(--alert)]/90 text-[var(--alert)]/60"
+                  ? "bg-[var(--alert)] text-[var(--on-alert)]"
                   : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
               }`}
             >
@@ -970,11 +970,11 @@ export const SocialAndFansGrowthChart: React.FC<
               className="px-2 py-1 flex items-center gap-1.5 text-micro font-sans cursor-pointer"
             >
               <span
-                className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.fans ? "bg-[var(--acc)]/60" : "bg-[var(--sunken)]"}`}
+                className={`w-2 h-2 rounded-[var(--r-pill)] ${selectedChannels.fans ? "bg-[var(--acc)]" : "bg-[var(--sunken)]"}`}
               ></span>
               <Heart className="w-3 h-3 text-[var(--acc)] fill-[var(--acc)]/30" />
               <span>Fans BD (Únete)</span>
-              <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70 font-sans font-bold">
+              <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold">
                 {totalFans}
               </span>
               {selectedChannels.fans ? (

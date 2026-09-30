@@ -269,7 +269,7 @@ export function PerfectSetlistModal({
               {canUndo && (
                 <button
                   onClick={onUndo}
-                  className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
+                  className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
                   title="Deshacer el último cambio del setlist"
                 >
                   <ShowIcon inline emoji="↩️" />Deshacer
@@ -381,7 +381,7 @@ export function PerfectSetlistModal({
                         <button
                           type="button"
                           onClick={() => handleUndo(idx)}
-                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
+                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
                           title="Deshacer este cambio"
                         >
                           <ShowIcon inline emoji="↩️" />Deshacer
@@ -392,7 +392,7 @@ export function PerfectSetlistModal({
                         <button
                           type="button"
                           onClick={() => handleApply(idx)}
-                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)]/50 hover:bg-[var(--ok)] text-[var(--ok)] font-bold text-micro font-sans transition whitespace-nowrap"
+                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] font-bold text-micro font-sans transition whitespace-nowrap"
                           title="Aplicar este cambio al setlist"
                         >
                           ✓ Aplicar
@@ -466,7 +466,7 @@ export function PerfectSetlistModal({
                   onClick={() => setFeedbackScope('global')}
                   className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui flex items-center gap-1 ${
                     feedbackScope === 'global'
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
+                      ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold'
                       : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                   }`}
                   title="La IA recordará esta corrección también para futuros setlists de la banda"

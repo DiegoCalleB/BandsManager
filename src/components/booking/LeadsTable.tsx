@@ -141,7 +141,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="conf"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--alert)]/80 text-[var(--alert)] font-bold "
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--alert)] text-[var(--on-alert)] font-bold "
             title={conflict.mensaje}
           >
             <ShowIcon inline emoji="🔴" />Conflicto
@@ -151,7 +151,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="compat"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--ok)]/80 text-[var(--ok)] font-bold "
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--ok)] text-[var(--on-ok)] font-bold "
             title={conflict.mensaje}
           >
             <ShowIcon inline emoji="🚗" />Enlace 2x1
@@ -163,7 +163,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="camp"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)]/80 text-[var(--acc)] font-semibold "
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)] text-[var(--on-acc)] font-semibold "
             title={`Fechas campaña: ${campaignFreeDates.join(", ")}`}
           >
             <ShowIcon inline emoji="🎯" />{campaignFreeDates.length} d.
@@ -173,7 +173,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="free"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)]/80 text-[var(--acc)] font-semibold "
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)] text-[var(--on-acc)] font-semibold "
             title={`Fechas libres detectadas: ${freeDates.join(", ")}`}
           >
             <CalendarCheck className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
@@ -186,7 +186,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         badges.push(
           <span
             key="hist"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)]/60 text-[var(--acc)] "
+            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)] text-[var(--on-acc)] "
             title={hist.resumenTexto}
           >
             <ShowIcon inline emoji="🏛️" />{hist.totalConciertos} prev.
@@ -263,9 +263,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             onClick={(e) => e.stopPropagation()}
             className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer ${
               wegowStatus === "ok"
-                ? "bg-[var(--ok)]/80 text-[var(--ok)]"
+                ? "bg-[var(--ok)] text-[var(--on-ok)]"
                 : wegowStatus === "error"
-                  ? "bg-[var(--alert)]/80 text-[var(--alert)]"
+                  ? "bg-[var(--alert)] text-[var(--on-alert)]"
                   : "bg-[var(--sunken)]/80 text-[var(--ink-2)]"
             }`}
             title={
@@ -286,7 +286,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             onClick={(e) => e.stopPropagation()}
             className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer ${
               bandsintownStatus === "ok"
-                ? "bg-[var(--acc)]/80 text-[var(--acc)]"
+                ? "bg-[var(--acc)] text-[var(--on-acc)]"
                 : "bg-[var(--sunken)]/80 text-[var(--ink-2)]"
             }`}
             title={
@@ -301,14 +301,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
           </a>
 
           {contrastado && (
-            <span className="text-micro text-[var(--acc)] font-bold bg-[var(--acc)]/70 px-1 py-0.2 rounded">
+            <span className="text-micro text-[var(--on-acc)] font-bold bg-[var(--acc)] px-1 py-0.2 rounded">
               <ShowIcon inline emoji="⭐" />Contrastado (Fiabilidad {fiabilidad})
             </span>
           )}
 
           {conflict.status === "conflicto_directo" && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--alert)]/90 text-[var(--alert)] font-bold"
+              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--alert)] text-[var(--on-alert)] font-bold"
               title={conflict.mensaje}
             >
               <ShowIcon inline emoji="🔴" />Conflicto agenda
@@ -317,7 +317,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
           {conflict.status === "cercano_compatible" && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--ok)]/90 text-[var(--ok)] font-bold"
+              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--ok)] text-[var(--on-ok)] font-bold"
               title={conflict.mensaje}
             >
               <ShowIcon inline emoji="🚗" />Enlace 2x1
@@ -326,7 +326,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
           {hist && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--acc)]/70 text-[var(--acc)] "
+              className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-[var(--acc)] text-[var(--on-acc)] "
               title={hist.resumenTexto}
             >
               <ShowIcon inline emoji="🏛️" />{hist.totalConciertos}{" "}
@@ -378,7 +378,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Ver web u obtener programación de ${lead.nombre_sala}`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-medium text-[var(--acc)]/90 bg-[var(--acc)]/50 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer group"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-medium text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 transition-colors cursor-pointer group"
             >
               <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
               <span>(no se han encontrado datos de fechas de esta sala)</span>
@@ -451,7 +451,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`La agenda publicada de esta sala solo llega hasta ${maxFechaFmt || "meses anteriores"}. Oportunidad para enviar propuesta antes de que cierren agenda.`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/90 text-[var(--acc)] hover:bg-[var(--acc)]/90 transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 transition-colors shadow-2xs group cursor-pointer"
             >
               <Clock className="w-3 h-3 text-[var(--acc)] shrink-0" />
               <span>
@@ -475,7 +475,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Cierre temporal o fuera de temporada en la época de la campaña`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/90 text-[var(--acc)] hover:bg-[var(--acc)]/90 transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 transition-colors shadow-2xs group cursor-pointer"
             >
               <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
               <span>FUERA DE TEMPORADA / VACACIONES</span>
@@ -516,7 +516,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || "Buscar en Google"})`}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--alert)]/90 text-[var(--alert)] hover:bg-[var(--alert)]/90 transition-colors shadow-2xs group cursor-pointer"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)]/90 transition-colors shadow-2xs group cursor-pointer"
             >
               <AlertCircle className="w-3 h-3 text-[var(--alert)] shrink-0" />
               <span>
@@ -539,7 +539,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     ) {
       return lead.nombre_sala ? (
         <div className="flex flex-col gap-0.5 mt-0.5">
-          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-medium text-[var(--acc)]/90 bg-[var(--acc)]/40 ">
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-medium text-[var(--ink)] bg-[var(--acc)]/40 ">
             <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
             (no se han encontrado datos de fechas de esta sala)
           </span>
@@ -552,7 +552,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       return (
         <div className="flex flex-col gap-0.5 mt-0.5">
           <span
-            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--acc)]/90 text-[var(--acc)] shadow-2xs cursor-pointer hover:bg-[var(--acc)] transition-colors"
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shadow-2xs cursor-pointer hover:bg-[var(--acc)] transition-colors"
             title={`Fechas libres detectadas por radar: ${freeDates.join(", ")}`}
             onClick={(e) => {
               e.stopPropagation();
@@ -569,7 +569,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
     return (
       <div className="flex flex-col gap-0.5 mt-0.5">
-        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans text-[var(--acc)]/90 bg-[var(--acc)]/40 ">
+        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans text-[var(--ink)] bg-[var(--acc)]/40 ">
           (no se han encontrado datos de fechas de esta sala)
         </span>
         {renderSourcePills()}
@@ -646,28 +646,28 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     const t = (tipoRaw || "sala").toLowerCase().trim();
     if (t === "festival") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
           <ShowIcon inline emoji="🎪" />Festival
         </span>
       );
     }
     if (t === "discoteca" || t === "club") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
           <ShowIcon inline emoji="🪩" />Club
         </span>
       );
     }
     if (t === "teatro" || t === "auditorio") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
           <ShowIcon inline emoji="🎭" />Teatro
         </span>
       );
     }
     if (t === "ayuntamiento") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
           <ShowIcon inline emoji="🏛️" />Ayto
         </span>
       );
@@ -679,7 +679,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       t === "televisión"
     ) {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
           <ShowIcon inline emoji="📻" />Medio
         </span>
       );
@@ -691,7 +691,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       t === "sello"
     ) {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--ok)]/80 text-[var(--ok)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--ok)] text-[var(--on-ok)] shrink-0">
           <ShowIcon inline emoji="💼" />Agencia
         </span>
       );
@@ -708,7 +708,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (temp === "muy_caliente" || lead.ultimo_sentimiento === "muy_positivo") {
       return (
         <span
-          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--ok)]/20 text-[var(--ok)] shrink-0 shadow-xs"
+          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--ok)]/20 text-[var(--ink)] shrink-0 shadow-xs"
           title="Lead muy receptivo / Cierre inminente"
         >
           <Flame className="w-2.5 h-2.5 text-[var(--ok)] fill-emerald-400" />
@@ -722,7 +722,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     ) {
       return (
         <span
-          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 shadow-xs"
+          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0 shadow-xs"
           title="Interés alto"
         >
           <Flame className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -733,7 +733,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (temp === "tibio") {
       return (
         <span
-          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-medium bg-[var(--acc)]/15 text-[var(--acc)] shrink-0"
+          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-medium bg-[var(--acc)]/15 text-[var(--acc-ink)] shrink-0"
           title="En evaluación / Interés templado"
         >
           <span><ShowIcon inline emoji="🌤️" />Tibio</span>
@@ -759,35 +759,35 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
     if (intent === "confirmar_fecha" || intent === "proponer_fechas") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink)] ">
           <ShowIcon inline emoji="📅" />Pide fechas
         </span>
       );
     }
     if (intent === "pedir_cache") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
           <ShowIcon inline emoji="💰" />Negociación caché
         </span>
       );
     }
     if (intent === "pedir_info_tecnica") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
           <ShowIcon inline emoji="🎛️" />Pide rider
         </span>
       );
     }
     if (intent === "rechazo_programacion_llena") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
           <ShowIcon inline emoji="⏳" />Prog. Llena
         </span>
       );
     }
     if (intent === "derivar_contacto") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
           <ShowIcon inline emoji="📋" />Deriva contacto
         </span>
       );
@@ -859,7 +859,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               )}
             </button>
             {selectedLeadIds.length > 0 && (
-              <span className="text-[var(--acc)] font-bold bg-[var(--acc)]/15 px-2 py-0.5 rounded-[var(--r-s)] text-xs">
+              <span className="text-[var(--acc-ink)] font-bold bg-[var(--acc)]/15 px-2 py-0.5 rounded-[var(--r-s)] text-xs">
                 {selectedLeadIds.length} selecc.
               </span>
             )}
@@ -868,7 +868,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               type="button"
               onClick={handleBatchScanDates}
               disabled={isScanningBatchDates}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/90 hover:bg-[var(--acc)] text-[var(--acc)] hover:text-[var(--ink)] transition-ui cursor-pointer shadow-xs disabled:opacity-50 text-xs font-sans font-semibold"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] hover:text-[var(--ink)] transition-ui cursor-pointer shadow-xs disabled:opacity-50 text-xs font-sans font-semibold"
               title="Escanea las carteleras de los recintos de la campaña para detectar sus fines de semana libres"
             >
               {isScanningBatchDates ? (
@@ -887,7 +887,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       </div>
 
       {batchScanResult && (
-        <div className="mb-3 p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--acc)] text-xs font-sans flex items-center justify-between gap-2 animate-fadeIn">
+        <div className="mb-3 p-2.5 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans flex items-center justify-between gap-2 animate-fadeIn">
           <span>{batchScanResult}</span>
           <button
             type="button"
@@ -1074,12 +1074,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             lead.financial_break_even.entradas_break_even /
                               (lead.aforo || 250) <=
                             0.4
-                              ? "bg-[var(--ok)]/60 text-[var(--ok)] "
+                              ? "bg-[var(--ok)] text-[var(--on-ok)] "
                               : lead.financial_break_even.entradas_break_even /
                                     (lead.aforo || 250) <=
                                   0.7
-                                ? "bg-[var(--acc)]/60 text-[var(--acc)] "
-                                : "bg-[var(--alert)]/60 text-[var(--alert)] "
+                                ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                                : "bg-[var(--alert)] text-[var(--on-alert)] "
                           }`}
                           title={`Break-Even: Cubre gastos vendiendo ${lead.financial_break_even.entradas_break_even} entradas (${Math.round((lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) * 100)}% del aforo)`}
                         >
@@ -1131,7 +1131,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         {lead.fechas_propuestas_sala &&
                           lead.fechas_propuestas_sala.length > 0 && (
                             <span
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] text-micro font-mono font-semibold"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro font-mono font-semibold"
                               title={`Fechas propuestas por la sala: ${lead.fechas_propuestas_sala.join(", ")}`}
                             >
                               <Calendar className="w-3 h-3 text-[var(--acc)] shrink-0" />
@@ -1144,7 +1144,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           )}
                         {lead.condiciones_economicas_detectadas?.cifra && (
                           <span
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] text-micro font-mono font-semibold"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink)] text-micro font-mono font-semibold"
                             title={`Condiciones económicas: ${lead.condiciones_economicas_detectadas.tipo || ""} ${lead.condiciones_economicas_detectadas.detalles || ""}`}
                           >
                             <Coins className="w-3 h-3 text-[var(--ok)] shrink-0" />
@@ -1169,7 +1169,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
                     {/* Tactical Playbook Chip */}
                     {lead.estrategia_playbook && (
-                      <div className="p-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-micro text-[var(--acc)] flex items-center justify-between gap-1">
+                      <div className="p-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-micro text-[var(--acc-ink)] flex items-center justify-between gap-1">
                         <span className="truncate font-medium flex items-center gap-1">
                           <Zap className="w-3 h-3 text-[var(--acc)] shrink-0" />
                           <span>{lead.estrategia_playbook.titulo}</span>
@@ -1205,7 +1205,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   {/* Icono de Teléfono Móvil disponible */}
                   {hasMovil ? (
                     <span
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--ok)]/80 text-[var(--ok)] shadow-2xs"
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--ok)] text-[var(--on-ok)] shadow-2xs"
                       title={`Teléfono móvil (WhatsApp disponible): ${rawMovil}`}
                     >
                       <Smartphone className="w-3 h-3 text-[var(--ok)] shrink-0" />
@@ -1216,7 +1216,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   {/* Icono de Teléfono Fijo disponible */}
                   {hasFijo ? (
                     <span
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] shadow-2xs"
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shadow-2xs"
                       title={`Teléfono fijo de sala: ${rawFijo}`}
                     >
                       <Phone className="w-3 h-3 text-[var(--acc)] shrink-0" />
@@ -1235,7 +1235,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--acc)]/80 text-[var(--acc)] shadow-2xs hover:bg-[var(--acc)] transition-colors"
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shadow-2xs hover:bg-[var(--acc)] transition-colors"
                       title={`Instagram: ${lead.instagram}`}
                     >
                       <Instagram className="w-3 h-3 text-[var(--acc)] shrink-0" />
@@ -1285,7 +1285,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer shadow-xs min-h-[38px]"
+                        className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer shadow-xs min-h-[38px]"
                         title={`Abrir Instagram (${lead.instagram})`}
                       >
                         <Instagram className="w-4 h-4 text-[var(--acc)]" />
@@ -1316,7 +1316,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <button
                         type="button"
                         onClick={(e) => handleQuickApprovePitch(e, lead)}
-                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px]"
+                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px]"
                         title="Aprobar pitch directamente para envío"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1339,7 +1339,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             pitchDraft: nudgeText,
                           });
                         }}
-                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px] shadow-xs"
+                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px] shadow-xs"
                         title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                       >
                         <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1741,7 +1741,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               openWhatsAppChat(rawMovil);
                             }}
-                            className="p-1 bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ok)] rounded transition-colors inline-flex items-center"
+                            className="p-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] rounded transition-colors inline-flex items-center"
                             title={`WhatsApp directo al móvil (${rawMovil})`}
                           >
                             <MessageCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -1759,7 +1759,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1 bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)] rounded transition-colors inline-flex items-center"
+                            className="p-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] rounded transition-colors inline-flex items-center"
                             title={`Abrir perfil de Instagram (${lead.instagram})`}
                           >
                             <Instagram className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1770,7 +1770,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <a
                             href={`tel:${phoneForCall}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1 bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)] rounded transition-colors inline-flex items-center"
+                            className="p-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] rounded transition-colors inline-flex items-center"
                             title={
                               hasMovil && hasFijo
                                 ? `Llamar (Móvil: ${rawMovil} / Fijo: ${rawFijo})`
@@ -1810,7 +1810,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                 pitchDraft: nudgeText,
                               });
                             }}
-                            className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] rounded text-micro font-bold transition-ui cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
+                            className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] rounded text-micro font-bold transition-ui cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
                             title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                           >
                             <Clock className="w-3 h-3 text-[var(--acc)]" />

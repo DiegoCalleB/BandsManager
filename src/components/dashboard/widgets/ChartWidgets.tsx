@@ -362,7 +362,7 @@ export function BookingFunnelChartWidget({
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       <div className="flex items-center justify-between pb-2.5">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink-2)] shrink-0">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)] shrink-0">
             <Building2 className="w-5 h-5" />
           </div>
           <div>
@@ -477,7 +477,7 @@ export function FinancesChartWidget({
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       <div className="flex items-center justify-between pb-2.5">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ok)] shrink-0">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ink)] shrink-0">
             <DollarSign className="w-5 h-5" />
           </div>
           <div>

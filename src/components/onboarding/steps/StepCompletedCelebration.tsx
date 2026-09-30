@@ -102,7 +102,7 @@ export const StepCompletedCelebration: React.FC<
                 Dossier EPK Online
               </h4>
             </div>
-            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
+            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-medium">
               Para salas y festivales
             </span>
           </div>
@@ -145,7 +145,7 @@ export const StepCompletedCelebration: React.FC<
                 Landing y QR de fans
               </h4>
             </div>
-            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--alert)]/60 font-medium">
+            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--ink)] font-medium">
               Para Conciertos
             </span>
           </div>

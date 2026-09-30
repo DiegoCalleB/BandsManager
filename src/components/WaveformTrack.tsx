@@ -408,15 +408,15 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
 
         {/* Unified Synchronized Master Playhead Cursor Line */}
         <div
-          className="absolute top-0 bottom-0 w-0.5 bg-[var(--acc)]/60 z-20 pointer-events-none"
+          className="absolute top-0 bottom-0 w-0.5 bg-[var(--acc)] z-20 pointer-events-none"
           style={{ left: `${playheadPercent}%`, willChange: "left" }}
         >
-          <div className="w-2 h-2 -ml-[3px] -mt-[1px] bg-[var(--acc)]/60 rotate-45" />
+          <div className="w-2 h-2 -ml-[3px] -mt-[1px] bg-[var(--acc)] rotate-45" />
         </div>
 
         {/* Loading Overlay */}
         {!isLoaded && !loadError && (
-          <div className="absolute inset-0 flex items-center justify-center text-micro text-[var(--ink-2)] font-sans bg-[var(--scrim)]/70 z-30">
+          <div className="absolute inset-0 flex items-center justify-center text-micro text-[var(--on-scrim)] font-sans bg-[var(--scrim)]/70 z-30">
             <ShowIcon inline emoji="⚡" />Cargando onda de audio…
           </div>
         )}

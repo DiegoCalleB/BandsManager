@@ -338,7 +338,7 @@ export const SpotifyDiscographyModal: React.FC<
                 <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight flex items-center gap-2">
                   Importar discografía de Spotify
                 </h2>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/20 text-[var(--ok)]/30">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/20 text-[var(--ok)]">
                   OFICIAL SPOTIFY API
                 </span>
               </div>
@@ -397,7 +397,7 @@ export const SpotifyDiscographyModal: React.FC<
           </form>
 
           {errorMsg && (
-            <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--alert)]/15 text-[var(--ink-2)] text-xs font-sans flex items-center gap-2.5">
+            <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--alert)]/15 text-[var(--ink)] text-xs font-sans flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
               <span>{errorMsg}</span>
             </div>
@@ -608,8 +608,8 @@ export const SpotifyDiscographyModal: React.FC<
                               <span
                                 className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold ${
                                   album.albumType === "album"
-                                    ? "bg-[var(--ok)]/20 text-[var(--ok)]"
-                                    : "bg-[var(--ok)]/20 text-[var(--ok)]"
+                                    ? "bg-[var(--ok)]/20 text-[var(--ink)]"
+                                    : "bg-[var(--ok)]/20 text-[var(--ink)]"
                                 }`}
                               >
                                 {album.albumType === "album"
@@ -696,7 +696,7 @@ export const SpotifyDiscographyModal: React.FC<
                                     className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                                       isPlaying
                                         ? "bg-[var(--surface)] text-[var(--ink)]"
-                                        : "bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]"
+                                        : "bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink)]"
                                     }`}
                                     title={
                                       isPlaying

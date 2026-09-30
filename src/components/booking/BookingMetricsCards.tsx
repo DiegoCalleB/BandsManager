@@ -82,7 +82,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
           <span className="text-xs font-semibold text-[var(--ink-2)]">
             Tasa de respuesta
           </span>
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/50 text-[var(--tentative)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)] text-[var(--on-tentative)]">
             <MessageSquare className="w-5 h-5" />
           </div>
         </div>
@@ -105,7 +105,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
           <span className="text-xs font-semibold text-[var(--ink-2)]">
             Aforo total potencial
           </span>
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc-ink)]">
             <TrendingUp className="w-5 h-5" />
           </div>
         </div>

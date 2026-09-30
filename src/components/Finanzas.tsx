@@ -226,7 +226,7 @@ export default function Finanzas({
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isSyncing
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
-                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] "
+                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] "
             }`}
             title="Sincronizar todas las transacciones financieras"
           >
@@ -389,7 +389,7 @@ export default function Finanzas({
 
         <button
           onClick={() => setIsAddOpen(true)}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${"bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]"}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${"bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]"}`}
         >
           <Plus className="w-3.5 h-3.5" /> Registrar Operación
         </button>
@@ -579,7 +579,7 @@ export default function Finanzas({
                       } else if (beneficioNeto < 150) {
                         alertBadge = {
                           label: "🟡 Ajustado",
-                          bgColor: "bg-[var(--acc-soft)]  text-[var(--acc)]/70",
+                          bgColor: "bg-[var(--acc-soft)]  text-[var(--acc-ink)]",
                         };
                       }
 
@@ -596,7 +596,7 @@ export default function Finanzas({
                               {c.tipo}
                             </span>
                             {c.giraNombre && (
-                              <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink-2)] font-sans">
+                              <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink)] font-sans">
                                 <ShowIcon inline emoji="🚐" />{c.giraNombre}
                               </span>
                             )}
@@ -610,7 +610,7 @@ export default function Finanzas({
                             </span>
                             {c.convocatoria_tipo === "parcial" ? (
                               <span
-                                className="inline-block mt-0.5 text-micro text-[var(--tentative)]/80 bg-[var(--tentative)]/10 px-1.5 py-0.2 rounded font-sans"
+                                className="inline-block mt-0.5 text-micro text-[var(--tentative)] bg-[var(--tentative)]/10 px-1.5 py-0.2 rounded font-sans"
                                 title={c.convocados_nombres?.join(",")}
                               >
                                 <ShowIcon inline emoji="👤" />Parcial ({numConvocados} miembros)
@@ -972,7 +972,7 @@ export default function Finanzas({
                         className={`p-2 rounded-[var(--r-s)] shrink-0 ${
                           p.tipo === "ingreso"
                             ? "bg-[var(--surface)]/15 text-[var(--ok)] "
-                            : "bg-[var(--alert)]/15 text-[var(--alert)] "
+                            : "bg-[var(--alert)]/15 text-[var(--ink)] "
                         }`}
                       >
                         <DollarSign className="w-4 h-4" />
@@ -1019,7 +1019,7 @@ export default function Finanzas({
                         className={`px-2.5 py-1 text-micro font-sans rounded font-bold transition-ui flex items-center gap-1 cursor-pointer active:scale-[0.97] ${
                           p.estado === "pagado"
                             ? "bg-[var(--ok)]/10 text-[var(--ok)]"
-                            : "bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/15"
+                            : "bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/15"
                         }`}
                         title="Hacer clic para cambiar el estado de pago"
                       >

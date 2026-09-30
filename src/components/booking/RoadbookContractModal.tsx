@@ -171,7 +171,7 @@ Firmado en conformidad por ambas partes.`;
               <div>
                 <h3 className="text-sm sm:text-base font-bold text-[var(--ink-2)] font-display flex items-center gap-2">
                   <span>Hoja de Ruta (Roadbook) & Contrato Pro</span>
-                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] font-mono">
+                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-mono">
                     Gira {bandName}
                   </span>
                 </h3>
@@ -501,7 +501,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ink)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
                   title="Copiar texto formateado listo para WhatsApp"
                 >
                   {copiedWhatsApp ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -513,7 +513,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--ink)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedContract ? '¡Contrato Copiado!' : 'Copiar Contrato'}</span>

@@ -23,7 +23,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--alert)] shrink-0">
+              <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--ink)] shrink-0">
                 <Trash2 className="w-6 h-6" />
               </div>
               <div>
@@ -57,7 +57,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
               }}
               className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-ui cursor-pointer group flex items-center gap-3"
             >
-              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)] transition-transform shrink-0">
+              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-transform shrink-0">
                 <FolderMinus className="w-5 h-5" />
               </div>
               <div>
@@ -76,7 +76,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
               }}
               className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 transition-ui cursor-pointer group flex items-center gap-3"
             >
-              <div className="p-2 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--alert)] transition-transform shrink-0">
+              <div className="p-2 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--ink)] transition-transform shrink-0">
                 <Trash2 className="w-5 h-5" />
               </div>
               <div>

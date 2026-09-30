@@ -744,7 +744,7 @@ export function ExcelImportModal({
           {/* MODAL HEADER */}
           <div className="flex items-center justify-between px-5 py-4 bg-[var(--ok)]/30 ">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ink)]">
                 <FileSpreadsheet className="w-5 h-5" />
               </div>
               <div>
@@ -752,7 +752,7 @@ export function ExcelImportModal({
                   <h3 className="text-base sm:text-lg font-bold font-display">
                     Importar Listado de Salas, Ayuntamientos o Bandas
                   </h3>
-                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink-2)]">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink)]">
                     Excel / CSV
                   </span>
                 </div>
@@ -787,7 +787,7 @@ export function ExcelImportModal({
           <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 text-xs">
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--on-ok)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink)]"}`}
               >
                 {step > 1 ? <Check className="w-3 h-3" /> : "1"}
               </div>
@@ -804,7 +804,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--on-ok)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink)]"}`}
               >
                 {step > 2 ? <Check className="w-3 h-3" /> : "2"}
               </div>
@@ -821,7 +821,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--on-ok)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink)]"}`}
               >
                 3
               </div>
@@ -894,7 +894,7 @@ export function ExcelImportModal({
                   <button
                     type="button"
                     onClick={handleDownloadTemplate}
-                    className="px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-ui cursor-pointer"
+                    className="px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] flex items-center gap-1.5 shrink-0 transition-ui cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Descargar plantilla</span>
@@ -955,7 +955,7 @@ export function ExcelImportModal({
                         onClick={() => setDefaultCategory(cat.id)}
                         className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
                           defaultCategory === cat.id
-                            ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold"
+                            ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                             : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -1325,7 +1325,7 @@ export function ExcelImportModal({
                       {selectedCount} de {parsedRows.length} seleccionados
                     </span>
                     {duplicatesCount > 0 && (
-                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-semibold flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         {duplicatesCount} ya registrados en CRM
                       </span>
@@ -1472,7 +1472,7 @@ export function ExcelImportModal({
                             <div className="flex items-center gap-1.5">
                               <span>{row.nombre_sala}</span>
                               {row.isDuplicate && (
-                                <span className="px-1.5 py-0.2 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                                <span className="px-1.5 py-0.2 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
                                   Existente
                                 </span>
                               )}

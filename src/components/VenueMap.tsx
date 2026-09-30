@@ -1025,7 +1025,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowStyleMenu(!showStyleMenu)}
-              className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+              className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--on-acc)]"}`}
             >
               <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Estilo mapa</span>
@@ -1050,7 +1050,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
                     }}
                     className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-xs font-bold transition-ui cursor-pointer flex items-center justify-between gap-2 ${
                       mapStyle === key
-                        ? "bg-[var(--tentative)]/80 text-[var(--ink)]"
+                        ? "bg-[var(--tentative)] text-[var(--on-tentative)]"
                         : "hover:bg-[var(--sunken)] text-[var(--ink-2)]"
                     }`}
                   >
@@ -1066,7 +1066,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
           <button
             onClick={handleRecenter}
-            className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+            className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--on-acc)]"}`}
           >
             <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Centrar vista</span>
@@ -1090,7 +1090,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
           <span>Pendiente aprobación</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/50 inline-block" />
+          <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--tentative)] inline-block" />
           <span>Interesado / Negociando</span>
         </div>
         <div className="flex items-center gap-2">

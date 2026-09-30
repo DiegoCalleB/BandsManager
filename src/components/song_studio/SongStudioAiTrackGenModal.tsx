@@ -54,7 +54,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
         </div>
 
         <div className="space-y-4 text-xs">
-          <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 text-[var(--acc)] space-y-1">
+          <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/40 text-[var(--ink)] space-y-1">
             <p className="font-bold font-mono flex items-center gap-1.5 text-[var(--acc)]">
               <Music className="w-4 h-4 text-[var(--acc)]" /> Pista base: {idea.titulo}
             </p>
@@ -103,7 +103,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           </div>
 
           {aiTrackGenError && (
-            <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 text-[var(--alert)] text-xs font-mono">
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 text-[var(--ink)] text-xs font-mono">
               <ShowIcon inline emoji="⚠️" />{aiTrackGenError}
             </div>
           )}

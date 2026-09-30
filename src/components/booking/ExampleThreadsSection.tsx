@@ -324,7 +324,7 @@ export function ExampleThreadsSection({
                 key={r}
                 type="button"
                 onClick={() => setResultado(r)}
-                className={`text-micro px-2 py-1 rounded-[var(--r-pill)] font-sans cursor-pointer ${resultado === r ? "bg-[var(--acc)]/30 text-[var(--acc)] font-bold" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
+                className={`text-micro px-2 py-1 rounded-[var(--r-pill)] font-sans cursor-pointer ${resultado === r ? "bg-[var(--acc)]/30 text-[var(--ink)] font-bold" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
               >
                 {RESULTADO_LABEL[r]}
               </button>

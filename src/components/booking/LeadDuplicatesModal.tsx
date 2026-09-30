@@ -239,7 +239,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
             className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${"bg-[var(--sunken)]"}`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
                 <Copy className="w-5 h-5" />
               </div>
               <div>
@@ -247,7 +247,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   <h2 className="text-base sm:text-lg font-bold tracking-tight text-[var(--ink)]">
                     Detector y Limpiador de Duplicados
                   </h2>
-                  <span className="px-2 py-0.5 text-xs font-semibold rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70">
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
                     {duplicateGroups.length}{" "}
                     {duplicateGroups.length === 1 ? "grupo" : "grupos"}
                   </span>
@@ -270,7 +270,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
           {/* Success Banner */}
           {successMessage && (
-            <div className="bg-[var(--ok)]/15 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink-2)] animate-in fade-in">
+            <div className="bg-[var(--ok)]/15 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink)] animate-in fade-in">
               <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
               <span>{successMessage}</span>
             </div>
@@ -386,7 +386,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   {/* Group Top Info */}
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 ">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)]/15 text-[var(--acc)]/70 flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)]/15 text-[var(--acc-ink)] flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         {group.matchReasonLabel}
                       </span>

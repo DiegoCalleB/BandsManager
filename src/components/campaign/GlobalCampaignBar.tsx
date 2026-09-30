@@ -71,7 +71,7 @@ export function GlobalCampaignBar({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-micro font-sans font-extrabold px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc)]/40 shrink-0">
+              <span className="text-micro font-sans font-extrabold px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc-ink)] shrink-0">
                 <ShowIcon inline emoji="🎯" />CAMPAÑA
               </span>
               <h2
@@ -130,7 +130,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "booking"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
+                : "bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-[var(--on-acc)]"
             }`}
             title="Ver salas objetivo de esta campaña en Booking CRM"
           >
@@ -147,7 +147,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "calendario"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
+                : "bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-[var(--on-acc)]"
             }`}
             title="Ver fechas de la campaña en el Calendario"
           >
@@ -164,7 +164,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "bandas"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
+                : "bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-[var(--on-acc)]"
             }`}
             title="Ver grupos en las ciudades objetivo para Co-booking"
           >

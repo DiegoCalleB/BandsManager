@@ -194,7 +194,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
           {/* Header */}
           <div className="flex justify-between items-start800/80 pb-3">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-micro font-bold mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] font-sans text-micro font-bold mb-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Concierto confirmado
               </div>
@@ -350,7 +350,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                             {st.nombre}
                           </span>
                           {isOptimal && (
-                            <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-micro font-bold">
+                            <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] font-sans text-micro font-bold">
                               <ShowIcon inline emoji="✨" />Sugerido
                             </span>
                           )}
@@ -365,7 +365,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                       <div
                         className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center shrink-0 ${
                           isSelected
-                            ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
+                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
                             : "ring-1 ring-[var(--hair)]"
                         }`}
                       >

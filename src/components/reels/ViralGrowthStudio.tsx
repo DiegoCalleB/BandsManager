@@ -310,7 +310,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <h3 className="text-xs sm:text-sm font-display font-bold text-[var(--ink)]">
                 Viral Retention Engine 4.0
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-micro font-mono font-bold bg-[var(--alert)]/20 text-[var(--alert)] ">
+              <span className="px-2 py-0.5 rounded-full text-micro font-mono font-bold bg-[var(--alert)]/20 text-[var(--ink)] ">
                 PRO VIRALITY
               </span>
             </div>
@@ -462,10 +462,10 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   {/* Cringe Score Badge */}
                   <div className={`px-2.5 py-1 rounded-lg text-micro font-mono font-bold flex items-center gap-1.5 ${
                     doctorDiagnosis.cringeScore <= 25 
-                      ? 'bg-[var(--ok)]/15 text-[var(--ok)] '
+                      ? 'bg-[var(--ok)]/15 text-[var(--ink)] '
                       : doctorDiagnosis.cringeScore <= 55
                         ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] '
-                        : 'bg-[var(--alert)]/15 text-[var(--alert)] '
+                        : 'bg-[var(--alert)]/15 text-[var(--ink)] '
                   }`}>
                     <span>Cringe Factor: {doctorDiagnosis.cringeScore}/100</span>
                     <span className="text-micro opacity-80">
@@ -534,7 +534,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                       <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
                         <MessageSquareQuote className="w-3 h-3 text-[var(--acc-ink)]" /> Primer Comentario Fijado (Pinned Comment)
                       </span>
-                      <span className="text-micro font-mono text-[var(--acc-ink)]/80 bg-[var(--acc)]/60 px-1 rounded">5x Comentarios</span>
+                      <span className="text-micro font-mono text-[var(--on-acc)] bg-[var(--acc)] px-1 rounded">5x Comentarios</span>
                     </div>
                     <p className="text-xs font-bold text-[var(--acc-ink)]">
                       "{doctorDiagnosis.pinnedComment}"
@@ -853,13 +853,13 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                 value={tourStickerText}
                 onChange={(e) => onUpdateTourStickerText(e.target.value)}
                 placeholder="Ej: 🎟️ Gira 2026 · Próxima parada: Madrid"
-                className="w-full text-micro font-mono rounded bg-[var(--scrim)]/60 px-2 py-1 text-[var(--acc-ink)] focus:outline-none"
+                className="w-full text-micro font-mono rounded bg-[var(--scrim)]/60 px-2 py-1 text-[var(--on-scrim)] focus:outline-none"
               />
               {onSyncFromTourCRM && (
                 <button
                   type="button"
                   onClick={onSyncFromTourCRM}
-                  className="w-full text-micro font-mono text-[var(--acc-ink)] hover:text-[var(--acc-ink)] bg-[var(--scrim)]/40 hover:bg-[var(--scrim)]/60 rounded py-1 flex items-center justify-center gap-1 cursor-pointer transition-ui bg-[var(--acc)]/10"
+                  className="w-full text-micro font-mono text-[var(--ink)] hover:text-[var(--acc-ink)] bg-[var(--scrim)]/40 hover:bg-[var(--scrim)]/60 rounded py-1 flex items-center justify-center gap-1 cursor-pointer transition-ui bg-[var(--acc)]/10"
                 >
                   <Sparkles className="w-2.5 h-2.5" /> Sincronizar con Próxima Fecha CRM
                 </button>

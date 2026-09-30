@@ -48,7 +48,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 transition-ui cursor-pointer active:scale-[0.97]"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] transition-ui cursor-pointer active:scale-[0.97]"
         title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
       >
         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
@@ -68,7 +68,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between pb-2.5">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold text-xs">
+                <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)] font-bold text-xs">
                   Я
                 </div>
                 <div>
@@ -92,7 +92,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Notification Badge */}
             {copiedNotification && (
-              <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-micro font-sans font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
+              <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink)] text-micro font-sans font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
                 <Check className="w-3 h-3 text-[var(--ok)]" />
                 <span>¡Estilo aplicado al nombre!</span>
               </div>

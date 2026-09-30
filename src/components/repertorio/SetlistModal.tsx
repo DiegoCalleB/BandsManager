@@ -57,7 +57,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
         >
           <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
                 <Layers className="w-4 h-4" />
               </div>
               <div>

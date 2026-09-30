@@ -20,8 +20,8 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
     <div
       className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
         agentsEnabled
-          ? 'bg-[var(--acc)]/80 text-[var(--on-acc)] border-b border-[var(--hair)]'
-          : 'bg-[var(--ok)]/80 text-[var(--ok)] border-b border-[var(--ok)]/30'
+          ? 'bg-[var(--acc)] text-[var(--on-acc)] border-b border-[var(--hair)]'
+          : 'bg-[var(--ok)] text-[var(--on-ok)] border-b border-[var(--ok)]/30'
       }`}
     >
       <div className="flex items-center gap-2 min-w-0">
@@ -49,7 +49,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
           >
             <Sliders className="w-3 h-3 text-[var(--acc)]" />
             <span>Niveles de autonomía</span>
-            <span className="px-1 py-0.2 rounded text-micro bg-[var(--acc)]/50 text-[var(--ink)] font-bold">ADMIN</span>
+            <span className="px-1 py-0.2 rounded text-micro bg-[var(--acc)] text-[var(--on-acc)] font-bold">ADMIN</span>
           </button>
         )}
 

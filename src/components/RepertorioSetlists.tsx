@@ -4063,7 +4063,7 @@ export default function RepertorioSetlists({
                             onClick={() => setShowTonalidad((v) => !v)}
                             className={`p-1 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                               showTonalidad
-                                ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                                ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
                             }`}
                             title={
@@ -4161,7 +4161,7 @@ export default function RepertorioSetlists({
                                 <button
                                   type="button"
                                   onClick={insertSuggestedChapa}
-                                  className="px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/60 hover:bg-[var(--ok)]/80 text-[var(--ok)]/40 transition-ui cursor-pointer font-medium shrink-0"
+                                  className="px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--on-ok)] transition-ui cursor-pointer font-medium shrink-0"
                                 >
                                   <ShowIcon inline emoji="➕" />Insertar aquí
                                 </button>
@@ -4239,7 +4239,7 @@ export default function RepertorioSetlists({
                                 };
                                 const dirBtnClass =
                                   "w-8 h-8 rounded-[var(--r-pill)] flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
-                                const reorderBtnClass = `${dirBtnClass} bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 `;
+                                const reorderBtnClass = `${dirBtnClass} bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc-ink)] `;
                                 // Antes era un rgba(23,23,23,0.8) fijo — negro casi puro sin importar el tema, por eso
                                 // en Claro los botones de subir/bajar energía salían tan oscuros. var(--sunken) es la
                                 // misma superficie hundida que usa el resto de la UI, y sí cambia con el tema.
@@ -4394,8 +4394,8 @@ export default function RepertorioSetlists({
                                                 }
                                                 className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                                   evalPrev?.status === "ok"
-                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
-                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
+                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
+                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
                                                 }`}
                                                 title={
                                                   evalPrev
@@ -4448,8 +4448,8 @@ export default function RepertorioSetlists({
                                                 }
                                                 className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                                   evalNext?.status === "ok"
-                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
-                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
+                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
+                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
                                                 }`}
                                                 title={
                                                   evalNext
@@ -4541,10 +4541,10 @@ export default function RepertorioSetlists({
                                     key={i}
                                     className={`px-2 py-0.5 rounded text-micro font-sans font-medium flex items-center gap-1 transition ${
                                       w.type === "warning"
-                                        ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
+                                        ? "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
                                         : w.type === "success"
-                                          ? "bg-[var(--ok)]/10 text-[var(--ink-2)]/30"
-                                          : "bg-[var(--acc)]/10 text-[var(--ink-2)]/30"
+                                          ? "bg-[var(--ok)]/10 text-[var(--ink-2)]"
+                                          : "bg-[var(--acc)]/10 text-[var(--ink-2)]"
                                     } ${isHighlighted ? "ring-2 ring-[var(--ink)]/60" : ""}`}
                                     style={{
                                       cursor: hasSongs ? "pointer" : "default",
@@ -4603,7 +4603,7 @@ export default function RepertorioSetlists({
                               <button
                                 type="button"
                                 onClick={() => setShowAIAnalysisModal(true)}
-                                className="px-2 py-0.5 rounded text-micro bg-[var(--acc)]/50 hover:bg-[var(--acc)] text-[var(--acc)]/40 transition font-medium"
+                                className="px-2 py-0.5 rounded text-micro bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] transition font-medium"
                               >
                                 Ver análisis completo
                               </button>
@@ -4857,7 +4857,7 @@ export default function RepertorioSetlists({
                           {isPlayingThisRow ? (
                             <div className="flex items-center gap-0.5">
                               <span className="w-0.5 h-2 bg-[var(--ok)] rounded-[var(--r-pill)]" />
-                              <span className="w-0.5 h-2.5 bg-[var(--ok)]/60 rounded-[var(--r-pill)] delay-75" />
+                              <span className="w-0.5 h-2.5 bg-[var(--ok)] rounded-[var(--r-pill)] delay-75" />
                               <span className="w-0.5 h-1.5 bg-[var(--ok)] rounded-[var(--r-pill)] delay-150" />
                             </div>
                           ) : (
@@ -5033,8 +5033,8 @@ export default function RepertorioSetlists({
                           <span
                             className={`text-micro font-sans px-1 py-0.5 rounded shrink-0 ${
                               song.estructuraVerificada
-                                ? "bg-[var(--ok)]/15 text-[var(--ok)]"
-                                : "bg-[var(--acc)]/15 text-[var(--acc)]"
+                                ? "bg-[var(--ok)]/15 text-[var(--ink)]"
+                                : "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
                             }`}
                             title={
                               song.estructuraVerificada
@@ -5213,8 +5213,8 @@ export default function RepertorioSetlists({
                                 }}
                                 className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 ${
                                   evalUnion?.status === "ok"
-                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)]/35"
-                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)]/35"
+                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)]"
+                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)]"
                                 }`}
                                 title={
                                   evalUnion
@@ -5889,7 +5889,7 @@ export default function RepertorioSetlists({
               {/* BULK ACTIONS BAR */}
               {selectedCatalogIds.size > 0 && (
                 <div
-                  className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${"bg-[var(--ok)]/20 text-[var(--ok)]/40"}`}
+                  className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${"bg-[var(--ok)]/20 text-[var(--ink)]"}`}
                 >
                   <span className="text-xs font-medium">
                     {selectedCatalogIds.size} canciones seleccionadas
@@ -5912,7 +5912,7 @@ export default function RepertorioSetlists({
                       onClick={() =>
                         handleBulkDeleteSongs(Array.from(selectedCatalogIds))
                       }
-                      className="px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] cursor-pointer transition-ui flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink)] cursor-pointer transition-ui flex items-center gap-1.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Eliminar seleccionadas</span>
@@ -5964,13 +5964,13 @@ export default function RepertorioSetlists({
                     <span className="hidden lg:inline opacity-70">
                       Acciones rápidas:
                     </span>
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] font-medium">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink)] font-medium">
                       Acordes
                     </span>
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)]/50 font-medium">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink)] font-medium">
                       Studio
                     </span>
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] font-medium">
                       Notas
                     </span>
                     <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] font-medium">
@@ -6280,9 +6280,9 @@ export default function RepertorioSetlists({
         <div
           className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-[var(--r-l)] text-xs font-sans max-w-sm ${
             statusBanner.type === "success"
-              ? "bg-[var(--ok-soft)]/60 text-[var(--ok)]/40"
+              ? "bg-[var(--ok-soft)]/60 text-[var(--ok)]"
               : statusBanner.type === "error"
-                ? "bg-[var(--alert-soft)]/60 text-[var(--alert)]/40"
+                ? "bg-[var(--alert-soft)]/60 text-[var(--alert)]"
                 : statusBanner.type === "warning"
                   ? "bg-[var(--acc-soft)]  text-[var(--acc)]"
                   : "bg-[var(--surface)] text-[var(--ink-2)]"

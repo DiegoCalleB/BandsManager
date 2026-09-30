@@ -123,7 +123,7 @@ export function ShareModal({
 
               <button
                 onClick={handleWebShare}
-                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-semibold text-xs transition-ui active:scale-[0.97]"
+                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--on-tentative)] font-semibold text-xs transition-ui active:scale-[0.97]"
               >
                 <Share2 className="w-4 h-4" />
                 <span>Otras Apps</span>
@@ -141,7 +141,7 @@ export function ShareModal({
 
               <button
                 onClick={handleEmail}
-                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-semibold text-xs transition-ui active:scale-[0.97]"
+                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)] font-semibold text-xs transition-ui active:scale-[0.97]"
               >
                 <Mail className="w-4 h-4" />
                 <span>Email</span>

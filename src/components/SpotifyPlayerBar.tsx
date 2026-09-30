@@ -863,7 +863,7 @@ export default function SpotifyPlayerBar({
                 <button
                   onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
                   className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer text-sm ${
-                    crossfadeEnabled ? 'text-[var(--ok)] bg-[var(--ok)]/15' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    crossfadeEnabled ? 'text-[var(--ink)] bg-[var(--ok)]/15' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title={crossfadeEnabled ? 'Fundido entre temas activado (5s)' : 'Activar fundido entre temas (5s)'}
                 >
@@ -948,7 +948,7 @@ export default function SpotifyPlayerBar({
               {/* Studio / Arreglos Button */}
               <button
                 onClick={() => onOpenStudio(song)}
-                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/25 hover:bg-[var(--ok)]/35 text-[var(--ok)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/25 hover:bg-[var(--ok)]/35 text-[var(--ink)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
                 title="Abrir estudio de arreglos e ideas"
               >
                 <Sliders className="w-3.5 h-3.5" />
@@ -958,7 +958,7 @@ export default function SpotifyPlayerBar({
               {/* Iris Stem Separator Button */}
               <button
                 onClick={() => (onOpenIris ? onOpenIris(song) : onOpenStudio(song))}
-                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/25 hover:bg-[var(--acc)]/35 text-[var(--acc)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/25 hover:bg-[var(--acc)]/35 text-[var(--ink)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
                 title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />

@@ -39,7 +39,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
       >
         <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
               <Calendar className="w-5 h-5" />
             </div>
             <div>
@@ -95,7 +95,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webCalFeed)}`}
               target="_blank"
               rel="noreferrer"
-              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-ui text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center justify-center gap-2 font-bold text-xs transition-ui text-center"
             >
               <Calendar className="w-4 h-4 text-[var(--acc)]" />
               <span>Añadir a Google Calendar</span>

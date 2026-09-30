@@ -123,7 +123,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   type="button"
                   onClick={handleAiLookup}
                   disabled={isAiSearching || !formName.trim()}
-                  className="flex items-center gap-1.5 text-micro font-mono font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] transition-ui disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 text-micro font-mono font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui disabled:opacity-50 cursor-pointer"
                 >
                   {isAiSearching ? (
                     <>
@@ -150,14 +150,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* AI Proposal Overlay / Card */}
             {isAiSearching && (
-              <div className="md:col-span-2 p-3 bg-[var(--sunken)]/90 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono">
+              <div className="md:col-span-2 p-3 bg-[var(--sunken)]/90 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc-ink)] font-mono">
                 <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
                 <span>Buscando datos de "{formName}" con IA en la web…</span>
               </div>
             )}
 
             {aiError && (
-              <div className="md:col-span-2 p-3 bg-[var(--alert)]/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--alert)] font-mono">
+              <div className="md:col-span-2 p-3 bg-[var(--alert)]/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--ink)] font-mono">
                 <span><ShowIcon inline emoji="⚠️" />{aiError}</span>
                 <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert)]/50 rounded">
                   <X className="w-3.5 h-3.5" />

@@ -234,10 +234,10 @@ export function MemberNotesModal({
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)]">
                   <ShowIcon inline emoji="✅" />{summary.lista} listos
                 </span>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/80">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
                   <ShowIcon inline emoji="🔶" />{summary.casiLista} casi
                 </span>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
                   <ShowIcon inline emoji="🌱" />{summary.aprendiendo} aprendiendo
                 </span>
                 {summary.sinOpinar > 0 && (
@@ -369,7 +369,7 @@ export function MemberNotesModal({
                           >
                             {member.name}
                           </span>
-                          <span className="ml-2 text-xs px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ink)]/10 text-[var(--ink-2)] font-sans">
+                          <span className="ml-2 text-xs px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ink)]/10 text-[var(--ink)] font-sans">
                             {member.instrument}
                           </span>
                         </div>

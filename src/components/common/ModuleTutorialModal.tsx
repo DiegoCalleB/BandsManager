@@ -278,69 +278,69 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
   // Color accents based on module
   const accentStyles = {
     purple: {
-      badgeBg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80",
-      iconBox: "bg-[var(--tentative)]/20 text-[var(--acc)]/30",
+      badgeBg: "bg-[var(--tentative)]/15 text-[var(--tentative)]",
+      iconBox: "bg-[var(--tentative)]/20 text-[var(--ink)]",
       activeDot: "bg-[var(--acc)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)]",
       hookBorder: "bg-[var(--tentative)]/10 text-[var(--ink)]",
       highlightText: "text-[var(--acc)]",
       targetCard: "bg-[var(--tentative)]/5",
-      targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
+      targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]",
       targetBtn:
-        "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80",
+        "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]",
     },
     amber: {
-      badgeBg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 ",
-      iconBox: "bg-[var(--acc)]/20 text-[var(--acc)] ",
-      activeDot: "bg-[var(--acc)]/60 w-7",
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--acc-ink)] ",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
+      activeDot: "bg-[var(--acc)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold",
-      hookBorder: " bg-[var(--acc)]/10 text-[var(--acc)]",
+      hookBorder: " bg-[var(--acc)]/10 text-[var(--acc-ink)]",
       highlightText: "text-[var(--acc)]",
       targetCard: " bg-[var(--acc)]/5",
-      targetBadge: "bg-[var(--acc)]/20 text-[var(--acc)]/70 ",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
       targetBtn:
-        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 ",
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] ",
     },
     blue: {
-      badgeBg: "bg-[var(--acc)]/15 text-[var(--ink-2)]/30",
-      iconBox: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--ink)]",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--ink)]",
       activeDot: "bg-[var(--tentative)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold",
-      hookBorder: "bg-[var(--acc)]/10 text-[var(--tentative)]/40",
+      hookBorder: "bg-[var(--acc)]/10 text-[var(--tentative)]",
       highlightText: "text-[var(--ink-2)]",
       targetCard: "bg-[var(--acc)]/5",
-      targetBadge: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--ink)]",
       targetBtn:
-        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-2)]/40",
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)]",
     },
     emerald: {
-      badgeBg: "bg-[var(--ok)]/15 text-[var(--ink-2)]/30",
-      iconBox: "bg-[var(--ok)]/20 text-[var(--ok)]/30",
+      badgeBg: "bg-[var(--ok)]/15 text-[var(--ink)]",
+      iconBox: "bg-[var(--ok)]/20 text-[var(--ink)]",
       activeDot: "bg-[var(--ok)] w-7",
       primaryBtn:
         "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold",
-      hookBorder: "bg-[var(--ok)]/10 text-[var(--ok)]/40",
+      hookBorder: "bg-[var(--ok)]/10 text-[var(--ok)]",
       highlightText: "text-[var(--ok)]",
       targetCard: "bg-[var(--ok)]/5",
-      targetBadge: "bg-[var(--ok)]/20 text-[var(--ink-2)]/30",
+      targetBadge: "bg-[var(--ok)]/20 text-[var(--ink)]",
       targetBtn:
-        "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)]/40",
+        "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)]",
     },
     rose: {
-      badgeBg: "bg-[var(--alert)]/15 text-[var(--ink-2)]/30",
-      iconBox: "bg-[var(--alert)]/20 text-[var(--alert)]/30",
+      badgeBg: "bg-[var(--alert)]/15 text-[var(--ink)]",
+      iconBox: "bg-[var(--alert)]/20 text-[var(--ink)]",
       activeDot: "bg-[var(--alert)] w-7",
       primaryBtn:
         "bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold",
-      hookBorder: "bg-[var(--alert)]/10 text-[var(--alert)]/40",
+      hookBorder: "bg-[var(--alert)]/10 text-[var(--alert)]",
       highlightText: "text-[var(--alert)]",
       targetCard: "bg-[var(--alert)]/5",
-      targetBadge: "bg-[var(--alert)]/20 text-[var(--ink-2)]/30",
+      targetBadge: "bg-[var(--alert)]/20 text-[var(--ink)]",
       targetBtn:
-        "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]/40",
+        "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink)]",
     },
   }[tutorialConfig.accent];
 
@@ -369,7 +369,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           >
             {/* Corner Ping Beacon */}
             <span className="absolute -top-2 -right-2 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)] opacity-75"></span>
               <span className="relative inline-flex rounded-[var(--r-pill)] h-4 w-4 bg-[var(--acc)]"></span>
             </span>
 
@@ -529,7 +529,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)] opacity-75"></span>
                           <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--acc)]"></span>
                         </span>
                         <span className="text-micro font-sans font-bold text-[var(--acc)]/70">

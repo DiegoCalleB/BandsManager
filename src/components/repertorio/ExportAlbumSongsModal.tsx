@@ -674,7 +674,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   </span>
                 </div>
                 {songsWithAudio.length < targetSongs.length && (
-                  <span className="text-xs text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-s)] shrink-0">
+                  <span className="text-xs text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-s)] shrink-0">
                     {targetSongs.length - songsWithAudio.length} sin MP3 subido
                   </span>
                 )}
@@ -777,7 +777,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
               <button
                 type="button"
                 onClick={handlePrintSetlist}
-                className="px-3.5 py-2.5 rounded-[var(--r-l)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--tentative)]/80 font-semibold text-xs flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="px-3.5 py-2.5 rounded-[var(--r-l)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--tentative)] font-semibold text-xs flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
                 title="Convertir canciones del disco en un setlist para imprimir en PDF"
               >
                 <Printer className="w-4 h-4 text-[var(--acc)]" />

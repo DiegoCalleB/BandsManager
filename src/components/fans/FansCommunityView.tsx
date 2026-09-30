@@ -213,28 +213,28 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         return {
           label: "Fan Fundador",
           icon: Star,
-          bg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 ",
-          dot: "bg-[var(--acc)]/60",
+          bg: "bg-[var(--acc)]/15 text-[var(--acc-ink)] ",
+          dot: "bg-[var(--acc)]",
         };
       case "superfan":
         return {
           label: "Superfan Directos",
           icon: Flame,
-          bg: "bg-[var(--alert)]/15 text-[var(--ink-2)]/30",
+          bg: "bg-[var(--alert)]/15 text-[var(--ink)]",
           dot: "bg-[var(--alert)]",
         };
       case "backstage":
         return {
           label: "Backstage VIP",
           icon: Award,
-          bg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80",
+          bg: "bg-[var(--tentative)]/15 text-[var(--tentative)]",
           dot: "bg-[var(--acc)]",
         };
       default:
         return {
           label: "Oyente Fiel",
           icon: Music,
-          bg: "bg-[var(--ok)]/15 text-[var(--ink-2)]/30",
+          bg: "bg-[var(--ok)]/15 text-[var(--ink)]",
           dot: "bg-[var(--ok)]",
         };
     }
@@ -278,7 +278,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 <span className="text-xs font-sans font-bold text-[var(--acc)]">
                   Muro oficial de la banda
                 </span>
-                <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
+                <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center gap-1">
                   <Megaphone className="w-2.5 h-2.5" /> Oficial
                 </span>
               </div>
@@ -328,7 +328,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         >
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold">
+              <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)] font-bold">
                 <Pin className="w-4 h-4" />
               </div>
               <div>
@@ -336,7 +336,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   <span className="font-bold text-[var(--ink)] text-sm">
                     {ann.autor}
                   </span>
-                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] font-sans font-bold">
+                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-sans font-bold">
                     Noticia banda
                   </span>
                 </div>
@@ -544,7 +544,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
                 {/* Favorite Song Badge */}
                 {fan.cancionFavorita && (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-xs font-sans text-[var(--acc)]/70">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-xs font-sans text-[var(--acc-ink)]">
                     <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
                     <span>
                       Tema favorito:{" "}
@@ -585,7 +585,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, "likes")}
                       className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer ${
                         fanUserReactions.likes
-                          ? "bg-[var(--alert)]/20 text-[var(--ink-2)] font-bold"
+                          ? "bg-[var(--alert)]/20 text-[var(--ink)] font-bold"
                           : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Me gusta"
@@ -599,7 +599,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, "fire")}
                       className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer ${
                         fanUserReactions.fire
-                          ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold"
+                          ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold"
                           : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Fuego / Brutal"
@@ -613,7 +613,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, "guitars")}
                       className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer ${
                         fanUserReactions.guitars
-                          ? "bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-bold"
+                          ? "bg-[var(--tentative)]/20 text-[var(--tentative)] font-bold"
                           : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Púa de Oro / Rock On"
@@ -627,7 +627,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, "applause")}
                       className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer ${
                         fanUserReactions.applause
-                          ? "bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold"
+                          ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
                           : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Aplausos"

@@ -117,7 +117,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <AtSign className="w-5 h-5" /> Configurar firma de correo
             </h3>
-            <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
+            <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)]">
               HTML Automático
             </span>
           </div>
@@ -297,7 +297,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigateToBlock("perfil")}
-                  className="px-2 py-0.5 text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)]/70 bg-[var(--acc)]/10 rounded flex items-center gap-1 cursor-pointer"
+                  className="px-2 py-0.5 text-micro font-bold text-[var(--acc-ink)] hover:text-[var(--acc)]/70 bg-[var(--acc)]/10 rounded flex items-center gap-1 cursor-pointer"
                 >
                   <FileText className="w-3 h-3" /> Editar en bloque 1
                 </button>
@@ -583,7 +583,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     onClick={handleCopyHtmlCode}
                     className={`px-3 py-2.5 rounded-[var(--r-pill)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
                       copiadoFirma === "html"
-                        ? "bg-[var(--ok)]/20 text-[var(--ink-2)]/40"
+                        ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                         : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title="Copiar el código fuente HTML puro de la firma"
@@ -604,7 +604,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     onClick={handleCopyPlainText}
                     className={`px-3 py-2.5 rounded-[var(--r-pill)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
                       copiadoFirma === "text"
-                        ? "bg-[var(--ok)]/20 text-[var(--ink-2)]/40"
+                        ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                         : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title="Copiar versión en texto plano"
@@ -685,7 +685,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         onClick={() => setInstructionTab("gmail")}
                         className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === "gmail"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -696,7 +696,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         onClick={() => setInstructionTab("outlook")}
                         className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === "outlook"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -707,7 +707,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         onClick={() => setInstructionTab("apple")}
                         className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === "apple"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -831,7 +831,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             </div>
 
             <div className="space-y-2 text-left">
-              <p className="text-xs font-sans text-[var(--acc)]/70 bg-[var(--sunken)] py-2 px-3 rounded-[var(--r-m)] truncate">
+              <p className="text-xs font-sans text-[var(--acc-ink)] bg-[var(--sunken)] py-2 px-3 rounded-[var(--r-m)] truncate">
                 {publicEpkUrl}
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
@@ -851,7 +851,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   href={publicEpkUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 bg-[var(--sunken)] text-[var(--acc)]/70 font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 hover:bg-[var(--surface)] transition"
+                  className="px-4 py-2 bg-[var(--sunken)] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 hover:bg-[var(--surface)] transition"
                 >
                   <ExternalLink className="w-3.5 h-3.5" /> Abrir dossier
                 </a>

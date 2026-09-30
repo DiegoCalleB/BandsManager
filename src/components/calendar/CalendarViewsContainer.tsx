@@ -246,8 +246,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           isSelected
                             ? 'bg-[var(--sunken)]/25 text-[var(--ink)] font-bold'
                             : isPosible
-                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
-                              : 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
+                              ? 'bg-[var(--acc)]/25 text-[var(--ink)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
+                              : 'bg-[var(--acc)]/25 text-[var(--ink)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
                         }`}
                         title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
                       >
@@ -279,8 +279,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           isSelected
                             ? 'bg-[var(--sunken)]/25 text-[var(--ink)] font-bold'
                             : isReu
-                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
-                              : 'bg-[var(--ok)]/25 text-[var(--ok)] hover:bg-[var(--ok)]/35 hover:text-[var(--ink)] '
+                              ? 'bg-[var(--acc)]/25 text-[var(--ink)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
+                              : 'bg-[var(--ok)]/25 text-[var(--ink)] hover:bg-[var(--ok)]/35 hover:text-[var(--ink)] '
                         }`}
                         title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
                       >
@@ -325,7 +325,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   isSelected
                     ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                     : isToday
-                      ? 'bg-[var(--acc)]/15 text-[var(--acc)] font-bold'
+                      ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold'
                       : 'bg-[var(--sunken)] text-[var(--ink)] '
                 } hover:brightness-95`}
               >
@@ -334,7 +334,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 {totalEvents > 0 && (
                   <span
                     className={`text-micro px-1.5 py-0.2 rounded-[var(--r-pill)] font-mono font-bold ${
-                      isSelected ? 'bg-[var(--surface)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc)]'
+                      isSelected ? 'bg-[var(--surface)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
                     }`}
                   >
                     {totalEvents} {totalEvents === 1 ? 'evt' : 'evts'}
@@ -361,7 +361,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   onClick={() => setSelectedDate(d)}
                   className={`flex flex-col rounded-[var(--r-m)] p-2 sm:p-2.5 transition-ui min-w-0 ${
                     isSelected
-                      ? 'bg-[var(--acc)]/50 ring-1 ring-[var(--acc)]'
+                      ? 'bg-[var(--acc)] ring-1 ring-[var(--acc)]'
                       : isToday
                         ? 'bg-[var(--acc-soft)]/40 '
                         : 'bg-[var(--sunken)] '
@@ -415,7 +415,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                 ? 'bg-[var(--acc)]/25 ring-1 ring-[var(--acc)]/50'
                                 : 'bg-[var(--acc)]/25 ring-1 ring-[var(--acc)]/50'
                               : isPosible
-                                ? 'bg-[var(--acc)]/30 hover:bg-[var(--acc)]/30 text-[var(--acc)]'
+                                ? 'bg-[var(--acc)]/30 hover:bg-[var(--acc)]/30 text-[var(--ink)]'
                                 : 'bg-[var(--acc)]/30 hover:bg-[var(--acc)]/30'
                           }`}
                         >
@@ -444,7 +444,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               {bandInfo.name}
                             </span>
                             {isPosible && (
-                              <span className="ml-auto text-micro font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] ">
+                              <span className="ml-auto text-micro font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--ink)] ">
                                 Posible
                               </span>
                             )}
@@ -521,7 +521,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                     {campaigns.map((camp) => (
                       <div
                         key={camp.id}
-                        className="p-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/25 text-micro text-[var(--acc)]"
+                        className="p-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/25 text-micro text-[var(--ink)]"
                       >
                         <ShowIcon inline emoji="🎯" />{camp.name}
                       </div>
@@ -617,7 +617,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
               Agenda Cronológica ({allEventsList.length} eventos)
             </span>
             {calendarSearchTerm.trim() && (
-              <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] ">
+              <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
                 Filtrado por: "{calendarSearchTerm}"
               </span>
             )}
@@ -688,7 +688,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             {agendaFilterPast !== 'all' && (
               <button
                 onClick={() => setAgendaFilterPast('all')}
-                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-ui "
+                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition-ui "
               >
                 Ver todos los eventos
               </button>
@@ -737,7 +737,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         </span>
                       )}
                       {isDatePast && !isToday && (
-                        <span className="text-micro font-mono font-bold px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] flex items-center gap-1">
+                        <span className="text-micro font-mono font-bold px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ink)] flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
                           <span>Realizado</span>
                         </span>
@@ -806,17 +806,17 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded ${
                                     isConcert
                                       ? isPast
-                                        ? 'bg-[var(--acc)]/15 text-[var(--acc)] '
-                                        : 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                                        ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] '
+                                        : 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                                       : isReu
-                                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
-                                        : 'bg-[var(--ok)]/20 text-[var(--ok)] '
+                                        ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                                        : 'bg-[var(--ok)]/20 text-[var(--ink)] '
                                   }`}
                                 >
                                   {isConcert ? 'Concierto' : isReu ? 'Reunión' : 'Ensayo'}
                                 </span>
                                 {isPast && (
-                                  <span className="text-micro font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--ok)]/20 text-[var(--ok)] flex items-center gap-1">
+                                  <span className="text-micro font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--ok)]/20 text-[var(--ink)] flex items-center gap-1">
                                     <CheckCircle2 className="w-2.5 h-2.5" />
                                     <span>Realizado</span>
                                   </span>
@@ -862,7 +862,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   setViewingRehearsal(r);
                                 }
                               }}
-                              className="px-2 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] flex items-center gap-1 transition-ui cursor-pointer"
+                              className="px-2 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] flex items-center gap-1 transition-ui cursor-pointer"
                               title={isPast ? 'Editar datos, notas o caché del bolo realizado' : 'Editar evento'}
                             >
                               <Edit className="w-3 h-3" />

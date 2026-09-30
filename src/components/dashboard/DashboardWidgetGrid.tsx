@@ -724,7 +724,7 @@ export function DashboardWidgetGrid({
                     <button
                       type="button"
                       onClick={() => handleRemoveWidget(widget.id)}
-                      className="p-1 rounded bg-[var(--alert)]/15 text-[var(--alert)] hover:bg-[var(--alert)]/30 cursor-pointer"
+                      className="p-1 rounded bg-[var(--alert)]/15 text-[var(--ink)] hover:bg-[var(--alert)]/30 cursor-pointer"
                       title="Quitar widget"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -743,7 +743,7 @@ export function DashboardWidgetGrid({
       {/* WIDGET IMPRESCINDIBLE: APOYO A BANDMANAGER (NO SE PUEDE QUITAR) */}
       <div className="pt-2 space-y-3">
         {isEditMode && (
-          <div className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-xs font-sans font-bold flex items-center gap-1.5 w-fit">
+          <div className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-sans font-bold flex items-center gap-1.5 w-fit">
             <Info className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
             <span>
               Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)
@@ -768,7 +768,7 @@ export function DashboardWidgetGrid({
             {/* Header */}
             <div className="p-5 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
+                <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
                   <Plus className="w-5 h-5" />
                 </div>
                 <div>

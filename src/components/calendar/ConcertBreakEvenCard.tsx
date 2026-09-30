@@ -30,9 +30,9 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
             analysis.estadoRentabilidad === 'beneficio'
               ? 'bg-[var(--ok)]/10 text-[var(--ok)] '
               : analysis.estadoRentabilidad === 'cubierto'
-                ? 'bg-[var(--acc)]/10 text-[var(--acc)] '
+                ? 'bg-[var(--acc)]/10 text-[var(--acc-ink)] '
                 : analysis.estadoRentabilidad === 'perdida_moderada'
-                  ? 'bg-[var(--acc)]/10 text-[var(--acc)] '
+                  ? 'bg-[var(--acc)]/10 text-[var(--acc-ink)] '
                   : 'bg-[var(--alert)]/10 text-[var(--alert)] '
           }`}
         >

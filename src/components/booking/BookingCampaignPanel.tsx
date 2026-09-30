@@ -352,7 +352,7 @@ export default function BookingCampaignPanel({
       <div className="absolute top-0 right-0 p-4">
         <button
           onClick={handleClear}
-          className="text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/10 rounded-[var(--r-pill)] p-1"
+          className="text-[var(--ink)] hover:text-[var(--ink)] bg-[var(--ink)]/10 rounded-[var(--r-pill)] p-1"
           title="Desactivar campaña"
         >
           <X className="w-4 h-4" />

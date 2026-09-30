@@ -1028,28 +1028,28 @@ export default function BandCRM({
         );
       case "concierto_agendado":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc-ink)] whitespace-nowrap shrink-0">
             <Zap className="w-3 h-3 text-[var(--acc)] shrink-0" />
             <span>Concierto Agendado</span>
           </span>
         );
       case "intercambio_propuesto":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink-2)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink)] whitespace-nowrap shrink-0">
             <Repeat className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span>Intercambio Propuesto</span>
           </span>
         );
       case "pendiente_respuesta":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--tentative)]/15 text-[var(--tentative)]/80 whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--tentative)]/15 text-[var(--tentative)] whitespace-nowrap shrink-0">
             <Clock className="w-3 h-3 text-[var(--tentative)]/80 shrink-0" />
             <span>Pendiente respuesta</span>
           </span>
         );
       case "no_disponible":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--alert)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink)] whitespace-nowrap shrink-0">
             <X className="w-3 h-3 text-[var(--alert)] shrink-0" />
             <span>No Disponible</span>
           </span>
@@ -1148,7 +1148,7 @@ Bakandeya Agent Manager IA & Músicos`;
                 }}
                 className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium transition-ui cursor-pointer flex items-center gap-1.5 ${
                   subTab === "registered_bands"
-                    ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
+                    ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
@@ -1176,7 +1176,7 @@ Bakandeya Agent Manager IA & Músicos`;
                 );
               }
             }}
-            className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--tentative)]/40 transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+            className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--tentative)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             title="Generar pitch de intercambio de fechas (Date Swap)"
           >
             <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
@@ -1186,7 +1186,7 @@ Bakandeya Agent Manager IA & Músicos`;
           <button
             type="button"
             onClick={() => setIsScoutModalOpen(true)}
-            className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+            className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             title="Scout IA: Buscar bandas para co-booking"
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -1249,7 +1249,7 @@ Bakandeya Agent Manager IA & Músicos`;
               <a
                 href="/api/export-excel"
                 download="band_data.xlsx"
-                className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer"
+                className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer"
               >
                 <FileSpreadsheet className="w-3.5 h-3.5" />
                 <span>Excel (.xlsx)</span>
@@ -1271,7 +1271,7 @@ Bakandeya Agent Manager IA & Músicos`;
                   <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10/20">
                     user_id
                   </th>
-                  <th className="p-3 text-right text-[var(--acc)]/70 bg-[var(--acc)]/10 /20 font-bold">
+                  <th className="p-3 text-right text-[var(--acc-ink)] bg-[var(--acc)]/10 /20 font-bold">
                     band_id
                   </th>
                 </tr>
@@ -1309,7 +1309,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         {band.email || "—"}
                       </td>
                       <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
+                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--tentative)]/15 text-[var(--tentative)]">
                           {band.plan || "emergente"}
                         </span>
                       </td>
@@ -1319,7 +1319,7 @@ Bakandeya Agent Manager IA & Músicos`;
                           : "—"}
                       </td>
                       <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--ok)]/15 text-[var(--ok)]">
+                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--ok)]/15 text-[var(--ink)]">
                           {band.estado_cuenta || "activo"}
                         </span>
                       </td>
@@ -1329,7 +1329,7 @@ Bakandeya Agent Manager IA & Músicos`;
                       <td className="p-3 text-left font-bold text-[var(--acc)]/80 bg-[var(--acc)]/5/20 font-sans">
                         {band.user_id || "—"}
                       </td>
-                      <td className="p-3 text-right font-bold text-[var(--acc)]/70 bg-[var(--acc)]/5 /20 font-sans">
+                      <td className="p-3 text-right font-bold text-[var(--acc-ink)] bg-[var(--acc)]/5 /20 font-sans">
                         {band.band_id || band.bandId || "band-1"}
                       </td>
                     </tr>
@@ -1419,7 +1419,7 @@ Bakandeya Agent Manager IA & Músicos`;
                     }
                     className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
                       selectedBandIds.length > 0
-                        ? "bg-[var(--acc)]/15 text-[var(--acc)]/30 hover:bg-[var(--acc)]/25"
+                        ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/25"
                         : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title={
@@ -1721,7 +1721,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         {/* Analyze Tone */}
                         <button
                           onClick={() => handleAnalyzeTone(band)}
-                          className="py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1"
+                          className="py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1"
                           title="Analizar forma de expresarse y tono en redes sociales con IA Grounding"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1735,7 +1735,7 @@ Bakandeya Agent Manager IA & Músicos`;
                             setSelectedPitchBand(band);
                             setIsPitchModalOpen(true);
                           }}
-                          className="flex-1 py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5"
+                          className="flex-1 py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5"
                           title="Generar Pitch de Date Swap"
                         >
                           <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -1756,7 +1756,7 @@ Bakandeya Agent Manager IA & Músicos`;
                           onClick={() =>
                             handleDeleteBand(band.id, band.nombre_banda)
                           }
-                          className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--alert)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
+                          className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--ink)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
                           title="Eliminar banda"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -1927,7 +1927,7 @@ Bakandeya Agent Manager IA & Músicos`;
                           <div className="flex items-center justify-end gap-1.5">
                             <button
                               onClick={() => handleAnalyzeTone(band)}
-                              className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-pill)] text-micro transition-ui cursor-pointer flex items-center gap-1"
+                              className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro transition-ui cursor-pointer flex items-center gap-1"
                               title="Analizar forma de expresarse"
                             >
                               <Sparkles className="w-3 h-3 text-[var(--acc)]" />
@@ -1940,7 +1940,7 @@ Bakandeya Agent Manager IA & Músicos`;
                                 setSelectedPitchBand(band);
                                 setIsPitchModalOpen(true);
                               }}
-                              className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] rounded-[var(--r-pill)] text-micro transition-ui cursor-pointer flex items-center gap-1"
+                              className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] rounded-[var(--r-pill)] text-micro transition-ui cursor-pointer flex items-center gap-1"
                             >
                               <Repeat className="w-3 h-3 text-[var(--ink-2)]" />
                               <span>Pitch</span>
@@ -1958,7 +1958,7 @@ Bakandeya Agent Manager IA & Músicos`;
                               onClick={() =>
                                 handleDeleteBand(band.id, band.nombre_banda)
                               }
-                              className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--alert)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
+                              className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--ink)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
                               title="Eliminar"
                             >
                               <Trash2 className="w-3.5 h-3.5" />

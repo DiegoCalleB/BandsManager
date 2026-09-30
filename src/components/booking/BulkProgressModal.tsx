@@ -55,7 +55,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
           {/* Header */}
           <div className="p-4 sm:p-5800 bg-[var(--surface)]  flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]/70">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)]">
                 {isCompleted ? (
                   <CheckCircle2 className="w-5 h-5 text-[var(--ok)]" />
                 ) : (

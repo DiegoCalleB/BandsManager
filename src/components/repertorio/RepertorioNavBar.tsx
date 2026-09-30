@@ -47,7 +47,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
         {/* Module Title */}
         <div className="flex items-center gap-2.5 min-w-0 shrink-0">
           <div
-            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${'bg-[var(--acc)]/15 text-[var(--acc)]'}`}
+            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${'bg-[var(--acc)]/15 text-[var(--acc-ink)]'}`}
           >
             <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           </div>
@@ -98,7 +98,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               type="button"
               onClick={() => setActiveTab('catalogo')}
               className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs flex items-center gap-1.5 transition-ui cursor-pointer font-medium ${
-                activeTab === 'catalogo' ? 'bg-[var(--acc)]/12 text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                activeTab === 'catalogo' ? 'bg-[var(--acc)]/12 text-[var(--acc-ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <Disc3 className="w-3.5 h-3.5" />
@@ -176,7 +176,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                           }}
                           className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 transition cursor-pointer ${
                             isSelected
-                              ? 'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-semibold'
+                              ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] font-semibold'
                               : 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                           }`}
                         >
@@ -230,7 +230,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 onClick={() => setCatalogoViewMode('albumes')}
                 className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'albumes'
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
+                    ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                 }`}
               >
@@ -243,7 +243,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 onClick={() => setCatalogoViewMode('canciones')}
                 className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'canciones'
-                    ? 'bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold'
+                    ? 'bg-[var(--ok)]/20 text-[var(--ink)] font-bold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                 }`}
               >

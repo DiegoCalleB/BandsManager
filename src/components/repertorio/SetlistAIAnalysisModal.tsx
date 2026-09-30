@@ -617,7 +617,7 @@ export function SetlistAIAnalysisModal({
                   <button
                     onClick={onUndo}
                     onMouseDown={(e) => e.stopPropagation()}
-                    className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
+                    className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
                     title="Deshacer el último reordenamiento del setlist"
                   >
                     <ShowIcon inline emoji="↩️" />Deshacer
@@ -668,10 +668,10 @@ export function SetlistAIAnalysisModal({
                       key={i}
                       className={`px-2 py-0.5 rounded text-micro font-sans font-medium flex items-center gap-1 transition ${
                         w.type === "warning"
-                          ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
+                          ? "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
                           : w.type === "success"
-                            ? "bg-[var(--ok)]/10 text-[var(--ink-2)]/30"
-                            : "bg-[var(--acc)]/10 text-[var(--ink-2)]/30"
+                            ? "bg-[var(--ok)]/10 text-[var(--ink-2)]"
+                            : "bg-[var(--acc)]/10 text-[var(--ink-2)]"
                       } ${isHighlighted ? "ring-2 ring-[var(--ink)]/60" : ""}`}
                       style={{ cursor: hasSongs ? "pointer" : "default" }}
                       onMouseEnter={() => {
@@ -746,7 +746,7 @@ export function SetlistAIAnalysisModal({
               <div className="bg-[var(--alert)]/10 rounded-[var(--r-s)] p-4 flex gap-3">
                 <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium text-[var(--alert)]/40">Error</p>
+                  <p className="font-medium text-[var(--alert)]">Error</p>
                   <p className="text-sm text-[var(--alert)]/60">{error}</p>
                   <button
                     onClick={handleAnalyze}
@@ -836,7 +836,7 @@ export function SetlistAIAnalysisModal({
                               isInvalid
                                 ? "bg-[var(--sunken)] opacity-50"
                                 : isHighlighted
-                                  ? "bg-[var(--acc)]/80 ring-2 ring-[var(--acc)]/30"
+                                  ? "bg-[var(--acc)] ring-2 ring-[var(--acc)]/30"
                                   : "bg-[var(--surface)]/80 hover:"
                             }`}
                             onMouseEnter={() => {
@@ -886,7 +886,7 @@ export function SetlistAIAnalysisModal({
                                               e.stopPropagation();
                                               handleUndoSuggestion(idx);
                                             }}
-                                            className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
+                                            className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
                                             title="Deshacer este cambio de orden"
                                           >
                                             <ShowIcon inline emoji="↩️" />Deshacer
@@ -909,7 +909,7 @@ export function SetlistAIAnalysisModal({
                                             e.stopPropagation();
                                             handleApplySuggestion(idx);
                                           }}
-                                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc)]/50 hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-micro font-sans transition whitespace-nowrap"
+                                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-micro font-sans transition whitespace-nowrap"
                                           title="Mover la canción a la posición sugerida"
                                         >
                                           ✓ Aplicar

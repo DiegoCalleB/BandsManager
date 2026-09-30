@@ -486,13 +486,13 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
           {/* Header */}
           <div className="p-410 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)]">
+              <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink)]">
                 <Guitar className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-2">
                   Afinador Pro Guitarra, Bajo & Ukelele
-                  <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
+                  <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink)]">
                     Precision Autocorrelation
                   </span>
                 </h3>
@@ -577,7 +577,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                     }}
                     className={`p-2.5 rounded-[var(--r-m)] text-left text-xs font-medium transition-ui cursor-pointer flex items-start justify-between gap-2 ${
                       selectedPresetId === p.id
-                        ? "bg-[var(--ok)]/20 text-[var(--ink-2)]/60 font-bold"
+                        ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
                         : "bg-[var(--ink)]/5 text-[var(--ink-2)]5 hover:bg-[var(--ink)]/10"
                     }`}
                   >
@@ -587,10 +587,10 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                         <span
                           className={`px-1.5 py-0.2 rounded text-micro font-sans shrink-0 ${
                             p.category === "ukulele"
-                              ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                              ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                               : p.category === "bass"
-                                ? "bg-[var(--tentative)]/50 text-[var(--acc)]/80"
-                                : "bg-[var(--ok)]/20 text-[var(--ink-2)]"
+                                ? "bg-[var(--tentative)] text-[var(--on-tentative)]"
+                                : "bg-[var(--ok)]/20 text-[var(--ink)]"
                           }`}
                         >
                           {p.category === "ukulele"
@@ -644,7 +644,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                       isTunedIn
                         ? "bg-[var(--ok)] scale-110"
                         : currentCents < -5
-                          ? "bg-[var(--acc)]/60"
+                          ? "bg-[var(--acc)]"
                           : "bg-[var(--alert)]"
                     }`}
                     style={{ left: `calc(${needlePercent}% - 7px)` }}
@@ -676,10 +676,10 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                       <span
                         className={`px-2 py-0.5 rounded-[var(--r-s)] font-bold ${
                           isTunedIn
-                            ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
+                            ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                             : pitch.cents < 0
-                              ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
-                              : "bg-[var(--alert)]/20 text-[var(--ink-2)]"
+                              ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                              : "bg-[var(--alert)]/20 text-[var(--ink)]"
                         }`}
                       >
                         {pitch.cents > 0 ? `+${pitch.cents}` : pitch.cents}{" "}
@@ -709,7 +709,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 onClick={isListening ? stopTuner : startTuner}
                 className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                   isListening
-                    ? "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]"
+                    ? "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink)]"
                     : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold"
                 }`}
               >
@@ -787,7 +787,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                         isTonePlaying
                           ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
                           : isSelected
-                            ? "bg-[var(--ok)]/20 text-[var(--ink-2)]/60 font-bold"
+                            ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
                             : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
                       }`}
                     >

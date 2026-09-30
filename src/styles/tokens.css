@@ -78,12 +78,14 @@
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Sombra / divisor en patrones */
   --shadow-soft: rgba(0, 0, 0, 0.15);      /* Sombra muy suave (playhead, etc.) */
   --scrim:      #000000;                   /* Velo tras un modal — siempre oscuro, no cambia con el tema */
+  --on-scrim:   #F5F6F8;                   /* Texto sobre el velo: siempre claro */
 
   /* Categoría "posible" (bolo tentativo, no confirmado) — no es ok/alert/acc,
      es su propio estado. NUNCA gatear en isStitchLight (roto: compara contra
      hex de un tema legacy pre-Espectro que ya no existe, ver AGENTS.md). */
   --tentative:      #4F5F86;
   --tentative-soft: #E6EAF3;
+  --on-tentative:   #FFFFFF;
 
   /* Paleta de colores para bandas (8 colores distintos). Se aplica en Calendar
      y cualquier vista que muestre múltiples bandas/equipos con identidad visual. */
@@ -150,9 +152,11 @@
   --acc-glow:   rgba(96, 165, 250, 0.1);   /* --acc (dark) con 10% */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
   --scrim:      #000000;
+  --on-scrim:   #F5F6F8;
 
   --tentative:      #A9B6D6;
   --tentative-soft: rgba(169, 182, 214, 0.16);
+  --on-tentative:   #10141F;
 
   --band-0:       #60A5FA; --band-0-soft: #1E3A5F; --band-0-ink: #60A5FA;
   --band-1:       #38BDF8; --band-1-soft: #164E63; --band-1-ink: #38BDF8;
@@ -203,6 +207,7 @@
   --acc-glow:   rgba(242, 202, 80, 0.1);   /* --acc (classic) con 10% */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
   --scrim:      #000000;
+  --on-scrim:   #F5F6F8;
 
   --tentative:      #C084FC;
   --tentative-soft: rgba(192, 132, 252, 0.2);

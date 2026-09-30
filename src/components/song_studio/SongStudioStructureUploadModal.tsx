@@ -228,7 +228,7 @@ export const SongStudioStructureUploadModal: React.FC<
           {/* Header */}
           <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--ink)] flex items-center justify-center">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
@@ -254,14 +254,14 @@ export const SongStudioStructureUploadModal: React.FC<
 
           {/* Messages */}
           {successMessage && (
-            <div className="p-3 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-xs text-[var(--ok)]/60 flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-xs text-[var(--ok)] flex items-center gap-2">
               <CheckCircle className="w-4 h-4" />
               {successMessage}
             </div>
           )}
 
           {errorMessage && (
-            <div className="p-3 rounded-[var(--r-s)] bg-[var(--alert)]/90 text-xs text-[var(--alert)]/40 flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-s)] bg-[var(--alert)] text-xs text-[var(--on-alert)] flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
               {errorMessage}
             </div>
@@ -269,7 +269,7 @@ export const SongStudioStructureUploadModal: React.FC<
 
           {/* Processing status */}
           {isProcessing && (
-            <div className="p-4 rounded-[var(--r-s)] bg-[var(--acc)]/90 text-sm text-[var(--acc)]/40 flex items-center gap-3">
+            <div className="p-4 rounded-[var(--r-s)] bg-[var(--acc)] text-sm text-[var(--on-acc)] flex items-center gap-3">
               <Loader className="w-4 h-4 animate-spin" />
               <div>
                 <p className="font-semibold">
@@ -348,7 +348,7 @@ export const SongStudioStructureUploadModal: React.FC<
 
                       <button
                         onClick={startCamera}
-                        className="w-full px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--ink)] text-sm font-semibold transition flex items-center justify-center gap-2"
+                        className="w-full px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)] text-sm font-semibold transition flex items-center justify-center gap-2"
                       >
                         <Camera className="w-4 h-4" />
                         Hacer Foto desde Cámara
@@ -374,7 +374,7 @@ export const SongStudioStructureUploadModal: React.FC<
                           />
                         )}
                         {selectedFile.type === "application/pdf" && (
-                          <div className="bg-[var(--alert)]/90 rounded p-3 text-center text-sm text-[var(--ink-2)]">
+                          <div className="bg-[var(--alert)] rounded p-3 text-center text-sm text-[var(--on-alert)]">
                             <ShowIcon inline emoji="📄" />PDF - Se procesará con IA para extraer acordes
                           </div>
                         )}
@@ -418,8 +418,8 @@ export const SongStudioStructureUploadModal: React.FC<
                     <span
                       className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] flex items-center gap-1 shrink-0 ${
                         song.estructuraVerificada
-                          ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
-                          : "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                          ? "bg-[var(--ok)]/20 text-[var(--ink)]"
+                          : "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
                       }`}
                     >
                       <ShieldCheck className="w-3 h-3" />
@@ -472,7 +472,7 @@ export const SongStudioStructureUploadModal: React.FC<
                     disabled={isSavingVerified}
                     className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
                       song.estructuraVerificada
-                        ? "bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30"
+                        ? "bg-[var(--ok)]/20 text-[var(--ink)] hover:bg-[var(--ok)]/30"
                         : "bg-[var(--accent-alt)]/20 text-[var(--acc)]/80 hover:bg-[var(--accent-alt)]/30"
                     }`}
                   >

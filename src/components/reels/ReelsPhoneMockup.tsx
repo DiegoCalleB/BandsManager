@@ -120,7 +120,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
       <div className="flex items-center justify-between px-2 pb-2.5">
         {/* Dynamic Notch / Island */}
         <div className="w-20 h-4 bg-[var(--surface)] rounded-full flex items-center justify-center gap-1.5 ">
-          <div className="w-2 h-2 rounded-full bg-[var(--acc)]/80 " />
+          <div className="w-2 h-2 rounded-full bg-[var(--acc)] " />
           <div className="w-6 h-1 rounded-full bg-[var(--sunken)]" />
         </div>
 
@@ -147,7 +147,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             className={`w-7 h-7 rounded-full flex items-center justify-center transition-ui cursor-pointer ${
               isPreviewMuted
                 ? 'bg-[var(--sunken)]/90 text-[var(--alert)] hover:bg-[var(--sunken)] bg-[var(--alert)]/10'
-                : 'bg-[var(--ok)]/20 text-[var(--ok)] '
+                : 'bg-[var(--ok)]/20 text-[var(--ink)] '
             }`}
             title={isPreviewMuted ? 'Activar sonido' : 'Silenciar sonido'}
           >
@@ -372,7 +372,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
           {/* Spotify Pill Sticker */}
           {showSpotifyBadge && (
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--scrim)]/85 text-[var(--ok)] text-micro font-mono font-bold bg-[var(--ok)]/10">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--scrim)]/85 text-[var(--on-scrim)] text-micro font-mono font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping" />
               <span className="truncate max-w-[180px]"><ShowIcon inline emoji="🎧" />Escucha · {videoMeta?.title || nombreBanda}</span>
             </div>

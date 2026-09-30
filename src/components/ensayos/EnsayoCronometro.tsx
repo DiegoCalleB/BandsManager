@@ -93,8 +93,8 @@ export function EnsayoCronometro({
           onClick={toggleTimer}
           className={`p-1 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
             isActive
-              ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30"
-              : "bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30"
+              ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30"
+              : "bg-[var(--ok)]/20 text-[var(--ink)] hover:bg-[var(--ok)]/30"
           }`}
           title={isActive ? "Pausar Cronómetro" : "Iniciar Cronómetro"}
         >
@@ -118,7 +118,7 @@ export function EnsayoCronometro({
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           <div
-            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--acc)]/60 text-[var(--acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
+            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--acc)] text-[var(--on-acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
           >
             <Clock className={`w-4 h-4 ${isActive ? "" : ""}`} />
           </div>
@@ -133,7 +133,7 @@ export function EnsayoCronometro({
         </div>
 
         {isOvertime && (
-          <span className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink-2)]">
+          <span className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink)]">
             <AlertCircle className="w-3 h-3" /> Tiempo excedido
           </span>
         )}

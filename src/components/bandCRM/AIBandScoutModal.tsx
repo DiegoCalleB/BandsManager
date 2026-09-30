@@ -120,7 +120,7 @@ export function AIBandScoutModal({
           {/* Header */}
           <div className="p-4/10 flex justify-between items-center bg-[var(--acc)]/10 ">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc)]">
+              <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc-ink)]">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>

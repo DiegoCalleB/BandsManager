@@ -462,7 +462,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                   onClick={() => handleProviderChange(p)}
                   className={`p-2.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                     provider === p
-                      ? "bg-[var(--acc)]/20 text-[var(--tentative)]/40"
+                      ? "bg-[var(--acc)]/20 text-[var(--tentative)]"
                       : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                   }`}
                 >

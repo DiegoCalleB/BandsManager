@@ -120,7 +120,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
         <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--surface)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--ink)] flex items-center justify-center">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
@@ -137,7 +137,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             </button>
           </div>
 
-          <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-xs text-[var(--acc)] space-y-1">
+          <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-xs text-[var(--ink)] space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" /> Creación de Ideas Avanzadas
             </p>
@@ -249,7 +249,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               <div className="mt-4 p-4 rounded-[var(--r-m)] bg-[var(--acc)]/20 space-y-3 animate-in fade-in duration-200">
                 <div className="flex items-center justify-between/30 pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] font-sans text-micro font-bold">
+                    <span className="px-2 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--ink)] font-sans text-micro font-bold">
                       {generatedIdea.instrumentoRol}
                     </span>
                     <h4 className="font-bold text-sm text-[var(--ink)]">{generatedIdea.tituloIdea}</h4>

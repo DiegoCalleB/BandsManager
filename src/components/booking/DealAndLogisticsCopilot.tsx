@@ -83,7 +83,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       return {
         tone: 'closed_schedule',
         label: 'Agenda de temporada cerrada',
-        color: 'text-[var(--acc)] bg-[var(--acc)]/10 ',
+        color: 'text-[var(--acc-ink)] bg-[var(--acc)]/10 ',
         tactic:
           'No insistas para esta temporada. Agradece la respuesta y pide fecha exacta de apertura del próximo trimestre para entrar los primeros.',
         suggestedSubject: `Re: Concierto en ${lead.nombre_sala} - Fechas próxima temporada`,
@@ -102,7 +102,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       return {
         tone: 'budget_concern',
         label: 'Objeción económica / Caché',
-        color: 'text-[var(--acc)] bg-[var(--acc)]/10 ',
+        color: 'text-[var(--acc-ink)] bg-[var(--acc)]/10 ',
         tactic: 'Ofrece pasar a formato mixto (fijo mínimo + taquilla compartida) o proponer fecha doble con banda local amiga.',
         suggestedSubject: `Re: Adaptación de propuesta económica para ${lead.nombre_sala}`,
         suggestedDraft: `Entendemos perfectamente vuestra postura y valoramos mucho el esfuerzo que hacéis por mantener la música en vivo. Lo primordial para nosotros es tocar en vuestra sala.\n\n¿Os encajaría plantearlo a taquilla con un porcentaje del 80/20 a nuestro favor, o bien organizar una fecha compartida con una banda local que active la venta anticipada?\n\nEstamos abiertos a encontrar la fórmula que os sea cómoda.`,
@@ -130,7 +130,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
     return {
       tone: 'open_reply',
       label: 'Conversación en curso',
-      color: 'text-[var(--acc)] bg-[var(--acc)]/10 ',
+      color: 'text-[var(--acc-ink)] bg-[var(--acc)]/10 ',
       tactic: 'Responde aclarando las dudas técnicas y manteniendo la iniciativa con una llamada a la acción clara.',
       suggestedSubject: `Re: Detalles concierto Bakandeya en ${lead.nombre_sala}`,
       suggestedDraft: `Hola de nuevo,\n\nMuchas gracias por las indicaciones. Por nuestra parte estamos totalmente alineados con la propuesta. ¿Queréis que os mandemos el cartel editable o preferís coordinar la comunicación vosotros?`,
@@ -212,8 +212,8 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <span
             className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
               isBreakEvenFeasible
-                ? 'bg-[var(--ok)]/15 text-[var(--ok)]'
-                : 'bg-[var(--acc)]/15 text-[var(--acc)]'
+                ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
+                : 'bg-[var(--acc)]/15 text-[var(--acc-ink)]'
             }`}
           >
             {isBreakEvenFeasible ? 'Bolo Viable' : 'Requiere >60% Aforo'}
@@ -358,7 +358,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <button
               type="button"
               onClick={() => onOpenRoadbookModal(lead)}
-              className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold font-mono flex items-center gap-1 transition-ui cursor-pointer"
+              className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro font-bold font-mono flex items-center gap-1 transition-ui cursor-pointer"
             >
               <FileText className="w-3 h-3" />
               <span>Exportar PDF / imprimir</span>
@@ -378,7 +378,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 <button
                   type="button"
                   onClick={() => copyToClipboard(roadbookMarkdown, setCopiedRoadbook)}
-                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-micro font-mono flex items-center gap-1 transition-ui cursor-pointer"
+                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--ink)] text-micro font-mono flex items-center gap-1 transition-ui cursor-pointer"
                 >
                   {copiedRoadbook ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
                   <span>{copiedRoadbook ? '¡Copiado!' : 'Copiar'}</span>
@@ -404,7 +404,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 <button
                   type="button"
                   onClick={() => copyToClipboard(miniContractSummary, setCopiedContract)}
-                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-micro font-mono flex items-center gap-1 transition-ui cursor-pointer"
+                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--ink)] text-micro font-mono flex items-center gap-1 transition-ui cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
                   <span>{copiedContract ? '¡Copiado!' : 'Copiar'}</span>

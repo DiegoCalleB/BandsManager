@@ -227,14 +227,14 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 onClick={() => setFilterMode('urgent')}
                 className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'urgent'
-                    ? 'bg-[var(--alert)]/15 text-[var(--alert)] font-semibold'
+                    ? 'bg-[var(--alert)]/15 text-[var(--ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
                 }`}
               >
                 <span>Urgentes</span>
                 {urgentAlerts.length > 0 && (
                   <span
-                    className={`px-1.5 py-0.2 rounded text-micro ${'bg-[var(--alert)]/15 text-[var(--alert)]'} font-mono`}
+                    className={`px-1.5 py-0.2 rounded text-micro ${'bg-[var(--alert)]/15 text-[var(--ink)]'} font-mono`}
                   >
                     {urgentAlerts.length}
                   </span>
@@ -300,7 +300,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                       : 'bg-[var(--sunken)] text-[var(--ink)]';
 
                 const badgeStyle = isUrgent
-                  ? 'bg-[var(--alert)]/15 text-[var(--alert)] '
+                  ? 'bg-[var(--alert)]/15 text-[var(--ink)] '
                   : isWarning
                     ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] '
                     : 'bg-[var(--surface)] text-[var(--ok)] ';

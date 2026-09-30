@@ -42,19 +42,19 @@ const BAND_STATUS_OPTIONS: {
   {
     status: "sin_contactar",
     label: "Sin Contactar",
-    color: "bg-[var(--ink-3)]/60 text-[var(--ink-2)]",
+    color: "bg-[var(--ink-3)]/60 text-[var(--ink)]",
     icon: Clock,
   },
   {
     status: "intercambio_propuesto",
     label: "Intercambio Propuesto",
-    color: "bg-[var(--acc)]/20 text-[var(--ink-2)]/40",
+    color: "bg-[var(--acc)]/20 text-[var(--ink)]",
     icon: Repeat,
   },
   {
     status: "pendiente_respuesta",
     label: "Pendiente Respuesta",
-    color: "bg-[var(--acc)]/20 text-[var(--acc)]/70 ",
+    color: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
     icon: Clock,
   },
   {
@@ -66,13 +66,13 @@ const BAND_STATUS_OPTIONS: {
   {
     status: "colegas_aliados",
     label: "Colegas / Aliados de Gira",
-    color: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
+    color: "bg-[var(--tentative)]/20 text-[var(--tentative)]",
     icon: Users,
   },
   {
     status: "no_disponible",
     label: "No Disponible / Descartado",
-    color: "bg-[var(--alert)]/20 text-[var(--ink-2)]/40",
+    color: "bg-[var(--alert)]/20 text-[var(--ink)]",
     icon: ShieldAlert,
   },
 ];
@@ -220,7 +220,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkGeneratePitch}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--acc)]/40"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)]"}`}
               title="Redactar propuestas de intercambio (Date Swaps) con IA"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -232,7 +232,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={() => onBulkToggleFavorite(true)}
-              className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc)]/70"}`}
+              className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc-ink)]"}`}
               title="Marcar bandas como favoritas"
             >
               <Star className="w-4 h-4 fill-[var(--acc)]/30 text-[var(--acc)]" />
@@ -280,7 +280,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
           <div className="w-full max-w-md bg-[var(--surface)] rounded-[var(--r-l)] p-5 space-y-4 my-auto">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/20 flex items-center justify-center text-[var(--alert)] shrink-0">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/20 flex items-center justify-center text-[var(--ink)] shrink-0">
                 <Trash2 className="w-5 h-5" />
               </div>
               <div>

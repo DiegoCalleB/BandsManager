@@ -283,9 +283,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               <span
                 className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-medium tracking-wide ${
                   song.estadoTema === 'listo'
-                    ? 'bg-[var(--ok)]/15 text-[var(--ink-2)]'
+                    ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
                     : song.estadoTema === 'ensayando'
-                      ? 'bg-[var(--acc)]/15 text-[var(--acc)]/70'
+                      ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)]'
                       : 'bg-[var(--surface)]text-[var(--ink-2)]'
                 }`}
               >
@@ -303,12 +303,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
             {/* Audio Indicator */}
             {song.audioPrincipalUrl ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink-2)]">
+              <span className="hidden xs:inline-flex items-center gap-1 text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink)]">
                 <Volume2 className="w-2.5 h-2.5" />
                 <span>{isDriveAudio ? 'Drive' : 'Audio'}</span>
               </span>
             ) : ideasCount > 0 ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
+              <span className="hidden xs:inline-flex items-center gap-1 text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/15 text-[var(--tentative)]">
                 <Headphones className="w-2.5 h-2.5" />
                 <span>{ideasCount} ideas</span>
               </span>

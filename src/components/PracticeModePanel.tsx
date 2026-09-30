@@ -670,7 +670,7 @@ export default function PracticeModePanel({
                 <button
                   type="button"
                   onClick={onOpenStudio}
-                  className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                  className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
                   title="Abrir Studio multipista completo de este tema"
                 >
                   <Sliders className="w-3.5 h-3.5" />
@@ -693,7 +693,7 @@ export default function PracticeModePanel({
                 Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
               </div>
             ) : (
-              <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70">
+              <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
                 No hemos podido identificar tu pista. Pídele a quien administra la banda que te asigne un instrumento (Voz, Batería, Bajo,
                 Guitarras, Teclados o Arreglos) en Gestión de Miembros — mientras tanto puedes usar la mezcla manual de abajo.
               </div>
@@ -745,7 +745,7 @@ export default function PracticeModePanel({
                       <div className="flex items-center gap-1.5">
                         <span className="text-[var(--ink)] font-bold">{formatTime(currentTime)}</span>
                         {currentActiveSection && (
-                          <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] ">
+                          <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
                             <ShowIcon inline emoji={currentActiveSection.icon} /> {currentActiveSection.name}
                           </span>
                         )}
@@ -789,13 +789,13 @@ export default function PracticeModePanel({
                     </span>
                     {loopA != null && loopB != null ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-micro text-[var(--ok)] font-bold bg-[var(--ok)]/15 px-2 py-0.5 rounded-[var(--r-m)]">
+                        <span className="text-micro text-[var(--ink)] font-bold bg-[var(--ok)]/15 px-2 py-0.5 rounded-[var(--r-m)]">
                           <ShowIcon inline emoji="🔁" />Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
                         </span>
                         <button
                           type="button"
                           onClick={handleClearLoop}
-                          className="text-micro text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 transition-ui cursor-pointer"
+                          className="text-micro text-[var(--ink)] hover:text-[var(--ink)] px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 transition-ui cursor-pointer"
                         >
                           ✕ Quitar
                         </button>
@@ -819,7 +819,7 @@ export default function PracticeModePanel({
                             isLoopActive
                               ? 'bg-[var(--acc)] text-[var(--on-acc)] /40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
-                                ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                                ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                                 : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 '
                           }`}
                           title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
@@ -845,7 +845,7 @@ export default function PracticeModePanel({
                     </span>
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] ${
-                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc)] ' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
+                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] ' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
                       }`}
                     >
                       {targetBpm} BPM ({speed.toFixed(2)}x)
@@ -921,7 +921,7 @@ export default function PracticeModePanel({
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] ${
                         semitonesOffset !== 0
-                          ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                          ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                           : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
                       }`}
                     >
@@ -965,7 +965,7 @@ export default function PracticeModePanel({
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}
                       className={`flex-1 flex items-center justify-center gap-1.5 text-micro font-bold py-1 px-2 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                         metronomeOn
-                          ? 'bg-[var(--acc)]/20 text-[var(--acc)]'
+                          ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
                           : 'bg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
@@ -977,7 +977,7 @@ export default function PracticeModePanel({
                       title="Alinear claqueta con el primer beat"
                       className={`text-micro font-bold py-1 px-2 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                         beatAnchorSec > 0
-                          ? 'bg-[var(--ok)]/20 text-[var(--ok)]'
+                          ? 'bg-[var(--ok)]/20 text-[var(--ink)]'
                           : 'bg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
@@ -1023,20 +1023,20 @@ export default function PracticeModePanel({
                       <span className="text-xs font-semibold truncate flex-1 min-w-0">
                         {tr.nombre}
                         {isMine && (
-                          <span className="ml-1.5 text-micro font-sans px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)]">TÚ</span>
+                          <span className="ml-1.5 text-micro font-sans px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ink)]">TÚ</span>
                         )}
                       </span>
                       <button
                         onClick={() => toggleMute(tr.id)}
                         title="Silenciar (solo en mi mezcla)"
-                        className={`w-6 h-6 rounded text-micro font-sans font-bold ${eff.muted ? 'bg-[var(--alert)]/80 text-[var(--ink)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                        className={`w-6 h-6 rounded text-micro font-sans font-bold ${eff.muted ? 'bg-[var(--alert)] text-[var(--on-alert)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                       >
                         M
                       </button>
                       <button
                         onClick={() => toggleSolo(tr.id)}
                         title="Solo (aislar, solo en mi mezcla)"
-                        className={`w-6 h-6 rounded text-micro font-sans font-bold ${eff.solo ? 'bg-[var(--acc)]/60 text-[var(--on-acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                        className={`w-6 h-6 rounded text-micro font-sans font-bold ${eff.solo ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                       >
                         S
                       </button>

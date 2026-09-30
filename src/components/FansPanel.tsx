@@ -1100,7 +1100,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-sm">
+                        <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] font-bold text-sm">
                           {fan.nombre.charAt(0)}
                         </div>
                         <div>
@@ -1196,7 +1196,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             {city}
                           </span>
                         </div>
-                        <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)]">
+                        <span className="bg-[var(--acc)]/20 text-[var(--acc-ink)] text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)]">
                           {count} {count === 1 ? "fan" : "fans"}
                         </span>
                       </div>
@@ -1244,7 +1244,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       >
                         <td className="p-3 font-semibold text-[var(--ink)]">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-[var(--r-pill)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-micro">
+                            <div className="w-6 h-6 rounded-[var(--r-pill)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] font-bold text-micro">
                               {fan.nombre.charAt(0)}
                             </div>
                             {fan.nombre}
@@ -1589,7 +1589,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             }))
                           }
                           placeholder="TUBANDA-FAN-10"
-                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--acc)]/70 font-bold outline-none font-sans"
+                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--acc-ink)] font-bold outline-none font-sans"
                         />
                       </div>
                     </div>
@@ -1642,7 +1642,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       onClick={() => setUseCustomDomain(true)}
                       className={`p-2.5 rounded-[var(--r-m)] text-left font-sans transition flex flex-col gap-1 ${
                         useCustomDomain
-                          ? "bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold"
+                          ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold"
                           : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                       }`}
                     >
@@ -1656,7 +1656,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       onClick={() => setUseCustomDomain(false)}
                       className={`p-2.5 rounded-[var(--r-m)] text-left font-sans transition flex flex-col gap-1 ${
                         !useCustomDomain
-                          ? "bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold"
+                          ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold"
                           : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                       }`}
                     >
@@ -1745,7 +1745,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           onClick={() => setQrLanguage(l.code)}
                           className={`py-2 px-2 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors ${
                             qrLanguage === l.code
-                              ? "bg-[var(--acc)]/15  text-[var(--acc)]/70"
+                              ? "bg-[var(--acc)]/15  text-[var(--acc-ink)]"
                               : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                           }`}
                         >

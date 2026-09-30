@@ -350,7 +350,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   {modalBandInfo.initials}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] inline-flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] inline-flex items-center gap-1">
                     <ShowIcon inline emoji="🎸" />{modalBandInfo.name}
                   </span>
                   <h3 className={`text-lg sm:text-xl font-bold font-display mt-1 line-clamp-2 sm:truncate ${textTitle}`}>{selectedEventTitle}</h3>
@@ -387,7 +387,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--ok)]/40 text-[var(--ok)] hover:bg-[var(--ok)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--ok)]/40 text-[var(--ink)] hover:bg-[var(--ok)]/50 flex items-center gap-1"
                     title="Compartir convocatoria por WhatsApp"
                   >
                     <Share2 className="w-3.5 h-3.5" />
@@ -397,7 +397,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--acc)]/40 text-[var(--ink)] hover:bg-[var(--acc)]/50 flex items-center gap-1"
                     title="Enviar recordatorio / notificación push a los músicos"
                   >
                     <Bell className="w-3.5 h-3.5" />
@@ -421,7 +421,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => setDeletingEventConfirmId(modalEvent.id)}
-                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--ink)] hover:bg-[var(--alert)]/50 flex items-center gap-1"
                     title="Eliminar este evento del calendario"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -466,7 +466,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
             {/* Panel de Confirmación de Eliminación In-Modal */}
             {isConfirmingDelete && modalEvent && (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/60 text-[var(--alert)] flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)] text-[var(--on-alert)] flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0" />
                   <div>
@@ -1149,7 +1149,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span className="text-xs font-mono font-bold text-[var(--ink)]">{contact.nombre}</span>
-                            <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)]">
+                            <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ink)]">
                               {contact.rol}
                             </span>
                           </div>
@@ -1217,27 +1217,27 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   camisetas: {
                     icon: <Shirt className="w-3.5 h-3.5" />,
                     label: 'Camisetas',
-                    color: 'text-[var(--acc)] bg-[var(--acc)]/15',
+                    color: 'text-[var(--acc-ink)] bg-[var(--acc)]/15',
                   },
                   vinilos: {
                     icon: <Disc3 className="w-3.5 h-3.5" />,
                     label: 'Vinilos',
-                    color: 'text-[var(--acc)] bg-[var(--acc)]/15',
+                    color: 'text-[var(--acc-ink)] bg-[var(--acc)]/15',
                   },
                   musica: {
                     icon: <Music className="w-3.5 h-3.5" />,
                     label: 'Música (CD/Tape)',
-                    color: 'text-[var(--acc)] bg-[var(--acc)]/15',
+                    color: 'text-[var(--acc-ink)] bg-[var(--acc)]/15',
                   },
                   accesorios: {
                     icon: <Tag className="w-3.5 h-3.5" />,
                     label: 'Accesorios & Púas',
-                    color: 'text-[var(--ok)] bg-[var(--ok)]/15',
+                    color: 'text-[var(--ink)] bg-[var(--ok)]/15',
                   },
                   otro: {
                     icon: <ShoppingBag className="w-3.5 h-3.5" />,
                     label: 'Otro',
-                    color: 'text-[var(--alert)] bg-[var(--alert)]/15',
+                    color: 'text-[var(--ink)] bg-[var(--alert)]/15',
                   },
                 };
 
@@ -1260,7 +1260,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <button
                           type="button"
                           onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
-                          className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
                           title="Copiar arqueo y balance para WhatsApp"
                         >
                           {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
@@ -1282,7 +1282,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <motion.div
                         initial={{ opacity: 0, y: -6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)] text-xs font-mono flex items-center gap-2"
+                        className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink)] text-xs font-mono flex items-center gap-2"
                       >
                         <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
                         <span>¡Resumen de arqueo y ventas copiado al portapapeles con formato WhatsApp para el grupo de la banda!</span>
@@ -1524,7 +1524,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <button
                             type="button"
                             onClick={() => setShowAddMerchForm(true)}
-                            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                           >
                             <Plus className="w-3.5 h-3.5" />
                             <span>Añadir primer producto</span>
@@ -1626,7 +1626,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                       <button
                                         type="button"
                                         onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, { stockFinal: 0 })}
-                                        className="text-micro font-mono px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 cursor-pointer"
+                                        className="text-micro font-mono px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
                                         title="Marcar como agotado tras el concierto"
                                       >
                                         Agotado (0)
@@ -1835,10 +1835,10 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <span
                             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold ${
                               diferenciaCuadre === 0
-                                ? 'bg-[var(--ok)]/20 text-[var(--ok)]'
+                                ? 'bg-[var(--ok)]/20 text-[var(--ink)]'
                                 : diferenciaCuadre > 0
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)]'
-                                  : 'bg-[var(--alert)]/20 text-[var(--alert)]'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
+                                  : 'bg-[var(--alert)]/20 text-[var(--ink)]'
                             }`}
                           >
                             {diferenciaCuadre === 0 ? (
@@ -1947,7 +1947,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <div className="text-micro font-mono text-[var(--ink-2)] font-bold mb-1"><ShowIcon inline emoji="⭐" />Hito de Booking</div>
                     <div className="text-sm font-bold font-mono mt-1">
                       {selectedConcert?.es_hito_destacado ? (
-                        <span className="px-2 py-0.5 rounded bg-[var(--ok)]/20 text-[var(--ok)] inline-flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded bg-[var(--ok)]/20 text-[var(--ink)] inline-flex items-center gap-1">
                           <ShowIcon inline emoji="⭐" />HITO DESTACADO DE LA BANDA
                         </span>
                       ) : (
@@ -2005,7 +2005,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <button
                       type="button"
                       onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
-                      className="px-2 py-1 rounded text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
+                      className="px-2 py-1 rounded text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ink)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
                     >
                       ✓ Marcar todo
                     </button>
@@ -2045,14 +2045,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
 
                       {isCompleted ? (
-                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/60 text-[var(--ok)] text-xs font-mono flex items-center gap-2">
+                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok)] text-[var(--on-ok)] text-xs font-mono flex items-center gap-2">
                           <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
                           <span>
                             ¡TODO EL MATERIAL VERIFICADO! Escenario y camerinos despejados. Furgoneta cerrada y lista para partir.
                           </span>
                         </div>
                       ) : (
-                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-mono flex items-center gap-2">
+                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--ink)] text-xs font-mono flex items-center gap-2">
                           <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0" />
                           <span>
                             Verifica uno a uno antes de cerrar la furgoneta para garantizar cero olvidos de cables, instrumentos o ropa.
@@ -2092,7 +2092,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             onClick={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
                             className={`p-2.5 rounded-[var(--r-m)] transition-ui flex items-center justify-between gap-2.5 cursor-pointer select-none ${
                               item.checked
-                                ? 'bg-[var(--ok)]/30 text-[var(--ink-2)] line-through'
+                                ? 'bg-[var(--ok)]/30 text-[var(--ink)] line-through'
                                 : 'bg-[var(--surface)] text-[var(--ink)] hover:brightness-95'
                             }`}
                           >

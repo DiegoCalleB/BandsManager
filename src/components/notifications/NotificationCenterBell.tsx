@@ -101,7 +101,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         }}
         className={`relative p-2 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center ${
           isOpen
-            ? 'bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs'
+            ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] shadow-xs'
             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
         }`}
         title="Centro de Notificaciones Push"
@@ -118,7 +118,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
         {/* Small dot indicating status if no unread messages */}
         {unreadCount === 0 && permission === 'granted' && config.enabled && (
-          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/80 shadow-xs" />
+          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] shadow-xs" />
         )}
       </button>
 
@@ -135,7 +135,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
               <BellRing className="w-4 h-4 text-[var(--acc)]" />
               <span className="font-bold text-xs text-[var(--ink-2)] font-display">Notificaciones</span>
               {unreadCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-micro font-mono text-[var(--acc)] font-bold">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-micro font-mono text-[var(--acc-ink)] font-bold">
                   {unreadCount} nuevas
                 </span>
               )}
@@ -228,7 +228,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     </div>
                     <p className="text-xs text-[var(--ink-2)] line-clamp-2 leading-tight">{item.body}</p>
                     {item.leadName && (
-                      <span className="inline-block text-micro font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
+                      <span className="inline-block text-micro font-mono text-[var(--acc-ink)] font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
                         <ShowIcon inline emoji="📍" />{item.leadName}
                       </span>
                     )}
@@ -268,7 +268,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 setIsOpen(false);
                 onOpenSettings();
               }}
-              className="text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 "
+              className="text-micro font-bold text-[var(--acc-ink)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 "
             >
               <Settings className="w-3 h-3" />
               <span>Configurar avisos</span>

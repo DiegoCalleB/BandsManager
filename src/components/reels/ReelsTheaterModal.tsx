@@ -293,7 +293,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
             {/* Video Info Overlays inside the phone */}
             <div className="z-10 flex justify-between items-center">
-              <span className="text-micro font-mono text-[var(--acc-ink)] font-extrabold bg-[var(--scrim)]/40 py-1 px-2 rounded-full ">
+              <span className="text-micro font-mono text-[var(--ink)] font-extrabold bg-[var(--scrim)]/40 py-1 px-2 rounded-full ">
                 Clip #{selectedHighlightIndex + 1}
               </span>
               <div className="flex gap-1 items-center bg-[var(--scrim)]/40 py-1 px-2 rounded-full ">
@@ -321,7 +321,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 {editedCopy || (highlights[selectedHighlightIndex]?.recommendedCopy || '')}
               </p>
 
-              <div className="flex items-center gap-1 text-micro font-mono bg-[var(--scrim)]/60 text-[var(--acc-ink)] py-1 px-2 rounded-full max-w-[150px] truncate">
+              <div className="flex items-center gap-1 text-micro font-mono bg-[var(--scrim)]/60 text-[var(--on-scrim)] py-1 px-2 rounded-full max-w-[150px] truncate">
                 <Music className="w-2.5 h-2.5 shrink-0" />
                 <span className="truncate">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
               </div>
@@ -603,7 +603,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       disabled={isCuttingVideo}
                       className={`w-full px-3 py-1.5 rounded-lg text-micro font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                         burnSubtitles
-                          ? 'bg-[var(--ok)]/15 text-[var(--ok)]'
+                          ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
                           : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                       }`}
                     >

@@ -209,7 +209,7 @@ export function NegotiationSimulationModal({
                   <label className={`block text-micro font-sans ${'text-[var(--acc)]'}`}>
                     <ShowIcon inline emoji="✨" />Vista previa del correo generado (Editable)
                   </label>
-                  <span className="text-micro font-sans bg-[var(--surface)]/15 text-[var(--ok)]/80 px-2 py-1 rounded">
+                  <span className="text-micro font-sans bg-[var(--surface)]/15 text-[var(--ok)] px-2 py-1 rounded">
                     Listo para ajustar
                   </span>
                 </div>

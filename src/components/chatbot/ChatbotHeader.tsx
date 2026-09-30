@@ -98,7 +98,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             <span>
               Autonomía: {dispatchLabel} • Min {minCache}€
             </span>
-            <span className="px-1 py-0.2 text-micro rounded font-bold bg-[var(--acc)]/40 text-[var(--acc)] ml-0.5">ADMIN</span>
+            <span className="px-1 py-0.2 text-micro rounded font-bold bg-[var(--acc)]/40 text-[var(--ink)] ml-0.5">ADMIN</span>
           </button>
         ) : (
           <div

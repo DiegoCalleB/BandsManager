@@ -203,7 +203,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
                       setCopiedStemError(true);
                       setTimeout(() => setCopiedStemError(false), 2000);
                     }}
-                    className="px-2.5 py-1 rounded bg-[var(--alert)]/40 hover:bg-[var(--alert)]/60 text-[var(--alert)] text-micro font-mono flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1 rounded bg-[var(--alert)]/40 hover:bg-[var(--alert)]/60 text-[var(--ink)] text-micro font-mono flex items-center gap-1 cursor-pointer"
                   >
                     <Copy className="w-3 h-3" />
                     <span>{copiedStemError ? '¡Copiado!' : 'Copiar detalle del error'}</span>

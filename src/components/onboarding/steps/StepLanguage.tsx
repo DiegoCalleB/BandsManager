@@ -87,11 +87,11 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
       {/* Header Banner */}
       <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15 ">
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center justify-center shrink-0 mt-0.5">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center justify-center shrink-0 mt-0.5">
             <Globe className="w-5 h-5 text-[var(--acc)]" />
           </div>
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-micro font-sans font-bold">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-sans font-bold">
               <span>Primer Paso Obligatorio / First Step</span>
             </div>
             <h3 className="text-base sm:text-lg font-bold font-display text-[var(--ink)]">
@@ -160,7 +160,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                         {lang.label}
                       </h4>
                       {isSelected && (
-                        <span className="px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)] text-micro font-sans font-extrabold">
+                        <span className="px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)] text-micro font-sans font-extrabold">
                           Activo
                         </span>
                       )}
@@ -174,7 +174,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                 <div
                   className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center transition-ui ${
                     isSelected
-                      ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "ring-1 ring-[var(--hair)] bg-[var(--surface)]/80 text-transparent"
                   }`}
                 >
@@ -199,7 +199,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
       {/* Impact Breakdown Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
         <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-start gap-2.5">
-          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] shrink-0">
+          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] shrink-0">
             <Languages className="w-4 h-4" />
           </div>
           <div>
@@ -214,7 +214,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
         </div>
 
         <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-start gap-2.5">
-          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] shrink-0">
+          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] shrink-0">
             <MessageSquareText className="w-4 h-4" />
           </div>
           <div>

@@ -158,7 +158,7 @@ export function TemplateConfigSection({
             <button
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
-              className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer hover:brightness-95"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer hover:brightness-95"
               title="Genera las 7 plantillas desde una propuesta base"
             >
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -204,7 +204,7 @@ export function TemplateConfigSection({
             onClick={() => setShowRecommendations(!showRecommendations)}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
               showRecommendations
-                ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--acc)] '
             } hover:brightness-95`}
           >
@@ -218,7 +218,7 @@ export function TemplateConfigSection({
             onClick={() => setShowExamples(!showExamples)}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
               showExamples
-                ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
+                ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] '
             } hover:brightness-95`}
           >
@@ -266,7 +266,7 @@ export function TemplateConfigSection({
 
       {/* Optimization Feedback Message */}
       {optimizationFeedbackMsg && (
-        <div className="p-3 bg-[var(--acc)]/15 text-[var(--acc)] text-xs rounded-[var(--r-m)] flex items-center justify-between animate-in fade-in">
+        <div className="p-3 bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs rounded-[var(--r-m)] flex items-center justify-between animate-in fade-in">
           <span>{optimizationFeedbackMsg}</span>
           {onClearFeedbackMsg && (
             <button type="button" onClick={onClearFeedbackMsg} className="text-[var(--acc)] font-bold ml-2 hover:text-[var(--ink)]">
@@ -346,7 +346,7 @@ export function TemplateConfigSection({
                 type="button"
                 onClick={() => onOptimizeTemplate()}
                 disabled={isOptimizingTemplate}
-                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
               >
                 <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
                 <span>{isOptimizingTemplate ? 'Optimizando...' : 'Optimizar con IA'}</span>
