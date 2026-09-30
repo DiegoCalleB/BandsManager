@@ -2158,7 +2158,7 @@ export default function CalendarView({
                   <button
                     id="create-event-unified-btn"
                     onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
-                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold'}`}
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold'}`}
                     title="Añadir Concierto, Ensayo o Reunión"
                   >
                     <Plus className="w-3.5 h-3.5" />

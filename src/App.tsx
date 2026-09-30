@@ -1160,11 +1160,11 @@ export default function App() {
   return (
     <PlayerProvider>
       <div
-        className={`h-screen ${colors.bg} flex flex-col md:flex-row transition-colors duration-300 font-sans w-full max-w-[100vw] overflow-hidden`}
+        className={`h-screen ${colors.bg} flex flex-col lg:flex-row transition-colors duration-300 font-sans w-full max-w-[100vw] overflow-hidden`}
       >
         {/* LEFT SIDEBAR */}
         {/* MOBILE TOP BAR */}
-        <header className="md:hidden flex flex-col bg-[var(--surface)] sticky top-0 z-30 shrink-0">
+        <header className="lg:hidden flex flex-col bg-[var(--surface)] sticky top-0 z-30 shrink-0">
           {/* Top Brand & Menu Row */}
           <div className="flex items-center justify-between px-4 pt-3 pb-2">
             <div
@@ -1264,7 +1264,7 @@ export default function App() {
  Resumen/Calendario navegan directo; Música/Promoción abren un sheet con sus
  sub-módulos; Más abre el drawer completo (Contactos, Negocio, Herramientas,
  Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.tsx. */}
-        <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[var(--surface)]">
+        <nav className="lg:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[var(--surface)]">
           {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
             let isActive = false;
             if (openGroupSheetId) {
@@ -1357,10 +1357,10 @@ export default function App() {
             return (
               <>
                 <div
-                  className="md:hidden fixed inset-x-0 top-0 bottom-16 z-40 bg-[var(--sunken)]"
+                  className="lg:hidden fixed inset-x-0 top-0 bottom-16 z-40 bg-[var(--sunken)]"
                   onClick={() => setOpenGroupSheetId(null)}
                 />
-                <div className="md:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[var(--surface)] rounded-t-[var(--r-xl)]">
+                <div className="lg:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[var(--surface)] rounded-t-[var(--r-xl)]">
                   <div className="w-9 h-1 rounded-[var(--r-pill)] bg-[var(--sunken)] mx-auto mt-2.5 mb-1" />
                   <div className="px-4 pt-1 pb-2 text-xs font-semibold text-[var(--ink-2)]">
                     {t(group.titleKey, group.titleDefault)}
@@ -1404,7 +1404,7 @@ export default function App() {
  reproductor y la nav inferior (z-40, en su propio contexto de apilamiento) pueden tapar
  un z-50 local a este árbol. Encontrado por scripts/design-audit.js, no a mano. */}
         {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-[9999] flex">
+          <div className="lg:hidden fixed inset-0 z-[9999] flex">
             {/* Backdrop */}
             <div
               className="fixed inset-0 z-[9999] bg-[var(--scrim)]/75 transition-opacity"
@@ -1672,7 +1672,7 @@ export default function App() {
           </div>
         )}
 
-        <aside className="hidden md:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
+        <aside className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
           {/* Brand Header (Clickable Netflix Style Switcher) */}
           <div
             onClick={() => setShowBandSwitcherModal(true)}
@@ -1999,7 +1999,7 @@ export default function App() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 md:p-8 pb-24 md:pb-8 overflow-y-auto custom-scrollbar">
+        <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 lg:p-8 pb-24 lg:pb-8 overflow-y-auto custom-scrollbar">
           {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
           {activeCampaign &&
             ["booking", "medios", "management", "bandas"].includes(
@@ -2416,7 +2416,7 @@ export default function App() {
           {/* Floating Chatbot Overlay */}
           {currentView !== "chat" && !isPromoPlan && (
             <div
-              className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-ui duration-200 ${
+              className={`fixed bottom-36 lg:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-ui duration-200 ${
                 isFloatingChatOpen
                   ? "block animate-in slide-in-from-bottom-5"
                   : "hidden"
@@ -2451,7 +2451,7 @@ export default function App() {
             <button
               id="floating-chat-trigger-btn"
               onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
-              className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group ${
+              className={`fixed bottom-20 lg:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group ${
                 isFloatingChatOpen
                   ? "bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)]"
                   : isChatLoading

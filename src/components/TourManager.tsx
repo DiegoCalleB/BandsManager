@@ -701,7 +701,7 @@ export default function TourManager({
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-4 py-2.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] transition-ui active:scale-[0.97] flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:brightness-95 transition-ui active:scale-[0.97] flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4 shrink-0" />
             <span>Nueva Gira</span>
@@ -1839,7 +1839,7 @@ export default function TourManager({
                 <button
                   type="submit"
                   form="tour-form"
-                  className="px-5 py-2 rounded-[var(--r-pill)] text-sm font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] active:scale-[0.97] transition-ui flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2 rounded-[var(--r-pill)] text-sm font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:brightness-95 active:scale-[0.97] transition-ui flex items-center gap-2 cursor-pointer"
                 >
                   <Activity className="w-4 h-4" />
                   {editingTour ? "Guardar Cambios" : "Crear Gira"}

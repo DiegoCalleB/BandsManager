@@ -121,7 +121,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4 stroke-[3]" />
                 <span>{setlistToEdit ? 'Guardar Cambios' : 'Crear Repertorio'}</span>

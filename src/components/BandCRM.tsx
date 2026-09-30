@@ -1197,7 +1197,7 @@ Bakandeya Agent Manager IA & Músicos`;
             id="band-btn-add-new"
             type="button"
             onClick={handleOpenCreateModal}
-            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
           >
             <Plus className="w-3.5 h-3.5 shrink-0" />
             <span>Nueva Banda</span>

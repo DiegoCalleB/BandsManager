@@ -492,7 +492,7 @@ export function AddLeadModal({
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 rounded-[var(--r-pill)] font-sans text-micro font-bold transition-ui cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
+                className={`px-4 py-2 rounded-[var(--r-pill)] font-sans text-micro font-bold transition-ui cursor-pointer ${'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'}`}
               >
                 {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
               </button>

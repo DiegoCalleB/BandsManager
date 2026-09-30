@@ -388,7 +388,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </div>
 
           {/* Tab Selection */}
-          <div className={`px-6 pt-3 flex gap-2 overflow-x-auto bg-[var(--bg)]/50`}>
+          <div className={`px-6 pt-3 flex gap-2 shrink-0 overflow-x-auto bg-[var(--bg)]/50`}>
             <button
               onClick={() => {
                 setActiveTab("band_info");

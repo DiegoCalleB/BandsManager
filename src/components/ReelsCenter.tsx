@@ -3210,7 +3210,7 @@ export default function ReelsCenter({
                               className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                 isReanalyzingClip
                                   ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                                  : "bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]"
+                                  : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                               }`}
                             >
                               <Sparkles

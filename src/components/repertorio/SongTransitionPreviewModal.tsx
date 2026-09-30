@@ -1279,7 +1279,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={togglePlay}
-                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold flex items-center justify-center shadow transition active:scale-[0.97] cursor-pointer"
+                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold flex items-center justify-center shadow transition active:scale-[0.97] cursor-pointer"
                     title={
                       isPlaying ? "Pausar comprobación" : "Reproducir unión"
                     }

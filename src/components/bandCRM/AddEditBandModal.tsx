@@ -176,7 +176,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <button
                       type="button"
                       onClick={handleApplyAllAiData}
-                      className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-micro hover:bg-[var(--acc-soft)] transition-ui cursor-pointer flex items-center gap-1 shadow"
+                      className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-micro hover:brightness-95 transition-ui cursor-pointer flex items-center gap-1 shadow"
                     >
                       <Check className="w-3.5 h-3.5" />
                       <span>Aplicar Todo</span>

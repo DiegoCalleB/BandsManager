@@ -554,7 +554,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             />
                           </div>
                         ) : (
-                          <p className="text-micro text-[var(--ink-3)] mt-0.5 line-clamp-2">{evt.salaOrLugar}</p>
+                          <p className="text-micro text-[var(--ink-2)] mt-0.5 line-clamp-2">{evt.salaOrLugar}</p>
                         )}
                       </div>
                     </div>

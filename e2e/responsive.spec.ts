@@ -73,7 +73,7 @@ for (const tema of ['light', 'dark']) {
   for (const ancho of ANCHOS) {
     test.describe(`${tema} · ${ancho}px`, () => {
       test.use({ viewport: { width: ancho, height: 844 } });
-      const esMovil = ancho < 768;
+      const esMovil = ancho < 1024;
       const vistas = esMovil ? ['resumen', ...RANURAS_MOVIL] : VISTAS_ESCRITORIO;
       for (const vista of vistas) {
         test(vista, async ({ page }) => {

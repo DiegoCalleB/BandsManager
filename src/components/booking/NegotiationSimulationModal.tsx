@@ -105,7 +105,7 @@ export function NegotiationSimulationModal({
                   onClick={() => onRoleChange('sala')}
                   className={`py-2 px-3 rounded-[var(--r-pill)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     simulationRole === 'sala'
-                      ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
+                      ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'
                       : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
                   }`}
                 >

@@ -336,7 +336,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           )}
 
           {/* Tab Buttons */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--scrim)]/40 self-start sm:self-auto overflow-x-auto max-w-full">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--scrim)]/40 self-start sm:self-auto overflow-x-auto shrink-0 max-w-full">
             {[
               { id: 'hooks' as const, label: 'Ganchos A/B', icon: Sparkles },
               { id: 'retention' as const, label: 'Dinamismo & FX', icon: Repeat },

@@ -851,12 +851,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick("revolut", revolutUrl, contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]  transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow" : ""}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]  transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden`}
           >
-            <span
-              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
-              aria-hidden="true"
-            />
             <div
               className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow transition-transform`}
             >
@@ -891,12 +887,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick("paypal", paypalUrl, contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow-delayed" : ""}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden`}
           >
-            <span
-              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
-              aria-hidden="true"
-            />
             <div
               className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[#003087] flex items-center justify-center shrink-0 shadow transition-transform`}
             >
@@ -924,12 +916,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             key={`bizum-${variant}`}
             type="button"
             onClick={() => handleCopyBizum(contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--ok-soft)] hover:bg-[var(--ok)]/20 transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow" : ""}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--ok-soft)] hover:bg-[var(--ok)]/20 transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden`}
           >
-            <span
-              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-[var(--ok)]/15 to-transparent animate-donate-sheen"
-              aria-hidden="true"
-            />
             <div
               className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] flex items-center justify-center shrink-0 shadow font-bold transition-transform`}
             >

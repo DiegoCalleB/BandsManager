@@ -102,6 +102,11 @@ const CHECKS = {
     pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w\/-])/g,
     severity: 'error',
   },
+  hoverPalidoConOnAcc: {
+    description: 'texto --on-* (blanco en Claro) con hover:bg-[var(--acc-soft|ok-soft|sunken)] — al pasar el ratón el relleno se aclara y el texto desaparece; usa hover:brightness-95',
+    pattern: /className=\{?[`"'][^`"']*(?:text-\[var\(--on-(?:acc|ok|alert)\)\][^`"']*hover:bg-\[var\(--(?:acc|ok)-soft\)\]|hover:bg-\[var\(--(?:acc|ok)-soft\)\][^`"']*text-\[var\(--on-(?:acc|ok|alert)\)\])/g,
+    severity: 'error',
+  },
   mayusculasDecorativas: {
     description: 'uppercase de Tailwind — visual-identity §1/§6: caja de frase siempre; las versalitas eliminan la silueta de la palabra y cansan en sesiones largas (un literal ya escrito en mayúsculas en el JSX no lo detecta esta regla)',
     pattern: /(?<![\w-])uppercase(?![\w-])/g,
