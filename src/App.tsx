@@ -1247,20 +1247,18 @@ export default function App() {
                 <span className="text-micro hidden xs:inline">Guía</span>
               </Button>
               {!isPromoPlan && (
-                <button
+                <Button
+                  variant={activeCampaign ? "soft" : "neutral"}
+                  size="xs"
                   onClick={() => setShowCampaignModal(true)}
-                  className={`px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                    activeCampaign
-                      ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
-                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                   title="Gestionar campañas de booking"
                 >
                   <Target className="w-3.5 h-3.5" />
                   <span className="text-micro hidden xs:inline">
                     {activeCampaign ? "Campaña" : "Campañas"}
                   </span>
-                </button>
+                </Button>
               )}
             </div>
           </div>

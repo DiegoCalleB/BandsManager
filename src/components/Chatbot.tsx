@@ -48,7 +48,7 @@ import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
 import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { ShowIcon } from './ui/ShowIcon';
-import { Select, Textarea } from './ui';
+import { Button, Select, Textarea } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -2639,7 +2639,8 @@ export default function Chatbot({
           placeholder="Escribe tu mensaje… (Enter para enviar, Shift+Enter para nueva línea)"
           className="flex-1 max-h-28 min-h-[38px]"
         />
-        <button
+        <Button
+          variant={isListening ? "danger" : "neutral"}
           id="chatbot-mic-btn"
           type="button"
           onClick={handleToggleMic}
@@ -2651,12 +2652,10 @@ export default function Chatbot({
                 : 'Dar instrucciones por voz'
               : 'Tu navegador no soporta dictado por voz'
           }
-          className={`p-2.5 rounded-[var(--r-pill)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
-            isListening ? 'bg-[var(--alert)] text-[var(--on-alert)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
-          }`}
+          className="items-center justify-center shrink-0 mb-0.5"
         >
           <Mic className="w-4 h-4" />
-        </button>
+        </Button>
         <button
           id="chatbot-send-btn"
           type="submit"

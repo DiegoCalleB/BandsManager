@@ -932,7 +932,6 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               variant="neutral"
               size="sm"
               onClick={onClose}
-              
             >
               Mantener banda actual
             </Button>
@@ -1239,7 +1238,6 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         variant="neutral"
                         type="button"
                         onClick={() => setShowCreateBandModal(false)}
-                        
                       >
                         Cancelar
                       </Button>
@@ -1315,50 +1313,38 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                     {/* Filter category pills */}
                     <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
-                      <button
+                      <Button
+                        variant={newBandFeatureCategory === "all" ? "primary" : "neutral"}
+                        size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("all")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
-                          newBandFeatureCategory === "all"
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                        }`}
                       >
                         Todas las funciones
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant={newBandFeatureCategory === "booking" ? "primary" : "neutral"}
+                        size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("booking")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
-                          newBandFeatureCategory === "booking"
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                        }`}
                       >
                         <ShowIcon inline emoji="🎯" />Booking y salas
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant={newBandFeatureCategory === "media" ? "primary" : "neutral"}
+                        size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("media")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
-                          newBandFeatureCategory === "media"
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                        }`}
                       >
                         <ShowIcon inline emoji="📱" />Redes, EPK y fans
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant={newBandFeatureCategory === "finance" ? "primary" : "neutral"}
+                        size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("finance")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
-                          newBandFeatureCategory === "finance"
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                        }`}
                       >
                         <ShowIcon inline emoji="💼" />Finanzas y agentes 360
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
@@ -1728,7 +1714,6 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   size="xs"
                   type="button"
                   onClick={() => setBandToDelete(null)}
-                  
                 >
                   Cancelar
                 </Button>

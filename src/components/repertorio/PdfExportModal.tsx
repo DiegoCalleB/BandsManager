@@ -47,7 +47,7 @@ import {
   MeasureRangeFn,
 } from "../../utils/setlistAutoFit";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Select } from '../ui';
+import { Button, Select } from '../ui';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -1693,46 +1693,40 @@ export function PdfExportModal({
               </Select>
 
               <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
-                <button
+                <Button
+                  variant={printMode === "all_members" ? "neutral" : "ghost"}
+                  size="xs"
                   onClick={() => {
                     setPrintMode("all_members");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
-                    printMode === "all_members"
-                      ? "bg-[var(--sunken)] text-[var(--ink)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                 >
                   <Users className="w-3.5 h-3.5" /> Todos los Músicos (
                   {resolvedMembers.length} hojas individuales)
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant={printMode === "single_member" ? "neutral" : "ghost"}
+                  size="xs"
                   onClick={() => {
                     setPrintMode("single_member");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
-                    printMode === "single_member"
-                      ? "bg-[var(--sunken)] text-[var(--ink)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                 >
                   <User className="w-3.5 h-3.5" /> 1 Músico específico
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant={printMode === "master" ? "neutral" : "ghost"}
+                  size="xs"
                   onClick={() => {
                     setPrintMode("master");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
-                    printMode === "master"
-                      ? "bg-[var(--sunken)] text-[var(--ink)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                 >
                   <FileText className="w-3.5 h-3.5" /> Master escenario / sonido
-                </button>
+                </Button>
               </div>
 
               {/* Single member picker */}
@@ -1760,28 +1754,24 @@ export function PdfExportModal({
  cerca — atril, mesa de sonido);"de pie" fuerza la letra más grande de todas,
  aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
               <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
-                <button
+                <Button
+                  variant={viewDensity === "sentado" ? "neutral" : "ghost"}
+                  size="xs"
                   onClick={() => setViewDensity("sentado")}
-                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
-                    viewDensity === "sentado"
-                      ? "bg-[var(--sunken)] text-[var(--ink)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                   title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
                 >
                   <ShowIcon inline emoji="🪑" />Sentado
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant={viewDensity === "de_pie" ? "neutral" : "ghost"}
+                  size="xs"
                   onClick={() => setViewDensity("de_pie")}
-                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
-                    viewDensity === "de_pie"
-                      ? "bg-[var(--sunken)] text-[var(--ink)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                   title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
                 >
                   <ShowIcon inline emoji="🧍" />De pie
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -1839,7 +1829,6 @@ export function PdfExportModal({
                   size="sm"
                   value={handwritingFont}
                   onChange={(e) => setHandwritingFont(e.target.value as any)}
-                  
                 >
                   <option value="caveat">Rotulador fino (Caveat)</option>
                   <option value="permanent_marker">

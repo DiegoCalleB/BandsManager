@@ -38,6 +38,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface SocialGrowthPlanViewProps {
   colors: ThemeColors;
@@ -298,17 +299,15 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           <span>Calendario Semanal</span>
         </button>
 
-        <button
+        <Button
+          variant={selectedTab === "instagram" ? "danger" : "ghost"}
+          size="xs"
           onClick={() => setSelectedTab("instagram")}
-          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-            selectedTab === "instagram"
-              ? "bg-[var(--alert)] text-[var(--on-alert)] shadow"
-              : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
-          }`}
+          className="items-center gap-1.5 whitespace-nowrap"
         >
           <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
           <span>Instagram ({igCount.toLocaleString()})</span>
-        </button>
+        </Button>
 
         <button
           onClick={() => setSelectedTab("tiktok")}
@@ -322,17 +321,15 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           <span>TikTok ({tkCount.toLocaleString()})</span>
         </button>
 
-        <button
+        <Button
+          variant={selectedTab === "youtube" ? "danger" : "ghost"}
+          size="xs"
           onClick={() => setSelectedTab("youtube")}
-          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-            selectedTab === "youtube"
-              ? "bg-[var(--alert)] text-[var(--on-alert)] shadow"
-              : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
-          }`}
+          className="items-center gap-1.5 whitespace-nowrap"
         >
           <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" />
           <span>YouTube ({ytSubs.toLocaleString()})</span>
-        </button>
+        </Button>
 
         <button
           onClick={() => setSelectedTab("spotify")}

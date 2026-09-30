@@ -818,17 +818,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
           <div className="flex gap-1.5 overflow-x-auto shrink-0 no-scrollbar py-0.5">
             {["todos", "televisión", "radio", "redes", "managements"].map(
               (type) => (
-                <button
+                <Button
+                  variant={mediaTypeFilter === type ? "primary" : "neutral"}
+                  size="xs"
                   key={type}
                   onClick={() => setMediaTypeFilter(type as any)}
-                  className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold capitalize transition-colors cursor-pointer ${
-                    mediaTypeFilter === type
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
                 >
                   {type}
-                </button>
+                </Button>
               ),
             )}
           </div>
@@ -1821,21 +1818,19 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           </button>
                         )}
 
-                        <button
+                        <Button
+                          variant={isDetailOpen ? "primary" : "neutral"}
+                          size="xs"
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             onSelectLead(lead);
                           }}
-                          className={`p-1.5 rounded-[var(--r-pill)] transition-colors inline-flex items-center ${
-                            isDetailOpen
-                              ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                              : "bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]"
-                          }`}
+                          className="items-center"
                           title="Abrir ficha"
                         >
                           <Eye className="w-3.5 h-3.5" />
-                        </button>
+                        </Button>
                       </div>
                     </td>
                   </tr>

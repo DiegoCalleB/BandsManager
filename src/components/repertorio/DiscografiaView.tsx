@@ -662,39 +662,30 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           <div
             className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}
           >
-            <button
+            <Button
+              variant={activeFilterTab === "todos" ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setActiveFilterTab("todos")}
-              className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium transition-ui cursor-pointer ${
-                activeFilterTab === "todos"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
             >
               Todos
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={activeFilterTab === "albumes" ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setActiveFilterTab("albumes")}
-              className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium transition-ui cursor-pointer ${
-                activeFilterTab === "albumes"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
             >
               Álbumes
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={activeFilterTab === "singles" ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setActiveFilterTab("singles")}
-              className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium transition-ui cursor-pointer ${
-                activeFilterTab === "singles"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
             >
               Singles
-            </button>
+            </Button>
           </div>
 
           {/* Action Icons: Fold/Unfold & Dynamics */}

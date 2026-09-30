@@ -744,19 +744,16 @@ export const SocialAndFansGrowthChart: React.FC<
             {TIME_PERIOD_OPTIONS.map((opt) => {
               const isSelected = selectedPeriod === opt.id;
               return (
-                <button
+                <Button
+                  variant={isSelected ? "primary" : "ghost"}
+                  size="xs"
                   key={opt.id}
                   type="button"
                   onClick={() => setSelectedPeriod(opt.id)}
-                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer ${
-                    isSelected
-                      ? "bg-[var(--acc)]  text-[var(--on-acc)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
-                  }`}
                   title={opt.label}
                 >
                   {opt.shortLabel}
-                </button>
+                </Button>
               );
             })}
           </div>

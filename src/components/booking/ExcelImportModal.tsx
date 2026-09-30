@@ -931,7 +931,6 @@ export function ExcelImportModal({
                         size="sm"
                         value={selectedSheet}
                         onChange={(e) => handleSheetChange(e.target.value)}
-                        
                       >
                         {sheetNames.map((s) => (
                           <option key={s} value={s}>
@@ -1350,20 +1349,18 @@ export function ExcelImportModal({
                     </div>
 
                     {duplicatesCount > 0 && (
-                      <button
+                      <Button
+                        variant={filterDuplicatesOnly ? "primary" : "neutral"}
+                        size="xs"
                         type="button"
                         onClick={() =>
                           setFilterDuplicatesOnly(!filterDuplicatesOnly)
                         }
-                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1 transition-ui cursor-pointer ${
-                          filterDuplicatesOnly
-                            ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                            : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60"
-                        }`}
+                        className="items-center gap-1"
                       >
                         <Filter className="w-3 h-3" />
                         <span>Solo duplicados</span>
-                      </button>
+                      </Button>
                     )}
 
                     <Button
@@ -1371,7 +1368,6 @@ export function ExcelImportModal({
                       size="xs"
                       type="button"
                       onClick={() => handleToggleSelectAll(true)}
-                      
                     >
                       Seleccionar todos
                     </Button>
@@ -1380,7 +1376,6 @@ export function ExcelImportModal({
                       size="xs"
                       type="button"
                       onClick={() => handleToggleSelectAll(false)}
-                      
                     >
                       Deseleccionar todos
                     </Button>
@@ -1500,7 +1495,6 @@ export function ExcelImportModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              
                             >
                               {CATEGORY_OPTIONS.map((c) => (
                                 <option key={c.id} value={c.id}>

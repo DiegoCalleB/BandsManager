@@ -367,39 +367,30 @@ export const MultiModelPitchComparatorModal: React.FC<
               <span className="text-micro text-[var(--ink-2)] px-2 font-sans">
                 Escala:
               </span>
-              <button
+              <Button
+                variant={volumeScale === "1" ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setVolumeScale("1")}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold cursor-pointer transition-ui ${
-                  volumeScale === "1"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
               >
                 1 Pitch
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={volumeScale === "100" ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setVolumeScale("100")}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold cursor-pointer transition-ui ${
-                  volumeScale === "100"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
               >
                 100 Salas (1 Gira)
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={volumeScale === "1000" ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setVolumeScale("1000")}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold cursor-pointer transition-ui ${
-                  volumeScale === "1000"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
               >
                 1.000 Salas (Campaña Nacional)
-              </button>
+              </Button>
             </div>
           </div>
 

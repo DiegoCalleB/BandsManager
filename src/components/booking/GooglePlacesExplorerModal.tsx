@@ -1397,17 +1397,14 @@ export function GooglePlacesExplorerModal({
                   Ciudades rápidas:
                 </span>
                 {QUICK_CITIES.map((city) => (
-                  <button
+                  <Button
+                    variant={selectedCity === city ? "primary" : "neutral"}
+                    size="xs"
                     key={city}
                     onClick={() => handleQuickCityClick(city)}
-                    className={`px-2.5 py-0.5 text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer font-medium ${
-                      selectedCity === city
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                        : "bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
-                    }`}
                   >
                     {city}
-                  </button>
+                  </Button>
                 ))}
               </div>
 
@@ -1637,7 +1634,6 @@ export function GooglePlacesExplorerModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              
                             >
                               {CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>
@@ -1848,7 +1844,6 @@ export function GooglePlacesExplorerModal({
                       size="xs"
                       type="button"
                       onClick={() => setShowDiscardedModal(false)}
-                      
                     >
                       Cerrar
                     </Button>

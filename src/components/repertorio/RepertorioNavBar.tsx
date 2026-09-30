@@ -73,15 +73,13 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             aria-label="Vistas principales de repertorio"
             className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 ${'bg-[var(--sunken)]'}`}
           >
-            <button
+            <Button
+              variant={activeTab === 'setlists' ? "primary" : "ghost"}
+              size="xs"
               id="tab-btn-setlists"
               type="button"
               onClick={() => setActiveTab('setlists')}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs flex items-center gap-1.5 transition-ui cursor-pointer ${
-                activeTab === 'setlists'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
-              }`}
+              className="items-center gap-1.5"
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Setlists</span>
@@ -92,7 +90,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               >
                 {setlists.length}
               </span>
-            </button>
+            </Button>
 
             <button
               id="tab-btn-catalogo"

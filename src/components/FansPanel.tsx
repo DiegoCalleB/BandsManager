@@ -721,7 +721,6 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               type="button"
               onClick={() => setShowFansHeaderMenu((v) => !v)}
               title="Previsualizar formulario, copiar enlace, registrar fan manual, exportar CSV o ver guía"
-              
             >
               <MoreHorizontal className="w-4 h-4" />
             </Button>
@@ -863,17 +862,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </div>
 
             <div className="flex flex-wrap items-center gap-2 pt-1">
-              <button
+              <Button
+                variant={selectedCityFilter === "" ? "primary" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setSelectedCityFilter("")}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                  selectedCityFilter === ""
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                    : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
-                }`}
               >
                 Todas ({fans.length})
-              </button>
+              </Button>
 
               {customCityChips.map((city) => {
                 const count = fans.filter(
@@ -937,7 +933,6 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     variant="primary"
                     size="xs"
                     type="submit"
-                    
                     title="Guardar ciudad"
                   >
                     <Check className="w-3.5 h-3.5" />
@@ -950,7 +945,6 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       setIsAddingCity(false);
                       setNewCityInput("");
                     }}
-                    
                   >
                     <X className="w-3.5 h-3.5" />
                   </Button>
@@ -1018,19 +1012,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             <div className="flex items-center gap-2">
               {/* View Switcher */}
               <div className="flex items-center gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)]">
-                <button
+                <Button
+                  variant={viewMode === "feed" ? "primary" : "ghost"}
+                  size="xs"
                   type="button"
                   onClick={() => setViewMode("feed")}
-                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                    viewMode === "feed"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                   title="Muro social y comunidad"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
                   <span>Muro Social</span>
-                </button>
+                </Button>
                 <button
                   type="button"
                   onClick={() => setViewMode("grid")}
@@ -1044,32 +1036,28 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <LayoutGrid className="w-3.5 h-3.5" />
                   <span>Tarjetas</span>
                 </button>
-                <button
+                <Button
+                  variant={viewMode === "table" ? "primary" : "ghost"}
+                  size="xs"
                   type="button"
                   onClick={() => setViewMode("table")}
-                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                    viewMode === "table"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                   title="Vista en detalles / tabla"
                 >
                   <List className="w-3.5 h-3.5" />
                   <span>Tabla CRM</span>
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant={viewMode === "map" ? "primary" : "ghost"}
+                  size="xs"
                   type="button"
                   onClick={() => setViewMode("map")}
-                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                    viewMode === "map"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
+                  className="items-center gap-1.5"
                   title="Vista en mapa por ciudades"
                 >
                   <MapIcon className="w-3.5 h-3.5" />
                   <span>Mapa</span>
-                </button>
+                </Button>
               </div>
 
               <span className="text-xs text-[var(--ink-2)] font-sans shrink-0 hidden sm:inline">
@@ -1998,7 +1986,6 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   variant="neutral"
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  
                 >
                   Cancelar
                 </Button>

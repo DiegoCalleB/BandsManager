@@ -263,33 +263,33 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
         {/* CONTROLES DEL BRIEFING: TABS Y TOGGLE */}
         <div className="flex items-center gap-2">
           <div className="flex items-center p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
-            <button
+            <Button
+              variant={activeTab === 'priorities' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => {
                 setActiveTab('priorities');
                 toggleExpanded(true);
               }}
-              className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'priorities' ? 'bg-[var(--acc)] text-[var(--on-acc)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <Flame className="w-3.5 h-3.5" />
               <span>Acción de Hoy ({priorityItems.all.length})</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant={activeTab === 'routing' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => {
                 setActiveTab('routing');
                 toggleExpanded(true);
               }}
-              className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'routing' ? 'bg-[var(--acc)] text-[var(--on-acc)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <Compass className="w-3.5 h-3.5" />
               <span>Enlaces de ruta</span>
-            </button>
+            </Button>
           </div>
 
           <Button
@@ -297,7 +297,6 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
             size="sm"
             type="button"
             onClick={() => toggleExpanded()}
-            
             title={isExpanded ? 'Plegar radar' : 'Desplegar radar'}
           >
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -537,7 +536,6 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         size="sm"
                         value={simulatorCity}
                         onChange={(e) => setSimulatorCity(e.target.value)}
-                        
                       >
                         <option value="Valencia">Valencia (eje mediterráneo)</option>
                         <option value="Barcelona">Barcelona (eje mediterráneo)</option>

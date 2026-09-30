@@ -14,14 +14,15 @@ const dry = process.argv.includes('--dry');
 const files = execSync("git ls-files ':(glob)src/**/*.tsx'", { cwd: ROOT }).toString().split('\n').filter((f) => f && !f.includes('components/ui/'));
 const RESP = /^(sm|md|lg|xl|2xl):/;
 const LAYOUT = /^(w|min-w|max-w|flex-1|flex-none|shrink-0|grow|basis|m[trblxyse]?|-m[trblxyse]?|col-span|order|self|absolute|relative|fixed|sticky|inset|top|right|bottom|left|z|hidden|block|gap|justify|items|truncate|whitespace|min-h|h)(-|$)/;
-const stats = { primary: 0, soft: 0, neutral: 0, danger: 0, skipped: 0 };
+const stats = { primary: 0, soft: 0, neutral: 0, danger: 0, dyn: 0, skipped: 0 };
 
-function variantOf(cls) {
-  if (!/rounded-\[var\(--r-pill\)\]/.test(cls)) return null;
+function variantOf(cls, requirePill = true) {
+  if (requirePill && !/rounded-\[var\(--r-pill\)\]/.test(cls)) return null;
   if (/(^|\s)bg-\[var\(--acc\)\](\s|$)/.test(cls) && /text-\[var\(--on-acc\)\]/.test(cls)) return 'primary';
   if (/(^|\s)bg-\[var\(--acc-soft\)\](\s|$)/.test(cls)) return 'soft';
   if (/(^|\s)bg-\[var\(--sunken\)\](\s|$)/.test(cls)) return 'neutral';
   if (/(^|\s)bg-\[var\(--alert(-soft)?\)\](\s|$)/.test(cls)) return 'danger';
+  if (!requirePill && /(^|\s)(text-\[var\(--ink-2\)\]|hover:bg-\[var\(--sunken\)\])/.test(cls) && !/(^|\s)bg-\[/.test(cls)) return 'ghost';
   return null;
 }
 function sizeOf(cls) {
@@ -61,14 +62,29 @@ for (const rel of files) {
       if (n === 'className') clsAttr = a;
       if (n === 'style') hasStyle = true;
     }
-    if (!clsAttr || !clsAttr.initializer || !ts.isStringLiteral(clsAttr.initializer)) return;
-    const cls = clsAttr.initializer.text;
-    const variant = variantOf(cls);
+    if (!clsAttr || !clsAttr.initializer) return;
+    let cls, variantExpr = null;
+    if (ts.isStringLiteral(clsAttr.initializer)) {
+      cls = clsAttr.initializer.text;
+    } else if (ts.isJsxExpression(clsAttr.initializer) && clsAttr.initializer.expression && ts.isTemplateExpression(clsAttr.initializer.expression)) {
+      // plantilla con UN ternario de literales que decide el aspecto (activo/inactivo) y el resto estático
+      const t = clsAttr.initializer.expression;
+      const spans = t.templateSpans;
+      const cond = spans.filter((sp) => ts.isConditionalExpression(sp.expression) && ts.isStringLiteral(sp.expression.whenTrue) && ts.isStringLiteral(sp.expression.whenFalse));
+      if (cond.length !== 1 || spans.length !== 1) { stats.skipped++; return; }
+      const ce = cond[0].expression;
+      const base = t.head.text + ' ' + cond[0].literal.text;
+      const vt = variantOf(base + ' ' + ce.whenTrue.text, false), vf = variantOf(base + ' ' + ce.whenFalse.text, false);
+      if (!vt || !vf || !/rounded-\[var\(--r-pill\)\]/.test(base + ce.whenTrue.text + ce.whenFalse.text)) { stats.skipped++; return; }
+      cls = base + ' ' + ce.whenTrue.text + ' ' + ce.whenFalse.text; // para size/layout
+      variantExpr = `{${ce.condition.getText(sf)} ? "${vt}" : "${vf}"}`;
+    } else return;
+    const variant = variantExpr ? 'dyn' : variantOf(cls);
     if (!variant || hasStyle) { stats.skipped++; return; }
     if (/(^|\s)(w-\d|size-|aspect-)/.test(cls) && /(^|\s)h-\d/.test(cls)) { stats.skipped++; return; } // botón cuadrado/icono: fuera
     const size = sizeOf(cls);
     const layout = layoutOf(cls);
-    edits.push({ start: open.tagName.getStart(sf), end: open.tagName.getEnd(), text: `Button variant="${variant}"${size !== 'md' ? ` size="${size}"` : ''}` });
+    edits.push({ start: open.tagName.getStart(sf), end: open.tagName.getEnd(), text: `Button variant=${variantExpr ?? `"${variant}"`}${size !== 'md' ? ` size="${size}"` : ''}` });
     if (closing) edits.push({ start: closing.tagName.getStart(sf), end: closing.tagName.getEnd(), text: 'Button' });
     edits.push({ start: clsAttr.getStart(sf), end: clsAttr.getEnd(), text: layout ? `className="${layout}"` : '' });
     stats[variant]++;

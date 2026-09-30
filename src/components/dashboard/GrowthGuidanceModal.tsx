@@ -100,41 +100,35 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         {/* Modal Navigation Tabs */}
         <div className="px-5 py-2.5 bg-[var(--sunken)] border-b border-[var(--hair)] flex items-center justify-between gap-2 overflow-x-auto shrink-0">
           <div className="flex items-center gap-1.5">
-            <button
+            <Button
+              variant={activeTab === 'blueprint' ? "primary" : "ghost"}
+              size="xs"
               onClick={() => setActiveTab('blueprint')}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
-                activeTab === 'blueprint'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <Calendar className="w-3.5 h-3.5" />
               <span>Agenda semanal guiada</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant={activeTab === 'channels' ? "primary" : "ghost"}
+              size="xs"
               onClick={() => setActiveTab('channels')}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
-                activeTab === 'channels'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <Radio className="w-3.5 h-3.5" />
               <span>Playbooks por canal</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant={activeTab === 'pillars' ? "primary" : "ghost"}
+              size="xs"
               onClick={() => setActiveTab('pillars')}
-              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
-                activeTab === 'pillars'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <Target className="w-3.5 h-3.5" />
               <span>Pilares y Diagnóstico</span>
-            </button>
+            </Button>
           </div>
 
           <div className="text-xs font-mono text-[var(--ink-2)] hidden sm:flex items-center gap-1">
@@ -353,7 +347,6 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               size="xs"
               type="button"
               onClick={onClose}
-              
             >
               Cerrar y empezar
             </Button>

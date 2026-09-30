@@ -404,30 +404,26 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
           {/* Main Tabs Navigation */}
           <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] ">
-            <button
+            <Button
+              variant={activeModalTab === "tone" ? "primary" : "ghost"}
+              size="sm"
               type="button"
               onClick={() => setActiveModalTab("tone")}
-              className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
-                activeModalTab === "tone"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
-              }`}
+              className="flex-1 items-center justify-center gap-2"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>ADN de Tono y Personalidad</span>
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={activeModalTab === "threads" ? "primary" : "ghost"}
+              size="sm"
               type="button"
               onClick={() => setActiveModalTab("threads")}
-              className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
-                activeModalTab === "threads"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
-              }`}
+              className="flex-1 items-center justify-center gap-2"
             >
               <MessageSquareText className="w-3.5 h-3.5" />
               <span>Hilos reales de ejemplo (Entrenar IA)</span>
-            </button>
+            </Button>
           </div>
 
           {activeModalTab === "threads" ? (
@@ -458,20 +454,17 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 ].map((cat) => {
                   const isActive = selectedCategoryThread === cat.id;
                   return (
-                    <button
+                    <Button
+                      variant={isActive ? "primary" : "ghost"}
+                      size="xs"
                       key={cat.id}
                       type="button"
                       onClick={() =>
                         setSelectedCategoryThread(cat.id as TemplateCategory)
                       }
-                      className={`py-1 px-2.5 rounded-[var(--r-pill)] text-micro font-bold transition-ui cursor-pointer ${
-                        isActive
-                          ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
-                          : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
-                      }`}
                     >
                       {cat.label}
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -507,7 +500,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div>
                       <label className={labelClass}>Tono general</label>
                       <Input
-                        
                         value={draft.tono_comunicacion}
                         onChange={(e) =>
                           setDraft({
@@ -521,7 +513,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div>
                       <label className={labelClass}>Tratamiento</label>
                       <Input
-                        
                         value={draft.tratamiento_habitual}
                         onChange={(e) =>
                           setDraft({
@@ -535,7 +526,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div>
                       <label className={labelClass}>Nivel de energía</label>
                       <Input
-                        
                         value={draft.nivel_energia}
                         onChange={(e) =>
                           setDraft({ ...draft, nivel_energia: e.target.value })
@@ -550,7 +540,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       Vocabulario Clave y Muletillas (separadas por comas)
                     </label>
                     <Input
-                      
                       value={draft.vocabulario_clave}
                       onChange={(e) =>
                         setDraft({
@@ -567,7 +556,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       Emojis que usáis (separados por espacios)
                     </label>
                     <Input
-                      
                       value={draft.emojis_frecuentes}
                       onChange={(e) =>
                         setDraft({
@@ -585,7 +573,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       <Input
-                        
                         value={draft.matiz_instagram}
                         onChange={(e) =>
                           setDraft({
@@ -596,7 +583,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         placeholder="Instagram: igual que el tono general…"
                       />
                       <Input
-                        
                         value={draft.matiz_tiktok}
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_tiktok: e.target.value })
@@ -604,7 +590,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         placeholder="TikTok: más gamberro y directo…"
                       />
                       <Input
-                        
                         value={draft.matiz_youtube}
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_youtube: e.target.value })
@@ -612,7 +597,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         placeholder="YouTube: más explicativo…"
                       />
                       <Input
-                        
                         value={draft.matiz_facebook}
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_facebook: e.target.value })
@@ -1316,7 +1300,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     variant="primary"
                     size="sm"
                     onClick={onReAnalyze}
-                    
                   >
                     Iniciar análisis de tono
                   </Button>

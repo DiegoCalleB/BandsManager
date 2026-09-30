@@ -111,42 +111,36 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
 
       {/* Sub tabs */}
       <div className="flex rounded-[var(--r-m)] bg-[var(--bg)]/80 p-1">
-        <button
+        <Button
+          variant={musicSubTab === "spotify" ? "primary" : "ghost"}
+          size="sm"
           type="button"
           onClick={() => setMusicSubTab("spotify")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
-            musicSubTab === "spotify"
-              ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
-              : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-          }`}
+          className="flex-1 items-center justify-center gap-2"
         >
           <Search className="w-3.5 h-3.5" />
           Importar de Spotify
-        </button>
-        <button
+        </Button>
+        <Button
+          variant={musicSubTab === "upload" ? "primary" : "ghost"}
+          size="sm"
           type="button"
           onClick={() => setMusicSubTab("upload")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
-            musicSubTab === "upload"
-              ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
-              : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-          }`}
+          className="flex-1 items-center justify-center gap-2"
         >
           <Upload className="w-3.5 h-3.5" />
           Subir audio (MP3 / WAV)
-        </button>
-        <button
+        </Button>
+        <Button
+          variant={musicSubTab === "manual" ? "primary" : "ghost"}
+          size="sm"
           type="button"
           onClick={() => setMusicSubTab("manual")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
-            musicSubTab === "manual"
-              ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
-              : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-          }`}
+          className="flex-1 items-center justify-center gap-2"
         >
           <Plus className="w-3.5 h-3.5" />
           Añadir manual / en bloque
-        </button>
+        </Button>
       </div>
 
       {/* Subtab 1: Spotify */}

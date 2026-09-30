@@ -591,22 +591,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 {SUPPORTED_LANGUAGES.map((l) => {
                   const isSelected = currentAppLang === l.code;
                   return (
-                    <button
+                    <Button
+                      variant={isSelected ? "primary" : "ghost"}
+                      size="xs"
                       key={l.code}
                       type="button"
                       onClick={() => setAppLang(l.code)}
-                      className={`px-2 py-1 rounded-[var(--r-pill)] text-xs font-sans font-semibold transition-ui cursor-pointer flex items-center gap-1 ${
-                        isSelected
-                          ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
-                          : "text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80"
-                      }`}
+                      className="items-center gap-1"
                       title={l.label}
                     >
                       <span>{l.flag}</span>
                       <span className="hidden sm:inline">
                         {l.label.slice(0, 3)}
                       </span>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>

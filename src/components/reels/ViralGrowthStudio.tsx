@@ -9,7 +9,7 @@ import {
 import { ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 export interface ViralHookVariant {
   id: string;
@@ -348,19 +348,17 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               const Icon = tab.icon;
               const isActive = activeStudioTab === tab.id;
               return (
-                <button
+                <Button
+                  variant={isActive ? "primary" : "ghost"}
+                  size="xs"
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveStudioTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center gap-1.5 transition-ui cursor-pointer whitespace-nowrap ${
-                    isActive
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)] '
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]/60'
-                  }`}
+                  className="items-center gap-1.5 whitespace-nowrap"
                 >
                   <Icon className="w-3 h-3" />
                   <span>{tab.label}</span>
-                </button>
+                </Button>
               );
             })}
           </div>

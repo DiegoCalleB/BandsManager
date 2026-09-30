@@ -473,31 +473,27 @@ export function SongChordsViewerModal({
           <div className="bg-[var(--surface)]/80 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-sans shrink-0">
             {/* TABS SELECTOR */}
             <div className="flex items-center bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
-              <button
+              <Button
+                variant={activeTab === "chords" ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setActiveTab("chords")}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  activeTab === "chords"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)] "
-                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
+                className="items-center gap-1.5"
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span>Letra y acordes</span>
-              </button>
+              </Button>
 
-              <button
+              <Button
+                variant={activeTab === "substitute" ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setActiveTab("substitute")}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  activeTab === "substitute"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)] "
-                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
+                className="items-center gap-1.5"
               >
                 <UserCheck className="w-3.5 h-3.5" />
                 <span>Ficha Sustituto URGENTE</span>
-              </button>
+              </Button>
 
               <button
                 type="button"
@@ -677,17 +673,14 @@ export function SongChordsViewerModal({
                 </div>
 
                 {/* TOGGLE CHORD DIAGRAMS */}
-                <button
+                <Button
+                  variant={showChordDiagrams ? "primary" : "neutral"}
+                  size="xs"
                   type="button"
                   onClick={() => setShowChordDiagrams(!showChordDiagrams)}
-                  className={`px-2.5 py-1 rounded-[var(--r-pill)] font-bold transition cursor-pointer ${
-                    showChordDiagrams
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                  }`}
                 >
                   <ShowIcon inline emoji="🎸" />Diagramas
-                </button>
+                </Button>
 
                 {/* COPY BUTTON */}
                 <button

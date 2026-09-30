@@ -1122,7 +1122,9 @@ export default function TourManager({
 
                         {/* Selector Banda Completa vs Parcial */}
                         <div className="flex rounded-[var(--r-s)] bg-[var(--sunken)] p-1">
-                          <button
+                          <Button
+                            variant={formConvocatoriaTipo === "completa" ? "primary" : "ghost"}
+                            size="xs"
                             type="button"
                             onClick={() => {
                               setFormConvocatoriaTipo("completa");
@@ -1130,25 +1132,17 @@ export default function TourManager({
                                 availableMembers.map((m) => m.id),
                               );
                             }}
-                            className={`px-3 py-1 text-xs font-sans font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                              formConvocatoriaTipo === "completa"
-                                ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                            }`}
                           >
                             <ShowIcon inline emoji="👥" />Banda Completa ({availableMembers.length})
-                          </button>
-                          <button
+                          </Button>
+                          <Button
+                            variant={formConvocatoriaTipo === "parcial" ? "primary" : "ghost"}
+                            size="xs"
                             type="button"
                             onClick={() => setFormConvocatoriaTipo("parcial")}
-                            className={`px-3 py-1 text-xs font-sans font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                              formConvocatoriaTipo === "parcial"
-                                ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                            }`}
                           >
                             <ShowIcon inline emoji="👤" />Formación parcial / reducida
-                          </button>
+                          </Button>
                         </div>
                       </div>
 
@@ -1435,7 +1429,6 @@ export default function TourManager({
                                         e.target.value,
                                       )
                                     }
-                                    
                                   >
                                     <option value="diesel">Diésel</option>
                                     <option value="gasolina95">G95</option>

@@ -1528,28 +1528,22 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* Dual Tab Mode Switcher */}
         <div className="flex bg-[var(--sunken)] p-1.5 rounded-[var(--r-l)] text-xs font-sans">
-          <button
+          <Button
+            variant={activeTab === "redes" ? "primary" : "ghost"}
             type="button"
             onClick={() => setActiveTab("redes")}
-            className={`flex-1 py-2.5 px-3 rounded-[var(--r-pill)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
-              activeTab === "redes"
-                ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
-                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-            }`}
+            className="flex-1 items-center justify-center gap-2"
           >
             <span>{t("tabFollow")}</span>
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={activeTab === "form" ? "primary" : "ghost"}
             type="button"
             onClick={() => setActiveTab("form")}
-            className={`flex-1 py-2.5 px-3 rounded-[var(--r-pill)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
-              activeTab === "form"
-                ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
-                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-            }`}
+            className="flex-1 items-center justify-center gap-2"
           >
             <span>{t("tabJoin")}</span>
-          </button>
+          </Button>
         </div>
 
         {/* Tab 1: Redes Sociales */}
@@ -2101,7 +2095,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <Button
                 variant="primary"
                 onClick={() => setShowPrivacyModal(false)}
-                
               >
                 {t("understood")}
               </Button>

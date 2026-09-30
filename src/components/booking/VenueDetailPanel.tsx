@@ -1419,7 +1419,6 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 onClick={() =>
                   onDeleteLead(selectedLead.id, selectedLead.nombre_sala)
                 }
-                
                 title="Eliminar y guardar en lista negra"
               >
                 <Trash2 className="w-4 h-4 text-[var(--alert)]" />
@@ -1992,20 +1991,18 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       : "Fechas disponibles detectadas:"}
                   </span>
                   {fechasLibres.map((fecha: string, idx: number) => (
-                    <button
+                    <Button
+                      variant={campaignIsActive ? "primary" : "primary"}
+                      size="xs"
                       key={`free-date-${idx}`}
                       type="button"
                       onClick={() => setShowWhatsAppModal(true)}
-                      className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-medium transition-colors cursor-pointer flex items-center gap-1 ${
-                        campaignIsActive
-                          ? "bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]"
-                          : "bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]"
-                      }`}
+                      className="items-center gap-1"
                       title="Clic para proponer esta fecha por WhatsApp o Pitch"
                     >
                       <span>{fecha}</span>
                       <span className="text-micro opacity-70"><ShowIcon inline emoji="💬" /></span>
-                    </button>
+                    </Button>
                   ))}
                 </div>
 

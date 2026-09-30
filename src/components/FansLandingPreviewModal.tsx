@@ -86,18 +86,16 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
         <div className="hidden lg:flex items-center gap-2">
           {/* Selector de Pantalla / Estado */}
           <div className="flex bg-[var(--sunken)] rounded-[var(--r-m)] p-1">
-            <button
+            <Button
+              variant={previewScreen === 'form' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setPreviewScreen('form')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                previewScreen === 'form'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>{t('previewTabForm')}</span>
-            </button>
+            </Button>
             <button
               type="button"
               onClick={() => setPreviewScreen('success')}

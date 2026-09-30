@@ -746,7 +746,6 @@ export default function Dashboard({
               type="button"
               onClick={() => setShowQuickAddMenu((v) => !v)}
               title="Añadir rápido"
-              
             >
               <Plus className="w-4 h-4" />
             </Button>
@@ -806,21 +805,18 @@ export default function Dashboard({
 
           {/* Engranaje Único de Ajustes del Dashboard */}
           <div className="relative">
-            <button
+            <Button
+              variant={isDashboardSettingsOpen || isEditDashboardMode ? "primary" : "neutral"}
+              size="sm"
               type="button"
               id="dashboard-settings-gear-btn"
               onClick={() =>
                 setIsDashboardSettingsOpen(!isDashboardSettingsOpen)
               }
-              className={`p-2 rounded-[var(--r-pill)] transition-[filter] cursor-pointer ${
-                isDashboardSettingsOpen || isEditDashboardMode
-                  ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                  : "bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-95"
-              }`}
               title="Ajustes del Dashboard"
             >
               <Settings className="w-4 h-4" />
-            </button>
+            </Button>
 
             {isDashboardSettingsOpen && (
               <div className="absolute right-0 mt-2 w-64 p-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] z-50 animate-fade-in space-y-0.5">

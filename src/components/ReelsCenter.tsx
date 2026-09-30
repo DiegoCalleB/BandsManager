@@ -2503,34 +2503,28 @@ export default function ReelsCenter({
                   className="flex gap-1.5 p-1 rounded-[var(--r-m)] w-fit"
                   style={{ borderColor: "#e2e8f0" }}
                 >
-                  <button
+                  <Button
+                    variant={inputType === "file" ? "primary" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => {
                       setInputType("file");
                       setAnalysisError(null);
                     }}
-                    className={`px-3.5 py-1.5 text-micro font-sans rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                      inputType === "file"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
                   >
                     <ShowIcon inline emoji="📂" />Archivo de vídeo
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={inputType === "youtube" ? "primary" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => {
                       setInputType("youtube");
                       setAnalysisError(null);
                     }}
-                    className={`px-3.5 py-1.5 text-micro font-sans rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                      inputType === "youtube"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
                   >
                     <ShowIcon inline emoji="📺" />Enlace de YouTube
-                  </button>
+                  </Button>
                 </div>
 
                 {/* Drag & Drop or YouTube Link Input */}

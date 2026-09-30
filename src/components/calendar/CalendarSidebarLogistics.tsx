@@ -473,17 +473,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   { id: 'conciertos', label: 'Bolos' },
                   { id: 'campañas', label: 'Campañas' },
                 ].map((f) => (
-                  <button
+                  <Button
+                    variant={upcomingFilter === f.id ? "soft" : "ghost"}
+                    size="xs"
                     key={f.id}
                     onClick={() => setUpcomingFilter(f.id as any)}
-                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition-ui cursor-pointer ${
-                      upcomingFilter === f.id
-                        ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
                   >
                     {f.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>

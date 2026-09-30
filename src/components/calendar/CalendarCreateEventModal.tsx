@@ -208,21 +208,19 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
           {/* Segmented Event Type Selector */}
           <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-5 ">
-            <button
+            <Button
+              variant={showCreateModal === 'concert' && !concIsPosible ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => {
                 setShowCreateModal('concert');
                 setConcIsPosible(false);
               }}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
-                showCreateModal === 'concert' && !concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-              }`}
+              className="flex-1 items-center justify-center gap-1"
             >
               <span><ShowIcon inline emoji="🎸" /></span>
               <span>Concierto</span>
-            </button>
+            </Button>
             <button
               type="button"
               onClick={() => setShowCreateModal('rehearsal')}
@@ -235,31 +233,29 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <span><ShowIcon inline emoji="🎙️" /></span>
               <span>Ensayo</span>
             </button>
-            <button
+            <Button
+              variant={showCreateModal === 'reunion' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setShowCreateModal('reunion')}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
-                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-              }`}
+              className="flex-1 items-center justify-center gap-1"
             >
               <span><ShowIcon inline emoji="💬" /></span>
               <span>Reunión</span>
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={showCreateModal === 'concert' && concIsPosible ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => {
                 setShowCreateModal('concert');
                 setConcIsPosible(true);
               }}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
-                showCreateModal === 'concert' && concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-              }`}
+              className="flex-1 items-center justify-center gap-1"
             >
               <span><ShowIcon inline emoji="❓" /></span>
               <span>Posible</span>
-            </button>
+            </Button>
           </div>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
@@ -360,7 +356,6 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   variant="primary"
                   size="xs"
                   type="submit"
-                  
                 >
                   Convocar Reunión
                 </Button>
@@ -545,16 +540,13 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant={concIsPosible ? "primary" : "primary"}
+                  size="xs"
                   type="submit"
-                  className={`px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                    concIsPosible
-                      ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold'
-                      : 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold'
-                  }`}
                 >
                   {concIsPosible ? 'Guardar Pre-reserva' : 'Guardar Concierto'}
-                </button>
+                </Button>
               </div>
             </form>
           )}

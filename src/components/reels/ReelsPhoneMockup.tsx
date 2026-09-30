@@ -8,6 +8,7 @@ import { ThemeColors } from '../../types';
 import { SUBTITLE_STYLES } from './ViralGrowthStudio';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 export interface ReelsPhoneMockupProps {
   colors: ThemeColors;
@@ -171,46 +172,42 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
         <div className="mb-2 px-1 flex items-center justify-between bg-[var(--sunken)]/80 p-1 rounded-[var(--r-s)] text-micro font-mono">
           <span className="text-[var(--ink-2)] pl-1">Encuadre:</span>
           <div className="flex items-center gap-1">
-            <button
+            <Button
+              variant={previewFraming === 'fit' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setPreviewFraming('fit')}
-              className={`px-2 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                previewFraming === 'fit' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
               title="Muestra el vídeo 16:9 completo sin recortar nada"
             >
               <ShowIcon inline emoji="📺" />16:9 Completo
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={previewFraming === 'left' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setPreviewFraming('left')}
-              className={`px-1.5 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                previewFraming === 'left' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
               title="Enfoca el tercio izquierdo (Músico/Cantante)"
             >
               <ShowIcon inline emoji="👤" />Izq
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={previewFraming === 'center' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setPreviewFraming('center')}
-              className={`px-1.5 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                previewFraming === 'center' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
               title="Enfoca el centro del plano"
             >
               <ShowIcon inline emoji="🎯" />Centro
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={previewFraming === 'right' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setPreviewFraming('right')}
-              className={`px-1.5 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
-                previewFraming === 'right' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
               title="Enfoca el tercio derecho"
             >
               <ShowIcon inline emoji="🎨" />Der
-            </button>
+            </Button>
           </div>
         </div>
       )}

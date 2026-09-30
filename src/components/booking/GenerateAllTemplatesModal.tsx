@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Wand2, X, Check, Loader2, Info, Building2, Tent, Disc3, Radio, Users, Briefcase, Landmark } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Textarea } from '../ui';
+import { Button, Textarea } from '../ui';
 
 export interface GenerateAllTemplatesModalProps {
   isOpen: boolean;
@@ -253,15 +253,12 @@ export function GenerateAllTemplatesModal({
             Cancelar
           </button>
 
-          <button
+          <Button
+            variant={isCampaign ? "primary" : "primary"}
             type="button"
             onClick={handleSubmit}
             disabled={isGenerating || !baseProposal.trim()}
-            className={`px-5 py-2.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 hover:brightness-105 active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
-              isCampaign
-                ? 'bg-[var(--acc)]  text-[var(--on-acc)]'
-                : 'bg-[var(--acc)]  text-[var(--on-acc)]'
-            }`}
+            className="items-center gap-2"
           >
             {isGenerating ? (
               <>
@@ -274,7 +271,7 @@ export function GenerateAllTemplatesModal({
                 <span>{isCampaign ? 'Generar y Aplicar a esta Campaña' : 'Generar y Guardar las 7 Plantillas'}</span>
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

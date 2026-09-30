@@ -61,7 +61,7 @@ import {
 } from "../../utils/audioCueDetector";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Select } from '../ui';
+import { Button, Select } from '../ui';
 
 interface SongTransitionPreviewModalProps {
   isOpen: boolean;
@@ -1106,21 +1106,19 @@ export function SongTransitionPreviewModal({
                       <Disc3 className="w-3 h-3" />
                       <span>Audio real</span>
                     </button>
-                    <button
+                    <Button
+                      variant={playbackMode === "synth" ? "primary" : "ghost"}
+                      size="xs"
                       type="button"
                       onClick={() => {
                         stopPlayback();
                         setPlaybackMode("synth");
                       }}
-                      className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
-                        playbackMode === "synth"
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                          : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                      }`}
+                      className="items-center gap-1"
                     >
                       <Music className="w-3 h-3" />
                       <span>Sinte</span>
-                    </button>
+                    </Button>
                   </div>
 
                   {/* Auto-CUE Toggle Button */}
@@ -1144,48 +1142,39 @@ export function SongTransitionPreviewModal({
 
                 {/* Transition Style Selector */}
                 <div className="flex items-center gap-1 bg-[var(--surface)] p-0.5 rounded-[var(--r-s)]">
-                  <button
+                  <Button
+                    variant={config.style === "crossfade" ? "primary" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => {
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "crossfade" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition cursor-pointer ${
-                      config.style === "crossfade"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
                   >
                     Fundido ({config.fadeDurationSec}s)
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={config.style === "segue" ? "primary" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => {
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "segue" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition cursor-pointer ${
-                      config.style === "segue"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
                   >
                     Corte (0s)
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={config.style === "pause" ? "primary" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => {
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "pause" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition cursor-pointer ${
-                      config.style === "pause"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
                   >
                     Pausa ({config.pauseDurationSec}s)
-                  </button>
+                  </Button>
 
                   {/* Seconds selector for crossfade */}
                   {config.style === "crossfade" && (
@@ -1356,47 +1345,41 @@ export function SongTransitionPreviewModal({
               <div className="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5800 bg-[var(--surface)]">
                 {/* Tabs */}
                 <div className="flex items-center gap-1">
-                  <button
+                  <Button
+                    variant={activeTab === "pros_cons" ? "neutral" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => setActiveTab("pros_cons")}
-                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
-                      activeTab === "pros_cons"
-                        ? "bg-[var(--sunken)] text-[var(--acc-ink)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center gap-1"
                   >
                     <span>Pros y Contras</span>
                     <span className="text-micro font-sans px-1 rounded bg-[var(--surface)] text-[var(--ink-2)]">
                       +{diagnosis.porQueSi.length} / -
                       {diagnosis.porQueNo.length}
                     </span>
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant={activeTab === "metrics" ? "neutral" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => setActiveTab("metrics")}
-                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
-                      activeTab === "metrics"
-                        ? "bg-[var(--sunken)] text-[var(--acc-ink)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center gap-1"
                   >
                     <span>Métricas Armónicas</span>
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant={activeTab === "stagecraft" ? "neutral" : "ghost"}
+                    size="xs"
                     type="button"
                     onClick={() => setActiveTab("stagecraft")}
-                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
-                      activeTab === "stagecraft"
-                        ? "bg-[var(--sunken)] text-[var(--acc-ink)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
+                    className="items-center gap-1"
                   >
                     <span>
                       Stagecraft ({diagnosis.stageRecommendations.length})
                     </span>
-                  </button>
+                  </Button>
                 </div>
 
                 {/* Right Summary Verdict */}

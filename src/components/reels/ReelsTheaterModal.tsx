@@ -591,19 +591,16 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                         { valor: 'blur' as const, etiqueta: 'Fondo blur' },
                         { valor: 'none' as const, etiqueta: 'Original' }
                       ]).map(opcion => (
-                        <button
+                        <Button
+                          variant={cropMode === opcion.valor ? "primary" : "neutral"}
+                          size="xs"
                           key={opcion.valor}
                           type="button"
                           onClick={() => setCropMode(opcion.valor)}
                           disabled={isCuttingVideo}
-                          className={`px-2 py-1.5 rounded-[var(--r-pill)] text-micro font-mono font-bold cursor-pointer transition-ui ${
-                            cropMode === opcion.valor
-                              ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                              : 'bg-[var(--sunken)] text-[var(--ink-2)]'
-                          }`}
                         >
                           {opcion.etiqueta}
-                        </button>
+                        </Button>
                       ))}
                     </div>
                   </div>

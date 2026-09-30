@@ -2185,22 +2185,23 @@ export default function CalendarView({
                 )}
 
                 {/* Móvil: lo secundario, fuera de la vista (AGENTS.md §6) */}
-                <button
+                <Button
+                  variant={showMobileSearch ? "primary" : "neutral"}
+                  size="sm"
                   type="button"
                   onClick={() => setShowMobileSearch((v) => !v)}
-                  className={`sm:hidden p-2 rounded-[var(--r-pill)] cursor-pointer ${showMobileSearch ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                  className="sm:hidden"
                   aria-label="Buscar en el calendario"
                   aria-expanded={showMobileSearch}
                 >
                   <Search className="w-4 h-4" />
-                </button>
+                </Button>
                 <div className="relative sm:hidden">
                   <Button
                     variant="neutral"
                     size="sm"
                     type="button"
                     onClick={() => setShowCalMoreMenu((v) => !v)}
-                    
                     aria-label="Más opciones del calendario"
                     aria-expanded={showCalMoreMenu}
                   >
@@ -2577,14 +2578,12 @@ export default function CalendarView({
             {/* Band Filter Mode Segment Toggle */}
             {isMultiBandUser && (
               <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 shrink-0 ${'bg-[var(--sunken)]'}`}>
-                <button
+                <Button
+                  variant={filterBandMode === 'all' ? "primary" : "ghost"}
+                  size="xs"
                   id="calendar-view-all-bands-btn"
                   onClick={() => setFilterBandMode('all')}
-                  className={`flex-1 md:flex-initial px-3 py-1.5 text-xs font-sans font-bold rounded-[var(--r-pill)] transition-ui flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
-                    filterBandMode === 'all'
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                  }`}
+                  className="flex-1 items-center justify-center gap-1.5 whitespace-nowrap min-w-0"
                   title="Ver eventos de todos los grupos"
                 >
                   <Users className="w-3 h-3 shrink-0" />
@@ -2607,16 +2606,14 @@ export default function CalendarView({
                       {rehearsals.length}
                     </span>
                   </span>
-                </button>
+                </Button>
 
-                <button
+                <Button
+                  variant={filterBandMode === 'active' ? "primary" : "ghost"}
+                  size="xs"
                   id="calendar-view-active-band-btn"
                   onClick={() => setFilterBandMode('active')}
-                  className={`flex-1 md:flex-initial px-3 py-1.5 text-xs font-sans font-bold rounded-[var(--r-pill)] transition-ui flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
-                    filterBandMode === 'active'
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                  }`}
+                  className="flex-1 items-center justify-center gap-1.5 whitespace-nowrap min-w-0"
                   title={`Filtrar solo ${activeBandName}`}
                 >
                   <Music className="w-3 h-3 shrink-0" />
@@ -2639,7 +2636,7 @@ export default function CalendarView({
                       {activeBandRehearsals.length}
                     </span>
                   </span>
-                </button>
+                </Button>
               </div>
             )}
           </div>

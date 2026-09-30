@@ -75,18 +75,14 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                 { id: 'teclado', label: 'Teclados / Synthe' },
                 { id: 'guitarra', label: 'Guitarra solista' },
               ].map((item) => (
-                <button
+                <Button
+                  variant={aiTrackGenInstrument === item.id ? "primary" : "neutral"}
                   key={item.id}
                   type="button"
                   onClick={() => setAiTrackGenInstrument(item.id)}
-                  className={`p-2.5 rounded-[var(--r-pill)] text-center transition-ui cursor-pointer font-bold ${
-                    aiTrackGenInstrument === item.id
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)] '
-                      : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                  }`}
                 >
                   {item.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

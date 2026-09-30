@@ -1447,15 +1447,13 @@ export default function BookingCRM({
                   </Button>
 
                   {/* Botón Herramientas & IA */}
-                  <button
+                  <Button
+                    variant={isMobileToolsOpen ? "soft" : "neutral"}
+                    size="xs"
                     id="open-tools-btn"
                     type="button"
                     onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
-                      isMobileToolsOpen
-                        ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                        : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
+                    className="items-center gap-1.5"
                     title="Herramientas, scout, Excel y agentes IA"
                   >
                     <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
@@ -1474,7 +1472,7 @@ export default function BookingCRM({
                       </span>
                     )}
                     {isMobileToolsOpen ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -1788,15 +1786,13 @@ export default function BookingCRM({
 
                   {/* Filters & Campaign — PC only, Mobile in Herramientas */}
                   <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-                    <button
+                    <Button
+                      variant={activeFiltersCount > 0 || isMobileFiltersOpen ? "soft" : "neutral"}
+                      size="sm"
                       id="toggle-filters-btn"
                       type="button"
                       onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
-                        activeFiltersCount > 0 || isMobileFiltersOpen
-                          ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
+                      className="items-center gap-1.5 shrink-0"
                       title="Filtros avanzados y búsquedas guardadas"
                     >
                       <Filter className="w-3.5 h-3.5" />
@@ -1806,18 +1802,16 @@ export default function BookingCRM({
                           {activeFiltersCount}
                         </span>
                       )}
-                    </button>
+                    </Button>
 
                     {activeCampaign && (
-                      <button
+                      <Button
+                        variant={filterByCampaign ? "soft" : "neutral"}
+                        size="sm"
                         id="crm-campaign-filter-btn"
                         type="button"
                         onClick={() => setFilterByCampaign(!filterByCampaign)}
-                        className={`px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold font-sans transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer ${
-                          filterByCampaign
-                            ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-                        }`}
+                        className="items-center gap-1.5 shrink-0"
                         title={filterByCampaign ? 'Quitar filtro de campaña' : 'Filtrar por campaña'}
                       >
                         <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
@@ -1827,7 +1821,7 @@ export default function BookingCRM({
                             {filteredLeads.length}
                           </span>
                         )}
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -1835,42 +1829,42 @@ export default function BookingCRM({
                 {/* View Mode Toggle Switcher — PC: Completo, Móvil: Compacto */}
                 <div className="flex items-center justify-between sm:justify-start gap-1 shrink-0">
                   <div className="p-1 rounded-[var(--r-m)] flex items-center gap-1 bg-[var(--sunken)]">
-                    <button
+                    <Button
+                      variant={viewMode === 'grid' ? "primary" : "ghost"}
+                      size="xs"
                       id="crm-view-grid"
                       type="button"
                       onClick={() => setViewMode('grid')}
-                      className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
+                      className="items-center justify-center gap-1.5"
                       title="Vista en tarjetas"
                     >
                       <LayoutGrid className="w-3.5 h-3.5" />
                       <span className="hidden sm:inline">Tarjetas</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant={viewMode === 'table' ? "primary" : "ghost"}
+                      size="xs"
                       id="crm-view-table"
                       type="button"
                       onClick={() => setViewMode('table')}
-                      className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
+                      className="items-center justify-center gap-1.5"
                       title="Vista en detalles / tabla"
                     >
                       <List className="w-3.5 h-3.5" />
                       <span className="hidden sm:inline">Detalles</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant={viewMode === 'map' ? "primary" : "ghost"}
+                      size="xs"
                       id="crm-view-map"
                       type="button"
                       onClick={() => setViewMode('map')}
-                      className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
+                      className="items-center justify-center gap-1.5"
                       title="Vista en mapa GPS interactivo"
                     >
                       <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-2)]'}`} />
                       <span className="hidden sm:inline">Mapa</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -2046,15 +2040,13 @@ export default function BookingCRM({
                 const isSelected = statusFilter === tab.key;
 
                 return (
-                  <button
+                  <Button
+                    variant={isSelected ? "soft" : "neutral"}
+                    size="xs"
                     id={`crm-filter-${tab.key}`}
                     key={tab.key}
                     onClick={() => setStatusFilter(tab.key)}
-                    className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                      isSelected
-                        ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--sunken)]'
-                    }`}
+                    className="shrink-0 items-center gap-1.5"
                   >
                     <span>{tab.label}</span>
                     <span
@@ -2064,7 +2056,7 @@ export default function BookingCRM({
                     >
                       {count}
                     </span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -2417,21 +2409,19 @@ export default function BookingCRM({
           </div>
 
           <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-            <button
+            <Button
+              variant={isTemplatesSectionOpen ? "soft" : "neutral"}
+              size="xs"
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsTemplatesSectionOpen(!isTemplatesSectionOpen);
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
-                isTemplatesSectionOpen
-                  ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                  : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center gap-1.5"
             >
               <span>{isTemplatesSectionOpen ? 'Plegar' : 'Configurar'}</span>
               {isTemplatesSectionOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            </button>
+            </Button>
           </div>
         </div>
 

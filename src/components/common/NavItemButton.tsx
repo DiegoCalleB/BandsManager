@@ -1,6 +1,7 @@
 import React from 'react';
 import { Lock } from 'lucide-react';
 import { NavItemDef } from '../../config/navGroups';
+import { Button } from '../ui';
 
 interface NavItemButtonProps {
   item: NavItemDef;
@@ -17,14 +18,11 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
 
   if (variant === 'desktop') {
     return (
-      <button
+      <Button
+        variant={isSelected ? "soft" : "ghost"}
         id={`nav-btn-${item.id}`}
         onClick={onNavigate}
-        className={`flex items-center justify-between py-2.5 px-3 rounded-[var(--r-pill)] text-sm font-sans transition-colors duration-200 cursor-pointer active:scale-[0.97] ${
-          isSelected
-            ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
-            : 'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)] hover:translate-x-0.5'
-        }`}
+        className="items-center justify-between"
       >
         <div className="flex items-center gap-3">
           <IconComp
@@ -48,7 +46,7 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
             </span>
           )
         )}
-      </button>
+      </Button>
     );
   }
 

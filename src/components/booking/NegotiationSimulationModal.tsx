@@ -3,7 +3,7 @@ import { Sparkles, X, Building, Users, Loader2, Check } from 'lucide-react';
 import { Lead } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface PredefinedScenario {
   key: string;
@@ -101,28 +101,24 @@ export function NegotiationSimulationModal({
             <div className="space-y-1.5">
               <label className={`block text-micro font-sans ${textSub}`}>¿Quién emite la respuesta simulada?</label>
               <div className="grid grid-cols-2 gap-2">
-                <button
+                <Button
+                  variant={simulationRole === 'sala' ? "primary" : "neutral"}
+                  size="sm"
                   type="button"
                   onClick={() => onRoleChange('sala')}
-                  className={`py-2 px-3 rounded-[var(--r-pill)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                    simulationRole === 'sala'
-                      ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'
-                      : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
-                  }`}
+                  className="items-center justify-center gap-1.5"
                 >
                   <Building className="w-4 h-4" /> Sala o festival (Entrante)
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant={simulationRole === 'banda' ? "primary" : "neutral"}
+                  size="sm"
                   type="button"
                   onClick={() => onRoleChange('banda')}
-                  className={`py-2 px-3 rounded-[var(--r-pill)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                    simulationRole === 'banda'
-                      ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'
-                      : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
-                  }`}
+                  className="items-center justify-center gap-1.5"
                 >
                   <Users className="w-4 h-4" /> Banda Bakandeya (Saliente)
-                </button>
+                </Button>
               </div>
             </div>
 

@@ -134,7 +134,9 @@ export function TemplateConfigSection({
             const isActive = templateTab === tab.id;
             const IconComp = tab.icon;
             return (
-              <button
+              <Button
+                variant={isActive ? "primary" : "ghost"}
+                size="xs"
                 key={tab.id}
                 type="button"
                 id={`template-tab-${tab.id}`}
@@ -142,13 +144,11 @@ export function TemplateConfigSection({
                   onSelectTemplateTab(tab.id);
                   setShowRecommendations(false);
                 }}
-                className={`py-1.5 px-3 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                  isActive ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
-                }`}
+                className="items-center gap-1.5"
               >
                 <IconComp className="w-3.5 h-3.5" />
                 <span>{tab.label}</span>
-              </button>
+              </Button>
             );
           })}
         </div>

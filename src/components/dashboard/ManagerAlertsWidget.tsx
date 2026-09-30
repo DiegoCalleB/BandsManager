@@ -25,6 +25,7 @@ import {
   Plus,
   Search,
 } from 'lucide-react';
+import { Button } from '../ui';
 
 interface ManagerAlertsWidgetProps {
   alerts: ManagerAlert[];
@@ -197,30 +198,25 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 Filtrar:
               </span>
 
-              <button
+              <Button
+                variant={filterMode === 'all' ? "neutral" : "ghost"}
+                size="xs"
                 id="filter-alerts-all"
                 onClick={() => setFilterMode('all')}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs cursor-pointer ${
-                  filterMode === 'all'
-                    ? 'bg-[var(--sunken)] text-[var(--ink)] font-semibold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
-                }`}
               >
                 Todas ({activeAlerts.length})
-              </button>
+              </Button>
 
-              <button
+              <Button
+                variant={filterMode === 'unread' ? "neutral" : "ghost"}
+                size="xs"
                 id="filter-alerts-unread"
                 onClick={() => setFilterMode('unread')}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer shrink-0 whitespace-nowrap ${
-                  filterMode === 'unread'
-                    ? 'bg-[var(--sunken)] text-[var(--ink)] font-semibold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
-                }`}
+                className="items-center gap-1 shrink-0 whitespace-nowrap"
               >
                 <span>Sin Leer</span>
                 {unreadAlerts.length > 0 && <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]" />}
-              </button>
+              </Button>
 
               <button
                 id="filter-alerts-urgent"
@@ -241,17 +237,14 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 )}
               </button>
 
-              <button
+              <Button
+                variant={filterMode === 'booking' ? "soft" : "ghost"}
+                size="xs"
                 id="filter-alerts-booking"
                 onClick={() => setFilterMode('booking')}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs cursor-pointer ${
-                  filterMode === 'booking'
-                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
-                }`}
               >
                 Booking y CRM
-              </button>
+              </Button>
 
               <button
                 id="filter-alerts-finanzas"

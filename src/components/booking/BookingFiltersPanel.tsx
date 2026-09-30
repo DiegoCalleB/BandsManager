@@ -92,36 +92,36 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         <div>
           <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Categoría de contactos</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
-            <button
+            <Button
+              variant={sectionTab === 'salas' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSelectSectionTab('salas')}
-              className={`py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                sectionTab === 'salas' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center justify-center gap-1.5"
             >
               <Building2 className="w-3.5 h-3.5" />
               <span>Escenarios</span>
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={sectionTab === 'medios' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSelectSectionTab('medios')}
-              className={`py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                sectionTab === 'medios' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center justify-center gap-1.5"
             >
               <Radio className="w-3.5 h-3.5" />
               <span>Medios</span>
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={sectionTab === 'grupos' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSelectSectionTab('grupos')}
-              className={`py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                sectionTab === 'grupos' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center justify-center gap-1.5"
             >
               <Briefcase className="w-3.5 h-3.5" />
               <span>Management</span>
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -141,19 +141,19 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               <LayoutGrid className="w-3.5 h-3.5" />
               <span>Tarjetas</span>
             </button>
-            <button
+            <Button
+              variant={viewMode === 'table' ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => {
                 setViewMode('table');
                 onClose();
               }}
-              className={`py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
+              className="items-center justify-center gap-1.5"
             >
               <List className="w-3.5 h-3.5" />
               <span>Detalles</span>
-            </button>
+            </Button>
             <button
               type="button"
               onClick={() => {
@@ -302,7 +302,6 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 size="xs"
                 type="button"
                 onClick={() => setIsSavingFilterOpen(false)}
-                
               >
                 <X className="w-3.5 h-3.5" />
               </Button>
@@ -382,16 +381,15 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                   { key: 'ayuntamiento', label: 'Ayuntamientos' },
                 ] as const)
           ).map((t) => (
-            <button
+            <Button
+              variant={typeFilter === t.key ? "primary" : "neutral"}
+              size="xs"
               key={t.key}
               type="button"
               onClick={() => setTypeFilter(t.key)}
-              className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
-                typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
-              }`}
             >
               {t.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -411,17 +409,15 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           )}
         </div>
         <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs">
-          <button
+          <Button
+            variant={selectedCityFilter === '' ? "neutral" : "neutral"}
+            size="xs"
             type="button"
             onClick={() => setSelectedCityFilter('')}
-            className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium shrink-0 transition-ui cursor-pointer ${
-              selectedCityFilter === ''
-                ? 'bg-[var(--sunken)] text-[var(--acc)] font-bold '
-                : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] '
-            } bg-[var(--acc)]/10`}
+            className="shrink-0"
           >
             Todas ({activeLeadsForSection.length})
-          </button>
+          </Button>
           {displayCityChips.map((cityName) => {
             const isSelected = selectedCityFilter.toLowerCase() === cityName.toLowerCase();
             const count = cityCounts[cityName] || 0;
@@ -460,7 +456,6 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           size="xs"
           type="button"
           onClick={() => onClose()}
-          
         >
           Ver {filteredCount} resultados
         </Button>

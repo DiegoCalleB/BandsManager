@@ -17,6 +17,7 @@ import {
   WeatherAlert,
 } from "../../services/weatherService";
 import { AnimatedWeatherIcon } from "./AnimatedWeatherIcon";
+import { Button } from '../ui';
 
 interface EventWeatherCardProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -482,14 +483,12 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                           </div>
                         </div>
 
-                        <button
+                        <Button
+                          variant={isDanger ? "ghost" : "ghost"}
+                          size="xs"
                           type="button"
                           onClick={() => toggleAlertExpand(alert.id)}
-                          className={`p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
-                            isDanger
-                              ? "hover:bg-[var(--alert-soft)]"
-                              : "hover:bg-[var(--acc-soft)]"
-                          }`}
+                          className="shrink-0"
                           title={
                             isExpanded
                               ? "Ocultar recomendaciones"
@@ -501,7 +500,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                           ) : (
                             <ChevronDown className="w-4 h-4" />
                           )}
-                        </button>
+                        </Button>
                       </div>
 
                       {/* Consejos técnicos y medidas de seguridad detalladas con micro-animación fluida */}

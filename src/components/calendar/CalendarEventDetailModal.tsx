@@ -439,7 +439,6 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       size="sm"
                       type="button"
                       onClick={() => setShowFichaMenu((v) => !v)}
-                      
                       aria-label="Más acciones"
                       aria-expanded={showFichaMenu}
                     >
@@ -489,7 +488,6 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     size="xs"
                     type="button"
                     onClick={() => setDeletingEventConfirmId(null)}
-                    
                   >
                     Cancelar
                   </Button>
@@ -498,7 +496,6 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     size="xs"
                     type="button"
                     onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
-                    
                   >
                     Sí, eliminar definitivamente
                   </Button>
@@ -523,29 +520,25 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
             <div
               className={`flex items-center gap-1.5 pb-2.5 overflow-x-auto shrink-0 ${''}`}
             >
-              <button
+              <Button
+                variant={modalActiveTab === 'resumen' ? "primary" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('resumen')}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  modalActiveTab === 'resumen'
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                }`}
+                className="shrink-0 items-center gap-1.5"
               >
                 <span><ShowIcon inline emoji="📋" />Resumen y info</span>
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={modalActiveTab === 'tecnica' ? "primary" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('tecnica')}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  modalActiveTab === 'tecnica'
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                }`}
+                className="shrink-0 items-center gap-1.5"
               >
                 <Wrench className="w-3.5 h-3.5" />
                 <span>1. Logística técnica</span>
-              </button>
+              </Button>
               <button
                 type="button"
                 onClick={() => setModalActiveTab('contactos')}
@@ -563,14 +556,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </span>
                 )}
               </button>
-              <button
+              <Button
+                variant={modalActiveTab === 'merchan' ? "primary" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('merchan')}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  modalActiveTab === 'merchan'
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                }`}
+                className="shrink-0 items-center gap-1.5"
               >
                 <Shirt className="w-3.5 h-3.5" />
                 <span>3. Control Merchandising</span>
@@ -579,30 +570,26 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     {modalRoadbook.merchControl.items.length}
                   </span>
                 )}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={modalActiveTab === 'postshow' ? "primary" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('postshow')}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  modalActiveTab === 'postshow'
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                }`}
+                className="shrink-0 items-center gap-1.5"
               >
                 <Users className="w-3.5 h-3.5" />
                 <span>4. Público y Post-Show</span>
                 {selectedConcert?.es_hito_destacado && (
                   <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro bg-[var(--acc)] text-[var(--on-acc)] font-bold"><ShowIcon inline emoji="⭐" />Hito</span>
                 )}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={modalActiveTab === 'cierre' ? "primary" : "neutral"}
+                size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('cierre')}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  modalActiveTab === 'cierre'
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                }`}
+                className="shrink-0 items-center gap-1.5"
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>5. Cierre material</span>
@@ -615,7 +602,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     {modalRoadbook.cierreMaterial.filter((i) => i.checked).length}/{modalRoadbook.cierreMaterial.length}
                   </span>
                 )}
-              </button>
+              </Button>
             </div>
 
             {/* TAB 1: RESUMEN GENERAL & DETALLES */}
@@ -2111,7 +2098,6 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     size="sm"
                     value={newCierreItemCat}
                     onChange={(e) => setNewCierreItemCat(e.target.value as any)}
-                    
                   >
                     <option value="escenario">Escenario</option>
                     <option value="camerino">Camerino</option>
@@ -2130,7 +2116,6 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     size="xs"
                     type="submit"
                     disabled={!newCierreItemText.trim()}
-                    
                   >
                     + Añadir ítem
                   </Button>

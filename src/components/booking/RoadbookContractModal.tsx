@@ -22,7 +22,7 @@ import {
   Info,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface RoadbookContractModalProps {
   isOpen: boolean;
@@ -200,7 +200,6 @@ Firmado en conformidad por ambas partes.`;
                 size="sm"
                 value={currentLead.id}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
-                
               >
                 {leads.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -212,36 +211,36 @@ Firmado en conformidad por ambas partes.`;
 
             {/* Pestañas */}
             <div className="flex items-center gap-1 bg-[var(--sunken)]/90 p-1 rounded-[var(--r-m)] ">
-              <button
+              <Button
+                variant={activeTab === 'roadbook' ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setActiveTab('roadbook')}
-                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'roadbook' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                }`}
+                className="items-center gap-1.5"
               >
                 <Clock className="w-3.5 h-3.5" />
                 <span>Roadbook y horarios</span>
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={activeTab === 'contract' ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setActiveTab('contract')}
-                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'contract' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                }`}
+                className="items-center gap-1.5"
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Acuerdo / Contrato</span>
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={activeTab === 'weblink' ? "primary" : "ghost"}
+                size="xs"
                 type="button"
                 onClick={() => setActiveTab('weblink')}
-                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'weblink' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                }`}
+                className="items-center gap-1.5"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 <span>Enlace Web</span>
-              </button>
+              </Button>
             </div>
           </div>
 

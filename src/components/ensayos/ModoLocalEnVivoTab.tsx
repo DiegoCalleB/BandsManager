@@ -488,31 +488,27 @@ export function ModoLocalEnVivoTab({
         <div className="flex items-center gap-1.5 shrink-0 pl-1">
           {/* Toggle Escenario vs Atril */}
           <div className="flex items-center p-0.5 bg-[var(--sunken)] rounded-[var(--r-m)]">
-            <button
+            <Button
+              variant={viewMode === "escenario" ? "primary" : "ghost"}
+              size="xs"
               onClick={() => setViewMode("escenario")}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                viewMode === "escenario"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
+              className="items-center gap-1"
               title="Vista escenario y estructura"
             >
               <Flame className="w-3.5 h-3.5" />
               <span className="hidden md:inline">Ficha</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant={viewMode === "atril" ? "primary" : "ghost"}
+              size="xs"
               onClick={() => setViewMode("atril")}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                viewMode === "atril"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
+              className="items-center gap-1"
               title="Modo atril / acordes y letra (Teleprompter)"
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span className="hidden md:inline">Atril / acordes</span>
-            </button>
+            </Button>
           </div>
 
           {/* Fullscreen Button */}
@@ -520,7 +516,6 @@ export function ModoLocalEnVivoTab({
             variant="neutral"
             size="sm"
             onClick={toggleFullscreen}
-            
             title={
               isFullscreen
                 ? "Salir de pantalla completa"
@@ -604,7 +599,6 @@ export function ModoLocalEnVivoTab({
               variant="primary"
               size="xs"
               onClick={() => setViewMode("atril")}
-              
             >
               Abrir atril <ShowIcon inline emoji="📜" />
             </Button>
@@ -753,7 +747,6 @@ export function ModoLocalEnVivoTab({
                 variant="primary"
                 size="xs"
                 onClick={handleTapTempo}
-                
               >
                 Tap
               </Button>
@@ -780,17 +773,15 @@ export function ModoLocalEnVivoTab({
                 <span>Bordada</span>
               </button>
 
-              <button
+              <Button
+                variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
+                size="sm"
                 onClick={() => handleSetEvaluation("regular")}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                  currentItem?.evaluacion === "regular"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                    : "bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60"
-                }`}
+                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
               >
                 <span><ShowIcon inline emoji="🟡" /></span>
                 <span>Regular</span>
-              </button>
+              </Button>
 
               <button
                 onClick={() => handleSetEvaluation("repetir")}
@@ -891,17 +882,14 @@ export function ModoLocalEnVivoTab({
               {/* Speed Switcher */}
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3].map((spd) => (
-                  <button
+                  <Button
+                    variant={scrollSpeed === spd ? "primary" : "ghost"}
+                    size="xs"
                     key={spd}
                     onClick={() => setScrollSpeed(spd)}
-                    className={`px-2 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer ${
-                      scrollSpeed === spd
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                    }`}
                   >
                     {spd}x
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -939,7 +927,6 @@ export function ModoLocalEnVivoTab({
                 variant="neutral"
                 size="xs"
                 onClick={() => setNotation((n) => (n === "ES" ? "EN" : "ES"))}
-                
                 title="Cambiar notación Do-Re-Mi vs C-D-E"
               >
                 {notation}
@@ -968,17 +955,14 @@ export function ModoLocalEnVivoTab({
               </div>
 
               {/* Toggle Chord Boxes */}
-              <button
+              <Button
+                variant={showChordDiagrams ? "primary" : "neutral"}
+                size="sm"
                 onClick={() => setShowChordDiagrams(!showChordDiagrams)}
-                className={`p-2 rounded-[var(--r-pill)] text-xs font-sans cursor-pointer transition-ui ${
-                  showChordDiagrams
-                    ? "bg-[var(--acc)] text-[var(--on-acc)] "
-                    : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
                 title="Ver diagramas de acordes de guitarra"
               >
                 <ShowIcon inline emoji="🎸" />
-              </button>
+              </Button>
 
               {/* Edit Chords in Studio Modal */}
               {currentSong && (
@@ -986,7 +970,6 @@ export function ModoLocalEnVivoTab({
                   variant="neutral"
                   size="sm"
                   onClick={() => setEditingSongModal(currentSong)}
-                  
                   title="Editar letra y acordes"
                 >
                   <Edit3 className="w-4 h-4" />
@@ -1072,16 +1055,14 @@ export function ModoLocalEnVivoTab({
                   <span><ShowIcon inline emoji="🟢" />Bordada</span>
                 </button>
 
-                <button
+                <Button
+                  variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
+                  size="xs"
                   onClick={() => handleSetEvaluation("regular")}
-                  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                    currentItem?.evaluacion === "regular"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                      : "bg-[var(--acc)] text-[var(--on-acc)]"
-                  }`}
+                  className="flex-1 sm:flex-none items-center justify-center gap-1"
                 >
                   <span><ShowIcon inline emoji="🟡" />Regular</span>
-                </button>
+                </Button>
 
                 <button
                   onClick={() => handleSetEvaluation("repetir")}

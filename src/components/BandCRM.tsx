@@ -1122,17 +1122,15 @@ ${myBandName}`;
 
           {/* Sub-tabs segmentadas */}
           <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
-            <button
+            <Button
+              variant={subTab === "co_booking" ? "neutral" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => setSubTab("co_booking")}
-              className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium transition-ui cursor-pointer flex items-center gap-1.5 ${
-                subTab === "co_booking"
-                  ? "bg-[var(--sunken)] text-[var(--ink)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
+              className="items-center gap-1.5"
             >
               <span>Bandas Amigas</span>
-            </button>
+            </Button>
 
             {registeredBands.length > 0 && (
               <button
@@ -1375,7 +1373,6 @@ ${myBandName}`;
                       e.target.value as BandRelationshipStatus | "todos",
                     )
                   }
-                  
                 >
                   <option value="todos">Todos los Estados</option>
                   <option value="colegas_aliados">Colegas / Aliados</option>
@@ -1458,32 +1455,26 @@ ${myBandName}`;
                   >
                     <LayoutGrid className="w-4 h-4" />
                   </button>
-                  <button
+                  <Button
+                    variant={viewMode === "table" ? "primary" : "ghost"}
+                    size="xs"
                     id="view-table-btn"
                     type="button"
                     onClick={() => setViewMode("table")}
-                    className={`p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${
-                      viewMode === "table"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
                     title="Vista en lista / tabla"
                   >
                     <List className="w-4 h-4" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={viewMode === "map" ? "primary" : "ghost"}
+                    size="xs"
                     id="view-map-btn"
                     type="button"
                     onClick={() => setViewMode("map")}
-                    className={`p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${
-                      viewMode === "map"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    }`}
                     title="Vista en mapa interactivo"
                   >
                     <Map className="w-4 h-4" />
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

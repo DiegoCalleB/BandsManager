@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Concert, Rehearsal, ThemeColors } from "../../../types";
 import { CalendarWidgetViewMode } from "../../../types/dashboardWidgets";
+import { Button } from '../../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -244,61 +245,53 @@ export function CalendarWidget({
         <div className="flex items-center gap-2 flex-wrap">
           {/* View Mode Switcher */}
           <div className="flex items-center rounded-[var(--r-pill)] p-1 gap-1 bg-[var(--sunken)]">
-            <button
+            <Button
+              variant={viewMode === "list" ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSetViewMode("list")}
-              className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
-                viewMode === "list"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
+              className="items-center gap-1"
               title="Vista lista próximos"
             >
               <List className="w-3.5 h-3.5" />
               <span className="hidden md:inline text-micro">Lista</span>
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={viewMode === "mini_month" ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSetViewMode("mini_month")}
-              className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
-                viewMode === "mini_month"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
+              className="items-center gap-1"
               title="Vista mensual compacta"
             >
               <CalendarDays className="w-3.5 h-3.5" />
               <span className="hidden md:inline text-micro">Mes</span>
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={viewMode === "weekly_grid" ? "primary" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSetViewMode("weekly_grid")}
-              className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
-                viewMode === "weekly_grid"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
+              className="items-center gap-1"
               title="Vista agenda semanal"
             >
               <Grid className="w-3.5 h-3.5" />
               <span className="hidden md:inline text-micro">Semana</span>
-            </button>
+            </Button>
           </div>
 
           {/* Band Scope Toggle */}
           {onSetAgendaFilterMode && (
-            <button
+            <Button
+              variant={agendaFilterMode === "all" ? "soft" : "neutral"}
+              size="xs"
               type="button"
               onClick={() =>
                 onSetAgendaFilterMode(
                   agendaFilterMode === "all" ? "active" : "all",
                 )
               }
-              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
-                agendaFilterMode === "all"
-                  ? "bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold"
-                  : "bg-[var(--sunken)] text-[var(--ink-2)] font-medium"
-              }`}
+              className="items-center gap-1"
               title={
                 agendaFilterMode === "all"
                   ? "Ver solo eventos de la banda activa"
@@ -311,33 +304,27 @@ export function CalendarWidget({
                   ? "Todas las bandas"
                   : activeBandName || "Banda activa"}
               </span>
-            </button>
+            </Button>
           )}
 
           {/* Filter Type Dropdown / Buttons */}
           <div className="flex items-center gap-1">
-            <button
+            <Button
+              variant={filterType === "all" ? "neutral" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSetFilterType("all")}
-              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer ${
-                filterType === "all"
-                  ? "bg-[var(--sunken)] text-[var(--acc-ink)] font-semibold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
             >
               Todos
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={filterType === "concierto" ? "soft" : "ghost"}
+              size="xs"
               type="button"
               onClick={() => handleSetFilterType("concierto")}
-              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer ${
-                filterType === "concierto"
-                  ? "bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
             >
               Bolos
-            </button>
+            </Button>
             <button
               type="button"
               onClick={() => handleSetFilterType("ensayo")}

@@ -54,7 +54,7 @@ import {
 import { SocialGrowthPlanView } from "./SocialGrowthPlanView";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface ReelsMetricsViewProps {
   colors: ThemeColors;
@@ -991,21 +991,19 @@ export function ReelsMetricsView({
             <span>Panel de métricas y radar</span>
           </button>
 
-          <button
+          <Button
+            variant={activeMainSection === "growth_plan" ? "primary" : "ghost"}
+            size="sm"
             type="button"
             onClick={() => setActiveMainSection("growth_plan")}
-            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-2 cursor-pointer ${
-              activeMainSection === "growth_plan"
-                ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
-                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-            }`}
+            className="items-center gap-2"
           >
             <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Plan y recomendaciones de crecimiento</span>
             <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)] font-normal">
               IA
             </span>
-          </button>
+          </Button>
         </div>
 
         {activeMainSection === "growth_plan" && (

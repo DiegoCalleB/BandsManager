@@ -49,35 +49,33 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
         </div>
 
         <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">
-          <button
+          <Button
+            variant={moisesTab === 'stems' ? "primary" : "neutral"}
+            size="xs"
             type="button"
             onClick={() => setMoisesTab('stems')}
-            className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
-            }`}
+            className="items-center gap-1.5"
           >
             <Sliders className="w-3.5 h-3.5" /> Separar pistas
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={moisesTab === 'how_it_works' ? "primary" : "neutral"}
+            size="xs"
             type="button"
             onClick={() => setMoisesTab('how_it_works')}
-            className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'how_it_works'
-                ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
-            }`}
+            className="items-center gap-1.5"
           >
             <Info className="w-3.5 h-3.5" /> ¿Cómo funciona?
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={moisesTab === 'upload' ? "primary" : "neutral"}
+            size="xs"
             type="button"
             onClick={() => setMoisesTab('upload')}
-            className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
-            }`}
+            className="items-center gap-1.5"
           >
             <Upload className="w-3.5 h-3.5" /> Subir pistas
-          </button>
+          </Button>
         </div>
 
         {moisesTab === 'stems' && (
@@ -121,7 +119,6 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                 size="sm"
                 type="button"
                 onClick={() => setShowMoisesStemsModal(null)}
-                
               >
                 Cancelar
               </Button>

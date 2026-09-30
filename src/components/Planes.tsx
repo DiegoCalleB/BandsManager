@@ -686,14 +686,12 @@ export const Planes: React.FC<PlanesProps> = ({
             >
               Mensual
             </button>
-            <button
+            <Button
+              variant={billingPeriod === "annual" ? "primary" : "ghost"}
+              size="sm"
               type="button"
               onClick={() => setBillingPeriod("annual")}
-              className={`relative px-5 py-2 rounded-[var(--r-pill)] text-xs sm:text-sm font-bold transition-ui cursor-pointer flex items-center gap-2 ${
-                billingPeriod === "annual"
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
-                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-              }`}
+              className="relative items-center gap-2"
             >
               <span>Anual</span>
               <span
@@ -705,7 +703,7 @@ export const Planes: React.FC<PlanesProps> = ({
               >
                 -20% · 2 meses gratis
               </span>
-            </button>
+            </Button>
           </div>
         </div>
       </div>

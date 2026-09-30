@@ -13,7 +13,7 @@ import {
 import { Song, ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
-import { Select } from './ui';
+import { Button, Select } from './ui';
 
 interface MetronomeModalProps {
   isOpen: boolean;
@@ -370,17 +370,14 @@ export function MetronomeModal({
                 </label>
                 <div className="grid grid-cols-3 gap-1">
                   {[4, 3, 2].map((sig) => (
-                    <button
+                    <Button
+                      variant={timeSignature === sig ? "primary" : "neutral"}
+                      size="xs"
                       key={sig}
                       onClick={() => setTimeSignature(sig)}
-                      className={`py-1 text-xs font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer ${
-                        timeSignature === sig
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                          : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
-                      }`}
                     >
                       {sig}/4
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
