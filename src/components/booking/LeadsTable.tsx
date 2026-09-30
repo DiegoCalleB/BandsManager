@@ -55,7 +55,7 @@ import {
   generateFollowupTemplate,
 } from "../../utils/bookingFollowup";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, Chip } from '../ui';
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -140,58 +140,58 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
       if (conflict.status === "conflicto_directo") {
         badges.push(
-          <span
+          <Chip
             key="conf"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--alert)] text-[var(--on-alert)] font-bold "
+            tone="alert"
             title={conflict.mensaje}
           >
             <ShowIcon inline emoji="🔴" />Conflicto
-          </span>,
+          </Chip>,
         );
       } else if (conflict.status === "cercano_compatible") {
         badges.push(
-          <span
+          <Chip
             key="compat"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--ok)] text-[var(--on-ok)] font-bold "
+            tone="ok"
             title={conflict.mensaje}
           >
             <ShowIcon inline emoji="🚗" />Enlace 2x1
-          </span>,
+          </Chip>,
         );
       }
 
       if (campaignIsActive && campaignFreeDates.length > 0) {
         badges.push(
-          <span
+          <Chip
             key="camp"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)] text-[var(--on-acc)] font-semibold "
+            tone="acc"
             title={`Fechas campaña: ${campaignFreeDates.join(", ")}`}
           >
             <ShowIcon inline emoji="🎯" />{campaignFreeDates.length} d.
-          </span>,
+          </Chip>,
         );
       } else if (freeDates.length > 0) {
         badges.push(
-          <span
+          <Chip
             key="free"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)] text-[var(--on-acc)] font-semibold "
+            tone="acc"
             title={`Fechas libres detectadas: ${freeDates.join(", ")}`}
           >
-            <CalendarCheck className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
+            <CalendarCheck className="w-3 h-3 shrink-0" />
             <span>{freeDates.length} lib.</span>
-          </span>,
+          </Chip>,
         );
       }
 
       if (hist && hist.totalConciertos > 0) {
         badges.push(
-          <span
+          <Chip
             key="hist"
-            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-micro bg-[var(--acc)] text-[var(--on-acc)] "
+            tone="neutral"
             title={hist.resumenTexto}
           >
             <ShowIcon inline emoji="🏛️" />{hist.totalConciertos} prev.
-          </span>,
+          </Chip>,
         );
       }
 

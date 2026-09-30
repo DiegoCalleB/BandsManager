@@ -1410,7 +1410,7 @@ export function ExcelImportModal({
                       className="mt-0.5 rounded text-[var(--tentative)] focus:ring-0"
                     />
                     <div className="text-xs">
-                      <p className="font-bold text-[var(--tentative)]/50 flex items-center gap-1.5">
+                      <p className="font-bold text-[var(--tentative)] flex items-center gap-1.5">
                         Enriquecer contactos sin email con IA
                       </p>
                       <p className="text-[var(--ink-2)]">

@@ -464,7 +464,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onOpenStudio();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/50 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--tentative)]/20 text-[var(--tentative)] transition-colors flex items-center gap-2 cursor-pointer font-bold"
                     >
                       <Headphones className="w-3.5 h-3.5 text-[var(--tentative)]" />
                       <span>Abrir Studio / Grabadora</span>

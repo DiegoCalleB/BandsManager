@@ -4267,7 +4267,7 @@ export default function SongStudioModal({
                           onClick={() => setGenAiOnNewIdea(!genAiOnNewIdea)}
                           className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-left ${
                             genAiOnNewIdea
-                              ? 'bg-[var(--tentative)]/10/40 text-[var(--tentative)]/60'
+                              ? 'bg-[var(--tentative)]/10/40 text-[var(--tentative)]'
                               : 'bg-[var(--tentative)]/5/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/5/40'
                           } bg-[var(--acc)]/10`}
                         >
@@ -4839,7 +4839,7 @@ export default function SongStudioModal({
                                   {isPlaying ? (
                                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping" />
                                   ) : (
-                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)]0" />
+                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ink-3)]" />
                                   )}
                                   {isPlaying ? 'Reproduciendo...' : 'Detenido'}
                                 </span>
@@ -5161,7 +5161,7 @@ export default function SongStudioModal({
 
                                             {/* Collapsible Advanced Track Settings Drawer (Pan, EQ, Latency Nudge) */}
                                             {expandedTrackSettingsId === tr.id && (
-                                              <div className="mt-1 p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/5/20 space-y-3 font-sans text-micro text-[var(--tentative)]/60">
+                                              <div className="mt-1 p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/5/20 space-y-3 font-sans text-micro text-[var(--tentative)]">
                                                 {/* Row 1: Paneo Estéreo & Limpiar Zumbidos */}
                                                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3/10 pb-2">
                                                   {/* Stereo Pan Slider */}

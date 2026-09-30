@@ -1076,7 +1076,7 @@ export function ReelsMetricsView({
                 }`}
                 title="Configurar conexión oficial con Meta Graph API / Instagram OAuth"
               >
-                <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
+                <Instagram className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                 {igStatus?.connected ? (
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]" />
@@ -1852,7 +1852,7 @@ export function ReelsMetricsView({
                           href={item.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1 rounded bg-[var(--surface)]0/10 hover:bg-[var(--surface)]0/20 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-center gap-1 text-micro font-sans"
+                          className="p-1 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-center gap-1 text-micro font-sans"
                           title="Ver contenido"
                         >
                           <span>Ver</span>
@@ -2197,7 +2197,7 @@ export function ReelsMetricsView({
                           return (
                             <tr
                               key={`${m.id || "metric"}-${index}`}
-                              className={`hover:bg-[var(--surface)]0/5 transition-colors ${
+                              className={`hover:bg-[var(--ink)]/5 transition-colors ${
                                 editingMetricId === m.id
                                   ? "bg-[var(--acc)]/5"
                                   : ""

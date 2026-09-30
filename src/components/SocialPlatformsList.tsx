@@ -185,14 +185,14 @@ export const PLATFORM_CONFIG: Record<
       "bg-[var(--acc)]/10 ",
     borderClass: "",
     hoverClass:
-      "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:text-[var(--alert)]/60 hover:brightness-95",
+      "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:text-[var(--alert)] hover:brightness-95",
   },
   youtube: {
     label: "YouTube",
     colorClass: "text-[var(--alert)]",
     bgClass: "bg-[var(--alert)]/10",
     borderClass: "",
-    hoverClass: "hover:bg-[var(--alert)]/20 hover:text-[var(--alert)]/60",
+    hoverClass: "hover:bg-[var(--alert)]/20 hover:text-[var(--alert)]",
   },
   tiktok: {
     label: "TikTok",
@@ -213,7 +213,7 @@ export const PLATFORM_CONFIG: Record<
     colorClass: "text-[var(--ok)]",
     bgClass: "bg-[var(--ok)]/10",
     borderClass: "",
-    hoverClass: "hover:bg-[var(--ok)]/20 hover:text-[var(--ok)]/60",
+    hoverClass: "hover:bg-[var(--ok)]/20 hover:text-[var(--ok)]",
   },
   soundcloud: {
     label: "SoundCloud",
@@ -312,7 +312,7 @@ export const PLATFORM_CONFIG: Record<
     colorClass: "text-[var(--ink-2)]",
     bgClass: "bg-[var(--acc)]/10",
     borderClass: "",
-    hoverClass: "hover:bg-[var(--acc)]/20 hover:text-[var(--tentative)]/40",
+    hoverClass: "hover:bg-[var(--acc)]/20 hover:text-[var(--tentative)]",
   },
   paypal: {
     label: "PayPal",

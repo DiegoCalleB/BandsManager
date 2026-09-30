@@ -329,9 +329,9 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
     case "neon":
       return {
         pageBg:
-          "bg-[#090713] text-[var(--tentative)]/20 selection:bg-[var(--tentative)]/80 selection:text-[var(--ink)]",
-        topBar: "bg-[#110d24]/90 text-[var(--tentative)]/20",
-        topBarBtn: "bg-[#181335] hover:bg-[#231b4d] text-[var(--tentative)]/40",
+          "bg-[#090713] text-[var(--tentative)] selection:bg-[var(--tentative)]/80 selection:text-[var(--ink)]",
+        topBar: "bg-[#110d24]/90 text-[var(--tentative)]",
+        topBarBtn: "bg-[#181335] hover:bg-[#231b4d] text-[var(--tentative)]",
         heroNoPhoto:
           "bg-gradient-to-br from-[#1b0e3d] via-[#090713] to-[#041d33]/50",
         heroOverlay:
@@ -346,7 +346,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         sectionHeadingStyle: {
           fontFamily: "'Space Grotesk', system-ui, sans-serif",
         },
-        card: "bg-[#120e24]/20 text-[var(--tentative)]/20",
+        card: "bg-[#120e24]/20 text-[var(--tentative)]",
         cardHighlight: "bg-[#161030]/30 hover:border-[var(--tentative)]/80",
         statNumber: "text-[var(--acc)]/80 font-sans",
         badge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
@@ -355,14 +355,14 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         accentBtnSubtle:
           "bg-[var(--tentative)]/15 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/25",
         accentText: "text-[var(--tentative)]/80",
-        bookingCard: "bg-[#171133]/40 text-[var(--tentative)]/20",
+        bookingCard: "bg-[#171133]/40 text-[var(--tentative)]",
         bookingTitle: "text-[var(--tentative)]/80 font-bold",
         memberRole: "text-[var(--acc)]/80 font-sans",
         memberCard: "bg-[#120e24]",
-        quoteIcon: "text-[var(--tentative)]/40",
+        quoteIcon: "text-[var(--tentative)]",
         quoteMedium: "text-[var(--acc)]/80",
-        footer: "text-[var(--tentative)]/60",
-        stickyPlayer: "bg-[#110d24]/95 text-[var(--tentative)]/20",
+        footer: "text-[var(--tentative)]",
+        stickyPlayer: "bg-[#110d24]/95 text-[var(--tentative)]",
       };
 
     case "vintage":
@@ -370,7 +370,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         pageBg:
           "bg-[#171310] text-amber-50 selection:bg-[var(--acc)] selection:text-[var(--ink)]",
         topBar: "bg-[#201a15]/95 text-[var(--ink)]",
-        topBarBtn: "bg-[#2b221c] hover:bg-[#382d25] text-[var(--ink-2)]/40",
+        topBarBtn: "bg-[#2b221c] hover:bg-[#382d25] text-[var(--ink-2)]",
         heroNoPhoto:
           "bg-gradient-to-br from-[#2e2119] via-[#171310] to-[#120d0b]",
         heroOverlay:
@@ -394,7 +394,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         bookingTitle: "text-[var(--acc)]/80 font-bold",
         memberRole: "text-[var(--acc)]/80 font-sans",
         memberCard: "bg-[#201a16]/40",
-        quoteIcon: "text-[var(--accent-alt)]/40",
+        quoteIcon: "text-[var(--accent-alt)]",
         quoteMedium: "text-[var(--acc)]/80 font-sans",
         footer: "text-[var(--accent-alt)]/70",
         stickyPlayer: "bg-[#201a16]/95 text-[var(--ink)]",
@@ -431,7 +431,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         bookingTitle: "text-[var(--acc)]/80",
         memberRole: "text-[var(--acc)]/80",
         memberCard: "bg-[var(--bg)]",
-        quoteIcon: "text-[var(--acc)]/40",
+        quoteIcon: "text-[var(--acc)]",
         quoteMedium: "text-[var(--acc)]/80",
         footer: "text-[var(--ink-2)]",
         stickyPlayer: "bg-[var(--bg)]/95 text-[var(--ink)]",

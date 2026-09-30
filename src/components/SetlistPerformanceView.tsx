@@ -1051,7 +1051,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               onClick={() => handleLaunchStudio()}
               className="items-center gap-1700"
             >
-              <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]/50" />
+              <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" />
               <span>Studio</span>
             </Button>
           </div>
@@ -1478,7 +1478,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                         className="items-center justify-center gap-1"
                         title="Abrir Studio multipista completo de este tema"
                       >
-                        <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]/50" />
+                        <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" />
                         <span className="hidden sm:inline">Studio</span>
                       </Button>
 
@@ -1722,7 +1722,7 @@ const ChordSheetPage: React.FC<{
               className={
                 glareMode
                   ? "text-[var(--tentative)]"
-                  : "text-[var(--tentative)]/50"
+                  : "text-[var(--tentative)]"
               }
             >
               {bpm} BPM
@@ -1814,7 +1814,7 @@ const ChordSheetPage: React.FC<{
           )}
           {progression && (
             <p
-              className={glareMode ? "text-[var(--ok)]" : "text-[var(--ok)]/60"}
+              className={glareMode ? "text-[var(--ok)]" : "text-[var(--ok)]"}
             >
               <span
                 className={

@@ -2210,7 +2210,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)] text-xs flex items-start gap-3">
                   <MessageSquare className="w-5 h-5 text-[var(--tentative)] shrink-0 mt-0.5" />
                   <div className="space-y-1 leading-relaxed">
-                    <strong className="font-bold text-[var(--tentative)]/60">
+                    <strong className="font-bold text-[var(--tentative)]">
                       ¿Cómo debe responder el agente cuando una sala contesta?
                     </strong>
                     <p className="text-[var(--ink-2)] text-xs">

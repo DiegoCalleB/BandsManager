@@ -305,7 +305,7 @@ export function PerfectSetlistModal({
         <div className="p-4 space-y-4">
           {!plan && !loading && !error && (
             <div className="text-center py-8">
-              <Wand2 className="w-12 h-12 text-[var(--ok)]/50 mx-auto mb-4" />
+              <Wand2 className="w-12 h-12 text-[var(--ok)] mx-auto mb-4" />
               <p className="text-[var(--ink-2)] mb-3">
                 Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan de cambios: reordenar canciones, quitar
                 las que no encajen, añadir otras del repertorio que sí, y sugerir bloques (presentación, pausa, bis…) donde falten.

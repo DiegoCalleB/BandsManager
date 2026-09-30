@@ -140,7 +140,7 @@ export function evaluarCalidadUnion(songA: Song, songB: Song): EvaluacionUnion {
   const shortBadge = isOk ? `✓ OK (${scorePercent}%)` : `✕ Revisar (${scorePercent}%)`;
 
   const badgeBg = isOk ? 'bg-[var(--ok)]/15' : 'bg-[var(--alert)]/15';
-  const badgeText = isOk ? 'text-[var(--ok)]/60' : 'text-[var(--alert)]/60';
+  const badgeText = isOk ? 'text-[var(--ok)]' : 'text-[var(--alert)]';
   const badgeBorder = isOk ? 'border-[var(--ok)]/35' : 'border-[var(--hair)]';
 
   return {

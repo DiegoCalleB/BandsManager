@@ -28,7 +28,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     'nav.calendario': 'Calendario',
     'nav.giras': 'Tour Manager',
     'nav.epk': 'Dossier (EPK)',
-    'nav.fans': 'Captura QR & Fans',
+    'nav.fans': 'Captura QR y fans',
     'nav.reels': 'Reels Center',
     'nav.repertorio': 'Repertorios',
     'nav.ensayos': 'Ensayos',

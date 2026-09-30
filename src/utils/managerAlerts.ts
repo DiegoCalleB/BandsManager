@@ -182,7 +182,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'crm_stale_leads',
         type: 'crm_followup',
-        title: `📬 ${staleLeads.length} Salas / Contactos sin respuesta desde hace +7 días`,
+        title: `${staleLeads.length} ${staleLeads.length === 1 ? 'contacto sin respuesta' : 'contactos sin respuesta'} desde hace más de 7 días`,
         description:
           'El 70% de las fechas se cierran en el 2º contacto. Re-contacta aportando un hito reciente (confirmación en ciudad vecina o avance de cartel).',
         severity: 'warning',
@@ -217,12 +217,12 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'pending_agent_drafts',
         type: 'pending_approval',
-        title: `✍️ ${pendingApprovalLeads.length} Propuestas en Borrador Esperando tu Aprobación`,
+        title: `${pendingApprovalLeads.length} ${pendingApprovalLeads.length === 1 ? 'propuesta en borrador espera' : 'propuestas en borrador esperan'} tu aprobación`,
         description:
           'El Agente Redactor ha preparado propuestas personalizadas de primer contacto o réplica. Revisa y aprueba para su despacho.',
         severity: 'urgent',
         category: 'Seguimiento CRM',
-        actionLabel: 'Revisar Borradores de la IA',
+        actionLabel: 'Revisar borradores de la IA',
         actionType: 'view_drafts',
         actions: [
           {
@@ -247,7 +247,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: `tour_cluster_${topOpp.confirmedConcert.id}`,
         type: 'tour_cluster',
-        title: `🚐 Oportunidad de Gira: Bolo en ${topOpp.concertCity} (${topOpp.concertDateStr})`,
+        title: `Oportunidad de gira: bolo en ${topOpp.concertCity} (${topOpp.concertDateStr})`,
         description: topOpp.suggestedAction,
         severity: 'urgent',
         category: 'Logística & Gira',
@@ -283,7 +283,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'crm_cold_negotiations',
         type: 'cold_negotiation',
-        title: `❄️ ${coldNegotiations.length} Negociación${coldNegotiations.length > 1 ? 'es' : ''} en Riesgo de Enfriamiento (+5 días)`,
+        title: `${coldNegotiations.length} ${coldNegotiations.length === 1 ? 'negociación se enfría' : 'negociaciones se enfrían'} (más de 5 días sin novedades)`,
         description:
           'Salas en negociación que no han recibido respuesta o seguimiento reciente. Envía un recordatorio ágil para cerrar fecha.',
         severity: 'warning',
@@ -325,7 +325,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'upcoming_concert_promo',
         type: 'upcoming_concert',
-        title: `🎸 Próximo Concierto: ${nextShow.sala || 'Directo'} (${nextShow.ciudad || 'Ciudad'})`,
+        title: `Próximo concierto: ${nextShow.sala || 'directo'} (${nextShow.ciudad || 'ciudad'})`,
         description:
           'Quedan menos de 30 días. Es el momento de lanzar la campaña digital local + aviso masivo a los fans de esa provincia.',
         severity: 'info',
@@ -362,7 +362,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'finanzas_unpaid_cache',
         type: 'unpaid_cache',
-        title: `💰 ${unpaidConcerts.length} Conciertos Pasados con Pago Pendiente (${totalPending}€)`,
+        title: `${unpaidConcerts.length} ${unpaidConcerts.length === 1 ? 'concierto pasado con pago pendiente' : 'conciertos pasados con pago pendiente'} (${totalPending} €)`,
         description: 'Tienes bolos realizados cuyo caché figura como pendiente de cobro. Revisa las facturas y estados de liquidación.',
         severity: 'urgent',
         category: 'Finanzas & Cobros',
@@ -402,7 +402,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'finanzas_upcoming_advance',
         type: 'advance_pending',
-        title: `📝 Contrato o Anticipo Pendiente: ${nextShow.sala || 'Bolo'} (${nextShow.ciudad || 'Ciudad'})`,
+        title: `Contrato o anticipo pendiente: ${nextShow.sala || 'bolo'} (${nextShow.ciudad || 'ciudad'})`,
         description: `Quedan <21 días para el bolo (${nextShow.cache}€ de caché). Asegúrate de reclamar el anticipo del 50% y tener el contrato firmado antes de salir a la carretera.`,
         severity: 'warning',
         category: 'Finanzas & Cobros',

@@ -251,7 +251,7 @@ export function ExampleThreadsSection({
           ))}
         </div>
       ) : (
-        <div className="text-micro text-[var(--acc)]/50 italic">
+        <div className="text-micro text-[var(--acc)] italic">
           Todavía no hay hilos de ejemplo guardados para esta categoría.
         </div>
       )}

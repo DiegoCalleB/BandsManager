@@ -113,6 +113,11 @@ const CHECKS = {
         pattern: /<button\b(?!(?:[^>]|=>)*?(?:aria-label|title=|aria-labelledby|\{\.\.\.))(?:[^>]|=>)*?[^=]>\s*<[A-Z]\w*\b[^>]*\/>\s*<\/button>/g,
     severity: 'error',
   },
+  textoConOpacidadBaja: {
+    description: 'text-[var(--…)]/NN con NN < 70 — la opacidad sobre el texto baja el contraste por debajo de AA (y en Oscuro lo hace invisible). Usa el token completo (--ink-2 para secundario)',
+    pattern: /(?<![\w-])(?:[a-z0-9-]+:)*text-\[var\(--[a-z0-9-]+\)\]\/(?:[1-5]\d|60|[1-9])(?![\d])/g,
+    severity: 'error',
+  },
   textoSobreRelleno: {
     description: 'texto que no es --on-* sobre un relleno sólido de acento/estado (bg-[var(--acc|ok|alert)] + text-[var(--ink|ink-2|acc-ink|mismo tono)]) — contraste insuficiente (en Oscuro, invisible); usa text-[var(--on-acc|on-ok|on-alert)]',
     pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w\/-])/g,

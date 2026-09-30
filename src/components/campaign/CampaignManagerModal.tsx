@@ -299,13 +299,13 @@ export function CampaignManagerModal({
         {/* Header */}
         <div className="p-5 flex items-center justify-between bg-[var(--sunken)] ">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--hair)]/20 text-[var(--hair)]/80 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--hair)]/20 text-[var(--ink-2)] flex items-center justify-center">
               <Target className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold font-display text-[var(--ink)] flex items-center gap-2">
                 Gestor de campañas de booking
-                <span className="text-micro font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--hair)]/80">
+                <span className="text-micro font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--ink-2)]">
                   {campaigns.length} disponibles
                 </span>
               </h2>
@@ -512,7 +512,7 @@ export function CampaignManagerModal({
                       </div>
                     ))}
 
-                    <div className="flex items-center gap-1.5 bg-[var(--hair)]/10 hover:bg-[var(--hair)]/20 rounded-[var(--r-m)] px-2.5 py-1 text-[var(--hair)]/80">
+                    <div className="flex items-center gap-1.5 bg-[var(--hair)]/10 hover:bg-[var(--hair)]/20 rounded-[var(--r-m)] px-2.5 py-1 text-[var(--ink-2)]">
                       <Plus className="w-3.5 h-3.5" />
                       <span className="text-xs font-sans font-bold">
                         Añadir Fecha:
@@ -558,7 +558,7 @@ export function CampaignManagerModal({
                   <label className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center gap-2">
                     Plantillas de pitch de campaña por caso de uso
                     {filledPitchCategoriesCount > 0 && (
-                      <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--hair)]/20 text-[var(--hair)]/80">
+                      <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--hair)]/20 text-[var(--ink-2)]">
                         {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length}{" "}
                         definidas
                       </span>
@@ -670,7 +670,7 @@ export function CampaignManagerModal({
                 </div>
                 <button
                   onClick={handleStartCreate}
-                  className="px-3 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--hair)]/80 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97]"
+                  className="px-3 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-2)] rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97]"
                 >
                   <Plus className="w-3.5 h-3.5" /> + Nueva campaña
                 </button>
@@ -752,7 +752,7 @@ export function CampaignManagerModal({
                               {camp.name}
                             </h3>
                             {isActive ? (
-                              <span className="inline-flex items-center gap-1 text-micro font-sans font-extrabold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--hair)]/80">
+                              <span className="inline-flex items-center gap-1 text-micro font-sans font-extrabold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--ink-2)]">
                                 <Flame className="w-2.5 h-2.5 text-[var(--acc)]" />
                                 MODO ACTIVO EN LA WEB
                               </span>
@@ -760,7 +760,7 @@ export function CampaignManagerModal({
                               <button
                                 type="button"
                                 onClick={() => onSetActiveCampaign(camp)}
-                                className="text-micro font-sans font-bold text-[var(--acc)] hover:text-[var(--hair)]/80 underline cursor-pointer"
+                                className="text-micro font-sans font-bold text-[var(--acc)] hover:text-[var(--ink-2)] underline cursor-pointer"
                               >
                                 Activar modo campaña
                               </button>
@@ -777,7 +777,7 @@ export function CampaignManagerModal({
                               <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
                               {camp.minCapacity} - {camp.maxCapacity} pax
                             </span>
-                            <span className="flex items-center gap-1 text-[var(--alert)]/60">
+                            <span className="flex items-center gap-1 text-[var(--alert)]">
                               <Calendar className="w-3.5 h-3.5 text-[var(--alert)]" />
                               {camp.targetDates?.length || 0} fechas (
                               {camp.targetDatesText || "Sin definir"})
@@ -785,7 +785,7 @@ export function CampaignManagerModal({
                             {Object.values(
                               camp.customPitchTemplates || {},
                             ).some((v) => (v || "").trim()) && (
-                              <span className="flex items-center gap-1 text-[var(--hair)]/80">
+                              <span className="flex items-center gap-1 text-[var(--ink-2)]">
                                 {
                                   Object.values(
                                     camp.customPitchTemplates || {},
@@ -816,7 +816,7 @@ export function CampaignManagerModal({
                                       selectedDate: camp.targetDates?.[0],
                                     });
                                   }}
-                                  className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--hair)]/20 text-[var(--hair)]/80 hover:bg-[var(--hair)]/30 flex items-center gap-1"
+                                  className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--hair)]/20 text-[var(--ink-2)] hover:bg-[var(--hair)]/30 flex items-center gap-1"
                                 >
                                   <Calendar className="w-3 h-3" /> Ver en
                                   Calendario

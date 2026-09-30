@@ -4168,7 +4168,7 @@ export default function RepertorioSetlists({
                                 <button
                                   type="button"
                                   onClick={() => setChapaSuggestion(null)}
-                                  className="text-[var(--ink-2)] hover:text-[var(--ok)]/40 transition-ui cursor-pointer shrink-0"
+                                  className="text-[var(--ink-2)] hover:text-[var(--ok)] transition-ui cursor-pointer shrink-0"
                                   title="Descartar sugerencia"
                                 >
                                   ✕
@@ -4394,8 +4394,8 @@ export default function RepertorioSetlists({
                                                 }
                                                 className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                                   evalPrev?.status === "ok"
-                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
-                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
+                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] hover:text-[var(--ink)]"
+                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)] hover:text-[var(--ink)]"
                                                 }`}
                                                 title={
                                                   evalPrev
@@ -4448,8 +4448,8 @@ export default function RepertorioSetlists({
                                                 }
                                                 className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                                   evalNext?.status === "ok"
-                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
-                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)] hover:text-[var(--ink)]/35"
+                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] hover:text-[var(--ink)]"
+                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)] hover:text-[var(--ink)]"
                                                 }`}
                                                 title={
                                                   evalNext

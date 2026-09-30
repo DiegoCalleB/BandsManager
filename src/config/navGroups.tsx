@@ -61,7 +61,7 @@ export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
   calendario: { id: 'calendario', icon: CalendarRange, labelKey: 'nav.calendario', labelDefault: 'Calendario' },
   giras: { id: 'giras', icon: Truck, labelKey: 'nav.giras', labelDefault: 'Tour Manager' },
   epk: { id: 'epk', icon: BookOpen, labelKey: 'nav.epk', labelDefault: 'Dossier (EPK)' },
-  fans: { id: 'fans', icon: QrCode, labelKey: 'nav.fans', labelDefault: 'Captura QR & Fans' },
+  fans: { id: 'fans', icon: QrCode, labelKey: 'nav.fans', labelDefault: 'Captura QR y fans' },
   reels: { id: 'reels', icon: Video, labelKey: 'nav.reels', labelDefault: 'Reels Center' },
   repertorio: { id: 'repertorio', icon: Disc3, labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
   ensayos: { id: 'ensayos', icon: Mic2, labelKey: 'nav.ensayos', labelDefault: 'Ensayos' },

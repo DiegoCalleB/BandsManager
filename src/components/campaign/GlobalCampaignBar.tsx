@@ -94,7 +94,7 @@ export function GlobalCampaignBar({
                 {campaign.minCapacity}-{campaign.maxCapacity} pax
               </span>
               <span className="text-[var(--ink-2)]">•</span>
-              <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-sans font-semibold truncate max-w-[180px]">
+              <span className="inline-flex items-center gap-1 text-[var(--alert)] font-sans font-semibold truncate max-w-[180px]">
                 <Calendar className="w-2.5 h-2.5 text-[var(--alert)] shrink-0" />
                 {campaign.targetDatesText ||
                   `${campaign.targetDates?.length || 0} fechas`}
@@ -106,7 +106,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={() => setIsMobileExpanded((prev) => !prev)}
-            className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--hair)]/80 transition-colors shrink-0"
+            className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors shrink-0"
             title={
               isMobileExpanded ? "Ocultar detalles" : "Ver ciudades y fechas"
             }
@@ -134,7 +134,7 @@ export function GlobalCampaignBar({
             }`}
             title="Ver salas objetivo de esta campaña en Booking CRM"
           >
-            <Building2 className="w-3 h-3 text-[var(--hair)]/80 shrink-0" />
+            <Building2 className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span>Salas ({matchingLeads.length})</span>
           </button>
 
@@ -151,7 +151,7 @@ export function GlobalCampaignBar({
             }`}
             title="Ver fechas de la campaña en el Calendario"
           >
-            <Calendar className="w-3 h-3 text-[var(--alert)]/60 shrink-0" />
+            <Calendar className="w-3 h-3 text-[var(--alert)] shrink-0" />
             <span>Calendario</span>
           </button>
 
@@ -187,7 +187,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onDeactivate}
-            className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)]/60 transition-colors shrink-0"
+            className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors shrink-0"
             title="Desactivar modo campaña (volver a modo general)"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -209,7 +209,7 @@ export function GlobalCampaignBar({
               <Users className="w-3 h-3 text-[var(--acc)] shrink-0" />
               {campaign.minCapacity} - {campaign.maxCapacity} pax
             </span>
-            <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-sans font-semibold">
+            <span className="inline-flex items-center gap-1 text-[var(--alert)] font-sans font-semibold">
               <Calendar className="w-3 h-3 text-[var(--alert)] shrink-0" />
               {campaign.targetDatesText ||
                 `${campaign.targetDates?.length || 0} fechas`}

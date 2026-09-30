@@ -509,7 +509,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                           <span className="text-xs font-sans font-medium truncate max-w-[85px] sm:max-w-[110px]">
                             @{username}
                           </span>
-                          <span className="text-micro font-semibold text-[var(--alert)] group-hover/ig:text-[var(--alert)]/60 shrink-0 ml-0.5">
+                          <span className="text-micro font-semibold text-[var(--alert)] group-hover/ig:text-[var(--alert)] shrink-0 ml-0.5">
                             {ctaText.split("")[0]} <ShowIcon inline emoji="↗" />
                           </span>
                         </a>

@@ -271,7 +271,7 @@ export function ImportSetlistModal({
         <div className="p-4 space-y-4">
           {!reviewItems && !analyzing && (
             <div className="text-center py-8 space-y-4">
-              <ImagePlus className="w-12 h-12 text-[var(--ink-2)]/50 mx-auto" />
+              <ImagePlus className="w-12 h-12 text-[var(--ink-2)] mx-auto" />
               <p className="text-[var(--ink-2)]">
                 Sube una foto o PDF de un repertorio ya impreso (a mano o a
                 máquina) — la IA lee los temas en orden y los casa contra tu
@@ -304,7 +304,7 @@ export function ImportSetlistModal({
           {error && (
             <div className="bg-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
               <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-[var(--alert)]/60">{error}</p>
+              <p className="text-sm text-[var(--alert)]">{error}</p>
             </div>
           )}
 

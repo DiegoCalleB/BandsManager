@@ -61,7 +61,7 @@ export function detectBandProfileArchetype(metric: SocialMetric | null): BandPro
       tier: 'regional_circuit',
       label: 'Circuito Regional & Gira en Salas (2.5K - 10K)',
       stageName: 'Fase 3: Consolidación y Conquista de Ciudades',
-      stageBadgeColor: 'text-[var(--tentative)]/30 bg-[var(--tentative)]/10',
+      stageBadgeColor: 'text-[var(--tentative)] bg-[var(--tentative)]/10',
       description:
         'Banda con solvencia en directo, repertorio asentado y presencia en festivales medianos o salas medianas (200-500 aforo). Requiere contenido de alta producción y campañas de lanzamiento con singles en cascada.',
       primaryBottleneck:
@@ -76,7 +76,7 @@ export function detectBandProfileArchetype(metric: SocialMetric | null): BandPro
     tier: 'national_headliner',
     label: 'Escalado Nacional & Cabeza de Cartel (10K+)',
     stageName: 'Fase 4: Posicionamiento Mainstream y Grandes Recintos',
-    stageBadgeColor: 'text-[var(--ok)]/30 bg-[var(--ok)]/10',
+    stageBadgeColor: 'text-[var(--ok)] bg-[var(--ok)]/10',
     description:
       'Banda con tracción consolidada, catálogo extenso y comunidad activa en múltiples ciudades. La estrategia pasa por exclusivas, colaboraciones con otros artistas del género y monetización de merchandising de autor.',
     primaryBottleneck: 'Fatiga de la audiencia si el contenido no se renueva con narrativas de álbum y formatos inmersivos.',

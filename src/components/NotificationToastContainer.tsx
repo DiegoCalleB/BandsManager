@@ -40,7 +40,7 @@ export const NotificationToastContainer: React.FC<NotificationToastContainerProp
             </div>
             <button
               onClick={() => onDismiss(toast.id)}
-              className="p-1 hover:bg-[var(--ink)]/10 rounded-[var(--r-pill)] transition-colors text-[var(--ink)]/60 hover:text-[var(--ink)] shrink-0"
+              className="p-1 hover:bg-[var(--ink)]/10 rounded-[var(--r-pill)] transition-colors text-[var(--ink)] hover:text-[var(--ink)] shrink-0"
               aria-label="Cerrar notificación"
             >
               <X className="w-3.5 h-3.5" />

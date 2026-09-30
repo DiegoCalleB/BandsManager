@@ -723,7 +723,7 @@ export function SetlistAIAnalysisModal({
           <div className="p-4 space-y-4">
             {!analysis && !loading && !error && (
               <div className="text-center py-8">
-                <Brain className="w-12 h-12 text-[var(--acc)]/50 mx-auto mb-4" />
+                <Brain className="w-12 h-12 text-[var(--acc)] mx-auto mb-4" />
                 <p className="text-[var(--ink-2)] mb-6">
                   Haz un análisis profundo de tu setlist con IA. Te daremos
                   sugerencias personalizadas sobre pacing, narrativa y
@@ -752,10 +752,10 @@ export function SetlistAIAnalysisModal({
                 <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-[var(--alert)]">Error</p>
-                  <p className="text-sm text-[var(--alert)]/60">{error}</p>
+                  <p className="text-sm text-[var(--alert)]">{error}</p>
                   <button
                     onClick={handleAnalyze}
-                    className="mt-3 text-sm text-[var(--alert)]/60 hover:text-[var(--alert)]/40 underline"
+                    className="mt-3 text-sm text-[var(--alert)] hover:text-[var(--alert)] underline"
                   >
                     Reintentar
                   </button>
@@ -811,7 +811,7 @@ export function SetlistAIAnalysisModal({
                     </p>
                     <ul className="space-y-1">
                       {analysis.strengths.map((strength, idx) => (
-                        <li key={idx} className="text-xs text-[var(--ok)]/60">
+                        <li key={idx} className="text-xs text-[var(--ok)]">
                           • {strength}
                         </li>
                       ))}

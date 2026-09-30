@@ -2027,7 +2027,7 @@ export default function App() {
           {syncStatus === "error" && (
             <div className="mb-4 p-3 bg-[var(--alert)]/10 rounded-[var(--r-s)] text-[var(--alert)] text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
               <div className="flex gap-2 items-center">
-                <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
+                <ShieldAlert className="w-5 h-5 text-[var(--alert)] shrink-0" />
                 <span>
                   <strong>Sin conexión con el servidor.</strong> Lo que hagas
                   ahora se guarda solo en este navegador hasta que vuelva.
@@ -2307,7 +2307,7 @@ export default function App() {
                       className={`p-8 rounded-[var(--r-m)] text-center space-y-3 ${colors.card} `}
                     >
                       <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
-                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60">
+                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]">
                         Acceso Restringido
                       </h3>
                       <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">

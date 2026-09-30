@@ -1143,7 +1143,7 @@ export default function Finanzas({
                 { cat: "comida", color: "bg-[var(--ok)]" },
                 { cat: "promo", color: "bg-[var(--alert)]" },
                 { cat: "merchandising", color: "bg-[var(--acc)]" },
-                { cat: "otros", color: "bg-[var(--bg)]0" },
+                { cat: "otros", color: "bg-[var(--ink-3)]" },
               ].map((item) => {
                 const totalInCat = payments
                   .filter(

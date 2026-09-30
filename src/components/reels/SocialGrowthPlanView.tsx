@@ -463,7 +463,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     </span>
                     <button
                       onClick={() => setSelectedTab(channel.platform)}
-                      className="text-xs font-sans font-bold text-[var(--tentative)] hover:text-[var(--tentative)]/50 flex items-center gap-1 cursor-pointer"
+                      className="text-xs font-sans font-bold text-[var(--tentative)] hover:text-[var(--tentative)] flex items-center gap-1 cursor-pointer"
                     >
                       <span>Ver estrategia completa</span>
                       <ChevronRight className="w-3 h-3" />

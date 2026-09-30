@@ -386,7 +386,7 @@ export default function BookingCampaignPanel({
             </span>
           </div>
           <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
-            <Calendar className="w-4 h-4 text-[var(--alert)]/60" />
+            <Calendar className="w-4 h-4 text-[var(--alert)]" />
             <span>
               {activeCampaign?.targetDates?.length || 0} fechas (
               {activeCampaign?.targetDatesText})

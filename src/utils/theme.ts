@@ -105,7 +105,7 @@ export const THEMES: Record<ThemeName, ThemeColors> = {
     text: "text-[var(--ink)]",
     textMuted: "text-[var(--ink-2)]",
     accent: "text-[var(--tentative)]",
-    accentBg: "bg-[var(--acc)]/20 text-[var(--acc)]/40",
+    accentBg: "bg-[var(--acc)]/20 text-[var(--acc)]",
     badgeGreen:
       "bg-[var(--ok)]/15 text-[var(--ok)]/80 rounded-full text-[10px] font-medium px-2.5 py-0.5",
     badgeYellow:
