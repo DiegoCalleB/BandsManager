@@ -94,7 +94,7 @@ import {
   Settings,
   Eye,
 } from "lucide-react";
-import { Button, IconButton } from './ui';
+import { Button, IconButton, MenuItem } from './ui';
 
 export type NavigationOptions = {
   sectionTab?: "salas" | "medios" | "grupos";
@@ -756,28 +756,26 @@ export default function Dashboard({
                   onClick={() => setShowQuickAddMenu(false)}
                 />
                 <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
-                  <button
+                  <MenuItem
                     type="button"
                     onClick={() => {
                       setShowQuickAddMenu(false);
                       setIsAddModalOpen(true);
                     }}
-                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
                   >
                     <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-2)]" />{" "}
                     Lead rápido
-                  </button>
-                  <button
+                  </MenuItem>
+                  <MenuItem
                     type="button"
                     onClick={() => {
                       setShowQuickAddMenu(false);
                       setIsQuickRehearsalOpen(true);
                     }}
-                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
                   >
                     <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-2)]" />{" "}
                     Ensayo rápido
-                  </button>
+                  </MenuItem>
                 </div>
               </>
             )}

@@ -24,7 +24,7 @@ import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, IconButton, Input } from './ui';
+import { Button, IconButton, Input, LinkButton } from './ui';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -800,7 +800,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     Crear banda
                   </button>
                   <span className="text-[var(--ink-2)]">•</span>
-                  <button
+                  <LinkButton
+                    tone="muted"
                     type="button"
                     onClick={() => {
                       setError(null);
@@ -808,10 +809,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       setActivateStep(1);
                       setView("activate");
                     }}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] hover:underline cursor-pointer"
                   >
                     Activar invitación
-                  </button>
+                  </LinkButton>
                 </div>
 
                 <div className="pt-3  text-center text-xs text-[var(--ink-2)]/90 flex items-center justify-center gap-1.5 font-medium">
@@ -1000,25 +1000,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     </button>
 
                     <div className="text-center pt-2">
-                      <button
+                      <LinkButton
                         type="button"
                         onClick={() => setResetStep(1)}
-                        className="text-xs text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline cursor-pointer"
                       >
                         ¿No te ha llegado el código? Pedir otro
-                      </button>
+                      </LinkButton>
                     </div>
                   </form>
                 )}
 
                 <div className="text-center pt-2">
-                  <button
+                  <LinkButton
                     type="button"
                     onClick={() => setView("login")}
-                    className="text-xs text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline font-medium cursor-pointer"
                   >
                     Volver a iniciar sesión
-                  </button>
+                  </LinkButton>
                 </div>
               </div>
             )}
@@ -1140,12 +1138,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 <div className="text-center mt-8">
                   <p className="text-sm text-[var(--ink-2)]">
                     ¿Ya tienes cuenta?{" "}
-                    <button
+                    <LinkButton
                       onClick={() => setView("login")}
-                      className="text-[var(--acc)] hover:underline font-medium cursor-pointer"
                     >
                       Inicia sesión
-                    </button>
+                    </LinkButton>
                   </p>
                 </div>
               </div>
@@ -1346,16 +1343,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 <div className="text-center mt-8">
                   <p className="text-sm text-[var(--ink-2)]">
                     ¿Prefieres iniciar sesión?{" "}
-                    <button
+                    <LinkButton
                       type="button"
                       onClick={() => {
                         setError(null);
                         setView("login");
                       }}
-                      className="text-[var(--acc)] hover:underline font-medium cursor-pointer"
                     >
                       Volver al login
-                    </button>
+                    </LinkButton>
                   </p>
                 </div>
               </div>

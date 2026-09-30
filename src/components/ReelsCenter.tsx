@@ -96,7 +96,7 @@ import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ViralGrowthStudio, SUBTITLE_STYLES } from "./reels/ViralGrowthStudio";
 import { ReelsPhoneMockup } from "./reels/ReelsPhoneMockup";
 import { ReelsTheaterModal } from "./reels/ReelsTheaterModal";
-import { Button, IconButton, Input, Select, Textarea } from './ui';
+import { Button, IconButton, Input, LinkButton, Select, Textarea } from './ui';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
@@ -3655,7 +3655,7 @@ export default function ReelsCenter({
                                 <span className="text-[var(--ink-2)]">
                                   Sin cuenta vinculada
                                 </span>
-                                <button
+                                <LinkButton
                                   type="button"
                                   onClick={() => {
                                     setShowConnectModal(true);
@@ -3664,10 +3664,9 @@ export default function ReelsCenter({
                                         `@${(bandName || "banda").toLowerCase().replace(/[^a-z0-9]+/g, "_")}`,
                                     );
                                   }}
-                                  className="text-[var(--acc-ink)] hover:text-[var(--acc-ink)] font-bold underline cursor-pointer flex items-center gap-1"
                                 >
                                   <span><ShowIcon inline emoji="🔗" />Conectar en 1 clic</span>
-                                </button>
+                                </LinkButton>
                               </div>
                             );
                           })()}

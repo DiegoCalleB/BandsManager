@@ -20,7 +20,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, LinkButton } from '../ui';
 
 interface BulkLeadsActionBarProps {
   selectedCount: number;
@@ -172,14 +172,13 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
                       {selectedCount === 1 ? "seleccionada" : "seleccionadas"}
                     </span>
                     {!isAllSelected && totalFilteredCount > selectedCount && (
-                      <button
+                      <LinkButton
                         type="button"
                         onClick={onSelectAll}
-                        className="text-xs text-[var(--acc)] hover:underline font-sans cursor-pointer font-semibold underline-offset-2"
                         title={`Seleccionar los ${totalFilteredCount} registros filtrados`}
                       >
                         (Seleccionar las {totalFilteredCount})
-                      </button>
+                      </LinkButton>
                     )}
                   </div>
                 </div>
@@ -302,7 +301,6 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
               size="xs"
               type="button"
               onClick={() => setIsConfirmDeleteOpen(true)}
-              
               title={`Eliminar ${selectedCount} ${itemLabel}`}
             >
               <Trash2 className="w-4 h-4 text-[var(--alert)]" />
@@ -353,7 +351,6 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
                 size="sm"
                 type="button"
                 onClick={() => setIsConfirmDeleteOpen(false)}
-                
               >
                 Cancelar
               </Button>
@@ -365,7 +362,6 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
                   setIsConfirmDeleteOpen(false);
                   onBulkDelete();
                 }}
-                
               >
                 Sí, eliminar {selectedCount}
               </Button>

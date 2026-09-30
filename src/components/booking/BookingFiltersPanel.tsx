@@ -2,7 +2,7 @@ import React from 'react';
 import { Filter, X, Building2, Radio, Briefcase, LayoutGrid, List, Map as MapIcon, BookmarkCheck, RefreshCw } from 'lucide-react';
 import { Lead } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton, Input, Select } from '../ui';
+import { Button, IconButton, Input, LinkButton, Select } from '../ui';
 
 export interface BookingFiltersPanelProps {
   isOpen: boolean;
@@ -400,13 +400,13 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         <div className="flex items-center justify-between">
           <p className="text-micro font-bold text-[var(--ink-2)]">Ciudad / Localidad</p>
           {selectedCityFilter && (
-            <button
+            <LinkButton
+              size="xs"
               type="button"
               onClick={() => setSelectedCityFilter('')}
-              className="text-micro text-[var(--acc)] hover:underline cursor-pointer"
             >
               Ver todas
-            </button>
+            </LinkButton>
           )}
         </div>
         <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs">

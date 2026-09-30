@@ -19,7 +19,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, LinkButton } from '../ui';
 
 interface BulkBandActionBarProps {
   selectedCount: number;
@@ -138,14 +138,13 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                         : "bandas seleccionadas"}
                     </span>
                     {!isAllSelected && totalFilteredCount > selectedCount && (
-                      <button
+                      <LinkButton
                         type="button"
                         onClick={onSelectAll}
-                        className="text-xs text-[var(--acc)] hover:underline font-sans cursor-pointer font-semibold underline-offset-2"
                         title={`Seleccionar las ${totalFilteredCount} bandas`}
                       >
                         (Seleccionar las {totalFilteredCount})
-                      </button>
+                      </LinkButton>
                     )}
                   </div>
                 </div>
@@ -256,7 +255,6 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
               size="xs"
               type="button"
               onClick={() => setIsConfirmDeleteOpen(true)}
-              
               title={`Eliminar ${selectedCount} bandas`}
             >
               <Trash2 className="w-4 h-4 text-[var(--alert)]" />
@@ -307,7 +305,6 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                 size="sm"
                 type="button"
                 onClick={() => setIsConfirmDeleteOpen(false)}
-                
               >
                 Cancelar
               </Button>
@@ -319,7 +316,6 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                   setIsConfirmDeleteOpen(false);
                   onBulkDelete();
                 }}
-                
               >
                 Sí, eliminar {selectedCount}
               </Button>

@@ -4,6 +4,7 @@ import { ShowIcon } from "../ui/ShowIcon";
 import { titlesMatch } from "../../utils/songTitleMatch";
 import { getEnergyInfo } from "../../utils/energyPacingUtils";
 import { EvaluacionUnion } from "../../utils/setlistCompatibility";
+import { LinkButton } from '../ui';
 
 export interface EnergyChartPoint {
   idx: number;
@@ -905,13 +906,13 @@ export function EnergyChart({
                     </div>
                   )}
                   {d.idx > 0 && onPreviewTransition && (
-                    <button
+                    <LinkButton
                       type="button"
                       onClick={() => onPreviewTransition(d.idx)}
-                      className="text-[var(--acc)] font-semibold mt-1 pt-1 flex items-center gap-1 cursor-pointer hover:underline"
+                      className="mt-1"
                     >
                       <ShowIcon inline emoji="🎧" />Probar unión con #{d.idx}
-                    </button>
+                    </LinkButton>
                   )}
                 </>
               )}

@@ -11,7 +11,7 @@ import {
   Search,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton, Input } from '../ui';
+import { Button, IconButton, Input, LinkButton } from '../ui';
 
 interface BookingCampaignPanelProps {
   onCampaignChange: (campaign: BookingCampaign | null) => void;
@@ -401,7 +401,8 @@ export default function BookingCampaignPanel({
           * Los pitches generados por la IA mencionarán automáticamente estas
           fechas y el formato de Co-booking.
         </div>
-        <button
+        <LinkButton
+          tone="muted"
           onClick={() => {
             if (activeCampaign) {
               setCampaignForm({
@@ -418,10 +419,9 @@ export default function BookingCampaignPanel({
             }
             setIsEditing(true);
           }}
-          className="text-xs font-medium text-[var(--ink)] hover:text-[var(--ink-2)] underline cursor-pointer"
         >
           Editar parámetros
-        </button>
+        </LinkButton>
       </div>
     </div>
   );

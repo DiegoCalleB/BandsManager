@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Concert, Rehearsal, ThemeColors } from "../../../types";
 import { CalendarWidgetViewMode } from "../../../types/dashboardWidgets";
-import { Button, IconButton } from '../../ui';
+import { Button, IconButton, LinkButton } from '../../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -340,14 +340,14 @@ export function CalendarWidget({
 
           {/* Nav to full calendar */}
           {onNavigate && (
-            <button
+            <LinkButton
               type="button"
               onClick={() => onNavigate("calendario")}
-              className="text-xs text-[var(--acc-ink)] hover:underline font-semibold flex items-center gap-1 cursor-pointer ml-1"
+              className="ml-1"
             >
               <span>Ver Completo</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </LinkButton>
           )}
         </div>
       </div>

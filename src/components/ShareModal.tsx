@@ -3,7 +3,7 @@ import { X, MessageSquare, Share2, Copy, Check, Mail, Phone, Edit3, Sparkles, Mu
 import { ThemeColors } from '../types';
 import { shareViaWhatsApp, shareViaWebShare, copyToClipboard, shareViaEmail, SharePayload } from '../utils/shareUtils';
 import { ModalPortal } from './common/ModalPortal';
-import { IconButton, Input, Textarea } from './ui';
+import { IconButton, Input, LinkButton, Textarea } from './ui';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -171,13 +171,12 @@ export function ShareModal({
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">Vista previa del mensaje</span>
-                <button
+                <LinkButton
                   onClick={() => setIsEditing(!isEditing)}
-                  className="text-xs text-[var(--acc)] hover:underline flex items-center gap-1"
                 >
                   <Edit3 className="w-3 h-3" />
                   {isEditing ? 'Ver formato final' : 'Editar texto antes de enviar'}
-                </button>
+                </LinkButton>
               </div>
 
               {isEditing ? (

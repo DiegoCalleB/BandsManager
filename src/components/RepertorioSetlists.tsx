@@ -92,7 +92,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
-import { Button, Chip, IconButton, Input, Select, ShowIcon } from './ui';
+import { Button, Chip, IconButton, Input, MenuItem, Select, ShowIcon } from './ui';
 import { RepertorioNavBar } from "./repertorio/RepertorioNavBar";
 import { SetlistAddBar } from "./repertorio/SetlistAddBar";
 import SongStudioModal from "./SongStudioModal";
@@ -3702,21 +3702,20 @@ export default function RepertorioSetlists({
                   <>
                     <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
                     <div className="absolute right-0 top-full mt-1.5 z-40 w-72 max-w-[calc(100vw-2rem)] rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs text-[var(--ink)]">
-                      <button
+                      <MenuItem
                         id="btn-ai-perfect-header"
                         type="button"
                         onClick={() => {
                           setShowAssistantChooser(false);
                           setShowAIAnalysisModal(true);
                         }}
-                        className="w-full text-left p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer hover:bg-[var(--sunken)] active:scale-[0.97]"
                       >
                         <span className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
                           <Brain className="size-4 text-[var(--acc)]" aria-hidden="true" /> Ver análisis
                         </span>
                         <span className="block mt-0.5 pl-6 text-xs text-[var(--ink-2)]">Arco narrativo, puntuación y sugerencias explicadas.</span>
-                      </button>
-                      <button
+                      </MenuItem>
+                      <MenuItem
                         type="button"
                         onClick={() => {
                           setShowAssistantChooser(false);
@@ -3724,13 +3723,12 @@ export default function RepertorioSetlists({
                           setPerfectSetlistError(null);
                           setShowPerfectSetlistModal(true);
                         }}
-                        className="w-full text-left p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer hover:bg-[var(--sunken)] active:scale-[0.97]"
                       >
                         <span className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
                           <Sparkles className="size-4 text-[var(--acc)]" aria-hidden="true" /> Generar plan de cambios
                         </span>
                         <span className="block mt-0.5 pl-6 text-xs text-[var(--ink-2)]">Reordena y optimiza canciones sobre una copia.</span>
-                      </button>
+                      </MenuItem>
                     </div>
                   </>
                 )}

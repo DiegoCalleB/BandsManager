@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton, Input, Textarea } from '../ui';
+import { Button, IconButton, Input, LinkButton, Textarea } from '../ui';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -335,12 +335,12 @@ export function CampaignManagerModal({
                     ? "✎ Editar Campaña"
                     : "Crear Nueva Campaña"}
                 </span>
-                <button
+                <LinkButton
+                  tone="muted"
                   onClick={() => setIsEditing(false)}
-                  className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)] underline cursor-pointer"
                 >
                   Volver a la lista
-                </button>
+                </LinkButton>
               </div>
 
               {/* Name & Color */}
@@ -760,13 +760,13 @@ export function CampaignManagerModal({
                                 MODO ACTIVO EN LA WEB
                               </span>
                             ) : (
-                              <button
+                              <LinkButton
+                                size="xs"
                                 type="button"
                                 onClick={() => onSetActiveCampaign(camp)}
-                                className="text-micro font-sans font-bold text-[var(--acc)] hover:text-[var(--ink-2)] underline cursor-pointer"
                               >
                                 Activar modo campaña
-                              </button>
+                              </LinkButton>
                             )}
                           </div>
 

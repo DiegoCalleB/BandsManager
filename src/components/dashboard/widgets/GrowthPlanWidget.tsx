@@ -2,7 +2,7 @@ import React from 'react';
 import { Rocket, Sparkles, ArrowRight, CheckCircle2, TrendingUp, Compass, Calendar, Zap, ChevronRight, Target } from 'lucide-react';
 import { GrowthPlan, ActionItem } from '../../../utils/growthPlanEngine';
 import { ModuleWidgetProps } from './ModuleWidgets';
-import { Button } from '../../ui';
+import { Button, LinkButton } from '../../ui';
 
 export interface GrowthGuidanceWidgetProps extends ModuleWidgetProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -45,23 +45,21 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
         </div>
 
         {onOpenGuidanceModal ? (
-          <button
+          <LinkButton
             type="button"
             onClick={onOpenGuidanceModal}
-            className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver plan completo</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         ) : onNavigate ? (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('reels')}
-            className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver Redes</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         ) : null}
       </div>
 

@@ -34,7 +34,7 @@ import {
   Target,
 } from "lucide-react";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, IconButton, Input, Select } from './ui';
+import { Button, IconButton, Input, LinkButton, Select } from './ui';
 
 interface TourManagerProps {
   colors: ThemeColors;
@@ -1154,21 +1154,20 @@ export default function TourManager({
                               viajarán en esta gira:
                             </span>
                             <div className="flex gap-2">
-                              <button
+                              <LinkButton
                                 type="button"
                                 onClick={handleSelectAllMembers}
-                                className="text-[var(--acc-ink)] hover:underline cursor-pointer"
                               >
                                 Seleccionar todos
-                              </button>
+                              </LinkButton>
                               <span>|</span>
-                              <button
+                              <LinkButton
+                                tone="muted"
                                 type="button"
                                 onClick={() => setFormConvocadosIds([])}
-                                className="text-[var(--ink-2)] hover:underline cursor-pointer"
                               >
                                 Limpiar
-                              </button>
+                              </LinkButton>
                             </div>
                           </div>
 

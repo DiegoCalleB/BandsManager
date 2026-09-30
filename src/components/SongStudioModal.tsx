@@ -97,7 +97,7 @@ import {
   GripVertical,
   Zap,
 } from 'lucide-react';
-import { Button, IconButton, Input, Select, Textarea } from './ui';
+import { Button, IconButton, Input, MenuItem, Select, Textarea } from './ui';
 
 // Live microphone waveform visualization component for Cubase-style real-time recording
 const LiveMicWaveformCanvas: React.FC<{
@@ -3886,7 +3886,9 @@ export default function SongStudioModal({
 
                     {showToolsMenu && (
                       <div className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
-                        <button
+                        <MenuItem
+                          tone="acc"
+                          dense
                           type="button"
                           onClick={() => {
                             setShowToolsMenu(false);
@@ -3895,11 +3897,10 @@ export default function SongStudioModal({
                               favoritoGeneral: !song.favoritoGeneral,
                             });
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--acc)]/70 flex items-center gap-2"
                         >
                           <Sparkles className={`w-4 h-4 text-[var(--acc)] ${song.favoritoGeneral ? 'fill-[var(--acc)]' : ''}`} />
                           {song.favoritoGeneral ? 'Quitar de Favoritos' : 'Marcar como Favorito'}
-                        </button>
+                        </MenuItem>
                         {/* Mi preparación: solo en móvil, en escritorio ya se ve en la cabecera */}
                         <div className="sm:hidden px-1 pb-1">
                           {(() => {
@@ -3934,66 +3935,70 @@ export default function SongStudioModal({
                             );
                           })()}
                         </div>
-                        <button
+                        <MenuItem
+                          tone="acc"
+                          dense
                           type="button"
                           onClick={() => {
                             setShowToolsMenu(false);
                             setShowChordsModal(true);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--acc)]/70 flex items-center gap-2"
                         >
                           <FileText className="w-4 h-4 text-[var(--acc)]" /> Acordes y Partitura
-                        </button>
-                        <button
+                        </MenuItem>
+                        <MenuItem
+                          dense
                           type="button"
                           onClick={() => {
                             setShowToolsMenu(false);
                             setShowAiComposerModal(true);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--tentative)]/80 flex items-center gap-2"
                         >
                           <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Arreglos IA (músico virtual)
-                        </button>
-                        <button
+                        </MenuItem>
+                        <MenuItem
+                          dense
                           type="button"
                           onClick={() => {
                             setShowToolsMenu(false);
                             setShowAiMusicModal(true);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--tentative)]/80 flex items-center gap-2"
                         >
                           <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Soundtrack IA (Lyria)
-                        </button>
-                        <button
+                        </MenuItem>
+                        <MenuItem
+                          tone="muted"
+                          dense
                           type="button"
                           onClick={() => {
                             setShowToolsMenu(false);
                             setShowCubaseHelp(true);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
                         >
                           <Keyboard className="w-4 h-4 text-[var(--ink-2)]" /> Atajos teclado (Cubase)
-                        </button>
-                        <button
+                        </MenuItem>
+                        <MenuItem
+                          tone="muted"
+                          dense
                           type="button"
                           onClick={() => {
                             setShowToolsMenu(false);
                             openTutorial();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
                         >
                           <Info className="w-4 h-4 text-[var(--ink-2)]" /> Guía rápida
-                        </button>
-                        <button
+                        </MenuItem>
+                        <MenuItem
+                          tone="muted"
+                          dense
                           type="button"
                           onClick={() => {
                             setShowToolsMenu(false);
                             handleShareSong();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2 pt-2"
                         >
                           <MessageSquare className="w-4 h-4 text-[var(--ok)]" /> Compartir tema por WhatsApp
-                        </button>
+                        </MenuItem>
                       </div>
                     )}
                   </div>
@@ -4628,39 +4633,42 @@ export default function SongStudioModal({
 
                               {openIdeaActionsMenuId === idea.id && (
                                 <div className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
-                                  <button
+                                  <MenuItem
+                                    tone="muted"
+                                    dense
                                     type="button"
                                     onClick={() => {
                                       setOpenIdeaActionsMenuId(null);
                                       handleShareIdea(idea);
                                     }}
-                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
                                   >
                                     <MessageSquare className="w-4 h-4 text-[var(--ok)]" /> Compartir por WhatsApp
-                                  </button>
-                                  <button
+                                  </MenuItem>
+                                  <MenuItem
+                                    dense
                                     type="button"
                                     onClick={() => {
                                       setOpenIdeaActionsMenuId(null);
                                       handleExportMasterMix(idea);
                                     }}
                                     disabled={isExportingMaster}
-                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--tentative)]/80 flex items-center gap-2 disabled:opacity-50"
                                   >
                                     <Disc className={`w-4 h-4 text-[var(--tentative)] ${isExportingMaster ? 'animate-spin' : ''}`} />{' '}
                                     Exportar mezcla (.WAV)
-                                  </button>
-                                  <button
+                                  </MenuItem>
+                                  <MenuItem
+                                    tone="muted"
+                                    dense
                                     type="button"
                                     onClick={(e) => {
                                       setOpenIdeaActionsMenuId(null);
                                       handleDuplicateIdea(e, idea.id);
                                     }}
-                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
                                   >
                                     <Copy className="w-4 h-4 text-[var(--ink-2)]" /> Duplicar como nueva versión
-                                  </button>
-                                  <button
+                                  </MenuItem>
+                                  <MenuItem
+                                    dense
                                     type="button"
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -4670,11 +4678,11 @@ export default function SongStudioModal({
                                       setAiTrackGenStartOffsetSec(0);
                                       setShowAiTrackGenModal(idea);
                                     }}
-                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--tentative)]/80 flex items-center gap-2"
                                   >
                                     <Wand2 className="w-4 h-4 text-[var(--tentative)]" /> Generar pista con IA
-                                  </button>
-                                  <button
+                                  </MenuItem>
+                                  <MenuItem
+                                    dense
                                     type="button"
                                     onClick={() => {
                                       setOpenIdeaActionsMenuId(null);
@@ -4682,20 +4690,20 @@ export default function SongStudioModal({
                                       setGenBpm(song.bpm || 120);
                                       setGenKey(song.tonalidad || 'Do');
                                     }}
-                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--tentative)]/80 flex items-center gap-2"
                                   >
                                     <Wand2 className="w-4 h-4 text-[var(--tentative)]" /> Base rítmica IA (batería/bajo)
-                                  </button>
-                                  <button
+                                  </MenuItem>
+                                  <MenuItem
+                                    tone="muted"
+                                    dense
                                     type="button"
                                     onClick={(e) => {
                                       setOpenIdeaActionsMenuId(null);
                                       handleDeleteIdea(e, idea.id);
                                     }}
-                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] flex items-center gap-2 pt-2"
                                   >
                                     <Trash2 className="w-4 h-4 text-[var(--alert)]" /> Eliminar idea
-                                  </button>
+                                  </MenuItem>
                                 </div>
                               )}
                             </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Music, X, Sparkles, Loader2, Upload, Check } from 'lucide-react';
 import { BandRelationshipStatus, BandContact } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, LinkButton, Select, Textarea } from '../ui';
 
 export interface AddEditBandModalProps {
   isOpen: boolean;
@@ -201,13 +201,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Estilo:</span> {aiProposal.estilo_musical}
                       </div>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => setFormStyle(aiProposal.estilo_musical)}
-                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="shrink-0"
                       >
                         Usar
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -216,13 +217,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Origen:</span> {aiProposal.localizacion}
                       </div>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => setFormLocation(aiProposal.localizacion)}
-                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="shrink-0"
                       >
                         Usar
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -231,13 +233,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Contacto:</span> {aiProposal.contacto_nombre}
                       </div>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => setFormContactName(aiProposal.contacto_nombre)}
-                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="shrink-0"
                       >
                         Usar
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -246,13 +249,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Email:</span> {aiProposal.email}
                       </div>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => setFormEmail(aiProposal.email)}
-                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="shrink-0"
                       >
                         Usar
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -261,13 +265,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Tel:</span> {aiProposal.telefono}
                       </div>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => setFormPhone(aiProposal.telefono)}
-                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="shrink-0"
                       >
                         Usar
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -276,13 +281,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <div className="truncate pr-2">
                         <span className="text-[var(--ink-2)] font-bold">Instagram:</span> {aiProposal.instagram}
                       </div>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => setFormInstagram(aiProposal.instagram)}
-                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="shrink-0"
                       >
                         Usar
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -291,13 +297,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <div className="truncate max-w-[80%]">
                         <span className="text-[var(--ink-2)] font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}
                       </div>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)}
-                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="shrink-0"
                       >
                         Usar
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -305,15 +312,16 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <div className="bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] sm:col-span-2 space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[var(--ink-2)] font-bold">Resumen / Bio:</span>
-                        <button
+                        <LinkButton
+                          size="xs"
                           type="button"
                           onClick={() =>
                             setFormNotes((prev) => (prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia))
                           }
-                          className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                          className="shrink-0"
                         >
                           Añadir a notas
-                        </button>
+                        </LinkButton>
                       </div>
                       <p className="text-micro text-[var(--ink-2)] italic leading-relaxed">{aiProposal.biografia}</p>
                     </div>

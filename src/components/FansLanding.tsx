@@ -58,7 +58,7 @@ import {
   WHATSAPP_WINDOW_NAME,
 } from "../utils/whatsapp";
 import { decodeBandIdClient } from "../utils/bandHash";
-import { Button, IconButton, Input, Textarea } from './ui';
+import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
 
 export interface FansLandingProps {
   currentBandId?: string;
@@ -1119,7 +1119,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                 {t("interactiveSimulation")}
               </span>
-              <button
+              <LinkButton
                 type="button"
                 onClick={() => {
                   setSuccessData(null);
@@ -1134,10 +1134,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     consentimiento: false,
                   });
                 }}
-                className="text-[var(--acc)] hover:text-[var(--ink)] underline font-bold"
               >
                 {t("backToForm")}
-              </button>
+              </LinkButton>
             </div>
           )}
 
@@ -1732,13 +1731,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             )}
 
             <div className="pt-1 text-center">
-              <button
+              <LinkButton
                 type="button"
                 onClick={() => setActiveTab("form")}
-                className="text-xs font-sans text-[var(--acc)]/90 hover:text-[var(--acc)]/70 underline font-bold transition-colors"
               >
                 {t("followCTA")}
-              </button>
+              </LinkButton>
             </div>
           </div>
         )}
@@ -1916,13 +1914,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
                 <span className="text-micro text-[var(--ink-2)] font-sans leading-relaxed group-hover:text-[var(--ink-2)] transition-colors pt-0.5">
                   {t("consentPrefix")}
-                  <button
+                  <LinkButton
                     type="button"
                     onClick={() => setShowPrivacyModal(true)}
-                    className="text-[var(--acc)] underline hover:text-[var(--acc)]/70 font-bold inline"
                   >
                     {t("consentPrivacyLink")}
-                  </button>
+                  </LinkButton>
                   {t("consentMiddle")}
                   <strong className="text-[var(--ink-2)]">
                     {t("consentExplicit")}

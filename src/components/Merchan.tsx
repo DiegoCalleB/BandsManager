@@ -30,7 +30,7 @@ import { ThemeColors, ThemeName } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, IconButton, Input } from './ui';
+import { Button, IconButton, Input, LinkButton } from './ui';
 
 const ResolvedBgImage: React.FC<{
   url: string;
@@ -516,14 +516,13 @@ export default function Merchan({
                 >
                   Imagen personalizada subida
                 </label>
-                <button
+                <LinkButton
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="text-xs font-sans font-bold text-[var(--acc)] hover:underline flex items-center gap-1"
                 >
                   <Plus className="w-3 h-3" />{" "}
                   {customImageUrl ? "Cambiar" : "Subir"}
-                </button>
+                </LinkButton>
               </div>
 
               {customImageUrl ? (

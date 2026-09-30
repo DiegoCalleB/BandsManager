@@ -4,7 +4,7 @@ import { User as UserType } from '../types';
 import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { ModalPortal } from './common/ModalPortal';
-import { Button, Input } from './ui';
+import { Button, Input, LinkButton } from './ui';
 
 // Ventana de acceso simplificada para la fase beta (bandas del festival Buskers y primeros
 // usuarios): a diferencia de LoginModal.tsx, el registro NO ofrece selector de planes — crea
@@ -419,7 +419,8 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     </button>
                   </div>
                   <div className="flex items-center justify-end text-xs text-[var(--ink-2)] px-1 pt-0.5">
-                    <button
+                    <LinkButton
+                      tone="muted"
                       type="button"
                       onClick={() => {
                         setError(null);
@@ -428,10 +429,9 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                         setResetEmailOrUsername(username || '');
                         setView('reset-password');
                       }}
-                      className="text-[var(--ink-2)] underline underline-offset-2 hover:text-[var(--ink)] font-medium cursor-pointer"
                     >
                       ¿Olvidaste tu contraseña?
-                    </button>
+                    </LinkButton>
                   </div>
                   <button
                     type="submit"
@@ -461,16 +461,16 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
                 <p className="text-center text-xs text-[var(--ink-2)] pt-1">
                   ¿Primera vez por aquí?{' '}
-                  <button
+                  <LinkButton
+                    tone="muted"
                     type="button"
                     onClick={() => {
                       setError(null);
                       setView('register');
                     }}
-                    className="text-[var(--ink-2)] underline underline-offset-2 hover:text-[var(--ink)] font-medium cursor-pointer"
                   >
                     Crea tu cuenta gratis
-                  </button>
+                  </LinkButton>
                 </p>
 
                 <div className="pt-3 text-center text-xs text-[var(--ink-2)] flex items-center justify-center gap-1.5">
@@ -590,16 +590,16 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
                 <p className="text-center text-xs text-[var(--ink-2)]">
                   ¿Ya tienes cuenta?{' '}
-                  <button
+                  <LinkButton
+                    tone="muted"
                     type="button"
                     onClick={() => {
                       setError(null);
                       setView('login');
                     }}
-                    className="text-[var(--ink-2)] underline underline-offset-2 hover:text-[var(--ink)] font-medium cursor-pointer"
                   >
                     Volver al login
-                  </button>
+                  </LinkButton>
                 </p>
               </div>
             )}

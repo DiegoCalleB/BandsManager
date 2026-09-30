@@ -19,7 +19,7 @@ import {
   tieneTraduccion,
   traduccionDesactualizada,
 } from "../../utils/epkTraducciones";
-import { Button, Input, Textarea } from '../ui';
+import { Button, Input, LinkButton, Textarea } from '../ui';
 
 interface EPKDonacionesBlockProps {
   config: EPKConfig;
@@ -383,14 +383,14 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 <span className="text-micro font-sans text-[var(--ink-2)]">
                   Previsualización en vivo
                 </span>
-                <button
+                <LinkButton
+                  tone="muted"
                   type="button"
                   onClick={() => setShowFansPreviewModal(true)}
-                  className="text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
                   title="Abrir simulador interactivo del formulario Únete"
                 >
                   <Eye className="w-3.5 h-3.5" /> Ver formulario únete
-                </button>
+                </LinkButton>
               </div>
 
               {config.donacionRevolut?.habilitado === false ? (

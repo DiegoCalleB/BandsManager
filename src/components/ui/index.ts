@@ -35,3 +35,9 @@ export type { CardProps } from './Card';
 
 export { EmptyState } from './EmptyState';
 export type { EmptyStateProps } from './EmptyState';
+
+export { MenuItem, menuItemVariants } from './MenuItem';
+export type { MenuItemProps } from './MenuItem';
+
+export { LinkButton, linkButtonVariants } from './LinkButton';
+export type { LinkButtonProps } from './LinkButton';

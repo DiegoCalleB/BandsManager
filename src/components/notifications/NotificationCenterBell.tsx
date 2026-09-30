@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { NotificationHistoryItem, NotificationPermissionStatus, BrowserNotificationConfig } from '../../types/browserNotifications';
 import { ShowIcon } from '../ui/ShowIcon';
-import { IconButton } from '../ui';
+import { IconButton, LinkButton } from '../ui';
 
 interface NotificationCenterBellProps {
   permission: NotificationPermissionStatus;
@@ -186,16 +186,17 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                   Activar
                 </button>
               ) : (
-                <button
+                <LinkButton
+                  size="xs"
                   type="button"
                   onClick={() => {
                     setIsOpen(false);
                     onOpenSettings();
                   }}
-                  className="text-micro text-[var(--acc)] hover:underline shrink-0 cursor-pointer"
+                  className="shrink-0"
                 >
                   Ver ayuda
-                </button>
+                </LinkButton>
               )}
             </div>
           )}

@@ -24,7 +24,7 @@ import {
   Cpu,
 } from 'lucide-react';
 import { hasIrisStems } from '../../utils/irisTracks';
-import { IconButton } from '../ui';
+import { IconButton, MenuItem } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -414,93 +414,98 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 <div className="py-1 space-y-0.5">
                   {/* Acordes */}
                   {onOpenChords && (
-                    <button
+                    <MenuItem
+                      dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         onOpenChords();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                      className="sm:hidden"
                     >
                       <FileText className="w-3.5 h-3.5" />
                       <span>Ver acordes y letra</span>
-                    </button>
+                    </MenuItem>
                   )}
 
                   {/* Editar Canción */}
                   {onEditSong && (
-                    <button
+                    <MenuItem
+                      tone="muted"
+                      dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         onEditSong();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                      className="sm:hidden"
                     >
                       <Edit3 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Editar canción</span>
-                    </button>
+                    </MenuItem>
                   )}
 
                   {/* Member Notes */}
                   {onOpenMemberNotes && (
-                    <button
+                    <MenuItem
+                      tone="acc"
+                      dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         onOpenMemberNotes();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-m)] hover:bg-[var(--acc)]/15 text-[var(--acc)] transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>Notas por miembro</span>
-                    </button>
+                    </MenuItem>
                   )}
 
                   {/* Studio / Grabadora Multipista */}
                   {onOpenStudio && (
-                    <button
+                    <MenuItem
+                      dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         onOpenStudio();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--tentative)]/20 text-[var(--tentative)] transition-colors flex items-center gap-2 cursor-pointer font-bold"
                     >
                       <Headphones className="w-3.5 h-3.5 text-[var(--tentative)]" />
                       <span>Abrir Studio / Grabadora</span>
-                    </button>
+                    </MenuItem>
                   )}
 
                   {/* Iris Stem Separator */}
                   {(onOpenIris || onOpenStudio) && (
-                    <button
+                    <MenuItem
+                      tone="acc"
+                      dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         if (onOpenIris) onOpenIris();
                         else if (onOpenStudio) onOpenStudio();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>{hasIrisStems(song) ? 'Ver Pistas Iris' : 'Separar Stems con Iris'}</span>
-                    </button>
+                    </MenuItem>
                   )}
 
                   {/* Share on WhatsApp */}
                   {onShareSong && (
-                    <button
+                    <MenuItem
+                      dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         onShareSong();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                       <span>Compartir por WhatsApp</span>
-                    </button>
+                    </MenuItem>
                   )}
 
                   {/* External Chords / Score Link */}
@@ -521,30 +526,32 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                   {showReorder && (
                     <>
                       {canMoveUp && onMoveUp && (
-                        <button
+                        <MenuItem
+                          dense
                           type="button"
                           onClick={() => {
                             setShowMenu(false);
                             onMoveUp();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                          className="sm:hidden"
                         >
                           <ArrowUp className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                           <span>Mover arriba</span>
-                        </button>
+                        </MenuItem>
                       )}
                       {canMoveDown && onMoveDown && (
-                        <button
+                        <MenuItem
+                          dense
                           type="button"
                           onClick={() => {
                             setShowMenu(false);
                             onMoveDown();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                          className="sm:hidden"
                         >
                           <ArrowDown className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                           <span>Mover abajo</span>
-                        </button>
+                        </MenuItem>
                       )}
                     </>
                   )}
@@ -553,17 +560,18 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 {/* Delete button */}
                 {onDeleteSong && (
                   <div className="py-1">
-                    <button
+                    <MenuItem
+                      tone="danger"
+                      dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         onDeleteSong();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Eliminar canción</span>
-                    </button>
+                    </MenuItem>
                   </div>
                 )}
               </div>

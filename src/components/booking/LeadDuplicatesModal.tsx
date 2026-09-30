@@ -27,7 +27,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton } from '../ui';
+import { Button, IconButton, LinkButton } from '../ui';
 
 interface LeadDuplicatesModalProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -398,17 +398,17 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                       </span>
                     </div>
 
-                    <button
+                    <LinkButton
+                      tone="muted"
                       type="button"
                       onClick={() =>
                         setIgnoredGroupIds((prev) =>
                           new Set(prev).add(group.id),
                         )
                       }
-                      className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)] underline cursor-pointer"
                     >
                       Ignorar (No son duplicados)
-                    </button>
+                    </LinkButton>
                   </div>
 
                   {/* Comparative Cards */}

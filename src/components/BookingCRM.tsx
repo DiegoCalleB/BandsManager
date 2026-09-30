@@ -258,7 +258,7 @@ interface BookingCRMProps {
 
 import { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
-import { Button, IconButton, Input } from './ui';
+import { Button, IconButton, Input, LinkButton } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1984,13 +1984,14 @@ export default function BookingCRM({
                     </IconButton>
                   </span>
                 )}
-                <button
+                <LinkButton
+                  tone="muted"
                   type="button"
                   onClick={handleClearAllFilters}
-                  className="text-xs text-[var(--ink-2)] hover:text-[var(--alert)] shrink-0 underline ml-1 cursor-pointer"
+                  className="shrink-0 ml-1"
                 >
                   Limpiar todo
-                </button>
+                </LinkButton>
               </div>
             )}
 

@@ -39,7 +39,7 @@ import {
   parseRootNote,
 } from "../utils/chordUtils";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, IconButton, Input, Textarea } from './ui';
+import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
 
 interface SongChordsViewerModalProps {
   song: Song;
@@ -743,12 +743,12 @@ export function SongChordsViewerModal({
                           <Zap className="w-4 h-4 text-[var(--acc)]" />
                           Estructura Rápida para el Músico:
                         </span>
-                        <button
+                        <LinkButton
+                          size="xs"
                           onClick={() => setActiveTab("substitute")}
-                          className="text-micro underline text-[var(--acc)] hover:text-[var(--ink)]"
                         >
                           Ver ficha completa →
-                        </button>
+                        </LinkButton>
                       </div>
                       <p className="text-[var(--ink-2)] text-sm font-semibold bg-[var(--sunken)] p-2 rounded-[var(--r-s)]5">
                         {guiaSustituto.estructura}

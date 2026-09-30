@@ -69,7 +69,7 @@ import { encodeBandIdClient } from "../utils/bandHash";
 import { ShowIcon } from './ui/ShowIcon';
 
 import { FansDashboardView } from "./fans/FansDashboardView";
-import { Button, IconButton, Input, Select, Textarea } from './ui';
+import { Button, IconButton, Input, LinkButton, MenuItem, Select, Textarea } from './ui';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -731,61 +731,61 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   onClick={() => setShowFansHeaderMenu(false)}
                 />
                 <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--sunken)] p-1.5 space-y-0.5 text-xs font-sans">
-                  <button
+                  <MenuItem
+                    tone="acc"
                     type="button"
                     onClick={() => {
                       setShowFansHeaderMenu(false);
                       openTutorial();
                     }}
-                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
                     <Sparkles className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />{" "}
                     Guía rápida y tutorial
-                  </button>
-                  <button
+                  </MenuItem>
+                  <MenuItem
+                    tone="acc"
                     type="button"
                     onClick={() => {
                       setShowFansHeaderMenu(false);
                       setShowFansPreviewModal(true);
                     }}
-                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
                     <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
                     formulario
-                  </button>
-                  <button
+                  </MenuItem>
+                  <MenuItem
+                    tone="muted"
                     type="button"
                     onClick={() => {
                       setShowFansHeaderMenu(false);
                       copyLink();
                     }}
-                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                   >
                     <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de captura
                     corto
-                  </button>
-                  <button
+                  </MenuItem>
+                  <MenuItem
+                    tone="muted"
                     type="button"
                     onClick={() => {
                       setShowFansHeaderMenu(false);
                       setShowAddModal(true);
                     }}
-                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                   >
                     <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar fan
                     manual
-                  </button>
-                  <button
+                  </MenuItem>
+                  <MenuItem
+                    tone="muted"
                     id="fans-export-csv-btn"
                     type="button"
                     onClick={() => {
                       setShowFansHeaderMenu(false);
                       handleExportCSV();
                     }}
-                    className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                   >
                     <Download className="w-3.5 h-3.5 shrink-0" /> Exportar CSV
-                  </button>
+                  </MenuItem>
                 </div>
               </>
             )}
@@ -852,12 +852,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 Filtrar por Ciudad (Pestañas Configurables Guardadas en BBDD)
               </span>
               {selectedCityFilter && (
-                <button
+                <LinkButton
                   onClick={() => setSelectedCityFilter("")}
-                  className="text-xs font-sans text-[var(--acc)] hover:underline cursor-pointer"
                 >
                   Limpiar filtro ciudad
-                </button>
+                </LinkButton>
               )}
             </div>
 
@@ -1379,13 +1378,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <span className="flex-1 min-w-0 truncate font-sans text-[var(--acc)]/70 text-xs text-left">
                 {qrConcertUrl}
               </span>
-              <button
+              <LinkButton
                 type="button"
                 onClick={handleCopyQrUrl}
-                className="shrink-0 text-xs text-[var(--acc)] hover:underline font-sans cursor-pointer"
+                className="shrink-0"
               >
                 {copiedQrUrl ? "¡Copiado!" : "Copiar"}
-              </button>
+              </LinkButton>
             </div>
 
             {/* Acción principal + resto de acciones detrás de un único menú */}
@@ -1414,64 +1413,63 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       onClick={() => setShowQrMoreMenu(false)}
                     />
                     <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
-                      <button
+                      <MenuItem
+                        tone="muted"
                         type="button"
                         onClick={() => {
                           setShowQrMoreMenu(false);
                           handleDownloadSvg();
                         }}
                         disabled={isExportingDirect}
-                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG
                         (imprenta/lonas)
-                      </button>
-                      <button
+                      </MenuItem>
+                      <MenuItem
                         type="button"
                         onClick={() => {
                           setShowQrMoreMenu(false);
                           handleDownloadPng4k();
                         }}
                         disabled={isExportingDirect}
-                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--tentative)]/80 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <Download className="w-3.5 h-3.5 shrink-0" /> PNG Ultra
                         HD 4K
-                      </button>
-                      <button
+                      </MenuItem>
+                      <MenuItem
+                        tone="acc"
                         type="button"
                         onClick={() => {
                           setShowQrMoreMenu(false);
                           setShowQrExportModal(true);
                         }}
-                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos
                         (tarjeta, pegatina…)
-                      </button>
+                      </MenuItem>
                       <div className="h-px bg-[var(--surface)] my-1" />
-                      <button
+                      <MenuItem
+                        tone="muted"
                         type="button"
                         onClick={() => {
                           setShowQrMoreMenu(false);
                           handleShareWhatsApp();
                         }}
-                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <MessageCircle className="w-3.5 h-3.5 shrink-0" />{" "}
                         Compartir por WhatsApp
-                      </button>
-                      <button
+                      </MenuItem>
+                      <MenuItem
+                        tone="muted"
                         type="button"
                         onClick={() => {
                           setShowQrMoreMenu(false);
                           handleShareNative();
                         }}
-                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <Share2 className="w-3.5 h-3.5 shrink-0" /> Compartir
                         enlace
-                      </button>
+                      </MenuItem>
                       <a
                         href={qrConcertUrl}
                         target="_blank"
@@ -1482,17 +1480,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         <ExternalLink className="w-3.5 h-3.5 shrink-0" /> Abrir
                         landing en pestaña nueva
                       </a>
-                      <button
+                      <MenuItem
+                        tone="muted"
                         type="button"
                         onClick={() => {
                           setShowQrMoreMenu(false);
                           setShowFansPreviewModal(true);
                         }}
-                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
                         formulario “Únete”
-                      </button>
+                      </MenuItem>
                     </div>
                   </>
                 )}

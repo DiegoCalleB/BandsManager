@@ -105,7 +105,7 @@ import {
 } from "../../utils/whatsapp";
 import { WhatsAppPreviewModal } from "./WhatsAppPreviewModal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, LinkButton, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -3509,17 +3509,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
                 {selectedLead.historial_feedback_pitch &&
                   selectedLead.historial_feedback_pitch.length > 0 && (
-                    <button
+                    <LinkButton
+                      size="xs"
                       type="button"
                       onClick={() =>
                         setShowFeedbackHistory(!showFeedbackHistory)
                       }
-                      className="text-micro text-[var(--acc)]/80 hover:text-[var(--acc)]/70 underline font-sans cursor-pointer"
                     >
                       {showFeedbackHistory
                         ? "Ocultar historial"
                         : `Historial (${selectedLead.historial_feedback_pitch.length})`}
-                    </button>
+                    </LinkButton>
                   )}
               </div>
 
@@ -3825,15 +3825,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                               >
                                 Pitch previo: {log.pitch_previo.slice(0, 38)}...
                               </span>
-                              <button
+                              <LinkButton
+                                size="xs"
                                 type="button"
                                 onClick={() => handleRevertPitch(log.id)}
                                 disabled={isRevertingPitch}
-                                className="text-micro text-[var(--acc)] hover:text-[var(--acc)]/70 font-sans underline flex items-center gap-1 cursor-pointer shrink-0"
+                                className="shrink-0"
                               >
                                 <RotateCcw className="w-3 h-3" />
                                 Volver a este pitch anterior
-                              </button>
+                              </LinkButton>
                             </div>
                           )}
                         </div>
@@ -4339,7 +4340,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         {selectedLead.setlist_history.referencia_pitch_sugerida}
                         "
                       </p>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => {
                           const hook =
@@ -4360,10 +4362,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             );
                           }
                         }}
-                        className="text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)] underline cursor-pointer"
                       >
                         + Añadir este gancho al final del Pitch
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
                 </div>
@@ -4933,7 +4934,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         }
                         "
                       </p>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => {
                           const hook =
@@ -4950,10 +4952,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             );
                           }
                         }}
-                        className="text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)] underline cursor-pointer"
                       >
                         <ShowIcon inline emoji="📋" />Copiar titular de prensa
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
 
@@ -5047,7 +5048,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         }
                         "
                       </p>
-                      <button
+                      <LinkButton
+                        size="xs"
                         type="button"
                         onClick={() => {
                           const cobooking =
@@ -5068,10 +5070,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             );
                           }
                         }}
-                        className="text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)] underline cursor-pointer"
                       >
                         + Añadir propuesta de co-booking al Pitch
-                      </button>
+                      </LinkButton>
                     </div>
                   )}
                 </div>

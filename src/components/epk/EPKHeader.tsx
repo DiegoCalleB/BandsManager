@@ -13,7 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from "./epkBlocks";
-import { Button, IconButton } from '../ui';
+import { Button, IconButton, MenuItem } from '../ui';
 
 interface EPKHeaderProps {
   activeBlock: EPKBlockId;
@@ -176,13 +176,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                       <span className="font-semibold">Ver EPK público</span>
                     </a>
 
-                    <button
+                    <MenuItem
                       type="button"
                       onClick={() => {
                         onCopyUrl();
                         setShowMobileMenu(false);
                       }}
-                      className="w-full text-left flex items-center gap-2 px-3 py-2 text-[var(--ink)]/80 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
                     >
                       {copiedPublicUrl ? (
                         <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
@@ -192,34 +191,34 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                       <span>
                         {copiedPublicUrl ? "¡Copiado!" : "Copiar URL pública"}
                       </span>
-                    </button>
+                    </MenuItem>
 
                     {onOpenTutorial && (
-                      <button
+                      <MenuItem
                         type="button"
                         onClick={() => {
                           onOpenTutorial();
                           setShowMobileMenu(false);
                         }}
-                        className="w-full text-left flex items-center gap-2 px-3 py-2 text-[var(--tentative)]/80 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
                       >
                         <HelpCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
                         <span>Guía interactiva EPK</span>
-                      </button>
+                      </MenuItem>
                     )}
 
                     {!isPromoPlan && (
-                      <button
+                      <MenuItem
+                        tone="muted"
                         type="button"
                         onClick={() => {
                           setShowAiNotice((prev) => !prev);
                           setShowMobileMenu(false);
                         }}
-                        className="w-full text-left flex items-center gap-2 px-3 py-2 text-[var(--ink-2)]/80 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer/80 mt-1 pt-1.5"
+                        className="mt-1"
                       >
                         <Bot className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
                         <span>Conexión con agentes IA</span>
-                      </button>
+                      </MenuItem>
                     )}
                   </div>
                 </>

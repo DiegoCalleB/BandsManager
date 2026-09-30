@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard } from 'lucide-react';
-import { IconButton, Input } from '../../ui';
+import { IconButton, Input, LinkButton } from '../../ui';
 
 interface StepFansPaymentsProps {
   fanCallToAction: string;
@@ -140,13 +140,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <button
+                <LinkButton
+                  tone="muted"
                   type="button"
                   onClick={() => leadMagnetInputRef.current?.click()}
-                  className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)] underline"
                 >
                   Cambiar
-                </button>
+                </LinkButton>
                 <IconButton
                   label="Eliminar"
                   variant="danger"

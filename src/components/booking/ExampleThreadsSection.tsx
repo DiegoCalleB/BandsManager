@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import type { TemplateCategory } from "./TemplateConfigSection";
-import { IconButton, Input, Select, Textarea } from '../ui';
+import { IconButton, Input, LinkButton, Select, Textarea } from '../ui';
 
 interface ThreadMessage {
   rol: "banda" | "sala";
@@ -185,13 +185,13 @@ export function ExampleThreadsSection({
           <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos
           de email reales de ejemplo
         </label>
-        <button
+        <LinkButton
+          size="xs"
           type="button"
           onClick={handleToggleForm}
-          className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
         >
           <Plus className="w-3 h-3" /> {showForm ? "Cancelar" : "Pegar un hilo"}
-        </button>
+        </LinkButton>
       </div>
 
       <p className="text-micro text-[var(--acc)]/70 font-sans leading-tight">
@@ -314,13 +314,13 @@ export function ExampleThreadsSection({
             </div>
           ))}
 
-          <button
+          <LinkButton
+            size="xs"
             type="button"
             onClick={handleAddMessageRow}
-            className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
           >
             <Plus className="w-3 h-3" /> Añadir mensaje al hilo
-          </button>
+          </LinkButton>
 
           <div className="flex items-center gap-2">
             <span className="text-micro text-[var(--ink-2)] font-sans">

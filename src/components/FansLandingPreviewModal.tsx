@@ -9,7 +9,7 @@ import {
   FAN_FORM_TRANSLATIONS,
   interpolate,
 } from '../i18n/fansTranslations';
-import { Button } from './ui';
+import { Button, LinkButton } from './ui';
 
 interface FansLandingPreviewModalProps {
   isOpen: boolean;
@@ -349,13 +349,13 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0 inline-block" />
           <span className="truncate">{t('previewDisclaimer')}</span>
         </div>
-        <button
+        <LinkButton
           type="button"
           onClick={onClose}
-          className="text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold underline ml-2 shrink-0 cursor-pointer text-xs"
+          className="ml-2 shrink-0"
         >
           {t('previewClose')}
-        </button>
+        </LinkButton>
       </footer>
     </div>
   );

@@ -20,6 +20,7 @@ import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors
 import { api } from '../../../services/api';
 import { Onda } from '../../ui/Onda';
 import { ShowIcon } from '../../ui/ShowIcon';
+import { LinkButton } from '../../ui';
 
 export interface ModuleWidgetProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -56,14 +57,13 @@ export function CrmPipelineWidget({ leads = [], onNavigate }: ModuleWidgetProps)
           </div>
         </div>
         {onNavigate && (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('booking')}
-            className="text-xs text-[var(--acc-ink)] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver CRM</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         )}
       </div>
 
@@ -128,14 +128,13 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
           </div>
         </div>
         {onNavigate && (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('repertorio')}
-            className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver Temas</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         )}
       </div>
 
@@ -170,14 +169,13 @@ export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = fals
           </div>
         </div>
         {onNavigate && (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('finanzas')}
-            className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Finanzas</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         )}
       </div>
 
@@ -212,14 +210,13 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
           </div>
         </div>
         {onNavigate && (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('fans')}
-            className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver Fans</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         )}
       </div>
 
@@ -256,14 +253,13 @@ export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }
           </div>
         </div>
         {onNavigate && (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('epk')}
-            className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Editar EPK</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         )}
       </div>
 
@@ -302,14 +298,13 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
           </div>
         </div>
         {onNavigate && (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('booking')}
-            className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Agentes</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         )}
       </div>
 
@@ -339,14 +334,13 @@ export function TourStatusWidget({ tours = [], onNavigate, isStitchLight = false
           </div>
         </div>
         {onNavigate && (
-          <button
+          <LinkButton
             type="button"
             onClick={() => onNavigate('tour')}
-            className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver Giras</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </LinkButton>
         )}
       </div>
 

@@ -15,7 +15,7 @@ import {
   Megaphone,
   type LucideIcon,
 } from "lucide-react";
-import { Button, Input, Select } from '../ui';
+import { Button, Input, MenuItem, Select } from '../ui';
 import { Song, Setlist, SetlistShortcut } from "../../types";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 
@@ -192,14 +192,15 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                   </div>
                   <div className="grid grid-cols-1 gap-0.5">
                     {QUICK_EVENTS.map((ev) => (
-                      <button
+                      <MenuItem
+                        tone="muted"
+                        dense
                         key={ev.type}
                         type="button"
                         onClick={() => {
                           setShowEventMenu(false);
                           handleAddItemToSetlist(undefined, ev.type);
                         }}
-                        className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition flex items-center justify-between cursor-pointer"
                       >
                         <span className="flex items-center gap-2 font-medium">
                           <ev.Icon className="size-4 text-[var(--ink-2)]" aria-hidden="true" />
@@ -208,7 +209,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                         <span className="text-micro text-[var(--ink-2)]">
                           Añadir
                         </span>
-                      </button>
+                      </MenuItem>
                     ))}
                   </div>
                 </div>

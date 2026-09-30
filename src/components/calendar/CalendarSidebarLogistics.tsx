@@ -87,7 +87,7 @@ import { EventWeatherCard } from './EventWeatherCard';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton, Input, Select, Textarea } from '../ui';
+import { Button, IconButton, Input, LinkButton, Select, Textarea } from '../ui';
 
 export interface CalendarSidebarLogisticsProps {
   colors: ThemeColors;
@@ -843,15 +843,15 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         <span>QR Bolo y Captación Fans:</span>
                       </div>
                       {onNavigate && (
-                        <button
+                        <LinkButton
+                          size="xs"
                           type="button"
                           onClick={() => onNavigate('fans', { concertId: selectedConcert.id })}
-                          className="text-micro font-mono text-[var(--acc)]/90 hover:text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer font-bold"
                           title="Configurar el QR y la experiencia del fan para este concierto"
                         >
                           <Settings className="w-3 h-3 text-[var(--acc)]" />
                           <span>Configurar</span>
-                        </button>
+                        </LinkButton>
                       )}
                     </div>
 
@@ -1309,16 +1309,16 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         <span className="font-bold flex items-center gap-1 text-[var(--acc)] font-mono text-micro">
                           <Wrench className="w-3 h-3" /> 1. Logística técnica
                         </span>
-                        <button
+                        <LinkButton
+                          size="xs"
                           type="button"
                           onClick={() => {
                             setModalActiveTab('tecnica');
                             setShowEventFichaModal(true);
                           }}
-                          className="text-micro underline text-[var(--acc)] hover:text-[var(--acc)] font-mono cursor-pointer"
                         >
                           Editar completo →
-                        </button>
+                        </LinkButton>
                       </div>
                       <div className="grid grid-cols-2 gap-1.5 text-micro">
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
