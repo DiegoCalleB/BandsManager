@@ -2,6 +2,34 @@ import fs from "fs";
 import path from "path";
 import express from "express";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES, INITIAL_SOCIAL_METRICS, INITIAL_USERS, INITIAL_SONGS, INITIAL_SETLISTS, INITIAL_BANDS, INITIAL_TOURS } from "../src/db_seed.js";
+import {
+  HERDEIROS_BAND_ID,
+  MASTER_OF_PROMPTS_BAND_ID,
+  HERDEIROS_LEADS,
+  HERDEIROS_BANDS,
+  HERDEIROS_SONGS,
+  HERDEIROS_SETLISTS,
+  HERDEIROS_CONCERTS,
+  HERDEIROS_REHEARSALS,
+  HERDEIROS_TOURS,
+  HERDEIROS_PAYMENTS,
+  HERDEIROS_FANS,
+  HERDEIROS_POSTS,
+  HERDEIROS_METRICS,
+  HERDEIROS_EPK_CONFIG,
+  MOP_LEADS,
+  MOP_BANDS,
+  MOP_SONGS,
+  MOP_SETLISTS,
+  MOP_CONCERTS,
+  MOP_REHEARSALS,
+  MOP_TOURS,
+  MOP_PAYMENTS,
+  MOP_FANS,
+  MOP_POSTS,
+  MOP_METRICS,
+  MASTER_OF_PROMPTS_EPK_CONFIG
+} from "../src/data/mouredevBandsSeed.js";
 import { ACTIVE_SESSIONS, hashPassword, getUserFromRequest, createAuthMiddleware, createLeaderMiddleware, createCronOrAuthMiddleware } from "./auth.js";
 import { generateUniqueSlugId, slugify } from "./utils/slug.js";
 import { ensureCategoryTemplatesInState } from "./promptsManager.js";
@@ -197,7 +225,7 @@ const VERTICE_REGISTERED_BAND = {
   notas: "Banda principal asignada a usuario Admin"
 };
 
-export const MASTER_OF_PROMPTS_BAND_ID = "band-master-of-prompts";
+export { MASTER_OF_PROMPTS_BAND_ID, HERDEIROS_BAND_ID, MASTER_OF_PROMPTS_EPK_CONFIG };
 
 export const MASTER_OF_PROMPTS_REGISTERED_BAND = {
   id: "reg-master-of-prompts",
@@ -221,8 +249,6 @@ export const MASTER_OF_PROMPTS_REGISTERED_BAND = {
   notas: "Banda seria estilo Metallica con temática de ingeniería de software e Inteligencia Artificial."
 };
 
-export const HERDEIROS_BAND_ID = "band-os-herdeiros-do-codigo";
-
 export const HERDEIROS_REGISTERED_BAND = {
   id: "reg-os-herdeiros-do-codigo",
   band_id: HERDEIROS_BAND_ID,
@@ -241,34 +267,6 @@ export const HERDEIROS_REGISTERED_BAND = {
   logoUrl: "/images/logo_herdeiros_do_codigo.svg",
   logo_url: "/images/logo_herdeiros_do_codigo.svg",
   notas: "Banda rock bravú galaica de Brais Moure"
-};
-
-export const MASTER_OF_PROMPTS_EPK_CONFIG = {
-  biografia: "Master of Prompts es una apisonadora de Thrash Metal clásico forjada en A Coruña (Galicia). Con una estética implacable inspirada en la era dorada de Metallica (1986), afinaciones en Mi estándar y un virtuosismo rítmico a 210 BPM en downpicking estricto, la banda combina la potencia del metal pesado con líricas de ingeniería de software, arquitectura de compiladores y la rebelión de los modelos de inteligencia artificial.",
-  logoUrl: "/images/logo_master_of_prompts.svg",
-  bandPhotos: [
-    "/images/logo_master_of_prompts.svg"
-  ],
-  riderTecnico: "- 2 Cabezales Mesa Boogie Dual Rectifier a válvulas con pantallas 4x12 Celestion V30\n- 1 Cabezal Ampeg SVT-CL a válvulas con pantalla 8x10 para bajo + Línea DI Radial J48\n- Batería acústica profesional (Tama Starclassic / Pearl Masters) con DOBLE BOMBO de 22\", 3 toms y 2 goliaths\n- Micrófonos vocales dinámicos Shure Beta 58A con pie reforzado y cableado Klotz\n- 4 Envíos estéreo de monitores inalámbricos In-Ear (Sennheiser G4 IEM)\n- PA mínima requerida: 6000W RMS estéreo para salas y festivales",
-  enlacesRedes: {
-    spotify: "https://open.spotify.com/artist/mouredev",
-    youtube: "https://youtube.com/@mouredev",
-    instagram: "https://instagram.com/mouredev",
-    tiktok: "https://tiktok.com/@mouredev",
-    website: "https://moure.dev",
-    whatsapp: "+34688101010"
-  },
-  contactoBooking: {
-    nombre: "Brais Moure (Management & Booking)",
-    email: "mouredev@gmail.com",
-    telefono: "+34 688 101 010"
-  },
-  temasDestacadosIds: ["mop-song-1", "mop-song-2", "mop-song-3"],
-  incentivoFans: {
-    mensajeAgradecimiento: "¡Grazas por apoiar a Master of Prompts no concerto! Aquí tes a descarga do noso directo en formato FLAC de alta resolución.",
-    enlaceDescarga: "https://moure.dev/master-of-prompts-live.flac",
-    codigoDescuento: "PROMPT-METAL"
-  }
 };
 
 export function ensureBakandeyaBandId(state: any): boolean {
@@ -317,12 +315,22 @@ export function ensureBakandeyaBandId(state: any): boolean {
     }
   }
 
-  // Pre-cargar EPK de Master of Prompts
+  // Pre-cargar EPK de Master of Prompts y Os Herdeiros do Código
   if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
   if (!state.epkConfigsByBand['band-master-of-prompts']) {
     state.epkConfigsByBand['band-master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
     state.epkConfigsByBand['master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
     state.epkConfigsByBand['reg-master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
+    changed = true;
+  }
+  if (!state.epkConfigsByBand['band-os-herdeiros-do-codigo']) {
+    state.epkConfigsByBand['band-os-herdeiros-do-codigo'] = HERDEIROS_EPK_CONFIG;
+    state.epkConfigsByBand['os-herdeiros-do-codigo'] = HERDEIROS_EPK_CONFIG;
+    state.epkConfigsByBand['reg-os-herdeiros-do-codigo'] = HERDEIROS_EPK_CONFIG;
+    changed = true;
+  }
+
+  if (ensureMouredevBandsData(state)) {
     changed = true;
   }
 
@@ -571,6 +579,205 @@ export function ensureBakandeyaBandId(state: any): boolean {
   return changed;
 }
 
+export function ensureMouredevBandsData(state: any): boolean {
+  let changed = false;
+
+  if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
+  const epkHerdeirosKeys = [HERDEIROS_BAND_ID, 'os-herdeiros-do-codigo', 'reg-os-herdeiros-do-codigo'];
+  for (const k of epkHerdeirosKeys) {
+    if (!state.epkConfigsByBand[k] || !state.epkConfigsByBand[k].riderTecnico || state.epkConfigsByBand[k].riderTecnico.includes('por definir')) {
+      state.epkConfigsByBand[k] = HERDEIROS_EPK_CONFIG;
+      changed = true;
+    }
+  }
+
+  const epkMopKeys = [MASTER_OF_PROMPTS_BAND_ID, 'master-of-prompts', 'reg-master-of-prompts'];
+  for (const k of epkMopKeys) {
+    if (!state.epkConfigsByBand[k] || !state.epkConfigsByBand[k].riderTecnico || state.epkConfigsByBand[k].riderTecnico.includes('por definir')) {
+      state.epkConfigsByBand[k] = MASTER_OF_PROMPTS_EPK_CONFIG;
+      changed = true;
+    }
+  }
+
+  // Leads (Escenarios, Medios, Productoras)
+  if (!state.leads) state.leads = [];
+  const allMoureLeads = [...HERDEIROS_LEADS, ...MOP_LEADS];
+  for (const l of allMoureLeads) {
+    const existingIdx = state.leads.findIndex((el: any) => el.id === l.id);
+    if (existingIdx === -1) {
+      state.leads.push(l);
+      changed = true;
+    } else {
+      if (state.leads[existingIdx].band_id !== l.band_id || state.leads[existingIdx].tipo !== l.tipo) {
+        state.leads[existingIdx] = { ...state.leads[existingIdx], ...l };
+        changed = true;
+      }
+    }
+  }
+
+  // Bands (Bandas amigas / Directorio Grupos)
+  if (!state.bands) state.bands = [];
+  const allMoureBands = [...HERDEIROS_BANDS, ...MOP_BANDS];
+  for (const b of allMoureBands) {
+    const existingIdx = state.bands.findIndex((eb: any) => eb.id === b.id);
+    if (existingIdx === -1) {
+      state.bands.push(b);
+      changed = true;
+    } else {
+      if (state.bands[existingIdx].band_id !== b.band_id || state.bands[existingIdx].nombre_banda !== b.nombre_banda) {
+        state.bands[existingIdx] = { ...state.bands[existingIdx], ...b };
+        changed = true;
+      }
+    }
+  }
+
+  // Songs
+  if (!state.songs) state.songs = [];
+  const allMoureSongs = [...HERDEIROS_SONGS, ...MOP_SONGS];
+  for (const s of allMoureSongs) {
+    const existingIdx = state.songs.findIndex((es: any) => es.id === s.id);
+    if (existingIdx === -1) {
+      state.songs.push(s);
+      changed = true;
+    } else {
+      if (state.songs[existingIdx].band_id !== s.band_id || state.songs[existingIdx].titulo !== s.titulo) {
+        state.songs[existingIdx] = { ...state.songs[existingIdx], ...s };
+        changed = true;
+      }
+    }
+  }
+
+  // Setlists
+  if (!state.setlists) state.setlists = [];
+  const allMoureSetlists = [...HERDEIROS_SETLISTS, ...MOP_SETLISTS];
+  for (const sl of allMoureSetlists) {
+    const existingIdx = state.setlists.findIndex((esl: any) => esl.id === sl.id);
+    if (existingIdx === -1) {
+      state.setlists.push(sl);
+      changed = true;
+    } else {
+      if (state.setlists[existingIdx].band_id !== sl.band_id || state.setlists[existingIdx].nombre !== sl.nombre) {
+        state.setlists[existingIdx] = { ...state.setlists[existingIdx], ...sl };
+        changed = true;
+      }
+    }
+  }
+
+  // Concerts
+  if (!state.concerts) state.concerts = [];
+  const allMoureConcerts = [...HERDEIROS_CONCERTS, ...MOP_CONCERTS];
+  for (const c of allMoureConcerts) {
+    const existingIdx = state.concerts.findIndex((ec: any) => ec.id === c.id);
+    if (existingIdx === -1) {
+      state.concerts.push(c);
+      changed = true;
+    } else {
+      if (state.concerts[existingIdx].band_id !== c.band_id) {
+        state.concerts[existingIdx] = { ...state.concerts[existingIdx], ...c };
+        changed = true;
+      }
+    }
+  }
+
+  // Rehearsals
+  if (!state.rehearsals) state.rehearsals = [];
+  const allMoureRehearsals = [...HERDEIROS_REHEARSALS, ...MOP_REHEARSALS];
+  for (const r of allMoureRehearsals) {
+    const existingIdx = state.rehearsals.findIndex((er: any) => er.id === r.id);
+    if (existingIdx === -1) {
+      state.rehearsals.push(r);
+      changed = true;
+    } else {
+      if (state.rehearsals[existingIdx].band_id !== r.band_id) {
+        state.rehearsals[existingIdx] = { ...state.rehearsals[existingIdx], ...r };
+        changed = true;
+      }
+    }
+  }
+
+  // Tours
+  if (!state.tours) state.tours = [];
+  const allMoureTours = [...HERDEIROS_TOURS, ...MOP_TOURS];
+  for (const t of allMoureTours) {
+    const existingIdx = state.tours.findIndex((et: any) => et.id === t.id);
+    if (existingIdx === -1) {
+      state.tours.push(t);
+      changed = true;
+    } else {
+      if (state.tours[existingIdx].band_id !== t.band_id) {
+        state.tours[existingIdx] = { ...state.tours[existingIdx], ...t };
+        changed = true;
+      }
+    }
+  }
+
+  // Payments
+  if (!state.payments) state.payments = [];
+  const allMourePayments = [...HERDEIROS_PAYMENTS, ...MOP_PAYMENTS];
+  for (const p of allMourePayments) {
+    const existingIdx = state.payments.findIndex((ep: any) => ep.id === p.id);
+    if (existingIdx === -1) {
+      state.payments.push(p);
+      changed = true;
+    } else {
+      if (state.payments[existingIdx].band_id !== p.band_id) {
+        state.payments[existingIdx] = { ...state.payments[existingIdx], ...p };
+        changed = true;
+      }
+    }
+  }
+
+  // Fans
+  if (!state.fans) state.fans = [];
+  const allMoureFans = [...HERDEIROS_FANS, ...MOP_FANS];
+  for (const f of allMoureFans) {
+    const existingIdx = state.fans.findIndex((ef: any) => ef.id === f.id);
+    if (existingIdx === -1) {
+      state.fans.push(f);
+      changed = true;
+    } else {
+      if (state.fans[existingIdx].band_id !== f.band_id) {
+        state.fans[existingIdx] = { ...state.fans[existingIdx], ...f };
+        changed = true;
+      }
+    }
+  }
+
+  // Posts
+  if (!state.posts) state.posts = [];
+  const allMourePosts = [...HERDEIROS_POSTS, ...MOP_POSTS];
+  for (const po of allMourePosts) {
+    const existingIdx = state.posts.findIndex((epo: any) => epo.id === po.id);
+    if (existingIdx === -1) {
+      state.posts.push(po);
+      changed = true;
+    } else {
+      if (state.posts[existingIdx].band_id !== po.band_id) {
+        state.posts[existingIdx] = { ...state.posts[existingIdx], ...po };
+        changed = true;
+      }
+    }
+  }
+
+  // Metrics
+  if (!state.metrics) state.metrics = [];
+  const allMoureMetrics = [...HERDEIROS_METRICS, ...MOP_METRICS];
+  for (const me of allMoureMetrics) {
+    const existingIdx = state.metrics.findIndex((eme: any) => eme.id === me.id);
+    if (existingIdx === -1) {
+      state.metrics.push(me);
+      changed = true;
+    } else {
+      if (state.metrics[existingIdx].band_id !== me.band_id) {
+        state.metrics[existingIdx] = { ...state.metrics[existingIdx], ...me };
+        changed = true;
+      }
+    }
+  }
+
+  return changed;
+}
+
 export function ensureValidUserEmails(state: any): boolean {
   let changed = false;
   if (!state.users || !Array.isArray(state.users)) return false;
@@ -635,7 +842,7 @@ export function ensureUniqueIdsInState(state: any): boolean {
         } else if (colKey === 'bands') {
           const bId = cleanBidStr(item.band_id || item.id || '');
           const bName = (item.nombre_banda || '').trim().toLowerCase();
-          key = bName ? `band:${bName}` : (bId || item.id || `b-${idx}`);
+          key = bName ? `band:${bName}:${bid}` : (bId || item.id || `b-${idx}`);
         } else if (colKey === 'userBands') {
           key = `ub:${item.user_id}:${item.band_id}`;
         } else if (colKey === 'users') {
@@ -646,36 +853,36 @@ export function ensureUniqueIdsInState(state: any): boolean {
           const femail = (item.email || '').trim().toLowerCase();
           const fname = (item.nombre || '').trim().toLowerCase();
           const fciudad = (item.ciudad || '').trim().toLowerCase();
-          key = femail ? `fan:email:${femail}` : (fname && fciudad ? `fan:${fname}:${fciudad}` : (item.id || `fan-${idx}`));
+          key = femail ? `fan:email:${femail}:${bid}` : (fname && fciudad ? `fan:${fname}:${fciudad}:${bid}` : (item.id || `fan-${idx}`));
         } else if (colKey === 'leads') {
           const lsala = (item.nombre_sala || '').trim().toLowerCase();
           const lciudad = (item.ciudad || '').trim().toLowerCase();
           const lemail = (item.email_contacto || '').trim().toLowerCase();
-          key = lemail ? `lead:email:${lemail}` : (lsala && lciudad ? `lead:${lsala}:${lciudad}` : (item.id || `lead-${idx}`));
+          key = lemail ? `lead:email:${lemail}:${bid}` : (lsala && lciudad ? `lead:${lsala}:${lciudad}:${bid}` : (item.id || `lead-${idx}`));
         } else if (colKey === 'concerts') {
           const cfecha = (item.fecha || '').trim();
           const csala = (item.sala || item.nombre || '').trim().toLowerCase();
-          key = cfecha && csala ? `concert:${cfecha}:${csala}` : (item.id || `concert-${idx}`);
+          key = cfecha && csala ? `concert:${cfecha}:${csala}:${bid}` : (item.id || `concert-${idx}`);
         } else if (colKey === 'rehearsals') {
           const rfecha = (item.fecha || '').trim();
           const rlugar = (item.lugar || item.titulo || '').trim().toLowerCase();
-          key = rfecha && rlugar ? `rehearsal:${rfecha}:${rlugar}` : (item.id || `rehearsal-${idx}`);
+          key = rfecha && rlugar ? `rehearsal:${rfecha}:${rlugar}:${bid}` : (item.id || `rehearsal-${idx}`);
         } else if (colKey === 'posts') {
           const pfecha = (item.fecha || '').trim();
           const ptitle = (item.titulo || item.caption || '').trim().toLowerCase();
-          key = ptitle ? `post:${ptitle}` : (item.id || `post-${idx}`);
+          key = ptitle ? `post:${ptitle}:${bid}` : (item.id || `post-${idx}`);
         } else if (colKey === 'payments') {
           const pconc = (item.concepto || '').trim().toLowerCase();
           const pfecha = (item.fecha || '').trim();
-          const pmonto = String(item.monto || item.cantidad || 0);
-          key = pconc && pfecha ? `payment:${pfecha}:${pconc}:${pmonto}` : (item.id || `payment-${idx}`);
+          const pmonto = String(item.monto || item.cantidad || item.importe || 0);
+          key = pconc && pfecha ? `payment:${pfecha}:${pconc}:${pmonto}:${bid}` : (item.id || `payment-${idx}`);
         } else if (colKey === 'metrics') {
           const mfecha = (item.fecha || '').trim();
           const mplat = (item.plataforma || '').trim().toLowerCase();
-          key = mfecha && mplat ? `metric:${mfecha}:${mplat}` : (item.id || `metric-${idx}`);
+          key = mfecha && mplat ? `metric:${mfecha}:${mplat}:${bid}` : (item.id || `metric-${idx}`);
         } else if (colKey === 'tours') {
           const tname = (item.nombre || '').trim().toLowerCase();
-          key = tname ? `tour:${tname}` : (item.id || `tour-${idx}`);
+          key = tname ? `tour:${tname}:${bid}` : (item.id || `tour-${idx}`);
         } else {
           key = item.id || `${colKey}-${idx}`;
         }
