@@ -7,9 +7,70 @@ import {
   Message,
   SocialMetric,
   Tour,
+  Song,
+  Setlist,
 } from "./types";
+import {
+  HERDEIROS_BAND_ID,
+  MASTER_OF_PROMPTS_BAND_ID,
+  HERDEIROS_LEADS,
+  HERDEIROS_BANDS,
+  HERDEIROS_SONGS,
+  HERDEIROS_SETLISTS,
+  HERDEIROS_CONCERTS,
+  HERDEIROS_REHEARSALS,
+  HERDEIROS_TOURS,
+  HERDEIROS_PAYMENTS,
+  HERDEIROS_FANS,
+  HERDEIROS_POSTS,
+  HERDEIROS_METRICS,
+  HERDEIROS_EPK_CONFIG,
+  MOP_LEADS,
+  MOP_BANDS,
+  MOP_SONGS,
+  MOP_SETLISTS,
+  MOP_CONCERTS,
+  MOP_REHEARSALS,
+  MOP_TOURS,
+  MOP_PAYMENTS,
+  MOP_FANS,
+  MOP_POSTS,
+  MOP_METRICS,
+  MASTER_OF_PROMPTS_EPK_CONFIG,
+} from "./data/mouredevBandsSeed.js";
+
+export {
+  HERDEIROS_BAND_ID,
+  MASTER_OF_PROMPTS_BAND_ID,
+  HERDEIROS_LEADS,
+  HERDEIROS_BANDS,
+  HERDEIROS_SONGS,
+  HERDEIROS_SETLISTS,
+  HERDEIROS_CONCERTS,
+  HERDEIROS_REHEARSALS,
+  HERDEIROS_TOURS,
+  HERDEIROS_PAYMENTS,
+  HERDEIROS_FANS,
+  HERDEIROS_POSTS,
+  HERDEIROS_METRICS,
+  HERDEIROS_EPK_CONFIG,
+  MOP_LEADS,
+  MOP_BANDS,
+  MOP_SONGS,
+  MOP_SETLISTS,
+  MOP_CONCERTS,
+  MOP_REHEARSALS,
+  MOP_TOURS,
+  MOP_PAYMENTS,
+  MOP_FANS,
+  MOP_POSTS,
+  MOP_METRICS,
+  MASTER_OF_PROMPTS_EPK_CONFIG,
+};
 
 export const INITIAL_LEADS: Lead[] = [
+  ...HERDEIROS_LEADS,
+  ...MOP_LEADS,
   {
     id: "lead-1",
     nombre_sala: "Apolo",
@@ -758,6 +819,8 @@ Bakandeya Agent Manager IA`,
 ];
 
 export const INITIAL_REHEARSALS: Rehearsal[] = [
+  ...HERDEIROS_REHEARSALS,
+  ...MOP_REHEARSALS,
   {
     id: "reh-1",
     fecha: "2026-07-11",
@@ -819,6 +882,8 @@ export const INITIAL_REHEARSALS: Rehearsal[] = [
 ];
 
 export const INITIAL_CONCERTS: Concert[] = [
+  ...HERDEIROS_CONCERTS,
+  ...MOP_CONCERTS,
   {
     id: "con-1",
     fecha: "2026-07-18",
@@ -1004,6 +1069,8 @@ export const INITIAL_CONCERTS: Concert[] = [
 ];
 
 export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
+  ...HERDEIROS_POSTS,
+  ...MOP_POSTS,
   {
     id: "post-1",
     fecha: "2026-07-10",
@@ -1070,6 +1137,8 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
 ];
 
 export const INITIAL_PAYMENTS: Payment[] = [
+  ...HERDEIROS_PAYMENTS,
+  ...MOP_PAYMENTS,
   {
     id: "pay-1",
     tipo: "ingreso",
@@ -1188,6 +1257,8 @@ export const INITIAL_MESSAGES: Message[] = [
 ];
 
 export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
+  ...HERDEIROS_METRICS,
+  ...MOP_METRICS,
   {
     id: "metric-1",
     fecha: "2025-03-01",
@@ -1471,6 +1542,7 @@ export const INITIAL_USERS = [
 ];
 
 export const INITIAL_SONGS = [
+  ...HERDEIROS_SONGS,
   {
     id: "song-cm-1",
     band_id: "band-bakandeya",
@@ -1706,239 +1778,12 @@ export const INITIAL_SONGS = [
     audioUrl: "/audio/samples/sample_05_cierre_triunfal.mp3",
     notasInternas: "Versión acelerada adaptada a vientos y ritmo ska-rock.",
   },
-  {
-    id: "mop-song-1",
-    band_id: "band-master-of-prompts",
-    titulo: "Mestre de Puppets",
-    duracion: "8:36",
-    duracionSegundos: 516,
-    tonalidad: "Em",
-    bpm: 212,
-    energia: 18,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_03_fuego_asfalto.mp3",
-    audioUrl: "/audio/samples/sample_03_fuego_asfalto.mp3",
-    notasInternas:
-      "Rítmicas demoledoras en downpicking constante a 212 BPM. Homenaje gallego a Master of Puppets criticando la dependencia ciega de frameworks y dependencias npm.",
-  },
-  {
-    id: "mop-song-2",
-    band_id: "band-master-of-prompts",
-    titulo: "Grep & Destroy",
-    duracion: "6:55",
-    duracionSegundos: 415,
-    tonalidad: "Em",
-    bpm: 204,
-    energia: 19,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_05_cierre_triunfal.mp3",
-    audioUrl: "/audio/samples/sample_05_cierre_triunfal.mp3",
-    notasInternas:
-      "Himno thrash veloz. Rastreo por regex en terminal y aniquilación de procesos zombies.",
-  },
-  {
-    id: "mop-song-3",
-    band_id: "band-master-of-prompts",
-    titulo: "Cabalga o Lóstrego",
-    duracion: "6:36",
-    duracionSegundos: 396,
-    tonalidad: "F#m",
-    bpm: 160,
-    energia: 15,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_01_groove_apertura.mp3",
-    audioUrl: "/audio/samples/sample_01_groove_apertura.mp3",
-    notasInternas:
-      "Riffs inspirados en Ride the Lightning. Clusters masivos de GPUs entrenando bajo temporal en Fisterra y A Coruña.",
-  },
-  {
-    id: "mop-song-4",
-    band_id: "band-master-of-prompts",
-    titulo: "Enter Daemon",
-    duracion: "5:31",
-    duracionSegundos: 331,
-    tonalidad: "Em",
-    bpm: 123,
-    energia: 13,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_03_fuego_asfalto.mp3",
-    audioUrl: "/audio/samples/sample_03_fuego_asfalto.mp3",
-    notasInternas:
-      "Riff pesado con pedal wah-wah de Kirk. Procesos demoníacos que corren en background de Linux en la oscuridad.",
-  },
-  {
-    id: "mop-song-5",
-    band_id: "band-master-of-prompts",
-    titulo: "Por Quen Dobra o Kernel",
-    duracion: "5:09",
-    duracionSegundos: 309,
-    tonalidad: "Em",
-    bpm: 118,
-    energia: 11,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_02_balada_medianoche.mp3",
-    audioUrl: "/audio/samples/sample_02_balada_medianoche.mp3",
-    notasInternas:
-      "Campanas de iglesia medieval seguidas por un riff marcial fúnebre ante un Kernel Panic irreversible.",
-  },
-  {
-    id: "mop-song-6",
-    band_id: "band-master-of-prompts",
-    titulo: "Fade to Dark Mode",
-    duracion: "6:56",
-    duracionSegundos: 416,
-    tonalidad: "Bm",
-    bpm: 144,
-    energia: 6,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_04_brisa_mediterranea.mp3",
-    audioUrl: "/audio/samples/sample_04_brisa_mediterranea.mp3",
-    notasInternas:
-      "Arpegios limpios de guitarra acústica sobre la soledad del programador nocturno a las 4:00 AM ante el editor OLED.",
-  },
-  {
-    id: "mop-song-7",
-    band_id: "band-master-of-prompts",
-    titulo: "The Unhandled Exception",
-    duracion: "6:27",
-    duracionSegundos: 387,
-    tonalidad: "Am",
-    bpm: 138,
-    energia: 9,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_02_balada_medianoche.mp3",
-    audioUrl: "/audio/samples/sample_02_balada_medianoche.mp3",
-    notasInternas:
-      "Medio tiempo melancólico y pesado sobre bugs en producción que ningún try/catch pudo interceptar.",
-  },
-  {
-    id: "mop-song-8",
-    band_id: "band-master-of-prompts",
-    titulo: "Deadlock Terminal",
-    duracion: "6:36",
-    duracionSegundos: 396,
-    tonalidad: "Em",
-    bpm: 198,
-    energia: 20,
-    energiaManual: true,
-    afinacion: "E Standard",
-    albumDisco: "Master of Prompts (2026)",
-    estadoTema: "listo",
-    esVersionCovers: false,
-    audioPrincipalUrl: "/audio/samples/sample_05_cierre_triunfal.mp3",
-    audioUrl: "/audio/samples/sample_05_cierre_triunfal.mp3",
-    notasInternas:
-      "Dos hilos de ejecución bloqueados eternamente disputándose el mismo recurso. Final apoteósico a doble bombo.",
-  },
+  ...MOP_SONGS,
 ];
 
 export const INITIAL_SETLISTS = [
-  {
-    id: "mop-setlist-1",
-    band_id: "band-master-of-prompts",
-    nombre: "Directo Resurrection Fest 2026 (45 min)",
-    descripcion: "Ataque frontal a piñón fijo para festivales metaleros",
-    tipoFormato: "festival",
-    duracionTotalEstimadaMinutos: 45,
-    fechaCreacion: "2026-03-01",
-    fechaUltimaEdicion: "2026-08-01",
-    items: [
-      {
-        id: "mop-item-1",
-        songId: "mop-song-1",
-        tipoItem: "cancion",
-        notaTema: "Entrada brutal con downpicking a 212 BPM",
-      },
-      {
-        id: "mop-item-2",
-        songId: "mop-song-2",
-        tipoItem: "cancion",
-        notaTema: "Empalmar batería sin tregua",
-      },
-      {
-        id: "mop-item-3",
-        songId: "mop-song-4",
-        tipoItem: "cancion",
-        notaTema: "Solo con wah-wah desatado",
-      },
-      {
-        id: "mop-item-4",
-        tipoItem: "chapa",
-        tituloCustom: "Presentación de la banda & Saludo a Galicia",
-        duracionEstimadaMinutos: 2,
-      },
-      {
-        id: "mop-item-5",
-        songId: "mop-song-3",
-        tipoItem: "cancion",
-        notaTema: "Clímax eléctrico",
-      },
-      {
-        id: "mop-item-6",
-        songId: "mop-song-8",
-        tipoItem: "cancion",
-        notaTema: "Mosh pit final con doble bombo",
-      },
-    ],
-  },
-  {
-    id: "mop-setlist-2",
-    band_id: "band-master-of-prompts",
-    nombre: "Gira Gallega de Salas (75 min)",
-    descripcion: "Setlist completo con interludio acústico y solos extendidos",
-    tipoFormato: "sala_larga",
-    duracionTotalEstimadaMinutos: 75,
-    fechaCreacion: "2026-04-10",
-    fechaUltimaEdicion: "2026-07-20",
-    items: [
-      { id: "mop-item-10", songId: "mop-song-1", tipoItem: "cancion" },
-      { id: "mop-item-11", songId: "mop-song-5", tipoItem: "cancion" },
-      { id: "mop-item-12", songId: "mop-song-7", tipoItem: "cancion" },
-      {
-        id: "mop-item-13",
-        tipoItem: "paron",
-        tituloCustom: "Interludio / Solo de bajo Cliff Burton",
-        duracionEstimadaMinutos: 4,
-      },
-      {
-        id: "mop-item-14",
-        songId: "mop-song-6",
-        tipoItem: "cancion",
-        notaTema: "Bloque acústico a Fade to Dark Mode",
-      },
-      { id: "mop-item-15", songId: "mop-song-3", tipoItem: "cancion" },
-      { id: "mop-item-16", songId: "mop-song-2", tipoItem: "cancion" },
-      { id: "mop-item-17", songId: "mop-song-8", tipoItem: "cancion" },
-    ],
-  },
+  ...HERDEIROS_SETLISTS,
+  ...MOP_SETLISTS,
   {
     id: "setlist-1",
     band_id: "band-bakandeya",
@@ -2034,14 +1879,9 @@ export const INITIAL_SETLISTS = [
   },
 ];
 
-export const MOP_SONGS = INITIAL_SONGS.filter(
-  (s) => s.band_id === "band-master-of-prompts",
-);
-export const MOP_SETLISTS = INITIAL_SETLISTS.filter(
-  (s) => s.band_id === "band-master-of-prompts",
-);
-
 export const INITIAL_BANDS: any[] = [
+  ...HERDEIROS_BANDS,
+  ...MOP_BANDS,
   {
     id: "band-1",
     nombre_banda: "La Señora Tomasa",
@@ -2096,6 +1936,8 @@ export const INITIAL_BANDS: any[] = [
 ];
 
 export const INITIAL_TOURS: Tour[] = [
+  ...HERDEIROS_TOURS,
+  ...MOP_TOURS,
   {
     id: "tour-1",
     nombre: "Gira Primavera Peninsular 2026",
