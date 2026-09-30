@@ -30,6 +30,7 @@ import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { FinanceSummaryCards } from "./finanzas/FinanceSummaryCards";
 import { AddTransactionModal } from "./finanzas/AddTransactionModal";
 import { calculateFinancialSummary } from "../utils/financeUtils";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface FinanzasProps {
   colors: ThemeColors;
@@ -596,7 +597,7 @@ export default function Finanzas({
                             </span>
                             {c.giraNombre && (
                               <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink-2)] font-sans">
-                                🚐 {c.giraNombre}
+                                <ShowIcon inline emoji="🚐" />{c.giraNombre}
                               </span>
                             )}
                           </td>
@@ -612,11 +613,11 @@ export default function Finanzas({
                                 className="inline-block mt-0.5 text-micro text-[var(--tentative)]/80 bg-[var(--tentative)]/10 px-1.5 py-0.2 rounded font-sans"
                                 title={c.convocados_nombres?.join(",")}
                               >
-                                👤 Parcial ({numConvocados} miembros)
+                                <ShowIcon inline emoji="👤" />Parcial ({numConvocados} miembros)
                               </span>
                             ) : (
                               <span className="inline-block mt-0.5 text-micro text-[var(--ok)]/80 font-sans">
-                                👥 Banda completa
+                                <ShowIcon inline emoji="👥" />Banda completa
                               </span>
                             )}
                           </td>
@@ -859,7 +860,7 @@ export default function Finanzas({
                       }
                       setEditingConcertId(null);
                     }}
-                    className="px-4 py-2 bg-[var(--acc)] text-[var(--ink)] text-xs font-bold rounded-[var(--r-m)]"
+                    className="px-4 py-2 bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-m)]"
                   >
                     Guardar Gastos
                   </button>

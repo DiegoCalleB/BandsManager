@@ -103,7 +103,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               onClick={() => setActiveTab('blueprint')}
               className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'blueprint'
-                  ? 'bg-[var(--acc)] text-[var(--ink)]'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
               }`}
             >
@@ -115,7 +115,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               onClick={() => setActiveTab('channels')}
               className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'channels'
-                  ? 'bg-[var(--acc)] text-[var(--ink)]'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
               }`}
             >
@@ -127,7 +127,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               onClick={() => setActiveTab('pillars')}
               className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'pillars'
-                  ? 'bg-[var(--acc)] text-[var(--ink)]'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
               }`}
             >
@@ -205,7 +205,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       onClick={() => setSelectedChannel(platform)}
                       className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
-                          ? 'bg-[var(--acc)] text-[var(--ink)]'
+                          ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                           : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                       }`}
                     >
@@ -350,7 +350,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-ui cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer"
             >
               Cerrar & Empezar
             </button>

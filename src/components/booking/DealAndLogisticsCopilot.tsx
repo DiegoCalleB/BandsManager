@@ -82,7 +82,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
     if (text.includes('cerrada') || text.includes('llena') || text.includes('completa') || text.includes('temporada')) {
       return {
         tone: 'closed_schedule',
-        label: 'Agenda de temporada cerrada ⏳',
+        label: 'Agenda de temporada cerrada',
         color: 'text-[var(--acc)] bg-[var(--acc)]/10 ',
         tactic:
           'No insistas para esta temporada. Agradece la respuesta y pide fecha exacta de apertura del próximo trimestre para entrar los primeros.',
@@ -101,7 +101,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
     ) {
       return {
         tone: 'budget_concern',
-        label: 'Objeción económica / Caché 💰',
+        label: 'Objeción económica / Caché',
         color: 'text-[var(--acc)] bg-[var(--acc)]/10 ',
         tactic: 'Ofrece pasar a formato mixto (fijo mínimo + taquilla compartida) o proponer fecha doble con banda local amiga.',
         suggestedSubject: `Re: Adaptación de propuesta económica para ${lead.nombre_sala}`,
@@ -119,7 +119,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
     ) {
       return {
         tone: 'hot_lead',
-        label: 'Interés Alto / Caliente 🔥',
+        label: 'Interés Alto / Caliente',
         color: 'text-[var(--ok)] bg-[var(--ok)]/10 ',
         tactic: 'Cierra fecha ya mismo: pide un hold de 48h, envía el rider y pacta el horario de prueba de sonido.',
         suggestedSubject: `Re: Confirmación de detalles y pre-reserva - ${lead.nombre_sala}`,
@@ -129,7 +129,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
 
     return {
       tone: 'open_reply',
-      label: 'Conversación en curso 💬',
+      label: 'Conversación en curso',
       color: 'text-[var(--acc)] bg-[var(--acc)]/10 ',
       tactic: 'Responde aclarando las dudas técnicas y manteniendo la iniciativa con una llamada a la acción clara.',
       suggestedSubject: `Re: Detalles concierto Bakandeya en ${lead.nombre_sala}`,
@@ -216,7 +216,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 : 'bg-[var(--acc)]/15 text-[var(--acc)]'
             }`}
           >
-            {isBreakEvenFeasible ? '✅ Bolo Viable' : '⚠️ Requiere >60% Aforo'}
+            {isBreakEvenFeasible ? 'Bolo Viable' : 'Requiere >60% Aforo'}
           </span>
         </div>
 

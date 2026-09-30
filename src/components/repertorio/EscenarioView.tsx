@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 const SILENT_AUDIO_URI =
   "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
@@ -344,7 +345,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   ) : null}
                   {isCrossfading && nextStageSong && (
                     <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro bg-[var(--acc)]/20 text-[var(--acc)] font-bold flex items-center gap-1">
-                      🔀 Fundiendo → {formatSongTitle(nextStageSong.titulo)}
+                      <ShowIcon inline emoji="🔀" />Fundiendo → {formatSongTitle(nextStageSong.titulo)}
                     </span>
                   )}
                 </div>
@@ -512,7 +513,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                     : "Fundido entre canciones desactivado (corte directo)"
                 }
               >
-                🔀
+                <ShowIcon inline emoji="🔀" />
               </button>
             </div>
           </div>
@@ -580,7 +581,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                 <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
                   <span className="font-bold text-[var(--ink)]">
-                    🦶 Pista Siguiente:
+                    <ShowIcon inline emoji="🦶" />Pista Siguiente:
                   </span>{" "}
                   <code className="bg-[var(--surface)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">
                     PageDown
@@ -596,7 +597,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 </div>
                 <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
                   <span className="font-bold text-[var(--ink)]">
-                    🦶 Pista Anterior:
+                    <ShowIcon inline emoji="🦶" />Pista Anterior:
                   </span>{" "}
                   <code className="bg-[var(--surface)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">
                     PageUp
@@ -612,7 +613,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 </div>
                 <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
                   <span className="font-bold text-[var(--ink)]">
-                    🦶 Play / Pausa:
+                    <ShowIcon inline emoji="🦶" />Play / Pausa:
                   </span>{" "}
                   <code className="bg-[var(--surface)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">
                     Barra Espaciadora
@@ -651,7 +652,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 <span>
                   {showChordsPanel
                     ? "Ocultar Letra/Acordes"
-                    : "📜 Letra y Acordes en Directo"}
+                    : "Letra y Acordes en Directo"}
                 </span>
               </button>
             </div>
@@ -760,7 +761,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               {currentStageSong?.notasRepertorio && (
                 <div className="p-2.5 rounded bg-[var(--bg)]/80 text-xs font-sans text-[var(--ink)]/90">
                   <span className="font-bold text-[var(--acc)]">
-                    💡 Nota de directo:
+                    <ShowIcon inline emoji="💡" />Nota de directo:
                   </span>{" "}
                   {currentStageSong.notasRepertorio}
                 </div>
@@ -844,7 +845,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                         </div>
                         {it.notaTema && (
                           <div className="text-xs font-sans text-[var(--acc)] mt-0.5 flex items-center gap-1">
-                            <span>⚠️</span>
+                            <span><ShowIcon inline emoji="⚠️" /></span>
                             <span>{it.notaTema}</span>
                           </div>
                         )}
@@ -874,7 +875,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       key={it.id}
                       className="py-3 px-4 bg-[var(--ok)]/20  rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs flex items-center gap-2 my-2"
                     >
-                      <span className="text-sm">⚡</span>
+                      <span className="text-sm"><ShowIcon inline emoji="⚡" /></span>
                       <span>{it.tituloCustom || "SECCIÓN DEL SHOW"}</span>
                     </div>
                   );
@@ -912,7 +913,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                           }}
                           className={`w-8 h-8 rounded-[var(--r-pill)] flex items-center justify-center cursor-pointer transition-ui ${
                             isPlayingThis
-                              ? "bg-[var(--acc)] text-[var(--ink)] font-bold scale-105"
+                              ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
                               : "bg-[var(--surface)] text-[var(--acc)] hover:bg-[var(--acc)] hover:text-[var(--ink)]"
                           }`}
                           title={
@@ -936,7 +937,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm font-bold font-sans text-[var(--ink)]">
-                              {typeConfig.icon}{" "}
+                              <ShowIcon inline emoji={typeConfig.icon} />{" "}
                               {it.tituloCustom ||
                                 "Interludio / Evento del Show"}
                             </span>
@@ -948,7 +949,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                           </div>
                           {it.notaTema && (
                             <div className="text-micro font-sans text-[var(--ink-2)] mt-0.5">
-                              📝 {it.notaTema}
+                              <ShowIcon inline emoji="📝" />{it.notaTema}
                             </div>
                           )}
                         </div>
@@ -983,7 +984,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       </div>
 
                       <div className="col-span-2 text-right font-sans text-xs text-[var(--acc)]/70 font-bold">
-                        ⏱️ {durationText}
+                        <ShowIcon inline emoji="⏱️" />{durationText}
                       </div>
                     </div>
                   );

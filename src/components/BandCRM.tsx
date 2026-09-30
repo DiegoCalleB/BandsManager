@@ -64,6 +64,7 @@ import {
   BulkProgressItem,
 } from "./booking/BulkProgressModal";
 import { AddEditBandModal } from "./bandCRM/AddEditBandModal";
+import { ShowIcon } from './ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1377,19 +1378,19 @@ Bakandeya Agent Manager IA & Músicos`;
                   }
                   className="bg-[var(--sunken)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-micro font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
                 >
-                  <option value="todos">🤝 Todos los Estados</option>
-                  <option value="colegas_aliados">🤝 Colegas / Aliados</option>
+                  <option value="todos">Todos los Estados</option>
+                  <option value="colegas_aliados">Colegas / Aliados</option>
                   <option value="concierto_agendado">
-                    ⚡ Concierto Agendado
+                    Concierto Agendado
                   </option>
                   <option value="intercambio_propuesto">
-                    🔄 Intercambio Propuesto
+                    Intercambio Propuesto
                   </option>
                   <option value="pendiente_respuesta">
-                    ⏳ Pendiente Respuesta
+                    Pendiente Respuesta
                   </option>
-                  <option value="sin_contactar">📡 Sin Contactar</option>
-                  <option value="no_disponible">❌ No Disponible</option>
+                  <option value="sin_contactar">Sin Contactar</option>
+                  <option value="no_disponible">No Disponible</option>
                 </select>
 
                 {/* Location Filter Dropdown */}
@@ -1399,7 +1400,7 @@ Bakandeya Agent Manager IA & Músicos`;
                   onChange={(e) => setLocationFilter(e.target.value)}
                   className="bg-[var(--sunken)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-micro font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer max-w-[160px] truncate"
                 >
-                  <option value="todos">📍 Todas las Ciudades</option>
+                  <option value="todos">Todas las Ciudades</option>
                   {availableLocations.map((loc) => (
                     <option key={loc} value={loc}>
                       {loc}

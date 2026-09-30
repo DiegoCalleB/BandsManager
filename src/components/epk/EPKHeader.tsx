@@ -134,7 +134,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             <button
               type="button"
               onClick={onSave}
-              className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition active:scale-[0.97] cursor-pointer"
+              className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition active:scale-[0.97] cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Guardar</span>
@@ -365,7 +365,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={onSave}
-            className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs sm:text-sm rounded-[var(--r-m)] flex items-center gap-2 transition cursor-pointer"
+            className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs sm:text-sm rounded-[var(--r-m)] flex items-center gap-2 transition cursor-pointer"
           >
             <Save className="w-4 h-4" />
             <span>Guardar Cambios</span>
@@ -529,7 +529,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               onClick={() => onSelectBlock(block.id)}
               className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
                 isActive
-                  ? "bg-[var(--acc)] text-[var(--ink)] font-bold"
+                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                   : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
               }`}
             >

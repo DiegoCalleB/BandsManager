@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
 import { api } from '../../../services/api';
+import { ShowIcon } from '../../ui/ShowIcon';
 
 export interface ModuleWidgetProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -274,7 +275,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }
           rel="noopener noreferrer"
           className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-sans text-xs font-bold hover:bg-[var(--tentative)]/30 transition-ui"
         >
-          Ver EPK Vivo ↗
+          Ver EPK Vivo <ShowIcon inline emoji="↗" />
         </a>
       </div>
     </div>

@@ -849,7 +849,7 @@ export function DashboardWidgetGrid({
                       className={`px-3.5 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold transition-ui shrink-0 flex items-center gap-1 ${
                         isAlreadyAdded
                           ? "bg-[var(--surface)] text-[var(--ink-2)] cursor-default"
-                          : "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-[0.97]"
+                          : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] cursor-pointer active:scale-[0.97]"
                       }`}
                     >
                       {isAlreadyAdded ? (

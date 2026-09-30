@@ -19,6 +19,7 @@ import {
   MessageSquare,
   ShieldAlert,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface BulkLeadsActionBarProps {
   selectedCount: number;
@@ -340,7 +341,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-xs text-[var(--ink)] font-sans">
-              ⚠️ Se borrarán definitivamente {selectedCount} elementos del CRM.
+              <ShowIcon inline emoji="⚠️" />Se borrarán definitivamente {selectedCount} elementos del CRM.
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-2800/80">
@@ -357,7 +358,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
                   setIsConfirmDeleteOpen(false);
                   onBulkDelete();
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] transition-colors cursor-pointer"
               >
                 Sí, eliminar {selectedCount}
               </button>

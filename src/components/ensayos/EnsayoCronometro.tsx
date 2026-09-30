@@ -164,8 +164,8 @@ export function EnsayoCronometro({
             onClick={toggleTimer}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isActive
-                ? "bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60"
-                : "bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]"
+                ? "bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60"
+                : "bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)]"
             }`}
           >
             {isActive ? (

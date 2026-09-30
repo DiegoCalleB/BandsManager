@@ -27,6 +27,7 @@ import {
   ChevronRight,
   Briefcase,
 } from 'lucide-react';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface MorningBriefingRadarProps {
   leads: Lead[];
@@ -247,7 +248,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 Morning Briefing • Radar del Mánager
               </h3>
               {totalActionCount > 0 && (
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--ink)] text-micro font-bold font-mono">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-bold font-mono">
                   {totalActionCount} urgentes
                 </span>
               )}
@@ -268,7 +269,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 toggleExpanded(true);
               }}
               className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'priorities' ? 'bg-[var(--acc)] text-[var(--ink)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                activeTab === 'priorities' ? 'bg-[var(--acc)] text-[var(--on-acc)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <Flame className="w-3.5 h-3.5" />
@@ -282,7 +283,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 toggleExpanded(true);
               }}
               className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'routing' ? 'bg-[var(--acc)] text-[var(--ink)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                activeTab === 'routing' ? 'bg-[var(--acc)] text-[var(--on-acc)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <Compass className="w-3.5 h-3.5" />
@@ -397,11 +398,11 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         {/* Playbook Táctico Sugerido */}
                         {lead.estrategia_playbook && (
                           <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-micro text-[var(--acc)]/90 flex items-center justify-between gap-1">
-                            <span className="truncate font-medium">⚡ {lead.estrategia_playbook.titulo}</span>
+                            <span className="truncate font-medium"><ShowIcon inline emoji="⚡" />{lead.estrategia_playbook.titulo}</span>
                             <button
                               type="button"
                               onClick={() => onSelectLead(lead, { tab: 'emails', pitchDraft: lead.estrategia_playbook?.propuesta_rapida })}
-                              className="text-micro font-bold bg-[var(--acc)] text-[var(--ink)] px-1.5 py-0.5 rounded shrink-0 hover:bg-[var(--acc)] cursor-pointer"
+                              className="text-micro font-bold bg-[var(--acc)] text-[var(--on-acc)] px-1.5 py-0.5 rounded shrink-0 hover:bg-[var(--acc)] cursor-pointer"
                               title="Aplicar propuesta rápida"
                             >
                               Aplicar
@@ -456,7 +457,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
               {routingOpportunities.length > 0 ? (
                 <div className="space-y-3">
                   <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-center justify-between text-xs">
-                    <span className="text-[var(--acc)] font-medium">🎯 Oportunidades detectadas vinculadas a tus fechas confirmadas</span>
+                    <span className="text-[var(--acc)] font-medium"><ShowIcon inline emoji="🎯" />Oportunidades detectadas vinculadas a tus fechas confirmadas</span>
                     <span className="text-micro text-[var(--ink-2)] font-mono">Ahorro medio en furgoneta: ~180€ / bolo</span>
                   </div>
 

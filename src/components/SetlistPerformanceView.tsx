@@ -48,6 +48,7 @@ import { getSongIrisStemIdea, getIdeaTracks } from "../utils/irisTracks";
 import { cacheActiveStageSetlist } from "../utils/stageOfflineCache";
 import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
@@ -534,7 +535,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="mt-4 px-6 py-2 bg-[var(--alert)] hover:bg-[var(--alert)]/80 text-[var(--on-alert)] rounded-[var(--r-pill)] font-medium text-sm"
+            className="mt-4 px-6 py-2 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] rounded-[var(--r-pill)] font-medium text-sm"
           >
             Cerrar
           </button>
@@ -560,7 +561,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         className="fixed inset-0 z-[9999] bg-[var(--surface)] flex flex-col items-center justify-center text-center p-8 cursor-pointer select-none"
         onClick={() => setIsResting(false)}
       >
-        <span className="text-5xl mb-4">😴</span>
+        <span className="text-5xl mb-4"><ShowIcon inline emoji="😴" /></span>
         <p className="text-[var(--ink-2)] text-sm font-sans mb-1">
           Modo descanso — ahorrando batería
         </p>
@@ -636,7 +637,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 onClick={() => setModeArchetype("ensayo")}
                 className={`px-2.5 py-1 rounded-[var(--r-s)] transition-ui flex items-center gap-1 cursor-pointer ${
                   modeArchetype === "ensayo"
-                    ? "bg-[var(--ok)] text-[var(--ink)]"
+                    ? "bg-[var(--ok)] text-[var(--on-ok)]"
                     : glareMode
                       ? "text-[var(--ink-2)] hover:text-[var(--ok)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ok)]"
@@ -983,7 +984,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 className="font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]"
                 title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
               >
-                ⚠️ sin verificar
+                <ShowIcon inline emoji="⚠️" />sin verificar
               </span>
             )}
         </div>
@@ -1026,7 +1027,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 type="button"
                 onClick={() => handleLaunchPractice()}
-                className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition active:scale-[0.97] cursor-pointer"
+                className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs flex items-center gap-1 transition active:scale-[0.97] cursor-pointer"
               >
                 <Headphones className="w-3.5 h-3.5" />
                 <span>Abrir Sala de Ensayo</span>
@@ -1173,7 +1174,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 -
               </button>
               <span className="text-[var(--acc)] font-bold font-sans">
-                🎯 {transposedKey}
+                <ShowIcon inline emoji="🎯" />{transposedKey}
               </span>
               <button
                 type="button"
@@ -1362,7 +1363,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       } hover:brightness-95`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="text-lg">{meta.icon}</span>
+                        <span className="text-lg"><ShowIcon inline emoji={meta.icon} /></span>
                         <div>
                           <div className="text-xs font-bold text-[var(--ink)]">
                             {item.tituloCustom || meta.label}
@@ -1522,7 +1523,7 @@ const TeleprompterBlockPage: React.FC<{
           : "bg-[var(--acc)]/40 "
       }`}
     >
-      <span className="text-5xl sm:text-7xl mb-6">{meta.icon}</span>
+      <span className="text-5xl sm:text-7xl mb-6"><ShowIcon inline emoji={meta.icon} /></span>
       <h2
         className={`text-2xl sm:text-4xl font-bold mb-6 tracking-wide ${glareMode ? "text-[var(--ink)]" : "text-[var(--acc)]/70"}`}
       >
@@ -1539,7 +1540,7 @@ const TeleprompterBlockPage: React.FC<{
       )}
       {duration && (
         <p className="mt-8 text-[var(--ink-2)] font-sans text-sm">
-          ⏱ {duration}
+          <ShowIcon inline emoji="⏱" />{duration}
         </p>
       )}
     </div>
@@ -1678,7 +1679,7 @@ const ChordSheetPage: React.FC<{
                   : "text-[var(--ok)] font-bold"
               }
             >
-              🎯 {transposedKey || "Sin tono"}
+              <ShowIcon inline emoji="🎯" />{transposedKey || "Sin tono"}
             </span>
             <button
               type="button"
@@ -1772,8 +1773,8 @@ const ChordSheetPage: React.FC<{
           >
             <span>
               {teleprompterMode === "scroll"
-                ? "📜 Teleprompter Auto"
-                : "📑 Modo Secciones"}
+                ? "Teleprompter Auto"
+                : "Modo Secciones"}
             </span>
           </button>
         </div>
@@ -1798,7 +1799,7 @@ const ChordSheetPage: React.FC<{
                     : "text-[var(--tentative)] font-bold"
                 }
               >
-                🎵 Estructura:{" "}
+                <ShowIcon inline emoji="🎵" />Estructura:{" "}
               </span>
               {structure}
             </p>
@@ -1814,7 +1815,7 @@ const ChordSheetPage: React.FC<{
                     : "text-[var(--ok)] font-bold"
                 }
               >
-                🎸 Progresión:{" "}
+                <ShowIcon inline emoji="🎸" />Progresión:{" "}
               </span>
               {progression}
             </p>
@@ -1835,8 +1836,8 @@ const ChordSheetPage: React.FC<{
                 onClick={onToggleTeleprompterPlay}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   isTeleprompterPlaying
-                    ? "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]"
-                    : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)]"
+                    ? "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
+                    : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)]"
                 }`}
                 title="Pausar o reanudar teleprompter (o pulsar Espacio)"
               >
@@ -1937,13 +1938,13 @@ const ChordSheetPage: React.FC<{
                   : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
               }`}
             >
-              ◀ Parte anterior
+              <ShowIcon inline emoji="◀" />Parte anterior
             </button>
             <button
               onClick={onAdvanceSection}
-              className="flex-1 py-2.5 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] rounded-[var(--r-s)] text-sm font-sans font-bold transition"
+              className="flex-1 py-2.5 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] rounded-[var(--r-s)] text-sm font-sans font-bold transition"
             >
-              Siguiente parte ▶
+              Siguiente parte <ShowIcon inline emoji="▶" />
             </button>
           </div>
         </div>

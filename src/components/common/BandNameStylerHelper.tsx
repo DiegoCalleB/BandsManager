@@ -5,6 +5,7 @@ import {
   ROCK_SYMBOLS,
   cleanToNormalText,
 } from "../../utils/bandNameStyler";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface BandNameStylerHelperProps {
   value: string;
@@ -120,7 +121,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                     >
                       <div className="flex items-center justify-between text-micro text-[var(--ink-2)] font-sans group-hover:text-[var(--acc)]/70">
                         <span>{preset.label}</span>
-                        <span className="text-xs">{preset.icon}</span>
+                        <span className="text-xs"><ShowIcon inline emoji={preset.icon} /></span>
                       </div>
                       <div
                         className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-[var(--ink)] mt-0.5"

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Song, ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface MetronomeModalProps {
   isOpen: boolean;
@@ -348,7 +349,7 @@ export function MetronomeModal({
                         isActive
                           ? isAccent
                             ? "bg-[var(--acc)]/60 text-[var(--ink)] scale-105"
-                            : "bg-[var(--ok)] text-[var(--ink)] scale-105"
+                            : "bg-[var(--ok)] text-[var(--on-ok)] scale-105"
                           : "bg-[var(--ink)]/5 text-[var(--ink-2)]"
                       }`}
                     >
@@ -373,7 +374,7 @@ export function MetronomeModal({
                       onClick={() => setTimeSignature(sig)}
                       className={`py-1 text-xs font-bold rounded-[var(--r-s)] transition-colors cursor-pointer ${
                         timeSignature === sig
-                          ? "bg-[var(--acc)] text-[var(--ink)]"
+                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
                           : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
                       }`}
                     >
@@ -389,7 +390,7 @@ export function MetronomeModal({
                 className="bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-ui active:scale-[0.97] group"
               >
                 <span className="text-xs font-bold text-[var(--acc)]/70 transition-transform">
-                  👆 TAP TEMPO
+                  <ShowIcon inline emoji="👆" />TAP TEMPO
                 </span>
                 <span className="text-micro text-[var(--ink-2)]">
                   Toca el ritmo 4 veces
@@ -431,8 +432,8 @@ export function MetronomeModal({
                 onClick={togglePlay}
                 className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                   isPlaying
-                    ? "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)]"
-                    : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
+                    ? "bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)]"
+                    : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                 }`}
               >
                 {isPlaying ? (

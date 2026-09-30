@@ -1,6 +1,7 @@
 import React from 'react';
 import { ToastNotification } from '../hooks/useNotificationSystem';
 import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
+import { ShowIcon } from './ui/ShowIcon';
 
 interface NotificationToastContainerProps {
   notifications: ToastNotification[];
@@ -32,7 +33,7 @@ export const NotificationToastContainer: React.FC<NotificationToastContainerProp
             key={toast.id}
             className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-[var(--r-l)] transition-ui duration-300 transform translate-y-0 animate-in fade-in slide-in-from-bottom-2 ${bg}`}
           >
-            {icon}
+            <ShowIcon inline emoji={icon} />
             <div className="flex-1 min-w-0 pr-1">
               <h4 className="text-xs font-semibold leading-tight">{toast.title}</h4>
               {toast.message && <p className="text-xs opacity-80 mt-0.5 line-clamp-2">{toast.message}</p>}

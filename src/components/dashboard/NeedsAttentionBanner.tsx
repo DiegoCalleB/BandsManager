@@ -1,6 +1,7 @@
 import React from "react";
 import { AlertCircle, ArrowRight, DollarSign, Mail } from "lucide-react";
 import { Concert, Lead } from "../../types";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface NeedsAttentionBannerProps {
   concerts?: Concert[];
@@ -95,7 +96,7 @@ export const NeedsAttentionBanner: React.FC<NeedsAttentionBannerProps> = ({
             }`}
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <span className="text-[var(--alert)] shrink-0">{item.icon}</span>
+              <span className="text-[var(--alert)] shrink-0"><ShowIcon inline emoji={item.icon} /></span>
               <span className="text-sm text-[var(--ink)] truncate">
                 {item.texto}
               </span>

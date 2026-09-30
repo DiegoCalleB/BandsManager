@@ -110,6 +110,7 @@ import { BookingFiltersPanel } from './booking/BookingFiltersPanel';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { ShowIcon } from './ui/ShowIcon';
 const matchesMedioType = (l: Lead, filter: string): boolean => {
   if (!filter || filter === 'todos') return true;
   const txt =
@@ -1483,7 +1484,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         handleTriggerEnviadorAgent();
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--on-ok)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
                     >
                       <span className="flex items-center gap-2">
                         {isDispatchingEmails ? (
@@ -1676,10 +1677,10 @@ export default function BookingCRM({
                       type="text"
                       placeholder={
                         sectionTab === 'medios'
-                          ? '🔍 Buscar medio...'
+                          ? 'Buscar medio...'
                           : sectionTab === 'grupos'
-                            ? '🔍 Buscar management...'
-                            : '🔍 Buscar escenario...'
+                            ? 'Buscar management...'
+                            : 'Buscar escenario...'
                       }
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -1713,42 +1714,42 @@ export default function BookingCRM({
                     >
                       {sectionTab === 'medios' ? (
                         <>
-                          <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
-                          <option value="radio">📻 Radios</option>
-                          <option value="tv">📺 TV</option>
-                          <option value="prensa">📰 Prensa</option>
-                          <option value="redes">📱 Redes</option>
-                          <option value="podcast">🎙️ Podcasts</option>
+                          <option value="todos">Todos los medios ({sectionLeads.length})</option>
+                          <option value="radio">Radios</option>
+                          <option value="tv">TV</option>
+                          <option value="prensa">Prensa</option>
+                          <option value="redes">Redes</option>
+                          <option value="podcast">Podcasts</option>
                         </>
                       ) : sectionTab === 'grupos' ? (
                         <>
-                          <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
-                          <option value="grupo">🎸 Grupos</option>
-                          <option value="agencia">💼 Agencias</option>
-                          <option value="manager">👔 Mánagers</option>
-                          <option value="productora">🎬 Productoras</option>
-                          <option value="sello">💿 Sellos</option>
+                          <option value="todos">Todas las entidades ({sectionLeads.length})</option>
+                          <option value="grupo">Grupos</option>
+                          <option value="agencia">Agencias</option>
+                          <option value="manager">Mánagers</option>
+                          <option value="productora">Productoras</option>
+                          <option value="sello">Sellos</option>
                         </>
                       ) : (
                         <>
-                          <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
-                          <option value="sala">🏛️ Salas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sala').length})</option>
+                          <option value="todos">Tipo: Todos ({sectionLeads.length})</option>
+                          <option value="sala">Salas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sala').length})</option>
                           <option value="festival">
-                            🎪 Festivales ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'festival').length})
+                            Festivales ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'festival').length})
                           </option>
                           <option value="discoteca">
-                            🪩 Discotecas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'discoteca').length})
+                            Discotecas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'discoteca').length})
                           </option>
                           <option value="ayuntamiento">
-                            🎆 Ayuntamientos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'ayuntamiento').length})
+                            Ayuntamientos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'ayuntamiento').length})
                           </option>
                           <option value="agencia">
-                            💼 Agencias (
+                            Agencias (
                             {sectionLeads.filter((l) => normalizeType(l.tipo) === 'agencia' || normalizeType(l.tipo) === 'manager').length})
                           </option>
-                          <option value="sello">💿 Sellos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sello').length})</option>
+                          <option value="sello">Sellos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sello').length})</option>
                           <option value="productora">
-                            🎛️ Productores (
+                            Productores (
                             {
                               sectionLeads.filter((l) => normalizeType(l.tipo) === 'productora' || normalizeType(l.tipo) === 'productor')
                                 .length
@@ -1756,7 +1757,7 @@ export default function BookingCRM({
                             )
                           </option>
                           <option value="grupo">
-                            🎸 Bandas Amigas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'grupo').length})
+                            Bandas Amigas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'grupo').length})
                           </option>
                         </>
                       )}
@@ -1919,7 +1920,7 @@ export default function BookingCRM({
                 <span className="text-micro font-bold text-[var(--acc)] shrink-0">Filtros:</span>
                 {selectedCityFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
-                    📍 {selectedCityFilter}
+                    <ShowIcon inline emoji="📍" />{selectedCityFilter}
                     <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
@@ -1927,7 +1928,7 @@ export default function BookingCRM({
                 )}
                 {typeFilter !== 'todos' && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
-                    🏛️ {typeFilter}
+                    <ShowIcon inline emoji="🏛️" />{typeFilter}
                     <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
@@ -1935,7 +1936,7 @@ export default function BookingCRM({
                 )}
                 {onlyFavoritesFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
-                    ⭐ Favoritos
+                    <ShowIcon inline emoji="⭐" />Favoritos
                     <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
@@ -1943,7 +1944,7 @@ export default function BookingCRM({
                 )}
                 {onlyVerifiedFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] shrink-0">
-                    ✔ Verificados
+                    <ShowIcon inline emoji="✔" />Verificados
                     <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
@@ -1959,7 +1960,7 @@ export default function BookingCRM({
                 )}
                 {activeSavedFilterId && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/50 shrink-0">
-                    📌 {savedFilters.find((f) => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
+                    <ShowIcon inline emoji="📌" />{savedFilters.find((f) => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
                     <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
@@ -2003,11 +2004,11 @@ export default function BookingCRM({
                   { key: 'todos', label: 'Todos' },
                   { key: 'nuevo', label: 'Por contactar' },
                   { key: 'esperando_respuesta', label: 'Contactados' },
-                  { key: 'seguimientos', label: '⏰ Seguimientos' },
+                  { key: 'seguimientos', label: 'Seguimientos' },
                   { key: 'respondido', label: 'En conversación' },
                   { key: 'negociando', label: 'Negociando' },
-                  { key: 'confirmado', label: 'Confirmados 🎉' },
-                  { key: 'aplazado', label: 'Aplazados ⏳' },
+                  { key: 'confirmado', label: 'Confirmados' },
+                  { key: 'aplazado', label: 'Aplazados' },
                   { key: 'no_interesado', label: 'Descartados' },
                 ] as const
               ).map((tab) => {
@@ -2053,7 +2054,7 @@ export default function BookingCRM({
                 <div className="flex items-center gap-2">
                   <Compass className="w-4 h-4 text-[var(--acc)] shrink-0" />
                   <span>
-                    🚗 <strong>Enlace de Fin de Semana desde {routeAnchorCity}:</strong> Mostrando {filteredLeads.length} salas compatibles
+                    <ShowIcon inline emoji="🚗" /><strong>Enlace de Fin de Semana desde {routeAnchorCity}:</strong> Mostrando {filteredLeads.length} salas compatibles
                     en ruta (&lt; 2.5h)
                   </span>
                 </div>
@@ -2604,7 +2605,7 @@ export default function BookingCRM({
           });
           setIsAddingLeadModalOpen(true);
         }}
-        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] active:scale-[0.97] transition-ui cursor-pointer animate-bounce"
+        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] active:scale-[0.97] transition-ui cursor-pointer animate-bounce"
         style={{ animationDuration: '3s' }}
         title="Añadir contacto"
       >

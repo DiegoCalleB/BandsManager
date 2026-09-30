@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SpotifyTrack {
   id: string;
@@ -414,7 +415,7 @@ export const SpotifyDiscographyModal: React.FC<
                   />
                 ) : (
                   <div className="w-14 h-14 rounded-[var(--r-pill)] bg-[var(--surface)]/40 flex items-center justify-center text-xl">
-                    🎸
+                    <ShowIcon inline emoji="🎸" />
                   </div>
                 )}
                 <div>

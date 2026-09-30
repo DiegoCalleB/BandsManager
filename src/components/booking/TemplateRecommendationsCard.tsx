@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, CheckCircle2, XCircle, Lightbulb, Compass, MessageSquarePlus, ChevronDown, ChevronUp, Wand2 } from 'lucide-react';
 import type { TemplateCategory } from './TemplateConfigSection';
 import { CATEGORY_RECOMMENDATIONS } from '../../data/templateRecommendations';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface TemplateRecommendationsCardProps {
   category: TemplateCategory;
@@ -31,7 +32,7 @@ export function TemplateRecommendationsCard({
         <div className="flex items-center gap-2.5 min-w-0">
           <div
             className={`p-1.5 rounded-[var(--r-m)] flex items-center justify-center shrink-0 ${
-              'bg-[var(--acc)] text-[var(--ink)] font-bold'
+              'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
             }`}
           >
             <Compass className="w-4 h-4" />
@@ -57,7 +58,7 @@ export function TemplateRecommendationsCard({
             onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
             disabled={isOptimizing}
             className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50 ${
-              'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-extrabold'
+              'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-extrabold'
             }`}
             title="Aplica la recomendación del agente y re-redacta la plantilla y pautas con IA"
           >
@@ -147,7 +148,7 @@ export function TemplateRecommendationsCard({
               }`}
             >
               <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
-                🎯 Apertura Recomendada
+                <ShowIcon inline emoji="🎯" />Apertura Recomendada
               </span>
               <p className="italic text-micro opacity-90">{rec.bestOpening}</p>
             </div>
@@ -157,7 +158,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--sunken)] '
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro">⚡ Ganchos Clave</span>
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro"><ShowIcon inline emoji="⚡" />Ganchos Clave</span>
               <ul className="space-y-0.5">
                 {rec.keyHooks.map((hook, i) => (
                   <li key={i} className="flex items-center gap-1">
@@ -174,7 +175,7 @@ export function TemplateRecommendationsCard({
               }`}
             >
               <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
-                📬 Cierre & Llamada a la Acción (CTA)
+                <ShowIcon inline emoji="📬" />Cierre & Llamada a la Acción (CTA)
               </span>
               <p className="italic text-micro opacity-90">{rec.ctaSuggestion}</p>
             </div>
@@ -193,7 +194,7 @@ export function TemplateRecommendationsCard({
               onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
               disabled={isOptimizing}
               className={`px-2.5 py-1 rounded text-micro font-bold transition-ui flex items-center gap-1 cursor-pointer disabled:opacity-50 ${
-                'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]'
+                'bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]'
               }`}
             >
               <Sparkles className="w-3 h-3" />

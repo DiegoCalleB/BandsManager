@@ -27,6 +27,7 @@ import {
 } from "../../types";
 import { formatTime } from "./EnsayoCronometro";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface GrabacionActaTabProps {
   rehearsal: Rehearsal;
@@ -316,7 +317,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <button
                   type="button"
                   onClick={stopRecording}
-                  className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-[0.97] transition-ui"
+                  className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-[0.97] transition-ui"
                 >
                   <Square className="w-4 h-4 fill-current" />
                   <span>Detener Grabación ({formatTime(recordDuration)})</span>
@@ -351,13 +352,13 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     onChange={(e) => setRecordingTag(e.target.value as any)}
                     className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none cursor-pointer"
                   >
-                    <option value="toma_completa">🎵 Toma Completa</option>
-                    <option value="riff">🎸 Riff / Idea Nueva</option>
-                    <option value="seccion">🎯 Sección Específica</option>
+                    <option value="toma_completa">Toma Completa</option>
+                    <option value="riff">Riff / Idea Nueva</option>
+                    <option value="seccion">Sección Específica</option>
                     <option value="voz_acta">
-                      🗣️ Nota de Voz / Conclusiones
+                      Nota de Voz / Conclusiones
                     </option>
-                    <option value="debate">💬 Debate / Comentarios</option>
+                    <option value="debate">Debate / Comentarios</option>
                   </select>
                 </div>
 
@@ -372,7 +373,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   <button
                     type="button"
                     onClick={handleSaveRecording}
-                    className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] text-xs font-sans font-bold cursor-pointer"
+                    className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-xs font-sans font-bold cursor-pointer"
                   >
                     Guardar Grabación
                   </button>
@@ -527,7 +528,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {/* Executive Summary */}
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
               <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                📝 Resumen Ejecutivo
+                <ShowIcon inline emoji="📝" />Resumen Ejecutivo
               </h4>
               <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
                 {acta.resumenEjecutivo}
@@ -538,7 +539,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
               <div>
                 <h4 className="text-xs font-sans font-bold text-[var(--ok)] mb-1.5">
-                  🟢 Temas Bordados
+                  <ShowIcon inline emoji="🟢" />Temas Bordados
                 </h4>
                 <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
                   {(
@@ -553,7 +554,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
               <div>
                 <h4 className="text-xs font-sans font-bold text-[var(--alert)] mb-1.5">
-                  🔴 A Repasar Próximo Día
+                  <ShowIcon inline emoji="🔴" />A Repasar Próximo Día
                 </h4>
                 <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
                   {(
@@ -570,7 +571,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {/* Deberes para casa */}
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2.5">
               <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                🎯 Deberes para Casa
+                <ShowIcon inline emoji="🎯" />Deberes para Casa
               </h4>
               <div className="space-y-2">
                 {(acta.deberesPorMiembro || []).map((d, i) => (

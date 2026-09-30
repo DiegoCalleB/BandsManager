@@ -290,7 +290,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                             type="button"
                             onClick={handleCreateShortcut}
                             disabled={!newShortcutLabel.trim()}
-                            className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
+                            className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-medium text-xs disabled:opacity-40 cursor-pointer"
                           >
                             Guardar
                           </button>

@@ -32,13 +32,13 @@ const isStitchLight = false;
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
 const CATEGORIES: { id: TemplateCategory; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 'salas', label: '🏛️ Salas', icon: Building2 },
-  { id: 'festivales', label: '🎪 Festivales', icon: Tent },
-  { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
-  { id: 'medios', label: '📻 Medios', icon: Radio },
-  { id: 'grupos', label: '🎸 Grupos', icon: Users },
-  { id: 'managements', label: '💼 Managements', icon: Briefcase },
-  { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
+  { id: 'salas', label: 'Salas', icon: Building2 },
+  { id: 'festivales', label: 'Festivales', icon: Tent },
+  { id: 'discotecas', label: 'Discotecas', icon: Disc3 },
+  { id: 'medios', label: 'Medios', icon: Radio },
+  { id: 'grupos', label: 'Grupos', icon: Users },
+  { id: 'managements', label: 'Managements', icon: Briefcase },
+  { id: 'ayuntamientos', label: 'Ayuntamientos', icon: Landmark },
 ];
 
 export interface ActiveTemplateData {
@@ -142,7 +142,7 @@ export function TemplateConfigSection({
                   setShowRecommendations(false);
                 }}
                 className={`py-1.5 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                  isActive ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
+                  isActive ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
                 }`}
               >
                 <IconComp className="w-3.5 h-3.5" />
@@ -170,7 +170,7 @@ export function TemplateConfigSection({
             id="template-btn-save"
             type="button"
             onClick={onSaveTemplates}
-            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Guardar</span>

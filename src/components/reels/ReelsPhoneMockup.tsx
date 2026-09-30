@@ -7,6 +7,7 @@ import {
 import { ThemeColors } from '../../types';
 import { SUBTITLE_STYLES } from './ViralGrowthStudio';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface ReelsPhoneMockupProps {
   colors: ThemeColors;
@@ -178,7 +179,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               }`}
               title="Muestra el vídeo 16:9 completo sin recortar nada"
             >
-              📺 16:9 Completo
+              <ShowIcon inline emoji="📺" />16:9 Completo
             </button>
             <button
               type="button"
@@ -188,7 +189,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               }`}
               title="Enfoca el tercio izquierdo (Músico/Cantante)"
             >
-              👤 Izq
+              <ShowIcon inline emoji="👤" />Izq
             </button>
             <button
               type="button"
@@ -198,7 +199,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               }`}
               title="Enfoca el centro del plano"
             >
-              🎯 Centro
+              <ShowIcon inline emoji="🎯" />Centro
             </button>
             <button
               type="button"
@@ -208,7 +209,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               }`}
               title="Enfoca el tercio derecho"
             >
-              🎨 Der
+              <ShowIcon inline emoji="🎨" />Der
             </button>
           </div>
         </div>
@@ -373,14 +374,14 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           {showSpotifyBadge && (
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--scrim)]/85 text-[var(--ok)] text-micro font-mono font-bold bg-[var(--ok)]/10">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping" />
-              <span className="truncate max-w-[180px]">🎧 Escucha · {videoMeta?.title || nombreBanda}</span>
+              <span className="truncate max-w-[180px]"><ShowIcon inline emoji="🎧" />Escucha · {videoMeta?.title || nombreBanda}</span>
             </div>
           )}
 
           {/* Tour Date / Ticket Sticker */}
           {showTourSticker && tourStickerText && (
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[var(--ink)] text-micro font-mono font-bold ">
-              <span>🎟️ {tourStickerText}</span>
+              <span><ShowIcon inline emoji="🎟️" />{tourStickerText}</span>
             </div>
           )}
         </div>
@@ -407,7 +408,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             </div>
             <div className="flex justify-between items-center my-auto">
               <div className="p-1.5 border-dashed bg-[var(--ok)]/10 rounded max-w-[70%]">
-                <span className="text-micro font-mono text-[var(--ok)] font-bold block">✨ SAFE ZONE REELS</span>
+                <span className="text-micro font-mono text-[var(--ok)] font-bold block"><ShowIcon inline emoji="✨" />SAFE ZONE REELS</span>
                 <span className="text-micro font-sans text-[var(--ok)]/80">Área libre de botones y texto nativo</span>
               </div>
               <div className="bg-[var(--alert)]/20 px-1.5 py-4 rounded text-center">
@@ -509,7 +510,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
         <div className="mt-3 p-2.5 rounded-2xl bg-[var(--surface)] space-y-1.5">
           <div className="flex justify-between items-center text-micro font-mono font-bold">
             <span className={isSeamlessLoop ? 'text-[var(--alert)] flex items-center gap-1' : 'text-[var(--acc-ink)]'}>
-              {isSeamlessLoop ? '🔁 120% SEAMLESS LOOP' : '⏱️ RECORTE SELECCIONADO'}
+              {isSeamlessLoop ? '120% SEAMLESS LOOP' : 'RECORTE SELECCIONADO'}
             </span>
             <span className="text-[var(--ink-2)]">
               {formatTime(start + simulatedTime)} / {formatTime(end)}

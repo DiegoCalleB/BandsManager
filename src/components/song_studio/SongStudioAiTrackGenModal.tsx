@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, X, Wand2, RefreshCw, Music, CheckCircle2, Check } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongStudioAiTrackGenModalProps {
   showAiTrackGenModal: SongAudioIdea | null;
@@ -69,10 +70,10 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs">
               {[
-                { id: 'bajo', label: '🎸 Bajo eléctrico' },
-                { id: 'bateria', label: '🥁 Batería / Beat' },
-                { id: 'teclado', label: '🎹 Teclados / Synthe' },
-                { id: 'guitarra', label: '🎸 Guitarra solista' },
+                { id: 'bajo', label: 'Bajo eléctrico' },
+                { id: 'bateria', label: 'Batería / Beat' },
+                { id: 'teclado', label: 'Teclados / Synthe' },
+                { id: 'guitarra', label: 'Guitarra solista' },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -80,7 +81,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                   onClick={() => setAiTrackGenInstrument(item.id)}
                   className={`p-2.5 rounded-[var(--r-m)] text-center transition-ui cursor-pointer font-bold ${
                     aiTrackGenInstrument === item.id
-                      ? 'bg-[var(--acc)] text-[var(--ink)] '
+                      ? 'bg-[var(--acc)] text-[var(--on-acc)] '
                       : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                   }`}
                 >
@@ -104,7 +105,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
 
           {aiTrackGenError && (
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 text-[var(--alert)] text-xs font-mono">
-              ⚠️ {aiTrackGenError}
+              <ShowIcon inline emoji="⚠️" />{aiTrackGenError}
             </div>
           )}
 
@@ -137,7 +138,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           {aiTrackGenPreview && (
             <button
               type="button"
-              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 cursor-pointer transition-ui active:scale-[0.97]"
+              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-mono text-xs font-bold flex items-center gap-2 cursor-pointer transition-ui active:scale-[0.97]"
             >
               <Check className="w-4 h-4" /> Añadir a la mezcla
             </button>
@@ -146,7 +147,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             type="button"
             disabled={isGeneratingAiTrack}
             onClick={handleSubmit}
-            className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
+            className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold flex items-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
           >
             {isGeneratingAiTrack ? (
               <>

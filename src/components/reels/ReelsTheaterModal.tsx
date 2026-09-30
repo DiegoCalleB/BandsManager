@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface ReelsTheaterModalProps {
   isOpen: boolean;
@@ -225,7 +226,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       {currentSubtitleText && !renderedBurnedSubs && (
                         <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--scrim)]/80 px-2 py-1.5 rounded-xl text-center bg-[var(--acc)]/10">
                           <span className="text-micro font-sans font-bold text-[var(--acc-ink)] leading-tight">
-                            ✨ {currentSubtitleText} ✨
+                            <ShowIcon inline emoji="✨" />{currentSubtitleText} <ShowIcon inline emoji="✨" />
                           </span>
                         </div>
                       )}
@@ -312,7 +313,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
               {highlights[selectedHighlightIndex] && (
                 <h4 className="text-micro text-[var(--ink)] font-bold line-clamp-1">
-                  🎬 {highlights[selectedHighlightIndex]?.title}
+                  <ShowIcon inline emoji="🎬" />{highlights[selectedHighlightIndex]?.title}
                 </h4>
               )}
 
@@ -497,17 +498,17 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       </div>
 
                       <div className="flex justify-between text-micro font-mono text-[var(--ink-2)] px-1">
-                        <span>⏱️ Inicio: <strong className="text-[var(--ink)] font-bold">{formatTime(start)}</strong></span>
+                        <span><ShowIcon inline emoji="⏱️" />Inicio: <strong className="text-[var(--ink)] font-bold">{formatTime(start)}</strong></span>
                         <span className="text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2.5 py-0.5 rounded-full font-bold">
                           Duración: {duration} segundos
                         </span>
-                        <span>⏱️ Fin: <strong className="text-[var(--ink)] font-bold">{formatTime(end)}</strong></span>
+                        <span><ShowIcon inline emoji="⏱️" />Fin: <strong className="text-[var(--ink)] font-bold">{formatTime(end)}</strong></span>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[var(--hair)]">
                       <div className="space-y-1.5 text-left">
-                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block">⬅️ Ajustar Inicio</span>
+                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block"><ShowIcon inline emoji="⬅️" />Ajustar Inicio</span>
                         <div className="flex gap-2">
                           <button
                             type="button"
@@ -530,7 +531,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       </div>
 
                       <div className="space-y-1.5 text-left">
-                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block">➡️ Ajustar Fin</span>
+                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block"><ShowIcon inline emoji="➡️" />Ajustar Fin</span>
                         <div className="flex gap-2">
                           <button
                             type="button"
@@ -621,7 +622,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       </span>
                     </div>
                     <p className="text-xs text-[var(--acc-ink)] font-mono pl-8">
-                      ⚡ {cuttingProgressText}
+                      <ShowIcon inline emoji="⚡" />{cuttingProgressText}
                     </p>
                   </div>
                 ) : renderedClipUrl ? (
@@ -652,7 +653,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                     className="w-full py-3 px-4 rounded-xl font-bold text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-ui"
                   >
                     <Sparkles className="w-4 h-4 text-[var(--ink)] fill-[var(--ink-3)]" />
-                    <span>✂️ Renderizar Reel Físico + Auto-Subtítulos (9:16)</span>
+                    <span><ShowIcon inline emoji="✂️" />Renderizar Reel Físico + Auto-Subtítulos (9:16)</span>
                   </button>
                 )}
               </div>
@@ -662,7 +663,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label className="text-xs font-mono font-bold text-[var(--ink-2)] ">
-                  📝 Copy de Publicación
+                  <ShowIcon inline emoji="📝" />Copy de Publicación
                 </label>
                 <button
                   type="button"

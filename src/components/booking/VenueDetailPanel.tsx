@@ -104,6 +104,7 @@ import {
   WHATSAPP_WINDOW_NAME,
 } from "../../utils/whatsapp";
 import { WhatsAppPreviewModal } from "./WhatsAppPreviewModal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1351,7 +1352,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     className="inline-flex items-center gap-1 text-xs text-[var(--acc)] hover:text-[var(--acc)] bg-[var(--acc)]/50 hover:bg-[var(--acc)]/60 px-1.5 py-0.5 rounded cursor-pointer transition-colors"
                     title={`Filtrar salas en ruta para fin de semana doble desde ${selectedLead.ciudad} (<2.5h)`}
                   >
-                    <span>🚗 Enlazar Ruta (&lt;2.5h)</span>
+                    <span><ShowIcon inline emoji="🚗" />Enlazar Ruta (&lt;2.5h)</span>
                   </button>
                 )}
                 <span>•</span>
@@ -1377,7 +1378,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 selectedLead.festival_end_date && (
                   <div className="space-y-1 mt-1">
                     <p className="text-xs sm:text-sm font-sans text-[var(--acc)] flex items-center gap-1.5">
-                      <span className="text-lg">🎪</span>
+                      <span className="text-lg"><ShowIcon inline emoji="🎪" /></span>
                       <span className="font-semibold">Festival/Evento:</span>
                       <span>
                         {formatFestivalDateRange(
@@ -1462,12 +1463,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {selectedLead.temperatura_lead && (
                   <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] font-mono">
                     {selectedLead.temperatura_lead === "muy_caliente"
-                      ? "🔥 Muy Caliente"
+                      ? "Muy Caliente"
                       : selectedLead.temperatura_lead === "caliente"
-                        ? "☀️ Caliente"
+                        ? "Caliente"
                         : selectedLead.temperatura_lead === "tibio"
-                          ? "🌤️ Tibio"
-                          : "❄️ Frío"}
+                          ? "Tibio"
+                          : "Frío"}
                   </span>
                 )}
               </div>
@@ -1493,61 +1494,61 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   value="sala"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  🏟️ Sala de Conciertos
+                  Sala de Conciertos
                 </option>
                 <option
                   value="festival"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  🎪 Festival
+                  Festival
                 </option>
                 <option
                   value="ayuntamiento"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  🏛️ Ayuntamiento / Fiestas
+                  Ayuntamiento / Fiestas
                 </option>
                 <option
                   value="discoteca"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  🪩 Discoteca / Club
+                  Discoteca / Club
                 </option>
                 <option
                   value="grupo"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  🎸 Grupo / Banda Aliada
+                  Grupo / Banda Aliada
                 </option>
                 <option
                   value="agencia"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  💼 Agencia de Booking
+                  Agencia de Booking
                 </option>
                 <option
                   value="manager"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  👔 Manager / Representante
+                  Manager / Representante
                 </option>
                 <option
                   value="productora"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  🎬 Productora de Eventos
+                  Productora de Eventos
                 </option>
                 <option
                   value="sello"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  💿 Discográfica / Sello
+                  Discográfica / Sello
                 </option>
                 <option
                   value="medio"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  📻 Medio / Prensa / Radio
+                  Medio / Prensa / Radio
                 </option>
               </select>
             </div>
@@ -1577,10 +1578,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   En negociación
                 </option>
                 <option value="confirmado" className="bg-[var(--bg)]">
-                  Concierto confirmado 🎉
+                  Concierto confirmado 
                 </option>
                 <option value="aplazado" className="bg-[var(--bg)]">
-                  Aplazado (recontactar luego) ⏳
+                  Aplazado (recontactar luego) 
                 </option>
                 <option value="no_interesado" className="bg-[var(--bg)]">
                   Descartado / No interesado
@@ -1668,7 +1669,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <span>
                 {isScanningJina
                   ? "Leyendo web..."
-                  : "🔍 Jina Reader (Web & Teléfonos)"}
+                  : "Jina Reader (Web & Teléfonos)"}
               </span>
             </button>
 
@@ -1687,7 +1688,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <span>
                 {isDetectingDates
                   ? "Detectando fechas..."
-                  : "📡 Radar Wegow (Fechas Libres)"}
+                  : "Radar Wegow (Fechas Libres)"}
               </span>
             </button>
 
@@ -1743,7 +1744,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               return (
                 <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--alert)]/70 text-[var(--alert)] text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-base shrink-0">🔴</span>
+                    <span className="text-base shrink-0"><ShowIcon inline emoji="🔴" /></span>
                     <div className="min-w-0">
                       <p className="font-bold text-[var(--alert)] text-xs truncate">
                         Conflicto en la agenda de {bandName || "la banda"}
@@ -1764,7 +1765,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               return (
                 <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/60 text-[var(--ok)] text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-base shrink-0">🚗</span>
+                    <span className="text-base shrink-0"><ShowIcon inline emoji="🚗" /></span>
                     <div className="min-w-0">
                       <p className="font-bold text-[var(--ok)] text-xs truncate">
                         Oportunidad de Enlace en Ruta (Doble Fecha)
@@ -1785,7 +1786,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               return (
                 <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--acc)] text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-base shrink-0">⚠️</span>
+                    <span className="text-base shrink-0"><ShowIcon inline emoji="⚠️" /></span>
                     <div className="min-w-0">
                       <p className="font-bold text-[var(--acc)] text-xs truncate">
                         Concierto en fecha adyacente
@@ -1997,7 +1998,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       title="Clic para proponer esta fecha por WhatsApp o Pitch"
                     >
                       <span>{fecha}</span>
-                      <span className="text-micro opacity-70">💬</span>
+                      <span className="text-micro opacity-70"><ShowIcon inline emoji="💬" /></span>
                     </button>
                   ))}
                 </div>
@@ -2054,7 +2055,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </a>
                   {contrastado && (
                     <span className="text-[var(--acc)] font-bold bg-[var(--acc)]/50 px-1 py-0.2 rounded ">
-                      ⭐ Multi-fuente contrastada
+                      <ShowIcon inline emoji="⭐" />Multi-fuente contrastada
                     </span>
                   )}
                 </div>
@@ -2085,8 +2086,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[var(--acc)]/70">
                       {isReplyStage
-                        ? "💬 Respuesta redactada por IA — Pendiente de aprobación"
-                        : "✉️ Pitch inicial redactado por IA — Pendiente de aprobación"}
+                        ? "Respuesta redactada por IA — Pendiente de aprobación"
+                        : "Pitch inicial redactado por IA — Pendiente de aprobación"}
                     </p>
                     <p className="text-micro text-[var(--ink-2)] truncate">
                       {isReplyStage
@@ -2099,7 +2100,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={handleApprovePitchDirectly}
                   disabled={isCreatingDraft}
-                  className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                  className="px-3 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer disabled:opacity-50"
                 >
                   {isCreatingDraft ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2120,7 +2121,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)]/80 shrink-0 ml-1" />
                 <div className="min-w-0">
                   <p className="text-xs font-bold text-[var(--acc)]/80">
-                    📝 Borrador creado en tu Gmail
+                    <ShowIcon inline emoji="📝" />Borrador creado en tu Gmail
                   </p>
                   <p className="text-micro text-[var(--ink-2)]">
                     Revísalo en tu bandeja de borradores y envíalo cuando
@@ -2138,7 +2139,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0 ml-1" />
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[var(--ink-2)]">
-                      🚀{" "}
+                      <ShowIcon inline emoji="🚀" />{" "}
                       {rawStatus === "aprobado_respuesta"
                         ? "Respuesta Aprobada"
                         : "Propuesta Aprobada"}{" "}
@@ -2194,7 +2195,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       setIsCreatingDraft(false);
                     }
                   }}
-                  className="px-3 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                   title="Forzar el despacho inmediato de este correo por el Agente Enviador"
                 >
                   {isCreatingDraft ? (
@@ -2222,7 +2223,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-center gap-2 text-xs text-[var(--ink-2)]">
                 <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--tentative)] shrink-0 ml-1" />
                 <span className="text-xs font-medium">
-                  📬 Email enviado el{" "}
+                  <ShowIcon inline emoji="📬" />Email enviado el{" "}
                   {selectedLead.fecha_envio || "recientemente"} • Agente a la
                   espera de respuesta de la sala
                 </span>
@@ -2247,7 +2248,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 translate="no"
                 title={`Email Principal: ${selectedLead.email_contacto}`}
               >
-                ✉️ {selectedLead.email_contacto}
+                <ShowIcon inline emoji="✉️" />{selectedLead.email_contacto}
               </span>
             )}
             {selectedLead.email_secundario && (
@@ -2256,7 +2257,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 translate="no"
                 title={`Email Secundario / Promotora: ${selectedLead.email_secundario}`}
               >
-                ✉️2 {selectedLead.email_secundario}
+                <ShowIcon inline emoji="✉️" />2 {selectedLead.email_secundario}
               </span>
             )}
             {selectedLead.telefono_movil && (
@@ -2357,7 +2358,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         )) && (
         <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2">
           <p className="text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-            <span>🎸</span> Róster de Artistas & Servicios de Representación
+            <span><ShowIcon inline emoji="🎸" /></span> Róster de Artistas & Servicios de Representación
           </p>
           {selectedLead.roster ? (
             <p className="text-xs font-sans text-[var(--ink)] bg-[var(--surface)] p-2.5 rounded-[var(--r-s)] leading-relaxed">
@@ -2510,22 +2511,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       }
                       className="w-full p-2 rounded bg-[var(--bg)] text-[var(--acc)]/70 font-bold focus:outline-none focus:cursor-pointer"
                     >
-                      <option value="sala">🏟️ Sala de Conciertos</option>
-                      <option value="festival">🎪 Festival</option>
+                      <option value="sala">Sala de Conciertos</option>
+                      <option value="festival">Festival</option>
                       <option value="ayuntamiento">
-                        🏛️ Ayuntamiento / Fiestas
+                        Ayuntamiento / Fiestas
                       </option>
-                      <option value="discoteca">🪩 Discoteca / Club</option>
-                      <option value="grupo">🎸 Grupo / Banda Aliada</option>
-                      <option value="agencia">💼 Agencia de Booking</option>
+                      <option value="discoteca">Discoteca / Club</option>
+                      <option value="grupo">Grupo / Banda Aliada</option>
+                      <option value="agencia">Agencia de Booking</option>
                       <option value="manager">
-                        👔 Manager / Representante
+                        Manager / Representante
                       </option>
                       <option value="productora">
-                        🎬 Productora de Eventos
+                        Productora de Eventos
                       </option>
-                      <option value="sello">💿 Discográfica / Sello</option>
-                      <option value="medio">📻 Medio / Prensa / Radio</option>
+                      <option value="sello">Discográfica / Sello</option>
+                      <option value="medio">Medio / Prensa / Radio</option>
                     </select>
                   </div>
                 </div>
@@ -2545,7 +2546,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       >
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                         <span>
-                          {isSearchingLogo ? "Buscando..." : "🔍 Buscar Logo"}
+                          {isSearchingLogo ? "Buscando..." : "Buscar Logo"}
                         </span>
                       </button>
                       {onLeadLogoUpload && (
@@ -2657,7 +2658,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {/* DIRECCIÓN / CALLE */}
                 <div>
                   <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
-                    📍 Dirección Exacta (Calle, Número...)
+                    <ShowIcon inline emoji="📍" />Dirección Exacta (Calle, Número...)
                   </label>
                   <input
                     type="text"
@@ -2749,7 +2750,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div>
                   <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1">
-                    ✉️ Email Secundario / Promotora / Alternativo
+                    <ShowIcon inline emoji="✉️" />Email Secundario / Promotora / Alternativo
                   </label>
                   <input
                     type="email"
@@ -2768,7 +2769,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
                     <label className="block text-micro font-mono text-[var(--ok)] font-bold mb-1 flex items-center gap-1">
-                      <span>📱 Teléfono Móvil (WhatsApp)</span>
+                      <span><ShowIcon inline emoji="📱" />Teléfono Móvil (WhatsApp)</span>
                     </label>
                     <input
                       type="tel"
@@ -2791,7 +2792,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
                   <div>
                     <label className="block text-micro font-mono text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
-                      <span>☎️ Teléfono Fijo (Sala / Oficina)</span>
+                      <span><ShowIcon inline emoji="☎️" />Teléfono Fijo (Sala / Oficina)</span>
                     </label>
                     <input
                       type="tel"
@@ -2872,7 +2873,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-micro font-sans text-[var(--acc)]">
-                      🎪 Fechas del Festival (Inicio / Fin)
+                      <ShowIcon inline emoji="🎪" />Fechas del Festival (Inicio / Fin)
                     </span>
                     <button
                       type="button"
@@ -2885,7 +2886,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <span>
                         {isExtractingDates
                           ? "Buscando fechas..."
-                          : "⚡ Rellenar Fechas con IA"}
+                          : "Rellenar Fechas con IA"}
                       </span>
                     </button>
                   </div>
@@ -2910,7 +2911,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </div>
                     <div>
                       <label className="block text-micro font-sans text-[var(--acc)] mb-1">
-                        🎪 Fin Festival (dd/mm/yyyy)
+                        <ShowIcon inline emoji="🎪" />Fin Festival (dd/mm/yyyy)
                       </label>
                       <input
                         type="date"
@@ -2978,7 +2979,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
                 <div>
                   <span className="text-xs font-bold text-[var(--acc)] font-sans block">
-                    ⏰ Seguimiento Pendiente (
+                    <ShowIcon inline emoji="⏰" />Seguimiento Pendiente (
                     {getDaysSinceContact(selectedLead)} días sin respuesta)
                   </span>
                   <span className="text-xs text-[var(--ink-2)] font-sans">
@@ -2997,10 +2998,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   setEditedPitch(draft);
                   setIsEditingPitch(true);
                 }}
-                className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer"
+                className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
-                <span>⚡ Cargar Nudge (40 palabras)</span>
+                <span><ShowIcon inline emoji="⚡" />Cargar Nudge (40 palabras)</span>
               </button>
             </div>
           )}
@@ -3023,7 +3024,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="p-3.5 bg-[var(--acc)]/40 rounded-[var(--r-m)] space-y-2.5">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-base">⚡</span>
+                    <span className="text-base"><ShowIcon inline emoji="⚡" /></span>
                     <div>
                       <h4 className="text-xs font-bold text-[var(--acc)] font-mono">
                         Playbook Táctico & Extracción de Condiciones
@@ -3045,7 +3046,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           setIsEditingPitch(true);
                         }
                       }}
-                      className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-micro rounded-[var(--r-m)] flex items-center gap-1 transition-ui cursor-pointer"
+                      className="px-2.5 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-micro rounded-[var(--r-m)] flex items-center gap-1 transition-ui cursor-pointer"
                       title="Cargar la propuesta de respuesta sugerida por el playbook táctico"
                     >
                       <Sparkles className="w-3 h-3" />
@@ -3153,8 +3154,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <div className="flex items-center justify-between flex-wrap gap-2">
               <span className="text-xs font-bold font-sans text-[var(--acc)]">
                 {isReplyStage
-                  ? "💬 Respuesta Redactada por IA"
-                  : "✉️ Propuesta de Pitch Redactada"}
+                  ? "Respuesta Redactada por IA"
+                  : "Propuesta de Pitch Redactada"}
               </span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button
@@ -3164,7 +3165,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
                 >
                   <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  <span>Comparador A/B (DeepSeek vs Gemini) 🚀</span>
+                  <span>Comparador A/B (DeepSeek vs Gemini) <ShowIcon inline emoji="🚀" /></span>
                 </button>
 
                 <button
@@ -3192,7 +3193,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleApprovePitchDirectly}
                     disabled={isCreatingDraft}
-                    className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold rounded text-xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                    className="px-2.5 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded text-xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
                   >
                     {isCreatingDraft ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -3216,7 +3217,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="mb-2.5 p-2.5 bg-[var(--acc)]/40  rounded-[var(--r-m)] space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-xs shrink-0">🎯</span>
+                    <span className="text-xs shrink-0"><ShowIcon inline emoji="🎯" /></span>
                     <div className="min-w-0">
                       <span className="text-xs font-bold text-[var(--acc)]/40 truncate block">
                         Campaña: {activeCampaign.name}
@@ -3236,7 +3237,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={() => handleRegeneratePitchWithFeedback()}
                     disabled={isRegeneratingPitch}
-                    className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold rounded text-micro flex items-center gap-1 transition-ui cursor-pointer shrink-0 disabled:opacity-50"
+                    className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold rounded text-micro flex items-center gap-1 transition-ui cursor-pointer shrink-0 disabled:opacity-50"
                     title="Reescribe el pitch adaptándolo a las fechas y aforo de esta campaña"
                   >
                     <Sparkles className="w-3 h-3" />
@@ -3299,7 +3300,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--acc)] text-micro font-sans font-medium flex items-center gap-1 transition-ui cursor-pointer shadow-xs"
                         title={`Inserta la propuesta para la fecha libre ${fecha} en el borrador`}
                       >
-                        <span>📅 Proponer {fecha}</span>
+                        <span><ShowIcon inline emoji="📅" />Proponer {fecha}</span>
                       </button>
                     ))}
                   </div>
@@ -3376,28 +3377,28 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {[
                   {
                     id: "hold",
-                    label: "⏳ Pedir Pre-reserva (Hold 48h)",
+                    label: "Pedir Pre-reserva (Hold 48h)",
                     text: "\n\nPara dejarla asegurada mientras cuadramos la logística de viaje y disponibilidad de los músicos, ¿os parece bien dejar la fecha en Pre-reserva (Hold / Option 1) durante 48 horas? En cuanto lo coordinemos os damos confirmación definitiva para formalizar contrato y rider.",
                     color:
                       "text-[var(--acc)] bg-[var(--acc)]/10 hover:brightness-95",
                   },
                   {
                     id: "curfew",
-                    label: "⏰ Preguntar Curfew / Horarios",
+                    label: "Preguntar Curfew / Horarios",
                     text: "\n\nPor coordinar bien la duración del pase y prueba de sonido: ¿cuál es el horario estricto de finalización de música en vivo (curfew) de la sala y tenéis limitador de decibelios?",
                     color:
                       "text-[var(--acc)] bg-[var(--acc)]/10 hover:brightness-95",
                   },
                   {
                     id: "taquilla",
-                    label: "💰 Clarificar Gastos Taquilla",
+                    label: "Clarificar Gastos Taquilla",
                     text: "\n\nRespecto a las condiciones de taquilla: ¿en el reparto pactado están ya incluidos el técnico de sonido de la sala y portería, o existe algún canon o gasto fijo deducible antes de la liquidación?",
                     color:
                       "text-[var(--ok)] bg-[var(--ok)]/10 hover:brightness-95",
                   },
                   {
                     id: "rider",
-                    label: "🎛️ Confirmar D.I. y Rider",
+                    label: "Confirmar D.I. y Rider",
                     text: "\n\nEn cuanto a producción: llevamos violín electroacústico, sintes y bases, por lo que requerimos 3 líneas directas D.I. activas y envíos para nuestros in-ears. ¿Nos podéis facilitar el rider técnico de la sala para revisarlo con el equipo?",
                     color:
                       "text-[var(--acc)] bg-[var(--acc)]/10 hover:brightness-95",
@@ -3437,7 +3438,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     className="text-micro text-[var(--ink-2)] font-sans"
                     title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí."
                   >
-                    ✏️ Esta edición se usará también para entrenar al Redactor
+                    <ShowIcon inline emoji="✏️" />Esta edición se usará también para entrenar al Redactor
                   </span>
                   <div className="flex gap-2 shrink-0">
                     <button
@@ -3469,7 +3470,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   selectedLead.pitch_generado ||
                   "Sin pitch generado."}
                 <span className="absolute bottom-2 right-2 text-micro text-[var(--acc)] opacity-0 group-hover:opacity-100 transition-opacity font-bold">
-                  Clic para editar ✏️
+                  Clic para editar <ShowIcon inline emoji="✏️" />
                 </span>
               </div>
             )}
@@ -3581,7 +3582,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               {/* Scope Selector: Solo este pitch vs Memoria Global Futura */}
               <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
                 <span className="text-micro font-bold text-[var(--ink-2)] font-sans block">
-                  🎯 Alcance del entrenamiento IA:
+                  <ShowIcon inline emoji="🎯" />Alcance del entrenamiento IA:
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <label
@@ -3649,7 +3650,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               {/* Model selection pills for single-click regenerate */}
               <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-[var(--sunken)] rounded-[var(--r-m)]">
                 <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
-                  🤖 Motor de Redacción & Coste:
+                  <ShowIcon inline emoji="🤖" />Motor de Redacción & Coste:
                 </span>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   {[
@@ -3679,7 +3680,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         } hover:brightness-95`}
                         title={`Coste aproximado por pitch: ${m.cost}`}
                       >
-                        <span>{m.icon}</span>
+                        <span><ShowIcon inline emoji={m.icon} /></span>
                         <span>{m.name}</span>
                         <span className="font-sans text-micro text-[var(--ok)] bg-[var(--sunken)] px-1 py-0.2 rounded">
                           {m.cost}
@@ -3716,7 +3717,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={() => handleRegeneratePitchWithFeedback()}
                   disabled={isRegeneratingPitch || isRevertingPitch}
-                  className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans"
+                  className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans"
                 >
                   {isRegeneratingPitch ? (
                     <>
@@ -3835,7 +3836,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
                 <div>
                   <span className="text-xs font-bold text-[var(--acc)] font-sans block">
-                    ⏰ Seguimiento Pendiente (
+                    <ShowIcon inline emoji="⏰" />Seguimiento Pendiente (
                     {getDaysSinceContact(selectedLead)} días sin respuesta)
                   </span>
                   <span className="text-xs text-[var(--ink-2)] font-sans">
@@ -3858,10 +3859,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   }
                   setActiveTab("info");
                 }}
-                className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer"
+                className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
-                <span>⚡ Cargar Nudge de Seguimiento</span>
+                <span><ShowIcon inline emoji="⚡" />Cargar Nudge de Seguimiento</span>
               </button>
             </div>
           )}
@@ -3929,12 +3930,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     {msg.remitente === "sala" && msg.temperatura && (
                       <span className="px-1.5 py-0.5 rounded text-micro bg-[var(--sunken)] text-[var(--ink-2)] font-mono">
                         {msg.temperatura === "muy_caliente"
-                          ? "🔥 Muy Caliente"
+                          ? "Muy Caliente"
                           : msg.temperatura === "caliente"
-                            ? "☀️ Caliente"
+                            ? "Caliente"
                             : msg.temperatura === "tibio"
-                              ? "🌤️ Tibio"
-                              : "❄️ Frío"}
+                              ? "Tibio"
+                              : "Frío"}
                       </span>
                     )}
                   </div>
@@ -3961,7 +3962,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         </p>
                         {msg.sugerencia_estrategia && (
                           <p className="text-[var(--acc)]/90 font-medium">
-                            💡 {msg.sugerencia_estrategia}
+                            <ShowIcon inline emoji="💡" />{msg.sugerencia_estrategia}
                           </p>
                         )}
                       </div>
@@ -4095,7 +4096,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               type="button"
               onClick={handleEnrichAllApis}
               disabled={isEnrichingApis}
-              className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+              className="px-3 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
               title="Volver a consultar todas las APIs en tiempo real"
             >
               <RefreshCw
@@ -4235,7 +4236,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="space-y-1.5 text-xs bg-[var(--surface)] p-2.5 rounded-[var(--r-m)] ">
                     <div className="flex items-start gap-1.5">
                       <span className="text-[var(--ink-2)] font-bold shrink-0">
-                        🔊 Acústica:
+                        <ShowIcon inline emoji="🔊" />Acústica:
                       </span>
                       <span className="text-[var(--ink-2)] leading-tight">
                         {selectedLead.google_places_info.resumen_acustica ||
@@ -4244,7 +4245,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </div>
                     <div className="flex items-start gap-1.5">
                       <span className="text-[var(--ink-2)] font-bold shrink-0">
-                        🚛 Carga / Backline:
+                        <ShowIcon inline emoji="🚛" />Carga / Backline:
                       </span>
                       <span className="text-[var(--ink-2)] leading-tight">
                         {selectedLead.google_places_info.acceso_backline ||
@@ -4254,7 +4255,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     {selectedLead.google_places_info.horario_carga && (
                       <div className="flex items-start gap-1.5">
                         <span className="text-[var(--ink-2)] font-bold shrink-0">
-                          ⏰ Horario prueba:
+                          <ShowIcon inline emoji="⏰" />Horario prueba:
                         </span>
                         <span className="text-[var(--ink-2)] leading-tight">
                           {selectedLead.google_places_info.horario_carga}
@@ -4296,7 +4297,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             key={idx}
                             className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] text-xs font-medium"
                           >
-                            🎸 {banda}
+                            <ShowIcon inline emoji="🎸" />{banda}
                           </span>
                         ),
                       )}
@@ -4368,7 +4369,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           : "bg-[var(--alert)]/60 text-[var(--alert)]"
                     }`}
                   >
-                    🛡️ {selectedLead.email_verification.entregabilidad_score}%
+                    <ShowIcon inline emoji="🛡️" />{selectedLead.email_verification.entregabilidad_score}%
                     Entregable
                   </span>
                 )}
@@ -4383,7 +4384,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       </span>
                       <span className="font-bold text-[var(--ink-2)] capitalize">
                         {selectedLead.email_verification.estado === "valido"
-                          ? "✅ Buzón Válido"
+                          ? "Buzón Válido"
                           : selectedLead.email_verification.estado}
                       </span>
                     </div>
@@ -4394,7 +4395,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <span className="font-bold text-[var(--ok)]">
                         {selectedLead.email_verification.mx_valido
                           ? "✓ Servidores de correo activos"
-                          : "⚠️ Sin registros MX"}
+                          : "Sin registros MX"}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -4410,7 +4411,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <p className="text-xs text-[var(--ink-2)] bg-[var(--acc)]/20 p-2 rounded-[var(--r-m)] ">
-                    💡 {selectedLead.email_verification.motivo}
+                    <ShowIcon inline emoji="💡" />{selectedLead.email_verification.motivo}
                   </p>
                 </div>
               ) : (
@@ -4451,7 +4452,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={handleCalculateRoute}
                   disabled={isCalculatingRoute}
-                  className="px-2.5 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1 transition-ui cursor-pointer disabled:opacity-50"
+                  className="px-2.5 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1 transition-ui cursor-pointer disabled:opacity-50"
                   title="Recalcular ruta y gasolina"
                 >
                   <RefreshCw
@@ -4502,7 +4503,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <p className="text-xs text-[var(--ink-2)] bg-[var(--acc)]/20 p-2.5 rounded-[var(--r-m)] leading-snug">
-                    🚐{" "}
+                    <ShowIcon inline emoji="🚐" />{" "}
                     <span className="font-semibold text-[var(--acc)]">
                       Road Manager:
                     </span>{" "}
@@ -4593,7 +4594,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <p className="text-xs text-[var(--ink-2)] bg-[var(--acc)]/20 p-2.5 rounded-[var(--r-m)] leading-snug">
-                    📢 {selectedLead.social_engagement.resumen_social}
+                    <ShowIcon inline emoji="📢" />{selectedLead.social_engagement.resumen_social}
                   </p>
                 </div>
               ) : (
@@ -4605,7 +4606,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchSocial}
                     disabled={isEnrichingSocial}
-                    className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingSocial ? "animate-spin" : ""}`}
@@ -4690,7 +4691,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {selectedLead.booking_window_info.consejo_antelacion && (
                     <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 space-y-1.5">
                       <p className="text-xs text-[var(--ink-2)] leading-snug">
-                        💡{" "}
+                        <ShowIcon inline emoji="💡" />{" "}
                         <strong className="text-[var(--acc)]">
                           Consejo Táctico:
                         </strong>{" "}
@@ -4708,7 +4709,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchBookingWindow}
                     disabled={isEnrichingBookingWindow}
-                    className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingBookingWindow ? "animate-spin" : ""}`}
@@ -4800,7 +4801,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                                   {ev.nombre}
                                 </strong>
                                 <span className="text-micro text-[var(--ink-2)] font-mono">
-                                  📅 {ev.fecha_aproximada} • {ev.tipo}
+                                  <ShowIcon inline emoji="📅" />{ev.fecha_aproximada} • {ev.tipo}
                                 </span>
                               </div>
                               <span
@@ -4823,7 +4824,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                   {selectedLead.local_events_clash_info.alerta_resumen && (
                     <p className="text-xs text-[var(--ink-2)] bg-[var(--alert)]/20 p-2.5 rounded-[var(--r-m)] leading-snug">
-                      ⚠️ {selectedLead.local_events_clash_info.alerta_resumen}
+                      <ShowIcon inline emoji="⚠️" />{selectedLead.local_events_clash_info.alerta_resumen}
                     </p>
                   )}
                 </div>
@@ -4836,7 +4837,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchLocalEvents}
                     disabled={isEnrichingLocalEvents}
-                    className="px-3 py-1 bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingLocalEvents ? "animate-spin" : ""}`}
@@ -4920,14 +4921,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         }}
                         className="text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)] underline cursor-pointer"
                       >
-                        📋 Copiar titular de prensa
+                        <ShowIcon inline emoji="📋" />Copiar titular de prensa
                       </button>
                     </div>
                   )}
 
                   {selectedLead.local_press_media_info.resumen_cobertura && (
                     <p className="text-micro text-[var(--ink-2)] bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
-                      📢 {selectedLead.local_press_media_info.resumen_cobertura}
+                      <ShowIcon inline emoji="📢" />{selectedLead.local_press_media_info.resumen_cobertura}
                     </p>
                   )}
                 </div>
@@ -4940,7 +4941,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchPressMedia}
                     disabled={isEnrichingPressMedia}
-                    className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingPressMedia ? "animate-spin" : ""}`}
@@ -4978,7 +4979,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         >
                           <div className="flex items-center justify-between">
                             <strong className="text-[var(--acc)]">
-                              🎸 {b.nombre}
+                              <ShowIcon inline emoji="🎸" />{b.nombre}
                             </strong>
                             {b.oyentes_estimados !== undefined && (
                               <span className="text-micro font-mono text-[var(--ink-2)]">
@@ -5051,7 +5052,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchCoBooking}
                     disabled={isEnrichingCoBooking}
-                    className="px-3 py-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingCoBooking ? "animate-spin" : ""}`}
@@ -5081,7 +5082,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={() => handleRecalculateFinancial()}
                   disabled={isRecalculatingFinancial}
-                  className="px-3 py-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                  className="px-3 py-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                 >
                   <RefreshCw
                     className={`w-3.5 h-3.5 ${isRecalculatingFinancial ? "animate-spin" : ""}`}
@@ -5095,7 +5096,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-xs">
               <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
-                  🎟️ Anticipada (€)
+                  <ShowIcon inline emoji="🎟️" />Anticipada (€)
                 </label>
                 <input
                   type="number"
@@ -5107,7 +5108,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
               <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
-                  🚪 Puerta (€)
+                  <ShowIcon inline emoji="🚪" />Puerta (€)
                 </label>
                 <input
                   type="number"
@@ -5119,7 +5120,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
               <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
-                  🏢 Alquiler Sala (€)
+                  <ShowIcon inline emoji="🏢" />Alquiler Sala (€)
                 </label>
                 <input
                   type="number"
@@ -5143,7 +5144,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
               <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
-                  🚐 Gastos Viaje/Prod (€)
+                  <ShowIcon inline emoji="🚐" />Gastos Viaje/Prod (€)
                 </label>
                 <input
                   type="number"
@@ -5155,7 +5156,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
               <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
-                  🎸 Nº Músicos
+                  <ShowIcon inline emoji="🎸" />Nº Músicos
                 </label>
                 <input
                   type="number"
@@ -5385,7 +5386,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             <button
               type="submit"
-              className="w-full py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] transition-ui cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] transition-ui cursor-pointer flex items-center justify-center gap-1.5"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Anotar en Bitácora</span>
@@ -5414,14 +5415,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <div className="flex items-center gap-1.5 font-bold">
                       <span className="px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--acc)]/70">
                         {log.tipo === "Llamada"
-                          ? "📞 Llamada"
+                          ? "Llamada"
                           : log.tipo === "WhatsApp"
-                            ? "💬 WhatsApp"
+                            ? "WhatsApp"
                             : log.tipo === "Email"
-                              ? "✉️ Email"
+                              ? "Email"
                               : log.tipo === "Reunión"
-                                ? "🤝 Reunión"
-                                : "📝 Nota"}
+                                ? "Reunión"
+                                : "Nota"}
                       </span>
                       <span className="text-[var(--ink-2)]">
                         {log.autor || "Agente"}

@@ -30,17 +30,17 @@ const MAP_STYLES: Record<
   { name: string; url: string; attr: string }
 > = {
   streets: {
-    name: "🗺️ Callejero Claro (Recomendado)",
+    name: "Callejero Claro (Recomendado)",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     attr: "&copy; Esri &mdash; OpenStreetMap contributors",
   },
   osm: {
-    name: "🏙️ OpenStreetMap Detallado",
+    name: "OpenStreetMap Detallado",
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     attr: "&copy; OpenStreetMap contributors",
   },
   satellite: {
-    name: "🛰️ Satélite Híbrido (Estilo Google Maps)",
+    name: "Satélite Híbrido (Estilo Google Maps)",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attr: "&copy; Esri World Imagery",
   },
@@ -50,7 +50,7 @@ const MAP_STYLES: Record<
     attr: "&copy; Esri &mdash; Light Gray Canvas",
   },
   dark: {
-    name: "🌙 Oscuro Nocturno",
+    name: "Oscuro Nocturno",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
     attr: "&copy; Esri &mdash; Dark Gray Canvas",
   },
@@ -371,25 +371,25 @@ function getStatusBadge(estado: string) {
       };
     case "pendiente_aprobacion":
       return {
-        text: "⚡ Pendiente Aprobación",
+        text: "Pendiente Aprobación",
         bg: "#fef3c7",
         color: "#92400e",
       };
     case "interesado":
-      return { text: "💡 Interesado", bg: "#dbeafe", color: "#1e40af" };
+      return { text: "Interesado", bg: "#dbeafe", color: "#1e40af" };
     case "negociando":
-      return { text: "🤝 En Negociación", bg: "#e0e7ff", color: "#3730a3" };
+      return { text: "En Negociación", bg: "#e0e7ff", color: "#3730a3" };
     case "esperando_respuesta":
       return {
-        text: "⏳ Esperando Respuesta",
+        text: "Esperando Respuesta",
         bg: "#f3e8ff",
         color: "#6b21a8",
       };
     case "no_interesado":
-      return { text: "❌ No Interesado", bg: "#ffe4e6", color: "#9f1239" };
+      return { text: "No Interesado", bg: "#ffe4e6", color: "#9f1239" };
     case "nuevo":
     default:
-      return { text: "🎵 Nuevo Contacto", bg: "#f1f5f9", color: "#334155" };
+      return { text: "Nuevo Contacto", bg: "#f1f5f9", color: "#334155" };
   }
 }
 

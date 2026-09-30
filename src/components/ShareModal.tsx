@@ -115,7 +115,7 @@ export function ShareModal({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
                 onClick={handleWhatsApp}
-                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-semibold text-xs transition-ui active:scale-[0.97]"
+                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-semibold text-xs transition-ui active:scale-[0.97]"
               >
                 <MessageSquare className="w-4 h-4 fill-[var(--surface)]/20" />
                 <span>WhatsApp</span>
@@ -209,7 +209,7 @@ export function ShareModal({
               </button>
               <button
                 onClick={handleWhatsApp}
-                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-colors flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-colors flex items-center gap-1.5"
               >
                 <Send className="w-3.5 h-3.5" />
                 Enviar a WhatsApp

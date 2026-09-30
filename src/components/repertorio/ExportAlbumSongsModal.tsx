@@ -23,6 +23,7 @@ import {
   AlertCircle,
   FileCheck,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ExportAlbumSongsModalProps {
   isOpen: boolean;
@@ -535,14 +536,14 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                 className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui bg-[var(--sunken)] text-[var(--ink)]`}
               >
                 <option value="all">
-                  💿 Discografía Completa (Todas las Canciones)
+                  Discografía Completa (Todas las Canciones)
                 </option>
                 {albumsList
                   .filter((a) => a !== "todos")
                   .map((album) => (
                     <option key={album} value={album}>
                       {album === "Singles / Sin Disco"
-                        ? "🎵 Singles / Sin Disco"
+                        ? "Singles / Sin Disco"
                         : `💽 ${album}`}
                     </option>
                   ))}
@@ -810,7 +811,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   type="button"
                   disabled={zipLoading}
                   onClick={handleDownloadZip}
-                  className="px-5 py-2.5 rounded-[var(--r-l)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-[var(--r-l)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--on-ok)] font-extrabold text-xs flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
                 >
                   {zipLoading ? (
                     <>

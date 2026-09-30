@@ -27,7 +27,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
       <div className="flex items-center gap-2 min-w-0">
         <span className={`w-2 h-2 rounded-[var(--r-pill)] shrink-0 ${agentsEnabled ? 'bg-[var(--acc)]' : 'bg-[var(--ok)]'}`} />
         <span className="font-bold truncate text-xs">
-          {agentsEnabled ? '⚡ Agentes Supabase Activos (Backend & Database)' : '🤖 Modo Gemini Directo (100% Autónomo)'}
+          {agentsEnabled ? 'Agentes Supabase Activos (Backend & Database)' : 'Modo Gemini Directo (100% Autónomo)'}
         </span>
         <span className="text-micro opacity-75 hidden sm:inline truncate">
           {agentsEnabled
@@ -64,7 +64,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
           className={`px-2.5 py-1 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97] ${
             agentsEnabled
               ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] '
-              : 'bg-[var(--ok)] hover:bg-[var(--ok)]/15 text-[var(--on-ok)] '
+              : 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] '
           }`}
           title={agentsEnabled ? 'Desactivar motor de agentes de Supabase y usar solo Gemini' : 'Activar motor de agentes en Supabase'}
         >

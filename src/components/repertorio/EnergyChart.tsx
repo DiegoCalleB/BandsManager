@@ -569,7 +569,7 @@ export function EnergyChart({
                   className="font-bold text-base"
                   style={{ color: info.hexColor }}
                 >
-                  {info.icon} {Math.round(liveEnergyScore / 2)}
+                  <ShowIcon inline emoji={info.icon} /> {Math.round(liveEnergyScore / 2)}
                 </span>
                 <span className="text-[var(--ink-2)]">/10 · {info.label}</span>
               </div>
@@ -779,7 +779,7 @@ export function EnergyChart({
           <div className="absolute z-30 top-1 -translate-x-1/2 bg-[var(--surface)] text-[var(--ink)] text-micro font-sans px-2.5 py-1.5 rounded-[var(--r-s)] max-w-[180px] pointer-events-none" style={{ left: tip.left }}>
             <p className="font-bold text-[var(--acc-ink)] truncate">{chartData[tip.i].name}</p>
             <p className="text-[var(--ink-2)] truncate">
-              {chartData[tip.i].icon} {chartData[tip.i].label} ({typeof chartData[tip.i].score === "number" ? Math.round((chartData[tip.i].score as number) / 2) : "–"}/10)
+              <ShowIcon inline emoji={chartData[tip.i].icon} /> {chartData[tip.i].label} ({typeof chartData[tip.i].score === "number" ? Math.round((chartData[tip.i].score as number) / 2) : "–"}/10)
               {chartData[tip.i].tonalidad ? ` · ${chartData[tip.i].tonalidad}` : ""}
               {typeof chartData[tip.i].bpm === "number" ? ` · ${chartData[tip.i].bpm} BPM` : ""}
             </p>
@@ -844,25 +844,25 @@ export function EnergyChart({
               </p>
               {d.isSpeechEvent ? (
                 <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
-                  <span>{d.icon}</span> Interludio / Pausa — meseta de energía
+                  <span><ShowIcon inline emoji={d.icon} /></span> Interludio / Pausa — meseta de energía
                 </p>
               ) : (
                 <>
                   <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
-                    <span>{d.icon}</span> {d.label} ({Math.round(d.score / 2)}
+                    <span><ShowIcon inline emoji={d.icon} /></span> {d.label} ({Math.round(d.score / 2)}
                     /10)
                   </p>
                   {typeof d.bpm === "number" && (
-                    <p className="text-[var(--ink-2)] mt-0.5">🥁 {d.bpm} BPM</p>
+                    <p className="text-[var(--ink-2)] mt-0.5"><ShowIcon inline emoji="🥁" />{d.bpm} BPM</p>
                   )}
                   {d.tonalidad && (
                     <p className="text-[var(--acc)]/70 mt-0.5">
-                      🎼 {d.tonalidad}
+                      <ShowIcon inline emoji="🎼" />{d.tonalidad}
                     </p>
                   )}
                   {d.variance > 0 && (
                     <p className="text-[var(--ink-2)] mt-0.5">
-                      🎧 Dinámica interna:{" "}
+                      <ShowIcon inline emoji="🎧" />Dinámica interna:{" "}
                       {d.variance >= 6
                         ? "alta (sube y baja mucho)"
                         : d.variance >= 3
@@ -874,7 +874,7 @@ export function EnergyChart({
                     typeof d.idealScore === "number" &&
                     Math.abs(d.idealScore - d.score) >= 2 && (
                       <p className="text-[var(--ink-2)] mt-0.5">
-                        〰️ Ideal aquí: ~{Math.round(d.idealScore / 2)}/10
+                        <ShowIcon inline emoji="〰️" />Ideal aquí: ~{Math.round(d.idealScore / 2)}/10
                       </p>
                     )}
                   {d.transitionFromPrev && (
@@ -887,7 +887,7 @@ export function EnergyChart({
                               : "bg-[var(--alert)]/20 text-[var(--ink-2)]"
                           }`}
                         >
-                          {d.transitionFromPrev.icon}
+                          <ShowIcon inline emoji={d.transitionFromPrev.icon} />
                         </span>
                         <span>
                           Unión con #{d.idx}:{" "}
@@ -910,7 +910,7 @@ export function EnergyChart({
                       onClick={() => onPreviewTransition(d.idx)}
                       className="text-[var(--acc)] font-semibold mt-1 pt-1 flex items-center gap-1 cursor-pointer hover:underline"
                     >
-                      🎧 Probar unión con #{d.idx}
+                      <ShowIcon inline emoji="🎧" />Probar unión con #{d.idx}
                     </button>
                   )}
                 </>

@@ -106,7 +106,7 @@ Regla de oro contra "hecho por varias IAs": **un solo botón, un solo campo, una
 - [ ] Todo control ≥ 40 px de zona táctil, con `:active`, foco visible y sin `hover:scale`.
 - [ ] Cero `transition-all`, cero `ease-in`, animaciones < 300 ms y solo `transform`/`opacity`.
 - [ ] Radios concéntricos; cifras tabulares; títulos con `balance`.
-- [ ] Sin emojis en la interfaz; iconos Lucide del mismo trazo.
+- [ ] Sin emojis en la interfaz (`npm run audit:emojis`); iconos Lucide del mismo trazo. Un dato que trae un emoji guardado se pinta con `<ShowIcon emoji={…} />`, nunca tal cual.
 - [ ] Móvil: modal como hoja, máximo 3 bloques, sin scroll horizontal.
 - [ ] Armonía cromática mirada a ojo (contact sheet Claro y Oscuro) y `python3 scripts/paleta-audit.py` en verde.
 - [ ] `node scripts/design-audit.js` y `tsc` limpios; Playwright visual revisado a ojo.

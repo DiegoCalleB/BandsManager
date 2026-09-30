@@ -26,6 +26,7 @@ import {
   buildEmailSignaturePlainText,
   copyRichSignatureToClipboard,
 } from "../../utils/emailFormatter";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface EPKFirmaQRBlockProps {
   config: EPKConfig;
@@ -559,8 +560,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   onClick={handleCopyRichSignature}
                   className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer ${
                     copiadoFirma === "rich"
-                      ? "bg-[var(--ok)] text-[var(--ink)] ring-2 ring-[var(--ok)]"
-                      : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--ok)] text-[var(--on-ok)] ring-2 ring-[var(--ok)]"
+                      : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                   }`}
                   title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
                 >
@@ -690,7 +691,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
-                        🔴 Gmail
+                        <ShowIcon inline emoji="🔴" />Gmail
                       </button>
                       <button
                         type="button"
@@ -701,7 +702,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
-                        🔵 Outlook / Microsoft 365
+                        <ShowIcon inline emoji="🔵" />Outlook / Microsoft 365
                       </button>
                       <button
                         type="button"
@@ -712,7 +713,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
-                        ⚪ Apple Mail / Mac
+                        <ShowIcon inline emoji="⚪" />Apple Mail / Mac
                       </button>
                     </div>
 
@@ -725,7 +726,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         </li>
                         <li>
                           Abre tu Gmail y pulsa en la rueda de{" "}
-                          <strong>Ajustes (⚙️)</strong> &gt;{" "}
+                          <strong>Ajustes (<ShowIcon inline emoji="⚙️" />)</strong> &gt;{" "}
                           <strong>Ver todos los ajustes</strong>.
                         </li>
                         <li>
@@ -759,7 +760,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         </li>
                         <li>
                           En Outlook Web o App, entra en{" "}
-                          <strong>Configuración (⚙️)</strong> &gt;{" "}
+                          <strong>Configuración (<ShowIcon inline emoji="⚙️" />)</strong> &gt;{" "}
                           <strong>Correo</strong> &gt;{" "}
                           <strong>Redactar y responder</strong>.
                         </li>
@@ -839,7 +840,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <button
                   type="button"
                   onClick={handleCopyUrl}
-                  className="flex-1 px-3 py-2 bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
+                  className="flex-1 px-3 py-2 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
                 >
                   {copiado ? (
                     <Check className="w-4 h-4" />

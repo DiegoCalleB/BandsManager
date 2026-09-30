@@ -49,6 +49,7 @@ import {
 import { Song, ThemeColors } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface TrackCutItem {
   index: number;
@@ -1452,7 +1453,7 @@ export const LiveConcertToAlbumModal: React.FC<
           <div className="p-6 overflow-y-auto space-y-6 flex-1">
             {errorMessage && (
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)]/10 text-[var(--alert)] text-sm flex items-center justify-between">
-                <span>⚠️ {errorMessage}</span>
+                <span><ShowIcon inline emoji="⚠️" />{errorMessage}</span>
                 <button
                   onClick={() => setErrorMessage(null)}
                   className="font-bold text-xs hover:underline"
@@ -1497,7 +1498,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       ) : (
                         <>
                           <Lock className="w-3 h-3" />
-                          <span>🔐 ¿Es tu canal? Vincular sesión</span>
+                          <span><ShowIcon inline emoji="🔐" />¿Es tu canal? Vincular sesión</span>
                         </>
                       )}
                     </button>
@@ -1552,7 +1553,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     onClick={handleAnalyzeConcert}
                     disabled={isAnalyzing || (!youtubeUrl && !uploadedFile)}
-                    className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] font-bold text-sm text-[var(--ink)]/10 disabled:opacity-50 flex items-center justify-center gap-2 transition-ui shrink-0"
+                    className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 font-bold text-sm text-[var(--ink)]/10 disabled:opacity-50 flex items-center justify-center gap-2 transition-ui shrink-0"
                   >
                     {isAnalyzing ? (
                       <>
@@ -1561,7 +1562,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       </>
                     ) : (
                       <>
-                        <Scissors className="w-4 h-4" /> 🔍 Analizar Concierto &
+                        <Scissors className="w-4 h-4" /> <ShowIcon inline emoji="🔍" />Analizar Concierto &
                         Detectar Pistas
                       </>
                     )}
@@ -1580,7 +1581,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <div>
                         <span className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
                           <Sparkles className="w-3.5 h-3.5 text-[var(--ok)]" />{" "}
-                          🎤 Transcribir audio completo ANTES de trocear (Ajuste
+                          <ShowIcon inline emoji="🎤" />Transcribir audio completo ANTES de trocear (Ajuste
                           fino de cortes por habla/letra)
                         </span>
                         <p className="text-xs text-[var(--ink-2)] mt-0.5">
@@ -1615,18 +1616,18 @@ export const LiveConcertToAlbumModal: React.FC<
                       <AlertTriangle className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                       <div>
                         <p className="font-bold text-[var(--ink)] text-sm">
-                          🎬 Audio y Muestras de YouTube Listos para Escuchar
+                          <ShowIcon inline emoji="🎬" />Audio y Muestras de YouTube Listos para Escuchar
                         </p>
                         <p className="text-[var(--acc)]/70 mt-1 leading-relaxed">
                           Puedes{" "}
                           <strong>escuchar las muestras de cada corte</strong>{" "}
                           directamente haciendo clic en{" "}
-                          <strong>"🔊 Escuchar muestra"</strong> (se reproduce
+                          <strong>"<ShowIcon inline emoji="🔊" />Escuchar muestra"</strong> (se reproduce
                           el vídeo/audio original de YouTube sincronizado con
                           los timestamps).
                         </p>
                         <p className="text-[var(--acc)]/80 mt-1 text-xs">
-                          ℹ️{" "}
+                          <ShowIcon inline emoji="ℹ️" />{" "}
                           <em>
                             Para trocear físicamente el concierto en archivos
                             MP3 independientes descargables en el servidor o
@@ -1646,8 +1647,8 @@ export const LiveConcertToAlbumModal: React.FC<
                         <Lock className="w-3.5 h-3.5 text-[var(--acc)]" />
                         <span>
                           {hasYoutubeCookies
-                            ? "🔐 Sesión YouTube Activa"
-                            : "🔐 Vincular Sesión de la Banda"}
+                            ? "Sesión YouTube Activa"
+                            : "Vincular Sesión de la Banda"}
                         </span>
                       </button>
 
@@ -1659,26 +1660,26 @@ export const LiveConcertToAlbumModal: React.FC<
                         title="Abrir Cobalt para descargar el MP3 completo de YouTube en 5 segundos y adjuntarlo aquí"
                       >
                         <Download className="w-3.5 h-3.5" />
-                        <span>📥 Extraer MP3 (Cobalt)</span>
+                        <span><ShowIcon inline emoji="📥" />Extraer MP3 (Cobalt)</span>
                         <ExternalLink className="w-3 h-3 ml-0.5 opacity-70" />
                       </a>
 
                       <button
                         onClick={handleLoadDemoAudio}
                         disabled={isLinkingLocalFile}
-                        className="px-3 py-2 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui text-xs disabled:opacity-50"
+                        className="px-3 py-2 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui text-xs disabled:opacity-50"
                         title="Cargar audio de ensayo demo instantáneamente para probar muestras y transcripciones"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-[var(--ink)]" />
-                        <span>✨ Cargar Demo</span>
+                        <span><ShowIcon inline emoji="✨" />Cargar Demo</span>
                       </button>
 
-                      <label className="px-3.5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold rounded-[var(--r-s)] cursor-pointer flex items-center justify-center gap-1.5 transition-ui text-xs">
+                      <label className="px-3.5 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-s)] cursor-pointer flex items-center justify-center gap-1.5 transition-ui text-xs">
                         <Upload className="w-4 h-4" />
                         <span>
                           {isLinkingLocalFile
                             ? "Subiendo..."
-                            : "📁 Adjuntar Archivo Local"}
+                            : "Adjuntar Archivo Local"}
                         </span>
                         <input
                           type="file"
@@ -1782,7 +1783,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       title="Abrir asistente para nombrar todos los temas y speeches rápidamente o pegar tu setlist"
                     >
                       <Tag className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                      <span>🏷️ Nombrar Temas & Speeches</span>
+                      <span><ShowIcon inline emoji="🏷️" />Nombrar Temas & Speeches</span>
                     </button>
 
                     <button
@@ -1797,7 +1798,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <span>
                         {isDetectingCues
                           ? "Detectando CUEs..."
-                          : "🎯 Autodetectar CUEs de Inicio"}
+                          : "Autodetectar CUEs de Inicio"}
                       </span>
                     </button>
 
@@ -1809,11 +1810,11 @@ export const LiveConcertToAlbumModal: React.FC<
                     ) && (
                       <button
                         onClick={handleSnapAllTracksToCues}
-                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--tentative)] flex items-center gap-1.5 font-bold"
+                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--tentative)] flex items-center gap-1.5 font-bold"
                         title="Ajusta automáticamente los tiempos de inicio de todos los temas musicales al punto CUE exacto de entrada musical"
                       >
                         <Target className="w-3.5 h-3.5" />
-                        <span>⚡ Ajustar Inicios a CUEs</span>
+                        <span><ShowIcon inline emoji="⚡" />Ajustar Inicios a CUEs</span>
                       </button>
                     )}
 
@@ -1828,7 +1829,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       />
                       {isClassifying
                         ? "Clasificando..."
-                        : "⚡ Auto-Clasificar (Música/Diálogo)"}
+                        : "Auto-Clasificar (Música/Diálogo)"}
                     </button>
 
                     <button
@@ -1844,7 +1845,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         ? `Transcribiendo (${transcribeAllProgress?.current}/${transcribeAllProgress?.total})...`
                         : selectedIndices.length > 0
                           ? `🎤 Transcribir Seleccionadas (${selectedIndices.length})`
-                          : "🎤 Transcribir Todo el Concierto"}
+                          : "Transcribir Todo el Concierto"}
                     </button>
 
                     <button
@@ -1854,14 +1855,14 @@ export const LiveConcertToAlbumModal: React.FC<
                     >
                       <Music2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                       {expandAllChords
-                        ? "🙈 Plegar Cifrados"
-                        : "📖 Desplegar Todos los Cifrados"}
+                        ? "Plegar Cifrados"
+                        : "Desplegar Todos los Cifrados"}
                     </button>
 
                     {selectedIndices.length >= 2 && (
                       <button
                         onClick={handleMergeSelectedTracks}
-                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60 flex items-center gap-1.5 animate-bounce"
+                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 flex items-center gap-1.5 animate-bounce"
                       >
                         <GitMerge className="w-3.5 h-3.5" />
                         Fusionar Seleccionadas ({selectedIndices.length})
@@ -1884,7 +1885,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <Sparkles className="w-4 h-4 text-[var(--tentative)] shrink-0" />
                       <span>
                         <strong>
-                          💡 ¿La Pista 1 es la presentación/speech de la banda?
+                          <ShowIcon inline emoji="💡" />¿La Pista 1 es la presentación/speech de la banda?
                         </strong>{" "}
                         Si incluye palabras de saludo o presentación (incluso
                         con música de fondo o ráfagas), conviértela a Speech:
@@ -1906,7 +1907,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       }}
                       className="px-3 py-1 bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold rounded-[var(--r-s)] text-xs shrink-0 shadow transition-ui flex items-center gap-1"
                     >
-                      🗣️ Convertir Pista 1 a Speech / Presentación
+                      <ShowIcon inline emoji="🗣️" />Convertir Pista 1 a Speech / Presentación
                     </button>
                   </div>
                 )}
@@ -2079,10 +2080,10 @@ export const LiveConcertToAlbumModal: React.FC<
                               title="Haz clic para alternar entre Canción y Speech/Presentación"
                             >
                               <option value="musica">
-                                🎵 Canción Completa
+                                Canción Completa
                               </option>
                               <option value="dialogo">
-                                🗣️ Speech / Presentación
+                                Speech / Presentación
                               </option>
                             </select>
                           </div>
@@ -2153,7 +2154,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)] text-[var(--acc)]/70 hover:text-[var(--ink)] rounded font-sans text-micro font-bold transition-ui cursor-pointer"
                                     title="Ajustar tiempo de inicio para que arranque exactamente en este CUE musical"
                                   >
-                                    ⚡ Ajustar Inicio
+                                    <ShowIcon inline emoji="⚡" />Ajustar Inicio
                                   </button>
                                 </div>
                               )}
@@ -2163,7 +2164,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                 className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1"
                                 title="Se detectó charla o aplauso antes de la entrada musical"
                               >
-                                👏 Charla previa
+                                <ShowIcon inline emoji="👏" />Charla previa
                               </span>
                             )}
 
@@ -2175,7 +2176,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                 disabled={isLoadingPreview}
                                 className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-ui ${
                                   isPlayingThis
-                                    ? "bg-[var(--acc)] text-[var(--ink)]"
+                                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
                                     : "bg-[var(--surface)] hover:bg-[var(--acc)] hover:text-[var(--ink)] text-[var(--ink-2)]"
                                 }`}
                                 title="Reproducir este trozo para escucharlo y clasificarlo"
@@ -2265,7 +2266,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               {track.type === "musica" ? (
                                 <Music2 className="w-4 h-4 text-[var(--acc)]" />
                               ) : (
-                                <span className="text-base">🗣️</span>
+                                <span className="text-base"><ShowIcon inline emoji="🗣️" /></span>
                               )}
                               <label className="text-xs font-bold tracking-wide text-[var(--ink-2)]">
                                 {track.type === "musica"
@@ -2351,7 +2352,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     title="Extrae las primeras palabras del speech para usarlas como nombre"
                                   >
                                     <Sparkles className="w-3 h-3 text-[var(--tentative)]" />
-                                    <span>💡 Usar frase del speech</span>
+                                    <span><ShowIcon inline emoji="💡" />Usar frase del speech</span>
                                   </button>
                                 )}
                               </>
@@ -2460,7 +2461,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   />
                                   {transcribingChordsIndex === track.index
                                     ? "Transcribiendo..."
-                                    : "✨ Re-Transcribir Letra y Acordes"}
+                                    : "Re-Transcribir Letra y Acordes"}
                                 </button>
 
                                 <button
@@ -2477,7 +2478,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   {expandedChordsIndex === track.index ||
                                   expandAllChords
                                     ? "Ocultar Cifrado"
-                                    : "🎼 Ver/Editar Cifrado"}
+                                    : "Ver/Editar Cifrado"}
                                   {expandedChordsIndex === track.index ||
                                   expandAllChords ? (
                                     <ChevronUp className="w-3 h-3" />
@@ -2557,7 +2558,7 @@ export const LiveConcertToAlbumModal: React.FC<
                           <div className="pl-9 pt-2 space-y-1.5/20 mt-2">
                             <div className="flex items-center justify-between text-xs">
                               <span className="text-xs font-bold text-[var(--tentative)]/80 flex items-center gap-1.5">
-                                🗣️ Transcripción del Speech / Intro:
+                                <ShowIcon inline emoji="🗣️" />Transcripción del Speech / Intro:
                               </span>
                               <button
                                 onClick={() => handleTranscribeSpeech(track)}
@@ -2638,7 +2639,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                         >
                                           <Target className="w-3 h-3 text-[var(--ink-2)]" />
                                           <span>
-                                            🎯 Ir a CUE (+
+                                            <ShowIcon inline emoji="🎯" />Ir a CUE (+
                                             {currentTrack.cueIn.toFixed(1)}s)
                                           </span>
                                         </button>
@@ -2657,7 +2658,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     className="px-2.5 py-1 text-micro font-bold rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/40 transition-ui flex items-center gap-1"
                                     title="Fijar el punto de inicio de este corte en el segundo actual de reproducción"
                                   >
-                                    📍 Ajustar Inicio (
+                                    <ShowIcon inline emoji="📍" />Ajustar Inicio (
                                     {formatSeconds(
                                       activeSnippet.start + snippetCurrentTime,
                                     )}
@@ -2673,7 +2674,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     className="px-2.5 py-1 text-micro font-bold rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/40 transition-ui flex items-center gap-1"
                                     title="Fijar el punto final de este corte en el segundo actual de reproducción"
                                   >
-                                    📍 Ajustar Fin (
+                                    <ShowIcon inline emoji="📍" />Ajustar Fin (
                                     {formatSeconds(
                                       activeSnippet.start + snippetCurrentTime,
                                     )}
@@ -2700,7 +2701,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   >
                                     <Scissors className="w-3 h-3 text-[var(--alert)]" />
                                     <span>
-                                      ✂️ Dividir en 2 Aquí (
+                                      <ShowIcon inline emoji="✂️" />Dividir en 2 Aquí (
                                       {formatSeconds(
                                         activeSnippet.start +
                                           snippetCurrentTime,
@@ -2736,7 +2737,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   </div>
                                   <div className="flex items-center justify-between text-xs text-[var(--acc)]/70 font-sans bg-[var(--surface)]/80 px-3 py-1.5 rounded-[var(--r-s)]">
                                     <span>
-                                      ▶️ Reproduciendo muestra sincronizada:{" "}
+                                      <ShowIcon inline emoji="▶️" />Reproduciendo muestra sincronizada:{" "}
                                       {formatSeconds(activeSnippet.start)} a{" "}
                                       {formatSeconds(activeSnippet.end)}
                                     </span>
@@ -2823,7 +2824,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                             else snippetAudioRef.current.play();
                                           }
                                         }}
-                                        className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs flex items-center gap-1.5/10/20"
+                                        className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5/10/20"
                                       >
                                         {snippetIsPlaying ? (
                                           <Pause className="w-4 h-4" />
@@ -2857,7 +2858,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                           }
                                           className={`px-1.5 py-0.5 rounded font-bold ${
                                             snippetSpeed === spd
-                                              ? "bg-[var(--acc)] text-[var(--ink)]"
+                                              ? "bg-[var(--acc)] text-[var(--on-acc)]"
                                               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                                           }`}
                                         >
@@ -2880,7 +2881,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     onClick={handleProcessAndSlice}
                     disabled={isProcessing}
-                    className="px-6 py-3 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] font-extrabold text-[var(--ink)] text-sm flex items-center gap-2 transition-ui"
+                    className="px-6 py-3 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] font-extrabold text-[var(--on-ok)] text-sm flex items-center gap-2 transition-ui"
                   >
                     {isProcessing ? (
                       <>
@@ -2889,7 +2890,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       </>
                     ) : (
                       <>
-                        <Scissors className="w-4 h-4" /> ✂️ Trocear Concierto &
+                        <Scissors className="w-4 h-4" /> <ShowIcon inline emoji="✂️" />Trocear Concierto &
                         Crear Disco (.mp3)
                       </>
                     )}
@@ -2960,9 +2961,9 @@ export const LiveConcertToAlbumModal: React.FC<
 
                   <button
                     onClick={handleSaveToCatalog}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/80 font-extrabold text-[var(--ink)] text-xs/10/20 flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 font-extrabold text-[var(--on-acc)] text-xs/10/20 flex items-center gap-2"
                   >
-                    <Disc3 className="w-4 h-4" /> 💾 Guardar como Álbum en la
+                    <Disc3 className="w-4 h-4" /> <ShowIcon inline emoji="💾" />Guardar como Álbum en la
                     Discografía
                   </button>
                 </div>
@@ -3026,7 +3027,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       </p>
                       <div className="pt-2 text-xs text-[var(--ink-2)] space-y-1">
                         <p className="font-bold text-[var(--ink-2)]">
-                          📌 Cómo obtener las cookies en 10 segundos:
+                          <ShowIcon inline emoji="📌" />Cómo obtener las cookies en 10 segundos:
                         </p>
                         <p>
                           1. Instala la extensión gratuita de Chrome/Firefox{" "}
@@ -3090,7 +3091,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         <button
                           onClick={handleSaveCookies}
                           disabled={isSavingCookies || !cookiesInputText.trim()}
-                          className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-extrabold/10/20 disabled:opacity-50 flex items-center gap-1.5"
+                          className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-extrabold/10/20 disabled:opacity-50 flex items-center gap-1.5"
                         >
                           {isSavingCookies ? (
                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -3144,7 +3145,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     onClick={() => setQuickNamingActiveTab("table")}
                     className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
                       quickNamingActiveTab === "table"
-                        ? "bg-[var(--acc)] text-[var(--ink)]"
+                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                     }`}
                   >
@@ -3157,7 +3158,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     onClick={() => setQuickNamingActiveTab("paste")}
                     className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
                       quickNamingActiveTab === "paste"
-                        ? "bg-[var(--acc)] text-[var(--ink)]"
+                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                     }`}
                   >
@@ -3171,17 +3172,17 @@ export const LiveConcertToAlbumModal: React.FC<
                   <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[300px]">
                     <div className="text-xs text-[var(--ink-2)] bg-[var(--surface)]/60 p-2.5 rounded-[var(--r-m)] flex items-center justify-between">
                       <span>
-                        💡 Edita directamente el título de cada corte o cambia
-                        su tipo entre 🎵 Canción y 🗣️ Speech. Pulsa Tab para
+                        <ShowIcon inline emoji="💡" />Edita directamente el título de cada corte o cambia
+                        su tipo entre <ShowIcon inline emoji="🎵" />Canción y <ShowIcon inline emoji="🗣️" />Speech. Pulsa Tab para
                         avanzar al siguiente.
                       </span>
                       <div className="flex items-center gap-2 text-micro font-sans shrink-0">
                         <span className="text-[var(--acc)]">
-                          🎵 {tracks.filter((t) => t.type === "musica").length}{" "}
+                          <ShowIcon inline emoji="🎵" />{tracks.filter((t) => t.type === "musica").length}{" "}
                           temas
                         </span>
                         <span className="text-[var(--tentative)]">
-                          🗣️ {tracks.filter((t) => t.type === "dialogo").length}{" "}
+                          <ShowIcon inline emoji="🗣️" />{tracks.filter((t) => t.type === "dialogo").length}{" "}
                           speeches
                         </span>
                       </div>
@@ -3239,8 +3240,8 @@ export const LiveConcertToAlbumModal: React.FC<
                               title="Haz clic para alternar entre Canción y Speech"
                             >
                               {tr.type === "musica"
-                                ? "🎵 Canción"
-                                : "🗣️ Speech"}
+                                ? "Canción"
+                                : "Speech"}
                             </button>
 
                             <span className="text-xs font-sans text-[var(--ink-2)]">
@@ -3407,7 +3408,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         etc.).
                       </p>
                       <p className="text-xs text-[var(--tentative)]/80">
-                        💡 Si una línea contiene palabras como <em>"speech"</em>
+                        <ShowIcon inline emoji="💡" />Si una línea contiene palabras como <em>"speech"</em>
                         , <em>"presentación"</em>, <em>"saludo"</em>,{" "}
                         <em>"charla"</em> o <em>"agradecimientos"</em>, la
                         clasificará automáticamente como Speech.
@@ -3442,7 +3443,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         type="button"
                         onClick={handleApplyBatchPastedNames}
                         disabled={!batchPastedText.trim()}
-                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-extrabold text-xs disabled:opacity-50 transition-ui flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-extrabold text-xs disabled:opacity-50 transition-ui flex items-center gap-1.5"
                       >
                         <Check className="w-4 h-4" />
                         <span>Aplicar Nombres a las Pistas</span>

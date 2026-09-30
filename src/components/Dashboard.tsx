@@ -715,7 +715,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("calendario")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <Calendar className="w-4 h-4" />
               <span>Calendario</span>
@@ -922,7 +922,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("fans")}
-                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
+                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
               >
                 <QrCode className="w-4 h-4" />
                 <span>Gestionar QRs y Fans</span>

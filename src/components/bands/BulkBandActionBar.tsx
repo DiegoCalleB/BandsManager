@@ -18,6 +18,7 @@ import {
   Users,
   ShieldAlert,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface BulkBandActionBarProps {
   selectedCount: number;
@@ -294,7 +295,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-xs text-[var(--ink)] font-sans">
-              ⚠️ Se borrarán definitivamente {selectedCount} bandas aliadas.
+              <ShowIcon inline emoji="⚠️" />Se borrarán definitivamente {selectedCount} bandas aliadas.
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-2800/80">
@@ -311,7 +312,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                   setIsConfirmDeleteOpen(false);
                   onBulkDelete();
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] transition-colors cursor-pointer"
               >
                 Sí, eliminar {selectedCount}
               </button>

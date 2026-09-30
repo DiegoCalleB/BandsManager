@@ -385,7 +385,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             type="button"
             onClick={handleConnectGmailOAuth}
             disabled={gmailOAuthConnecting}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {gmailOAuthConnecting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -620,7 +620,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {saving ? (
               <>

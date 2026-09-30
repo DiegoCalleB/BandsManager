@@ -225,7 +225,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           <button
             type="button"
             onClick={() => setStemProgressModal(null)}
-            className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-mono text-xs font-bold cursor-pointer"
+            className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold cursor-pointer"
           >
             Cerrar
           </button>

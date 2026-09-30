@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface QueueJobItem {
   id: string;
@@ -108,25 +109,25 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
       case 'lector_inbox_check':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
-            📥 Lector Inbox
+            <ShowIcon inline emoji="📥" />Lector Inbox
           </span>
         );
       case 'redactor_pitch_dispatch':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--ok)]/20 text-[var(--ok)] ">
-            📤 Redactor Dispatch
+            <ShowIcon inline emoji="📤" />Redactor Dispatch
           </span>
         );
       case 'scout_enrichment':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
-            🔍 Scout Enrichment
+            <ShowIcon inline emoji="🔍" />Scout Enrichment
           </span>
         );
       case 'campaign_radar_sync':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
-            🛰️ Radar Sync
+            <ShowIcon inline emoji="🛰️" />Radar Sync
           </span>
         );
       default:
@@ -155,7 +156,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
       case 'pending':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
-            ⏳ En Cola
+            <ShowIcon inline emoji="⏳" />En Cola
           </span>
         );
       case 'failed':

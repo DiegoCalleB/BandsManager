@@ -258,7 +258,7 @@ export function EnsayosManager({
                   ? "✓ Ensayo Finalizado"
                   : currentRehearsal?.estado === "en_curso"
                     ? "● Ensayo en Curso"
-                    : "📅 Ensayo Programado"}
+                    : "Ensayo Programado"}
               </span>
 
               {/* Edit Rehearsal */}

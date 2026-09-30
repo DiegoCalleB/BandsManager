@@ -1741,7 +1741,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 <button
                   type="button"
                   onClick={handleNextStep}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-ui"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-ui"
                 >
                   {currentStepIndex === activeSteps.length - 1 ? (
                     <>

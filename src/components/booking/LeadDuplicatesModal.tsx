@@ -26,6 +26,7 @@ import {
 } from "../../utils/duplicateLeads";
 import { ModalPortal } from "../common/ModalPortal";
 import { apiFetch } from "../../utils/api";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface LeadDuplicatesModalProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -352,7 +353,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 type="button"
                 disabled={isProcessing}
                 onClick={handleMergeAllAuto}
-                className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
+                className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Fusionar Todos Automáticamente</span>
@@ -431,7 +432,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                   </h4>
                                   {isSuggested && (
                                     <span className="px-1.5 py-0.5 rounded text-micro font-bold bg-[var(--acc)] text-[var(--on-acc)]">
-                                      ⭐ Recomendado
+                                      <ShowIcon inline emoji="⭐" />Recomendado
                                     </span>
                                   )}
                                 </div>
@@ -464,14 +465,14 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
                               {lead.telefono_movil && (
                                 <div className="flex items-center gap-1.5 truncate text-[var(--ok)] font-medium">
-                                  <span>📱</span>
+                                  <span><ShowIcon inline emoji="📱" /></span>
                                   <span>{lead.telefono_movil}</span>
                                 </div>
                               )}
 
                               {lead.telefono_fijo && (
                                 <div className="flex items-center gap-1.5 truncate text-[var(--acc)] font-medium">
-                                  <span>☎️</span>
+                                  <span><ShowIcon inline emoji="☎️" /></span>
                                   <span>{lead.telefono_fijo}</span>
                                 </div>
                               )}
@@ -519,7 +520,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               onClick={() => handleMergeGroup(group, lead.id)}
                               className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                                 isSuggested
-                                  ? "bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)]"
+                                  ? "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                                   : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
                               }`}
                               title="Conserva este lead y añade todos los teléfonos, notas y datos de los demás"

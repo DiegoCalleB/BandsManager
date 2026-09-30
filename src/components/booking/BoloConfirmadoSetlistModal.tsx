@@ -16,6 +16,7 @@ import {
   Zap,
   CheckCircle2,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface BoloConfirmadoSetlistModalProps {
   isOpen: boolean;
@@ -288,7 +289,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
               >
                 {generateNewSetlist
                   ? "← Elegir de mis setlists"
-                  : "⚡ Crear setlist a medida"}
+                  : "Crear setlist a medida"}
               </button>
             </div>
 
@@ -316,7 +317,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                   onClick={() => setGenerateNewSetlist(true)}
                   className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
                 >
-                  ⚡ Autogenerar Setlist ({targetDurationMin} min)
+                  <ShowIcon inline emoji="⚡" />Autogenerar Setlist ({targetDurationMin} min)
                 </button>
               </div>
             ) : (
@@ -352,7 +353,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                           </span>
                           {isOptimal && (
                             <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-micro font-bold">
-                              ✨ Sugerido
+                              <ShowIcon inline emoji="✨" />Sugerido
                             </span>
                           )}
                         </div>
@@ -387,7 +388,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 isSubmitting || (!selectedSetlistId && !generateNewSetlist)
               }
               onClick={handleSaveAndLink}
-              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--ok)]  text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--ok)]  text-[var(--on-ok)] font-sans font-bold text-xs flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               <Check className="w-4 h-4 stroke-[3]" />
               <span>

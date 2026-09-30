@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Music, Layers, Disc3, Plus, ImagePlus, ChevronDown, Check } from 'lucide-react';
 import { Setlist } from '../../types';
 import { ModuleTutorialTrigger } from '../common/ModuleTutorialTrigger';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface RepertorioNavBarProps {
   activeTab: 'catalogo' | 'setlists';
@@ -126,7 +127,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-ui cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink)] hover:'}`}
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-[var(--acc)] font-bold shrink-0">📋</span>
+                  <span className="text-[var(--acc)] font-bold shrink-0"><ShowIcon inline emoji="📋" /></span>
                   <span className="font-semibold truncate text-[var(--ink)]">
                     {activeSetlist ? activeSetlist.nombre : 'Seleccionar repertorio'}
                   </span>
@@ -200,7 +201,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-create-setlist"
                 type="button"
                 onClick={onCreateSetlist}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
                 title="Crear un nuevo setlist de concierto"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -264,7 +265,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-add-song"
                 type="button"
                 onClick={onOpenNewSongModal}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--on-acc)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 active:scale-[0.97]"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 active:scale-[0.97]"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Nueva Canción</span>

@@ -45,6 +45,7 @@ import { apiFetch } from "../../utils/api";
 import { BandSchedule } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { EmailAccountConfig } from "../EmailAccountConfig";
+import { ShowIcon } from '../ui/ShowIcon';
 
 const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
   salas: "🏛️ Salas",
@@ -166,27 +167,27 @@ export const DAYS_OF_WEEK = [
     name: "Martes",
     short: "Mar",
     initial: "M",
-    description: "⭐ Día Top (+45% respuestas)",
+    description: "Día Top (+45% respuestas)",
     recommended: true,
-    badge: "🔥 Top Booking",
+    badge: "Top Booking",
   },
   {
     id: 3,
     name: "Miércoles",
     short: "Mié",
     initial: "X",
-    description: "⭐ Día Top (Máxima atención de programadores)",
+    description: "Día Top (Máxima atención de programadores)",
     recommended: true,
-    badge: "🔥 Top Booking",
+    badge: "Top Booking",
   },
   {
     id: 4,
     name: "Jueves",
     short: "Jue",
     initial: "J",
-    description: "⭐ Día Top (Cierre de fechas y agenda)",
+    description: "Día Top (Cierre de fechas y agenda)",
     recommended: true,
-    badge: "🔥 Top Booking",
+    badge: "Top Booking",
   },
   {
     id: 5,
@@ -1678,7 +1679,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-relaxed">
                           {config.markAsReadInInbox ? (
                             <span className="text-[var(--acc)]">
-                              ⚠️ Activado: El Agente Lector quitará la marca de
+                              <ShowIcon inline emoji="⚠️" />Activado: El Agente Lector quitará la marca de
                               "No leído" en tu correo oficial cada vez que
                               analice un mensaje entrante.
                             </span>
@@ -1719,24 +1720,24 @@ export const AgentAutonomySettingsModal: React.FC<
                       <button
                         type="button"
                         onClick={applyPresetRecommendedBooking}
-                        className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] flex items-center gap-1.5/10/20"
+                        className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] flex items-center gap-1.5/10/20"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>🌟 Sugerir Mejores Días (M-X-J)</span>
+                        <span><ShowIcon inline emoji="🌟" />Sugerir Mejores Días (M-X-J)</span>
                       </button>
                       <button
                         type="button"
                         onClick={applyPresetCommercial}
                         className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
                       >
-                        🏢 Laborables L-V
+                        <ShowIcon inline emoji="🏢" />Laborables L-V
                       </button>
                       <button
                         type="button"
                         onClick={applyPresetAllDay}
                         className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans transition-ui cursor-pointer active:scale-[0.97]"
                       >
-                        ⚡ Toda la Semana (7d)
+                        <ShowIcon inline emoji="⚡" />Toda la Semana (7d)
                       </button>
                     </div>
                   )}
@@ -1767,7 +1768,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-sans text-micro">
                     <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] flex flex-col gap-0.5">
                       <span className="text-[var(--acc)] font-bold">
-                        🔥 Martes a Jueves
+                        <ShowIcon inline emoji="🔥" />Martes a Jueves
                       </span>
                       <span className="text-[var(--ink-2)] font-sans text-micro">
                         Ventana dorada de contratación y respuesta.
@@ -1775,7 +1776,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     </div>
                     <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] flex flex-col gap-0.5">
                       <span className="text-[var(--ink-2)] font-bold">
-                        ⏰ 10:00 a 14:00
+                        <ShowIcon inline emoji="⏰" />10:00 a 14:00
                       </span>
                       <span className="text-[var(--ink-2)] font-sans text-micro">
                         Franja de máxima apertura y lectura de email.
@@ -1783,7 +1784,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     </div>
                     <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] flex flex-col gap-0.5">
                       <span className="text-[var(--ok)] font-bold">
-                        🛡️ Smart Gate Supabase
+                        <ShowIcon inline emoji="🛡️" />Smart Gate Supabase
                       </span>
                       <span className="text-[var(--ink-2)] font-sans text-micro">
                         Los agentes solo envían en los días/horas elegidos.
@@ -1850,7 +1851,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             onClick={() => setDiasEnviador([2, 3, 4])}
                             className="px-2 py-0.5 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 transition-ui cursor-pointer font-bold"
                           >
-                            🔥 Solo Top (M, X, J)
+                            <ShowIcon inline emoji="🔥" />Solo Top (M, X, J)
                           </button>
                           <button
                             type="button"
@@ -1936,7 +1937,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             onClick={() => setHorasEnviador([10, 11, 12, 13])}
                             className="px-2 py-0.5 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 transition-ui cursor-pointer font-bold"
                           >
-                            🔥 Mañana (10-14h)
+                            <ShowIcon inline emoji="🔥" />Mañana (10-14h)
                           </button>
                           <button
                             type="button"
@@ -2153,7 +2154,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         onClose();
                         onOpenBandProfile();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
                     >
                       Ir a Gestión de Banda ➔
                     </button>
@@ -2182,7 +2183,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         onClose();
                         onOpenTemplatesSection();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
                     >
                       Ver Plantillas ➔
                     </button>
@@ -2259,7 +2260,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                       key={idx}
                                       className="text-micro font-sans text-[var(--ink)]"
                                     >
-                                      🔒 {r}
+                                      <ShowIcon inline emoji="🔒" />{r}
                                     </li>
                                   ))}
                                 </ul>
@@ -2273,7 +2274,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                       key={idx}
                                       className="text-micro font-sans text-[var(--ink-2)]"
                                     >
-                                      ⭐ {r}
+                                      <ShowIcon inline emoji="⭐" />{r}
                                     </li>
                                   ),
                                 )}
@@ -2321,7 +2322,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         onClose();
                         onOpenTemplatesSection();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
                     >
                       Ver Hilos de Ejemplo ➔
                     </button>
@@ -2341,7 +2342,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     >
                       <div className="flex items-center gap-2">
                         <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/80">
-                          {type.icon}
+                          <ShowIcon inline emoji={type.icon} />
                         </span>
                         <div>
                           <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
@@ -2618,7 +2619,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                     ? "✓ Éxito"
                                     : isError
                                       ? "✕ Fallo"
-                                      : "⚠ Aviso"}
+                                      : "Aviso"}
                                 </span>
                               </div>
 
@@ -2676,7 +2677,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                         >
                                           <div className="flex items-center gap-2 min-w-0">
                                             <span className="text-[var(--acc)] font-bold">
-                                              🏛️{" "}
+                                              <ShowIcon inline emoji="🏛️" />{" "}
                                               {item.nombre_sala ||
                                                 "Sala sin nombre"}
                                             </span>

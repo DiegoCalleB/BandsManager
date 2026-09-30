@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { BrowserNotificationConfig, NotificationPermissionStatus } from '../../types/browserNotifications';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface NotificationSettingsModalProps {
   isOpen: boolean;
@@ -101,7 +102,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <div className="flex-1 space-y-1">
                   <span className="font-bold block text-sm">Permiso bloqueado en el navegador</span>
                   <p className="text-xs text-[var(--alert)]/80">
-                    Las notificaciones están bloqueadas en los ajustes de tu navegador. Para recibirlas, haz clic en el icono del candado 🔒
+                    Las notificaciones están bloqueadas en los ajustes de tu navegador. Para recibirlas, haz clic en el icono del candado <ShowIcon inline emoji="🔒" />
                     junto a la URL y permite las "Notificaciones".
                   </p>
                 </div>
@@ -120,7 +121,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <button
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs shrink-0 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs shrink-0 transition-colors cursor-pointer"
                 >
                   Solicitar Permiso
                 </button>
@@ -164,7 +165,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     className="text-micro text-[var(--ink-2)] hover:text-[var(--acc)] px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition-colors cursor-pointer"
                     title="Reproducir sonido de prueba"
                   >
-                    🔊 Probar
+                    <ShowIcon inline emoji="🔊" />Probar
                   </button>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
@@ -300,7 +301,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer"
+              className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer"
             >
               Guardar y Cerrar
             </button>

@@ -13,6 +13,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { isImageDocument, isPdfDocument } from "../../utils/documentType";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongStudioStructureUploadModalProps {
   song: Song;
@@ -305,9 +306,9 @@ export const SongStudioStructureUploadModal: React.FC<
                       <div className="flex gap-2">
                         <button
                           onClick={handleCameraCapture}
-                          className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] text-sm font-semibold transition"
+                          className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-sm font-semibold transition"
                         >
-                          📸 Capturar Foto
+                          <ShowIcon inline emoji="📸" />Capturar Foto
                         </button>
                         <button
                           onClick={stopCamera}
@@ -374,12 +375,12 @@ export const SongStudioStructureUploadModal: React.FC<
                         )}
                         {selectedFile.type === "application/pdf" && (
                           <div className="bg-[var(--alert)]/90 rounded p-3 text-center text-sm text-[var(--ink-2)]">
-                            📄 PDF - Se procesará con IA para extraer acordes
+                            <ShowIcon inline emoji="📄" />PDF - Se procesará con IA para extraer acordes
                           </div>
                         )}
                         {selectedFile.type.includes("word") && (
                           <div className="bg-[var(--tentative)]/10 rounded p-3 text-center text-sm text-[var(--ink-2)]">
-                            📝 Documento Word - Se procesará con IA para extraer
+                            <ShowIcon inline emoji="📝" />Documento Word - Se procesará con IA para extraer
                             acordes
                           </div>
                         )}
@@ -398,9 +399,9 @@ export const SongStudioStructureUploadModal: React.FC<
                         <button
                           onClick={handleProcessWithAI}
                           disabled={isProcessing}
-                          className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)] disabled:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
+                          className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 disabled:bg-[var(--sunken)] text-[var(--on-acc)] text-sm font-semibold transition"
                         >
-                          ✨ Procesar con IA
+                          <ShowIcon inline emoji="✨" />Procesar con IA
                         </button>
                       </div>
                     </div>
@@ -445,17 +446,17 @@ export const SongStudioStructureUploadModal: React.FC<
                         onClick={() => setShowComparison((v) => !v)}
                         className={`px-3 py-1.5 rounded text-xs font-semibold transition flex items-center gap-1 ${
                           showComparison
-                            ? "bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)]"
+                            ? "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                             : "bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]"
                         }`}
                       >
-                        👁️ {showComparison ? "Ocultar" : "Comparar"}
+                        <ShowIcon inline emoji="👁️" />{showComparison ? "Ocultar" : "Comparar"}
                       </button>
                       <a
                         href={song.estructuraDocumentoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] text-xs font-semibold transition flex items-center gap-1"
+                        className="px-3 py-1.5 rounded bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-xs font-semibold transition flex items-center gap-1"
                       >
                         <Download className="w-3 h-3" />
                         Descargar

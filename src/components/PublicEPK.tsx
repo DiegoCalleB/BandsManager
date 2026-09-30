@@ -37,6 +37,7 @@ import {
   getTemplateStyles,
 } from "./epk/epkTemplates";
 import { getFontFamilyById } from "../config/bandFonts";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface PublicEPKProps {
   initialData?: {
@@ -508,7 +509,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                             @{username}
                           </span>
                           <span className="text-micro font-semibold text-[var(--alert)] group-hover/ig:text-[var(--alert)]/60 shrink-0 ml-0.5">
-                            {ctaText.split("")[0]} ↗
+                            {ctaText.split("")[0]} <ShowIcon inline emoji="↗" />
                           </span>
                         </a>
                       </div>
@@ -926,14 +927,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                       href={c.entradasUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] text-xs font-bold hover:bg-[var(--ok)] transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] text-xs font-bold hover:bg-[var(--ok)] transition-colors"
                     >
                       <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                     </a>
                   )}
                   {c.entradasLugarFisico && (
                     <span className="text-xs opacity-75">
-                      📍 También en: {c.entradasLugarFisico}
+                      <ShowIcon inline emoji="📍" />También en: {c.entradasLugarFisico}
                     </span>
                   )}
                 </div>

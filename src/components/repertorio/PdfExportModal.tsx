@@ -46,6 +46,7 @@ import {
   tryFitInPageCount,
   MeasureRangeFn,
 } from "../../utils/setlistAutoFit";
+import { ShowIcon } from '../ui/ShowIcon';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -1683,10 +1684,10 @@ export function PdfExportModal({
                 className={`sm:hidden flex-1 min-w-0 p-2 rounded-[var(--r-s)] font-bold cursor-pointer ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               >
                 <option value="all_members">
-                  👥 Todos los Músicos ({resolvedMembers.length} hojas)
+                  Todos los Músicos ({resolvedMembers.length} hojas)
                 </option>
-                <option value="single_member">👤 1 Músico Específico</option>
-                <option value="master">📄 Master Escenario / Sonido</option>
+                <option value="single_member">1 Músico Específico</option>
+                <option value="master">Master Escenario / Sonido</option>
               </select>
 
               <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
@@ -1745,7 +1746,7 @@ export function PdfExportModal({
                   >
                     {resolvedMembers.map((m) => (
                       <option key={m.id} value={m.id}>
-                        👤 {m.name} ({m.instrument})
+                        {m.name} ({m.instrument})
                       </option>
                     ))}
                   </select>
@@ -1765,7 +1766,7 @@ export function PdfExportModal({
                   }`}
                   title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
                 >
-                  🪑 Sentado
+                  <ShowIcon inline emoji="🪑" />Sentado
                 </button>
                 <button
                   onClick={() => setViewDensity("de_pie")}
@@ -1776,7 +1777,7 @@ export function PdfExportModal({
                   }`}
                   title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
                 >
-                  🧍 De pie
+                  <ShowIcon inline emoji="🧍" />De pie
                 </button>
               </div>
             </div>
@@ -1821,7 +1822,7 @@ export function PdfExportModal({
                   className="px-2.5 py-1 rounded text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70"
                   title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio (mínimo ideal 17pt; solo baja a 15pt como último recurso si eso evita saltar a una hoja extra)."
                 >
-                  ⚡ Automático
+                  <ShowIcon inline emoji="⚡" />Automático
                 </span>
               </div>
 
@@ -1836,12 +1837,12 @@ export function PdfExportModal({
                   onChange={(e) => setHandwritingFont(e.target.value as any)}
                   className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
                 >
-                  <option value="caveat">✍️ Rotulador Fino (Caveat)</option>
+                  <option value="caveat">Rotulador Fino (Caveat)</option>
                   <option value="permanent_marker">
-                    🖊️ Sharpie Grueso (Permanent Marker)
+                    Sharpie Grueso (Permanent Marker)
                   </option>
-                  <option value="courier">⌨️ Máquina (Courier)</option>
-                  <option value="sans">🔤 Imprenta Limpia (Sans)</option>
+                  <option value="courier">Máquina (Courier)</option>
+                  <option value="sans">Imprenta Limpia (Sans)</option>
                 </select>
 
                 {/* Ink color selector */}
@@ -1956,7 +1957,7 @@ export function PdfExportModal({
                 </span>
                 <span className="px-2.5 sm:px-3 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold flex items-center gap-1.5 min-w-0 truncate">
                   <span className="truncate">
-                    👤 {currentPreviewMember.name}
+                    <ShowIcon inline emoji="👤" />{currentPreviewMember.name}
                   </span>
                   <span className="hidden sm:inline text-[var(--ink-2)] text-micro shrink-0">
                     ({currentPreviewMember.instrument})
@@ -2071,10 +2072,10 @@ export function PdfExportModal({
                         : "COPIA DE CONTROL"}
                     </div>
                     <div className="text-[10pt] font-bold text-[var(--ink)] leading-tight font-['Anton',sans-serif]">
-                      👤 {currentPreviewMember.name}
+                      <ShowIcon inline emoji="👤" />{currentPreviewMember.name}
                     </div>
                     <div className="text-[7pt] font-sans font-bold text-[var(--ink)]">
-                      🎵 {currentPreviewMember.instrument}
+                      <ShowIcon inline emoji="🎵" />{currentPreviewMember.instrument}
                     </div>
                   </div>
                 </div>
@@ -2419,7 +2420,7 @@ export function PdfExportModal({
                 <div className="flex justify-between items-center pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)]">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-[var(--ink)]">
-                      ⚡ BandManager
+                      <ShowIcon inline emoji="⚡" />BandManager
                     </span>
                     <span>•</span>
                     <a
@@ -2475,7 +2476,7 @@ export function PdfExportModal({
                   <div
                     className={`font-bold text-sm mb-1 ${"text-[var(--ink)]"}`}
                   >
-                    📄 1 sola hoja (letra más pequeña)
+                    <ShowIcon inline emoji="📄" />1 sola hoja (letra más pequeña)
                   </div>
                   <div className={`text-xs ${"text-[var(--ink-2)]"}`}>
                     {sizeChoiceDialog.singleTotalPages} hoja
@@ -2493,7 +2494,7 @@ export function PdfExportModal({
                   <div
                     className={`font-bold text-sm mb-1 ${"text-[var(--ink)]"}`}
                   >
-                    📄📄 Varias hojas (letra más grande)
+                    <ShowIcon inline emoji="📄" /><ShowIcon inline emoji="📄" />Varias hojas (letra más grande)
                   </div>
                   <div className={`text-xs ${"text-[var(--ink-2)]"}`}>
                     {sizeChoiceDialog.multiTotalPages} hojas en total — letra al

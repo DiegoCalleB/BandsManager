@@ -31,6 +31,7 @@ import {
 import { ModuleTutorialConfig, ModuleTutorialId } from "../../types/tutorial";
 import { MODULE_TUTORIALS } from "../../config/moduleTutorials";
 import { ModalPortal } from "./ModalPortal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ModuleTutorialModalProps {
   moduleId: ModuleTutorialId;
@@ -281,7 +282,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       iconBox: "bg-[var(--tentative)]/20 text-[var(--acc)]/30",
       activeDot: "bg-[var(--acc)] w-7",
       primaryBtn:
-        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]",
+        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)]",
       hookBorder: "bg-[var(--tentative)]/10 text-[var(--ink)]",
       highlightText: "text-[var(--acc)]",
       targetCard: "bg-[var(--tentative)]/5",
@@ -294,7 +295,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       iconBox: "bg-[var(--acc)]/20 text-[var(--acc)] ",
       activeDot: "bg-[var(--acc)]/60 w-7",
       primaryBtn:
-        "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold",
+        "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold",
       hookBorder: " bg-[var(--acc)]/10 text-[var(--acc)]",
       highlightText: "text-[var(--acc)]",
       targetCard: " bg-[var(--acc)]/5",
@@ -307,7 +308,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       iconBox: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
       activeDot: "bg-[var(--tentative)] w-7",
       primaryBtn:
-        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold",
+        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold",
       hookBorder: "bg-[var(--acc)]/10 text-[var(--tentative)]/40",
       highlightText: "text-[var(--ink-2)]",
       targetCard: "bg-[var(--acc)]/5",
@@ -320,7 +321,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       iconBox: "bg-[var(--ok)]/20 text-[var(--ok)]/30",
       activeDot: "bg-[var(--ok)] w-7",
       primaryBtn:
-        "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold",
+        "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold",
       hookBorder: "bg-[var(--ok)]/10 text-[var(--ok)]/40",
       highlightText: "text-[var(--ok)]",
       targetCard: "bg-[var(--ok)]/5",
@@ -333,7 +334,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       iconBox: "bg-[var(--alert)]/20 text-[var(--alert)]/30",
       activeDot: "bg-[var(--alert)] w-7",
       primaryBtn:
-        "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold",
+        "bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold",
       hookBorder: "bg-[var(--alert)]/10 text-[var(--alert)]/40",
       highlightText: "text-[var(--alert)]",
       targetCard: "bg-[var(--alert)]/5",
@@ -374,9 +375,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
             {/* Target Tooltip Badge */}
             <div
-              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] font-sans font-bold text-micro flex items-center gap-1 whitespace-nowrap`}
+              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-micro flex items-center gap-1 whitespace-nowrap`}
             >
-              <span>👉 {currentStep.uiTarget?.label || "Aquí"}</span>
+              <span><ShowIcon inline emoji="👉" />{currentStep.uiTarget?.label || "Aquí"}</span>
             </div>
           </div>
         </div>
@@ -533,14 +534,14 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                         </span>
                         <span className="text-micro font-sans font-bold text-[var(--acc)]/70">
                           {currentStep.uiTarget.type === "button"
-                            ? "🔘 Botón en pantalla"
+                            ? "Botón en pantalla"
                             : currentStep.uiTarget.type === "tab"
-                              ? "📑 Pestaña / Vista"
+                              ? "Pestaña / Vista"
                               : currentStep.uiTarget.type === "menu"
-                                ? "⚙️ Menú de opciones"
+                                ? "Menú de opciones"
                                 : currentStep.uiTarget.type === "section"
-                                  ? "📦 Bloque / Sección"
-                                  : "🎯 Control en pantalla"}
+                                  ? "Bloque / Sección"
+                                  : "Control en pantalla"}
                         </span>
                       </div>
 

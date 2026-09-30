@@ -30,6 +30,7 @@ import { apiFetch } from "../../utils/api";
 import { api } from "../../services/api";
 import { ExampleThreadsSection } from "../booking/ExampleThreadsSection";
 import type { TemplateCategory } from "../booking/TemplateConfigSection";
+import { ShowIcon } from '../ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -367,7 +368,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </p>
                   ) : (
                     <p className="text-micro text-[var(--acc)] font-sans mt-0.5">
-                      ⚠️ No se pudo guardar de forma permanente. Vuelve a
+                      <ShowIcon inline emoji="⚠️" />No se pudo guardar de forma permanente. Vuelve a
                       analizarlo antes de usarlo en tus próximos posts.
                     </p>
                   ))}
@@ -408,7 +409,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               onClick={() => setActiveModalTab("tone")}
               className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "tone"
-                  ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
+                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
               }`}
             >
@@ -420,7 +421,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               onClick={() => setActiveModalTab("threads")}
               className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "threads"
-                  ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
+                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
               }`}
             >
@@ -447,13 +448,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               {/* Category selector */}
               <div className="flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] ">
                 {[
-                  { id: "salas", label: "🏛️ Salas" },
-                  { id: "festivales", label: "🎪 Festivales" },
-                  { id: "discotecas", label: "🪩 Discotecas" },
-                  { id: "medios", label: "📻 Medios" },
-                  { id: "grupos", label: "🎸 Grupos" },
-                  { id: "managements", label: "💼 Managements" },
-                  { id: "ayuntamientos", label: "🎉 Ayuntamientos" },
+                  { id: "salas", label: "Salas" },
+                  { id: "festivales", label: "Festivales" },
+                  { id: "discotecas", label: "Discotecas" },
+                  { id: "medios", label: "Medios" },
+                  { id: "grupos", label: "Grupos" },
+                  { id: "managements", label: "Managements" },
+                  { id: "ayuntamientos", label: "Ayuntamientos" },
                 ].map((cat) => {
                   const isActive = selectedCategoryThread === cat.id;
                   return (
@@ -465,7 +466,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       }
                       className={`py-1 px-2.5 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer ${
                         isActive
-                          ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
+                          ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
                       }`}
                     >
@@ -681,7 +682,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <button
                       onClick={handleSaveEdit}
                       disabled={isSaving}
-                      className="flex-1 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 text-[var(--ink)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
+                      className="flex-1 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 text-[var(--on-ok)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
                     >
                       <Save className="w-3.5 h-3.5" />{" "}
                       {isSaving ? "Guardando..." : "Guardar cambios"}
@@ -778,7 +779,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       toneData.frases_emblematicas_extraidas.length > 0 && (
                         <div className="pt-1.5 border-t border-[var(--hair)] space-y-1">
                           <span className="text-micro font-mono font-bold text-[var(--acc)]/90 block">
-                            💬 Expresiones extraídas de sus Reels & Posts:
+                            <ShowIcon inline emoji="💬" />Expresiones extraídas de sus Reels & Posts:
                           </span>
                           <div className="space-y-1">
                             {toneData.frases_emblematicas_extraidas.map(
@@ -800,7 +801,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       toneData.frases_directo_extraidas.length > 0 && (
                         <div className="pt-1.5 border-t border-[var(--hair)] space-y-1">
                           <span className="text-micro font-mono font-bold text-[var(--ok)]/90 block">
-                            🎤 Frases reales dichas en directo (de vuestros
+                            <ShowIcon inline emoji="🎤" />Frases reales dichas en directo (de vuestros
                             propios conciertos):
                           </span>
                           <div className="space-y-1">
@@ -825,7 +826,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       ) && (
                         <div className="pt-1.5 border-t border-[var(--hair)] space-y-1.5">
                           <span className="text-micro font-mono font-bold text-[var(--acc)]/90 block">
-                            🎚️ Matices de tono según la red:
+                            <ShowIcon inline emoji="🎚️" />Matices de tono según la red:
                           </span>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                             {(
@@ -922,7 +923,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                             );
                             onClose();
                           }}
-                          className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer/20 transition-ui"
+                          className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer/20 transition-ui"
                         >
                           <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch
                           Personalizado en Co-Booking
@@ -990,7 +991,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                               key={idx}
                                               className="text-micro font-sans text-[var(--acc)] flex items-start justify-between gap-1.5 group"
                                             >
-                                              <span>🔒 {r}</span>
+                                              <span><ShowIcon inline emoji="🔒" />{r}</span>
                                               <button
                                                 onClick={() =>
                                                   handleDeleteLearnedRule(
@@ -1021,7 +1022,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                               key={idx}
                                               className="text-micro font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group"
                                             >
-                                              <span>⭐ {r}</span>
+                                              <span><ShowIcon inline emoji="⭐" />{r}</span>
                                               <button
                                                 onClick={() =>
                                                   handleDeleteLearnedRule(
@@ -1072,7 +1073,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                         if (e.key === "Enter")
                                           handleAddLearnedRule("pitch", cat);
                                       }}
-                                      placeholder="🔒 + añadir regla manual (protegida)..."
+                                      placeholder="+ añadir regla manual (protegida)..."
                                       disabled={savingManual}
                                       className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                     />
@@ -1109,8 +1110,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         </p>
                       )}
                       <p className="text-micro font-mono text-[var(--ink-2)]">
-                        🔒 = regla escrita a mano, nunca se pierde al
-                        re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se
+                        <ShowIcon inline emoji="🔒" />= regla escrita a mano, nunca se pierde al
+                        re-entrenar &nbsp;·&nbsp; <ShowIcon inline emoji="⭐" />= detectada por la IA, se
                         fusiona con lo anterior en cada re-entrenamiento
                       </p>
                     </div>
@@ -1173,7 +1174,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                           key={idx}
                                           className="text-micro font-sans text-[var(--ink)] flex items-start justify-between gap-1.5 group"
                                         >
-                                          <span>🔒 {r}</span>
+                                          <span><ShowIcon inline emoji="🔒" />{r}</span>
                                           <button
                                             onClick={() =>
                                               handleDeleteLearnedRule(
@@ -1203,7 +1204,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                             key={idx}
                                             className="text-micro font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group"
                                           >
-                                            <span>⭐ {r}</span>
+                                            <span><ShowIcon inline emoji="⭐" />{r}</span>
                                             <button
                                               onClick={() =>
                                                 handleDeleteLearnedRule(
@@ -1252,7 +1253,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       if (e.key === "Enter")
                                         handleAddLearnedRule("reply", cat);
                                     }}
-                                    placeholder="🔒 + añadir regla manual (protegida)..."
+                                    placeholder="+ añadir regla manual (protegida)..."
                                     disabled={savingManual}
                                     className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                   />
@@ -1289,8 +1290,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         </p>
                       )}
                       <p className="text-micro font-mono text-[var(--ink-2)]">
-                        🔒 = regla escrita a mano, nunca se pierde al
-                        re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se
+                        <ShowIcon inline emoji="🔒" />= regla escrita a mano, nunca se pierde al
+                        re-entrenar &nbsp;·&nbsp; <ShowIcon inline emoji="⭐" />= detectada por la IA, se
                         fusiona con lo anterior en cada re-entrenamiento
                       </p>
                     </div>
@@ -1310,7 +1311,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </div>
                   <button
                     onClick={onReAnalyze}
-                    className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans font-bold text-xs cursor-pointer"
+                    className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans font-bold text-xs cursor-pointer"
                   >
                     Iniciar Análisis de Tono
                   </button>

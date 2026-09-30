@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Keyboard } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongStudioCubaseHelpModalProps {
   onClose: () => void;
@@ -98,13 +99,13 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
           <div className="pt-2 flex items-center justify-between">
             <span className="text-xs text-[var(--ink-2)] font-sans">
-              💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">K</kbd> o{' '}
+              <ShowIcon inline emoji="💡" />Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">K</kbd> o{' '}
               <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
             </span>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-ui cursor-pointer"
+              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-ui cursor-pointer"
             >
               Entendido
             </button>

@@ -188,7 +188,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-colors cursor-pointer"
               >
                 Cerrar y ver resultados
               </button>

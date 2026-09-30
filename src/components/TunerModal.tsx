@@ -555,7 +555,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                           }}
                           className={`px-2 py-1 rounded-[var(--r-s)] font-bold transition-ui cursor-pointer ${
                             isCatSelected
-                              ? "bg-[var(--ok)] text-[var(--ink)]"
+                              ? "bg-[var(--ok)] text-[var(--on-ok)]"
                               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
                           }`}
                         >
@@ -710,7 +710,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                   isListening
                     ? "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]"
-                    : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold"
+                    : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold"
                 }`}
               >
                 {isListening ? (

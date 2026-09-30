@@ -157,7 +157,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 billingInterval={billingPeriod}
                 bandId={currentUser?.band_id}
                 userEmail={currentUser?.email}
-                className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs transition-ui active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-ui active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>
                   Mejorar a {targetPlanDef.name} ({targetPlanDef.price})

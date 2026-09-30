@@ -57,7 +57,7 @@ export const StepCompletedCelebration: React.FC<
   return (
     <div className="space-y-6 text-center animate-in zoom-in-95 duration-300 py-4">
       {/* Celebration Icon */}
-      <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--acc)]  text-[var(--ink)] flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--acc)]  text-[var(--on-acc)] flex items-center justify-center mx-auto">
         <Sparkles className="w-8 h-8" />
       </div>
 
@@ -117,7 +117,7 @@ export const StepCompletedCelebration: React.FC<
               href="/epk"
               target="_blank"
               rel="noreferrer"
-              className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
               <ExternalLink className="w-3.5 h-3.5" /> Ver Dossier EPK
             </a>
@@ -160,7 +160,7 @@ export const StepCompletedCelebration: React.FC<
               href="/fans"
               target="_blank"
               rel="noreferrer"
-              className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
               <ExternalLink className="w-3.5 h-3.5" /> Ver Landing Fans
             </a>
@@ -185,7 +185,7 @@ export const StepCompletedCelebration: React.FC<
         <button
           type="button"
           onClick={onFinish}
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-sm transition-ui"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-sm transition-ui"
         >
           Entrar a BandManager.ai <ArrowRight className="w-4 h-4" />
         </button>

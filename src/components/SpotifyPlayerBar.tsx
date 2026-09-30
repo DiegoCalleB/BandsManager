@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ShowIcon } from './ui/ShowIcon';
 
 const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, ThemeColors } from '../types';
@@ -676,7 +677,7 @@ export default function SpotifyPlayerBar({
               <button
                 type="button"
                 onClick={togglePlayPause}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition active:scale-[0.97]"
+                className="w-9 h-9 md:w-10 md:h-10 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition active:scale-[0.97]"
                 title={isPlaying ? 'Pausar' : 'Reproducir'}
               >
                 {isPlaying ? (
@@ -786,7 +787,7 @@ export default function SpotifyPlayerBar({
                           className="ml-1 text-[var(--ink-2)] font-bold text-micro"
                           title="Procesando trasposición DSP con Pedalboard de Spotify"
                         >
-                          🎛️ Pedalboard...
+                          <ShowIcon inline emoji="🎛️" />Pedalboard...
                         </span>
                       )}
                     </span>
@@ -795,7 +796,7 @@ export default function SpotifyPlayerBar({
                     {isCrossfading && nextQueueSong && (
                       <>
                         <span>•</span>
-                        <span className="text-[var(--ink-2)] font-semibold">🔀 → {nextQueueSong.titulo}</span>
+                        <span className="text-[var(--ink-2)] font-semibold"><ShowIcon inline emoji="🔀" />→ {nextQueueSong.titulo}</span>
                       </>
                     )}
                   </div>
@@ -866,7 +867,7 @@ export default function SpotifyPlayerBar({
                   }`}
                   title={crossfadeEnabled ? 'Fundido entre temas activado (5s)' : 'Activar fundido entre temas (5s)'}
                 >
-                  🔀
+                  <ShowIcon inline emoji="🔀" />
                 </button>
 
                 {/* Speed multiplier selector */}

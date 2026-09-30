@@ -9,6 +9,7 @@ import {
 } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface EPKMusicaBlockProps {
   config: EPKConfig;
@@ -145,7 +146,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       <option key={song.id || `song-${idx}`} value={song.id}>
                         {song.titulo}{" "}
                         {song.duracion ? `(${song.duracion})` : ""}{" "}
-                        {song.audioPrincipalUrl ? "🎵 (Con audio subido)" : ""}
+                        {song.audioPrincipalUrl ? "(Con audio subido)" : ""}
                       </option>
                     ))}
                   </select>
@@ -231,7 +232,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     : "opacity-50"
                 } flex items-center justify-between gap-3 text-left`}
               >
-                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--on-acc)] flex items-center justify-center shrink-0">
                   <Music className="w-5 h-5 fill-bg-[var(--surface)]" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -254,7 +255,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               </div>
               {config.audioPreview?.habilitado === false && (
                 <p className="text-xs text-[var(--acc)]/90 font-sans text-center">
-                  ⚠️ Reproductor actualmente desactivado para los fans.
+                  <ShowIcon inline emoji="⚠️" />Reproductor actualmente desactivado para los fans.
                 </p>
               )}
             </div>
@@ -273,7 +274,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             <button
               type="button"
               onClick={anadirVideo}
-              className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
             >
               + Añadir vídeo
             </button>
@@ -303,7 +304,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     }
                     className={`shrink-0 w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center text-sm transition cursor-pointer ${
                       v.destacado
-                        ? "bg-[var(--acc)] text-[var(--ink)] font-bold"
+                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                         : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
                     }`}
                   >

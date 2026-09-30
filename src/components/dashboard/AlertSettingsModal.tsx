@@ -31,7 +31,7 @@ interface AlertSettingsModalProps {
 export const DEFAULT_ALERT_RULES: CustomAlertRule[] = [
   {
     id: 'rule_festivals_window',
-    name: '🎪 Ventana de Festivales de Verano (Oct-Feb)',
+    name: 'Ventana de Festivales de Verano (Oct-Feb)',
     description: 'Aviso urgente cuando la industria abre la contratación masiva de festivales.',
     category: 'booking',
     requiredModule: 'booking',
@@ -42,7 +42,7 @@ export const DEFAULT_ALERT_RULES: CustomAlertRule[] = [
   },
   {
     id: 'rule_stale_festival_lead',
-    name: '📬 Lead de Festival sin Respuesta',
+    name: 'Lead de Festival sin Respuesta',
     description: 'Notificar si un festival no responde tras un número de días para enviar el follow-up de hito.',
     category: 'booking',
     requiredModule: 'booking',
@@ -54,7 +54,7 @@ export const DEFAULT_ALERT_RULES: CustomAlertRule[] = [
   },
   {
     id: 'rule_stale_venue_lead',
-    name: '🏟️ Lead de Sala / Club sin Respuesta',
+    name: 'Lead de Sala / Club sin Respuesta',
     description: 'Aviso cuando una sala lleva días congelada sin confirmación de agenda.',
     category: 'booking',
     requiredModule: 'booking',
@@ -66,7 +66,7 @@ export const DEFAULT_ALERT_RULES: CustomAlertRule[] = [
   },
   {
     id: 'rule_pending_drafts',
-    name: '✍️ Borradores de IA Listos para Aprobación',
+    name: 'Borradores de IA Listos para Aprobación',
     description: 'Alertar cuando el Agente Redactor genera borradores de pitch esperando revisión humana.',
     category: 'booking',
     requiredModule: 'booking',
@@ -77,7 +77,7 @@ export const DEFAULT_ALERT_RULES: CustomAlertRule[] = [
   },
   {
     id: 'rule_unpaid_cache',
-    name: '💰 Caché de Concierto Pasado sin Cobrar',
+    name: 'Caché de Concierto Pasado sin Cobrar',
     description: 'Alerta cuando un bolo realizado supera el margen de cobro sin figurar como pagado.',
     category: 'finanzas',
     requiredModule: 'finanzas',
@@ -89,7 +89,7 @@ export const DEFAULT_ALERT_RULES: CustomAlertRule[] = [
   },
   {
     id: 'rule_rehearsal_warning',
-    name: '🥁 Show Próximo sin Ensayos Agendados',
+    name: 'Show Próximo sin Ensayos Agendados',
     description: 'Aviso si hay un concierto en menos de 14 días y no consta ensayo en la agenda.',
     category: 'ensayos',
     requiredModule: 'ensayos',
@@ -614,7 +614,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               id="save-alert-settings-btn"
               type="button"
               onClick={handleSave}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97]"
             >
               {savedSuccess ? (
                 <>

@@ -49,6 +49,7 @@ import {
 import { renderBold } from "../utils/richText";
 import { safeUrl } from "../utils/safeUrl";
 import { sanitizeConcertDisplayName } from "../utils/fanUtils";
+import { ShowIcon } from './ui/ShowIcon';
 
 import { Concert, EPKConfig, BandMember } from "../types";
 import {
@@ -930,7 +931,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               aria-hidden="true"
             />
             <div
-              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow font-bold transition-transform`}
+              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] flex items-center justify-center shrink-0 shadow font-bold transition-transform`}
             >
               <BizumLogo className="w-full h-full" />
             </div>
@@ -1239,7 +1240,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <button
                 type="button"
                 onClick={handleShareWithFriend}
-                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97]"
+                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97]"
               >
                 {copiedShareLink ? (
                   <>
@@ -1279,7 +1280,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !== "undefined" ? window.location.href : ""}`;
                   openWhatsAppChat(undefined, msg);
                 }}
-                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97] text-center"
+                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97] text-center"
               >
                 <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
               </a>
@@ -1502,7 +1503,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     ? t("audioPreviewPause") || "Pausar audio"
                     : t("audioPreviewPlay") || "Reproducir audio"
                 }
-                className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0 transition-ui active:scale-[0.97]"
+                className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center justify-center shrink-0 transition-ui active:scale-[0.97]"
               >
                 {isPlayingAudioPreview ? (
                   <Pause className="w-5 h-5 fill-bg-[var(--surface)]" />
@@ -1553,7 +1554,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             onClick={() => setActiveTab("redes")}
             className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
               activeTab === "redes"
-                ? "bg-[var(--acc)]  text-[var(--ink)] font-bold"
+                ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -1564,7 +1565,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             onClick={() => setActiveTab("form")}
             className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
               activeTab === "form"
-                ? "bg-[var(--acc)]  text-[var(--ink)] font-bold"
+                ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -1721,14 +1722,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                               href={c.entradasUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] text-micro font-bold hover:bg-[var(--ok)] transition-colors"
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] text-micro font-bold hover:bg-[var(--ok)] transition-colors"
                             >
                               <Ticket className="w-3 h-3" /> Comprar Entradas
                             </a>
                           )}
                           {c.entradasLugarFisico && (
                             <span className="text-micro text-[var(--ink-2)] truncate">
-                              📍 También en: {c.entradasLugarFisico}
+                              <ShowIcon inline emoji="📍" />También en: {c.entradasLugarFisico}
                             </span>
                           )}
                         </div>
@@ -2121,7 +2122,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <div className="pt-4 text-right">
               <button
                 onClick={() => setShowPrivacyModal(false)}
-                className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--ink)] font-bold font-sans text-xs rounded-[var(--r-m)] transition-colors"
+                className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--on-acc)] font-bold font-sans text-xs rounded-[var(--r-m)] transition-colors"
               >
                 {t("understood")}
               </button>

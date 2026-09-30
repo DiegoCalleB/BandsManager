@@ -44,6 +44,7 @@ import {
   transposeChordToken,
 } from "../../utils/chordUtils";
 import { SongChordsViewerModal } from "../SongChordsViewerModal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -441,7 +442,7 @@ export function ModoLocalEnVivoTab({
           className={`fixed top-16 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-[var(--r-l)] font-sans text-xs font-bold flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 ${
             swipeToast.dir === "left"
               ? "bg-[var(--acc)]/60 text-[var(--ink)]"
-              : "bg-[var(--ok)] text-[var(--ink)]"
+              : "bg-[var(--ok)] text-[var(--on-ok)]"
           }`}
         >
           <span>{swipeToast.dir === "left" ? "⏩" : "⏪"}</span>
@@ -474,9 +475,9 @@ export function ModoLocalEnVivoTab({
                 <span className="truncate max-w-[90px] sm:max-w-[140px]">
                   {item.titulo}
                 </span>
-                {item.evaluacion === "bordada" && <span>🟢</span>}
-                {item.evaluacion === "regular" && <span>🟡</span>}
-                {item.evaluacion === "repetir" && <span>🔴</span>}
+                {item.evaluacion === "bordada" && <span><ShowIcon inline emoji="🟢" /></span>}
+                {item.evaluacion === "regular" && <span><ShowIcon inline emoji="🟡" /></span>}
+                {item.evaluacion === "repetir" && <span><ShowIcon inline emoji="🔴" /></span>}
               </button>
             );
           })}
@@ -600,7 +601,7 @@ export function ModoLocalEnVivoTab({
               onClick={() => setViewMode("atril")}
               className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold cursor-pointer transition-ui active:scale-[0.97]"
             >
-              Abrir Atril 📜
+              Abrir Atril <ShowIcon inline emoji="📜" />
             </button>
           </div>
 
@@ -681,8 +682,8 @@ export function ModoLocalEnVivoTab({
                 onClick={() => setIsMetronomeActive(!isMetronomeActive)}
                 className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-sans font-bold text-xs transition-ui cursor-pointer ${
                   isMetronomeActive
-                    ? "bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]"
-                    : "bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]"
+                    ? "bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)]"
+                    : "bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)]"
                 }`}
               >
                 {isMetronomeActive ? (
@@ -764,11 +765,11 @@ export function ModoLocalEnVivoTab({
                 onClick={() => handleSetEvaluation("bordada")}
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                   currentItem?.evaluacion === "bordada"
-                    ? "bg-[var(--ok)] text-[var(--ink)]"
+                    ? "bg-[var(--ok)] text-[var(--on-ok)]"
                     : "bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25"
                 }`}
               >
-                <span>🟢</span>
+                <span><ShowIcon inline emoji="🟢" /></span>
                 <span>Bordada</span>
               </button>
 
@@ -780,7 +781,7 @@ export function ModoLocalEnVivoTab({
                     : "bg-[var(--acc)]/60 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60"
                 }`}
               >
-                <span>🟡</span>
+                <span><ShowIcon inline emoji="🟡" /></span>
                 <span>Regular</span>
               </button>
 
@@ -788,11 +789,11 @@ export function ModoLocalEnVivoTab({
                 onClick={() => handleSetEvaluation("repetir")}
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                   currentItem?.evaluacion === "repetir"
-                    ? "bg-[var(--alert)] text-[var(--ink)]"
+                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
                     : "bg-[var(--alert)]/15 text-[var(--ink-2)] hover:bg-[var(--alert)]/25"
                 }`}
               >
-                <span>🔴</span>
+                <span><ShowIcon inline emoji="🔴" /></span>
                 <span>Repetir</span>
               </button>
             </div>
@@ -834,8 +835,8 @@ export function ModoLocalEnVivoTab({
                 onClick={() => setIsMetronomeActive(!isMetronomeActive)}
                 className={`p-2 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer transition-ui ${
                   isMetronomeActive
-                    ? "bg-[var(--alert)] text-[var(--ink)]"
-                    : "bg-[var(--ok)] text-[var(--ink)]"
+                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
+                    : "bg-[var(--ok)] text-[var(--on-ok)]"
                 }`}
                 title="Metrónomo Clic"
               >
@@ -966,7 +967,7 @@ export function ModoLocalEnVivoTab({
                 }`}
                 title="Ver diagramas de acordes de guitarra"
               >
-                🎸
+                <ShowIcon inline emoji="🎸" />
               </button>
 
               {/* Edit Chords in Studio Modal */}
@@ -1032,7 +1033,7 @@ export function ModoLocalEnVivoTab({
                   {currentSong?.afinacion || "Standard E"}
                 </span>
                 <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)]">
-                  ⏱ {formatTime(trackSeconds)}
+                  <ShowIcon inline emoji="⏱" />{formatTime(trackSeconds)}
                 </span>
               </div>
             </div>
@@ -1052,11 +1053,11 @@ export function ModoLocalEnVivoTab({
                   onClick={() => handleSetEvaluation("bordada")}
                   className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                     currentItem?.evaluacion === "bordada"
-                      ? "bg-[var(--ok)] text-[var(--ink)] font-bold"
+                      ? "bg-[var(--ok)] text-[var(--on-ok)] font-bold"
                       : "bg-[var(--ok)]/15 text-[var(--ink-2)]"
                   }`}
                 >
-                  <span>🟢 Bordada</span>
+                  <span><ShowIcon inline emoji="🟢" />Bordada</span>
                 </button>
 
                 <button
@@ -1067,24 +1068,24 @@ export function ModoLocalEnVivoTab({
                       : "bg-[var(--acc)]/60 text-[var(--acc)]/70"
                   }`}
                 >
-                  <span>🟡 Regular</span>
+                  <span><ShowIcon inline emoji="🟡" />Regular</span>
                 </button>
 
                 <button
                   onClick={() => handleSetEvaluation("repetir")}
                   className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                     currentItem?.evaluacion === "repetir"
-                      ? "bg-[var(--alert)] text-[var(--ink)] font-bold"
+                      ? "bg-[var(--alert)] text-[var(--on-alert)] font-bold"
                       : "bg-[var(--alert)]/15 text-[var(--ink-2)]"
                   }`}
                 >
-                  <span>🔴 Repetir</span>
+                  <span><ShowIcon inline emoji="🔴" />Repetir</span>
                 </button>
               </div>
 
               {/* Middle swipe hint indicator */}
               <div className="hidden lg:flex items-center gap-1 text-xs font-sans text-[var(--ink-2)]">
-                <span>👈 Desliza para cambiar 👉</span>
+                <span><ShowIcon inline emoji="👈" />Desliza para cambiar <ShowIcon inline emoji="👉" /></span>
               </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">

@@ -180,7 +180,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
               type="button"
               onClick={handleStartEnrichment}
               disabled={isProcessing || incompleteLeads.length === 0}
-              className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] transition-ui flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
                 <>

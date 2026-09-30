@@ -341,7 +341,7 @@ export function ExampleThreadsSection({
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-micro rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+            className="w-full py-1.5 px-3 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-micro rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
           >
             {isSaving ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />

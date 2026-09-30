@@ -106,7 +106,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
             <div className="space-y-3 flex-1 w-full">
               <div className="flex items-center gap-2">
-                <label className="flex-1 cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition">
+                <label className="flex-1 cursor-pointer bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition">
                   {isUploadingLogo ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
@@ -241,7 +241,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </p>
               </div>
 
-              <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
+              <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
                 {isUploadingDossier ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
@@ -370,7 +370,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   </p>
                 </div>
 
-                <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
+                <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
                   {isUploadingRider ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
@@ -576,7 +576,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             alguien que nunca os ha visto tocar.
           </p>
           <label
-            className={`cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition ${
+            className={`cursor-pointer bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition ${
               subiendoGaleria ? "opacity-70 pointer-events-none" : ""
             }`}
           >

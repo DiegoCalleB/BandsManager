@@ -53,6 +53,7 @@ import {
 } from "../../utils/growthPlanEngine";
 import { SocialGrowthPlanView } from "./SocialGrowthPlanView";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ReelsMetricsViewProps {
   colors: ThemeColors;
@@ -1063,7 +1064,7 @@ export function ReelsMetricsView({
                 title="Sube una captura de pantalla de tu Instagram, TikTok o Spotify y Gemini extraerá todas las métricas al instante"
               >
                 <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
-                <span>📸 Escanear Captura IA</span>
+                <span><ShowIcon inline emoji="📸" />Escanear Captura IA</span>
               </button>
 
               {/* Instagram OAuth / Meta Graph API Button */}
@@ -1100,7 +1101,7 @@ export function ReelsMetricsView({
                   className={`flex-1 md:flex-initial px-4 py-2.5 rounded-[var(--r-m)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                     isScanningMetrics
                       ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                      : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)]"
+                      : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)]"
                   }`}
                 >
                   <RefreshCw
@@ -2318,7 +2319,7 @@ export function ReelsMetricsView({
             {/* Modal Header */}
             <div className="p-5 flex items-center justify-between bg-[var(--acc)]/30 ">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--ink)]">
+                <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--on-acc)]">
                   <Instagram className="w-5 h-5" />
                 </div>
                 <div>
@@ -2521,7 +2522,7 @@ export function ReelsMetricsView({
                     className={`px-4 py-2.5 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer ${
                       isConnectingIg || !igTokenInput.trim()
                         ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                        : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
+                        : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                     }`}
                   >
                     {isConnectingIg ? (
@@ -2544,7 +2545,7 @@ export function ReelsMetricsView({
                 className={`p-4 rounded-[var(--r-m)] space-y-2 text-xs ${"bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 <div className="font-bold font-sans text-xs text-[var(--ink-2)] flex items-center gap-1.5">
-                  <span>📘</span> Pasos según la documentación oficial de Meta
+                  <span><ShowIcon inline emoji="📘" /></span> Pasos según la documentación oficial de Meta
                   Insights:
                 </div>
                 <ol className="list-decimal list-inside space-y-1.5 text-xs leading-relaxed">
@@ -2730,7 +2731,7 @@ export function ReelsMetricsView({
                   className={`w-full py-3 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center justify-center gap-2 transition-ui cursor-pointer ${
                     isAnalyzingScreenshot
                       ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
-                      : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
+                      : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                   }`}
                 >
                   {isAnalyzingScreenshot ? (

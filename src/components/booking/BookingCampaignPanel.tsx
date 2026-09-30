@@ -10,6 +10,7 @@ import {
   Check,
   Search,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface BookingCampaignPanelProps {
   onCampaignChange: (campaign: BookingCampaign | null) => void;
@@ -116,7 +117,7 @@ export default function BookingCampaignPanel({
         </div>
         <button
           onClick={() => setIsEditing(true)}
-          className="flex items-center gap-1 text-xs font-semibold text-[var(--ink)] hover:text-[var(--ink)] bg-[var(--acc)] px-3 py-2 rounded-[var(--r-s)]"
+          className="flex items-center gap-1 text-xs font-semibold text-[var(--on-acc)] hover:text-[var(--ink)] bg-[var(--acc)] px-3 py-2 rounded-[var(--r-s)]"
         >
           <Plus className="w-3.5 h-3.5" /> Configurar Campaña
         </button>
@@ -285,7 +286,7 @@ export default function BookingCampaignPanel({
 
           <div className="md:col-span-2 lg:col-span-3">
             <label className="block text-xs text-[var(--ink-2)] font-medium mb-2">
-              🎪 Rango de Fechas para Filtrar Festivales/Eventos
+              <ShowIcon inline emoji="🎪" />Rango de Fechas para Filtrar Festivales/Eventos
             </label>
             <p className="text-xs text-[var(--ink-2)] mb-2">
               Define el rango de fechas para mostrar solo los festivales y

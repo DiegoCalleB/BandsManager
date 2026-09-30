@@ -20,6 +20,7 @@ import {
   Calculator,
   HelpCircle,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface MultiModelPitchComparatorModalProps {
   isOpen: boolean;
@@ -232,7 +233,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-base font-bold text-[var(--ink)] font-display">
-                    Comparador A/B: DeepSeek 🚀 vs. Gemini ⚡
+                    Comparador A/B: DeepSeek <ShowIcon inline emoji="🚀" />vs. Gemini <ShowIcon inline emoji="⚡" />
                   </h2>
                   <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     A/B Testing + Costes Reales (€)
@@ -264,7 +265,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   SALA DESTINO:
                 </span>
                 <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--acc)]/70 font-bold">
-                  🏟️ {lead.nombre_sala} ({lead.ciudad || "España"})
+                  <ShowIcon inline emoji="🏟️" />{lead.nombre_sala} ({lead.ciudad || "España"})
                 </span>
                 <span className="text-[var(--ink-2)] text-xs">
                   • Tipo: {lead.tipo || "sala"} • Aforo: {lead.aforo || "N/D"}
@@ -292,7 +293,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                           : "bg-[var(--bg)]/60 text-[var(--ink-2)] "
                       } hover:brightness-95`}
                     >
-                      <span>{prov.icon}</span>
+                      <span><ShowIcon inline emoji={prov.icon} /></span>
                       <span>{prov.name}</span>
                       {isSelected && (
                         <Check className="w-3 h-3 text-[var(--acc)] ml-0.5" />
@@ -321,7 +322,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 onClick={handleRunComparison}
                 disabled={isLoading || selectedProviders.length === 0}
-                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans shrink-0"
               >
                 {isLoading ? (
                   <>
@@ -483,8 +484,8 @@ export const MultiModelPitchComparatorModal: React.FC<
                                 className={`text-micro px-1.5 py-0.5 rounded font-sans font-semibold ${getProviderBadge(prop.provider)}`}
                               >
                                 {isDeepSeek
-                                  ? "🚀 Más Económico"
-                                  : "⚡ Instantáneo"}
+                                  ? "Más Económico"
+                                  : "Instantáneo"}
                               </span>
                             </div>
                             <p className="text-micro text-[var(--ink-2)] font-sans">
@@ -559,7 +560,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                               <div className="space-y-1">
                                 <div className="flex items-center justify-between text-micro text-[var(--ink-2)] font-sans">
                                   <span>
-                                    ⚡ Borrador Inteligente Adaptado (Modo
+                                    <ShowIcon inline emoji="⚡" />Borrador Inteligente Adaptado (Modo
                                     Local):
                                   </span>
                                 </div>
@@ -598,7 +599,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                             disabled={!prop.text && !prop.fallbackText}
                             className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                               isSelected
-                                ? "bg-[var(--ok)] text-[var(--ink)]"
+                                ? "bg-[var(--ok)] text-[var(--on-ok)]"
                                 : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 "
                             }`}
                           >
@@ -657,7 +658,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   <tbody className="divide-y divide-[var(--hair)] font-sans text-[var(--ink-2)]">
                     <tr className="hover:bg-[var(--surface)]/40">
                       <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
-                        <span>🚀</span> DeepSeek V3
+                        <span><ShowIcon inline emoji="🚀" /></span> DeepSeek V3
                       </td>
                       <td className="py-1.5 px-2 font-sans text-[var(--ink-2)]">
                         0,14 $ (0,13 €)
@@ -677,7 +678,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                     </tr>
                     <tr className="hover:bg-[var(--surface)]/40">
                       <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
-                        <span>⚡</span> Google Gemini 3.7 Flash
+                        <span><ShowIcon inline emoji="⚡" /></span> Google Gemini 3.7 Flash
                       </td>
                       <td className="py-1.5 px-2 font-sans text-[var(--ink-2)]">
                         0,10 $ (0,09 €)

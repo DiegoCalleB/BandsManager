@@ -91,7 +91,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               onClick={() => setPreviewScreen('form')}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                 previewScreen === 'form'
-                  ? 'bg-[var(--acc)] text-[var(--ink)] font-extrabold'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -103,7 +103,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               onClick={() => setPreviewScreen('success')}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                 previewScreen === 'success'
-                  ? 'bg-[var(--ok)] text-[var(--ink)] font-extrabold'
+                  ? 'bg-[var(--ok)] text-[var(--on-ok)] font-extrabold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -196,7 +196,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold transition cursor-pointer text-xs font-sans active:scale-[0.97]"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold transition cursor-pointer text-xs font-sans active:scale-[0.97]"
             title={t('previewClose')}
           >
             <X className="w-4 h-4" />
@@ -213,7 +213,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             type="button"
             onClick={() => setPreviewScreen('form')}
             className={`px-2.5 py-1 rounded text-xs font-sans font-bold transition-ui ${
-              previewScreen === 'form' ? 'bg-[var(--acc)] text-[var(--ink)]' : 'text-[var(--ink-2)]'
+              previewScreen === 'form' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)]'
             }`}
           >
             {t('previewTabForm')}
@@ -222,7 +222,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             type="button"
             onClick={() => setPreviewScreen('success')}
             className={`px-2.5 py-1 rounded text-xs font-sans font-bold transition-ui ${
-              previewScreen === 'success' ? 'bg-[var(--ok)] text-[var(--ink)]' : 'text-[var(--ink-2)]'
+              previewScreen === 'success' ? 'bg-[var(--ok)] text-[var(--on-ok)]' : 'text-[var(--ink-2)]'
             }`}
           >
             {t('previewTabSuccess')}

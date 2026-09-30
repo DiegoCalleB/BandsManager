@@ -66,6 +66,7 @@ import { ModuleTutorialTrigger } from "./common/ModuleTutorialTrigger";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { openWhatsAppChat } from "../utils/whatsapp";
 import { encodeBandIdClient } from "../utils/bandHash";
+import { ShowIcon } from './ui/ShowIcon';
 
 import { FansDashboardView } from "./fans/FansDashboardView";
 interface FansPanelProps {
@@ -864,7 +865,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 onClick={() => setSelectedCityFilter("")}
                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                   selectedCityFilter === ""
-                    ? "bg-[var(--acc)] text-[var(--ink)]"
+                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                 }`}
               >
@@ -885,7 +886,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     onClick={() => setSelectedCityFilter(city)}
                     className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                       isSelected
-                        ? "bg-[var(--acc)] text-[var(--ink)]"
+                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     }`}
                   >
@@ -930,7 +931,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   />
                   <button
                     type="submit"
-                    className="p-1 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition cursor-pointer"
+                    className="p-1 bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition cursor-pointer"
                     title="Guardar ciudad"
                   >
                     <Check className="w-3.5 h-3.5" />
@@ -994,10 +995,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans cursor-pointer"
                 >
                   <option value="">Todos los niveles</option>
-                  <option value="superfan">🔥 Superfan</option>
-                  <option value="fundador">🌟 Fan Fundador</option>
-                  <option value="fiel">🎸 Fan Fiel</option>
-                  <option value="backstage">🎟️ VIP Backstage</option>
+                  <option value="superfan">Superfan</option>
+                  <option value="fundador">Fan Fundador</option>
+                  <option value="fiel">Fan Fiel</option>
+                  <option value="backstage">VIP Backstage</option>
                 </select>
               </div>
             </div>
@@ -1010,7 +1011,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   onClick={() => setViewMode("feed")}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "feed"
-                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Muro Social & Comunidad"
@@ -1023,7 +1024,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   onClick={() => setViewMode("grid")}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "grid"
-                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Vista en Tarjetas"
@@ -1036,7 +1037,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   onClick={() => setViewMode("table")}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "table"
-                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Vista en Detalles / Tabla"
@@ -1049,7 +1050,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   onClick={() => setViewMode("map")}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "map"
-                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Vista en Mapa por Ciudades"
@@ -1328,7 +1329,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </option>
               {concerts.map((c) => (
                 <option key={c.id} value={c.id}>
-                  📅 {c.fecha} — {c.sala} ({c.ciudad})
+                  {c.fecha} — {c.sala} ({c.ciudad})
                 </option>
               ))}
             </select>
@@ -1351,7 +1352,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     />
                   </div>
                 ) : (
-                  <div className="w-12 h-12 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-m)] flex items-center justify-center">
                     <Users className="w-6 h-6" />
                   </div>
                 )}
@@ -1390,7 +1391,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 id="fans-qr-export-btn"
                 type="button"
                 onClick={handlePrintQr}
-                className="flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
+                className="flex-1 py-3 px-4 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
               >
                 <Printer className="w-4 h-4" /> Cartel A4 / PDF
               </button>
@@ -1597,7 +1598,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       <button
                         type="button"
                         onClick={() => handleSaveIncentive()}
-                        className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
                       >
                         <Save className="w-3.5 h-3.5" /> Guardar Incentivo
                       </button>
@@ -1622,7 +1623,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => onNavigate?.("epk")}
-                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> Configurar en el
                     Dossier EPK
@@ -1645,7 +1646,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                       }`}
                     >
-                      <span>🌐 Dominio Web Oficial</span>
+                      <span><ShowIcon inline emoji="🌐" />Dominio Web Oficial</span>
                       <span className="text-micro text-[var(--ink-2)] font-normal">
                         Para impresiones/carteles
                       </span>
@@ -1659,7 +1660,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                       }`}
                     >
-                      <span>🧪 Servidor Dev</span>
+                      <span><ShowIcon inline emoji="🧪" />Servidor Dev</span>
                       <span className="text-micro text-[var(--ink-2)] font-normal">
                         Para pruebas en visor actual
                       </span>
@@ -1775,14 +1776,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         }}
                         className={`w-full py-2.5 px-3 font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer ${
                           savedToConcertFeedback
-                            ? "bg-[var(--ok)] text-[var(--ink)]"
-                            : "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]"
+                            ? "bg-[var(--ok)] text-[var(--on-ok)]"
+                            : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                         }`}
                       >
                         <CheckCircle2 className="w-4 h-4" />
                         {savedToConcertFeedback
                           ? "¡QR Asignado a este Concierto en el Calendario!"
-                          : "💾 Asignar este QR a este Concierto en el Calendario"}
+                          : "Asignar este QR a este Concierto en el Calendario"}
                       </button>
                     </div>
                   )}
@@ -1919,10 +1920,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     onChange={(e) => setNewNivel(e.target.value as any)}
                     className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   >
-                    <option value="fiel">🎵 Oyente Fiel</option>
-                    <option value="superfan">🔥 Superfan Directos</option>
-                    <option value="fundador">🌟 Fan Fundador</option>
-                    <option value="backstage">🎸 Backstage VIP</option>
+                    <option value="fiel">Oyente Fiel</option>
+                    <option value="superfan">Superfan Directos</option>
+                    <option value="fundador">Fan Fundador</option>
+                    <option value="backstage">Backstage VIP</option>
                   </select>
                 </div>
                 <div>
@@ -1975,7 +1976,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--on-acc)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" /> Guardar Fan
                 </button>

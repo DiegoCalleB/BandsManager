@@ -13,6 +13,7 @@ import {
   Music,
 } from "lucide-react";
 import { sanitizeConcertDisplayName } from "../utils/fanUtils";
+import { ShowIcon } from './ui/ShowIcon';
 
 export const PublicFanCapture: React.FC = () => {
   const [nombre, setNombre] = useState("");
@@ -143,7 +144,7 @@ export const PublicFanCapture: React.FC = () => {
                 <Music className="w-10 h-10" />
               </div>
             )}
-            <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--ink)] p-1.5 rounded-[var(--r-pill)]">
+            <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--on-acc)] p-1.5 rounded-[var(--r-pill)]">
               <Heart className="w-4 h-4 fill-neutral-950" />
             </span>
           </div>
@@ -178,7 +179,7 @@ export const PublicFanCapture: React.FC = () => {
           >
             {errorMsg && (
               <div className="p-3 bg-[var(--alert)]/90 text-[var(--alert)]/40 text-xs rounded-[var(--r-m)] font-medium">
-                ⚠️ {errorMsg}
+                <ShowIcon inline emoji="⚠️" />{errorMsg}
               </div>
             )}
 
@@ -262,7 +263,7 @@ export const PublicFanCapture: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-extrabold text-sm rounded-[var(--r-m)] transition flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-extrabold text-sm rounded-[var(--r-m)] transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
                 <span>Guardando...</span>

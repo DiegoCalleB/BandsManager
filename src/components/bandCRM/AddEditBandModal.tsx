@@ -1,6 +1,7 @@
 import React from 'react';
 import { Music, X, Sparkles, Loader2, Upload, Check } from 'lucide-react';
 import { BandRelationshipStatus, BandContact } from '../../types';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface AddEditBandModalProps {
   isOpen: boolean;
@@ -157,7 +158,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {aiError && (
               <div className="md:col-span-2 p-3 bg-[var(--alert)]/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--alert)] font-mono">
-                <span>⚠️ {aiError}</span>
+                <span><ShowIcon inline emoji="⚠️" />{aiError}</span>
                 <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert)]/50 rounded">
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -422,12 +423,12 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
                 className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
               >
-                <option value="sin_contactar">📡 Sin Contactar</option>
-                <option value="intercambio_propuesto">🔄 Intercambio Propuesto (Date Swap)</option>
-                <option value="concierto_agendado">⚡ Concierto Agendado</option>
-                <option value="colegas_aliados">🤝 Colegas / Aliados de Gira</option>
-                <option value="pendiente_respuesta">⏳ Pendiente Respuesta</option>
-                <option value="no_disponible">❌ No Disponible</option>
+                <option value="sin_contactar">Sin Contactar</option>
+                <option value="intercambio_propuesto">Intercambio Propuesto (Date Swap)</option>
+                <option value="concierto_agendado">Concierto Agendado</option>
+                <option value="colegas_aliados">Colegas / Aliados de Gira</option>
+                <option value="pendiente_respuesta">Pendiente Respuesta</option>
+                <option value="no_disponible">No Disponible</option>
               </select>
             </div>
 

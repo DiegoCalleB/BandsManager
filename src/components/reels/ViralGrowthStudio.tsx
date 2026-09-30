@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface ViralHookVariant {
   id: string;
@@ -243,9 +244,9 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
 
     score = Math.min(98, Math.max(20, score));
 
-    if (score >= 85) return { score, label: 'Viral Explosivo 🔥', color: 'text-[var(--alert)]', bg: 'bg-[var(--alert)]/15 ' };
-    if (score >= 70) return { score, label: 'Alto Impacto ⚡', color: 'text-[var(--acc-ink)]', bg: 'bg-[var(--acc)]/15 ' };
-    return { score, label: 'Mejorable 💡', color: 'text-[var(--acc-ink)]', bg: 'bg-[var(--acc)]/10 ' };
+    if (score >= 85) return { score, label: 'Viral Explosivo', color: 'text-[var(--alert)]', bg: 'bg-[var(--alert)]/15 ' };
+    if (score >= 70) return { score, label: 'Alto Impacto', color: 'text-[var(--acc-ink)]', bg: 'bg-[var(--acc)]/15 ' };
+    return { score, label: 'Mejorable', color: 'text-[var(--acc-ink)]', bg: 'bg-[var(--acc)]/10 ' };
   };
 
   const hookAnalysis = calculateHookScore(currentHook);
@@ -258,7 +259,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
         {
           id: 'var-curiosity',
           angle: 'curiosity',
-          title: '🎭 Curiosidad / Hueco de Información',
+          title: 'Curiosidad / Hueco de Información',
           hookText: `El fallo en el segundo 14 que el público convirtió en el estribillo 🤯`,
           copyText: `Nadie en la sala se dio cuenta de lo que pasó hasta que terminamos de tocar... ¿Vosotros lo habéis visto? Dejadnos en comentarios en qué segundo exacto fue 👇🎸\n\n#${bandName.replace(/\s+/g, '')} #IndieRock #MusicaEnDirecto #Backstage`,
           score: 95,
@@ -267,7 +268,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
         {
           id: 'var-debate',
           angle: 'debate',
-          title: '🔥 Debate / Pregunta Polarizante',
+          title: 'Debate / Pregunta Polarizante',
           hookText: `¿Esto es puro Rock de verdad o solo energía de directo? 🤔⚡`,
           copyText: `Hay quien dice que este tipo de canciones ya no se componen hoy en día. ¿Qué opináis vosotros? ¿Del 1 al 10 qué nota le dais a este solo del final? 🥁👇\n\nEscucha el tema completo en Spotify y añade ${bandName} a tu playlist favorita.\n\n#NuevosArtistas #RockEspañol #Conciertos #DescubreMusica`,
           score: 92,
@@ -276,7 +277,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
         {
           id: 'var-storytelling',
           angle: 'storytelling',
-          title: '📖 Storytelling / Conexión Emocional',
+          title: 'Storytelling / Conexión Emocional',
           hookText: `Escribimos este tema pensando que nadie vendría a vernos y pasó esto... 🖤`,
           copyText: `Hace 2 años tocábamos en un local para 5 amigos. Ayer escuchamos a toda la sala cantando nuestra letra a pleno pulmón. Gracias a cada persona que comparte nuestra música y cree en los grupos independientes ✨🙌\n\n¿Desde qué ciudad nos escuchas? ¡Os leemos a todos!\n\n#${bandName.replace(/\s+/g, '')} #Directo #MusicosIndependientes #Concierto`,
           score: 89,
@@ -330,18 +331,18 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               title="Aplica automáticamente el combo óptimo: Mejor hook, punch-in zoom, beat-drop, subtítulos oro y sincronía con gira"
             >
               <Sparkles className="w-3.5 h-3.5 fill-[var(--ink-3)] animate-spin" />
-              <span>{magicAppliedNotification ? '¡COMBO VIRAL APLICADO! ✨' : '✨ AUTO-DIRECTOR MÁGICO (1-CLICK)'}</span>
+              <span>{magicAppliedNotification ? '¡COMBO VIRAL APLICADO!' : 'AUTO-DIRECTOR MÁGICO (1-CLICK)'}</span>
             </button>
           )}
 
           {/* Tab Buttons */}
           <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--scrim)]/40 self-start sm:self-auto overflow-x-auto max-w-full">
             {[
-              { id: 'hooks' as const, label: '🎯 Ganchos A/B', icon: Sparkles },
-              { id: 'retention' as const, label: '⚡ Dinamismo & FX', icon: Repeat },
-              { id: 'subtitles' as const, label: '💬 Subtítulos', icon: Smile },
-              { id: 'overlays' as const, label: '🎨 Stickers', icon: Layers },
-              { id: 'layout' as const, label: '📱 Formatos', icon: Smartphone }
+              { id: 'hooks' as const, label: 'Ganchos A/B', icon: Sparkles },
+              { id: 'retention' as const, label: 'Dinamismo & FX', icon: Repeat },
+              { id: 'subtitles' as const, label: 'Subtítulos', icon: Smile },
+              { id: 'overlays' as const, label: 'Stickers', icon: Layers },
+              { id: 'layout' as const, label: 'Formatos', icon: Smartphone }
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeStudioTab === tab.id;
@@ -388,11 +389,11 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     type="button"
                     onClick={handleRunHookDoctor}
                     disabled={isAnalyzingDoctor}
-                    className="px-2.5 h-full rounded-lg bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
+                    className="px-2.5 h-full rounded-lg bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
                     title="Auditoría Anti-Cringe y Primer Comentario Fijado con IA"
                   >
                     <Stethoscope className={`w-3 h-3 ${isAnalyzingDoctor ? 'animate-spin' : ''}`} />
-                    <span>{isAnalyzingDoctor ? 'Auditando...' : '🩺 Hook Doctor IA'}</span>
+                    <span>{isAnalyzingDoctor ? 'Auditando...' : 'Hook Doctor IA'}</span>
                   </button>
                   <button
                     type="button"
@@ -468,7 +469,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   }`}>
                     <span>Cringe Factor: {doctorDiagnosis.cringeScore}/100</span>
                     <span className="text-micro opacity-80">
-                      {doctorDiagnosis.cringeScore <= 25 ? '✓ Auténtico' : '⚠️ Cliché'}
+                      {doctorDiagnosis.cringeScore <= 25 ? '✓ Auténtico' : 'Cliché'}
                     </span>
                   </div>
 
@@ -539,7 +540,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                       "{doctorDiagnosis.pinnedComment}"
                     </p>
                     <p className="text-micro text-[var(--ink-2)] font-mono">
-                      🎯 {doctorDiagnosis.pinnedCommentGoal}
+                      <ShowIcon inline emoji="🎯" />{doctorDiagnosis.pinnedCommentGoal}
                     </p>
                   </div>
 
@@ -549,7 +550,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     className={`w-full py-1.5 rounded-lg text-micro font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-ui ${
                       copiedPinnedComment
                         ? 'bg-[var(--ok)] text-[var(--on-ok)] font-bold'
-                        : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] '
+                        : 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] '
                     }`}
                   >
                     {copiedPinnedComment ? (
@@ -680,7 +681,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Zap className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span>⚡ Beat-Drop & Rhythm Impacts</span>
+                  <span><ShowIcon inline emoji="⚡" />Beat-Drop & Rhythm Impacts</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -702,7 +703,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Radio className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span>🧠 Smart-Pan Framing Dinámico</span>
+                  <span><ShowIcon inline emoji="🧠" />Smart-Pan Framing Dinámico</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -742,7 +743,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   onChange={(e) => onToggleInjectEmojis(e.target.checked)}
                   className="rounded bg-[var(--sunken)] text-[var(--acc-ink)] focus:ring-0"
                 />
-                <span>Auto-Emojis en Palabras Clave (🎸, 🔥, ⚡)</span>
+                <span>Auto-Emojis en Palabras Clave (<ShowIcon inline emoji="🎸" />, <ShowIcon inline emoji="🔥" />, <ShowIcon inline emoji="⚡" />)</span>
               </label>
             </div>
           </div>
@@ -881,8 +882,8 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               </span>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: 'full' as const, label: '🎬 Pantalla Completa 9:16', desc: 'Encuadre limpio vertical para Reels/TikTok' },
-                  { id: 'pip' as const, label: '🎙️ Reacción / Selfie', desc: 'Miniatura de cámara en esquina' }
+                  { id: 'full' as const, label: 'Pantalla Completa 9:16', desc: 'Encuadre limpio vertical para Reels/TikTok' },
+                  { id: 'pip' as const, label: 'Reacción / Selfie', desc: 'Miniatura de cámara en esquina' }
                 ].map((l) => (
                   <button
                     key={l.id}

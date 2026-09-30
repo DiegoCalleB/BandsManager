@@ -38,6 +38,7 @@ import {
   transposeChordToken,
   parseRootNote,
 } from "../utils/chordUtils";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface SongChordsViewerModalProps {
   song: Song;
@@ -678,7 +679,7 @@ export function SongChordsViewerModal({
                       : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
-                  🎸 Diagramas
+                  <ShowIcon inline emoji="🎸" />Diagramas
                 </button>
 
                 {/* COPY BUTTON */}
@@ -861,7 +862,7 @@ export function SongChordsViewerModal({
                       <button
                         type="button"
                         onClick={handleSaveEdits}
-                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <Save className="w-4 h-4" />
                         <span>Guardar Cambios</span>
@@ -971,7 +972,7 @@ export function SongChordsViewerModal({
               <div className="w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
                 <div className="flex items-center justify-between pb-2">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                    🎸 Posiciones de Acordes ({uniqueChords.length})
+                    <ShowIcon inline emoji="🎸" />Posiciones de Acordes ({uniqueChords.length})
                   </span>
                   <button
                     type="button"

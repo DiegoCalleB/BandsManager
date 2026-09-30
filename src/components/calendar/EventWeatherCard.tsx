@@ -164,11 +164,11 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 <span
                   className={`px-1.5 py-0.5 rounded text-micro font-sans font-bold ${
                     dangerAlertsCount > 0
-                      ? "bg-[var(--alert)] text-[var(--ink)]"
+                      ? "bg-[var(--alert)] text-[var(--on-alert)]"
                       : "bg-[var(--acc)] text-[var(--on-acc)]"
                   }`}
                 >
-                  {dangerAlertsCount > 0 ? "⚠️ Alerta Clima" : "Aviso Meteo"}
+                  {dangerAlertsCount > 0 ? "Alerta Clima" : "Aviso Meteo"}
                 </span>
               )}
             </div>
@@ -231,7 +231,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 <span
                   className={`px-1.5 py-0.2 rounded text-micro font-sans font-bold ${
                     dangerAlertsCount > 0
-                      ? "bg-[var(--alert)] text-[var(--ink)]"
+                      ? "bg-[var(--alert)] text-[var(--on-alert)]"
                       : "bg-[var(--acc)] text-[var(--on-acc)]"
                   }`}
                 >
@@ -467,7 +467,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                               <span
                                 className={`px-1.5 py-0.2 rounded text-micro font-sans font-bold ${
                                   isDanger
-                                    ? "bg-[var(--alert)] text-[var(--ink)]"
+                                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
                                     : "bg-[var(--acc)] text-[var(--on-acc)]"
                                 }`}
                               >

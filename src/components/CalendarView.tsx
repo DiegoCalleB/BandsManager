@@ -16,6 +16,7 @@ import {
 import { CalendarSyncModal } from './calendar/CalendarSyncModal';
 import { CalendarReminderModal } from './calendar/CalendarReminderModal';
 import { CalendarEventDetailModal } from './calendar/CalendarEventDetailModal';
+import { ShowIcon } from './ui/ShowIcon';
 
 import { ConcertBreakEvenCard } from './calendar/ConcertBreakEvenCard';
 import { CalendarCreateEventModal } from './calendar/CalendarCreateEventModal';
@@ -2143,7 +2144,7 @@ export default function CalendarView({
                       className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center gap-1"
                       title="Reuniones de coordinación"
                     >
-                      <span>🤝</span> {filteredRehearsals.filter((r) => r.tipo_evento === 'reunion').length} reuniones
+                      <span><ShowIcon inline emoji="🤝" /></span> {filteredRehearsals.filter((r) => r.tipo_evento === 'reunion').length} reuniones
                     </span>
                   )}
                 </div>
@@ -2184,7 +2185,7 @@ export default function CalendarView({
                           }}
                           className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--acc)]/15 hover:text-[var(--acc)] transition-colors cursor-pointer"
                         >
-                          <span>🎸</span>
+                          <span><ShowIcon inline emoji="🎸" /></span>
                           <span>+ Concierto</span>
                         </button>
                         <button
@@ -2196,7 +2197,7 @@ export default function CalendarView({
                           }}
                           className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--tentative)]/15 hover:text-[var(--tentative)] transition-colors cursor-pointer"
                         >
-                          <span>🎯</span>
+                          <span><ShowIcon inline emoji="🎯" /></span>
                           <span>+ Bolo Posible</span>
                         </button>
                         <button
@@ -2207,7 +2208,7 @@ export default function CalendarView({
                           }}
                           className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--ok)]/15 hover:text-[var(--ok)] transition-colors cursor-pointer"
                         >
-                          <span>🥁</span>
+                          <span><ShowIcon inline emoji="🥁" /></span>
                           <span>+ Ensayo</span>
                         </button>
                         <button
@@ -2218,7 +2219,7 @@ export default function CalendarView({
                           }}
                           className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--tentative)]/15 hover:text-[var(--tentative)] transition-colors cursor-pointer"
                         >
-                          <span>🤝</span>
+                          <span><ShowIcon inline emoji="🤝" /></span>
                           <span>+ Reunión</span>
                         </button>
                       </div>
@@ -2815,14 +2816,14 @@ export default function CalendarView({
                 onClick={() => setShowCreateModal('concert')}
                 className="px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
               >
-                <span>🎸</span> + Concierto
+                <span><ShowIcon inline emoji="🎸" /></span> + Concierto
               </button>
               <button
                 type="button"
                 onClick={() => setShowCreateModal('rehearsal')}
                 className="px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
               >
-                <span>🥁</span> + Ensayo
+                <span><ShowIcon inline emoji="🥁" /></span> + Ensayo
               </button>
             </div>
           </div>
@@ -2878,14 +2879,14 @@ export default function CalendarView({
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)]">
-                              🎸 Concierto
+                              <ShowIcon inline emoji="🎸" />Concierto
                             </span>
                             <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
                               {bandInfo.name}
                             </span>
                             {selectedConcert.cache ? (
                               <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold text-[var(--acc)]/70 bg-[var(--acc)]/10">
-                                💰 {selectedConcert.cache.toLocaleString('es-ES')} €
+                                <ShowIcon inline emoji="💰" />{selectedConcert.cache.toLocaleString('es-ES')} €
                               </span>
                             ) : null}
                             <span
@@ -2911,7 +2912,7 @@ export default function CalendarView({
                             )}
                           </h3>
                           {selectedConcert.direccion && (
-                            <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">📍 {selectedConcert.direccion}</p>
+                            <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5"><ShowIcon inline emoji="📍" />{selectedConcert.direccion}</p>
                           )}
                         </div>
 
@@ -2959,7 +2960,7 @@ export default function CalendarView({
                               setModalActiveTab('resumen');
                               setShowEventFichaModal(true);
                             }}
-                            className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                            className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
                           >
                             <Maximize2 className="w-3.5 h-3.5" />
                             <span>Abrir Ficha Completa</span>
@@ -2971,15 +2972,15 @@ export default function CalendarView({
                       <div className="flex items-center gap-3 text-micro font-sans text-[var(--ink)] flex-wrap pt-1 /20">
                         {selectedConcert.aforo_total ? (
                           <span className="flex items-center gap-1">
-                            <span>👥</span> Aforo: {selectedConcert.aforo_vendido || 0} / {selectedConcert.aforo_total}
+                            <span><ShowIcon inline emoji="👥" /></span> Aforo: {selectedConcert.aforo_vendido || 0} / {selectedConcert.aforo_total}
                           </span>
                         ) : null}
                         <span className="flex items-center gap-1">
-                          <span>📄</span> {selectedConcert.contrato_firmado ? 'Contrato firmado' : 'Contrato pendiente'}
+                          <span><ShowIcon inline emoji="📄" /></span> {selectedConcert.contrato_firmado ? 'Contrato firmado' : 'Contrato pendiente'}
                         </span>
                         {selectedConcert.tipo && (
                           <span className="flex items-center gap-1 opacity-80">
-                            <span>🏷️</span> Tipo: {selectedConcert.tipo}
+                            <span><ShowIcon inline emoji="🏷️" /></span> Tipo: {selectedConcert.tipo}
                           </span>
                         )}
                       </div>
@@ -3044,17 +3045,17 @@ export default function CalendarView({
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span
                               className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-black ${
-                                isReu ? 'bg-[var(--tentative)] text-[var(--ink)]' : 'bg-[var(--ok)] text-[var(--ink)]'
+                                isReu ? 'bg-[var(--tentative)] text-[var(--ink)]' : 'bg-[var(--ok)] text-[var(--on-ok)]'
                               }`}
                             >
-                              {isReu ? '🤝 Reunión' : '🥁 Ensayo'}
+                              {isReu ? 'Reunión' : 'Ensayo'}
                             </span>
                             <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
                               {bandInfo.name}
                             </span>
                             {selectedRehearsal.hora && (
                               <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold text-[var(--ink)] bg-[var(--surface)]/80">
-                                🕒 {selectedRehearsal.hora}
+                                <ShowIcon inline emoji="🕒" />{selectedRehearsal.hora}
                               </span>
                             )}
                           </div>
@@ -3063,11 +3064,11 @@ export default function CalendarView({
                           </h3>
                           {isReu && selectedRehearsal.enlace_reunion && (
                             <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5 truncate">
-                              🔗 {selectedRehearsal.enlace_reunion}
+                              <ShowIcon inline emoji="🔗" />{selectedRehearsal.enlace_reunion}
                             </p>
                           )}
                           {!isReu && selectedRehearsal.notas && (
-                            <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5 line-clamp-2">📝 {selectedRehearsal.notas}</p>
+                            <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5 line-clamp-2"><ShowIcon inline emoji="📝" />{selectedRehearsal.notas}</p>
                           )}
                         </div>
 
@@ -3078,7 +3079,7 @@ export default function CalendarView({
                           className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-black flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97] ${
                             isReu
                               ? 'bg-[var(--tentative)] hover:bg-[var(--tentative)]/80 text-[var(--ink)]/20'
-                              : 'bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)]/20'
+                              : 'bg-[var(--ok)] hover:brightness-95 text-[var(--ink)]/20'
                           }`}
                         >
                           <Maximize2 className="w-3.5 h-3.5" />

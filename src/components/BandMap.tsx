@@ -30,17 +30,17 @@ const MAP_STYLES: Record<
   { name: string; url: string; attr: string }
 > = {
   streets: {
-    name: "🗺️ Callejero Claro (Recomendado)",
+    name: "Callejero Claro (Recomendado)",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     attr: "&copy; Esri &mdash; OpenStreetMap contributors",
   },
   osm: {
-    name: "🏙️ OpenStreetMap Detallado",
+    name: "OpenStreetMap Detallado",
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     attr: "&copy; OpenStreetMap contributors",
   },
   satellite: {
-    name: "🛰️ Satélite Híbrido",
+    name: "Satélite Híbrido",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attr: "&copy; Esri World Imagery",
   },
@@ -50,7 +50,7 @@ const MAP_STYLES: Record<
     attr: "&copy; Esri &mdash; Light Gray Canvas",
   },
   dark: {
-    name: "🌙 Oscuro Nocturno",
+    name: "Oscuro Nocturno",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
     attr: "&copy; Esri &mdash; Dark Gray Canvas",
   },
@@ -209,38 +209,38 @@ function getStatusBadgeConfig(status: BandRelationshipStatus) {
   switch (status) {
     case "colegas_aliados":
       return {
-        text: "🤝 Colegas / Aliados",
+        text: "Colegas / Aliados",
         color: okColor,
         bg: okColor + "26",
       };
     case "concierto_agendado":
       return {
-        text: "⚡ Concierto Agendado",
+        text: "Concierto Agendado",
         color: accColor,
         bg: accColor + "26",
       };
     case "intercambio_propuesto":
       return {
-        text: "🔄 Date Swap Propuesto",
+        text: "Date Swap Propuesto",
         color: okColor,
         bg: okColor + "26",
       };
     case "pendiente_respuesta":
       return {
-        text: "⏳ Pendiente Respuesta",
+        text: "Pendiente Respuesta",
         color: accColor,
         bg: accColor + "26",
       };
     case "no_disponible":
       return {
-        text: "❌ No Disponible",
+        text: "No Disponible",
         color: alertColor,
         bg: alertColor + "26",
       };
     case "sin_contactar":
     default:
       return {
-        text: "📡 Sin Contactar",
+        text: "Sin Contactar",
         color: ink3Color,
         bg: ink3Color + "26",
       };

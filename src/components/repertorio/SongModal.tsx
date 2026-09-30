@@ -4,6 +4,7 @@ import { ThemeColors, Song } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
+import { ShowIcon } from '../ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -234,7 +235,7 @@ export function SongModal({
                       .filter((a) => a && a !== 'todos' && a !== 'Singles / Sin Disco')
                       .map((alb) => (
                         <option key={alb} value={alb}>
-                          💿 {alb}
+                          {alb}
                         </option>
                       ))}
                     <option value="__CUSTOM__">+ Crear Nuevo Álbum...</option>
@@ -319,10 +320,10 @@ export function SongModal({
                     defaultValue={energiaDefault}
                     className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                   >
-                    <option value="20">💣 Explosiva</option>
-                    <option value="18">🔥 Alta</option>
-                    <option value="12">🎵 Media</option>
-                    <option value="6">🌙 Balada</option>
+                    <option value="20">Explosiva</option>
+                    <option value="18">Alta</option>
+                    <option value="12">Media</option>
+                    <option value="6">Balada</option>
                   </select>
                 </div>
               </div>
@@ -396,10 +397,10 @@ export function SongModal({
                             'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                         >
-                          <option value="listo">⚡ Listo para Directo</option>
-                          <option value="ensayando">🎸 En Ensayo</option>
-                          <option value="componiendo">💡 En Composición</option>
-                          <option value="descartado">📦 Archivo</option>
+                          <option value="listo">Listo para Directo</option>
+                          <option value="ensayando">En Ensayo</option>
+                          <option value="componiendo">En Composición</option>
+                          <option value="descartado">Archivo</option>
                         </select>
                       </div>
 
@@ -481,7 +482,7 @@ export function SongModal({
                       {showMemberNotesSection && (
                         <div className="space-y-2 pt-1">
                           <div>
-                            <label className="block text-[var(--ink-2)] text-micro mb-1">📌 Nota General para todo el grupo</label>
+                            <label className="block text-[var(--ink-2)] text-micro mb-1"><ShowIcon inline emoji="📌" />Nota General para todo el grupo</label>
                             <input
                               name="notasRepertorio"
                               type="text"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
+import { ShowIcon } from '../ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -89,11 +90,11 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 onChange={(e) => setTipoFormato(e.target.value as any)}
                 className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
               >
-                <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
-                <option value="sala_larga">🎸 Sala / Show Largo (90-120m)</option>
-                <option value="acustico">🌙 Acústico / Íntimo</option>
-                <option value="ensayo">🥁 Ensayo / Local</option>
-                <option value="otro">📋 Otro Formato</option>
+                <option value="festival">Festival (45-60m Caña Directa)</option>
+                <option value="sala_larga">Sala / Show Largo (90-120m)</option>
+                <option value="acustico">Acústico / Íntimo</option>
+                <option value="ensayo">Ensayo / Local</option>
+                <option value="otro">Otro Formato</option>
               </select>
             </div>
 
@@ -120,7 +121,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4 stroke-[3]" />
                 <span>{setlistToEdit ? 'Guardar Cambios' : 'Crear Repertorio'}</span>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lead } from '../../types';
 import { Calculator, Coins, TrendingUp, ChevronDown, ChevronUp, RefreshCw, Check, AlertCircle } from 'lucide-react';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface QuickDealSimulatorProps {
   lead: Lead;
@@ -104,7 +105,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
         <div className="p-3.5 border-t border-[var(--hair)] space-y-3 bg-[var(--surface)] text-xs">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-              <label className="text-micro text-[var(--ink-2)] block font-medium">🎟️ Anticipada (€)</label>
+              <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🎟️" />Anticipada (€)</label>
               <input
                 type="number"
                 value={anticipada}
@@ -114,7 +115,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-              <label className="text-micro text-[var(--ink-2)] block font-medium">🚪 Puerta (€)</label>
+              <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🚪" />Puerta (€)</label>
               <input
                 type="number"
                 value={taquilla}
@@ -124,7 +125,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-              <label className="text-micro text-[var(--ink-2)] block font-medium">🏢 Alquiler Sala (€)</label>
+              <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🏢" />Alquiler Sala (€)</label>
               <input
                 type="number"
                 value={alquiler}
@@ -144,7 +145,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-              <label className="text-micro text-[var(--ink-2)] block font-medium">🚐 Gastos Viaje (€)</label>
+              <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🚐" />Gastos Viaje (€)</label>
               <input
                 type="number"
                 value={gastosViaje}
@@ -154,7 +155,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-              <label className="text-micro text-[var(--ink-2)] block font-medium">🎸 Nº Músicos</label>
+              <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🎸" />Nº Músicos</label>
               <input
                 type="number"
                 value={numMusicos}
@@ -212,7 +213,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                 type="button"
                 onClick={handleSave}
                 disabled={isSaving}
-                className="px-3.5 py-1 rounded bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                className="px-3.5 py-1 rounded bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
               >
                 {isSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                 <span>Guardar Deal</span>

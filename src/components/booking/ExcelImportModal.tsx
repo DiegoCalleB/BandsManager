@@ -22,6 +22,7 @@ import {
 import { Lead, LeadType } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ExcelImportModalProps {
   isOpen: boolean;
@@ -787,7 +788,7 @@ export function ExcelImportModal({
           <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 text-xs">
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--on-ok)]"}`}
               >
                 {step > 1 ? <Check className="w-3 h-3" /> : "1"}
               </div>
@@ -804,7 +805,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--on-ok)]"}`}
               >
                 {step > 2 ? <Check className="w-3 h-3" /> : "2"}
               </div>
@@ -821,7 +822,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--on-ok)]"}`}
               >
                 3
               </div>
@@ -959,7 +960,7 @@ export function ExcelImportModal({
                             : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
-                        <span>{cat.icon}</span>
+                        <span><ShowIcon inline emoji={cat.icon} /></span>
                         <span>{cat.label}</span>
                       </button>
                     ))}
@@ -1046,7 +1047,7 @@ export function ExcelImportModal({
                   {/* Teléfono Móvil (WhatsApp) */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
-                      <span>📱</span>
+                      <span><ShowIcon inline emoji="📱" /></span>
                       <span>Teléfono Móvil (WhatsApp)</span>
                     </label>
                     <select
@@ -1071,7 +1072,7 @@ export function ExcelImportModal({
                   {/* Teléfono Fijo */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
-                      <span>☎️</span>
+                      <span><ShowIcon inline emoji="☎️" /></span>
                       <span>Teléfono Fijo</span>
                     </label>
                     <select
@@ -1096,7 +1097,7 @@ export function ExcelImportModal({
                   {/* Teléfono General */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                      <span>📞</span>
+                      <span><ShowIcon inline emoji="📞" /></span>
                       <span>Teléfono General / Otro</span>
                     </label>
                     <select
@@ -1495,7 +1496,7 @@ export function ExcelImportModal({
                             >
                               {CATEGORY_OPTIONS.map((c) => (
                                 <option key={c.id} value={c.id}>
-                                  {c.icon} {c.label}
+                                  <ShowIcon inline emoji={c.icon} /> {c.label}
                                 </option>
                               ))}
                             </select>
@@ -1574,7 +1575,7 @@ export function ExcelImportModal({
                 <button
                   type="button"
                   onClick={buildParsedRows}
-                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-[0.97] transition-ui cursor-pointer"
+                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer"
                 >
                   <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1586,7 +1587,7 @@ export function ExcelImportModal({
                   type="button"
                   disabled={isImporting || selectedCount === 0}
                   onClick={handleExecuteImport}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isImporting ? (
                     <>

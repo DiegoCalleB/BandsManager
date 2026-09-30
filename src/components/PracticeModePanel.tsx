@@ -26,6 +26,7 @@ import { matchInstrumentToStemCategory } from '../config/stemInstruments';
 import { apiFetch } from '../utils/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { transposeChordToken } from '../utils/chordUtils';
+import { ShowIcon } from './ui/ShowIcon';
 
 const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 
@@ -625,16 +626,16 @@ export default function PracticeModePanel({
   const chordsSourceLabel = (source: TrackChordsResult['chordsSource']) => {
     if (source === 'audio_real')
       return {
-        text: '🎧 Transcrito escuchando esta pista real',
+        text: 'Transcrito escuchando esta pista real',
         tone: 'text-[var(--ok)]',
       };
     if (source === 'ia_sin_audio')
       return {
-        text: '🤖 Propuesta de IA sin poder escuchar el audio',
+        text: 'Propuesta de IA sin poder escuchar el audio',
         tone: 'text-[var(--acc)]',
       };
     return {
-      text: '📐 Plantilla genérica (sin IA disponible)',
+      text: 'Plantilla genérica (sin IA disponible)',
       tone: 'text-[var(--ink-2)]',
     };
   };
@@ -733,7 +734,7 @@ export default function PracticeModePanel({
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--ok)]  text-[var(--ink)] flex items-center justify-center shrink-0 hover:brightness-110/40 transition-ui active:scale-[0.97] cursor-pointer"
+                    className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--ok)]  text-[var(--on-ok)] flex items-center justify-center shrink-0 hover:brightness-110/40 transition-ui active:scale-[0.97] cursor-pointer"
                     title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
                   >
                     {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -745,7 +746,7 @@ export default function PracticeModePanel({
                         <span className="text-[var(--ink)] font-bold">{formatTime(currentTime)}</span>
                         {currentActiveSection && (
                           <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] ">
-                            {currentActiveSection.icon} {currentActiveSection.name}
+                            <ShowIcon inline emoji={currentActiveSection.icon} /> {currentActiveSection.name}
                           </span>
                         )}
                       </div>
@@ -789,7 +790,7 @@ export default function PracticeModePanel({
                     {loopA != null && loopB != null ? (
                       <div className="flex items-center gap-2">
                         <span className="text-micro text-[var(--ok)] font-bold bg-[var(--ok)]/15 px-2 py-0.5 rounded-[var(--r-m)]">
-                          🔁 Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
+                          <ShowIcon inline emoji="🔁" />Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
                         </span>
                         <button
                           type="button"
@@ -816,14 +817,14 @@ export default function PracticeModePanel({
                           onClick={() => applySmartSectionLoop(sec)}
                           className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-micro font-bold shrink-0 transition-ui cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
-                              ? 'bg-[var(--acc)] text-[var(--ink)] /40 ring-1 ring-[var(--acc)]'
+                              ? 'bg-[var(--acc)] text-[var(--on-acc)] /40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
                                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                                 : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 '
                           }`}
                           title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
                         >
-                          <span>{sec.icon}</span>
+                          <span><ShowIcon inline emoji={sec.icon} /></span>
                           <span>{sec.name}</span>
                           <span className="text-micro opacity-75 font-normal">({formatTime(sec.startSec)})</span>
                         </button>
@@ -862,7 +863,7 @@ export default function PracticeModePanel({
                           onClick={() => changeSpeed(spd)}
                           className={`py-1 rounded-[var(--r-m)] text-center transition-ui cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
+                              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                               : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >
@@ -947,7 +948,7 @@ export default function PracticeModePanel({
                           onClick={() => setSemitonesOffset(st)}
                           className={`py-1 rounded-[var(--r-m)] text-center transition-ui cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
+                              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                               : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >

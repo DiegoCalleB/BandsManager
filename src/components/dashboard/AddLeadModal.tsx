@@ -2,6 +2,7 @@ import React from "react";
 import { LeadType } from "../../types";
 import { Plus, X } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface AddLeadModalProps {
   isOpen: boolean;
@@ -154,22 +155,22 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                   className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans cursor-pointer"
                 >
                   <option value="sala">
-                    🏛️ Sala / Teatro (Booking directo)
+                    Sala / Teatro (Booking directo)
                   </option>
                   <option value="festival">
-                    🎪 Festival (Escenarios / Carteles)
+                    Festival (Escenarios / Carteles)
                   </option>
                   <option value="ayuntamiento">
-                    🎆 Ayuntamiento / Fiestas Patronales
+                    Ayuntamiento / Fiestas Patronales
                   </option>
                   <option value="grupo">
-                    🎸 Grupo / Artista (Colaboración)
+                    Grupo / Artista (Colaboración)
                   </option>
                   <option value="productora">
-                    💼 Productora / Agencia Management
+                    Productora / Agencia Management
                   </option>
                   <option value="medio">
-                    📻 Medio de Comunicación (Radio 3 / Prensa / TV)
+                    Medio de Comunicación (Radio 3 / Prensa / TV)
                   </option>
                 </select>
               </div>

@@ -24,6 +24,7 @@ import {
   Clock,
 } from "lucide-react";
 import { OndaSeries } from "../ui/Onda";
+import { ShowIcon } from '../ui/ShowIcon';
 
 export type TimePeriod = "7d" | "30d" | "90d" | "1y" | "all";
 
@@ -564,7 +565,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <button
                 type="button"
                 onClick={() => onNavigate("reels")}
-                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"}`}
+                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"}`}
                 title="Abrir el panel completo de métricas y sincronización"
               >
                 <Activity className="w-3.5 h-3.5" />
@@ -715,11 +716,11 @@ export const SocialAndFansGrowthChart: React.FC<
             </div>
             <div className="text-micro font-sans text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1  pt-1">
               <span className="text-[var(--acc)]/70 font-bold">
-                ✨ {uneteFans} vía Únete
+                <ShowIcon inline emoji="✨" />{uneteFans} vía Únete
               </span>
               {directoFans > 0 && (
                 <span className="text-[var(--ink-2)]">
-                  🎤 {directoFans} directo
+                  <ShowIcon inline emoji="🎤" />{directoFans} directo
                 </span>
               )}
               <span className="text-[var(--ok)] font-bold">✓ RGPD</span>
@@ -748,7 +749,7 @@ export const SocialAndFansGrowthChart: React.FC<
                   onClick={() => setSelectedPeriod(opt.id)}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold transition-ui cursor-pointer ${
                     isSelected
-                      ? "bg-[var(--acc)]  text-[var(--ink)]"
+                      ? "bg-[var(--acc)]  text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
                   }`}
                   title={opt.label}
@@ -1009,7 +1010,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <button
               type="button"
               onClick={selectAllChannels}
-              className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-micro font-bold transition-ui cursor-pointer"
+              className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-micro font-bold transition-ui cursor-pointer"
             >
               Activar todos los canales
             </button>

@@ -40,6 +40,7 @@ import { formatSongTitle } from "../../utils/formatSongTitle";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface OrdenDelDiaTabProps {
   rehearsal: Rehearsal;
@@ -419,14 +420,14 @@ export function OrdenDelDiaTab({
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-1 font-sans text-xs">
             <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--acc)]/70 font-bold">
-              ⏱ {totalMinutosEstimados} min estimados
+              <ShowIcon inline emoji="⏱" />{totalMinutosEstimados} min estimados
             </span>
             <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)]">
-              🎵 {cancionesCount} canciones
+              <ShowIcon inline emoji="🎵" />{cancionesCount} canciones
             </span>
             {pausasCount > 0 && (
               <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)]">
-                ☕ {pausasCount} descansos
+                <ShowIcon inline emoji="☕" />{pausasCount} descansos
               </span>
             )}
             {historyStack.length > 0 && (
@@ -458,7 +459,7 @@ export function OrdenDelDiaTab({
 
           <button
             onClick={onGoToLiveMode}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-bold text-xs hover:brightness-110 transition-ui cursor-pointer active:scale-[0.97]"
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--on-acc)] font-sans font-bold text-xs hover:brightness-110 transition-ui cursor-pointer active:scale-[0.97]"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>Iniciar Modo Local en Vivo</span>
@@ -555,7 +556,7 @@ export function OrdenDelDiaTab({
           {/* Quick tips */}
           <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2">
             <h5 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-              💡 Consejos de Productividad
+              <ShowIcon inline emoji="💡" />Consejos de Productividad
             </h5>
             <ul className="text-xs text-[var(--ink-2)] space-y-1.5 pl-4 list-disc font-sans">
               <li>
@@ -637,7 +638,7 @@ export function OrdenDelDiaTab({
                     onClick={() => setShowImportSetlistModal(true)}
                     className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold hover:bg-[var(--tentative)]/30 cursor-pointer"
                   >
-                    ⚡ Cargar Repertorio Completo
+                    <ShowIcon inline emoji="⚡" />Cargar Repertorio Completo
                   </button>
                 )}
               </div>
@@ -717,7 +718,7 @@ export function OrdenDelDiaTab({
                             <span
                               className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold ${bType.bg} ${bType.text}`}
                             >
-                              {bType.icon} {bType.label}
+                              <ShowIcon inline emoji={bType.icon} /> {bType.label}
                             </span>
 
                             {/* Song state info from catalog */}
@@ -735,17 +736,17 @@ export function OrdenDelDiaTab({
                             {/* Evaluation badge if set */}
                             {item.evaluacion === "bordada" && (
                               <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
-                                🟢 Bordada
+                                <ShowIcon inline emoji="🟢" />Bordada
                               </span>
                             )}
                             {item.evaluacion === "regular" && (
                               <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
-                                🟡 Regular
+                                <ShowIcon inline emoji="🟡" />Regular
                               </span>
                             )}
                             {item.evaluacion === "repetir" && (
                               <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
-                                🔴 Repetir
+                                <ShowIcon inline emoji="🔴" />Repetir
                               </span>
                             )}
                           </div>
@@ -1168,7 +1169,7 @@ export function OrdenDelDiaTab({
                               : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
                           }`}
                         >
-                          <span>{def.icon}</span>
+                          <span><ShowIcon inline emoji={def.icon} /></span>
                           <span className="truncate">
                             {def.label.split("(")[0]}
                           </span>

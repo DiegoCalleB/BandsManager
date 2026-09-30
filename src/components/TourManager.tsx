@@ -33,6 +33,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface TourManagerProps {
   colors: ThemeColors;
@@ -167,42 +168,42 @@ export default function TourManager({
   // Vehicle Presets
   const VEHICLE_PRESETS = [
     {
-      label: "🚐 Furgoneta Grande (Sprinter, Crafter, Master)",
+      label: "Furgoneta Grande (Sprinter, Crafter, Master)",
       name: "Furgoneta Grande (Sprinter)",
       l100km: 9.5,
       fuel: "diesel",
       defaultPrice: 1.55,
     },
     {
-      label: "🚐 Furgoneta Mediana (Transit Custom, Transporter, Vito)",
+      label: "Furgoneta Mediana (Transit Custom, Transporter, Vito)",
       name: "Furgoneta Mediana (Transit/Vito)",
       l100km: 7.8,
       fuel: "diesel",
       defaultPrice: 1.55,
     },
     {
-      label: "🚐 Furgoneta Pequeña (Berlingo, Kangoo, Partner)",
+      label: "Furgoneta Pequeña (Berlingo, Kangoo, Partner)",
       name: "Furgoneta Pequeña (Berlingo)",
       l100km: 6.2,
       fuel: "diesel",
       defaultPrice: 1.55,
     },
     {
-      label: "🚗 Turismo / Coche de Apoyo",
+      label: "Turismo / Coche de Apoyo",
       name: "Turismo / Coche de Apoyo",
       l100km: 6.8,
       fuel: "gasolina95",
       defaultPrice: 1.62,
     },
     {
-      label: "⚡ Furgoneta Eléctrica",
+      label: "Furgoneta Eléctrica",
       name: "Furgoneta Eléctrica",
       l100km: 22.0,
       fuel: "electrico",
       defaultPrice: 0.25,
     },
     {
-      label: "⚙️ Vehículo Personalizado",
+      label: "Vehículo Personalizado",
       name: "Vehículo Adicional",
       l100km: 8.5,
       fuel: "diesel",
@@ -1134,22 +1135,22 @@ export default function TourManager({
                             }}
                             className={`px-3 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition-ui cursor-pointer ${
                               formConvocatoriaTipo === "completa"
-                                ? "bg-[var(--acc)] text-[var(--ink)]"
+                                ? "bg-[var(--acc)] text-[var(--on-acc)]"
                                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                             }`}
                           >
-                            👥 Banda Completa ({availableMembers.length})
+                            <ShowIcon inline emoji="👥" />Banda Completa ({availableMembers.length})
                           </button>
                           <button
                             type="button"
                             onClick={() => setFormConvocatoriaTipo("parcial")}
                             className={`px-3 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition-ui cursor-pointer ${
                               formConvocatoriaTipo === "parcial"
-                                ? "bg-[var(--acc)] text-[var(--ink)]"
+                                ? "bg-[var(--acc)] text-[var(--on-acc)]"
                                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                             }`}
                           >
-                            👤 Formación Parcial / Reducida
+                            <ShowIcon inline emoji="👤" />Formación Parcial / Reducida
                           </button>
                         </div>
                       </div>
@@ -1200,7 +1201,7 @@ export default function TourManager({
                                   <div
                                     className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${
                                       isSelected
-                                        ? "bg-[var(--acc)] text-[var(--ink)]"
+                                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
                                         : ""
                                     }`}
                                   >
@@ -1453,7 +1454,7 @@ export default function TourManager({
                       <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-3 text-xs font-sans">
                         <div className="space-y-1">
                           <span className="text-[var(--ink)] flex items-center gap-1.5">
-                            📐{" "}
+                            <ShowIcon inline emoji="📐" />{" "}
                             <strong className="text-[var(--ink)]">
                               Cálculo de Consumo Combinado:
                             </strong>
@@ -1732,7 +1733,7 @@ export default function TourManager({
                   {/* Sincronización Automática Checkboxes */}
                   <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)]/30 space-y-2.5">
                     <span className="text-xs font-sans font-bold text-[var(--ink-2)] block">
-                      ⚡ Integración con Calendario & Finanzas
+                      <ShowIcon inline emoji="⚡" />Integración con Calendario & Finanzas
                     </span>
 
                     <label className="flex items-center gap-2.5 text-xs text-[var(--ink)] cursor-pointer">
@@ -1746,7 +1747,7 @@ export default function TourManager({
                       />
                       <span>
                         <strong className="text-[var(--ink)]">
-                          📅 Sincronizar paradas en el Calendario oficial de la
+                          <ShowIcon inline emoji="📅" />Sincronizar paradas en el Calendario oficial de la
                           Banda:
                         </strong>{" "}
                         Crea/actualiza automáticamente los conciertos
@@ -1891,7 +1892,7 @@ export default function TourManager({
                 <button
                   type="button"
                   onClick={confirmDelete}
-                  className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] active:scale-[0.97] transition-ui flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] active:scale-[0.97] transition-ui flex items-center gap-1.5 cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                   Sí, Eliminar Gira

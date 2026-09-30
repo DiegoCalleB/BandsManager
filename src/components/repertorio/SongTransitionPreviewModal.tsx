@@ -61,6 +61,7 @@ import {
   AudioCueAnalysis,
 } from "../../utils/audioCueDetector";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongTransitionPreviewModalProps {
   isOpen: boolean;
@@ -773,14 +774,14 @@ export function SongTransitionPreviewModal({
                     </span>
                     <div className="flex items-center gap-1">
                       <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-sans text-micro font-semibold">
-                        🎼{" "}
+                        <ShowIcon inline emoji="🎼" />{" "}
                         {itemA?.tonalidadDeseada ||
                           songA.tonalidad ||
                           "Sin tono"}
                       </span>
                       {songA.bpm && (
                         <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-micro font-semibold">
-                          🥁 {songA.bpm} BPM
+                          <ShowIcon inline emoji="🥁" />{songA.bpm} BPM
                         </span>
                       )}
                       <span
@@ -791,7 +792,7 @@ export function SongTransitionPreviewModal({
                           color: energyInfoA.hexColor,
                         }}
                       >
-                        {energyInfoA.icon}{" "}
+                        <ShowIcon inline emoji={energyInfoA.icon} />{" "}
                         {Math.round((songA.energia ?? 10) / 2)}/10
                       </span>
                     </div>
@@ -813,7 +814,7 @@ export function SongTransitionPreviewModal({
                           CUE Out: {formatSec(cueAnalysisA.cueOut)}
                           {cueAnalysisA.hasApplauseOutro && (
                             <span className="text-[var(--ink)]">
-                              👏 Aplausos fin
+                              <ShowIcon inline emoji="👏" />Aplausos fin
                             </span>
                           )}
                           {cueAnalysisA.outroSilenceSec > 0.3 && (
@@ -891,7 +892,7 @@ export function SongTransitionPreviewModal({
                       className="text-micro text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 transition cursor-pointer shrink-0"
                       title="Subir archivo .mp3/.wav propio para probar"
                     >
-                      📁 Subir
+                      <ShowIcon inline emoji="📁" />Subir
                     </button>
                   </div>
 
@@ -948,14 +949,14 @@ export function SongTransitionPreviewModal({
                     </span>
                     <div className="flex items-center gap-1">
                       <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-sans text-micro font-semibold">
-                        🎼{" "}
+                        <ShowIcon inline emoji="🎼" />{" "}
                         {itemB?.tonalidadDeseada ||
                           songB.tonalidad ||
                           "Sin tono"}
                       </span>
                       {songB.bpm && (
                         <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-micro font-semibold">
-                          🥁 {songB.bpm} BPM
+                          <ShowIcon inline emoji="🥁" />{songB.bpm} BPM
                         </span>
                       )}
                       <span
@@ -966,7 +967,7 @@ export function SongTransitionPreviewModal({
                           color: energyInfoB.hexColor,
                         }}
                       >
-                        {energyInfoB.icon}{" "}
+                        <ShowIcon inline emoji={energyInfoB.icon} />{" "}
                         {Math.round((songB.energia ?? 10) / 2)}/10
                       </span>
                     </div>
@@ -988,7 +989,7 @@ export function SongTransitionPreviewModal({
                           CUE In: {formatSec(cueAnalysisB.cueIn)}
                           {cueAnalysisB.hasApplauseIntro && (
                             <span className="text-[var(--ink)]">
-                              👏 Aplausos inicio
+                              <ShowIcon inline emoji="👏" />Aplausos inicio
                             </span>
                           )}
                           {cueAnalysisB.introSilenceSec > 0.3 && (
@@ -1066,7 +1067,7 @@ export function SongTransitionPreviewModal({
                       className="text-micro text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 transition cursor-pointer shrink-0"
                       title="Subir archivo .mp3/.wav propio para probar"
                     >
-                      📁 Subir
+                      <ShowIcon inline emoji="📁" />Subir
                     </button>
                   </div>
 
@@ -1096,7 +1097,7 @@ export function SongTransitionPreviewModal({
                       }}
                       className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
                         playbackMode === "real"
-                          ? "bg-[var(--ok)] text-[var(--ink)]"
+                          ? "bg-[var(--ok)] text-[var(--on-ok)]"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                       }`}
                     >
@@ -1257,7 +1258,7 @@ export function SongTransitionPreviewModal({
                       width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`,
                     }}
                   >
-                    ⚡ Fade
+                    <ShowIcon inline emoji="⚡" />Fade
                   </div>
                 )}
 
@@ -1278,7 +1279,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={togglePlay}
-                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)] font-bold flex items-center justify-center shadow transition active:scale-[0.97] cursor-pointer"
+                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold flex items-center justify-center shadow transition active:scale-[0.97] cursor-pointer"
                     title={
                       isPlaying ? "Pausar comprobación" : "Reproducir unión"
                     }
@@ -1334,7 +1335,7 @@ export function SongTransitionPreviewModal({
                 {/* Progress Time & Status */}
                 <div className="flex items-center gap-1.5">
                   <span className="font-sans text-[var(--ink-2)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded text-micro">
-                    ⏱️ {currentTime.toFixed(1)}s /{" "}
+                    <ShowIcon inline emoji="⏱️" />{currentTime.toFixed(1)}s /{" "}
                     {timeline.totalDurationSec.toFixed(1)}s
                   </span>
                   {isPlaying && (

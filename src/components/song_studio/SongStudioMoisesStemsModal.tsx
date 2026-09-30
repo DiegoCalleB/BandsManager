@@ -52,7 +52,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             type="button"
             onClick={() => setMoisesTab('stems')}
             className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+              moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
             <Sliders className="w-3.5 h-3.5" /> Separar Pistas
@@ -62,7 +62,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             onClick={() => setMoisesTab('how_it_works')}
             className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'how_it_works'
-                ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
+                ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
@@ -72,7 +72,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             type="button"
             onClick={() => setMoisesTab('upload')}
             className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+              moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
             <Upload className="w-3.5 h-3.5" /> Subir Pistas
@@ -130,7 +130,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                     setShowMoisesStemsModal(null);
                   }
                 }}
-                className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Comenzar Separación</span>

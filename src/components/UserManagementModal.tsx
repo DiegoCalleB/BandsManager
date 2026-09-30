@@ -519,7 +519,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
                     {/* Upload Action */}
                     <div className="flex-1 space-y-2.5 text-center sm:text-left">
-                      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs transition-ui cursor-pointer active:scale-[0.97]">
+                      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-ui cursor-pointer active:scale-[0.97]">
                         <Upload className="w-4 h-4" />
                         <span>
                           {isUploadingLogo
@@ -712,7 +712,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             type="button"
                             onClick={() => handleChangePassword(u.id)}
                             disabled={loading}
-                            className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] font-bold text-xs transition-colors flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs transition-colors flex items-center gap-1"
                           >
                             <Check className="w-3.5 h-3.5" />
                             <span>Guardar</span>
@@ -844,7 +844,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
+                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
                 >
                   {loading ? (
                     <span>Creando miembro...</span>

@@ -2453,10 +2453,10 @@ export default function App() {
               onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
               className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group ${
                 isFloatingChatOpen
-                  ? "bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]"
+                  ? "bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)]"
                   : isChatLoading
                     ? "bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50"
-                    : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] "
+                    : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] "
               }`}
               title={
                 isChatLoading

@@ -30,6 +30,7 @@ import {
 import { ThemeColors, ThemeName } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
+import { ShowIcon } from './ui/ShowIcon';
 
 const ResolvedBgImage: React.FC<{
   url: string;
@@ -403,7 +404,7 @@ export default function Merchan({
                 setClaimStep("form");
                 setShowClaimModal(true);
               }}
-              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold font-sans transition-ui active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
+              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans transition-ui active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
             >
               <PackageCheck className="w-4 h-4" />
               <span>Canjear Pegatinas Gratis</span>
@@ -603,7 +604,7 @@ export default function Merchan({
                   onClick={() => setRemoveBgMode(m.id as any)}
                   className={`py-1.5 px-1 rounded text-micro font-sans font-bold transition ${
                     removeBgMode === m.id
-                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "bg-[var(--surface)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]"
                   }`}
                 >
@@ -843,7 +844,7 @@ export default function Merchan({
                             link.href = displayGraphic;
                             link.click();
                           }}
-                          className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition ${"bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--surface)]"}`}
+                          className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition ${"bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--surface)]"}`}
                         >
                           <Download className="w-4 h-4" />
                           Descargar Gráfico
@@ -946,7 +947,7 @@ export default function Merchan({
                           al agua, al sol y a fundas de guitarra.
                         </p>
                         <p className="text-xs font-sans text-[var(--acc)]/70 pt-1">
-                          ✨ Cantidad asignada por tu plan:{" "}
+                          <ShowIcon inline emoji="✨" />Cantidad asignada por tu plan:{" "}
                           <strong>500 unidades</strong>
                         </p>
                       </div>
@@ -1130,7 +1131,7 @@ export default function Merchan({
                   <button
                     type="button"
                     onClick={() => setClaimStep("success")}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold font-sans active:scale-[0.97] cursor-pointer flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans active:scale-[0.97] cursor-pointer flex items-center gap-2"
                   >
                     <PackageCheck className="w-4 h-4" />
                     <span>Pedir mis pegatinas</span>

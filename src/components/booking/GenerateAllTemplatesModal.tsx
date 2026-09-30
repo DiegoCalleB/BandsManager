@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Wand2, X, Check, Loader2, Info, Building2, Tent, Disc3, Radio, Users, Briefcase, Landmark } from 'lucide-react';
 import { ThemeColors } from '../../types';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface GenerateAllTemplatesModalProps {
   isOpen: boolean;
@@ -138,17 +139,17 @@ export function GenerateAllTemplatesModal({
               <div className="flex flex-wrap gap-2 text-xs pt-1">
                 {campaignContext.targetCities?.length ? (
                   <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 ">
-                    📍 Ciudades: {campaignContext.targetCities.join(', ')}
+                    <ShowIcon inline emoji="📍" />Ciudades: {campaignContext.targetCities.join(', ')}
                   </span>
                 ) : null}
                 {campaignContext.targetDates?.length ? (
                   <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 ">
-                    📅 Fechas: {campaignContext.targetDates.join(', ')}
+                    <ShowIcon inline emoji="📅" />Fechas: {campaignContext.targetDates.join(', ')}
                   </span>
                 ) : null}
                 {campaignContext.minCapacity || campaignContext.maxCapacity ? (
                   <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 ">
-                    👥 Aforo: {campaignContext.minCapacity || 100} - {campaignContext.maxCapacity || 500} pax
+                    <ShowIcon inline emoji="👥" />Aforo: {campaignContext.minCapacity || 100} - {campaignContext.maxCapacity || 500} pax
                   </span>
                 ) : null}
               </div>

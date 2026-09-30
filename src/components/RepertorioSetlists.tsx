@@ -2611,7 +2611,7 @@ export default function RepertorioSetlists({
     const { updatedSongs, changedCount } = normalizeSongTitlesInList(songs);
     if (changedCount === 0) {
       setStatusBanner({
-        text: "✨ Todos los temas del catálogo ya tienen formato con mayúsculas de nombres propios.",
+        text: "Todos los temas del catálogo ya tienen formato con mayúsculas de nombres propios.",
         type: "success",
       });
       setTimeout(() => setStatusBanner(null), 3500);
@@ -3963,7 +3963,7 @@ export default function RepertorioSetlists({
                                     }`}
                                     title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio"
                                   >
-                                    <span>〰️ Curva ideal</span>
+                                    <span><ShowIcon inline emoji="〰️" />Curva ideal</span>
                                     <span>{showIdealCurve ? "ON" : "OFF"}</span>
                                   </button>
                                   <button
@@ -3976,7 +3976,7 @@ export default function RepertorioSetlists({
                                     }`}
                                     title="Línea de BPM en un eje secundario — apagada por defecto para no saturar el gráfico en pantallas estrechas"
                                   >
-                                    <span>🥁 Línea de BPM</span>
+                                    <span><ShowIcon inline emoji="🥁" />Línea de BPM</span>
                                     <span>{showBpmLine ? "ON" : "OFF"}</span>
                                   </button>
                                   <button
@@ -3989,7 +3989,7 @@ export default function RepertorioSetlists({
                                     }`}
                                     title="Tonalidad de cada canción junto a su punto — con muchos temas seguidos, usa el zoom (🔍) para separarlos y leerlos bien"
                                   >
-                                    <span>🎼 Tonalidad</span>
+                                    <span><ShowIcon inline emoji="🎼" />Tonalidad</span>
                                     <span>{showTonalidad ? "ON" : "OFF"}</span>
                                   </button>
                                   <button
@@ -4002,7 +4002,7 @@ export default function RepertorioSetlists({
                                     }`}
                                     title="Ensancha el gráfico y añade scroll horizontal — más espacio entre puntos para leer tonalidad/BPM por tramos"
                                   >
-                                    <span>🔍 Zoom (más espacio)</span>
+                                    <span><ShowIcon inline emoji="🔍" />Zoom (más espacio)</span>
                                     <span>{chartZoom ? "ON" : "OFF"}</span>
                                   </button>
                                   <button
@@ -4028,28 +4028,28 @@ export default function RepertorioSetlists({
                                         className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#0284c7" }}
                                       />
-                                      🌙 Balada
+                                      <ShowIcon inline emoji="🌙" />Balada
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                       <i
                                         className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#059669" }}
                                       />
-                                      🎵 Media
+                                      <ShowIcon inline emoji="🎵" />Media
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                       <i
                                         className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#a16207" }}
                                       />
-                                      🔥 Alta
+                                      <ShowIcon inline emoji="🔥" />Alta
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                       <i
                                         className="w-2 h-2 rounded-[var(--r-pill)] inline-block"
                                         style={{ background: "#a21caf" }}
                                       />
-                                      💣 Explosiva
+                                      <ShowIcon inline emoji="💣" />Explosiva
                                     </span>
                                   </div>
                                 </div>
@@ -4072,7 +4072,7 @@ export default function RepertorioSetlists({
                                 : "Mostrar tonalidades en el gráfico"
                             }
                           >
-                            🎼
+                            <ShowIcon inline emoji="🎼" />
                           </button>
                         )}
                         <button
@@ -4151,7 +4151,7 @@ export default function RepertorioSetlists({
                             return (
                               <div className="flex flex-wrap items-center gap-2 text-micro font-sans text-[var(--ink-2)] bg-[var(--ok)]/10 rounded-[var(--r-s)] px-2 py-1">
                                 <span>
-                                  💬 Mejor sitio para una chapa: entre{" "}
+                                  <ShowIcon inline emoji="💬" />Mejor sitio para una chapa: entre{" "}
                                   <b>"{chapaSuggestion.cancionAntes}"</b> y{" "}
                                   <b>"{chapaSuggestion.cancionDespues}"</b>
                                   {motivos.length > 0
@@ -4163,7 +4163,7 @@ export default function RepertorioSetlists({
                                   onClick={insertSuggestedChapa}
                                   className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/60 hover:bg-[var(--ok)]/80 text-[var(--ok)]/40 transition-ui cursor-pointer font-medium shrink-0"
                                 >
-                                  ➕ Insertar aquí
+                                  <ShowIcon inline emoji="➕" />Insertar aquí
                                 </button>
                                 <button
                                   type="button"
@@ -4568,7 +4568,7 @@ export default function RepertorioSetlists({
                                         : undefined
                                     }
                                   >
-                                    <span>{w.icon}</span>
+                                    <span><ShowIcon inline emoji={w.icon} /></span>
                                     <span>{w.message}</span>
                                     {w.suggestedReorder && (
                                       <button
@@ -4598,7 +4598,7 @@ export default function RepertorioSetlists({
                           <div className="space-y-2 pt-2">
                             <div className="flex items-center justify-between">
                               <span className="text-xs font-bold text-[var(--ok)]/80">
-                                🧠 Análisis IA: {aiAnalysisResult.overallScore}
+                                <ShowIcon inline emoji="🧠" />Análisis IA: {aiAnalysisResult.overallScore}
                               </span>
                               <button
                                 type="button"
@@ -5096,13 +5096,13 @@ export default function RepertorioSetlists({
                                 className={`text-micro font-sans px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-[var(--ink)]/40 ${energy.bgClass} ${energy.textClass}`}
                                 title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? "— fijada a mano" : ""}. Clic para cambiarla.`}
                               >
-                                <span>{energy.icon}</span>
+                                <span><ShowIcon inline emoji={energy.icon} /></span>
                                 {song.energiaManual && (
                                   <span
                                     className="ml-0.5"
                                     title="Energía fijada a mano"
                                   >
-                                    ✋
+                                    <ShowIcon inline emoji="✋" />
                                   </span>
                                 )}
                               </button>
@@ -5219,7 +5219,7 @@ export default function RepertorioSetlists({
                                 title={
                                   evalUnion
                                     ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(",")}`
-                                    : "🎧 Probar unión y transición con la canción anterior"
+                                    : "Probar unión y transición con la canción anterior"
                                 }
                               >
                                 <span>{evalUnion?.icon || "⚡"}</span>
@@ -5298,7 +5298,7 @@ export default function RepertorioSetlists({
                                 className="text-[var(--accent-alt)]/80 truncate"
                                 title={song.notasRepertorio}
                               >
-                                📝 {song.notasRepertorio}
+                                <ShowIcon inline emoji="📝" />{song.notasRepertorio}
                               </div>
                             )}
                             {userNote && (
@@ -5306,7 +5306,7 @@ export default function RepertorioSetlists({
                                 className="text-[var(--ok)]/80 truncate"
                                 title={userNote}
                               >
-                                👤 {currentUser.name}: {userNote}
+                                <ShowIcon inline emoji="👤" />{currentUser.name}: {userNote}
                               </div>
                             )}
                             {it.notaTema && (
@@ -5636,7 +5636,7 @@ export default function RepertorioSetlists({
 
                         {isSelected && (
                           <span className="px-1 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
-                            📌
+                            <ShowIcon inline emoji="📌" />
                           </span>
                         )}
 
@@ -5782,7 +5782,7 @@ export default function RepertorioSetlists({
                       selectPlayerSongWithQueue(first, true, null);
                     }
                   }}
-                  className="shrink-0 w-12 h-12 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold flex items-center justify-center transition-ui cursor-pointer active:scale-[0.97]"
+                  className="shrink-0 w-12 h-12 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold flex items-center justify-center transition-ui cursor-pointer active:scale-[0.97]"
                   title="Reproducir catálogo"
                 >
                   {activePlayerSong &&
@@ -5822,7 +5822,7 @@ export default function RepertorioSetlists({
                   }
                   className={`px-3.5 py-2 rounded-[var(--r-m)] text-sm font-medium transition-colors flex items-center gap-2 ${
                     catalogStatusFilter === "listo"
-                      ? "bg-[var(--acc)] text-[var(--ink)]"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -5840,7 +5840,7 @@ export default function RepertorioSetlists({
                     setEditingSong(null);
                     setShowSongModal(true);
                   }}
-                  className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-medium text-sm flex items-center gap-2 transition-ui active:scale-[0.97]"
+                  className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-medium text-sm flex items-center gap-2 transition-ui active:scale-[0.97]"
                 >
                   <Plus className="w-4 h-4" />
                   <span className="hidden sm:inline">Tema</span>
@@ -5902,7 +5902,7 @@ export default function RepertorioSetlists({
                           Array.from(selectedCatalogIds),
                         )
                       }
-                      className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] cursor-pointer transition-ui flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] cursor-pointer transition-ui flex items-center gap-1.5"
                     >
                       <ListPlus className="w-3.5 h-3.5" />
                       <span>Añadir a Repertorio…</span>
@@ -6018,7 +6018,7 @@ export default function RepertorioSetlists({
                       <React.Fragment key={`${s.id}-${idx}`}>
                         {showAlbumHeader && (
                           <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-micro font-sans font-bold text-[var(--acc)]">
-                            <span>💿 {albumLabel}</span>
+                            <span><ShowIcon inline emoji="💿" />{albumLabel}</span>
                             <div
                               className={`h-px flex-1 ${"bg-[var(--sunken)]"}`}
                             />

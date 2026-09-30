@@ -1,6 +1,7 @@
 import React from "react";
 import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from "lucide-react";
 import { QuickEventItem } from "../types";
+import { ShowIcon } from '../../ui/ShowIcon';
 
 interface StepEventsProps {
   events: QuickEventItem[];
@@ -205,7 +206,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
           <div className="sm:col-span-3 p-3 rounded-[var(--r-m)] bg-[var(--acc)]/5 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-bold text-[var(--acc)]">
-                📊 Éxito / Afluencia Real (Opcional - Contexto para Agente IA)
+                <ShowIcon inline emoji="📊" />Éxito / Afluencia Real (Opcional - Contexto para Agente IA)
               </span>
               {setNewEventIsMilestone && (
                 <label className="flex items-center gap-1.5 cursor-pointer text-micro font-mono text-[var(--acc)] font-bold bg-[var(--acc)]/20 px-2 py-0.5 rounded ">
@@ -215,7 +216,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                     onChange={(e) => setNewEventIsMilestone(e.target.checked)}
                     className="accent-amber-500 rounded"
                   />
-                  <span>⭐ Llenazo / Hito Clave</span>
+                  <span><ShowIcon inline emoji="⭐" />Llenazo / Hito Clave</span>
                 </label>
               )}
             </div>
@@ -262,7 +263,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
             type="button"
             onClick={onAddEvent}
             disabled={!newEventTitle.trim() || !newEventDate}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir a la Agenda

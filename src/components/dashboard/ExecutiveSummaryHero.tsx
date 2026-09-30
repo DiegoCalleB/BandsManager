@@ -7,6 +7,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Concert, Lead, Rehearsal } from "../../types";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ExecutiveSummaryHeroProps {
   concerts?: Concert[];
@@ -67,7 +68,7 @@ const CardKpi: React.FC<CardKpiProps> = ({
           color: `var(${accentVar})`,
         }}
       >
-        {icon}
+        <ShowIcon inline emoji={icon} />
       </div>
       {onClick && <ArrowRight className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
     </div>

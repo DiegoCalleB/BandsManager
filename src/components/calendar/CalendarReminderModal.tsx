@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, Loader2, Send } from 'lucide-react';
 import { Concert, Rehearsal } from '../../types';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface CalendarReminderModalProps {
   isOpen: boolean;
@@ -92,7 +93,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
                 : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Ensayo/Reunión'}
             </p>
             <p className="text-xs text-[var(--ink-2)] font-mono mt-0.5">
-              📅 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
+              <ShowIcon inline emoji="📅" />{selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
               {selectedRehearsal?.hora ? ` a las ${selectedRehearsal.hora}` : ''}
             </p>
           </div>
@@ -104,7 +105,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             <div className="flex flex-wrap gap-1 font-mono text-micro">
               {effectiveBandMembers.map((m: any, idx: number) => (
                 <span key={idx} className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] ">
-                  👤 {m.name} {m.email ? `(${m.email})` : ''}
+                  <ShowIcon inline emoji="👤" />{m.name} {m.email ? `(${m.email})` : ''}
                 </span>
               ))}
             </div>
@@ -138,7 +139,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
                 htmlFor="chk-send-push"
                 className="text-xs text-[var(--acc)] cursor-pointer font-mono font-medium flex items-center gap-1"
               >
-                📱 Notificación Push en móvil / navegador (PWA)
+                <ShowIcon inline emoji="📱" />Notificación Push en móvil / navegador (PWA)
               </label>
             </div>
 
@@ -151,7 +152,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
                 className="rounded cursor-pointer accent-sky-500"
               />
               <label htmlFor="chk-send-email" className="text-xs text-[var(--ink-2)] cursor-pointer font-mono flex items-center gap-1">
-                📧 Enviar correo electrónico a la banda
+                <ShowIcon inline emoji="📧" />Enviar correo electrónico a la banda
               </label>
             </div>
           </div>
@@ -169,7 +170,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             type="button"
             disabled={reminderSending}
             onClick={handleSendEventReminder}
-            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-xs font-bold text-[var(--ink)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-ui"
+            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-xs font-bold text-[var(--on-acc)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-ui"
           >
             {reminderSending ? (
               <>

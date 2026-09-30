@@ -214,7 +214,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   <button
                     type="button"
                     onClick={handleSavePhone}
-                    className="px-3 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] rounded-[var(--r-m)] font-bold text-xs cursor-pointer"
+                    className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] rounded-[var(--r-m)] font-bold text-xs cursor-pointer"
                   >
                     Guardar
                   </button>
@@ -386,7 +386,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 disabled={!hasValidPhone}
                 className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer ${
                   hasValidPhone
-                    ? 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-extrabold/20'
+                    ? 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-extrabold/20'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed'
                 }`}
               >

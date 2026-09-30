@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
+import { ShowIcon } from '../ui/ShowIcon';
 
 /** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
@@ -271,7 +272,7 @@ export function PerfectSetlistModal({
                   className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
                   title="Deshacer el último cambio del setlist"
                 >
-                  ↩️ Deshacer
+                  <ShowIcon inline emoji="↩️" />Deshacer
                 </button>
               )}
               <button onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition">
@@ -311,7 +312,7 @@ export function PerfectSetlistModal({
               </p>
               <button
                 onClick={() => onGenerate()}
-                className="bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+                className="bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
               >
                 Generar Plan
               </button>
@@ -341,7 +342,7 @@ export function PerfectSetlistModal({
           {plan && liveActions && (
             <div className="space-y-4">
               <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
-                <p className="text-xs text-[var(--ink-2)] mb-1.5">🪄 Resumen del plan</p>
+                <p className="text-xs text-[var(--ink-2)] mb-1.5"><ShowIcon inline emoji="🪄" />Resumen del plan</p>
                 <p className="text-sm text-[var(--ink-2)]">{plan.summary}</p>
               </div>
 
@@ -364,7 +365,7 @@ export function PerfectSetlistModal({
                       key={idx}
                       className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ? 'bg-[var(--sunken)] opacity-50' : 'bg-[var(--surface)]/80'}`}
                     >
-                      <span className="text-sm mt-0.5">{icon}</span>
+                      <span className="text-sm mt-0.5"><ShowIcon inline emoji={icon} /></span>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-[var(--ink-2)]">{label}</p>
                         <p className="text-xs text-[var(--ink-2)] mt-0.5">{action.reason}</p>
@@ -374,7 +375,7 @@ export function PerfectSetlistModal({
                           className="shrink-0 text-micro text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
                           title="Un cambio anterior afectó al item que esta acción necesitaba"
                         >
-                          ⚠️ Ya no aplica
+                          <ShowIcon inline emoji="⚠️" />Ya no aplica
                         </span>
                       ) : isCurrentUndo ? (
                         <button
@@ -383,7 +384,7 @@ export function PerfectSetlistModal({
                           className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
                           title="Deshacer este cambio"
                         >
-                          ↩️ Deshacer
+                          <ShowIcon inline emoji="↩️" />Deshacer
                         </button>
                       ) : isApplied ? (
                         <span className="shrink-0 text-micro text-[var(--ok)] font-sans font-medium whitespace-nowrap">✓ Aplicado</span>
@@ -479,16 +480,16 @@ export function PerfectSetlistModal({
               <button
                 onClick={() => handleGenerateWithFeedback()}
                 title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
-                className="flex-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+                className="flex-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
-                🔄 Regenerar
+                <ShowIcon inline emoji="🔄" />Regenerar
               </button>
               <button
                 onClick={() => handleGenerateWithFeedback(true)}
                 title="Crea una copia nueva desde cero en vez de reutilizar la actual"
                 className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
-                🆕 Nueva copia
+                <ShowIcon inline emoji="🆕" />Nueva copia
               </button>
               <button
                 onClick={onClose}

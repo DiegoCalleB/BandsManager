@@ -56,6 +56,9 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         launchOptions: LAUNCH_OPTIONS,
         storageState: FICHERO_SESION,
+        // La app se usa en español: con el locale por defecto (en-US) el menú salía mitad en
+        // inglés y las capturas no eran lo que ve un usuario real.
+        locale: 'es-ES',
       },
     },
   ],

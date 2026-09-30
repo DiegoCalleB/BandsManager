@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ShowItemModalProps {
   isOpen: boolean;
@@ -72,7 +73,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
       <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card} bg-[var(--acc)]/10`}>
         <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)]">⚡</span>
+            <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)]"><ShowIcon inline emoji="⚡" /></span>
             <div>
               <h3 className={`text-sm font-extrabold font-mono ${colors.text}`}>
                 {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
@@ -193,7 +194,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] font-bold hover:bg-[var(--acc)] text-xs font-mono cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] text-xs font-mono cursor-pointer flex items-center gap-1.5"
             >
               <span>Guardar en Setlist</span>
             </button>

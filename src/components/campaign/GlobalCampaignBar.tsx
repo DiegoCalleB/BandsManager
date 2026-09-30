@@ -16,6 +16,7 @@ import {
   Flame,
   CheckCircle2,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface GlobalCampaignBarProps {
   campaign: BookingCampaign;
@@ -71,7 +72,7 @@ export function GlobalCampaignBar({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-micro font-sans font-extrabold px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc)]/40 shrink-0">
-                🎯 CAMPAÑA
+                <ShowIcon inline emoji="🎯" />CAMPAÑA
               </span>
               <h2
                 className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] truncate"

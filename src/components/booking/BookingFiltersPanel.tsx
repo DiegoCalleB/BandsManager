@@ -1,6 +1,7 @@
 import React from 'react';
 import { Filter, X, Building2, Radio, Briefcase, LayoutGrid, List, Map as MapIcon, BookmarkCheck, RefreshCw } from 'lucide-react';
 import { Lead } from '../../types';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface BookingFiltersPanelProps {
   isOpen: boolean;
@@ -159,7 +160,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 onClose();
               }}
               className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow-xs' : 'bg-[var(--acc)]/15 text-[var(--acc)] '
+                viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'bg-[var(--acc)]/15 text-[var(--acc)] '
               }`}
             >
               <MapIcon className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
@@ -177,43 +178,43 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           >
             {sectionTab === 'medios' ? (
               <>
-                <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
-                <option value="radio">📻 Radios</option>
-                <option value="tv">📺 TV</option>
-                <option value="prensa">📰 Prensa</option>
-                <option value="redes">📱 Redes</option>
-                <option value="podcast">🎙️ Podcasts</option>
+                <option value="todos">Todos los medios ({sectionLeads.length})</option>
+                <option value="radio">Radios</option>
+                <option value="tv">TV</option>
+                <option value="prensa">Prensa</option>
+                <option value="redes">Redes</option>
+                <option value="podcast">Podcasts</option>
               </>
             ) : sectionTab === 'grupos' ? (
               <>
-                <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
-                <option value="grupo">🎸 Grupos</option>
-                <option value="agencia">💼 Agencias</option>
-                <option value="manager">👔 Mánagers</option>
-                <option value="productora">🎬 Productoras</option>
-                <option value="sello">💿 Sellos</option>
+                <option value="todos">Todas las entidades ({sectionLeads.length})</option>
+                <option value="grupo">Grupos</option>
+                <option value="agencia">Agencias</option>
+                <option value="manager">Mánagers</option>
+                <option value="productora">Productoras</option>
+                <option value="sello">Sellos</option>
               </>
             ) : (
               <>
-                <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
-                <option value="sala">🏛️ Salas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sala').length})</option>
-                <option value="festival">🎪 Festivales ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'festival').length})</option>
+                <option value="todos">Tipo: Todos ({sectionLeads.length})</option>
+                <option value="sala">Salas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sala').length})</option>
+                <option value="festival">Festivales ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'festival').length})</option>
                 <option value="discoteca">
-                  🪩 Discotecas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'discoteca').length})
+                  Discotecas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'discoteca').length})
                 </option>
                 <option value="ayuntamiento">
-                  🎆 Ayuntamientos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'ayuntamiento').length})
+                  Ayuntamientos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'ayuntamiento').length})
                 </option>
                 <option value="agencia">
-                  💼 Agencias (
+                  Agencias (
                   {sectionLeads.filter((l) => normalizeType(l.tipo) === 'agencia' || normalizeType(l.tipo) === 'manager').length})
                 </option>
-                <option value="sello">💿 Sellos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sello').length})</option>
+                <option value="sello">Sellos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sello').length})</option>
                 <option value="productora">
-                  🎛️ Productores (
+                  Productores (
                   {sectionLeads.filter((l) => normalizeType(l.tipo) === 'productora' || normalizeType(l.tipo) === 'productor').length})
                 </option>
-                <option value="grupo">🎸 Bandas Amigas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'grupo').length})</option>
+                <option value="grupo">Bandas Amigas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'grupo').length})</option>
               </>
             )}
           </select>
@@ -233,7 +234,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
           >
-            <span>⭐ Favoritos</span>
+            <span><ShowIcon inline emoji="⭐" />Favoritos</span>
             {onlyFavoritesFilter && <X className="w-3 h-3 ml-0.5" />}
           </button>
 
@@ -246,7 +247,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
           >
-            <span>✔ Verificados</span>
+            <span><ShowIcon inline emoji="✔" />Verificados</span>
             {onlyVerifiedFilter && <X className="w-3 h-3 ml-0.5" />}
           </button>
 
@@ -275,7 +276,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               title="Guardar la combinación de filtros actual en 1 clic"
             >
               <BookmarkCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
-              <span>💾 Guardar búsqueda</span>
+              <span><ShowIcon inline emoji="💾" />Guardar búsqueda</span>
             </button>
           ) : (
             <form onSubmit={handleSaveCurrentFilter} className="flex items-center gap-1.5 animate-fadeIn">
@@ -289,7 +290,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               />
               <button
                 type="submit"
-                className="px-2.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-bold cursor-pointer"
+                className="px-2.5 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] rounded-[var(--r-m)] text-xs font-bold cursor-pointer"
               >
                 Guardar
               </button>
@@ -326,7 +327,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                     onClick={() => handleApplySavedFilter(sf)}
                     className="px-3 py-1 text-xs font-sans flex items-center gap-1.5 cursor-pointer"
                   >
-                    <span>📌 {sf.nombre}</span>
+                    <span><ShowIcon inline emoji="📌" />{sf.nombre}</span>
                     {sf.minCapacityFilter ? (
                       <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-[var(--acc)]">&gt;{sf.minCapacityFilter}</span>
                     ) : null}
@@ -352,28 +353,28 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         <div className="flex items-center gap-1.5 flex-wrap">
           {(sectionTab === 'medios'
             ? ([
-                { key: 'todos', label: '🌟 Todos' },
-                { key: 'radio', label: '📻 Radio' },
+                { key: 'todos', label: 'Todos' },
+                { key: 'radio', label: 'Radio' },
                 { key: 'tv', label: '📺 TV' },
-                { key: 'prensa', label: '📰 Prensa' },
-                { key: 'redes', label: '📱 Redes' },
-                { key: 'podcast', label: '🎙️ Podcasts' },
+                { key: 'prensa', label: 'Prensa' },
+                { key: 'redes', label: 'Redes' },
+                { key: 'podcast', label: 'Podcasts' },
               ] as const)
             : sectionTab === 'grupos'
               ? ([
-                  { key: 'todos', label: '🌟 Todos' },
-                  { key: 'productora', label: '🎬 Productoras' },
-                  { key: 'manager', label: '👔 Mánagers' },
-                  { key: 'agencia', label: '💼 Agencias' },
-                  { key: 'sello', label: '💿 Sellos' },
-                  { key: 'grupo', label: '🎸 Grupos' },
+                  { key: 'todos', label: 'Todos' },
+                  { key: 'productora', label: 'Productoras' },
+                  { key: 'manager', label: 'Mánagers' },
+                  { key: 'agencia', label: 'Agencias' },
+                  { key: 'sello', label: 'Sellos' },
+                  { key: 'grupo', label: 'Grupos' },
                 ] as const)
               : ([
-                  { key: 'todos', label: '🌟 Todos' },
-                  { key: 'sala', label: '🏛️ Salas' },
-                  { key: 'festival', label: '🎪 Festivales' },
-                  { key: 'discoteca', label: '🪩 Discotecas' },
-                  { key: 'ayuntamiento', label: '🎆 Ayuntamientos' },
+                  { key: 'todos', label: 'Todos' },
+                  { key: 'sala', label: 'Salas' },
+                  { key: 'festival', label: 'Festivales' },
+                  { key: 'discoteca', label: 'Discotecas' },
+                  { key: 'ayuntamiento', label: 'Ayuntamientos' },
                 ] as const)
           ).map((t) => (
             <button

@@ -12,6 +12,7 @@ import {
 } from "../../utils/repertorioUtils";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ModalPortal } from "../common/ModalPortal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface MemberNotesModalProps {
   isOpen: boolean;
@@ -231,13 +232,13 @@ export function MemberNotesModal({
                   Preparación de la banda:
                 </span>
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)]">
-                  ✅ {summary.lista} listos
+                  <ShowIcon inline emoji="✅" />{summary.lista} listos
                 </span>
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/80">
-                  🔶 {summary.casiLista} casi
+                  <ShowIcon inline emoji="🔶" />{summary.casiLista} casi
                 </span>
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]">
-                  🌱 {summary.aprendiendo} aprendiendo
+                  <ShowIcon inline emoji="🌱" />{summary.aprendiendo} aprendiendo
                 </span>
                 {summary.sinOpinar > 0 && (
                   <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)]">
@@ -274,7 +275,7 @@ export function MemberNotesModal({
               <label
                 className={`block text-xs font-bold font-sans mb-1.5 ${"text-[var(--ink-2)]"}`}
               >
-                📌 Nota General para todo el Grupo (Opcional)
+                <ShowIcon inline emoji="📌" />Nota General para todo el Grupo (Opcional)
               </label>
               <textarea
                 rows={2}
@@ -397,7 +398,7 @@ export function MemberNotesModal({
                               : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
                           }`}
                         >
-                          {level.icon} {level.label}
+                          <ShowIcon inline emoji={level.icon} /> {level.label}
                         </button>
                       ))}
                     </div>
@@ -431,7 +432,7 @@ export function MemberNotesModal({
               onClick={handleSave}
               className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-[0.97] cursor-pointer ${
                 savedSuccess
-                  ? "bg-[var(--ok)] text-[var(--ink)]"
+                  ? "bg-[var(--ok)] text-[var(--on-ok)]"
                   : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"
               }`}
             >

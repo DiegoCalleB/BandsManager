@@ -308,7 +308,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             type="button"
             onClick={handleDownload}
             disabled={isExporting}
-            className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
+            className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
           >
             <Download className="w-4 h-4" />
             {isExporting

@@ -163,7 +163,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
             </span>
             <button
               onClick={onClose}
-              className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${"bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]"}`}
+              className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${"bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"}`}
             >
               Aceptar & Cerrar
             </button>

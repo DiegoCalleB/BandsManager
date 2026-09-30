@@ -39,6 +39,7 @@ import {
   getPlanTierLevel,
   getPlanDefinition,
 } from "../utils/planPermissions";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface PlanesProps {
   colors?: ThemeColors;
@@ -492,7 +493,7 @@ export const Planes: React.FC<PlanesProps> = ({
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -631,7 +632,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   if (deGiraBtn)
                     deGiraBtn.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-ui active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
               </button>
@@ -733,9 +734,9 @@ export const Planes: React.FC<PlanesProps> = ({
               case "silver":
                 return "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]";
               case "gold":
-                return "bg-[var(--acc)]  hover:brightness-110 text-[var(--ink)] font-bold";
+                return "bg-[var(--acc)]  hover:brightness-110 text-[var(--on-acc)] font-bold";
               case "emerald":
-                return "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold";
+                return "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold";
             }
           };
 
@@ -751,7 +752,7 @@ export const Planes: React.FC<PlanesProps> = ({
               {/* Popular Floating Badge */}
               {plan.isPopular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--ink)] text-micro font-bold font-sans">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--on-acc)] text-micro font-bold font-sans">
                     <Star className="w-3 h-3 fill-[var(--ink)]" />
                     <span>MÁS POPULAR</span>
                   </span>
@@ -840,7 +841,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           plan.isPopular
                             ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                             : plan.id === "cabeza_de_cartel"
-                              ? "bg-[var(--ok)] text-[var(--ink)]"
+                              ? "bg-[var(--ok)] text-[var(--on-ok)]"
                               : "bg-[var(--surface)] text-[var(--ink)]"
                         }`}
                       >
@@ -864,7 +865,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           </span>
                         </div>
                         <p className="text-xs font-bold text-[var(--ink)] leading-snug">
-                          🎁 {plan.stickerGift.qty}
+                          <ShowIcon inline emoji="🎁" />{plan.stickerGift.qty}
                         </p>
                         <p className="text-micro text-[var(--ink-2)] leading-tight mt-0.5">
                           {plan.stickerGift.description}
@@ -1028,7 +1029,7 @@ export const Planes: React.FC<PlanesProps> = ({
               Local (12€/m)
             </div>
             <div className="col-span-2 text-center text-[var(--acc)]/70 font-bold">
-              De Gira (29€/m) ⭐
+              De Gira (29€/m) <ShowIcon inline emoji="⭐" />
             </div>
             <div className="col-span-2 text-center text-[var(--ok)] font-bold">
               Cabeza de Cartel (79€/m)
@@ -1123,7 +1124,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs bg-[var(--acc)]/5 lg:bg-transparent p-2 lg:p-0 rounded-[var(--r-s)]">
                             <span className="lg:hidden text-micro font-sans text-[var(--acc)] font-bold">
-                              De Gira (⭐):
+                              De Gira (<ShowIcon inline emoji="⭐" />):
                             </span>
                             {typeof row.de_gira === "boolean" ? (
                               row.de_gira ? (

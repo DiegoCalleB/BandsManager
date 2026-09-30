@@ -47,6 +47,7 @@ import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
 import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
+import { ShowIcon } from './ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -938,7 +939,7 @@ export default function Chatbot({
       const errMsg: ChatMessage = {
         id: `err-${Date.now()}`,
         sender: 'bot',
-        text: '⚠️ **Error de Conexión:** Ha habido un problema conectando con el servicio de Inteligencia Artificial. Por favor, inténtalo de nuevo.',
+        text: '**Error de Conexión:** Ha habido un problema conectando con el servicio de Inteligencia Artificial. Por favor, inténtalo de nuevo.',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errMsg]);
@@ -1983,7 +1984,7 @@ export default function Chatbot({
                               onClick={() => handleConfirmAllActions(msg.id, msg.proposedActions || [])}
                               className={`text-micro font-bold font-sans px-2 py-1 rounded-[var(--r-s)] transition-ui active:scale-[0.97] ${'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]'}`}
                             >
-                              ⚡ Aprobar Todos ({pendingActions.length})
+                              <ShowIcon inline emoji="⚡" />Aprobar Todos ({pendingActions.length})
                             </button>
                           )}
                         </div>
@@ -2301,27 +2302,27 @@ export default function Chatbot({
                 <span className="text-micro font-sans text-[var(--ink-2)]">Estado</span>
                 {activeRun.status === 'queued' && (
                   <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)]">
-                    🕒 En Cola
+                    <ShowIcon inline emoji="🕒" />En Cola
                   </span>
                 )}
                 {activeRun.status === 'fetching' && (
                   <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/20">
-                    🔄 Despachando
+                    <ShowIcon inline emoji="🔄" />Despachando
                   </span>
                 )}
                 {activeRun.status === 'in_progress' && (
                   <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -cyan-500/20">
-                    ⚙️ Ejecutando...
+                    <ShowIcon inline emoji="⚙️" />Ejecutando...
                   </span>
                 )}
                 {activeRun.status === 'completed' && activeRun.conclusion === 'success' && (
                   <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20">
-                    ✅ Éxito
+                    <ShowIcon inline emoji="✅" />Éxito
                   </span>
                 )}
                 {activeRun.status === 'completed' && activeRun.conclusion === 'failure' && (
                   <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--alert)] -rose-500/20">
-                    ❌ Fallido
+                    <ShowIcon inline emoji="❌" />Fallido
                   </span>
                 )}
                 {activeRun.status === 'completed' && activeRun.conclusion !== 'success' && activeRun.conclusion !== 'failure' && (
@@ -2648,7 +2649,7 @@ export default function Chatbot({
               : 'Tu navegador no soporta dictado por voz'
           }
           className={`p-2.5 rounded-[var(--r-m)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
-            isListening ? 'bg-[var(--alert)] text-[var(--ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+            isListening ? 'bg-[var(--alert)] text-[var(--on-alert)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
           }`}
         >
           <Mic className="w-4 h-4" />

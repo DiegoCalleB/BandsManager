@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Song, Setlist, SetlistItem } from "../../types";
 import { getAuthHeaders } from "../../services/api";
+import { ShowIcon } from '../ui/ShowIcon';
 
 type SongAction = "link_matched" | "link_other" | "create_new" | "discard";
 
@@ -335,7 +336,7 @@ export function ImportSetlistModal({
                         className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ? "bg-[var(--surface)]/80" : "bg-[var(--sunken)] opacity-50"}`}
                       >
                         <span className="text-xs text-[var(--ink-2)]">
-                          📋 {it.titulo}{" "}
+                          <ShowIcon inline emoji="📋" />{it.titulo}{" "}
                           <span className="text-[var(--ink-2)]">
                             ({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})
                           </span>

@@ -503,7 +503,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       type="button"
                       onClick={() => traducirConIA(idioma.code)}
                       disabled={estaTraduciendo}
-                      className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--ink)] font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
+                      className="text-xs bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
                     >
                       {estaTraduciendo ? (
                         <>

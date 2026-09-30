@@ -177,7 +177,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             onClick={onPlay}
             className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-[var(--r-pill)] flex items-center justify-center transition-ui cursor-pointer ${
               isPlaying
-                ? 'bg-[var(--ok)] text-[var(--ink)] scale-105'
+                ? 'bg-[var(--ok)] text-[var(--on-ok)] scale-105'
                 : 'bg-[var(--surface)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
             title={isPlaying ? 'Pausar canción' : `Reproducir ${displayTitle}`}
@@ -450,7 +450,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-                      <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris' : '✨ Separar Stems con Iris'}</span>
+                      <span>{hasIrisStems(song) ? 'Ver Pistas Iris' : 'Separar Stems con Iris'}</span>
                     </button>
                   )}
 

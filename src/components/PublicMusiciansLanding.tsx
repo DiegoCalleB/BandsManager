@@ -387,7 +387,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 )}
                 <a
                   href="/"
-                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans text-xs font-bold transition hover:brightness-110 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--on-acc)] font-sans text-xs font-bold transition hover:brightness-110 flex items-center justify-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   {t.successExploreApp}
@@ -683,7 +683,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-bold text-sm hover:brightness-110 active:scale-[0.97] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--on-acc)] font-sans font-bold text-sm hover:brightness-110 active:scale-[0.97] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
                   {loading ? (
                     <>

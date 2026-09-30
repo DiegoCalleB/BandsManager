@@ -2,6 +2,7 @@ import React from 'react';
 import { Sparkles, X, Building, Users, Loader2, Check } from 'lucide-react';
 import { Lead } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface PredefinedScenario {
   key: string;
@@ -104,7 +105,7 @@ export function NegotiationSimulationModal({
                   onClick={() => onRoleChange('sala')}
                   className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     simulationRole === 'sala'
-                      ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]'
+                      ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
                       : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
                   }`}
                 >
@@ -115,7 +116,7 @@ export function NegotiationSimulationModal({
                   onClick={() => onRoleChange('banda')}
                   className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     simulationRole === 'banda'
-                      ? 'bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]'
+                      ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'
                       : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
                   }`}
                 >
@@ -187,7 +188,7 @@ export function NegotiationSimulationModal({
                 type="button"
                 onClick={onGenerate}
                 disabled={isGeneratingSimulation || !simulationCustomInstruction}
-                className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-40 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]`}
+                className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-40 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]`}
               >
                 {isGeneratingSimulation ? (
                   <>
@@ -206,7 +207,7 @@ export function NegotiationSimulationModal({
               <div className="space-y-2 pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="flex justify-between items-center">
                   <label className={`block text-micro font-sans ${'text-[var(--acc)]'}`}>
-                    ✨ Vista Previa del Correo Generado (Editable)
+                    <ShowIcon inline emoji="✨" />Vista Previa del Correo Generado (Editable)
                   </label>
                   <span className="text-micro font-sans bg-[var(--surface)]/15 text-[var(--ok)]/80 px-2 py-1 rounded">
                     Listo para Ajustar
@@ -219,7 +220,7 @@ export function NegotiationSimulationModal({
                   className={`w-full rounded-[var(--r-s)] p-3 text-micro focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink-2)]`}
                 />
                 <p className={`text-micro font-sans ${textMuted} leading-tight`}>
-                  💡 Tip: Puedes retocar el texto directamente para añadir detalles personalizados específicos antes de confirmarlo.
+                  <ShowIcon inline emoji="💡" />Tip: Puedes retocar el texto directamente para añadir detalles personalizados específicos antes de confirmarlo.
                 </p>
               </div>
             )}
@@ -238,7 +239,7 @@ export function NegotiationSimulationModal({
               type="button"
               onClick={onCommit}
               disabled={!simulationMessage || isGeneratingSimulation}
-              className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.97] disabled:opacity-40 transition-ui bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)]`}
+              className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.97] disabled:opacity-40 transition-ui bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]`}
             >
               <Check className="w-4 h-4" /> Guardar y Sincronizar
             </button>

@@ -40,6 +40,7 @@ import {
 } from "../utils/planPermissions";
 import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
+import { ShowIcon } from './ui/ShowIcon';
 
 // Fase beta: crear una banda nueva desde aquí va directa al plan Promo, sin pasar por la
 // parrilla de planes de pago (mismo criterio que SimplePromoLoginModal.tsx). El selector de
@@ -1237,7 +1238,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           !newBandName.trim() ||
                           (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)
                         }
-                        className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
                           isCreatingBand ? (
@@ -1320,7 +1321,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
-                        🎯 Booking & Salas
+                        <ShowIcon inline emoji="🎯" />Booking & Salas
                       </button>
                       <button
                         type="button"
@@ -1331,7 +1332,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
-                        📱 Redes, EPK & Fans
+                        <ShowIcon inline emoji="📱" />Redes, EPK & Fans
                       </button>
                       <button
                         type="button"
@@ -1342,7 +1343,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
-                        💼 Finanzas & Agentes 360
+                        <ShowIcon inline emoji="💼" />Finanzas & Agentes 360
                       </button>
                     </div>
                   </div>
@@ -1450,7 +1451,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex items-center gap-1.5 text-micro font-sans text-[var(--ink-2)] font-bold">
                         <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
-                        <span>🎁 250 pegatinas gratis</span>
+                        <span><ShowIcon inline emoji="🎁" />250 pegatinas gratis</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
@@ -1530,7 +1531,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center gap-1.5 text-micro font-sans text-[var(--acc)]/70 font-bold">
                         <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
-                        <span>🎁 500 pegatinas gratis</span>
+                        <span><ShowIcon inline emoji="🎁" />500 pegatinas gratis</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
@@ -1573,7 +1574,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         type="button"
                         onClick={() => handleSelectPlanForCreation("de_gira")}
                         disabled={isCreatingBand}
-                        className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer/20 flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer/20 flex items-center justify-center gap-1.5 disabled:opacity-50"
                       >
                         {isCreatingBand && creatingPlanKey === "de_gira" ? (
                           <>
@@ -1615,7 +1616,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--ok-soft)] flex items-center gap-1.5 text-micro font-sans text-[var(--ink-2)] font-bold">
                         <Sparkles className="w-3 h-3 text-[var(--ok)] shrink-0" />
-                        <span>🎁 1.000 pegatinas + Express</span>
+                        <span><ShowIcon inline emoji="🎁" />1.000 pegatinas + Express</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
@@ -1721,7 +1722,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                 <button
                   type="button"
                   onClick={handleConfirmLeaveBand}
-                  className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Sí, eliminar</span>
@@ -1915,7 +1916,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                         );
                                       }
                                     }}
-                                    className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
+                                    className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
                                   >
                                     <Sparkles className="w-3 h-3 fill-[var(--ink-3)]" />
                                     <span>Seleccionar {plan.name}</span>

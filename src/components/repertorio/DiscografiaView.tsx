@@ -42,6 +42,7 @@ import { SpotifyDiscographyModal } from "./SpotifyDiscographyModal";
 import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -533,7 +534,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           <button
             type="button"
             onClick={() => setShowCreateAlbumMenu((v) => !v)}
-            className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+            className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Nuevo Disco</span>
@@ -596,7 +597,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <Disc className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--ok)] block">
-                      🟢 Traer de Spotify
+                      <ShowIcon inline emoji="🟢" />Traer de Spotify
                     </span>
                     <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Importa la discografía completa de la banda.
@@ -614,7 +615,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <Scissors className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--acc)] block">
-                      🔴 Concierto en Vivo a Disco
+                      <ShowIcon inline emoji="🔴" />Concierto en Vivo a Disco
                     </span>
                     <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Recorta y cataloga a partir del vídeo o audio de un
@@ -862,7 +863,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       <button
                         type="button"
                         onClick={handlePlayAlbum}
-                        className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1 transition-ui cursor-pointer"
+                        className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-medium text-xs flex items-center gap-1 transition-ui cursor-pointer"
                         title={
                           isPlayingAlbum ? "Pausar disco" : "Reproducir disco"
                         }

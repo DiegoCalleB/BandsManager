@@ -2,6 +2,7 @@ import React from 'react';
 import { Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { Music, Trash2 } from 'lucide-react';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface CalendarEditRehearsalModalProps {
   viewingRehearsal: Rehearsal | null;
@@ -69,9 +70,9 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
             {isReunion ? (
-              <span className="text-[var(--acc)]">💬 Editar Reunión</span>
+              <span className="text-[var(--acc)]"><ShowIcon inline emoji="💬" />Editar Reunión</span>
             ) : (
-              <span className="text-[var(--ok)]">🎙️ Editar Ensayo</span>
+              <span className="text-[var(--ok)]"><ShowIcon inline emoji="🎙️" />Editar Ensayo</span>
             )}
           </h3>
           <p className="text-xs font-mono text-[var(--ink-2)] mb-4">
@@ -231,7 +232,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-ui cursor-pointer font-bold"
+                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-ui cursor-pointer font-bold"
                 >
                   Guardar Cambios
                 </button>

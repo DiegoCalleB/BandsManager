@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, SongAudioIdea } from '../../types';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongStudioAiComposerModalProps {
   isOpen: boolean;
@@ -228,7 +229,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               type="button"
               onClick={handleGenerateIdea}
               disabled={isGenerating}
-              className="w-full py-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
+              className="w-full py-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
             >
               {isGenerating ? (
                 <>
@@ -288,12 +289,12 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                     disabled={isGenerating}
                     className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-sans font-bold text-[var(--ink-2)] transition-ui cursor-pointer"
                   >
-                    🔄 Probar otra idea
+                    <ShowIcon inline emoji="🔄" />Probar otra idea
                   </button>
                   <button
                     type="button"
                     onClick={handleAcceptAndAddIdea}
-                    className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                    className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Añadir como Nueva Idea al Tema</span>

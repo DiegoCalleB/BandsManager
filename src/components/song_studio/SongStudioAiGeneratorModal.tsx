@@ -2,6 +2,7 @@ import React from 'react';
 import { Wand2, X, Sparkles, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { SongAudioIdea, DrumPatternStyle } from '../../types';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongStudioAiGeneratorModalProps {
   // Solo se usa como"hay idea seleccionada o no", pero el estado real es la idea completa.
@@ -119,7 +120,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                     onChange={(e) => setIncludeDrums(e.target.checked)}
                     className="accent-purple-500"
                   />
-                  <span className="text-xs font-bold font-sans">🥁 Batería Synth</span>
+                  <span className="text-xs font-bold font-sans"><ShowIcon inline emoji="🥁" />Batería Synth</span>
                 </label>
 
                 <label
@@ -133,7 +134,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                     onChange={(e) => setIncludeBass(e.target.checked)}
                     className="accent-purple-500"
                   />
-                  <span className="text-xs font-bold font-sans">🎸 Bajo Tónica</span>
+                  <span className="text-xs font-bold font-sans"><ShowIcon inline emoji="🎸" />Bajo Tónica</span>
                 </label>
               </div>
             </div>
@@ -150,7 +151,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                       onClick={() => setDrumStyle(style)}
                       className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                         drumStyle === style
-                          ? 'bg-[var(--acc)] text-[var(--ink)]'
+                          ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                           : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
@@ -189,7 +190,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
               type="button"
               onClick={handleGenerateAccompaniment}
               disabled={isGeneratingAccompaniment || (!includeDrums && !includeBass)}
-              className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold text-xs flex items-center gap-2 cursor-pointer"
             >
               {isGeneratingAccompaniment ? (
                 <>

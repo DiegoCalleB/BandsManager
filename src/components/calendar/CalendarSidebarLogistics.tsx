@@ -87,6 +87,7 @@ import { ConcertBreakEvenCard } from './ConcertBreakEvenCard';
 import { EventWeatherCard } from './EventWeatherCard';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface CalendarSidebarLogisticsProps {
   colors: ThemeColors;
@@ -340,7 +341,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   </div>
                   <div>
                     <span className="text-micro font-mono font-extrabold text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-[var(--r-pill)] ">
-                      🎯 Fecha Objetivo de Campaña
+                      <ShowIcon inline emoji="🎯" />Fecha Objetivo de Campaña
                     </span>
                     <p className="text-xs font-mono text-[var(--ink-2)] font-bold mt-0.5">
                       {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
@@ -357,7 +358,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       {camp.name}
                     </h4>
                     {camp.isActive && (
-                      <span className="text-micro font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--ink)]">
+                      <span className="text-micro font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)]">
                         ACTIVA
                       </span>
                     )}
@@ -400,7 +401,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setConcNotas(`Concierto agendado para la campaña "${camp.name}".`);
                         setShowCreateModal('concert');
                       }}
-                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
+                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Confirmar Concierto</span>
@@ -468,7 +469,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 {[
                   { id: 'todos', label: 'Todas' },
                   { id: 'conciertos', label: 'Bolos' },
-                  { id: 'campañas', label: '🎯 Campañas' },
+                  { id: 'campañas', label: 'Campañas' },
                 ].map((f) => (
                   <button
                     key={f.id}
@@ -554,7 +555,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                                   : 'bg-[var(--ok-soft)] text-[var(--ok)]'
                             }`}
                           >
-                            {evt.type === 'campaña' ? '🎯 Posible Bolo' : evt.type}
+                            {evt.type === 'campaña' ? 'Posible Bolo' : evt.type}
                           </span>
                           {evt.bandName && (
                             <span
@@ -566,7 +567,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           )}
                         </div>
                         <div className="text-xs sm:text-sm font-bold font-display text-[var(--ink-2)] mt-1 truncate">{evt.title}</div>
-                        {evt.direccion && <p className={`text-micro font-sans ${textSub} mt-0.5`}>📍 {evt.direccion}</p>}
+                        {evt.direccion && <p className={`text-micro font-sans ${textSub} mt-0.5`}><ShowIcon inline emoji="📍" />{evt.direccion}</p>}
                         {evt.type !== 'campaña' ? (
                           <div className="mt-1 flex justify-center">
                             <DirectionsCard
@@ -613,7 +614,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 </div>
                 {(selectedConcert || selectedRehearsal) && (
                   <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs flex items-center gap-1">
-                    🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
+                    <ShowIcon inline emoji="🎸" />Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
                   </span>
                 )}
               </div>
@@ -650,7 +651,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   }`}
                   title="Enviar un recordatorio por correo/notificación a los convocados"
                 >
-                  🔔 Notificar Banda
+                  <ShowIcon inline emoji="🔔" />Notificar Banda
                 </button>
               )}
               {selectedConcert && (
@@ -688,7 +689,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   }}
                   className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
-                  🗑 Eliminar
+                  <ShowIcon inline emoji="🗑" />Eliminar
                 </button>
               )}
               {selectedRehearsal && onDeleteRehearsal && (
@@ -702,7 +703,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   }}
                   className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
-                  🗑 Eliminar
+                  <ShowIcon inline emoji="🗑" />Eliminar
                 </button>
               )}
             </div>
@@ -797,7 +798,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     href={selectedEventDetails.entradasUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)] transition-colors w-fit"
                   >
                     <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                   </a>
@@ -826,7 +827,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               <div className="flex items-center gap-2 text-micro pt-2 border-t border-[var(--hair)] mt-2">
                 <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Gira:</span>
-                <span className="font-bold font-mono text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
+                <span className="font-bold font-mono text-[var(--acc)]"><ShowIcon inline emoji="🚐" />{selectedConcert.giraNombre}</span>
               </div>
             )}
 
@@ -945,7 +946,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <span>Detalles de la Reunión:</span>
                   </div>
                   <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] ">
-                    🤝 Coordinación
+                    <ShowIcon inline emoji="🤝" />Coordinación
                   </span>
                 </div>
 
@@ -955,10 +956,10 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   }`}
                 >
                   {selectedRehearsal.asunto && (
-                    <div className="text-xs font-semibold text-[var(--acc)]">📌 {selectedRehearsal.asunto}</div>
+                    <div className="text-xs font-semibold text-[var(--acc)]"><ShowIcon inline emoji="📌" />{selectedRehearsal.asunto}</div>
                   )}
                   <div className="text-micro text-[var(--ink-2)] flex items-center gap-1.5">
-                    <span>📍 {selectedRehearsal.lugar}</span>
+                    <span><ShowIcon inline emoji="📍" />{selectedRehearsal.lugar}</span>
                   </div>
 
                   {selectedRehearsal.enlace_reunion && (
@@ -971,7 +972,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1.5/20 transition-ui cursor-pointer"
+                        className="flex-1 px-3 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1.5/20 transition-ui cursor-pointer"
                       >
                         <Video className="w-3.5 h-3.5" />
                         <span>Unirse a Videollamada</span>
@@ -1029,7 +1030,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
                         setActiveStageSetlist(assignedSetlist);
                       }}
-                      className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-ui cursor-pointer"
+                      className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-ui cursor-pointer"
                       title="Lanzar Modo Escenario / Vista de Directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
@@ -1146,7 +1147,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
                       <div className="flex items-center justify-between">
                         <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
-                          📞 Contacto Producción & Hotel
+                          <ShowIcon inline emoji="📞" />Contacto Producción & Hotel
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-micro">
@@ -1193,7 +1194,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                     <div className={`p-3 rounded-[var(--r-m)] space-y-1.5 ${'bg-[var(--surface)]'}`}>
                       <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
-                        🎸 Input List / Rider de Canales
+                        <ShowIcon inline emoji="🎸" />Input List / Rider de Canales
                       </span>
                       <textarea
                         rows={4}
@@ -1310,7 +1311,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         printWindow.document.close();
                       }}
                       className={`w-full py-2 px-3 rounded-[var(--r-m)] font-mono text-micro font-bold flex items-center justify-center gap-2 cursor-pointer transition-ui ${
-                        'bg-[var(--acc)]  text-[var(--ink)]'
+                        'bg-[var(--acc)]  text-[var(--on-acc)]'
                       }`}
                     >
                       <Download className="w-3.5 h-3.5" />

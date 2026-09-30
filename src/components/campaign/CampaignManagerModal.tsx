@@ -26,6 +26,7 @@ import {
   Landmark,
 } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
+import { ShowIcon } from '../ui/ShowIcon';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -35,13 +36,13 @@ const PITCH_CATEGORIES: {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
-  { id: "salas", label: "🏛️ Salas", icon: Building2 },
-  { id: "festivales", label: "🎪 Festivales", icon: Tent },
-  { id: "discotecas", label: "🪩 Discotecas", icon: Disc3 },
-  { id: "medios", label: "📻 Medios", icon: Radio },
-  { id: "grupos", label: "🎸 Grupos", icon: Users },
-  { id: "managements", label: "💼 Managements", icon: Briefcase },
-  { id: "ayuntamientos", label: "🎉 Ayuntamientos", icon: Landmark },
+  { id: "salas", label: "Salas", icon: Building2 },
+  { id: "festivales", label: "Festivales", icon: Tent },
+  { id: "discotecas", label: "Discotecas", icon: Disc3 },
+  { id: "medios", label: "Medios", icon: Radio },
+  { id: "grupos", label: "Grupos", icon: Users },
+  { id: "managements", label: "Managements", icon: Briefcase },
+  { id: "ayuntamientos", label: "Ayuntamientos", icon: Landmark },
 ];
 
 interface CampaignManagerModalProps {
@@ -332,7 +333,7 @@ export function CampaignManagerModal({
                 <span className="text-xs font-sans font-bold text-[var(--acc)]">
                   {editingCampaignId
                     ? "✎ Editar Campaña"
-                    : "➕ Crear Nueva Campaña"}
+                    : "Crear Nueva Campaña"}
                 </span>
                 <button
                   onClick={() => setIsEditing(false)}
@@ -526,7 +527,7 @@ export function CampaignManagerModal({
                   </div>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] italic">
-                  💡 Consejo: Las fechas añadidas aparecerán destacadas con
+                  <ShowIcon inline emoji="💡" />Consejo: Las fechas añadidas aparecerán destacadas con
                   badge de campaña en el Calendario y serán propuestas
                   automáticamente por los agentes de IA al redactar pitches a
                   salas.
@@ -628,7 +629,7 @@ export function CampaignManagerModal({
                   className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
                 />
                 <p className="text-xs text-[var(--ink-2)] italic mt-1">
-                  💡 Cada caso de uso tiene su propio mensaje. Mientras esta
+                  <ShowIcon inline emoji="💡" />Cada caso de uso tiene su propio mensaje. Mientras esta
                   campaña esté activa, el Redactor IA prioriza el mensaje de la
                   categoría del lead sobre la plantilla habitual; las categorías
                   sin mensaje definido siguen usando solo la plantilla habitual.
@@ -647,7 +648,7 @@ export function CampaignManagerModal({
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--hair)] text-[var(--ink)] active:scale-[0.97] flex items-center gap-2"
+                  className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--hair)] text-[var(--on-acc)] active:scale-[0.97] flex items-center gap-2"
                 >
                   <Check className="w-4 h-4" />
                   Guardar Campaña
@@ -830,7 +831,7 @@ export function CampaignManagerModal({
                             <button
                               type="button"
                               onClick={() => onSetActiveCampaign(camp)}
-                              className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--hair)] text-[var(--ink)] flex items-center gap-1.5 transition-ui active:scale-[0.97]"
+                              className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--hair)] text-[var(--on-acc)] flex items-center gap-1.5 transition-ui active:scale-[0.97]"
                             >
                               <Target className="w-3.5 h-3.5" /> Activar
                             </button>

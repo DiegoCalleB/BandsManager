@@ -20,6 +20,7 @@ import {
 import { EPKConfig, BandMember } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface EPKPerfilBlockProps {
   config: EPKConfig;
@@ -391,7 +392,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 type="button"
                 onClick={handleAddSimilarBand}
                 disabled={!similarBandInput.trim()}
-                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir</span>
@@ -412,7 +413,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <button
               type="button"
               onClick={anadirMiembro}
-              className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
             >
               + Añadir miembro
             </button>
@@ -670,7 +671,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   .map((item) => (
                     <div key={item.key} className="space-y-1">
                       <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1">
-                        <span>{item.icon}</span>
+                        <span><ShowIcon inline emoji={item.icon} /></span>
                         <span>{item.label}</span>
                       </label>
                       <input

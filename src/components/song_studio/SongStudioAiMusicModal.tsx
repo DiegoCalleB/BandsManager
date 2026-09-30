@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongStudioAiMusicModalProps {
   isOpen: boolean;
@@ -157,7 +158,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
             {error && (
               <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 text-xs text-[var(--alert)] font-sans">
-                ⚠️ {error}
+                <ShowIcon inline emoji="⚠️" />{error}
               </div>
             )}
 
@@ -204,7 +205,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                       );
                       onClose();
                     }}
-                    className="w-full py-2 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] transition"
+                    className="w-full py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] transition"
                   >
                     + Añadir Soundtrack a la Canción / Estudio
                   </button>
@@ -225,7 +226,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating || !prompt.trim()}
-              className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold text-xs flex items-center gap-2 cursor-pointer"
             >
               {isGenerating ? (
                 <>

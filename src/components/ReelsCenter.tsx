@@ -59,6 +59,7 @@ import {
   Rocket,
 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface ReelsCenterProps {
   colors: ThemeColors;
@@ -2441,7 +2442,7 @@ export default function ReelsCenter({
                         disabled={isGenerating}
                         className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.97] transition-ui disabled:opacity-50 bg-[var(--acc)] text-[var(--on-acc)]`}
                       >
-                        <Flame className="w-4 h-4" /> Balkan Hype 🎺🔥
+                        <Flame className="w-4 h-4" /> Balkan Hype <ShowIcon inline emoji="🎺" /><ShowIcon inline emoji="🔥" />
                       </button>
                       <button
                         id="btn-reels-chill"
@@ -2449,7 +2450,7 @@ export default function ReelsCenter({
                         disabled={isGenerating}
                         className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.97] transition-ui disabled:opacity-50 bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ok)]`}
                       >
-                        <Music className="w-4 h-4" /> Reggae Chill 🌿🕊️
+                        <Music className="w-4 h-4" /> Reggae Chill <ShowIcon inline emoji="🌿" /><ShowIcon inline emoji="🕊️" />
                       </button>
 
                       {isGenerating && (
@@ -2513,7 +2514,7 @@ export default function ReelsCenter({
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
-                    📂 Archivo de Vídeo
+                    <ShowIcon inline emoji="📂" />Archivo de Vídeo
                   </button>
                   <button
                     type="button"
@@ -2527,7 +2528,7 @@ export default function ReelsCenter({
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
-                    📺 Enlace de YouTube
+                    <ShowIcon inline emoji="📺" />Enlace de YouTube
                   </button>
                 </div>
 
@@ -2869,7 +2870,7 @@ export default function ReelsCenter({
                     <p
                       className={`text-xs font-sans leading-normal text-[var(--ink-2)]`}
                     >
-                      ⚡️{" "}
+                      <ShowIcon inline emoji="⚡️" />{" "}
                       <span className={"text-[var(--acc)]"}>
                         {getLoadingSteps()[loadingStep]}
                       </span>
@@ -3425,17 +3426,17 @@ export default function ReelsCenter({
                               {[
                                 {
                                   id: "viral" as const,
-                                  label: "⚡ Viral",
+                                  label: "Viral",
                                   tip: "Algoritmo y debate en comentarios",
                                 },
                                 {
                                   id: "comunidad" as const,
-                                  label: "🎸 Comunidad",
+                                  label: "Comunidad",
                                   tip: "Conexión y lore de la banda",
                                 },
                                 {
                                   id: "conversion" as const,
-                                  label: "🎟️ Conversión",
+                                  label: "Conversión",
                                   tip: "Spotify, entradas y EPK",
                                 },
                               ].map((tab) => (
@@ -3666,7 +3667,7 @@ export default function ReelsCenter({
                                   }}
                                   className="text-[var(--acc-ink)] hover:text-[var(--acc-ink)] font-bold underline cursor-pointer flex items-center gap-1"
                                 >
-                                  <span>🔗 Conectar en 1 Clic</span>
+                                  <span><ShowIcon inline emoji="🔗" />Conectar en 1 Clic</span>
                                 </button>
                               </div>
                             );
@@ -3693,7 +3694,7 @@ export default function ReelsCenter({
                             ) : (
                               <>
                                 <Download className="w-4 h-4" />
-                                <span>📦 Descargar Pack Completo</span>
+                                <span><ShowIcon inline emoji="📦" />Descargar Pack Completo</span>
                               </>
                             )}
                           </button>
@@ -3737,7 +3738,7 @@ export default function ReelsCenter({
                               className={`py-3 px-2 rounded-xl font-mono text-xs font-black tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
                                 isPublishingNow
                                   ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed"
-                                  : "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] active:scale-[0.97]"
+                                  : "bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] active:scale-[0.97]"
                               }`}
                               title="Publica inmediatamente este Reel en tu cuenta oficial"
                             >

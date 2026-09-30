@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Info,
 } from 'lucide-react';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface RoadbookContractModalProps {
   isOpen: boolean;
@@ -213,7 +214,7 @@ Firmado en conformidad por ambas partes.`;
                 type="button"
                 onClick={() => setActiveTab('roadbook')}
                 className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'roadbook' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                  activeTab === 'roadbook' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
                 <Clock className="w-3.5 h-3.5" />
@@ -223,7 +224,7 @@ Firmado en conformidad por ambas partes.`;
                 type="button"
                 onClick={() => setActiveTab('contract')}
                 className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'contract' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                  activeTab === 'contract' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
@@ -233,7 +234,7 @@ Firmado en conformidad por ambas partes.`;
                 type="button"
                 onClick={() => setActiveTab('weblink')}
                 className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'weblink' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                  activeTab === 'weblink' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
                 <Share2 className="w-3.5 h-3.5" />
@@ -340,7 +341,7 @@ Firmado en conformidad por ambas partes.`;
                         </div>
                         <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 ">
                           <span className="text-xs font-mono font-bold text-[var(--ok)] w-12">{showTime}</span>
-                          <span className="text-[var(--ink-2)] font-bold">⚡ INICIO CONCIERTO (Show 75 min)</span>
+                          <span className="text-[var(--ink-2)] font-bold"><ShowIcon inline emoji="⚡" />INICIO CONCIERTO (Show 75 min)</span>
                         </div>
                         <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/60 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{curfewTime}</span>
@@ -469,7 +470,7 @@ Firmado en conformidad por ambas partes.`;
                     <button
                       type="button"
                       onClick={() => handleCopy(`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`, setCopiedLink)}
-                      className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition-ui cursor-pointer"
+                      className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition-ui cursor-pointer"
                     >
                       {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedLink ? '¡Enlace Copiado!' : 'Copiar Enlace'}</span>

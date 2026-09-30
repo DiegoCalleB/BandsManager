@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Concert, Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface CalendarCreateEventModalProps {
   showCreateModal: 'rehearsal' | 'concert' | 'reunion' | null;
@@ -214,11 +215,11 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               }}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                 showCreateModal === 'concert' && !concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
-              <span>🎸</span>
+              <span><ShowIcon inline emoji="🎸" /></span>
               <span>Concierto</span>
             </button>
             <button
@@ -226,21 +227,21 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               onClick={() => setShowCreateModal('rehearsal')}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                 showCreateModal === 'rehearsal'
-                  ? 'bg-[var(--ok)] text-[var(--ink)] font-bold'
+                  ? 'bg-[var(--ok)] text-[var(--on-ok)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
-              <span>🎙️</span>
+              <span><ShowIcon inline emoji="🎙️" /></span>
               <span>Ensayo</span>
             </button>
             <button
               type="button"
               onClick={() => setShowCreateModal('reunion')}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
-                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
-              <span>💬</span>
+              <span><ShowIcon inline emoji="💬" /></span>
               <span>Reunión</span>
             </button>
             <button
@@ -251,20 +252,20 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               }}
               className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                 showCreateModal === 'concert' && concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
-              <span>❓</span>
+              <span><ShowIcon inline emoji="❓" /></span>
               <span>Posible</span>
             </button>
           </div>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
-            {showCreateModal === 'rehearsal' && <span className="text-[var(--ok)]">🎙️ Convocar Ensayo</span>}
-            {showCreateModal === 'reunion' && <span className="text-[var(--acc)]">💬 Convocatoria de Reunión</span>}
-            {showCreateModal === 'concert' && concIsPosible && <span className="text-[var(--acc)]">❓ Fecha Posible / Pre-reserva</span>}
-            {showCreateModal === 'concert' && !concIsPosible && <span className="text-[var(--acc)]">🎸 Agendar Concierto Confirmado</span>}
+            {showCreateModal === 'rehearsal' && <span className="text-[var(--ok)]"><ShowIcon inline emoji="🎙️" />Convocar Ensayo</span>}
+            {showCreateModal === 'reunion' && <span className="text-[var(--acc)]"><ShowIcon inline emoji="💬" />Convocatoria de Reunión</span>}
+            {showCreateModal === 'concert' && concIsPosible && <span className="text-[var(--acc)]"><ShowIcon inline emoji="❓" />Fecha Posible / Pre-reserva</span>}
+            {showCreateModal === 'concert' && !concIsPosible && <span className="text-[var(--acc)]"><ShowIcon inline emoji="🎸" />Agendar Concierto Confirmado</span>}
           </h3>
           <p className="text-xs font-mono text-[var(--ink-2)] mb-4">
             Fecha: <strong className="text-[var(--ink)]">{formattedDateStr}</strong>
@@ -365,7 +366,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-ui cursor-pointer"
+                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer"
                 >
                   Convocar Reunión
                 </button>
@@ -460,7 +461,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-ui cursor-pointer font-bold"
+                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-ui cursor-pointer font-bold"
                 >
                   Guardar Ensayo
                 </button>
@@ -574,8 +575,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   type="submit"
                   className={`px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] transition-ui cursor-pointer ${
                     concIsPosible
-                      ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold'
-                      : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold'
+                      ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold'
+                      : 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold'
                   }`}
                 >
                   {concIsPosible ? 'Guardar Pre-reserva' : 'Guardar Concierto'}

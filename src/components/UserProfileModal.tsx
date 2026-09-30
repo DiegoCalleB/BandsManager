@@ -545,7 +545,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowUpgradeModal(true)}
-                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold font-sans transition-ui duration-200 active:scale-[0.97] flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans transition-ui duration-200 active:scale-[0.97] flex items-center gap-1.5 shrink-0 cursor-pointer"
                     >
                       <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
                       <span>Upgrade</span>
@@ -867,7 +867,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         type="button"
                         onClick={handleCreateBandInProfile}
                         disabled={isCreatingBand || !createBandName.trim()}
-                        className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                       >
                         {isCreatingBand ? (
                           <>
@@ -911,7 +911,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       type="button"
                       onClick={handleConfirmDeleteBandInProfile}
                       disabled={!!deletingBandId}
-                      className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
                       {deletingBandId ? (
                         <>
@@ -1361,7 +1361,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-ui cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97] ${"bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]"}`}
+              className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-ui cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97] ${"bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"}`}
             >
               {loading ? (
                 <span>Guardando cambios...</span>
@@ -1463,7 +1463,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               window.location.href = res.url;
                           } catch (e) {}
                         }}
-                        className="px-3 py-1 bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-sans font-bold text-micro rounded-[var(--r-s)] transition-ui cursor-pointer whitespace-nowrap"
+                        className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-micro rounded-[var(--r-s)] transition-ui cursor-pointer whitespace-nowrap"
                       >
                         Actualizar Tarjeta
                       </button>
@@ -1652,7 +1652,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                     );
                                   }
                                 }}
-                                className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
+                                className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
                               >
                                 <Sparkles className="w-3 h-3 fill-neutral-950" />
                                 <span>Seleccionar {plan.name}</span>

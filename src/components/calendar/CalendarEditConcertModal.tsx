@@ -3,6 +3,7 @@ import { Concert } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import { Music, MapPin, Ticket, Flame, Trash2 } from 'lucide-react';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface CalendarEditConcertModalProps {
   viewingConcert: Concert | null;
@@ -88,7 +89,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
           </button>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
-            <span className="text-[var(--acc)]">🎸 Editar Concierto</span>
+            <span className="text-[var(--acc)]"><ShowIcon inline emoji="🎸" />Editar Concierto</span>
           </h3>
           <p className="text-xs font-mono text-[var(--ink-2)] mb-4">
             Modificando fecha: <strong className="text-[var(--ink)]">{editDraft.fecha}</strong>
@@ -213,7 +214,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 htmlFor="editConcIsPosibleCheck"
                 className="text-micro font-mono cursor-pointer select-none font-bold text-[var(--acc)] flex items-center gap-1"
               >
-                🎯 Concierto Posible / En negociación
+                <ShowIcon inline emoji="🎯" />Concierto Posible / En negociación
               </label>
             </div>
 
@@ -255,7 +256,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-ui cursor-pointer font-bold"
+                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer font-bold"
                 >
                   Guardar Cambios
                 </button>

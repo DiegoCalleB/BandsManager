@@ -1,6 +1,7 @@
 import React from 'react';
 import { Concert } from '../../types';
 import { calcularBreakEvenConcierto } from '../../utils/breakEvenCalculator';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface ConcertBreakEvenCardProps {
   concert: Concert;
@@ -23,7 +24,7 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
       className={`p-3 rounded-[var(--r-m)] mt-3 ${'bg-[var(--sunken)] '} space-y-2`}
     >
       <div className="flex items-center justify-between text-xs font-bold">
-        <span className={textTitle}>📊 Viabilidad del Bolo</span>
+        <span className={textTitle}><ShowIcon inline emoji="📊" />Viabilidad del Bolo</span>
         <span
           className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro ${
             analysis.estadoRentabilidad === 'beneficio'

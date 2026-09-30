@@ -12,6 +12,9 @@ import {
   Edit,
   Ticket,
   Target,
+  Guitar,
+  Handshake,
+  Drum,
   AlertTriangle,
   Eye,
   Users,
@@ -23,6 +26,7 @@ import { RoadbookInfo } from './calendarTypes';
 import { CalendarWeatherBadge } from './AnimatedWeatherIcon';
 import { WeatherAlert } from '../../services/weatherService';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface CalendarViewsContainerProps {
   calendarViewMode: '1m' | '2m' | 'week' | 'agenda';
@@ -185,27 +189,19 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             const isToday = isThisRealMonth && cell.day === realToday.getDate();
 
-            // Stylish contorno logic for non-selected vs event vs selected days
+            // Celda de día: lienzo limpio. Sin relleno gris en cada día (30 bloques iguales eran ruido);
+            // el día de hoy lleva el círculo de acento en el número, el seleccionado un velo suave.
             let borderAndBgClass = '';
             if (isSelected) {
-              borderAndBgClass = 'bg-[var(--acc)] text-[var(--ink)] font-extrabold scale-[1.05] z-20';
-            } else if (isToday) {
-              borderAndBgClass =
-                'bg-[var(--acc)]/15 text-[var(--acc)] font-bold border-2 /10 z-10 hover:brightness-95';
+              borderAndBgClass = 'bg-[var(--acc-soft)] text-[var(--ink)] z-10';
             } else if (hasConcert && hasRehearsal) {
-              borderAndBgClass =
-                'bg-[var(--acc)]/40 text-[var(--ink)] hover:brightness-95';
-            } else if (hasConcert) {
-              borderAndBgClass =
-                'bg-[var(--acc)]/20 text-[var(--acc)] hover:brightness-95';
+              borderAndBgClass = 'bg-[var(--acc-soft)]/60 text-[var(--ink)] hover:bg-[var(--acc-soft)]';
+            } else if (hasConcert || hasCampaign) {
+              borderAndBgClass = 'bg-[var(--acc-soft)]/40 text-[var(--ink)] hover:bg-[var(--acc-soft)]/70';
             } else if (hasRehearsal) {
-              borderAndBgClass =
-                'bg-[var(--ok)]/20 text-[var(--ok)] hover:brightness-95';
-            } else if (hasCampaign) {
-              borderAndBgClass =
-                'bg-[var(--acc)]/30 text-[var(--acc)] hover:brightness-95';
+              borderAndBgClass = 'bg-[var(--ok-soft)]/60 text-[var(--ink)] hover:bg-[var(--ok-soft)]';
             } else {
-              borderAndBgClass = 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] shadow-xs';
+              borderAndBgClass = 'bg-transparent text-[var(--ink)] hover:bg-[var(--sunken)]';
             }
 
             return (
@@ -217,17 +213,19 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                     setSelectedEventId(dayEvents[0].id);
                   }
                 }}
-                className={`relative min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-[var(--r-m)] flex flex-col justify-between transition-ui duration-200 cursor-pointer overflow-hidden ${borderAndBgClass}`}
+                className={`relative min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-[var(--r-s)] flex flex-col justify-between transition-ui duration-150 cursor-pointer overflow-hidden ${borderAndBgClass}`}
               >
                 <div className="flex items-center justify-between w-full">
                   <span
-                    className={`text-xs sm:text-xs font-mono font-bold ${isSelected ? 'text-[var(--ink)] font-bold' : isToday ? 'text-[var(--acc)]' : ''}`}
+                    className={`flex size-6 items-center justify-center rounded-[var(--r-pill)] text-xs font-semibold tabular-nums ${
+                      isToday ? 'bg-[var(--acc)] text-[var(--on-acc)]' : ''
+                    }`}
                   >
                     {cell.day}
                   </span>
                   <div className="flex items-center gap-1">
                     {primaryAlert && <CalendarWeatherBadge alert={primaryAlert} compact />}
-                    {isToday && !isSelected && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] shrink-0 animate-ping" />}
+                    
                   </div>
                 </div>
 
@@ -244,16 +242,16 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           e.stopPropagation();
                           handleSelectEvent(c);
                         }}
-                        className={`text-micro sm:text-micro font-mono font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-ui ${
+                        className={`text-micro sm:text-micro font-sans font-semibold truncate px-1 sm:px-1.5 py-0.5 rounded-[var(--r-s)] flex items-center gap-1 transition-ui ${
                           isSelected
                             ? 'bg-[var(--sunken)]/25 text-[var(--ink)] font-bold'
                             : isPosible
-                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
-                              : 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
+                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
+                              : 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
                         }`}
                         title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
                       >
-                        <span className="shrink-0 text-micro leading-none">{isPosible ? '🎯' : '🎸'}</span>
+                        {isPosible ? <Target className="size-3 shrink-0" aria-hidden="true" /> : <Guitar className="size-3 shrink-0" aria-hidden="true" />}
                         <span className="truncate font-extrabold tracking-tight">{venueLabel}</span>
                         {c.ciudad && c.sala && (
                           <span className="hidden md:inline opacity-75 text-micro shrink-0 font-normal">· {c.ciudad}</span>
@@ -277,16 +275,16 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           e.stopPropagation();
                           handleSelectEvent(r);
                         }}
-                        className={`text-micro sm:text-micro font-mono font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-ui ${
+                        className={`text-micro sm:text-micro font-sans font-semibold truncate px-1 sm:px-1.5 py-0.5 rounded-[var(--r-s)] flex items-center gap-1 transition-ui ${
                           isSelected
                             ? 'bg-[var(--sunken)]/25 text-[var(--ink)] font-bold'
                             : isReu
-                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] shadow-xs'
-                              : 'bg-[var(--ok)]/25 text-[var(--ok)] hover:bg-[var(--ok)]/35 hover:text-[var(--ink)] shadow-xs'
+                              ? 'bg-[var(--acc)]/25 text-[var(--acc)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)] '
+                              : 'bg-[var(--ok)]/25 text-[var(--ok)] hover:bg-[var(--ok)]/35 hover:text-[var(--ink)] '
                         }`}
                         title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
                       >
-                        <span className="shrink-0 text-micro leading-none">{isReu ? '🤝' : '🥁'}</span>
+                        {isReu ? <Handshake className="size-3 shrink-0" aria-hidden="true" /> : <Drum className="size-3 shrink-0" aria-hidden="true" />}
                         <span className="truncate font-extrabold tracking-tight">{rehearsalLabel}</span>
                       </div>
                     );
@@ -325,7 +323,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setSelectedDate(d)}
                 className={`flex flex-col items-center justify-center p-2 rounded-[var(--r-m)] transition-ui cursor-pointer ${
                   isSelected
-                    ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
+                    ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                     : isToday
                       ? 'bg-[var(--acc)]/15 text-[var(--acc)] font-bold'
                       : 'bg-[var(--sunken)] text-[var(--ink)] '
@@ -455,11 +453,11 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                             <span>{isPosible ? '🎯' : '🎸'}</span>
                             <span className="truncate">{c.sala}</span>
                           </div>
-                          {c.ciudad && <div className="text-micro text-[var(--acc)]/80 truncate">📍 {c.ciudad}</div>}
+                          {c.ciudad && <div className="text-micro text-[var(--acc)]/80 truncate"><ShowIcon inline emoji="📍" />{c.ciudad}</div>}
                           <HolidayDateWarning date={c.fecha} city={c.ciudad} compact className="mt-1" />
                           {((c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')) && (
                             <div className="text-micro font-mono text-[var(--ink-2)] mt-1">
-                              🕒 {(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
+                              <ShowIcon inline emoji="🕒" />{(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
                             </div>
                           )}
                         </div>
@@ -516,7 +514,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                             <span>{isReu ? '🤝' : '🥁'}</span>
                             <span className="truncate">{isReu ? r.asunto || 'Reunión' : r.lugar}</span>
                           </div>
-                          {r.hora && <div className="text-micro font-mono text-[var(--ink-2)] mt-1">🕒 {r.hora}</div>}
+                          {r.hora && <div className="text-micro font-mono text-[var(--ink-2)] mt-1"><ShowIcon inline emoji="🕒" />{r.hora}</div>}
                         </div>
                       );
                     })}
@@ -525,7 +523,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         key={camp.id}
                         className="p-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/25 text-micro text-[var(--acc)]"
                       >
-                        🎯 {camp.name}
+                        <ShowIcon inline emoji="🎯" />{camp.name}
                       </div>
                     ))}
 
@@ -637,7 +635,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setAgendaFilterPast('all')}
                 className={`px-2.5 py-1 rounded transition-ui cursor-pointer ${
                   agendaFilterPast === 'all'
-                    ? 'bg-[var(--surface)] text-[var(--ink)] shadow-xs'
+                    ? 'bg-[var(--surface)] text-[var(--ink)] '
                     : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
@@ -648,7 +646,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setAgendaFilterPast('future')}
                 className={`px-2.5 py-1 rounded transition-ui cursor-pointer ${
                   agendaFilterPast === 'future'
-                    ? 'bg-[var(--surface)] text-[var(--ink)] shadow-xs'
+                    ? 'bg-[var(--surface)] text-[var(--ink)] '
                     : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
@@ -659,7 +657,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setAgendaFilterPast('past')}
                 className={`px-2.5 py-1 rounded transition-ui cursor-pointer flex items-center gap-1 ${
                   agendaFilterPast === 'past'
-                    ? 'bg-[var(--surface)] text-[var(--ink)] shadow-xs'
+                    ? 'bg-[var(--surface)] text-[var(--ink)] '
                     : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
@@ -670,7 +668,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             <button
               onClick={() => setShowCreateModal('concert')}
-              className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/90 transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Añadir Evento</span>
@@ -724,7 +722,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                       <span
                         className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
                           isToday
-                            ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
+                            ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                             : isDatePast
                               ? 'bg-[var(--surface)]/80 text-[var(--ink-2)]'
                               : 'bg-[var(--surface)] text-[var(--ink-2)]'
@@ -815,7 +813,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                         : 'bg-[var(--ok)]/20 text-[var(--ok)] '
                                   }`}
                                 >
-                                  {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
+                                  {isConcert ? 'Concierto' : isReu ? 'Reunión' : 'Ensayo'}
                                 </span>
                                 {isPast && (
                                   <span className="text-micro font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--ok)]/20 text-[var(--ok)] flex items-center gap-1">

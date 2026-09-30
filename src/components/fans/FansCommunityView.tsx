@@ -25,6 +25,7 @@ import {
   Star,
 } from "lucide-react";
 import { Fan, Concert, ThemeColors } from "../../types";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface BandAnnouncement {
   id: string;
@@ -268,7 +269,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 className="w-12 h-12 object-contain rounded-[var(--r-m)] p-1 bg-[var(--surface)] shrink-0"
               />
             ) : (
-              <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center font-bold font-display text-lg shrink-0">
+              <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] flex items-center justify-center font-bold font-display text-lg shrink-0">
                 {effectiveBandName[0] || "B"}
               </div>
             )}
@@ -290,7 +291,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowNewPostModal(true)}
-              className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-sans font-bold rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer active:scale-[0.97]"
+              className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer active:scale-[0.97]"
             >
               <Send className="w-3.5 h-3.5" /> Publicar Comunicado
             </button>
@@ -361,7 +362,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 onClick={() => handleReactAnnouncement(ann.id, "likes")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-[0.97]"
               >
-                <span>❤️</span>
+                <span><ShowIcon inline emoji="❤️" /></span>
                 <span className="font-bold text-[var(--ink-2)]">
                   {ann.reacciones.likes}
                 </span>
@@ -370,7 +371,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 onClick={() => handleReactAnnouncement(ann.id, "fire")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-[0.97]"
               >
-                <span>🔥</span>
+                <span><ShowIcon inline emoji="🔥" /></span>
                 <span className="font-bold text-[var(--ink-2)]">
                   {ann.reacciones.fire}
                 </span>
@@ -379,7 +380,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 onClick={() => handleReactAnnouncement(ann.id, "guitars")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-[0.97]"
               >
-                <span>🎸</span>
+                <span><ShowIcon inline emoji="🎸" /></span>
                 <span className="font-bold text-[var(--ink-2)]">
                   {ann.reacciones.guitars}
                 </span>
@@ -388,7 +389,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 onClick={() => handleReactAnnouncement(ann.id, "applause")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-[0.97]"
               >
-                <span>👏</span>
+                <span><ShowIcon inline emoji="👏" /></span>
                 <span className="font-bold text-[var(--ink-2)]">
                   {ann.reacciones.applause}
                 </span>
@@ -429,7 +430,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             </p>
             <button
               onClick={onOpenAddModal}
-              className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-sans font-bold rounded-[var(--r-m)] transition cursor-pointer"
+              className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold rounded-[var(--r-m)] transition cursor-pointer"
             >
               Registrar Primer Fan
             </button>
@@ -589,7 +590,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       }`}
                       title="Me gusta"
                     >
-                      <span>❤️</span>
+                      <span><ShowIcon inline emoji="❤️" /></span>
                       <span>{fanReactions.likes}</span>
                     </button>
 
@@ -603,7 +604,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       }`}
                       title="Fuego / Brutal"
                     >
-                      <span>🔥</span>
+                      <span><ShowIcon inline emoji="🔥" /></span>
                       <span>{fanReactions.fire}</span>
                     </button>
 
@@ -617,7 +618,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       }`}
                       title="Púa de Oro / Rock On"
                     >
-                      <span>🎸</span>
+                      <span><ShowIcon inline emoji="🎸" /></span>
                       <span>{fanReactions.guitars}</span>
                     </button>
 
@@ -631,7 +632,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       }`}
                       title="Aplausos"
                     >
-                      <span>👏</span>
+                      <span><ShowIcon inline emoji="👏" /></span>
                       <span>{fanReactions.applause}</span>
                     </button>
                   </div>
@@ -722,7 +723,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-sans text-xs font-bold rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-xs font-bold rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-1.5"
                 >
                   <Send className="w-3.5 h-3.5" /> Publicar en el Muro
                 </button>

@@ -210,7 +210,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                         </span>
                       </div>
                       {isSelected && (
-                        <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0">
+                        <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] flex items-center justify-center shrink-0">
                           <Check className="w-2 sm:w-2.5 h-2 sm:h-2.5 stroke-[3]" />
                         </span>
                       )}

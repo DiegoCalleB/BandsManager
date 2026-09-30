@@ -81,7 +81,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     if (days >= 7) {
       return {
         type: 'seguimiento',
-        label: '⏳ Seguimiento Necesario',
+        label: 'Seguimiento Necesario',
         badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold',
         icon: '⏳',
         description: `Enviado hace ${days}d sin respuesta`,
@@ -94,7 +94,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     const days = daysSinceLastActivity ?? daysSincePitch ?? 14;
     return {
       type: 'frio',
-      label: '🧊 Lead Frío',
+      label: 'Lead Frío',
       badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc)] font-medium',
       icon: '🧊',
       description: `Sin interacción desde hace ${days}d`,
@@ -104,7 +104,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
   // Default / Nuevo / Pendiente
   return {
     type: 'neutral',
-    label: '✨ Activo',
+    label: 'Activo',
     badgeClass: 'bg-[var(--sunken)]/80 text-[var(--ink-2)] font-medium',
     icon: '✨',
     description: 'En seguimiento regular',

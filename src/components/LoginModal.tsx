@@ -23,6 +23,7 @@ import { guardarCookieDeSesion } from "../utils/sessionCookie";
 import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
+import { ShowIcon } from './ui/ShowIcon';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -595,7 +596,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       onClick={() => setAppLang(l.code)}
                       className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-sans font-semibold transition-ui cursor-pointer flex items-center gap-1 ${
                         isSelected
-                          ? "bg-[var(--acc)] text-[var(--ink)] font-bold scale-105"
+                          ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
                           : "text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80"
                       }`}
                       title={l.label}
@@ -628,7 +629,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         setError(null);
                         setView("register");
                       }}
-                      className="px-3 py-1.5 bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] hover:bg-[var(--acc)]/30 transition-ui cursor-pointer flex items-center gap-1.5"
+                      className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] hover:bg-[var(--acc)]/30 transition-ui cursor-pointer flex items-center gap-1.5"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       <span>Crear / Acceder con Email en 10s</span>
@@ -881,14 +882,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     </div>
 
                     <p className="text-xs text-[var(--ink-2)] px-1 leading-tight">
-                      ⚡ Te enviaremos un código de verificación de 6 dígitos
+                      <ShowIcon inline emoji="⚡" />Te enviaremos un código de verificación de 6 dígitos
                       por correo electrónico para restablecer tu contraseña.
                     </p>
 
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                      className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                     >
                       {loading ? (
                         <span className="flex items-center gap-2">
@@ -990,7 +991,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         (resetConfirmPassword.length > 0 &&
                           resetNewPassword !== resetConfirmPassword)
                       }
-                      className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                      className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                     >
                       {loading ? (
                         <span className="flex items-center gap-2">
@@ -1119,7 +1120,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                    className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
@@ -1195,7 +1196,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                        className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                       >
                         {loading ? (
                           <span className="flex items-center gap-2">
@@ -1221,7 +1222,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                             setError(null);
                             setView("register");
                           }}
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold transition-ui cursor-pointer text-xs flex items-center justify-center gap-2"
+                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold transition-ui cursor-pointer text-xs flex items-center justify-center gap-2"
                         >
                           <Zap className="w-3.5 h-3.5" />
                           <span>Crear Banda Nueva con {activateEmail}</span>
@@ -1333,7 +1334,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                        className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                       >
                         {loading ? (
                           <span className="flex items-center gap-2">
@@ -1444,7 +1445,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     type="button"
                     onClick={() => handlePlanSelect("promo")}
                     disabled={loading}
-                    className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-ui cursor-pointer disabled:opacity-50"
+                    className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-sm tracking-wide transition-ui cursor-pointer disabled:opacity-50"
                   >
                     {loading
                       ? "Creando cuenta..."

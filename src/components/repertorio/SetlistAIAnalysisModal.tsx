@@ -21,6 +21,7 @@ import {
   adjustPosition1,
 } from "../../utils/setlistActionPositionAdjust";
 import { openWhatsAppChat } from "../../utils/whatsapp";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -619,7 +620,7 @@ export function SetlistAIAnalysisModal({
                     className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
                     title="Deshacer el último reordenamiento del setlist"
                   >
-                    ↩️ Deshacer
+                    <ShowIcon inline emoji="↩️" />Deshacer
                   </button>
                 )}
                 <button
@@ -689,7 +690,7 @@ export function SetlistAIAnalysisModal({
                           : undefined
                       }
                     >
-                      <span>{w.icon}</span>
+                      <span><ShowIcon inline emoji={w.icon} /></span>
                       <span>{w.message}</span>
                       {w.suggestedReorder && onReorder && (
                         <button
@@ -727,7 +728,7 @@ export function SetlistAIAnalysisModal({
                 </p>
                 <button
                   onClick={handleAnalyze}
-                  className="bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+                  className="bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
                 >
                   Iniciar Análisis IA
                 </button>
@@ -780,7 +781,7 @@ export function SetlistAIAnalysisModal({
                 {/* Narrative Arc */}
                 <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
                   <p className="text-xs text-[var(--ink-2)] mb-1.5">
-                    📖 Arco Narrativo
+                    <ShowIcon inline emoji="📖" />Arco Narrativo
                   </p>
                   <p className="text-sm text-[var(--ink-2)]">
                     {analysis.narrativeArc}
@@ -790,7 +791,7 @@ export function SetlistAIAnalysisModal({
                 {/* Psychological Flow */}
                 <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
                   <p className="text-xs text-[var(--ink-2)] mb-1.5">
-                    🧠 Flujo Psicológico
+                    <ShowIcon inline emoji="🧠" />Flujo Psicológico
                   </p>
                   <p className="text-sm text-[var(--ink-2)]">
                     {analysis.psychologicalFlow}
@@ -870,7 +871,7 @@ export function SetlistAIAnalysisModal({
                                             className="text-micro text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
                                             title="Un cambio anterior afectó a la canción que esta sugerencia necesitaba"
                                           >
-                                            ⚠️ Ya no aplica
+                                            <ShowIcon inline emoji="⚠️" />Ya no aplica
                                           </span>
                                         );
                                       }
@@ -888,7 +889,7 @@ export function SetlistAIAnalysisModal({
                                             className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
                                             title="Deshacer este cambio de orden"
                                           >
-                                            ↩️ Deshacer
+                                            <ShowIcon inline emoji="↩️" />Deshacer
                                           </button>
                                         );
                                       }
@@ -922,7 +923,7 @@ export function SetlistAIAnalysisModal({
                             <div className="space-y-1.5 text-xs ml-7">
                               <div>
                                 <p className="text-[var(--ink-2)]">
-                                  🔍 Problema:
+                                  <ShowIcon inline emoji="🔍" />Problema:
                                 </p>
                                 <p className="text-[var(--ink-2)]">
                                   {sugg.issue}
@@ -930,7 +931,7 @@ export function SetlistAIAnalysisModal({
                               </div>
                               <div>
                                 <p className="text-[var(--ink-2)]">
-                                  💡 Sugerencia:
+                                  <ShowIcon inline emoji="💡" />Sugerencia:
                                 </p>
                                 <p className="text-[var(--ink-2)] font-medium">
                                   {sugg.suggestion}
@@ -938,7 +939,7 @@ export function SetlistAIAnalysisModal({
                               </div>
                               <div>
                                 <p className="text-[var(--ink-2)]">
-                                  ⭐ Impacto:
+                                  <ShowIcon inline emoji="⭐" />Impacto:
                                 </p>
                                 <p className="text-[var(--ink-2)]">
                                   {sugg.impact}
@@ -948,7 +949,7 @@ export function SetlistAIAnalysisModal({
                                 sugg.songs_involved.length > 0 && (
                                   <div>
                                     <p className="text-[var(--ink-2)]">
-                                      🎵 Canciones:
+                                      <ShowIcon inline emoji="🎵" />Canciones:
                                     </p>
                                     <p className="text-[var(--ink-2)]">
                                       {sugg.songs_involved.join(",")}
@@ -967,7 +968,7 @@ export function SetlistAIAnalysisModal({
                 {analysis.areasForImprovement.length > 0 && (
                   <div className="bg-[var(--acc-soft)] rounded-[var(--r-s)] p-3">
                     <p className="text-xs font-medium text-[var(--acc)]/70 mb-1.5">
-                      🎯 Áreas de Mejora
+                      <ShowIcon inline emoji="🎯" />Áreas de Mejora
                     </p>
                     <ul className="space-y-1">
                       {analysis.areasForImprovement.map((area, idx) => (
@@ -1025,9 +1026,9 @@ export function SetlistAIAnalysisModal({
             <div className="flex gap-3">
               <button
                 onClick={handleAnalyze}
-                className="flex-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+                className="flex-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
-                🔄 Re-analizar
+                <ShowIcon inline emoji="🔄" />Re-analizar
               </button>
               <button
                 onClick={onClose}

@@ -966,7 +966,7 @@ export function BulkAlbumAudioUploaderModal({
                               <Check className="w-3.5 h-3.5" />
                               {""}
                               {item.chordsSource === "plantilla_generica"
-                                ? "⚠️ Plantilla"
+                                ? "Plantilla"
                                 : "Guardado"}
                             </span>
                           )}

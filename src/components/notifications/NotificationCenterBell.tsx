@@ -16,6 +16,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { NotificationHistoryItem, NotificationPermissionStatus, BrowserNotificationConfig } from '../../types/browserNotifications';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface NotificationCenterBellProps {
   permission: NotificationPermissionStatus;
@@ -110,7 +111,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
         {/* Unread badge count */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)] text-micro font-bold font-mono text-[var(--ink)]">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)] text-micro font-bold font-mono text-[var(--on-acc)]">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -179,7 +180,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 <button
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-2 py-0.5 rounded bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-micro shrink-0 cursor-pointer shadow-xs"
+                  className="px-2 py-0.5 rounded bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-micro shrink-0 cursor-pointer shadow-xs"
                 >
                   Activar
                 </button>
@@ -228,7 +229,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     <p className="text-xs text-[var(--ink-2)] line-clamp-2 leading-tight">{item.body}</p>
                     {item.leadName && (
                       <span className="inline-block text-micro font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
-                        📍 {item.leadName}
+                        <ShowIcon inline emoji="📍" />{item.leadName}
                       </span>
                     )}
                   </div>

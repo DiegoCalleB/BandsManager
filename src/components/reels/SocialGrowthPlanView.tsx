@@ -37,6 +37,7 @@ import {
   Eye,
   HelpCircle,
 } from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SocialGrowthPlanViewProps {
   colors: ThemeColors;
@@ -144,7 +145,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 Plan de Crecimiento Musical ({growthPlan.horizonDays} Días)
               </h3>
               <span className="text-micro font-sans font-bold px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)]">
-                🎸 {bandName}
+                <ShowIcon inline emoji="🎸" />{bandName}
               </span>
               {archetype && (
                 <span
@@ -185,7 +186,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer ${
                 isGeneratingAI
                   ? "bg-[var(--tentative)]/50 text-[var(--tentative)]/50 cursor-wait"
-                  : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] "
+                  : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] "
               }`}
             >
               <RefreshCw
@@ -301,7 +302,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           onClick={() => setSelectedTab("instagram")}
           className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "instagram"
-              ? "bg-[var(--alert)] text-[var(--ink)] shadow"
+              ? "bg-[var(--alert)] text-[var(--on-alert)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
@@ -325,7 +326,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           onClick={() => setSelectedTab("youtube")}
           className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "youtube"
-              ? "bg-[var(--alert)] text-[var(--ink)] shadow"
+              ? "bg-[var(--alert)] text-[var(--on-alert)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
@@ -337,7 +338,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           onClick={() => setSelectedTab("spotify")}
           className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "spotify"
-              ? "bg-[var(--ok)] text-[var(--ink)] shadow"
+              ? "bg-[var(--ok)] text-[var(--on-ok)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >

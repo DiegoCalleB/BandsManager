@@ -30,6 +30,7 @@ import { apiFetch } from "../../utils/api";
 import { api } from "../../services/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface PlaceResult {
   place_id: string;
@@ -1101,7 +1102,7 @@ export function GooglePlacesExplorerModal({
                   type="button"
                   onClick={handleMassCampaignSearch}
                   disabled={isMassCampaignSearching || isSearching}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-ui/20 cursor-pointer disabled:opacity-50 shrink-0"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-ui/20 cursor-pointer disabled:opacity-50 shrink-0"
                 >
                   {isMassCampaignSearching ? (
                     <>
@@ -1156,7 +1157,7 @@ export function GooglePlacesExplorerModal({
                             : "bg-[var(--bg)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                         }`}
                       >
-                        <span>{item.icon}</span>
+                        <span><ShowIcon inline emoji={item.icon} /></span>
                         <span>{item.label}</span>
                       </button>
                     );
@@ -1225,7 +1226,7 @@ export function GooglePlacesExplorerModal({
                         }`}
                         title={cat.desc}
                       >
-                        <span>{cat.icon}</span>
+                        <span><ShowIcon inline emoji={cat.icon} /></span>
                         <span className="truncate">
                           {cat.label.split("")[0]}
                         </span>
@@ -1417,7 +1418,7 @@ export function GooglePlacesExplorerModal({
                       className="px-2.5 py-0.5 text-micro rounded-[var(--r-m)] transition-ui cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50"
                       title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
                     >
-                      🔍 {band}
+                      <ShowIcon inline emoji="🔍" />{band}
                     </button>
                   ))}
                   <button
@@ -1426,7 +1427,7 @@ export function GooglePlacesExplorerModal({
                     disabled={isSearching}
                     className="px-2.5 py-0.5 text-micro rounded-[var(--r-m)] font-bold transition-ui cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] ml-auto"
                   >
-                    ⚡ Rastrear Todas
+                    <ShowIcon inline emoji="⚡" />Rastrear Todas
                   </button>
                 </div>
               )}
@@ -1499,7 +1500,7 @@ export function GooglePlacesExplorerModal({
                     <button
                       onClick={handleExtractBatchEmails}
                       disabled={isExtractingBatch || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                      className="px-3.5 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                       title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
                     >
                       {isExtractingBatch ? (
@@ -1507,20 +1508,20 @@ export function GooglePlacesExplorerModal({
                       ) : (
                         <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]/70" />
                       )}
-                      <span>⚡ Agente Enriquecedor ({selectedCount})</span>
+                      <span><ShowIcon inline emoji="⚡" />Agente Enriquecedor ({selectedCount})</span>
                     </button>
 
                     <button
                       onClick={handleImportToCRM}
                       disabled={isImporting || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                      className="px-3.5 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                     >
                       {isImporting ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       ) : (
                         <PlusCircle className="w-3.5 h-3.5" />
                       )}
-                      <span>📥 Incluir en mis Leads ({selectedCount})</span>
+                      <span><ShowIcon inline emoji="📥" />Incluir en mis Leads ({selectedCount})</span>
                     </button>
                   </div>
                 </div>
@@ -1574,7 +1575,7 @@ export function GooglePlacesExplorerModal({
                                     className="text-micro px-1.5 py-0.2 bg-[var(--alert)]/20 text-[var(--ink-2)] rounded font-medium shrink-0"
                                     title="El aforo estimado difiere de los filtros de la campaña"
                                   >
-                                    ⚠️ Aforo fuera de rango
+                                    <ShowIcon inline emoji="⚠️" />Aforo fuera de rango
                                   </span>
                                 )}
                               </div>
@@ -1629,7 +1630,7 @@ export function GooglePlacesExplorerModal({
                             >
                               {CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>
-                                  {c.icon} {c.label}
+                                  <ShowIcon inline emoji={c.icon} /> {c.label}
                                 </option>
                               ))}
                             </select>
@@ -1733,7 +1734,7 @@ export function GooglePlacesExplorerModal({
                                 <span>
                                   {place.extractingEmail
                                     ? "Buscando..."
-                                    : "⚡ Enriquecer"}
+                                    : "Enriquecer"}
                                 </span>
                               </button>
                             </div>

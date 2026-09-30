@@ -3,6 +3,7 @@ import { X, Building2, Radio, Sparkles, Loader2, Upload, Briefcase, SlidersHoriz
 import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
+import { ShowIcon } from '../ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -182,7 +183,7 @@ export function AddLeadModal({
               </div>
             )}
             {modalScrapeError && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--alert)] bg-[var(--alert)]/15 ">⚠️ {modalScrapeError}</div>
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--alert)] bg-[var(--alert)]/15 "><ShowIcon inline emoji="⚠️" />{modalScrapeError}</div>
             )}
             {modalScrapeSuccessMsg && (
               <div className="p-2.5 rounded-[var(--r-m)] text-xs text-[var(--ok)] bg-[var(--ok)]/15 ">
@@ -375,7 +376,7 @@ export function AddLeadModal({
                             onClick={() => setNewLeadData((prev) => ({ ...prev, icono: emoji }))}
                             className={`w-7 h-7 rounded-[var(--r-m)] text-xs flex items-center justify-center transition-ui cursor-pointer ${
                               newLeadData.icono === emoji
-                                ? 'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105 shadow-xs'
+                                ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105 shadow-xs'
                                 : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
                             }`}
                           >
