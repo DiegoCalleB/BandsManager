@@ -39,7 +39,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Globe className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Redes Sociales, Web y Tienda Oficial (Merch)</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">Redes sociales, web y tienda oficial (merch)</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

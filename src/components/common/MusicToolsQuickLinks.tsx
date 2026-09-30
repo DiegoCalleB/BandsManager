@@ -20,7 +20,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
         <button
           onClick={onOpenMetronome}
           className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui cursor-pointer text-left active:scale-[0.97] group"
-          title="Abrir Metrónomo WebAudio Pro"
+          title="Abrir metrónomo webAudio Pro"
         >
           <div className="p-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-transform shrink-0">
             <Clock className="w-3.5 h-3.5" />
@@ -34,14 +34,14 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
         <button
           onClick={onOpenTuner}
           className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] transition-ui cursor-pointer text-left active:scale-[0.97] group"
-          title="Abrir Afinador de Guitarra, Bajo y Ukelele"
+          title="Abrir afinador de guitarra, bajo y ukelele"
         >
           <div className="p-1 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink)] transition-transform shrink-0">
             <Guitar className="w-3.5 h-3.5" />
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-xs font-bold truncate leading-tight">Afinador</span>
-            <span className="text-micro text-[var(--ok)]/80 font-sans truncate">Guitar, Bass y Uke</span>
+            <span className="text-micro text-[var(--ok)]/80 font-sans truncate">Guitar, bass y uke</span>
           </div>
         </button>
       </div>
@@ -53,7 +53,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
       <button
         onClick={onOpenMetronome}
         className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui cursor-pointer text-left active:scale-[0.97]"
-        title="Abrir Metrónomo WebAudio Pro"
+        title="Abrir metrónomo webAudio Pro"
       >
         <Clock className="w-4 h-4 text-[var(--acc)] shrink-0" />
         <div className="flex flex-col min-w-0">
@@ -65,12 +65,12 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
       <button
         onClick={onOpenTuner}
         className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] transition-ui cursor-pointer text-left active:scale-[0.97]"
-        title="Abrir Afinador de Guitarra, Bajo y Ukelele"
+        title="Abrir afinador de guitarra, bajo y ukelele"
       >
         <Guitar className="w-4 h-4 text-[var(--ok)] shrink-0" />
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold truncate leading-tight">Afinador</span>
-          <span className="text-micro text-[var(--ok)]/70 font-sans truncate">Guitar, Bass y Uke</span>
+          <span className="text-micro text-[var(--ok)]/70 font-sans truncate">Guitar, bass y uke</span>
         </div>
       </button>
     </div>

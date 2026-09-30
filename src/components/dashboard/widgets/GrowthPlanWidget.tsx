@@ -33,7 +33,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold font-display text-[var(--ink-2)]">
-                Guía de Crecimiento & Promoción
+                Guía de crecimiento y promoción
               </h3>
               <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
                 {growthPlan?.horizonDays || 30}D

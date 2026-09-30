@@ -1517,7 +1517,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   value="grupo"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  Grupo / Banda Aliada
+                  Grupo / banda aliada
                 </option>
                 <option
                   value="agencia"
@@ -1547,7 +1547,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   value="medio"
                   className="bg-[var(--bg)] text-[var(--ink)]"
                 >
-                  Medio / Prensa / Radio
+                  Medio / prensa / radio
                 </option>
               </select>
             </div>
@@ -1645,7 +1645,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-micro font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
-              Herramientas Agente Scout & Inteligencia Externa:
+              Herramientas Agente Scout e Inteligencia Externa:
             </span>
             <span className="text-micro text-[var(--ink-2)] font-sans">
               Datos verificados sin inventar
@@ -1668,7 +1668,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <span>
                 {isScanningJina
                   ? "Leyendo web..."
-                  : "Jina Reader (Web & Teléfonos)"}
+                  : "Jina Reader (Web y Teléfonos)"}
               </span>
             </button>
 
@@ -2194,7 +2194,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     }
                   }}
                   className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-pill)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  title="Forzar el despacho inmediato de este correo por el Agente Enviador"
+                  title="Forzar el despacho inmediato de este correo por el agente enviador"
                 >
                   {isCreatingDraft ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2355,7 +2355,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         )) && (
         <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2">
           <p className="text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-            <span><ShowIcon inline emoji="🎸" /></span> Róster de Artistas & Servicios de Representación
+            <span><ShowIcon inline emoji="🎸" /></span> Róster de Artistas y Servicios de Representación
           </p>
           {selectedLead.roster ? (
             <p className="text-xs font-sans text-[var(--ink)] bg-[var(--surface)] p-2.5 rounded-[var(--r-s)] leading-relaxed">
@@ -2514,7 +2514,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         Ayuntamiento / fiestas
                       </option>
                       <option value="discoteca">Discoteca / Club</option>
-                      <option value="grupo">Grupo / Banda Aliada</option>
+                      <option value="grupo">Grupo / banda aliada</option>
                       <option value="agencia">Agencia de Booking</option>
                       <option value="manager">
                         Manager / Representante
@@ -2523,7 +2523,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         Productora de eventos
                       </option>
                       <option value="sello">Discográfica / Sello</option>
-                      <option value="medio">Medio / Prensa / Radio</option>
+                      <option value="medio">Medio / prensa / radio</option>
                     </Select>
                   </div>
                 </div>
@@ -2861,7 +2861,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="space-y-1">
                   <label className="block text-micro font-sans text-[var(--acc)] mb-1">
-                    Róster de Artistas / Bandas que representa
+                    Róster de artistas / bandas que representa
                   </label>
                   <Input
                     size="sm"
@@ -3037,7 +3037,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <span className="text-base"><ShowIcon inline emoji="⚡" /></span>
                     <div>
                       <h4 className="text-xs font-bold text-[var(--acc)] font-mono">
-                        Playbook Táctico & Extracción de Condiciones
+                        Playbook táctico y extracción de condiciones
                       </h4>
                       <p className="text-xs text-[var(--ink-2)] font-medium">
                         {selectedLead.estrategia_playbook?.titulo ||
@@ -3490,7 +3490,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[var(--acc)]/70 font-sans flex items-center gap-1.5">
-                    Aprendizaje Agéntico & ADN de Tono
+                    Aprendizaje Agéntico y ADN de Tono
                     <span className="text-micro bg-[var(--acc)]/20 text-[var(--acc-ink)] px-1.5 py-0.5 rounded font-sans font-normal">
                       Dynamic Few-Shot
                     </span>
@@ -3658,7 +3658,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               {/* Model selection pills for single-click regenerate */}
               <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-[var(--sunken)] rounded-[var(--r-m)]">
                 <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
-                  <ShowIcon inline emoji="🤖" />Motor de Redacción & Coste:
+                  <ShowIcon inline emoji="🤖" />Motor de Redacción y Coste:
                 </span>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   {[
@@ -3756,7 +3756,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 selectedLead.historial_feedback_pitch.length > 0 && (
                   <div className="mt-3 pt-3800 space-y-2">
                     <span className="text-xs font-bold text-[var(--acc)] font-sans block">
-                      Historial de Aprendizaje e Iteraciones IA
+                      Historial de aprendizaje e iteraciones IA
                     </span>
                     <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                       {selectedLead.historial_feedback_pitch.map((log) => (
@@ -4005,7 +4005,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           ) : (
                             <>
                               <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-                              <span>Analizar Sentimiento e Intención</span>
+                              <span>Analizar sentimiento e intención</span>
                             </>
                           )}
                         </button>
@@ -4085,7 +4085,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
               <div>
                 <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-2">
-                  <span>Inteligencia Multi-Fuente Conectada</span>
+                  <span>Inteligencia multi-Fuente conectada</span>
                   <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-mono font-bold ">
                     11 Herramientas activas
                   </span>
@@ -4722,7 +4722,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <span>
                       {isEnrichingBookingWindow
                         ? "Calculando..."
-                        : "Calcular Lead Time & Ventana"}
+                        : "Calcular Lead Time y Ventana"}
                     </span>
                   </button>
                 </div>
@@ -4862,7 +4862,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <Megaphone className="w-4 h-4" />
-                  <span>Medios, Radios y Prensa Cultural Local</span>
+                  <span>Medios, radios y prensa cultural local</span>
                 </div>
                 <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)] font-bold">
                   {selectedLead.ciudad || "Provincial"}
@@ -4953,7 +4953,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <span>
                       {isEnrichingPressMedia
                         ? "Buscando..."
-                        : "Buscar Medios & Radios"}
+                        : "Buscar Medios y Radios"}
                     </span>
                   </button>
                 </div>
@@ -5259,7 +5259,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
             ) : (
               <div className="py-3 text-center text-[var(--ink-2)] text-xs italic">
-                Ajusta los precios y pulsa “Recalcular & Guardar P&L” para
+                Ajusta los precios y pulsa “Recalcular y Guardar P&L” para
                 simular la rentabilidad del concierto.
               </div>
             )}
@@ -5287,7 +5287,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-[var(--acc)]" />
               <h4 className="text-xs font-bold text-[var(--ink)] font-sans">
-                Bitácora de Contacto y Llamadas
+                Bitácora de contacto y llamadas
               </h4>
             </div>
             <span className="text-micro text-[var(--acc)]/80 font-sans">

@@ -740,7 +740,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
                     <Sparkles className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />{" "}
-                    Guía Rápida & Tutorial
+                    Guía Rápida y Tutorial
                   </button>
                   <button
                     type="button"
@@ -811,7 +811,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "qr" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
         >
           <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "1" : "2"}
-          . Captura en Vivo & QR
+          . Captura en Vivo y QR
         </button>
         <button
           id="tab-btn-fans-dashboard"
@@ -819,7 +819,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "dashboard" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
         >
           <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "2" : "3"}.
-          Dashboard & Analítica
+          Dashboard y Analítica
         </button>
         <button
           id="tab-btn-fans-directory"
@@ -827,7 +827,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "fans" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
         >
           <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? "3" : "4"}.
-          Comunidad & Red Social ({fans.length})
+          Comunidad y Red Social ({fans.length})
         </button>
       </div>
 
@@ -989,7 +989,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       Concierto: {c.name}
                     </option>
                   ))}
-                  <option value="Otros">Redes Sociales / Amigos / Otros</option>
+                  <option value="Otros">Redes sociales / amigos / otros</option>
                 </select>
               </div>
               <div className="relative w-full sm:w-48">
@@ -1019,7 +1019,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
-                  title="Muro Social & Comunidad"
+                  title="Muro social y comunidad"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
                   <span>Muro Social</span>
@@ -1045,7 +1045,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
-                  title="Vista en Detalles / Tabla"
+                  title="Vista en detalles / tabla"
                 >
                   <List className="w-3.5 h-3.5" />
                   <span>Tabla CRM</span>
@@ -1620,7 +1620,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <div className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-3">
                   <label className="text-xs font-bold text-[var(--ink-2)] font-sans flex items-center gap-2">
                     <Heart className="w-4 h-4 text-[var(--ink-2)]" />
-                    Colaboración Económica & Donaciones (Revolut, PayPal y
+                    Colaboración Económica y Donaciones (Revolut, PayPal y
                     Bizum)
                   </label>
                   <p className="text-xs text-[var(--ink-2)] font-sans">
@@ -1957,7 +1957,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
               <div>
                 <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
-                  Canción Favorita (Opcional)
+                  Canción favorita (opcional)
                 </label>
                 <Input
                   size="sm"
@@ -1971,7 +1971,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
               <div>
                 <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
-                  Mensaje / Dedicatoria para el Muro (Opcional)
+                  Mensaje / dedicatoria para el muro (opcional)
                 </label>
                 <Textarea
                   rows={2}

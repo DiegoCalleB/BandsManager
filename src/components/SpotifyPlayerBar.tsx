@@ -940,7 +940,7 @@ export default function SpotifyPlayerBar({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans flex items-center gap-1 transition-ui cursor-pointer"
-                  title="Ver Acordes / Partitura"
+                  title="Ver acordes / partitura"
                 >
                   <FileText className="w-3.5 h-3.5 text-[var(--ok)]" />
                   <span className="hidden lg:inline text-xs">Acordes</span>
@@ -961,7 +961,7 @@ export default function SpotifyPlayerBar({
               <button
                 onClick={() => (onOpenIris ? onOpenIris(song) : onOpenStudio(song))}
                 className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/25 hover:bg-[var(--acc)]/35 text-[var(--ink)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
-                title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
+                title="Procesar y separar voces e instrumentos con iris (IA stems)"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span className="hidden sm:inline text-xs">Iris</span>

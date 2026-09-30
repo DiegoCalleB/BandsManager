@@ -399,7 +399,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                     ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
                     : "bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 }`}
-                title="Atajos de teclado / Pedal Bluetooth para pasar canciones sin manos"
+                title="Atajos de teclado / pedal bluetooth para pasar canciones sin manos"
               >
                 <Footprints className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span className="hidden sm:inline">Pedal</span>
@@ -964,7 +964,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                             setShowShowItemModal(true);
                           }}
                           className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 self-start sm:self-auto"
-                          title="Modificar Audio o Grabación de este evento"
+                          title="Modificar audio o grabación de este evento"
                         >
                           <Mic className="w-3 h-3 text-[var(--acc)]" />
                           <span>

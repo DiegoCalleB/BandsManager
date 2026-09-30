@@ -392,7 +392,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     onClick={handleRunHookDoctor}
                     disabled={isAnalyzingDoctor}
                     className="px-2.5 h-full rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
-                    title="Auditoría Anti-Cringe y Primer Comentario Fijado con IA"
+                    title="Auditoría anti-Cringe y primer comentario fijado con IA"
                   >
                     <Stethoscope className={`w-3 h-3 ${isAnalyzingDoctor ? 'animate-spin' : ''}`} />
                     <span>{isAnalyzingDoctor ? 'Auditando...' : 'Hook Doctor IA'}</span>
@@ -452,7 +452,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   </div>
                   <div>
                     <h4 className="text-xs font-mono font-bold text-[var(--ink)] ">
-                      Diagnóstico AI Hook Doctor & Anti-Cringe
+                      Diagnóstico AI Hook Doctor y Anti-Cringe
                     </h4>
                     <span className="text-micro font-sans text-[var(--acc-ink)]">
                       "{doctorDiagnosis.verdict}"
@@ -506,7 +506,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
-                        Gancho y Copy Mejorado
+                        Gancho y copy mejorado
                       </span>
                     </div>
                     <p className="text-xs font-bold text-[var(--acc-ink)]">
@@ -639,7 +639,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--alert)] font-bold text-xs font-mono ">
                   <Repeat className="w-4 h-4 text-[var(--alert)]" />
-                  <span>Bucle Infinito (120% Watch-Time)</span>
+                  <span>Bucle infinito (120% watch-Time)</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -683,7 +683,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Zap className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span>Beat-Drop y Rhythm Impacts</span>
+                  <span>Beat-Drop y rhythm impacts</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -705,7 +705,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Radio className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span>Smart-Pan Framing Dinámico</span>
+                  <span>Smart-Pan framing dinámico</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input

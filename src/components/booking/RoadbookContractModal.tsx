@@ -171,7 +171,7 @@ Firmado en conformidad por ambas partes.`;
               </div>
               <div>
                 <h3 className="text-sm sm:text-base font-bold text-[var(--ink-2)] font-display flex items-center gap-2">
-                  <span>Hoja de Ruta (Roadbook) & Contrato Pro</span>
+                  <span>Hoja de ruta (roadbook) y contrato Pro</span>
                   <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-mono">
                     Gira {bandName}
                   </span>

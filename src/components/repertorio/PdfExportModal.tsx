@@ -1617,7 +1617,7 @@ export function PdfExportModal({
                     Generador de repertorios
                   </h3>
                   <span className="hidden sm:inline-block px-2 py-0.5 rounded text-micro font-bold font-sans bg-[var(--surface)] text-[var(--ink)] shrink-0">
-                    Rock Stage Edition
+                    Rock stage edition
                   </span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5 truncate">
@@ -1843,7 +1843,7 @@ export function PdfExportModal({
                 >
                   <option value="caveat">Rotulador fino (Caveat)</option>
                   <option value="permanent_marker">
-                    Sharpie Grueso (Permanent Marker)
+                    Sharpie grueso (permanent marker)
                   </option>
                   <option value="courier">Máquina (Courier)</option>
                   <option value="sans">Imprenta limpia (Sans)</option>
@@ -1858,7 +1858,7 @@ export function PdfExportModal({
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
                     }`}
-                    title="Tinta Azul Rotulador"
+                    title="Tinta azul rotulador"
                   />
                   <button
                     onClick={() => setHandwritingColor("black")}
@@ -1867,7 +1867,7 @@ export function PdfExportModal({
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
                     }`}
-                    title="Tinta Negra Sharpie"
+                    title="Tinta negra sharpie"
                   />
                   <button
                     onClick={() => setHandwritingColor("red")}
@@ -1876,7 +1876,7 @@ export function PdfExportModal({
                         ? "ring-2 ring-white scale-110"
                         : "opacity-60 hover:opacity-100"
                     }`}
-                    title="Tinta Roja Marcador"
+                    title="Tinta roja marcador"
                   />
                   <button
                     onClick={() => setHandwritingColor("purple")}

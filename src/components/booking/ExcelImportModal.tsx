@@ -751,7 +751,7 @@ export function ExcelImportModal({
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-base sm:text-lg font-bold font-display">
-                    Importar Listado de Salas, Ayuntamientos o Bandas
+                    Importar listado de salas, ayuntamientos o bandas
                   </h3>
                   <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink)]">
                     Excel / CSV
@@ -978,7 +978,7 @@ export function ExcelImportModal({
                         Requerido
                       </span>
                     </label>
-                    <Select size="sm" aria-label="Nombre Sala / Contacto / Banda * Requerido"
+                    <Select size="sm" aria-label="Nombre sala / contacto / banda * requerido"
                       value={mapping.nombre_sala}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1173,9 +1173,9 @@ export function ExcelImportModal({
                   {/* Website */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Sitio Web / Link
+                      Sitio web / link
                     </label>
-                    <Select size="sm" aria-label="Sitio Web / Link"
+                    <Select size="sm" aria-label="Sitio web / link"
                       value={mapping.website}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1197,9 +1197,9 @@ export function ExcelImportModal({
                   {/* Tipo / Categoría */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Tipo de Entidad (Columna)
+                      Tipo de entidad (columna)
                     </label>
-                    <Select size="sm" aria-label="Tipo de Entidad (Columna)"
+                    <Select size="sm" aria-label="Tipo de entidad (columna)"
                       value={mapping.tipo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1221,9 +1221,9 @@ export function ExcelImportModal({
                   {/* Contacto Nombre */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Persona de Contacto / Booker
+                      Persona de contacto / booker
                     </label>
-                    <Select size="sm" aria-label="Persona de Contacto / Booker"
+                    <Select size="sm" aria-label="Persona de contacto / booker"
                       value={mapping.contacto_nombre}
                       onChange={(e) =>
                         setMapping((prev) => ({

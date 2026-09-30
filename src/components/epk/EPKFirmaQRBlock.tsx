@@ -141,7 +141,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     },
                   })
                 }
-                placeholder="Ej: Booking & Management"
+                placeholder="Ej: Booking y Management"
                 className="w-full"
               />
             </div>
@@ -163,7 +163,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     },
                   })
                 }
-                placeholder="Ej: Booking & Management Team"
+                placeholder="Ej: Booking y Management Team"
                 className="w-full"
               />
             </div>
@@ -373,11 +373,11 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       {config.firmaEmail?.nombreRemitente ||
                         config.contactoBooking?.nombre ||
                         (isBakandeya
-                          ? "Booking & Management"
-                          : "Booking & Management Team")}
+                          ? "Booking y Management"
+                          : "Booking y Management Team")}
                     </h4>
                     <p className="text-[var(--ink-2)] font-medium text-xs truncate">
-                      {config.firmaEmail?.cargo || "Booking & Management Team"}
+                      {config.firmaEmail?.cargo || "Booking y Management Team"}
                     </p>
                     {config.firmaEmail?.textoPie && (
                       <p className="text-[var(--ink-2)] text-xs italic truncate">
@@ -414,7 +414,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <span>
                         {config.dossierPdfName
                           ? `Ver Dossier Oficial (${config.dossierPdfName})`
-                          : "Ver Dossier Oficial & EPK Online"}
+                          : "Ver Dossier Oficial y EPK Online"}
                       </span>
                       <ExternalLink className="w-3 h-3 text-[var(--ink-2)]" />
                     </a>
@@ -726,7 +726,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-2)] pl-1 leading-relaxed">
                         <li>
                           Haz clic arriba en{" "}
-                          <strong>“Copiar Firma Formateada”</strong>.
+                          <strong>“Copiar firma formateada”</strong>.
                         </li>
                         <li>
                           Abre tu Gmail y pulsa en la rueda de{" "}
@@ -760,7 +760,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-2)] pl-1 leading-relaxed">
                         <li>
                           Haz clic arriba en{" "}
-                          <strong>“Copiar Firma Formateada”</strong>.
+                          <strong>“Copiar firma formateada”</strong>.
                         </li>
                         <li>
                           En Outlook Web o App, entra en{" "}
@@ -786,7 +786,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-2)] pl-1 leading-relaxed">
                         <li>
                           Haz clic arriba en{" "}
-                          <strong>“Copiar Firma Formateada”</strong>.
+                          <strong>“Copiar firma formateada”</strong>.
                         </li>
                         <li>
                           En la app Mail de Mac, ve al menú superior{" "}

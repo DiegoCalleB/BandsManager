@@ -104,7 +104,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
             ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] shadow-xs'
             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
         }`}
-        title="Centro de Notificaciones Push"
+        title="Centro de notificaciones push"
         aria-label="Notificaciones"
       >
         <Bell className="w-4 h-4 sm:w-4.5 sm:h-4.5" />

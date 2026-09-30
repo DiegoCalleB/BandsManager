@@ -397,7 +397,7 @@ export function TemplateConfigSection({
                 <Eye className="w-6 h-6 text-[var(--ink-2)] mx-auto" />
                 <p className="text-xs text-[var(--ink-2)] font-medium">Ninguna simulación activa</p>
                 <p className="text-xs text-[var(--ink-2)] max-w-xs mx-auto">
-                  Haz clic en <strong>“Simular Vista Previa”</strong> para ver cómo la IA adapta esta plantilla a un contacto real.
+                  Haz clic en <strong>“Simular vista previa”</strong> para ver cómo la IA adapta esta plantilla a un contacto real.
                 </p>
               </div>
             )}

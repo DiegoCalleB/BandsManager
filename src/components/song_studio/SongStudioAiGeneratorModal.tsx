@@ -66,7 +66,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
 
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-xs text-[var(--ink)] space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
-              Pista de Referencia Orientativa
+              Pista de referencia orientativa
             </p>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               Genera una secuencia rítmica sintetizada de bajo y batería para escuchar cómo sonaría tu guitarra o voz con acompañamiento.

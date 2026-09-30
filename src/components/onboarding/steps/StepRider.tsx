@@ -54,7 +54,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <Layers className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Rider Técnico, Stage Plot & Requerimientos
+          Rider técnico, stage plot y requerimientos
         </h3>
       </div>
 
@@ -67,9 +67,9 @@ export const StepRider: React.FC<StepRiderProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-xs font-medium text-[var(--ink-2)]">
-            Canales de Mesa Mínimos
+            Canales de mesa mínimos
           </label>
-          <Input size="sm" aria-label="Canales de Mesa Mínimos"
+          <Input size="sm" aria-label="Canales de mesa mínimos"
             type="number"
             min={4}
             max={64}
@@ -192,7 +192,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           >
             <Upload className="w-6 h-6 text-[var(--ink-2)] mx-auto mb-1.5" />
             <span className="text-xs font-medium text-[var(--ink-2)] block">
-              Subir PDF de Rider Técnico o imagen de Stage Plot
+              Subir PDF de rider técnico o imagen de stage plot
             </span>
             <span className="text-micro text-[var(--ink-2)]">
               PDF, JPG o PNG hasta 20 MB
@@ -210,7 +210,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
       {/* Notas técnicas en texto */}
       <div className="pt-2">
         <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-          Notas de Escenario & Requerimientos Adicionales (Texto)
+          Notas de escenario y requerimientos adicionales (texto)
         </label>
         <Textarea
           rows={3}

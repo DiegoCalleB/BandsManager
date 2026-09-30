@@ -548,7 +548,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
                   <div>
                     <label className={labelClass}>
-                      Vocabulario Clave & Muletillas (separadas por comas)
+                      Vocabulario Clave y Muletillas (separadas por comas)
                     </label>
                     <input
                       className={inputClass}
@@ -742,7 +742,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="text-micro font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                         <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
-                        Vocabulario Clave & Muletillas
+                        Vocabulario Clave y Muletillas
                       </span>
                       {toneData.emojis_frecuentes &&
                         toneData.emojis_frecuentes.length > 0 && (
@@ -780,7 +780,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       toneData.frases_emblematicas_extraidas.length > 0 && (
                         <div className="pt-1.5 border-t border-[var(--hair)] space-y-1">
                           <span className="text-micro font-mono font-bold text-[var(--acc)]/90 block">
-                            <ShowIcon inline emoji="💬" />Expresiones extraídas de sus Reels & Posts:
+                            <ShowIcon inline emoji="💬" />Expresiones extraídas de sus Reels y Posts:
                           </span>
                           <div className="space-y-1">
                             {toneData.frases_emblematicas_extraidas.map(

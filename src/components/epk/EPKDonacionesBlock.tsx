@@ -83,8 +83,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--ink-2)] flex items-center gap-2">
-              <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones
-              (Revolut, PayPal & Bizum)
+              <Heart className="w-5 h-5" /> Apoyo Económico y Donaciones
+              (Revolut, PayPal y Bizum)
             </h3>
             <span className="text-micro font-bold text-[var(--ink-2)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Crowdfunding directo

@@ -101,7 +101,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               </div>
               <div>
                 <h3 className="text-base font-bold">
-                  Generador AI de Soundtracks & Jingles (Lyria)
+                  Generador AI de soundtracks y jingles (lyria)
                 </h3>
                 <p className="text-xs text-[var(--acc)]/70 font-sans">
                   Creación de música basada en el estilo y letras de la banda
@@ -120,7 +120,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-xs text-[var(--ink)] space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
               Motor de
-              Audio Generativo IA
+              audio generativo IA
             </p>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               Genera bandas sonoras originales, jingles corporativos o música de
@@ -146,7 +146,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
             <div>
               <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
-                Prompt / Descripción del Soundtrack o Jingle
+                Prompt / descripción del soundtrack o jingle
               </label>
               <Textarea
                 value={prompt}
@@ -208,7 +208,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                     }}
                     className="w-full py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] transition"
                   >
-                    + Añadir Soundtrack a la Canción / Estudio
+                    + añadir soundtrack a la canción / estudio
                   </button>
                 )}
               </div>

@@ -128,8 +128,8 @@ export function NegotiationSimulationModal({
 
             {/* Scenario selector */}
             <div className="space-y-1.5">
-              <label className={`block text-micro font-sans ${textSub}`}>Instrucciones de Situación / Pauta Inicial</label>
-              <Select size="sm" aria-label="Instrucciones de Situación / Pauta Inicial"
+              <label className={`block text-micro font-sans ${textSub}`}>Instrucciones de situación / pauta inicial</label>
+              <Select size="sm" aria-label="Instrucciones de situación / pauta inicial"
                 value={simulationScenario}
                 onChange={(e) => onScenarioChange(e.target.value)}
                 wrapperClassName="w-full"
@@ -172,7 +172,7 @@ export function NegotiationSimulationModal({
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
                 <label className={`block text-micro font-sans ${textSub}`}>
-                  Instrucciones Detalladas de Negociación para la IA
+                  Instrucciones detalladas de negociación para la IA
                 </label>
                 <span className={`text-micro font-sans ${textMuted}`}>Cualquier cambio aquí personalizará el correo</span>
               </div>

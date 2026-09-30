@@ -284,7 +284,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 </span>
               </div>
               <h3 className="text-[var(--ink)] font-bold text-base font-display">
-                Comunidad & Red Social de {effectiveBandName}
+                Comunidad y Red Social de {effectiveBandName}
               </h3>
             </div>
           </div>
@@ -408,7 +408,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         <div className="flex items-center justify-between pt-2">
           <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-2">
             <MessageCircle className="w-3.5 h-3.5 text-[var(--acc)]" />
-            Muro de Fans & Mensajes de la Comunidad ({fans.length})
+            Muro de Fans y Mensajes de la Comunidad ({fans.length})
           </h4>
           <span className="text-xs text-[var(--ink-2)] font-sans">
             {selectedCityFilter
@@ -617,7 +617,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                           ? "bg-[var(--tentative)]/20 text-[var(--tentative)] font-bold"
                           : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
-                      title="Púa de Oro / Rock On"
+                      title="Púa de oro / rock On"
                     >
                       <span><ShowIcon inline emoji="🎸" /></span>
                       <span>{fanReactions.guitars}</span>

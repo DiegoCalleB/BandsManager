@@ -77,7 +77,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
               </div>
               <div>
                 <h3 className="text-lg font-bold" style={{ color: colors.text }}>
-                  Simulador de Correo Entrante / Saliente
+                  Simulador de correo entrante / saliente
                 </h3>
                 <p className="text-xs text-[var(--ink-2)]">Genera una respuesta realista con IA para probar el flujo de hilo de correos</p>
               </div>
@@ -103,8 +103,8 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                   }}
                   wrapperClassName="w-full"
                 >
-                  <option value="sala">Sala / Promotor (Respuesta Entrante)</option>
-                  <option value="banda">Banda Bakandeya (Respuesta Saliente)</option>
+                  <option value="sala">Sala / promotor (respuesta entrante)</option>
+                  <option value="banda">Banda bakandeya (respuesta saliente)</option>
                 </Select>
               </div>
 
@@ -117,7 +117,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                 >
                   <option value="taquilla">Propuesta de taquilla (70/30)</option>
                   <option value="cache">Propuesta de caché fijo</option>
-                  <option value="rechazo">Agenda Llena / Rechazo Amable</option>
+                  <option value="rechazo">Agenda llena / rechazo amable</option>
                   <option value="mas_info">Petición de EPK / Dossier técnico</option>
                 </Select>
               </div>
@@ -134,7 +134,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             </div>
 
             <div>
-              <label className="block text-[var(--ink-2)] mb-1 font-semibold">Instrucción Especial / Contexto</label>
+              <label className="block text-[var(--ink-2)] mb-1 font-semibold">Instrucción especial / contexto</label>
               <Textarea
                 rows={2}
                 value={simulationCustomInstruction}

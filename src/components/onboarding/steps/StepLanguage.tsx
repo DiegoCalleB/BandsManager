@@ -204,7 +204,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
           </div>
           <div>
             <h5 className="text-xs font-bold text-[var(--ink-2)]">
-              Panel & Menús
+              Panel y Menús
             </h5>
             <p className="text-xs text-[var(--ink-2)] mt-0.5 leading-relaxed">
               Todos los módulos, botones y tablas cambian de inmediato en tiempo

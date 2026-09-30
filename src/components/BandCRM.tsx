@@ -1172,7 +1172,7 @@ ${myBandName}`;
               }
             }}
             className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--tentative)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
-            title="Generar pitch de intercambio de fechas (Date Swap)"
+            title="Generar pitch de intercambio de fechas (date swap)"
           >
             <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
             <span>Date Swap</span>
@@ -1218,7 +1218,7 @@ ${myBandName}`;
               <h3 className="text-xl font-bold font-display text-[var(--ink)] flex items-center gap-2">
                 <Building2 className="w-5 h-5 text-[var(--ok)]" />
                 <span>
-                  Registro de Nuevas Bandas Clientes (registro_bandas)
+                  Registro de nuevas bandas clientes (registro_bandas)
                 </span>
               </h3>
               <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">
@@ -1465,7 +1465,7 @@ ${myBandName}`;
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
-                    title="Vista en Lista / Tabla"
+                    title="Vista en lista / tabla"
                   >
                     <List className="w-4 h-4" />
                   </button>
@@ -1734,7 +1734,7 @@ ${myBandName}`;
                             setIsPitchModalOpen(true);
                           }}
                           className="flex-1 py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5"
-                          title="Generar Pitch de Date Swap"
+                          title="Generar pitch de date swap"
                         >
                           <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                           <span>Pitch de intercambio de fechas</span>

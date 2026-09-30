@@ -429,7 +429,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                               type="button"
                               onClick={() => onOpenRoadbookModal(lead)}
                               className="p-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs transition-colors cursor-pointer"
-                              title="Ver / Imprimir Roadbook & Contrato"
+                              title="Ver / imprimir roadbook y contrato"
                             >
                               <FileText className="w-3.5 h-3.5" />
                             </button>
@@ -537,13 +537,13 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         onChange={(e) => setSimulatorCity(e.target.value)}
                         
                       >
-                        <option value="Valencia">Valencia (Eje Mediterráneo)</option>
-                        <option value="Barcelona">Barcelona (Eje Mediterráneo)</option>
+                        <option value="Valencia">Valencia (eje mediterráneo)</option>
+                        <option value="Barcelona">Barcelona (eje mediterráneo)</option>
                         <option value="Madrid">Madrid (Eje centro)</option>
-                        <option value="Zaragoza">Zaragoza (Eje Ebro)</option>
-                        <option value="Bilbao">Bilbao (Eje Cantábrico / Ebro)</option>
-                        <option value="Sevilla">Sevilla (Eje Sur)</option>
-                        <option value="Valladolid">Valladolid (Eje Castilla)</option>
+                        <option value="Zaragoza">Zaragoza (eje ebro)</option>
+                        <option value="Bilbao">Bilbao (eje cantábrico / ebro)</option>
+                        <option value="Sevilla">Sevilla (eje sur)</option>
+                        <option value="Valladolid">Valladolid (eje castilla)</option>
                       </Select>
                     </div>
                   </div>

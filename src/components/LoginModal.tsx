@@ -633,7 +633,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] hover:bg-[var(--acc)]/30 transition-ui cursor-pointer flex items-center gap-1.5"
                     >
                       <Zap className="w-3.5 h-3.5" />
-                      <span>Crear / Acceder con Email en 10s</span>
+                      <span>Crear / acceder con email en 10s</span>
                     </button>
                   </div>
                 )}
@@ -1022,7 +1022,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     onClick={() => setView("login")}
                     className="text-xs text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline font-medium cursor-pointer"
                   >
-                    Volver a Iniciar Sesión
+                    Volver a iniciar sesión
                   </button>
                 </div>
               </div>
@@ -1413,7 +1413,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 <div className="bg-[var(--surface)]/50 rounded-[var(--r-l)] p-6 flex flex-col space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-micro font-sans font-bold px-2.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">
-                      Festivales & Buskers
+                      Festivales y Buskers
                     </span>
                     <span className="text-xl font-bold text-[var(--ink)]">
                       0€{" "}

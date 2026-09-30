@@ -3943,7 +3943,7 @@ export default function SongStudioModal({
                           }}
                           className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--acc)]/70 flex items-center gap-2"
                         >
-                          <FileText className="w-4 h-4 text-[var(--acc)]" /> Acordes & Partitura
+                          <FileText className="w-4 h-4 text-[var(--acc)]" /> Acordes y Partitura
                         </button>
                         <button
                           type="button"
@@ -4338,7 +4338,7 @@ export default function SongStudioModal({
                                 onChange={(e) => setNewIdeaStyle(e.target.value as any)}
                                 wrapperClassName="w-full"
                               >
-                                <option value="rock">Rock / Pop Standard</option>
+                                <option value="rock">Rock / pop standard</option>
                                 <option value="pop">Pop / Disco 4-on-floor</option>
                                 <option value="funk">Funk Syncopated</option>
                                 <option value="reggae">Reggae One-Drop</option>
@@ -5491,7 +5491,7 @@ export default function SongStudioModal({
                                           onChange={(e) => setUseCleanDSPFilter(e.target.checked)}
                                           className="rounded accent-sky-500"
                                         />
-                                        <span>Filtro DSP Anti-Zumbido (High-Pass 80Hz + Notch)</span>
+                                        <span>Filtro DSP anti-Zumbido (high-Pass 80Hz + notch)</span>
                                       </label>
 
                                       <label className="flex items-center gap-1.5 cursor-pointer text-[var(--ink-2)] hover:text-[var(--ink)]">
@@ -5528,7 +5528,7 @@ export default function SongStudioModal({
                                               type="button"
                                               onClick={() => setAutoLatencyTrimMs(300)}
                                               className={`px-1.5 py-0.5 rounded text-micro font-sans transition-colors ${autoLatencyTrimMs === 300 ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
-                                              title="Recorte para auriculares Bluetooth tipo AirPods o Sony (300ms)"
+                                              title="Recorte para auriculares bluetooth tipo airPods o sony (300ms)"
                                             >
                                               Bluetooth (300ms)
                                             </button>
@@ -5683,7 +5683,7 @@ export default function SongStudioModal({
                                     ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
                                     : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--ink)]/10'
                                 }`}
-                                title="Establecer esta idea como la Maqueta Principal del tema"
+                                title="Establecer esta idea como la maqueta principal del tema"
                               >
                                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                                 <span>{song.audioPrincipalUrl === idea.audioUrl ? 'Maqueta Principal' : 'Hacer Maqueta Principal'}</span>
@@ -5694,7 +5694,7 @@ export default function SongStudioModal({
                             <div className="space-y-2 pt-2">
                               <span className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5">
                                 <MessageSquare className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                                Comentarios & Críticas del Grupo ({(idea.comentarios || []).length})
+                                Comentarios y Críticas del Grupo ({(idea.comentarios || []).length})
                               </span>
 
                               {/* Comment items list */}
@@ -5921,12 +5921,12 @@ export default function SongStudioModal({
                 </div>
 
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-                  <span className="text-[var(--ink-2)]">Fijar Cue In (Inicio Bucle)</span>
+                  <span className="text-[var(--ink-2)]">Fijar cue In (inicio bucle)</span>
                   <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">I</kbd>
                 </div>
 
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-                  <span className="text-[var(--ink-2)]">Fijar Cue Out (Fin Bucle)</span>
+                  <span className="text-[var(--ink-2)]">Fijar cue out (fin bucle)</span>
                   <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">O</kbd>
                 </div>
 
@@ -5951,7 +5951,7 @@ export default function SongStudioModal({
                 </div>
 
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-                  <span className="text-[var(--ink-2)]">Alternar Silencio (Mute)</span>
+                  <span className="text-[var(--ink-2)]">Alternar silencio (mute)</span>
                   <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc-ink)] font-bold shadow">M</kbd>
                 </div>
 

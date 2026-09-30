@@ -814,7 +814,7 @@ export function BulkAlbumAudioUploaderModal({
                 <span>
                   {isCreatingBrandNewAlbum
                     ? "Pistas del Nuevo Álbum"
-                    : "Archivos de Audio & Asignación"}
+                    : "Archivos de Audio y Asignación"}
                 </span>
                 <span>
                   {items.length} {items.length === 1 ? "pista" : "pistas"}

@@ -858,7 +858,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   ) : (
                     <>
                       <UserPlus className="w-4 h-4" />
-                      <span>Crear e Inscribir Nuevo Miembro</span>
+                      <span>Crear e inscribir nuevo miembro</span>
                     </>
                   )}
                 </button>

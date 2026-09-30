@@ -67,7 +67,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-xs font-medium text-[var(--ink-2)]">
-            Caché Acústico / Showcase (€)
+            Caché acústico / showcase (€)
           </label>
           <div className="relative">
             <Input
@@ -103,7 +103,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-xs font-medium text-[var(--ink-2)]">
-            Caché Festival / Fiesta Mayor (€)
+            Caché festival / fiesta mayor (€)
           </label>
           <div className="relative">
             <Input
@@ -181,7 +181,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
               type="text"
               value={contactoBookingNombre}
               onChange={(e) => setContactoBookingNombre(e.target.value)}
-              placeholder="Ej. Carlos (Booking & Manager)"
+              placeholder="Ej. Carlos (Booking y Manager)"
               className="w-full"
             />
           </div>

@@ -1107,7 +1107,7 @@ export default function TourManager({
                         <div>
                           <span className="text-xs font-sans font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
                             <Users className="w-4 h-4 text-[var(--acc-ink)]" />{" "}
-                            Miembros & Formación de la Gira
+                            Miembros y Formación de la Gira
                           </span>
                           <p className="text-xs text-[var(--ink-2)] mt-0.5">
                             Selecciona si viaja toda la banda o una formación
@@ -1265,7 +1265,7 @@ export default function TourManager({
                         <div>
                           <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                             <Truck className="w-4 h-4 text-[var(--ink-2)]" />{" "}
-                            Flota & Vehículos de la Gira ({formVehiculos.length}{" "}
+                            Flota y Vehículos de la Gira ({formVehiculos.length}{" "}
                             {formVehiculos.length === 1
                               ? "vehículo"
                               : "vehículos"}
@@ -1737,7 +1737,7 @@ export default function TourManager({
                   {/* Sincronización Automática Checkboxes */}
                   <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)]/30 space-y-2.5">
                     <span className="text-xs font-sans font-bold text-[var(--ink-2)] block">
-                      <ShowIcon inline emoji="⚡" />Integración con Calendario & Finanzas
+                      <ShowIcon inline emoji="⚡" />Integración con Calendario y Finanzas
                     </span>
 
                     <label className="flex items-center gap-2.5 text-xs text-[var(--ink)] cursor-pointer">

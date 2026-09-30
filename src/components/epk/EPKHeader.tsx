@@ -301,13 +301,13 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-micro font-sans font-bold">
-              Kit de Prensa & EPK
+              Kit de Prensa y EPK
             </span>
             <span className="text-xs text-[var(--ink-2)] hidden sm:inline">
               •
             </span>
             <span className="text-xs text-[var(--ink-2)] hidden sm:inline">
-              Gestor Modular del Dossier
+              Gestor modular del dossier
             </span>
           </div>
           <h2 className="page-title">
@@ -455,7 +455,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--acc)]/10 text-[var(--ink-2)]"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
-            title="Temas y audio preview (Bloque Música)"
+            title="Temas y audio preview (bloque música)"
           >
             {health.numTemas} {health.numTemas === 1 ? "tema" : "temas"}
           </button>
@@ -468,7 +468,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--tentative)]/10 text-[var(--tentative)]"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
-            title="Versiones en otros idiomas (Bloque Donaciones & Idiomas)"
+            title="Versiones en otros idiomas (bloque donaciones e idiomas)"
           >
             {health.numTraducciones + 1}{" "}
             {health.numTraducciones === 0 ? "idioma" : "idiomas"}
@@ -484,7 +484,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             }`}
-            title="Ver integración con Chatbot y Agentes de IA"
+            title="Ver integración con chatbot y agentes de IA"
           >
             <Bot className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span className="hidden sm:inline">Info IA</span>
@@ -503,7 +503,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <Bot className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
           <div className="space-y-1">
             <p className="font-bold text-[var(--acc)]/70 text-xs">
-              Conexión Automática con Agentes de IA y Chatbot
+              Conexión automática con agentes de IA y chatbot
             </p>
             <p className="text-[var(--ink-2)] leading-relaxed text-xs">
               Toda la información del dossier (biografía, integrantes, PDF

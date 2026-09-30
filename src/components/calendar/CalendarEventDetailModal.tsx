@@ -923,7 +923,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Truck className="w-3.5 h-3.5" />
-                    <span>Backline Aportado vs Traído y Toma Eléctrica</span>
+                    <span>Backline aportado vs traído y toma eléctrica</span>
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
@@ -938,7 +938,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     </div>
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
-                        Potencia y Tomas Eléctricas en Escenario
+                        Potencia y tomas eléctricas en escenario
                       </label>
                       <Textarea
                         rows={3}
@@ -958,7 +958,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <span><ShowIcon inline emoji="🎛️" /></span>
-                      <span>Input List / Lista de Canales de Microfonía</span>
+                      <span>Input list / lista de canales de microfonía</span>
                     </h4>
                     <span className="text-micro font-mono text-[var(--ink-2)]">
                       {(modalRoadbook.inputList || '').split('\n').filter(Boolean).length} canales especificados
@@ -978,7 +978,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--sunken)]'}`}
                 >
                   <label className={`block text-micro font-mono font-bold ${textSub}`}>
-                    Notas de Acceso, Muelle de Carga & Observaciones
+                    Notas de acceso, muelle de carga y observaciones
                   </label>
                   <Textarea
                     rows={2}
@@ -1852,7 +1852,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       Sección 4
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
-                      Convocatoria Real, Bandas del Cartel & Sensaciones Post-Show
+                      Convocatoria Real, Bandas del Cartel y Sensaciones Post-Show
                     </h3>
                   </div>
                   {selectedConcert && (
@@ -1865,7 +1865,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       className="px-2.5 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-colors flex items-center gap-1 cursor-pointer"
                     >
                       <Edit className="w-3.5 h-3.5" />
-                      <span>Editar Convocatoria / Dictar Nota</span>
+                      <span>Editar convocatoria / dictar nota</span>
                     </button>
                   )}
                 </div>
@@ -1937,7 +1937,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--acc-soft)]/40'}`}
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
-                    <span>Resumen / Sensaciones Post-Show (Usado por la IA)</span>
+                    <span>Resumen / sensaciones post-Show (usado por la IA)</span>
                   </h4>
                   {selectedConcert?.post_show_review ? (
                     <p className={`text-xs font-sans italic leading-relaxed ${textTitle}`}>

@@ -190,10 +190,10 @@ export function ConvocarEnsayoModal({
 
             {/* Setlist Asociado */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Repertorio a Repasar (Opcional)</label>
+              <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Repertorio a repasar (opcional)</label>
               <div className="relative">
                 <Disc3 className="w-3.5 h-3.5 absolute left-3 top-3 text-[var(--acc)]" />
-                <Select size="sm" aria-label="Repertorio a Repasar (Opcional)"
+                <Select size="sm" aria-label="Repertorio a repasar (opcional)"
                   value={setlistId}
                   onChange={(e) => setSetlistId(e.target.value)}
                   wrapperClassName="w-full pl-9 pr-3"

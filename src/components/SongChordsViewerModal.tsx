@@ -619,7 +619,7 @@ export function SongChordsViewerModal({
                     setNotation((prev) => (prev === "ES" ? "EN" : "ES"))
                   }
                   className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer flex items-center gap-1"
-                  title="Cambiar entre Cifrado Latino (Do, Re, Mi) e Inglés (C, D, E)"
+                  title="Cambiar entre cifrado latino (Do, Re, Mi) e inglés (C, D, E)"
                 >
                   <span>Cifrado:</span>
                   <span className="text-[var(--acc)]">
@@ -637,7 +637,7 @@ export function SongChordsViewerModal({
                         ? "bg-[var(--ok)] text-[var(--on-ok)]"
                         : "bg-[var(--ink)]/10 text-[var(--ink)] hover:text-[var(--ink)]"
                     }`}
-                    title="Iniciar/Pausar Desfile Automático"
+                    title="Iniciar/Pausar desfile automático"
                   >
                     {isAutoScrolling ? (
                       <Pause className="w-3 h-3" />
@@ -776,7 +776,7 @@ export function SongChordsViewerModal({
                       </div>
                       <div>
                         <h3 className="text-lg font-bold text-[var(--ink)]">
-                          Ficha de Sustitución Urgente
+                          Ficha de sustitución urgente
                         </h3>
                         <p className="text-xs text-[var(--tentative)]/80 font-sans">
                           Resumen express para tocar el tema correctamente en
@@ -844,7 +844,7 @@ export function SongChordsViewerModal({
                         className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
                       >
                         <Edit3 className="w-4 h-4" />
-                        <span>Editar esta Ficha de Sustitución</span>
+                        <span>Editar esta ficha de sustitución</span>
                       </button>
                     </div>
                   </div>

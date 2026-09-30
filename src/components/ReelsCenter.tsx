@@ -2043,7 +2043,7 @@ export default function ReelsCenter({
             Medios
           </h1>
           <p className="text-sm font-sans text-[var(--ink-2)]">
-            Analítica Social y Prensa
+            Analítica social y prensa
           </p>
         </div>
         <div className="flex gap-2.5 items-center flex-wrap">
@@ -2127,7 +2127,7 @@ export default function ReelsCenter({
               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
           }`}
         >
-          Pipeline & Redactor de Copy
+          Pipeline y redactor de copy
         </button>
         <button
           id="tab-btn-analyzer"
@@ -2420,7 +2420,7 @@ export default function ReelsCenter({
                 <div className="space-y-4">
                   <div className="space-y-1.5">
                     <label className="block text-micro font-sans text-[var(--ink-2)]">
-                      Idea de Contenido o Anécdota
+                      Idea de contenido o anécdota
                     </label>
                     <Textarea
                       id="reels-idea-input"
@@ -2784,7 +2784,7 @@ export default function ReelsCenter({
                   </div>
                   <div className="space-y-1">
                     <label className="block text-micro font-sans text-[var(--ink-2)]">
-                      Límite de Duración Deseado
+                      Límite de duración deseado
                     </label>
                     <Select
                       size="sm"
@@ -3202,7 +3202,7 @@ export default function ReelsCenter({
                               <span
                                 className={`text-xs font-sans font-bold ${textTitle}`}
                               >
-                                Reanalizar y Refinar Fragmento con IA
+                                Reanalizar y refinar fragmento con IA
                               </span>
                             </div>
                             <button

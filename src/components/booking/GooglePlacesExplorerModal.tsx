@@ -1033,7 +1033,7 @@ export function GooglePlacesExplorerModal({
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-base font-bold font-display text-[var(--acc)]">
-                    Buscador de Salas & Nuevos Leads (Scout Descubridor)
+                    Buscador de Salas y Nuevos Leads (Scout Descubridor)
                   </h2>
                   <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] font-sans font-bold">
                     IA + Google Places
@@ -1081,7 +1081,7 @@ export function GooglePlacesExplorerModal({
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs font-bold font-display text-[var(--acc)]/70">
-                        Prospección Masiva de Campaña
+                        Prospección masiva de campaña
                       </span>
                       {activeCampaign && (
                         <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-sans">
@@ -1322,7 +1322,7 @@ export function GooglePlacesExplorerModal({
                     title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
                   >
                     <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" />
-                    <span>Radar Multi-Fuente (Wegow/Songkick/TM)</span>
+                    <span>Radar multi-Fuente (wegow/Songkick/TM)</span>
                   </button>
 
                   <button

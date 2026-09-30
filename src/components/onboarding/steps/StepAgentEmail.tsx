@@ -110,7 +110,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
                 type="text"
                 value={signatureCargo}
                 onChange={(e) => setSignatureCargo(e.target.value)}
-                placeholder="Ej. Cantante & Booking"
+                placeholder="Ej. Cantante y Booking"
                 className="w-full"
               />
             </div>

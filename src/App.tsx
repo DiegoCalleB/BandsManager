@@ -1249,7 +1249,7 @@ export default function App() {
                       ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
                       : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
-                  title="Gestionar Campañas de Booking"
+                  title="Gestionar campañas de booking"
                 >
                   <Target className="w-3.5 h-3.5" />
                   <span className="text-micro hidden xs:inline">
@@ -1825,7 +1825,7 @@ export default function App() {
                 <button
                   onClick={() => setShowCampaignModal(true)}
                   className="text-xs font-semibold text-[var(--acc-ink)] hover:brightness-90 flex items-center gap-1 cursor-pointer"
-                  title="Gestionar Campañas de Booking"
+                  title="Gestionar campañas de booking"
                 >
                   <Target className="w-3 h-3" />
                   <span>Configurar</span>

@@ -535,7 +535,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                       className="accent-amber-500"
                     />
                     <div>
-                      <div className="text-xs font-bold text-[var(--ink-2)]">Solo Mánager / Líder de la Banda (Recomendado)</div>
+                      <div className="text-xs font-bold text-[var(--ink-2)]">Solo mánager / líder de la banda (recomendado)</div>
                       <div className="text-xs text-[var(--ink-2)]">Las alertas de booking, cobros y borradores solo llegan a ti.</div>
                     </div>
                   </label>

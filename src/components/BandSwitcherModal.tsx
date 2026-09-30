@@ -1184,14 +1184,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     <div className="space-y-1.5">
                       <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                         <UserIcon className="w-3.5 h-3.5 text-[var(--acc)]" />
-                        <span>Tu Rol o Nombre en este Proyecto</span>
+                        <span>Tu rol o nombre en este proyecto</span>
                       </label>
                       <Input
                         size="sm"
                         type="text"
                         value={newBandLeaderName}
                         onChange={(e) => setNewBandLeaderName(e.target.value)}
-                        placeholder="Ej: Kurt Cobain (Guitarra & Mánager)"
+                        placeholder="Ej: Kurt Cobain (Guitarra y Mánager)"
                         className="w-full"
                       />
                     </div>
@@ -1766,7 +1766,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       </div>
                       <div>
                         <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans">
-                          Planes & Upgrade — {targetBandName}
+                          Planes y Upgrade — {targetBandName}
                         </h3>
                         <p className="text-micro text-[var(--ink-2)] font-sans">
                           Plan independiente para {targetBandName}

@@ -491,7 +491,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
               </div>
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-2">
-                  Afinador Pro Guitarra, Bajo & Ukelele
+                  Afinador Pro Guitarra, Bajo y Ukelele
                   <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink)]">
                     Precision Autocorrelation
                   </span>
@@ -764,7 +764,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                   <Volume2 className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  Cuerdas Objetivo & Tonos de Referencia:
+                  Cuerdas Objetivo y Tonos de Referencia:
                 </span>
                 <span className="text-micro text-[var(--ink-2)] font-sans">
                   Toca un tono para oírlo

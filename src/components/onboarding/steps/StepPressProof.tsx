@@ -42,7 +42,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Award className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Hitos, Reseñas de Prensa y Social Proof</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">Hitos, reseñas de prensa y social proof</h3>
       </div>
 
       <p className="text-xs text-[var(--ink-2)]">
@@ -88,7 +88,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
             type="text"
             value={cifrasComunidad}
             onChange={(e) => setCifrasComunidad(e.target.value)}
-            placeholder="Ej. +4.800 en Instagram & TikTok"
+            placeholder="Ej. +4.800 en Instagram y TikTok"
             className="w-full"
           />
         </div>
@@ -96,7 +96,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
 
       {/* Festivales & Salas donde han tocado */}
       <div>
-        <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Festivales, Salas o Concursos Destacados</label>
+        <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Festivales, salas o concursos destacados</label>
         <Input
           size="sm"
           type="text"

@@ -135,7 +135,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' 
                 : 'bg-[var(--sunken)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] '
             }`}
-            title="Cuadrícula Safe-Zone (TikTok & Reels)"
+            title="Cuadrícula Safe-Zone (TikTok y Reels)"
           >
             <Gauge className="w-3.5 h-3.5" />
           </button>
@@ -275,7 +275,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                       className="w-full h-full object-cover pointer-events-none"
                       style={{ border: 0 }}
                       allow="autoplay; encrypted-media"
-                      title="Highlight Clip Video Player"
+                      title="Highlight clip video player"
                     />
                   </div>
                 ) : (
@@ -287,7 +287,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                     }`}
                     style={{ border: 0 }}
                     allow="autoplay; encrypted-media"
-                    title="Highlight Clip Video Player"
+                    title="Highlight clip video player"
                   />
                 )}
                 {isBeatDropActive && (
@@ -404,7 +404,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
         {showSafeZone && (
           <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-3 border-2 border-dashed bg-[var(--acc)]/5">
             <div className="bg-[var(--alert)]/20 p-1 rounded text-center">
-              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona Header (Historias / Filtros)</span>
+              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona header (historias / filtros)</span>
             </div>
             <div className="flex justify-between items-center my-auto">
               <div className="p-1.5 border-dashed bg-[var(--ok)]/10 rounded max-w-[70%]">
@@ -416,7 +416,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               </div>
             </div>
             <div className="bg-[var(--alert)]/20 p-1 rounded text-center">
-              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona Inferior (Pie de foto y Audio)</span>
+              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona inferior (pie de foto y audio)</span>
             </div>
           </div>
         )}

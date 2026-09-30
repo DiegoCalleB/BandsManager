@@ -187,7 +187,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
           <div>
             <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5 font-display">
-              Copiloto de Cierre, Logística & Rentabilidad
+              Copiloto de cierre, logística y rentabilidad
             </h4>
             <p className="text-micro text-[var(--ink-2)] font-sans">Inteligencia financiera y táctica para no perder dinero en carretera</p>
           </div>
@@ -207,7 +207,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <div className="flex items-center gap-2">
             <Calculator className="w-4 h-4 text-[var(--ok)]" />
             <span className="text-xs font-bold font-sans text-[var(--ok)]">
-              1. Rentabilidad de Gira & Punto de Equilibrio (Cubrir Gastos)
+              1. Rentabilidad de Gira y Punto de Equilibrio (Cubrir Gastos)
             </span>
           </div>
           <span
@@ -308,7 +308,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
             <span className="text-xs font-bold font-sans text-[var(--acc)]">
-              2. Asistente Táctico de Cierre (Objeciones & Negociación)
+              2. Asistente Táctico de Cierre (Objeciones y Negociación)
             </span>
           </div>
           <span className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${sentimentAnalysis.color}`}>
@@ -352,7 +352,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-[var(--acc)]" />
             <span className="text-xs font-bold font-sans text-[var(--acc)]">
-              3. Generador de Hoja de Ruta (Roadbook) & Resumen de Acuerdo
+              3. Generador de Hoja de Ruta (Roadbook) y Resumen de Acuerdo
             </span>
           </div>
 

@@ -258,7 +258,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <div className="flex items-center gap-2">
               <Music2 className="w-5 h-5 text-[var(--acc)]" />
               <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">
-                Identidad Sonora, Género & Bandas Afines (FFO - For Fans Of)
+                Identidad Sonora, Género y Bandas Afines (FFO - For Fans Of)
               </h3>
             </div>
             <span className="text-micro font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] font-bold flex items-center gap-1.5">
@@ -551,9 +551,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
-                  Nombre / Cargo Mánager
+                  Nombre / cargo mánager
                 </label>
-                <Input size="sm" aria-label="Nombre / Cargo Mánager"
+                <Input size="sm" aria-label="Nombre / cargo mánager"
                   type="text"
                   value={config.contactoBooking?.nombre || ""}
                   onChange={(e) =>

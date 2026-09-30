@@ -522,7 +522,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 {/* Tiempo de prueba y canales */}
                 <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
                   <label className="text-xs font-semibold text-[var(--ink-2)] block">
-                    Prueba / Canales Mínimos
+                    Prueba / canales mínimos
                   </label>
                   <div className="flex gap-2">
                     <Input

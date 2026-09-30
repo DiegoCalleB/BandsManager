@@ -265,7 +265,7 @@ export function CalendarWidget({
                   ? "bg-[var(--acc)] text-[var(--on-acc)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
-              title="Vista Mensual Compacta"
+              title="Vista mensual compacta"
             >
               <CalendarDays className="w-3.5 h-3.5" />
               <span className="hidden md:inline text-micro">Mes</span>
@@ -278,7 +278,7 @@ export function CalendarWidget({
                   ? "bg-[var(--acc)] text-[var(--on-acc)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
-              title="Vista Agenda Semanal"
+              title="Vista agenda semanal"
             >
               <Grid className="w-3.5 h-3.5" />
               <span className="hidden md:inline text-micro">Semana</span>

@@ -242,7 +242,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}?start=${start}&end=${end}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=1&modestbranding=1&loop=1&playlist=${getYouTubeId(youtubeUrl)}&showinfo=0&rel=0&iv_load_policy=3`}
                       className="absolute w-[280%] h-full left-1/2 -translate-x-1/2 object-cover"
                       allow="autoplay; encrypted-media; picture-in-picture"
-                      title="Expanded Highlight Video Player"
+                      title="Expanded highlight video player"
                       style={{ border: 0 }}
                     />
                   </div>
@@ -360,7 +360,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
-                    Highlight de Alto Impacto
+                    Highlight de alto impacto
                   </span>
                   <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
                     {highlights[selectedHighlightIndex]?.range || 'N/D'}

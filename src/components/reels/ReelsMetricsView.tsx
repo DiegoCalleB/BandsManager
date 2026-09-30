@@ -1409,7 +1409,7 @@ export function ReelsMetricsView({
                   <div className="flex items-center gap-2 flex-wrap">
                     <BarChart3 className="w-4 h-4 text-[var(--tentative)]" />
                     <span className="text-xs font-sans font-bold text-[var(--ink-2)]">
-                      Curva de Crecimiento Multiplataforma
+                      Curva de crecimiento multiplataforma
                     </span>
                     <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
                       Escala Adaptativa: 0 -{" "}
@@ -1798,7 +1798,7 @@ export function ReelsMetricsView({
 
             {contentItems.length === 0 ? (
               <div className="py-8 text-center text-[var(--ink-2)] font-sans text-xs rounded-[var(--r-m)]">
-                Pulsa <b className="text-[var(--ok)]">“Ejecutar Radar Ahora”</b>{" "}
+                Pulsa <b className="text-[var(--ok)]">“Ejecutar radar ahora”</b>{" "}
                 para escanear y listar los vídeos y reproducciones de tus
                 canales.
               </div>
@@ -2850,7 +2850,7 @@ export function ReelsMetricsView({
             {/* Modal Footer */}
             <div className="p-4 flex justify-between items-center bg-[var(--surface)]/50">
               <span className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1">
-                OCR & Visión Asistida por Gemini 2.5
+                OCR y Visión Asistida por Gemini 2.5
               </span>
               <button
                 onClick={() => {

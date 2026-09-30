@@ -250,7 +250,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
                 }`}
               >
-                Booking & CRM
+                Booking y CRM
               </button>
 
               <button

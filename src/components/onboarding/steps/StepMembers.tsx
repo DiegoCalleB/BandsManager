@@ -43,7 +43,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <Users className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Miembros de la Banda & Invitaciones
+          Miembros de la banda e invitaciones
         </h3>
       </div>
 

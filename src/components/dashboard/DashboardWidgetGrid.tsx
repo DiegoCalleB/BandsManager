@@ -837,7 +837,7 @@ export function DashboardWidgetGrid({
                 </div>
                 <div>
                   <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">
-                    Catálogo de Widgets del Dashboard
+                    Catálogo de widgets del dashboard
                   </h3>
                   <p className="text-xs font-sans text-[var(--ink-2)]">
                     Añade los que quieras, uno detrás de otro — el catálogo no

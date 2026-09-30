@@ -517,7 +517,7 @@ export function CampaignManagerModal({
                       <span className="text-xs font-sans font-bold">
                         Añadir Fecha:
                       </span>
-                      <input aria-label="Fechas Objetivo (se marcarán en Calendario y pitches IA)"
+                      <input aria-label="Fechas objetivo (se marcarán en calendario y pitches IA)"
                         type="date"
                         onChange={(e) => {
                           handleAddDate(e.target.value);

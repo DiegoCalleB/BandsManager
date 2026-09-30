@@ -68,7 +68,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
       {/* Mensajes QR para Fans */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Gancho / Titular en el QR de Concierto</label>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Gancho / titular en el QR de concierto</label>
           <Input
             size="sm"
             type="text"
@@ -96,7 +96,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
       <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
         <div className="flex items-center justify-between">
           <h4 className="text-xs font-semibold text-[var(--acc)]/70 flex items-center gap-1.5">
-            Regalo para el Fan (Lead Magnet / Descarga Inmediata)
+            Regalo para el fan (lead magnet / descarga inmediata)
           </h4>
         </div>
 
@@ -187,7 +187,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
       <div className="pt-2 space-y-3">
         <h4 className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
           <DollarSign className="w-3.5 h-3.5 text-[var(--acc)]" />
-          Métodos de Pago & Propinas Directas (Sin Comisiones)
+          Métodos de Pago y Propinas Directas (Sin Comisiones)
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">

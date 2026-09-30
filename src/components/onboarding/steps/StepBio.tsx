@@ -34,14 +34,14 @@ export const StepBio: React.FC<StepBioProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <FileText className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Biografía, Slogan & Formato Directo
+          Biografía, slogan y formato directo
         </h3>
       </div>
 
       {/* Slogan */}
       <div>
         <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-          Slogan / Frase de Impacto
+          Slogan / frase de impacto
         </label>
         <Input
           type="text"
@@ -112,7 +112,7 @@ export const StepBio: React.FC<StepBioProps> = ({
 
         <div>
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-            Duración Típica del Show
+            Duración típica del show
           </label>
           <Input
             size="sm"

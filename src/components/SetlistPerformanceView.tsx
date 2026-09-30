@@ -699,7 +699,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     ? "bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]"
                     : "bg-[var(--sunken)]/80 hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
                 }`}
-                title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
+                title="Separar pistas de este tema con el motor de IA iris en modo Studio"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
                 <span className="hidden sm:inline">Separar con Iris</span>
@@ -771,7 +771,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           }`}
                         >
                           <Headphones className="w-4 h-4 shrink-0 text-[var(--ok)]" />
-                          <span>Sala de Ensayo (Pistas Iris)</span>
+                          <span>Sala de ensayo (pistas iris)</span>
                         </button>
                       ) : (
                         <button
@@ -1318,7 +1318,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-[var(--ink)]">
-                    Repertorio & Pistas Iris
+                    Repertorio y pistas iris
                   </h3>
                   <p className="text-xs text-[var(--ink-2)]">
                     {songsWithIrisCount} de {songsInSetlistCount} temas con
@@ -1456,7 +1456,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                             handleLaunchStudio(song);
                           }}
                           className="flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
-                          title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
+                          title="Separar pistas de este tema con el motor de IA iris en modo Studio"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
                           <span>Separar con Iris</span>

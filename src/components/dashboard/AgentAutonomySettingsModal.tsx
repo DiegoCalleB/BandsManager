@@ -1525,7 +1525,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                     <div className="space-y-1.5">
                       <label className="text-xs font-sans text-[var(--ink-2)] font-semibold block">
-                        Nombre / Cargo del Remitente
+                        Nombre / cargo del remitente
                       </label>
                       <Input
                         size="sm"
@@ -1543,13 +1543,13 @@ export const AgentAutonomySettingsModal: React.FC<
                       />
                       <p className="text-micro text-[var(--ink-2)]">
                         Nombre de la persona o departamento que firma las
-                        propuestas (ej: Booking & Management - {bandName}).
+                        propuestas (ej: Booking y Management - {bandName}).
                       </p>
                     </div>
 
                     <div className="space-y-1.5 sm:col-span-2">
                       <label className="text-xs font-sans text-[var(--ink-2)] font-semibold block">
-                        Email de respuesta (Reply-To) (Opcional)
+                        Email de respuesta (reply-To) (opcional)
                       </label>
                       <Input
                         size="sm"
@@ -1803,7 +1803,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     <Globe className="w-4 h-4 text-[var(--acc)]" /> Zona Horaria
                     de la Banda
                   </label>
-                  <Select size="sm" aria-label="Zona Horaria de la Banda"
+                  <Select size="sm" aria-label="Zona horaria de la banda"
                     disabled={!isAdmin}
                     value={timezone}
                     onChange={(e) => setTimezone(e.target.value)}
@@ -2004,7 +2004,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-[var(--ink-2)]" />
                     <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
-                      Agente Lector (Bandeja de Entrada)
+                      Agente lector (bandeja de entrada)
                     </h4>
                     <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ink-2)] font-bold">
                       Siempre activo
@@ -2038,7 +2038,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]" />
                         <div>
                           <div className="text-xs font-sans font-bold text-[var(--ink)]">
-                            Agente Scout (Búsqueda)
+                            Agente scout (búsqueda)
                           </div>
                           <div className="text-micro text-[var(--ink-2)] font-sans">
                             Rastreo de salas y contactos
@@ -2094,7 +2094,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--tentative)]" />
                         <div>
                           <div className="text-xs font-sans font-bold text-[var(--ink)]">
-                            Agente Lector (Clasificador)
+                            Agente lector (clasificador)
                           </div>
                           <div className="text-micro text-[var(--ink-2)] font-sans">
                             Revisa la bandeja cada minuto, sin horario
@@ -2164,7 +2164,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     </button>
                   ) : (
                     <span className="text-micro text-[var(--ink-2)] font-sans shrink-0 max-w-[160px] text-right">
-                      Búscalo en Gestión de Banda ➔ ADN de Tono
+                      Búscalo en gestión de banda ➔ ADN de tono
                     </span>
                   )}
                 </div>

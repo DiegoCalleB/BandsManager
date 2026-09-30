@@ -233,7 +233,7 @@ export const SongStudioStructureUploadModal: React.FC<
               </div>
               <div>
                 <h3 className="text-base font-bold">
-                  Subir Estructura de Canción
+                  Subir estructura de canción
                 </h3>
                 <p className="text-xs text-[var(--tentative)]/80 font-sans">
                   PDF, imagen o Word → IA extrae acordes

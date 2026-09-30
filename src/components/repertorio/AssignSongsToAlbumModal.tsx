@@ -163,7 +163,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Descripción / Notas de Lanzamiento</label>
+                <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Descripción / notas de lanzamiento</label>
                 <Textarea
                   rows={2}
                   value={description}

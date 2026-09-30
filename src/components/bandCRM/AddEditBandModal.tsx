@@ -427,9 +427,9 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 wrapperClassName="w-full"
               >
                 <option value="sin_contactar">Sin Contactar</option>
-                <option value="intercambio_propuesto">Intercambio Propuesto (Date Swap)</option>
+                <option value="intercambio_propuesto">Intercambio propuesto (date swap)</option>
                 <option value="concierto_agendado">Concierto Agendado</option>
-                <option value="colegas_aliados">Colegas / Aliados de Gira</option>
+                <option value="colegas_aliados">Colegas / aliados de gira</option>
                 <option value="pendiente_respuesta">Pendiente respuesta</option>
                 <option value="no_disponible">No Disponible</option>
               </Select>
@@ -500,7 +500,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Aforo habitual */}
             <div className="space-y-1">
-              <label className="block text-micro font-mono text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Aforo promedio que mueven</label>
               <Input
                 size="sm"
                 type="number"
@@ -528,7 +528,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
           {/* Notas de Colaboración */}
           <div className="space-y-1">
             <label className="block text-micro font-mono text-[var(--ink-2)]">
-              Notas de Colaboración / Salas propuestas / Intercambios
+              Notas de colaboración / salas propuestas / intercambios
             </label>
             <Textarea
               rows={3}

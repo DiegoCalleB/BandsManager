@@ -237,7 +237,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                     Comparador A/B: DeepSeek <ShowIcon inline emoji="🚀" />vs. Gemini <ShowIcon inline emoji="⚡" />
                   </h2>
                   <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
-                    A/B Testing + Costes Reales (€)
+                    A/B testing + costes reales (€)
                   </span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] font-sans">
@@ -551,7 +551,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                               <AlertCircle className="w-4 h-4 shrink-0 text-[var(--acc)] mt-0.5" />
                               <div>
                                 <p className="font-bold text-[var(--acc)]/70">
-                                  Aviso de Cuota / Saldo API
+                                  Aviso de cuota / saldo API
                                 </p>
                                 <p className="text-xs text-[var(--ink-2)] mt-0.5">
                                   {prop.error}

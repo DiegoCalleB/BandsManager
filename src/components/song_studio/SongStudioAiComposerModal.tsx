@@ -125,7 +125,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Asistente Compositor IA (Músico Virtual)</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Asistente compositor IA (músico virtual)</h3>
                 <p className="text-xs text-[var(--acc)] font-sans">Aporta arreglos, riffs y creatividad como un músico de sesión real</p>
               </div>
             </div>
@@ -159,10 +159,10 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   wrapperClassName="w-full"
                 >
                   <option value="Productor y Arreglista General">Productor y arreglista general</option>
-                  <option value="Guitarrista Líder (Solos y Riffs)">Guitarrista Líder (Solos y Riffs)</option>
+                  <option value="Guitarrista Líder (Solos y Riffs)">Guitarrista líder (solos y riffs)</option>
                   <option value="Bajista de Sesión (Grooves y Líneas)">Bajista de sesión (Grooves y líneas)</option>
-                  <option value="Teclista / Sintetizador (Atmósferas)">Teclista / Sintetizador (Atmósferas)</option>
-                  <option value="Letrista y Co-autor (Ganchos y Letra)">Letrista y Co-autor (Ganchos y Letra)</option>
+                  <option value="Teclista / Sintetizador (Atmósferas)">Teclista / sintetizador (atmósferas)</option>
+                  <option value="Letrista y Co-autor (Ganchos y Letra)">Letrista y Co-autor (ganchos y letra)</option>
                 </Select>
               </div>
 
@@ -173,11 +173,11 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   onChange={(e) => setObjetivoIdea(e.target.value)}
                   wrapperClassName="w-full"
                 >
-                  <option value="Nuevo Riff o Puente Instrumental">Nuevo Riff o Puente Instrumental</option>
+                  <option value="Nuevo Riff o Puente Instrumental">Nuevo riff o puente instrumental</option>
                   <option value="Variación Armónica para el Estribillo">Variación armónica para el estribillo</option>
                   <option value="Línea Melódica de Gancho (Hook)">Línea melódica de gancho (hook)</option>
-                  <option value="Corte Rítmico o Transición Sorpresa">Corte Rítmico o Transición Sorpresa</option>
-                  <option value="Outro Épico o Final de Canción">Outro Épico o Final de Canción</option>
+                  <option value="Corte Rítmico o Transición Sorpresa">Corte rítmico o transición sorpresa</option>
+                  <option value="Outro Épico o Final de Canción">Outro épico o final de canción</option>
                 </Select>
               </div>
             </div>

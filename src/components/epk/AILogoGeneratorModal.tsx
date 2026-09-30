@@ -97,7 +97,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <h3 className="font-bold text-base text-[var(--ink)] flex items-center gap-2">
                 Diseñador de Logotipos con IA
                 <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] ">
-                  Amateur & Indie
+                  Amateur e Indie
                 </span>
               </h3>
               <p className="text-xs text-[var(--ink-2)]">Genera una identidad visual profesional para {bandName || 'tu banda'}</p>

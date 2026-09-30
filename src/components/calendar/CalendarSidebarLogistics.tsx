@@ -1005,7 +1005,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setActiveStageSetlist(assignedSetlist);
                       }}
                       className="flex-1 py-2 px-3 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-ui cursor-pointer"
-                      title="Lanzar Modo Escenario / Vista de Directo para este evento"
+                      title="Lanzar modo escenario / vista de directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
                       <span>{selectedConcert ? 'Lanzar Modo Escenario' : 'Lanzar Modo Ensayo'}</span>
@@ -1121,7 +1121,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
                       <div className="flex items-center justify-between">
                         <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
-                          <ShowIcon inline emoji="📞" />Contacto Producción & Hotel
+                          <ShowIcon inline emoji="📞" />Contacto Producción y Hotel
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-micro">
@@ -1157,7 +1157,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                       <div>
                         <label className={`block text-micro font-mono ${textSub}`}>Catering y Menús</label>
-                        <Input size="sm" aria-label="Catering & Menús"
+                        <Input size="sm" aria-label="Catering y Menús"
                           type="text"
                           value={currentRb.cateringInfo}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, cateringInfo: e.target.value })}

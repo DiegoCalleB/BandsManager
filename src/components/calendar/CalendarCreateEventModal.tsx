@@ -327,7 +327,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Enlace de Videollamada (Opcional)</label>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Enlace de videollamada (opcional)</label>
                 <Input
                   size="sm"
                   type="text"

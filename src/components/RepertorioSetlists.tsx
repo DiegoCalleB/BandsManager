@@ -5187,7 +5187,7 @@ export default function RepertorioSetlists({
                             handleOpenStudioModal(song);
                           }}
                           className="shrink-0 cursor-pointer rounded-[var(--r-pill)] p-1.5 text-[var(--ink-2)] transition-ui hover:bg-[var(--sunken)] hover:text-[var(--ok)] active:scale-[0.97]"
-                          title="Abrir Studio de Grabación Multipista & Pistas"
+                          title="Abrir Studio de grabación multipista y pistas"
                         >
                           <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
                         </button>

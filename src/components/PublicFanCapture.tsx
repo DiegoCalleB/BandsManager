@@ -325,7 +325,7 @@ export const PublicFanCapture: React.FC = () => {
         </div>
 
         <footer className="text-center text-xs text-[var(--ink-2)]">
-          Bakandeya Official Community • Powered by BandManager
+          Bakandeya official community • powered by bandManager
         </footer>
       </div>
     </div>

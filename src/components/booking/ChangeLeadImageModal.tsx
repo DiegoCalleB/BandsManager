@@ -256,7 +256,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                   <span className="block font-bold text-xs text-[var(--acc)]/70">
                     {isSearching
                       ? "Buscando logo oficial..."
-                      : "Buscar Logo con IA & Google"}
+                      : "Buscar Logo con IA y Google"}
                   </span>
                   <span className="block text-xs text-[var(--acc)]/80 font-sans">
                     Encuentra fotos de recintos o favicons oficiales

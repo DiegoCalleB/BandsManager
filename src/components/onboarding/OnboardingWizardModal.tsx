@@ -1745,7 +1745,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 >
                   {currentStepIndex === activeSteps.length - 1 ? (
                     <>
-                      <span>Finalizar y Ver Portales</span>
+                      <span>Finalizar y ver portales</span>
                       <Check className="w-4 h-4" />
                     </>
                   ) : (

@@ -2104,7 +2104,7 @@ export default function CalendarView({
                     id="create-event-unified-btn"
                     onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
                     className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold'}`}
-                    title="Añadir Concierto, Ensayo o Reunión"
+                    title="Añadir concierto, ensayo o reunión"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>+ Evento</span>
@@ -2379,7 +2379,7 @@ export default function CalendarView({
                   <button
                     id="calendar-view-agenda-btn"
                     onClick={() => setCalendarViewMode('agenda')}
-                    title="Vista Agenda / Lista estilo Google Calendar"
+                    title="Vista agenda / lista estilo Google Calendar"
                     className={`px-2 py-0.5 text-micro font-sans font-bold rounded transition-ui cursor-pointer flex items-center gap-1 ${
                       calendarViewMode === 'agenda'
                         ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'

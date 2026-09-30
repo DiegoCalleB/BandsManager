@@ -143,7 +143,7 @@ test.describe('regresión visual — móvil', () => {
     // su clase.
     const overlayBox = await page.evaluate(() => {
       const heading = Array.from(document.querySelectorAll('h3')).find((h) =>
-        h.textContent?.includes('Catálogo de Widgets del Dashboard')
+        h.textContent?.includes('Catálogo de widgets del dashboard')
       );
       if (!heading) return null;
       let el: HTMLElement | null = heading;

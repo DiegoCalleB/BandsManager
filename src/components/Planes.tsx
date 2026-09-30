@@ -989,7 +989,7 @@ export const Planes: React.FC<PlanesProps> = ({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2">
           <div className="text-center sm:text-left">
             <h2 className="text-2xl sm:text-3xl font-black font-display text-[var(--ink)]">
-              Tabla Comparativa de Módulos
+              Tabla comparativa de módulos
             </h2>
             <p className="text-xs text-[var(--ink-2)]">
               Desglose detallado de capacidades técnicas, límites y herramientas

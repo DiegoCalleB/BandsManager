@@ -1449,7 +1449,7 @@ export default function BookingCRM({
                         ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
                         : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
                     }`}
-                    title="Herramientas, Scout, Excel y Agentes IA"
+                    title="Herramientas, scout, Excel y agentes IA"
                   >
                     <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                     <span>IA y Herramientas</span>
@@ -1644,7 +1644,7 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-[var(--acc)]" />
-                        <span>Hoja de Ruta (Roadbook) & Contratos</span>
+                        <span>Hoja de ruta (roadbook) y contratos</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
                     </button>
@@ -1845,7 +1845,7 @@ export default function BookingCRM({
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                         viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
-                      title="Vista en Detalles / Tabla"
+                      title="Vista en detalles / tabla"
                     >
                       <List className="w-3.5 h-3.5" />
                       <span className="hidden sm:inline">Detalles</span>

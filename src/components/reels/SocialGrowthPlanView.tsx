@@ -225,7 +225,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             >
               <div className="flex items-center gap-1.5 text-[var(--ink-2)] text-micro font-sans mb-1">
                 <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)]" />
-                <span>Cuello de Botella a Resolver</span>
+                <span>Cuello de botella a resolver</span>
               </div>
               <p className="text-xs font-sans text-[var(--ink)] leading-snug">
                 {archetype.primaryBottleneck}
@@ -237,7 +237,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             >
               <div className="flex items-center gap-1.5 text-[var(--ink-2)] text-micro font-sans mb-1">
                 <Target className="w-3.5 h-3.5 text-[var(--ok)]" />
-                <span>Objetivo de Conversión a Salas</span>
+                <span>Objetivo de conversión a salas</span>
               </div>
               <p className="text-xs font-sans text-[var(--ink-2)] leading-snug">
                 {archetype.conversionFocus}
@@ -611,7 +611,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
-                    Checklist de Tácticas & Plan de Acción para la Banda
+                    Checklist de Tácticas y Plan de Acción para la Banda
                   </h4>
                   <span className="text-micro font-sans text-[var(--ink-2)]">
                     Haz clic para marcar como hecha
@@ -689,7 +689,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 >
                   <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5 mb-3">
                     <Flame className="w-4 h-4" />
-                    Ganchos Líricos & Visuales de Alto Impacto
+                    Ganchos Líricos y Visuales de Alto Impacto
                   </h4>
                   <div className="space-y-2.5">
                     {currentChannel.hookFormulas.map((hook, hIdx) => (

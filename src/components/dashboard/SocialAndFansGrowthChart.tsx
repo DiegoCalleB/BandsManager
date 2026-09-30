@@ -559,7 +559,7 @@ export const SocialAndFansGrowthChart: React.FC<
                 title="Ir al gestor de comunidad, muro y capturas de fans"
               >
                 <Heart className="w-3.5 h-3.5 text-[var(--acc)]" />
-                <span>Muro & Base de Fans ({totalFans})</span>
+                <span>Muro y Base de Fans ({totalFans})</span>
               </button>
 
               <button

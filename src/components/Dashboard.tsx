@@ -789,7 +789,7 @@ export default function Dashboard({
               )
             }
             className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
-            title="Alternar entre Vista Esencial y Vista Completa"
+            title="Alternar entre vista esencial y vista completa"
           >
             <Eye className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
             <span>

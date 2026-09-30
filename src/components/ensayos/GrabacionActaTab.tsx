@@ -359,7 +359,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     <option value="riff">Riff / idea nueva</option>
                     <option value="seccion">Sección Específica</option>
                     <option value="voz_acta">
-                      Nota de Voz / Conclusiones
+                      Nota de voz / conclusiones
                     </option>
                     <option value="debate">Debate / comentarios</option>
                   </Select>

@@ -964,7 +964,7 @@ export default function Merchan({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--sunken)]">
                       <div className="sm:col-span-2 space-y-1">
                         <label className="text-micro font-sans text-[var(--ink-2)]">
-                          Nombre del Destinatario / Banda
+                          Nombre del destinatario / banda
                         </label>
                         <div className="relative">
                           <User className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />

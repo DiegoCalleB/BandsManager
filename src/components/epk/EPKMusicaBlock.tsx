@@ -64,7 +64,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview
-              (Landing de Fans & EPK)
+              (Landing de Fans y EPK)
             </h3>
             <span className="text-micro font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Player interactivo
@@ -518,7 +518,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               {/* Transporte y Hospedaje */}
               <div className="bg-[var(--sunken)]/60 rounded-[var(--r-m)] p-3.5 space-y-2">
                 <span className="text-xs font-semibold text-[var(--ink-2)] block">
-                  Transporte & Logística
+                  Transporte y Logística
                 </span>
                 <div className="flex gap-2">
                   <button

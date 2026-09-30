@@ -138,7 +138,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
               <div className="space-y-1.5">
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
-                  Género Musical Preferente
+                  Género musical preferente
                 </label>
                 <Input
                   size="sm"
@@ -162,19 +162,19 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                   wrapperClassName="w-full"
                 >
                   <option value="sala">
-                    Sala / Teatro (Booking directo)
+                    Sala / teatro (booking directo)
                   </option>
                   <option value="festival">
                     Festival (Escenarios / carteles)
                   </option>
                   <option value="ayuntamiento">
-                    Ayuntamiento / Fiestas Patronales
+                    Ayuntamiento / fiestas patronales
                   </option>
                   <option value="grupo">
                     Grupo / artista (Colaboración)
                   </option>
                   <option value="productora">
-                    Productora / Agencia Management
+                    Productora / agencia management
                   </option>
                   <option value="medio">
                     Medio de comunicación (Radio 3 / prensa / TV)
@@ -200,7 +200,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
             <div className="space-y-1.5 col-span-2">
               <label className="block text-micro font-sans text-[var(--ink-2)]">
-                Email de Contacto (Opcional, sino Scout lo buscará)
+                Email de contacto (opcional, sino scout lo buscará)
               </label>
               <Input
                 size="sm"

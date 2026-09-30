@@ -211,7 +211,7 @@ export default function Finanzas({
           <h4
             className={`text-xs font-sans ${"text-[var(--acc)]"}`}
           >
-            Finanzas & Libro Contable
+            Finanzas y libro contable
           </h4>
           <h2
             className={`text-xl font-bold font-display mt-1 ${textTitle}`}
@@ -427,7 +427,7 @@ export default function Finanzas({
                     className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}
                   >
                     <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
-                      Total Caché Contratado
+                      Total caché contratado
                     </span>
                     <h4 className="text-xl font-bold text-[var(--acc)]">
                       {totalConcertCache.toLocaleString("es-ES")}€
@@ -455,7 +455,7 @@ export default function Finanzas({
                     className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}
                   >
                     <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
-                      Beneficio Neto Acumulado
+                      Beneficio neto acumulado
                     </span>
                     <h4
                       className={`text-xl font-bold ${totalBeneficioNeto >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"}`}

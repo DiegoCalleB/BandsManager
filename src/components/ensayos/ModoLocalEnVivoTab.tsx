@@ -494,7 +494,7 @@ export function ModoLocalEnVivoTab({
                   ? "bg-[var(--acc)] text-[var(--on-acc)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
-              title="Vista Escenario & Estructura"
+              title="Vista escenario y estructura"
             >
               <Flame className="w-3.5 h-3.5" />
               <span className="hidden md:inline">Ficha</span>
@@ -610,7 +610,7 @@ export function ModoLocalEnVivoTab({
             {/* Song Structure Flow */}
             <div>
               <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-2.5">
-                Estructura & Dinámica del Tema
+                Estructura y dinámica del tema
               </label>
               <div className="flex flex-wrap items-center gap-2">
                 {estructuraPills.map((sec, sIdx) => (

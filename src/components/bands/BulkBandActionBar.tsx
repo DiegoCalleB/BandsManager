@@ -221,7 +221,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
               type="button"
               onClick={onBulkGeneratePitch}
               className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)]"}`}
-              title="Redactar propuestas de intercambio (Date Swaps) con IA"
+              title="Redactar propuestas de intercambio (date swaps) con IA"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span className="hidden sm:inline">Swaps IA</span>

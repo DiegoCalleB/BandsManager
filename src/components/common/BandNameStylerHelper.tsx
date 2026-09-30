@@ -52,7 +52,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
         title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
       >
         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-        <span>Estilos Rock & KoЯn</span>
+        <span>Estilos Rock y KoЯn</span>
       </button>
 
       {/* Floating Popover / Helper Modal */}

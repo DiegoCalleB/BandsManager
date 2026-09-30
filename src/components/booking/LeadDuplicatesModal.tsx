@@ -245,7 +245,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-base sm:text-lg font-bold tracking-tight text-[var(--ink)]">
-                    Detector y Limpiador de Duplicados
+                    Detector y limpiador de duplicados
                   </h2>
                   <span className="px-2 py-0.5 text-xs font-semibold rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
                     {duplicateGroups.length}{" "}

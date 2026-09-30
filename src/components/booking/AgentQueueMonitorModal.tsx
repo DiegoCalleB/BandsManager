@@ -248,7 +248,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
 
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col">
                 <div className="flex items-center justify-between text-[var(--ink-2)] text-xs font-semibold mb-1">
-                  <span>Con Error / Backoff</span>
+                  <span>Con error / backoff</span>
                   <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)]" />
                 </div>
                 <span className="text-2xl font-black text-[var(--alert)] font-mono">{stats.failed}</span>
@@ -350,7 +350,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
           <div className="px-6 py-3.5 border-t border-[var(--hair)]/10 bg-[var(--sunken)] flex items-center justify-between text-xs text-[var(--ink-2)]">
             <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
               <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" />
-              <span>Concurrencia atómica garantizada con Exponential Backoff</span>
+              <span>Concurrencia atómica garantizada con exponential backoff</span>
             </span>
             <button
               type="button"

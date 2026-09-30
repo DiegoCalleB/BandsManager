@@ -558,7 +558,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       type="button"
                       onClick={onOpenProfileWizard}
                       className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 cursor-pointer"
-                      title="Abrir Asistente de Inicio / Onboarding"
+                      title="Abrir asistente de inicio / onboarding"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span>Guía de inicio</span>
@@ -571,7 +571,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <div className="space-y-1">
               <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                 <UserIcon className="w-3.5 h-3.5 text-[var(--ok)]" />
-                <span>Nombre Completo / Apodo</span>
+                <span>Nombre completo / apodo</span>
               </label>
               <Input
                 size="sm"
@@ -690,7 +690,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <span>Cambiar logo</span>
                     </>
                   )}
-                  <input aria-label="Logo de tu Banda / Proyecto Musical Editar Avatar"
+                  <input aria-label="Logo de tu banda / proyecto musical editar avatar"
                     type="file"
                     accept="image/*"
                     className="hidden"
@@ -1040,7 +1040,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  <span>Idioma de la Plataforma / Language</span>
+                  <span>Idioma de la plataforma / language</span>
                 </span>
                 <span className="text-micro text-[var(--acc)]/80 font-normal font-sans">
                   Multilenguaje
@@ -1272,7 +1272,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <div className="flex items-center gap-2">
                     <BellRing className="w-4 h-4 text-[var(--acc)]" />
                     <span className="text-xs font-mono font-semibold">
-                      Notificaciones Push del Navegador
+                      Notificaciones push del navegador
                     </span>
                   </div>
                   <span className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1">
@@ -1291,7 +1291,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
               <div className="space-y-1">
                 <label className="text-xs font-sans text-[var(--ink-2)]">
-                  Nueva Contraseña Secreta
+                  Nueva contraseña secreta
                 </label>
                 <Input
                   size="sm"
@@ -1492,7 +1492,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-[var(--acc)] shrink-0" />
                       <span className="text-xs text-[var(--ink-2)] font-sans">
-                        Facturación & Tarjetas en Stripe:
+                        Facturación y Tarjetas en Stripe:
                       </span>
                     </div>
                     <button

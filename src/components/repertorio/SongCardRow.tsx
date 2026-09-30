@@ -341,7 +341,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                   ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--ink)]'
                   : 'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]'
               }`}
-              title="Abrir Studio de Grabación Multipista & Pistas"
+              title="Abrir Studio de grabación multipista y pistas"
             >
               <Headphones className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
               <span className="hidden xs:inline text-xs">Studio</span>

@@ -79,7 +79,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
-                placeholder="ej. Festival Rumba & Rock 2026"
+                placeholder="ej. Festival Rumba y Rock 2026"
                 className="w-full"
               />
             </div>
@@ -91,8 +91,8 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 onChange={(e) => setTipoFormato(e.target.value as any)}
                 wrapperClassName="w-full"
               >
-                <option value="festival">Festival (45-60m Caña Directa)</option>
-                <option value="sala_larga">Sala / Show Largo (90-120m)</option>
+                <option value="festival">Festival (45-60m caña directa)</option>
+                <option value="sala_larga">Sala / show largo (90-120m)</option>
                 <option value="acustico">Acústico / Íntimo</option>
                 <option value="ensayo">Ensayo / local</option>
                 <option value="otro">Otro formato</option>

@@ -474,7 +474,7 @@ export function FinancesChartWidget({
           </div>
           <div>
             <h3 className="text-sm font-bold font-display text-[var(--ink)]">
-              Evolución Financiera & Caché
+              Evolución financiera y caché
             </h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">
               Ingresos vs gastos de directos

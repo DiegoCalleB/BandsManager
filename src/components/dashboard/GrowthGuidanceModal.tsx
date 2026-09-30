@@ -238,7 +238,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   {/* Action Checklist */}
                   <div className="space-y-2">
                     <h5 className="text-xs font-mono font-bold text-[var(--ink-2)]">
-                      Acciones Recomendadas (Marca al completarlas)
+                      Acciones recomendadas (marca al completarlas)
                     </h5>
                     <div className="space-y-2">
                       {channelData.actionItems?.map((action) => {
@@ -279,7 +279,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   {channelData.hookFormulas && channelData.hookFormulas.length > 0 && (
                     <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-2">
                       <h5 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
-                        Fórmulas de Gancho Probadas
+                        Fórmulas de gancho probadas
                       </h5>
                       <ul className="space-y-1.5">
                         {channelData.hookFormulas.map((hook, hIdx) => (
@@ -305,7 +305,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
               <div className="space-y-2">
                 <h5 className="text-xs font-mono font-bold text-[var(--ink-2)]">
-                  Pilares de Crecimiento & Reparto de Esfuerzo
+                  Pilares de crecimiento y reparto de esfuerzo
                 </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {growthPlan.overallPillars?.map((p, idx) => (

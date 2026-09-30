@@ -1189,7 +1189,7 @@ export function OrdenDelDiaTab({
                   <Input
                     size="sm"
                     type="text"
-                    placeholder="Ej: Calentamiento & Sonido, Pausa café…"
+                    placeholder="Ej: Calentamiento y Sonido, Pausa café…"
                     value={blockTitulo}
                     onChange={(e) => setBlockTitulo(e.target.value)}
                     className="w-full"

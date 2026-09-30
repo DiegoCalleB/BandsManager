@@ -1430,7 +1430,7 @@ export const LiveConcertToAlbumModal: React.FC<
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-2xl font-black tracking-tight">
-                    Live Concert to Album Generator
+                    Live concert to album generator
                   </h2>
                   <span className="px-2 py-0.5 text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded-[var(--r-pill)]">
                     v2.0 Híbrido
@@ -1760,7 +1760,7 @@ export const LiveConcertToAlbumModal: React.FC<
                             ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
                             : "text-[var(--ink-2)] cursor-not-allowed opacity-50"
                         }`}
-                        title="Rehacer acción cancelada (Ctrl+Y / Ctrl+Shift+Z)"
+                        title="Rehacer acción cancelada (ctrl+Y / ctrl+Shift+Z)"
                       >
                         <Redo2 className="w-3.5 h-3.5" />
                         <span>Rehacer</span>
@@ -2078,7 +2078,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]  hover:bg-[var(--acc)]/30"
                                   : "bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30"
                               }`}
-                              title="Haz clic para alternar entre Canción y Speech/Presentación"
+                              title="Haz clic para alternar entre canción y speech/Presentación"
                             >
                               <option value="musica">
                                 Canción completa
@@ -2942,7 +2942,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       target="_blank"
                       rel="noreferrer"
                       className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1.5"
-                      title="Descargar mapa de índices para DAWs (Reaper, Cubase, Ableton, Logic)"
+                      title="Descargar mapa de índices para DAWs (reaper, Cubase, ableton, logic)"
                     >
                       <FileCode className="w-3.5 h-3.5 text-[var(--tentative)]" />{" "}
                       CUE Sheet (.cue)
@@ -3242,7 +3242,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]  hover:bg-[var(--acc)]/30"
                                   : "bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30"
                               }`}
-                              title="Haz clic para alternar entre Canción y Speech"
+                              title="Haz clic para alternar entre canción y speech"
                             >
                               {tr.type === "musica"
                                 ? "Canción"

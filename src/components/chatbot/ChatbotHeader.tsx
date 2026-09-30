@@ -92,7 +92,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-semibold transition-ui cursor-pointer active:scale-[0.97] ${
               'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] '
             }`}
-            title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
+            title="Configurar niveles de autonomía de los agentes (solo administradores)"
           >
             <Sliders className="w-3 h-3 text-[var(--acc)]" />
             <span>

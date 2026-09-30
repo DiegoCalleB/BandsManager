@@ -124,7 +124,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
           </div>
           <div>
             <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Repertorio y setlists</h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">Canciones e Iris Stems</p>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Canciones e iris stems</p>
           </div>
         </div>
         {onNavigate && (

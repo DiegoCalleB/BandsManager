@@ -607,7 +607,7 @@ export const ProfileCompletenessCard: React.FC<
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
                   <Bot className="w-4 h-4" /> 1. Agente Scout (Prospección de
-                  Salas & Recintos)
+                  Salas y Recintos)
                 </h4>
                 <p className="text-[var(--ink-2)] text-xs">
                   Busca automáticamente salas, festivales y fiestas patronales
@@ -619,7 +619,7 @@ export const ProfileCompletenessCard: React.FC<
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
                   <FileText className="w-4 h-4" /> 2. Agente Redactor (Pitches
-                  Personalizados & ADN de Tono)
+                  Personalizados y ADN de Tono)
                 </h4>
                 <p className="text-[var(--ink-2)] text-xs">
                   Redacta las propuestas de correo para las salas extrayendo
@@ -648,7 +648,7 @@ export const ProfileCompletenessCard: React.FC<
 
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
-                  <Mail className="w-4 h-4" /> 4. Agente Lector & Enviador
+                  <Mail className="w-4 h-4" /> 4. Agente Lector y Enviador
                   (Smart Gate)
                 </h4>
                 <p className="text-[var(--ink-2)] text-xs">

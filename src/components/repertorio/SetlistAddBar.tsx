@@ -233,7 +233,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                 <div className="pt-1">
                   <div className="flex items-center justify-between px-2 py-1">
                     <span className="text-micro text-[var(--ok)] font-semibold">
-                      Accesos Rápidos de la Banda
+                      Accesos rápidos de la banda
                     </span>
                     {!isAddingShortcut && (
                       <button
