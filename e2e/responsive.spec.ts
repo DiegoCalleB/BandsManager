@@ -124,3 +124,20 @@ test.describe('modales · hoja inferior', () => {
     expect(g!.top).toBeGreaterThanOrEqual(0);
   });
 });
+
+/**
+ * MENÚ MÓVIL — el panel del drawer tiene que ser lo que recibe los toques. Una vez el scrim (z-9999)
+ * quedó por encima del panel (z-10): el menú se veía oscurecido y tocar una opción cerraba el
+ * menú en vez de navegar. Se comprueba qué elemento hay realmente en un punto del panel.
+ */
+test('menú móvil · el drawer recibe los toques, no el scrim', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await abrirApp(page, true);
+  await page.locator('nav[class*="bottom-0"]').last().locator('> button').nth(4).click();
+  await page.waitForTimeout(700);
+  const dentroDelPanel = await page.evaluate(() => {
+    const el = document.elementFromPoint(120, 300);
+    return !!el?.closest('.w-\\[280px\\]');
+  });
+  expect(dentroDelPanel, 'en (120,300) debería estar el panel del drawer, no el scrim').toBe(true);
+});

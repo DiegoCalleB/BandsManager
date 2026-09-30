@@ -60,7 +60,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
         <>
           {/* Backdrop on mobile */}
           <div
-            className="fixed inset-0 z-[9999] bg-[var(--scrim)]/40 sm:hidden"
+            className="fixed inset-0 z-40 bg-[var(--scrim)]/40 sm:hidden"
             onClick={() => setIsOpen(false)}
           />
 
