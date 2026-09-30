@@ -78,7 +78,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tempo (BPM)</label>
-                <input
+                <input aria-label="Tempo (BPM)"
                   type="number"
                   min={60}
                   max={220}
@@ -89,7 +89,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
               </div>
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tonalidad (Raíz del Bajo)</label>
-                <select
+                <select aria-label="Tonalidad (Raíz del Bajo)"
                   value={genKey}
                   onChange={(e) => setGenKey(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"

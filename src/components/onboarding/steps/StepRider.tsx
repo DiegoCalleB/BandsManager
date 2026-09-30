@@ -68,7 +68,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)]">
             Canales de Mesa Mínimos
           </label>
-          <input
+          <input aria-label="Canales de Mesa Mínimos"
             type="number"
             min={4}
             max={64}

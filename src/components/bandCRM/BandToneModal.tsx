@@ -642,7 +642,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
                   <div>
                     <label className={labelClass}>Punto de Conexión</label>
-                    <textarea
+                    <textarea aria-label="Punto de Conexión"
                       rows={4}
                       className={`${inputClass} min-h-[90px] resize-y`}
                       value={draft.puntos_fuertes_para_conectar}
@@ -659,7 +659,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <label className={labelClass}>
                       Recomendación de Contacto
                     </label>
-                    <textarea
+                    <textarea aria-label="Recomendación de Contacto"
                       rows={4}
                       className={`${inputClass} min-h-[90px] resize-y`}
                       value={draft.recomendacion_pitch}

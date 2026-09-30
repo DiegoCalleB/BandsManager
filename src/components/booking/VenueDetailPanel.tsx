@@ -2482,7 +2482,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Nombre Sala / Espacio / Contacto
                     </label>
-                    <input
+                    <input aria-label="Nombre Sala / Espacio / Contacto"
                       type="text"
                       value={editedLeadInfo.nombre_sala || ""}
                       onChange={(e) =>
@@ -2499,7 +2499,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1">
                       Tipo / Categoría de Lead
                     </label>
-                    <select
+                    <select aria-label="Tipo / Categoría de Lead"
                       value={String(
                         editedLeadInfo.tipo || "sala",
                       ).toLowerCase()}
@@ -2895,7 +2895,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                         Inicio Festival (dd/mm/yyyy)
                       </label>
-                      <input
+                      <input aria-label="Inicio Festival (dd/mm/yyyy)"
                         type="date"
                         value={toIsoDateString(
                           editedLeadInfo.festival_start_date,
@@ -2913,7 +2913,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <label className="block text-micro font-sans text-[var(--acc)] mb-1">
                         <ShowIcon inline emoji="🎪" />Fin Festival (dd/mm/yyyy)
                       </label>
-                      <input
+                      <input aria-label="Fin Festival (dd/mm/yyyy)"
                         type="date"
                         value={toIsoDateString(
                           editedLeadInfo.festival_end_date,
@@ -5098,7 +5098,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🎟️" />Anticipada (€)
                 </label>
-                <input
+                <input aria-label="Anticipada (€)"
                   type="number"
                   value={simAnticipada}
                   onChange={(e) => setSimAnticipada(Number(e.target.value))}
@@ -5110,7 +5110,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🚪" />Puerta (€)
                 </label>
-                <input
+                <input aria-label="Puerta (€)"
                   type="number"
                   value={simTaquilla}
                   onChange={(e) => setSimTaquilla(Number(e.target.value))}
@@ -5122,7 +5122,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🏢" />Alquiler Sala (€)
                 </label>
-                <input
+                <input aria-label="Alquiler Sala (€)"
                   type="number"
                   value={simAlquiler}
                   onChange={(e) => setSimAlquiler(Number(e.target.value))}
@@ -5134,7 +5134,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   % Sala / Taquilla
                 </label>
-                <input
+                <input aria-label="% Sala / Taquilla"
                   type="number"
                   value={simPctSala}
                   onChange={(e) => setSimPctSala(Number(e.target.value))}
@@ -5146,7 +5146,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🚐" />Gastos Viaje/Prod (€)
                 </label>
-                <input
+                <input aria-label="Gastos Viaje/Prod (€)"
                   type="number"
                   value={simGastosProd}
                   onChange={(e) => setSimGastosProd(Number(e.target.value))}
@@ -5158,7 +5158,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🎸" />Nº Músicos
                 </label>
-                <input
+                <input aria-label="Nº Músicos"
                   type="number"
                   value={simNumMusicos}
                   onChange={(e) => setSimNumMusicos(Number(e.target.value))}

@@ -687,7 +687,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-[var(--sunken)]/30 ">
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Plataforma</label>
-                <select
+                <select aria-label="Plataforma"
                   value={selectedPlatform}
                   onChange={(e) => {
                     const nueva = e.target.value;
@@ -705,7 +705,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Fecha</label>
-                <input
+                <input aria-label="Fecha"
                   type="date"
                   value={scheduledDate}
                   onChange={(e) => setScheduledDate(e.target.value)}
@@ -715,7 +715,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Hora</label>
-                <input
+                <input aria-label="Hora"
                   type="time"
                   value={scheduledTime}
                   onChange={(e) => setScheduledTime(e.target.value)}

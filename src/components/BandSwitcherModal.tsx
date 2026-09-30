@@ -1032,7 +1032,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           ? "Guardando..."
                           : "Subir Imagen de Logo"}
                       </span>
-                      <input
+                      <input aria-label="Logotipo Oficial de la Banda"
                         type="file"
                         accept="image/*"
                         className="hidden"

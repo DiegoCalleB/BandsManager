@@ -98,7 +98,7 @@ export const StepBio: React.FC<StepBioProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
             Músicos en Escenario
           </label>
-          <input
+          <input aria-label="Músicos en Escenario"
             type="number"
             min={1}
             max={25}

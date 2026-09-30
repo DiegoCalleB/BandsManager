@@ -127,7 +127,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Tipo de Trabajo</label>
-                  <select
+                  <select aria-label="Tipo de Trabajo"
                     value={albumType}
                     onChange={(e) => setAlbumType(e.target.value)}
                     className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
@@ -152,7 +152,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                     />
                     <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 flex items-center gap-1 text-xs">
                       <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
-                      <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                      <input aria-label="Imagen de Portada (Upload o URL)" type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                     </label>
                   </div>
                 </div>

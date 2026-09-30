@@ -110,7 +110,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Tipo de Elemento</label>
-              <select
+              <select aria-label="Tipo de Elemento"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
                 className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}

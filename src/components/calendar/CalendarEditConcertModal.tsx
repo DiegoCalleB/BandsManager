@@ -99,7 +99,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Ciudad</label>
-                <input
+                <input aria-label="Ciudad"
                   type="text"
                   value={editDraft.ciudad}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, ciudad: e.target.value } : prev))}
@@ -111,7 +111,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               </div>
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Sala / Evento</label>
-                <input
+                <input aria-label="Sala / Evento"
                   type="text"
                   value={editDraft.sala}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, sala: e.target.value } : prev))}
@@ -125,7 +125,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
 
             <div>
               <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Fecha</label>
-              <input
+              <input aria-label="Fecha"
                 type="date"
                 value={editDraft.fecha}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
@@ -154,7 +154,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Caché (€)</label>
-                <input
+                <input aria-label="Caché (€)"
                   type="number"
                   value={editDraft.cache}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, cache: Number(e.target.value) } : prev))}
@@ -165,7 +165,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               </div>
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Estado de Pago</label>
-                <select
+                <select aria-label="Estado de Pago"
                   value={editDraft.estado_pago}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
                   className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
@@ -186,7 +186,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   <span>Repertorio / Setlist</span>
                 </span>
               </label>
-              <select
+              <select aria-label="Repertorio / Setlist"
                 value={editDraft.setlistId || ''}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
                 className={`w-full px-2 py-1.5 text-micro rounded-[var(--r-m)] outline-none font-mono ${
@@ -220,7 +220,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
 
             <div>
               <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Notas y Logística</label>
-              <textarea
+              <textarea aria-label="Notas y Logística"
                 value={editDraft.notas || ''}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                 rows={2}

@@ -252,7 +252,7 @@ Firmado en conformidad por ambas partes.`;
                 <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Fecha Evento</label>
-                    <input
+                    <input aria-label="Fecha Evento"
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
@@ -261,7 +261,7 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Salida Furgoneta</label>
-                    <input
+                    <input aria-label="Salida Furgoneta"
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
@@ -270,7 +270,7 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Prueba Sonido</label>
-                    <input
+                    <input aria-label="Prueba Sonido"
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
@@ -279,7 +279,7 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Inicio Show</label>
-                    <input
+                    <input aria-label="Inicio Show"
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
@@ -391,7 +391,7 @@ Firmado en conformidad por ambas partes.`;
                 <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Régimen Económico</label>
-                    <select
+                    <select aria-label="Régimen Económico"
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
                       className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
@@ -418,7 +418,7 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Reparto Banda (%)</label>
-                    <input
+                    <input aria-label="Reparto Banda (%)"
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
@@ -427,7 +427,7 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Aforo Sala</label>
-                    <input
+                    <input aria-label="Aforo Sala"
                       type="number"
                       value={venueCapacity}
                       disabled

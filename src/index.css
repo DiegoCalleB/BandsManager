@@ -371,15 +371,20 @@ textarea::-webkit-resizer {
   }
 }
 
-/* Zona táctil ≥ 44px sin cambiar el diseño: la ampliación es invisible. Solo en dispositivos
-   táctiles y solo para controles que no son ya contenedor posicionado. */
+/* Zona de pulsación ampliada sin cambiar el diseño: la ampliación es invisible. Táctil: +8px por
+   lado (≥ 44px con el control típico de 28px). Ratón: +4px por lado, que sube los iconos de 22px y
+   los enlaces de 16px de alto al mínimo de 24px de WCAG 2.2 (2.5.8). Solo para controles que no
+   son ya contenedor posicionado. */
+button:where(:not(.absolute):not(.fixed):not(.sticky):not(.relative):not([data-no-hit])) {
+  position: relative;
+}
+button:where(:not([data-no-hit]))::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
 @media (pointer: coarse) {
-  button:where(:not(.absolute):not(.fixed):not(.sticky):not(.relative):not([data-no-hit])) {
-    position: relative;
-  }
   button:where(:not([data-no-hit]))::after {
-    content: "";
-    position: absolute;
     inset: -8px;
   }
 }

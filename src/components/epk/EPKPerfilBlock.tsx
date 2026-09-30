@@ -549,7 +549,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
                   Nombre / Cargo Mánager
                 </label>
-                <input
+                <input aria-label="Nombre / Cargo Mánager"
                   type="text"
                   value={config.contactoBooking?.nombre || ""}
                   onChange={(e) =>
@@ -569,7 +569,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
                   Email de Contacto
                 </label>
-                <input
+                <input aria-label="Email de Contacto"
                   type="email"
                   value={config.contactoBooking?.email || ""}
                   onChange={(e) =>
@@ -589,7 +589,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
                   Teléfono Mánager
                 </label>
-                <input
+                <input aria-label="Teléfono Mánager"
                   type="text"
                   value={config.contactoBooking?.telefono || ""}
                   onChange={(e) =>

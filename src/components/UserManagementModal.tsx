@@ -790,7 +790,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                     Rol en la App
                   </label>
-                  <select
+                  <select aria-label="Rol en la App"
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as UserRole)}
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
@@ -889,7 +889,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                     Rol en esta Banda
                   </label>
-                  <select
+                  <select aria-label="Rol en esta Banda"
                     value={assocRole}
                     onChange={(e) => setAssocRole(e.target.value as UserRole)}
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}

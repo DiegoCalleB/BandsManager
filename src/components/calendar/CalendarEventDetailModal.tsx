@@ -1018,7 +1018,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
                       <div>
                         <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">Rol / Cargo</label>
-                        <select
+                        <select aria-label="Rol / Cargo"
                           value={newContactRol}
                           onChange={(e) => setNewContactRol(e.target.value)}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
@@ -1398,7 +1398,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                             <div>
                               <label className={`block text-micro mb-1 ${textSub}`}>Categoría</label>
-                              <select
+                              <select aria-label="Categoría"
                                 value={newMerchCategoria}
                                 onChange={(e) => setNewMerchCategoria(e.target.value as any)}
                                 className={`w-full px-2 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
@@ -1429,7 +1429,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             <div className="grid grid-cols-2 gap-1.5">
                               <div>
                                 <label className={`block text-micro mb-1 ${textSub}`}>Precio (€)</label>
-                                <input
+                                <input aria-label="Precio (€)"
                                   type="number"
                                   step="0.5"
                                   min="0"
@@ -1442,7 +1442,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               </div>
                               <div>
                                 <label className={`block text-micro mb-1 ${textSub}`}>Furgón (uds)</label>
-                                <input
+                                <input aria-label="Furgón (uds)"
                                   type="number"
                                   min="0"
                                   value={newMerchStockInicial}

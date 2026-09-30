@@ -106,7 +106,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🎟️" />Anticipada (€)</label>
-              <input
+              <input aria-label="Anticipada (€)"
                 type="number"
                 value={anticipada}
                 onChange={(e) => setAnticipada(Number(e.target.value))}
@@ -116,7 +116,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🚪" />Puerta (€)</label>
-              <input
+              <input aria-label="Puerta (€)"
                 type="number"
                 value={taquilla}
                 onChange={(e) => setTaquilla(Number(e.target.value))}
@@ -126,7 +126,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🏢" />Alquiler Sala (€)</label>
-              <input
+              <input aria-label="Alquiler Sala (€)"
                 type="number"
                 value={alquiler}
                 onChange={(e) => setAlquiler(Number(e.target.value))}
@@ -136,7 +136,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium">% Comisión Sala</label>
-              <input
+              <input aria-label="% Comisión Sala"
                 type="number"
                 value={pctSala}
                 onChange={(e) => setPctSala(Number(e.target.value))}
@@ -146,7 +146,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🚐" />Gastos Viaje (€)</label>
-              <input
+              <input aria-label="Gastos Viaje (€)"
                 type="number"
                 value={gastosViaje}
                 onChange={(e) => setGastosViaje(Number(e.target.value))}
@@ -156,7 +156,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🎸" />Nº Músicos</label>
-              <input
+              <input aria-label="Nº Músicos"
                 type="number"
                 value={numMusicos}
                 onChange={(e) => setNumMusicos(Number(e.target.value))}

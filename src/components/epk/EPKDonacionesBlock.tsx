@@ -567,7 +567,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                             <label className="block text-micro text-[var(--acc)]/80 font-semibold mb-1.5">
                               {f.etiqueta} — {idioma.label}
                             </label>
-                            <textarea
+                            <textarea aria-label="—"
                               value={traduccion?.[f.campo] || ""}
                               onChange={(e) =>
                                 editarTraduccion(

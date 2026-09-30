@@ -530,7 +530,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   {formattedTotalDuration})
                 </span>
               </label>
-              <select
+              <select aria-label="Seleccionar Álbum / Disco ( )"
                 value={selectedAlbum}
                 onChange={(e) => setSelectedAlbum(e.target.value)}
                 className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui bg-[var(--sunken)] text-[var(--ink)]`}

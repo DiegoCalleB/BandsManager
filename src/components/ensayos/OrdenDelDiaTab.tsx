@@ -1195,7 +1195,7 @@ export function OrdenDelDiaTab({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Duración Estimada (Minutos)
                   </label>
-                  <input
+                  <input aria-label="Duración Estimada (Minutos)"
                     type="number"
                     min="1"
                     max="120"

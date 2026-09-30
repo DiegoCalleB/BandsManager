@@ -366,7 +366,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <Upload className="w-3.5 h-3.5 text-[var(--acc)]" />
                     )}
                     <span>{isUploadingLogo ? 'Subiendo...' : 'Subir Imagen'}</span>
-                    <input
+                    <input aria-label="Icono o Logo / Foto de la Banda"
                       type="file"
                       accept="image/*"
                       className="hidden"
@@ -418,7 +418,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {/* Estado de la Relación */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Estado de la Relación</label>
-              <select
+              <select aria-label="Estado de la Relación"
                 value={formStatus}
                 onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
                 className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
@@ -447,7 +447,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {/* Último Contacto */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Fecha de Último Contacto</label>
-              <input
+              <input aria-label="Fecha de Último Contacto"
                 type="date"
                 value={formLastContact}
                 onChange={(e) => setFormLastContact(e.target.value)}

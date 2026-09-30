@@ -1799,7 +1799,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     <Globe className="w-4 h-4 text-[var(--acc)]" /> Zona Horaria
                     de la Banda
                   </label>
-                  <select
+                  <select aria-label="Zona Horaria de la Banda"
                     disabled={!isAdmin}
                     value={timezone}
                     onChange={(e) => setTimezone(e.target.value)}

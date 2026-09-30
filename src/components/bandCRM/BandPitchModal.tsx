@@ -62,7 +62,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-micro font-sans">
               <div>
                 <label className="block text-micro text-[var(--ink-2)] mb-1">Ciudad de Bakandeya</label>
-                <select
+                <select aria-label="Ciudad de Bakandeya"
                   value={proposedBakandeyaCity}
                   onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
                   className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
@@ -75,7 +75,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
 
               <div>
                 <label className="block text-micro text-[var(--ink-2)] mb-1">Sala propuesta en Madrid/Sevilla</label>
-                <input
+                <input aria-label="Sala propuesta en Madrid/Sevilla"
                   type="text"
                   value={proposedVenueBakandeya}
                   onChange={(e) => setProposedVenueBakandeya(e.target.value)}
@@ -85,7 +85,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
 
               <div>
                 <label className="block text-micro text-[var(--ink-2)] mb-1">Periodo / Mes Estimado</label>
-                <input
+                <input aria-label="Periodo / Mes Estimado"
                   type="text"
                   value={proposedMonth}
                   onChange={(e) => setProposedMonth(e.target.value)}

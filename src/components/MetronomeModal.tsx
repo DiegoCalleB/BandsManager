@@ -252,7 +252,7 @@ export function MetronomeModal({
                   <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
                   Sincronizar BPM desde Repertorio:
                 </label>
-                <select
+                <select aria-label="Sincronizar BPM desde Repertorio"
                   value={selectedSongId}
                   onChange={handleSelectSong}
                   className="w-full bg-[var(--bg)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none "

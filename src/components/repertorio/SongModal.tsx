@@ -225,7 +225,7 @@ export function SongModal({
                     <Disc3 className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span>Álbum / Disco</span>
                   </label>
-                  <select
+                  <select aria-label="Álbum / Disco"
                     value={selectedAlbum}
                     onChange={(e) => setSelectedAlbum(e.target.value)}
                     className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${'bg-[var(--sunken)] text-[var(--ok)]'}`}
@@ -315,7 +315,7 @@ export function SongModal({
 
                 <div>
                   <label className="block text-[var(--ink-2)] text-xs font-semibold mb-1">Energía</label>
-                  <select
+                  <select aria-label="Energía"
                     name="energia"
                     defaultValue={energiaDefault}
                     className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
@@ -372,7 +372,7 @@ export function SongModal({
 
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Tipo de Tema</label>
-                        <select
+                        <select aria-label="Tipo de Tema"
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
@@ -390,7 +390,7 @@ export function SongModal({
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Estado de Madurez</label>
-                        <select
+                        <select aria-label="Estado de Madurez"
                           name="estadoTema"
                           defaultValue={editingSong?.estadoTema || 'listo'}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${

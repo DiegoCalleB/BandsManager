@@ -694,7 +694,7 @@ export function BulkAlbumAudioUploaderModal({
                 <label className="text-xs font-sans font-bold text-[var(--ink-2)]">
                   Portada del Disco
                 </label>
-                <input
+                <input aria-label="Portada del Disco"
                   ref={coverInputRef}
                   type="file"
                   accept="image/*"

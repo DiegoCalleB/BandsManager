@@ -749,7 +749,7 @@ export default function Finanzas({
                       <label className="text-[var(--ink-2)] font-semibold">
                         Gasolina & Peajes (€)
                       </label>
-                      <input
+                      <input aria-label="Gasolina & Peajes (€)"
                         type="number"
                         value={editingGasolina}
                         onChange={(e) => setEditingGasolina(e.target.value)}
@@ -760,7 +760,7 @@ export default function Finanzas({
                       <label className="text-[var(--ink-2)] font-semibold">
                         Dietas / Comidas (€)
                       </label>
-                      <input
+                      <input aria-label="Dietas / Comidas (€)"
                         type="number"
                         value={editingDietas}
                         onChange={(e) => setEditingDietas(e.target.value)}
@@ -774,7 +774,7 @@ export default function Finanzas({
                       <label className="text-[var(--ink-2)] font-semibold">
                         Alquiler Furgoneta / Backline (€)
                       </label>
-                      <input
+                      <input aria-label="Alquiler Furgoneta / Backline (€)"
                         type="number"
                         value={editingAlquiler}
                         onChange={(e) => setEditingAlquiler(e.target.value)}
@@ -785,7 +785,7 @@ export default function Finanzas({
                       <label className="text-[var(--ink-2)] font-semibold">
                         Alojamiento / Hoteles (€)
                       </label>
-                      <input
+                      <input aria-label="Alojamiento / Hoteles (€)"
                         type="number"
                         value={editingAlojamiento}
                         onChange={(e) => setEditingAlojamiento(e.target.value)}
@@ -798,7 +798,7 @@ export default function Finanzas({
                     <label className="text-[var(--ink-2)] font-semibold">
                       Otros Gastos Extra (€)
                     </label>
-                    <input
+                    <input aria-label="Otros Gastos Extra (€)"
                       type="number"
                       value={editingOtros}
                       onChange={(e) => setEditingOtros(e.target.value)}

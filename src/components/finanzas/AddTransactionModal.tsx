@@ -103,7 +103,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
 
             <div>
               <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Categoría</label>
-              <select
+              <select aria-label="Categoría"
                 value={categoria}
                 onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
                 className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
@@ -146,7 +146,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
               </div>
               <div>
                 <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Fecha</label>
-                <input
+                <input aria-label="Fecha"
                   type="date"
                   required
                   value={fecha}

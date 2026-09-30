@@ -221,7 +221,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 <Calendar className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Fecha del Concierto:
               </label>
-              <input
+              <input aria-label="Fecha del Concierto"
                 type="date"
                 value={concertDate}
                 onChange={(e) => setConcertDate(e.target.value)}

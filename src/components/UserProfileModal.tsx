@@ -688,7 +688,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <span>Cambiar Logo</span>
                     </>
                   )}
-                  <input
+                  <input aria-label="Logo de tu Banda / Proyecto Musical Editar Avatar"
                     type="file"
                     accept="image/*"
                     className="hidden"

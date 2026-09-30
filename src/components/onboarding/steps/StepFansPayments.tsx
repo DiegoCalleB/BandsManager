@@ -125,7 +125,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
         {/* Subida del archivo de regalo */}
         <div className="pt-2 space-y-2">
           <label className="block text-xs font-medium text-[var(--ink-2)]">Archivo descargable de regalo (MP3, WAV, PDF, ZIP)</label>
-          <input type="file" ref={leadMagnetInputRef} onChange={onLeadMagnetUpload} accept="audio/*,.pdf,.zip,image/*" className="hidden" />
+          <input aria-label="Archivo descargable de regalo (MP3, WAV, PDF, ZIP)" type="file" ref={leadMagnetInputRef} onChange={onLeadMagnetUpload} accept="audio/*,.pdf,.zip,image/*" className="hidden" />
 
           {fanRewardLink ? (
             <div className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/10">

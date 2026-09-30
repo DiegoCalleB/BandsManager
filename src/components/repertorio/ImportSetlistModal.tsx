@@ -313,7 +313,7 @@ export function ImportSetlistModal({
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
                   Nombre del repertorio
                 </label>
-                <input
+                <input aria-label="Nombre del repertorio"
                   type="text"
                   value={setlistName}
                   onChange={(e) => setSetlistName(e.target.value)}

@@ -146,7 +146,7 @@ export function ConvocarEnsayoModal({
                 <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                   Fecha <span className="text-[var(--acc)]">*</span>
                 </label>
-                <input
+                <input aria-label="Fecha"
                   type="date"
                   required
                   value={fecha}
@@ -158,7 +158,7 @@ export function ConvocarEnsayoModal({
                 <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                   Hora de Inicio <span className="text-[var(--acc)]">*</span>
                 </label>
-                <input
+                <input aria-label="Hora de Inicio"
                   type="time"
                   required
                   value={hora}
@@ -191,7 +191,7 @@ export function ConvocarEnsayoModal({
               <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Repertorio a Repasar (Opcional)</label>
               <div className="relative">
                 <Disc3 className="w-3.5 h-3.5 absolute left-3 top-3 text-[var(--acc)]" />
-                <select
+                <select aria-label="Repertorio a Repasar (Opcional)"
                   value={setlistId}
                   onChange={(e) => setSetlistId(e.target.value)}
                   className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs outline-none cursor-pointer"
@@ -227,7 +227,7 @@ export function ConvocarEnsayoModal({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Hora Fin Estimada</label>
-                      <input
+                      <input aria-label="Hora Fin Estimada"
                         type="time"
                         value={horaFin}
                         onChange={(e) => setHoraFin(e.target.value)}
@@ -236,7 +236,7 @@ export function ConvocarEnsayoModal({
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Duración (Minutos)</label>
-                      <input
+                      <input aria-label="Duración (Minutos)"
                         type="number"
                         min="15"
                         max="480"

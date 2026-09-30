@@ -115,7 +115,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       </span>
                     )}
                   </label>
-                  <select
+                  <select aria-label="Elegir tema de vuestro repertorio"
                     value={config.audioPreview?.cancionId || ""}
                     onChange={(e) => {
                       const selectedId = e.target.value;

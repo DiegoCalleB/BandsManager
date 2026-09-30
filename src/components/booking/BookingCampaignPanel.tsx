@@ -145,7 +145,7 @@ export default function BookingCampaignPanel({
             <label className="block text-xs text-[var(--ink-2)] font-medium mb-1">
               Nombre
             </label>
-            <input
+            <input aria-label="Nombre"
               type="text"
               value={campaignForm.name}
               onChange={(e) =>
@@ -176,7 +176,7 @@ export default function BookingCampaignPanel({
               Aforo Objetivo
             </label>
             <div className="flex items-center gap-2">
-              <input
+              <input aria-label="Aforo Objetivo"
                 type="number"
                 value={campaignForm.minCapacity}
                 onChange={(e) =>
@@ -188,7 +188,7 @@ export default function BookingCampaignPanel({
                 className="w-full text-sm rounded-[var(--r-s)] focus:ring-black"
               />
               <span className="text-[var(--ink-2)]">-</span>
-              <input
+              <input aria-label="Aforo Objetivo"
                 type="number"
                 value={campaignForm.maxCapacity}
                 onChange={(e) =>
@@ -251,7 +251,7 @@ export default function BookingCampaignPanel({
                 <span className="text-xs font-semibold shrink-0">
                   Añadir Fecha:
                 </span>
-                <input
+                <input aria-label="Fechas Clave del Concierto"
                   type="date"
                   onChange={(e) => {
                     if (
@@ -297,7 +297,7 @@ export default function BookingCampaignPanel({
                 <label className="block text-xs text-[var(--ink-2)] mb-1">
                   Desde
                 </label>
-                <input
+                <input aria-label="Desde"
                   type="date"
                   value={campaignForm.campaignStartDate || ""}
                   onChange={(e) =>
@@ -313,7 +313,7 @@ export default function BookingCampaignPanel({
                 <label className="block text-xs text-[var(--ink-2)] mb-1">
                   Hasta
                 </label>
-                <input
+                <input aria-label="Hasta"
                   type="date"
                   value={campaignForm.campaignEndDate || ""}
                   onChange={(e) =>

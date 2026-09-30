@@ -93,7 +93,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[var(--ink-2)] mb-1 font-semibold">Rol del Remitente</label>
-                <select
+                <select aria-label="Rol del Remitente"
                   value={simulationRole}
                   onChange={(e) => {
                     const role = e.target.value as 'sala' | 'banda';
@@ -109,7 +109,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
 
               <div>
                 <label className="block text-[var(--ink-2)] mb-1 font-semibold">Escenario</label>
-                <select
+                <select aria-label="Escenario"
                   value={simulationScenario}
                   onChange={(e) => setSimulationScenario(e.target.value)}
                   className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] outline-none"
@@ -124,7 +124,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
 
             <div>
               <label className="block text-[var(--ink-2)] mb-1 font-semibold">Nombre del Remitente</label>
-              <input
+              <input aria-label="Nombre del Remitente"
                 type="text"
                 value={simulationSenderName}
                 onChange={(e) => setSimulationSenderName(e.target.value)}

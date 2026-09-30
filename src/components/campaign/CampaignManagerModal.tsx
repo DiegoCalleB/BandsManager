@@ -441,7 +441,7 @@ export function CampaignManagerModal({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Aforo Mínimo (pax)
                   </label>
-                  <input
+                  <input aria-label="Aforo Mínimo (pax)"
                     type="number"
                     value={formData.minCapacity || 0}
                     onChange={(e) =>
@@ -457,7 +457,7 @@ export function CampaignManagerModal({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Aforo Máximo (pax)
                   </label>
-                  <input
+                  <input aria-label="Aforo Máximo (pax)"
                     type="number"
                     value={formData.maxCapacity || 0}
                     onChange={(e) =>
@@ -515,7 +515,7 @@ export function CampaignManagerModal({
                       <span className="text-xs font-sans font-bold">
                         Añadir Fecha:
                       </span>
-                      <input
+                      <input aria-label="Fechas Objetivo (se marcarán en Calendario y pitches IA)"
                         type="date"
                         onChange={(e) => {
                           handleAddDate(e.target.value);

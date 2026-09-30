@@ -4114,7 +4114,7 @@ export default function SongStudioModal({
 
                       <div>
                         <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Sección del Tema *</label>
-                        <select
+                        <select aria-label="Sección del Tema"
                           value={ideaSection}
                           onChange={(e) => setIdeaSection(e.target.value as any)}
                           className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none"
@@ -4131,7 +4131,7 @@ export default function SongStudioModal({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Aportado por (Tu Nombre)</label>
-                        <input
+                        <input aria-label="Aportado por (Tu Nombre)"
                           type="text"
                           value={ideaUploader}
                           onChange={(e) => setIdeaUploader(e.target.value)}
@@ -4329,7 +4329,7 @@ export default function SongStudioModal({
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                             <div>
                               <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Estilo Rítmico</label>
-                              <select
+                              <select aria-label="Estilo Rítmico"
                                 value={newIdeaStyle}
                                 onChange={(e) => setNewIdeaStyle(e.target.value as any)}
                                 className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-sans"
@@ -4346,7 +4346,7 @@ export default function SongStudioModal({
 
                             <div>
                               <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Tempo (BPM)</label>
-                              <input
+                              <input aria-label="Tempo (BPM)"
                                 type="number"
                                 value={newIdeaBpm}
                                 onChange={(e) => setNewIdeaBpm(parseInt(e.target.value) || 120)}

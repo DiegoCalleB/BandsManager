@@ -221,7 +221,7 @@ export function RepertorioEnergyChartWidget({
           Repertorio
         </label>
         <div className="relative">
-          <select
+          <select aria-label="Repertorio"
             value={selectedRepertorioId}
             onChange={(e) => setSelectedRepertorioId(e.target.value)}
             className="w-full bg-[var(--sunken)] text-[var(--ink)] text-xs font-medium rounded-[var(--r-s)] px-3 py-2 pr-8 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"

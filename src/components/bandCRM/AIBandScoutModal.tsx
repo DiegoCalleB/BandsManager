@@ -203,7 +203,7 @@ export function AIBandScoutModal({
                 >
                   Cantidad (Max 10)
                 </label>
-                <select
+                <select aria-label="Cantidad (Max 10)"
                   value={count}
                   onChange={(e) => setCount(Number(e.target.value))}
                   className={`w-full px-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}

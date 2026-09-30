@@ -1516,7 +1516,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                     O Subir Archivo de Vídeo/Audio Local
                   </label>
-                  <input
+                  <input aria-label="O Subir Archivo de Vídeo/Audio Local"
                     type="file"
                     accept="video/*,audio/*"
                     onChange={(e) =>
@@ -1769,7 +1769,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <label className="text-xs font-semibold text-[var(--ink-2)]">
                         Título Disco:
                       </label>
-                      <input
+                      <input aria-label="Título Disco"
                         type="text"
                         value={albumTitle}
                         onChange={(e) => setAlbumTitle(e.target.value)}
@@ -3052,7 +3052,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         <label className="text-xs font-semibold text-[var(--acc)] hover:text-[var(--acc)]/70 cursor-pointer flex items-center gap-1">
                           <Upload className="w-3 h-3" />
                           <span>Subir archivo cookies.txt</span>
-                          <input
+                          <input aria-label="Contenido de cookies.txt (formato Netscape)"
                             type="file"
                             accept=".txt"
                             onChange={handleUploadCookieFile}

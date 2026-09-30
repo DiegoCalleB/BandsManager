@@ -83,7 +83,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             {isReunion && (
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Asunto de la Reunión</label>
-                <input
+                <input aria-label="Asunto de la Reunión"
                   type="text"
                   value={editRehearsalDraft.asunto || ''}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, asunto: e.target.value } : prev))}
@@ -98,7 +98,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Fecha</label>
-                <input
+                <input aria-label="Fecha"
                   type="date"
                   value={editRehearsalDraft.fecha}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
@@ -110,7 +110,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
               </div>
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Horario</label>
-                <input
+                <input aria-label="Horario"
                   type="text"
                   value={editRehearsalDraft.hora}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, hora: e.target.value } : prev))}
@@ -160,7 +160,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                     <span>Repertorio Asociado</span>
                   </span>
                 </label>
-                <select
+                <select aria-label="Repertorio Asociado"
                   value={editRehearsalDraft.setlistId || ''}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
                   className={`w-full px-2 py-1.5 text-micro rounded-[var(--r-m)] outline-none font-mono ${
@@ -179,7 +179,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
 
             <div>
               <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Estado</label>
-              <select
+              <select aria-label="Estado"
                 value={editRehearsalDraft.estado}
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
                 className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${

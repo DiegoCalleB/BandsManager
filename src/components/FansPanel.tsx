@@ -1892,7 +1892,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Origen / Canal
                   </label>
-                  <select
+                  <select aria-label="Origen / Canal"
                     value={newOrigen}
                     onChange={(e) => setNewOrigen(e.target.value)}
                     className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
@@ -1915,7 +1915,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Nivel Fan
                   </label>
-                  <select
+                  <select aria-label="Nivel Fan"
                     value={newNivel}
                     onChange={(e) => setNewNivel(e.target.value as any)}
                     className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"

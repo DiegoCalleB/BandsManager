@@ -152,7 +152,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Rol del Músico IA</label>
-                <select
+                <select aria-label="Rol del Músico IA"
                   value={estiloMusico}
                   onChange={(e) => setEstiloMusico(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
@@ -167,7 +167,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Objetivo del Arreglo</label>
-                <select
+                <select aria-label="Objetivo del Arreglo"
                   value={objetivoIdea}
                   onChange={(e) => setObjetivoIdea(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
@@ -184,7 +184,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Parte de la Canción</label>
-                <select
+                <select aria-label="Parte de la Canción"
                   value={seccionCancion}
                   onChange={(e) => setSeccionCancion(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"

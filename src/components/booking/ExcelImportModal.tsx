@@ -977,7 +977,7 @@ export function ExcelImportModal({
                         Requerido
                       </span>
                     </label>
-                    <select
+                    <select aria-label="Nombre Sala / Contacto / Banda * Requerido"
                       value={mapping.nombre_sala}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1001,7 +1001,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Ciudad / Población
                     </label>
-                    <select
+                    <select aria-label="Ciudad / Población"
                       value={mapping.ciudad}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1025,7 +1025,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Email de Contacto
                     </label>
-                    <select
+                    <select aria-label="Email de Contacto"
                       value={mapping.email_contacto}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1050,7 +1050,7 @@ export function ExcelImportModal({
                       <span><ShowIcon inline emoji="📱" /></span>
                       <span>Teléfono Móvil (WhatsApp)</span>
                     </label>
-                    <select
+                    <select aria-label="Teléfono Móvil (WhatsApp)"
                       value={mapping.telefono_movil}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1075,7 +1075,7 @@ export function ExcelImportModal({
                       <span><ShowIcon inline emoji="☎️" /></span>
                       <span>Teléfono Fijo</span>
                     </label>
-                    <select
+                    <select aria-label="Teléfono Fijo"
                       value={mapping.telefono_fijo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1100,7 +1100,7 @@ export function ExcelImportModal({
                       <span><ShowIcon inline emoji="📞" /></span>
                       <span>Teléfono General / Otro</span>
                     </label>
-                    <select
+                    <select aria-label="Teléfono General / Otro"
                       value={mapping.telefono}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1124,7 +1124,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Aforo / Capacidad
                     </label>
-                    <select
+                    <select aria-label="Aforo / Capacidad"
                       value={mapping.aforo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1150,7 +1150,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Instagram / Redes
                     </label>
-                    <select
+                    <select aria-label="Instagram / Redes"
                       value={mapping.instagram}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1174,7 +1174,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Sitio Web / Link
                     </label>
-                    <select
+                    <select aria-label="Sitio Web / Link"
                       value={mapping.website}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1198,7 +1198,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Tipo de Entidad (Columna)
                     </label>
-                    <select
+                    <select aria-label="Tipo de Entidad (Columna)"
                       value={mapping.tipo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1222,7 +1222,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Persona de Contacto / Booker
                     </label>
-                    <select
+                    <select aria-label="Persona de Contacto / Booker"
                       value={mapping.contacto_nombre}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1246,7 +1246,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Género / Estilo Musical
                     </label>
-                    <select
+                    <select aria-label="Género / Estilo Musical"
                       value={mapping.genero}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1270,7 +1270,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Dirección Física
                     </label>
-                    <select
+                    <select aria-label="Dirección Física"
                       value={mapping.direccion}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1294,7 +1294,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Notas / Comentarios
                     </label>
-                    <select
+                    <select aria-label="Notas / Comentarios"
                       value={mapping.notas}
                       onChange={(e) =>
                         setMapping((prev) => ({

@@ -128,7 +128,7 @@ export function NegotiationSimulationModal({
             {/* Scenario selector */}
             <div className="space-y-1.5">
               <label className={`block text-micro font-sans ${textSub}`}>Instrucciones de Situación / Pauta Inicial</label>
-              <select
+              <select aria-label="Instrucciones de Situación / Pauta Inicial"
                 value={simulationScenario}
                 onChange={(e) => onScenarioChange(e.target.value)}
                 className={`w-full rounded-[var(--r-s)] px-2 py-1 text-micro focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}

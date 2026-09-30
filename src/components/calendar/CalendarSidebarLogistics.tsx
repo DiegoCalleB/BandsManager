@@ -1129,7 +1129,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <div className="grid grid-cols-2 gap-2 text-micro">
                         <div>
                           <label className={`block text-micro font-mono ${textSub}`}>Promotor / Sala</label>
-                          <input
+                          <input aria-label="Promotor / Sala"
                             type="text"
                             value={currentRb.contactoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, contactoPromotor: e.target.value })}
@@ -1138,7 +1138,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         </div>
                         <div>
                           <label className={`block text-micro font-mono ${textSub}`}>Teléfono</label>
-                          <input
+                          <input aria-label="Teléfono"
                             type="text"
                             value={currentRb.telefonoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, telefonoPromotor: e.target.value })}
@@ -1149,7 +1149,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                       <div>
                         <label className={`block text-micro font-mono ${textSub}`}>Hotel Alojamientos</label>
-                        <input
+                        <input aria-label="Hotel Alojamientos"
                           type="text"
                           value={currentRb.hotelNombre}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, hotelNombre: e.target.value })}
@@ -1159,7 +1159,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                       <div>
                         <label className={`block text-micro font-mono ${textSub}`}>Catering & Menús</label>
-                        <input
+                        <input aria-label="Catering & Menús"
                           type="text"
                           value={currentRb.cateringInfo}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, cateringInfo: e.target.value })}

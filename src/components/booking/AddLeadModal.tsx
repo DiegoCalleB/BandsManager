@@ -330,7 +330,7 @@ export function AddLeadModal({
                         <label className="cursor-pointer px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-micro rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-ui ">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
-                          <input
+                          <input aria-label="Logo o Icono"
                             type="file"
                             accept="image/*"
                             className="hidden"

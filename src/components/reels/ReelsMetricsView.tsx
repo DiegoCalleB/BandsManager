@@ -1893,7 +1893,7 @@ export function ReelsMetricsView({
                   <label className="text-micro font-sans text-[var(--ink-2)]">
                     Fecha del Snapshot
                   </label>
-                  <input
+                  <input aria-label="Fecha del Snapshot"
                     type="date"
                     required
                     value={metricDate}

@@ -419,7 +419,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Sistema de Monitoreo
                   </label>
-                  <select
+                  <select aria-label="Sistema de Monitoreo"
                     value={
                       config.riderConfig?.tipoMonitoreo || "sin_preferencia"
                     }
@@ -450,7 +450,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Backline (Amplis / Batería)
                   </label>
-                  <select
+                  <select aria-label="Backline (Amplis / Batería)"
                     value={config.riderConfig?.backlinePropio || "completo"}
                     onChange={(e) =>
                       setConfig({

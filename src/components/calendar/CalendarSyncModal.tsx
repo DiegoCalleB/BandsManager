@@ -62,7 +62,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               URL de Suscripción iCal (Privada)
             </label>
             <div className="flex items-center gap-2">
-              <input
+              <input aria-label="URL de Suscripción iCal (Privada)"
                 type="text"
                 readOnly
                 value={rutaFeed}

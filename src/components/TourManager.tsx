@@ -1095,7 +1095,7 @@ export default function TourManager({
                       >
                         Estado de la Gira
                       </label>
-                      <select
+                      <select aria-label="Estado de la Gira"
                         value={formEstado}
                         onChange={(e) => setFormEstado(e.target.value as any)}
                         className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ${colors.text} focus:outline-none transition-colors text-sm cursor-pointer`}
@@ -1338,7 +1338,7 @@ export default function TourManager({
                                 <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
                                   Cargar Plantilla
                                 </label>
-                                <select
+                                <select aria-label="Cargar Plantilla"
                                   onChange={(e) =>
                                     handleApplyPresetToVehicle(
                                       vIdx,
@@ -1388,7 +1388,7 @@ export default function TourManager({
                                     : "L/100km"}
                                   )
                                 </label>
-                                <input
+                                <input aria-label="Consumo ( )"
                                   type="number"
                                   step="0.1"
                                   min="0.1"
@@ -1413,7 +1413,7 @@ export default function TourManager({
                                   )
                                 </label>
                                 <div className="flex gap-1">
-                                  <input
+                                  <input aria-label="Precio (€/ )"
                                     type="number"
                                     step="0.01"
                                     min="0.01"
@@ -1427,7 +1427,7 @@ export default function TourManager({
                                     }
                                     className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-bold text-[var(--ink-2)]"
                                   />
-                                  <select
+                                  <select aria-label="Precio (€/ )"
                                     value={veh.tipoCombustible || "diesel"}
                                     onChange={(e) =>
                                       handleUpdateVehicle(
@@ -1595,7 +1595,7 @@ export default function TourManager({
                                 <label className="text-micro font-sans text-[var(--ink-2)] block">
                                   Fecha
                                 </label>
-                                <input
+                                <input aria-label="Fecha"
                                   type="date"
                                   value={stop.fecha}
                                   onChange={(e) =>

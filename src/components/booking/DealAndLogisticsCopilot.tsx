@@ -224,7 +224,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
-            <select
+            <select aria-label="Tipo de Acuerdo"
               value={dealType}
               onChange={(e: any) => setDealType(e.target.value)}
               className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none"
@@ -253,7 +253,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
-            <input
+            <input aria-label="Distancia Ida (km)"
               type="number"
               value={vanKmEstimated}
               onChange={(e) => setVanKmEstimated(Number(e.target.value))}
@@ -263,7 +263,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
-            <input
+            <input aria-label="Hotel + Dietas (€)"
               type="number"
               value={hotelCost + dietsCost}
               onChange={(e) => {

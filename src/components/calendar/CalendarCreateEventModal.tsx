@@ -276,7 +276,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <form onSubmit={handleSaveNewReunion} className="space-y-4">
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / Banda</label>
-                <select
+                <select aria-label="Proyecto / Banda"
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                   className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
@@ -308,7 +308,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Horario</label>
-                  <input
+                  <input aria-label="Horario"
                     type="text"
                     value={reuHora}
                     onChange={(e) => setReuHora(e.target.value)}
@@ -346,7 +346,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Orden del Día / Notas</label>
-                <textarea
+                <textarea aria-label="Orden del Día / Notas"
                   value={reuNotas}
                   onChange={(e) => setReuNotas(e.target.value)}
                   rows={3}
@@ -379,7 +379,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / Banda</label>
-                <select
+                <select aria-label="Proyecto / Banda"
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                   className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
@@ -397,7 +397,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Horario</label>
-                  <input
+                  <input aria-label="Horario"
                     type="text"
                     value={rehTime}
                     onChange={(e) => setRehTime(e.target.value)}
@@ -408,7 +408,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Local / Ubicación</label>
-                  <input
+                  <input aria-label="Local / Ubicación"
                     type="text"
                     value={rehLugar}
                     onChange={(e) => setRehLugar(e.target.value)}
@@ -422,7 +422,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               {availableSetlists.length > 0 && (
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Repertorio Asociado</label>
-                  <select
+                  <select aria-label="Repertorio Asociado"
                     value={rehSetlistId}
                     onChange={(e) => setRehSetlistId(e.target.value)}
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
@@ -441,7 +441,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
 
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Objetivos del Ensayo / Notas</label>
-                <textarea
+                <textarea aria-label="Objetivos del Ensayo / Notas"
                   value={rehNotas}
                   onChange={(e) => setRehNotas(e.target.value)}
                   rows={2}
@@ -474,7 +474,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / Banda</label>
-                <select
+                <select aria-label="Proyecto / Banda"
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                   className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
@@ -521,7 +521,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Caché Acordado (€)</label>
-                  <input
+                  <input aria-label="Caché Acordado (€)"
                     type="number"
                     value={concCache}
                     onChange={(e) => setConcCache(e.target.value)}
@@ -532,7 +532,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Aforo del Espacio</label>
-                  <input
+                  <input aria-label="Aforo del Espacio"
                     type="number"
                     value={concAforo}
                     onChange={(e) => setConcAforo(e.target.value)}
@@ -546,7 +546,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               {availableSetlists.length > 0 && (
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Setlist Programado</label>
-                  <select
+                  <select aria-label="Setlist Programado"
                     value={concSetlistId}
                     onChange={(e) => setConcSetlistId(e.target.value)}
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${

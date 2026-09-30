@@ -85,7 +85,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
 
             <div>
               <label className="block text-[var(--ink-2)] font-semibold mb-1">Formato de Concierto</label>
-              <select
+              <select aria-label="Formato de Concierto"
                 value={tipoFormato}
                 onChange={(e) => setTipoFormato(e.target.value as any)}
                 className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
