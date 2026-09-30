@@ -88,7 +88,7 @@ export const Onda: React.FC<OndaProps> = ({
               }}
             >
               {showValues && (
-                <span style={{ fontSize: 10, lineHeight: '14px', color: 'var(--ink-2)', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ fontSize: 11, lineHeight: '14px', color: 'var(--ink-2)', fontVariantNumeric: 'tabular-nums' }}>
                   {valueFormatter(bar.value)}
                 </span>
               )}

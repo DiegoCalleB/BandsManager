@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
 import { api } from '../../../services/api';
+import { Onda } from '../../ui/Onda';
 import { ShowIcon } from '../../ui/ShowIcon';
 
 export interface ModuleWidgetProps {
@@ -66,20 +67,22 @@ export function CrmPipelineWidget({ leads = [], onNavigate }: ModuleWidgetProps)
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-3 text-center">
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-xl font-bold text-[var(--ink)] tabular-nums">{urgentRepliesNeeded.length}</span>
-          <p className="text-micro text-[var(--ink-2)] mt-1">Negociando</p>
-        </div>
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)]">
-          <span className="text-xl font-bold text-[var(--acc-ink)] tabular-nums">{urgentApprovalsNeeded.length}</span>
-          <p className="text-micro text-[var(--acc-ink)]/75 mt-1">Por aprobar</p>
-        </div>
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)]">
-          <span className="text-xl font-bold text-[var(--ok)] tabular-nums">{confirmedShows.length}</span>
-          <p className="text-micro text-[var(--ok)]/75 mt-1">Confirmados</p>
-        </div>
-      </div>
+      <Onda
+        className="mx-auto"
+        height={leads.length ? 104 : 16}
+        barWidth={56}
+        gap={24}
+        showValues
+        data={[
+          { label: 'Negociando', value: urgentRepliesNeeded.length, color: 'var(--ok)' },
+          { label: 'Por aprobar', value: urgentApprovalsNeeded.length, color: 'var(--ok)' },
+          { label: 'Confirmados', value: confirmedShows.length },
+        ]}
+      />
+
+      {leads.length === 0 && (
+        <p className="text-xs text-[var(--ink-2)] text-center">Todavía no hay ninguna sala en el embudo. Busca las primeras.</p>
+      )}
 
       <div className="text-xs text-[var(--ink-2)] flex items-center justify-between pt-1">
         <span>Total de salas y eventos en el embudo</span>
