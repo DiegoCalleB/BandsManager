@@ -32,7 +32,7 @@ export default defineConfig({
     // proyecto con sesión reutilizada.
     {
       name: 'chromium',
-      testIgnore: [/visual\.spec\.ts/, /superficies\.spec\.ts/, /energia\.spec\.ts/, /responsive\.spec\.ts/, /auth\.setup\.ts/],
+      testIgnore: [/visual\.spec\.ts/, /superficies\.spec\.ts/, /energia\.spec\.ts/, /responsive\.spec\.ts/, /auth\.setup\.ts/, /visual-theme-review\.spec\.ts/],
       use: {
         ...devices['Desktop Chrome'],
         // El Chromium completo que trae preinstalado el entorno no coincide en revisión con

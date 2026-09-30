@@ -60,11 +60,11 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
         <>
           {/* Backdrop on mobile */}
           <div
-            className="fixed inset-0 z-40 bg-[var(--scrim)]/40 sm:hidden"
+            className="fixed inset-0 z-[9999] bg-[var(--scrim)]/40 sm:hidden"
             onClick={() => setIsOpen(false)}
           />
 
-          <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 z-50 text-[var(--ink-2)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
+          <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 z-[10000] text-[var(--ink-2)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
             {/* Header */}
             <div className="flex items-center justify-between pb-2.5">
               <div className="flex items-center gap-2">
