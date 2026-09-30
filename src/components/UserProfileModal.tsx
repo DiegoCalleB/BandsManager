@@ -892,7 +892,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <p className="text-xs font-bold text-[var(--alert)] flex items-center gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
                     <span>
-                      ¿Eliminar proyecto"{bandToDeleteInProfile.name}"?
+                      ¿Eliminar proyecto "{bandToDeleteInProfile.name}"?
                     </span>
                   </p>
                   <p className="text-xs text-[var(--ink-2)]">

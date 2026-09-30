@@ -381,7 +381,7 @@ export function ImportSetlistModal({
                         >
                           {it.matchedSongId && (
                             <option value="link_matched">
-                              Vincular a"{it.matchedSongTitle}"
+                              Vincular a "{it.matchedSongTitle}"
                             </option>
                           )}
                           <option value="create_new">

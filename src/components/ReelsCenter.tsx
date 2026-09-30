@@ -2816,7 +2816,7 @@ export default function ReelsCenter({
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
-                      ). Pulsa"Analizar highlights con IA" si quieres uno nuevo.
+                      ). Pulsa "Analizar highlights con IA" si quieres uno nuevo.
                     </span>
                   </div>
                 )}

@@ -143,7 +143,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             </p>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               ¿Te has quedado estancado en el local de ensayo? Nuestro músico virtual analiza la tonalidad (
-              {song.tonalidad || 'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de"{song.titulo}" para proponerte arreglos
+              {song.tonalidad || 'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de "{song.titulo}" para proponerte arreglos
               profesionales, melodías, puentes o variaciones armónicas originales.
             </p>
           </div>

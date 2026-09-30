@@ -519,7 +519,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         {!acta ? (
           <div className="p-8 text-center text-[var(--ink-2)] text-xs space-y-2 rounded-[var(--r-m)]">
             <p>
-              Pulsa"Generar Acta con IA" para obtener un resumen estructurado
+              Pulsa "Generar Acta con IA" para obtener un resumen estructurado
               del ensayo listo para compartir.
             </p>
           </div>

@@ -429,7 +429,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <div className="py-16 text-center space-y-3 text-[var(--ink-2)]">
                 <Sparkles className="w-8 h-8 mx-auto text-[var(--ink-2)]" />
                 <p className="text-xs">
-                  Haz clic en"Generar y Comparar Propuestas" para ver las
+                  Haz clic en "Generar y Comparar Propuestas" para ver las
                   opciones A/B y sus costes detallados.
                 </p>
               </div>

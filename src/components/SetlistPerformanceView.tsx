@@ -566,7 +566,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           Modo descanso — ahorrando batería
         </p>
         <p className="text-[var(--ink)] text-xs font-sans">
-          Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"
+          Toca la pantalla para volver a "{itemLabel(currentItem, songs)}"
         </p>
       </div>
     );

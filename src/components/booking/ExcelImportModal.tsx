@@ -1011,7 +1011,7 @@ export function ExcelImportModal({
                       }
                       className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
-                      <option value="">-- No asignar (Usar'España') --</option>
+                      <option value="">-- No asignar (Usar 'España') --</option>
                       {rawHeaders.map((h) => (
                         <option key={h} value={h}>
                           {h}

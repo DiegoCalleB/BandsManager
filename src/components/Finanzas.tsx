@@ -496,7 +496,7 @@ export default function Finanzas({
                 Rentabilidad por Bolo
               </h3>
               <span className="text-xs text-[var(--ink-2)]">
-                Haz clic en"Gastos" para desglosar peajes, gasolina, hotel y
+                Haz clic en "Gastos" para desglosar peajes, gasolina, hotel y
                 dietas.
               </span>
             </div>

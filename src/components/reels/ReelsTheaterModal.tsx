@@ -142,7 +142,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-[var(--scrim)]/95 flex items-center justify-center p-2 sm:p-4 lg:p-6 overflow-y-auto"
+      className="fixed inset-0 z-[100] bg-[var(--scrim)]/95 flex items-center justify-center p-2 sm:p-4 lg:p-6 overflow-y-auto"
       onClick={onClose}
     >
       <div 

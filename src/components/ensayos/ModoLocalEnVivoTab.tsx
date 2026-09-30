@@ -398,7 +398,7 @@ export function ModoLocalEnVivoTab({
           No hay temas en el orden del día
         </h3>
         <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
-          Ve a la pestaña"1. Orden del Día" para añadir canciones y bloques
+          Ve a la pestaña "1. Orden del Día" para añadir canciones y bloques
           antes de activar el modo local.
         </p>
       </div>

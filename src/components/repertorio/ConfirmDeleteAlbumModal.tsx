@@ -63,7 +63,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
               <div>
                 <div className="text-xs font-bold text-[var(--acc)]/70">Desvincular canciones (Recomendado)</div>
                 <div className="text-xs text-[var(--ink)]/70 mt-0.5">
-                  Elimina el disco de la discografía pero mantiene sus canciones en el catálogo como"Sin Disco".
+                  Elimina el disco de la discografía pero mantiene sus canciones en el catálogo como "Sin Disco".
                 </div>
               </div>
             </button>

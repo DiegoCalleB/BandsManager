@@ -3404,7 +3404,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         Copia la lista desde tu WhatsApp, notas o papel de
                         escenario y pégala aquí. El asistente asignará cada
                         línea a la pista correspondiente (#1, #2, #3...) y
-                        limpiará automáticamente números iniciales ("1.","01 -",
+                        limpiará automáticamente números iniciales ("1.", "01 -",
                         etc.).
                       </p>
                       <p className="text-xs text-[var(--tentative)]/80">

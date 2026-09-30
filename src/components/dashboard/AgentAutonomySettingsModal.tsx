@@ -1219,7 +1219,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           Nivel A
                         </span>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                          Solo"Llamada a la puerta"
+                          Solo "Llamada a la puerta"
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
                           El agente solo saluda y envía el Dossier EPK. En
@@ -1605,7 +1605,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           Crear Borrador en Gmail
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
-                          El agente prepara el correo en la carpeta"Borradores"
+                          El agente prepara el correo en la carpeta "Borradores"
                           de tu Gmail con sala, asunto, pitch y dossier adjunto.
                           Puedes abrirlo, darle tu toque y pulsar Enviar desde
                           Gmail o desde el CRM.
@@ -1640,7 +1640,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           Envío Directo tras Aprobación
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
-                          Tras pulsar"Aprobar Propuesta" o"Aprobar Respuesta" en
+                          Tras pulsar "Aprobar Propuesta" o "Aprobar Respuesta" en
                           el CRM, el agente despacha el correo directamente al
                           email de la sala respetando las ventanas horarias
                           comerciales.

@@ -2024,7 +2024,7 @@ export default function Chatbot({
                                           <audio controls src={audioState.url} onError={(e) => e.preventDefault()} className="w-full h-9" />
                                           {audioState.savedToSong ? (
                                             <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 -emerald-500/10 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
-                                              <CheckCircle className="w-3.5 h-3.5" /> Guardada en"{audioState.savedToSong}" (Song Studio)
+                                              <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
                                             </div>
                                           ) : songPicker[audioKey] ? (
                                             <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>
@@ -2144,7 +2144,7 @@ export default function Chatbot({
                                           </button>
                                           {audioState.savedToSong ? (
                                             <div className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/5 -emerald-500/10 rounded-[var(--r-s)] p-2 flex items-center gap-1.5">
-                                              <CheckCircle className="w-3.5 h-3.5" /> Guardada en"{audioState.savedToSong}" (Song Studio)
+                                              <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
                                             </div>
                                           ) : songPicker[audioKey] ? (
                                             <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>

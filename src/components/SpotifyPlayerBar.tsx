@@ -558,13 +558,13 @@ export default function SpotifyPlayerBar({
   // esta barra debajo de esa. Se renderiza vía portal a document.body (ver
   // RepertorioSetlists.tsx), así que z-50 la deja siempre por encima sin pelear por el orden.
   // Móvil: left-0, bottom-[64px] (bajo el nav inferior h-16 = 64px).
-  // Desktop: md:left-[248px] (240px sidebar + 8px gap), md:bottom-5 (espacio al piso), md:right-5 (espacio al lado).
+  // Desktop: lg:left-[248px] (240px sidebar + 8px gap), lg:bottom-5 (espacio al piso), lg:right-5 (espacio al lado).
   // Así el reproductor flota debajo del sidebar con margen, nunca sobre ella.
   // z-50 en móvil y en desktop — ver el comentario de arriba: con z-40 quedaba al mismo nivel
   // que el nav inferior (también z-40) y, según el orden del DOM, el nav podía tapar el botón de
   // cerrar del reproductor y dejarlo inalcanzable ("no puedo cerrar el reproductor").
   return (
-    <div className="fixed bottom-[64px] md:bottom-5 left-3 right-3 md:left-[248px] md:right-5 z-50 transition-ui duration-300">
+    <div className="fixed bottom-[64px] lg:bottom-5 left-3 right-3 lg:left-[248px] lg:right-5 z-50 transition-ui duration-300">
       {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
  en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
       <audio

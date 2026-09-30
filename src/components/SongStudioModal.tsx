@@ -5635,7 +5635,7 @@ export default function SongStudioModal({
                                     >
                                       <Disc className="w-5 h-5 text-[var(--acc)] animate-spin-slow" />
                                       <span className="text-xs font-bold text-center">Base Tema Original</span>
-                                      <span className="text-micro text-[var(--acc)]/70/80 font-sans text-center">Usar"{song.titulo}"</span>
+                                      <span className="text-micro text-[var(--acc)]/70/80 font-sans text-center">Usar "{song.titulo}"</span>
                                     </button>
                                   )}
                                 </div>

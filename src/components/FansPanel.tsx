@@ -1488,7 +1488,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
-                        formulario"Únete"
+                        formulario "Únete"
                       </button>
                     </div>
                   </>

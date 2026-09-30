@@ -512,7 +512,7 @@ export const SongStudioStructureUploadModal: React.FC<
                           ) : (
                             <div className="h-96 flex items-center justify-center text-xs text-[var(--ink-2)] p-4 text-center">
                               Este tipo de documento no se puede previsualizar
-                              aquí. Usa"Descargar" para abrirlo.
+                              aquí. Usa "Descargar" para abrirlo.
                             </div>
                           )}
                         </div>
