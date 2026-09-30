@@ -77,13 +77,13 @@ describe('buildAvailableBandsForUser', () => {
     expect(propia?.plan).toBe('de_gira');
   });
 
-  it('sí fuerza a promo cuando el plan real del usuario es promo (comportamiento legítimo, no el hack)', async () => {
+  it('el plan de la banda registrada manda sobre el plan del usuario (facturación), aunque el usuario sea promo', async () => {
     const state = baseState();
     const user = { id: 'u3', email: 'festivalero@ejemplo.com', band_id: 'band-lostigres', plan: 'promo' };
 
     const bands = await buildAvailableBandsForUser(state, user);
     const propia = bands.find((b: any) => b.band_id === 'band-lostigres');
-    expect(propia?.plan).toBe('promo');
+    expect(propia?.plan).toBe('de_gira');
   });
 
   it('permite que un usuario tenga planes distintos en cada banda a la que pertenece', async () => {
