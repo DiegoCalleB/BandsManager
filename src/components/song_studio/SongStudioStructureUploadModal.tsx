@@ -352,7 +352,7 @@ export const SongStudioStructureUploadModal: React.FC<
                         className="w-full px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)] text-sm font-semibold transition flex items-center justify-center gap-2"
                       >
                         <Camera className="w-4 h-4" />
-                        Hacer Foto desde Cámara
+                        Hacer foto desde cámara
                       </button>
                     </div>
                   )}

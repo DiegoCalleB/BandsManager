@@ -887,12 +887,11 @@ export default function SpotifyPlayerBar({
                 </Select>
 
                 {/* Pitch Transpose selector (Spotify Pedalboard DSP) */}
-                <select
+                <Select
+                  size="sm"
                   value={transposeSemitones}
                   onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
-                  className={`bg-[var(--sunken)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui ${
-                    transposeSemitones !== 0 ? 'text-[var(--alert)]' : 'text-[var(--ink-2)]'
-                  }`}
+                  
                   title="Trasposición de tono"
                 >
                   {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
@@ -908,7 +907,7 @@ export default function SpotifyPlayerBar({
                       </option>
                     );
                   })}
-                </select>
+                </Select>
               </div>
 
               {/* Timeline Slider */}

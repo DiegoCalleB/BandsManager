@@ -89,7 +89,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
           {/* Nombre de la Banda */}
           <div>
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-              Nombre de la Banda o Proyecto Musical{" "}
+              Nombre de la banda o proyecto musical{" "}
               <span className="text-[var(--acc)]">*</span>
             </label>
             <Input
@@ -104,7 +104,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
           {/* Ciudad Base */}
           <div>
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-              Ciudad / Región de Origen{" "}
+              Ciudad / región de origen{" "}
               <span className="text-[var(--acc)]">*</span>
             </label>
             <Input
@@ -119,7 +119,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
           {/* Género */}
           <div className="md:col-span-2">
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-              Género / Estilo Musical{" "}
+              Género / estilo musical{" "}
               <span className="text-[var(--acc)]">*</span>
             </label>
             <Input

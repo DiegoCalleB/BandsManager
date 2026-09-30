@@ -168,7 +168,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] text-xs font-medium transition-colors"
               >
                 {isUploadingLeadMagnet ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
-                Subir Archivo de Regalo
+                Subir archivo de regalo
               </button>
               <Input
                 size="sm"
@@ -187,7 +187,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
       <div className="pt-2 space-y-3">
         <h4 className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
           <DollarSign className="w-3.5 h-3.5 text-[var(--acc)]" />
-          Métodos de Pago y Propinas Directas (Sin Comisiones)
+          Métodos de pago y propinas directas (sin comisiones)
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">

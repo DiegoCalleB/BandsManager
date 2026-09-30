@@ -105,7 +105,8 @@ const CHECKS = {
   campoSinPrimitiva: {
     description: '<input>/<select>/<textarea> escrito a mano — craft-interfaces: un solo campo. Usa <Input>, <Select> o <Textarea> de components/ui (checkbox, radio, range, file, hidden y color quedan fuera; para una excepción justificada añade data-raw)',
     pattern: /<(?:select|textarea)\b(?![^>]*\bdata-raw\b)|<input\b(?![^>]*(?:type=["'](?:checkbox|radio|range|file|hidden|color)["']|\bdata-raw\b))/g,
-    severity: 'warning',
+    severity: 'error',
+    skipUi: true,
   },
   textoSobreRelleno: {
     description: 'texto que no es --on-* sobre un relleno sólido de acento/estado (bg-[var(--acc|ok|alert)] + text-[var(--ink|ink-2|acc-ink|mismo tono)]) — contraste insuficiente (en Oscuro, invisible); usa text-[var(--on-acc|on-ok|on-alert)]',
@@ -183,6 +184,8 @@ function auditFile(filePath) {
 
   for (const [checkName, check] of Object.entries(CHECKS)) {
     if (!check.pattern) continue;
+    // Las primitivas de components/ui/ y sus tests SON la implementación: no se auditan contra sí mismas.
+    if (check.skipUi && /components\/ui\//.test(filePath)) continue;
 
     let match;
     const regex = new RegExp(check.pattern.source, check.pattern.flags);

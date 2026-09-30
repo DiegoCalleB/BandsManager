@@ -300,7 +300,7 @@ export function MemberNotesModal({
                   onClick={() => setShowAddCustomMember(true)}
                   className="text-xs text-[var(--ok)] hover:text-[var(--ok)] font-sans flex items-center gap-1 font-bold cursor-pointer transition-colors"
                 >
-                  <Plus className="w-3.5 h-3.5" /> + Añadir Músico / Suplente
+                  <Plus className="w-3.5 h-3.5" /> + añadir músico / suplente
                 </button>
               </div>
 

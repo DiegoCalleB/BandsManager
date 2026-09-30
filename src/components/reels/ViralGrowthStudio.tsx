@@ -534,7 +534,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
-                        <MessageSquareQuote className="w-3 h-3 text-[var(--acc-ink)]" /> Primer Comentario Fijado (Pinned Comment)
+                        <MessageSquareQuote className="w-3 h-3 text-[var(--acc-ink)]" /> Primer comentario fijado (pinned comment)
                       </span>
                       <span className="text-micro font-mono text-[var(--on-acc)] bg-[var(--acc)] px-1 rounded">5x Comentarios</span>
                     </div>
@@ -864,7 +864,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   onClick={onSyncFromTourCRM}
                   className="w-full text-micro font-mono text-[var(--ink)] hover:text-[var(--acc-ink)] bg-[var(--scrim)]/40 hover:bg-[var(--scrim)]/60 rounded py-1 flex items-center justify-center gap-1 cursor-pointer transition-ui bg-[var(--acc)]/10"
                 >
-                  <Sparkles className="w-2.5 h-2.5" /> Sincronizar con Próxima Fecha CRM
+                  <Sparkles className="w-2.5 h-2.5" /> Sincronizar con próxima fecha CRM
                 </button>
               )}
             </div>

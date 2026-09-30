@@ -61,7 +61,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
               onClick={this.handleReset}
               className="items-center gap-2"
             >
-              <RefreshCw className="w-4 h-4" /> Reintentar Cargar Módulo
+              <RefreshCw className="w-4 h-4" /> Reintentar cargar módulo
             </Button>
             <Button
               variant="neutral"

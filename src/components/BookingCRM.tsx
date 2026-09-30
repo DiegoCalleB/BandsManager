@@ -258,7 +258,7 @@ interface BookingCRMProps {
 
 import { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
-import { Button } from './ui';
+import { Button, Input } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1529,7 +1529,7 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <Search className="w-4 h-4" />
-                        Scout Descubridor (Buscar Nuevos Leads)
+                        Scout descubridor (buscar nuevos leads)
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
                     </button>
@@ -1559,7 +1559,7 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <Copy className="w-4 h-4 text-[var(--acc)]" />
-                        Detector y Limpiador de Duplicados
+                        Detector y limpiador de duplicados
                       </span>
                       {duplicateGroupsCount > 0 ? (
                         <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)] text-[var(--on-acc)]">
@@ -1692,7 +1692,8 @@ export default function BookingCRM({
                   {/* Search Input */}
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors text-[var(--acc-ink)]" />
-                    <input
+                    <Input
+                      size="sm"
                       id="crm-search"
                       type="text"
                       placeholder={
@@ -1704,7 +1705,7 @@ export default function BookingCRM({
                       }
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-2)]`}
+                      className={`w-full pl-9 ${searchTerm ? "pr-8" : "pr-3"}`}
                     />
                     {searchTerm && (
                       <button
@@ -1721,7 +1722,7 @@ export default function BookingCRM({
 
                   {/* Tipo Dropdown Selector — Solo en PC */}
                   <div className="hidden sm:block relative shrink-0">
-                    <select
+                    <select data-raw
                       id="crm-type-filter-select"
                       value={typeFilter}
                       onChange={(e) => setTypeFilter(e.target.value as any)}

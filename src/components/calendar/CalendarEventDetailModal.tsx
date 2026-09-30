@@ -1691,7 +1691,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     >
                       <div className="flex items-center justify-between pb-2">
                         <span className="text-xs font-mono font-bold text-[var(--ok)] flex items-center gap-1.5">
-                          <Coins className="w-4 h-4" /> Arqueo de Caja y Métodos de Cobro
+                          <Coins className="w-4 h-4" /> Arqueo de caja y métodos de cobro
                         </span>
                         <span className="text-micro font-mono text-[var(--ink-2)]">
                           Introduce los importes reales cobrados durante la noche

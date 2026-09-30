@@ -1834,7 +1834,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelHowFound")}
                   </label>
-                  <select
+                  <select data-raw
                     value={formData.comoConocio}
                     onChange={(e) =>
                       setFormData({ ...formData, comoConocio: e.target.value })

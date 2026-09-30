@@ -643,7 +643,7 @@ export function ModoLocalEnVivoTab({
                   <Flame className="w-3.5 h-3.5" /> Enfoque / Detalle para este
                   ensayo
                 </label>
-                <textarea
+                <textarea data-raw
                   rows={2}
                   placeholder="Escribe anotaciones para la banda (ej. entrada con slap, cuidar coros, acento al final)…"
                   value={currentItem?.enfoque || ""}

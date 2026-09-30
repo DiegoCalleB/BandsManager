@@ -1125,7 +1125,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
                       <div className="flex items-center justify-between">
                         <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
-                          <ShowIcon inline emoji="📞" />Contacto Producción y Hotel
+                          <ShowIcon inline emoji="📞" />Contacto producción y hotel
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-micro">
@@ -1172,7 +1172,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                     <div className={`p-3 rounded-[var(--r-m)] space-y-1.5 ${'bg-[var(--surface)]'}`}>
                       <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
-                        <ShowIcon inline emoji="🎸" />Input List / Rider de Canales
+                        <ShowIcon inline emoji="🎸" />Input list / rider de canales
                       </span>
                       <Textarea
                         rows={4}

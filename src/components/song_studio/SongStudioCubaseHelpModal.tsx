@@ -27,7 +27,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
             </div>
             <div>
               <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
-                Atajos de Teclado Tipo Cubase DAW
+                Atajos de teclado tipo Cubase DAW
                 <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--ink)]">Modo Studio</span>
               </h3>
               <p className="text-xs text-[var(--ink-2)]">

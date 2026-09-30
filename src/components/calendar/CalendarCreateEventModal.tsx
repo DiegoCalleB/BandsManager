@@ -265,7 +265,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
             {showCreateModal === 'rehearsal' && <span className="text-[var(--ok)]"><ShowIcon inline emoji="🎙️" />Convocar ensayo</span>}
             {showCreateModal === 'reunion' && <span className="text-[var(--acc)]"><ShowIcon inline emoji="💬" />Convocatoria de Reunión</span>}
-            {showCreateModal === 'concert' && concIsPosible && <span className="text-[var(--acc)]"><ShowIcon inline emoji="❓" />Fecha Posible / Pre-reserva</span>}
+            {showCreateModal === 'concert' && concIsPosible && <span className="text-[var(--acc)]"><ShowIcon inline emoji="❓" />Fecha posible / pre-reserva</span>}
             {showCreateModal === 'concert' && !concIsPosible && <span className="text-[var(--acc)]"><ShowIcon inline emoji="🎸" />Agendar concierto confirmado</span>}
           </h3>
           <p className="text-xs font-mono text-[var(--ink-2)] mb-4">

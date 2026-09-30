@@ -762,7 +762,7 @@ export function OrdenDelDiaTab({
 
                           {/* Focus Notes / Enfoque */}
                           <div className="flex items-center gap-2">
-                            <input
+                            <input data-raw
                               type="text"
                               placeholder="Enfoque: ej. solo de guitarra, compenetrar coros, dinamismo…"
                               value={item.enfoque || ""}
@@ -784,7 +784,7 @@ export function OrdenDelDiaTab({
                           title="Duración estimada en minutos"
                         >
                           <Clock className="w-3 h-3 text-[var(--ink-2)]" />
-                          <input
+                          <input data-raw
                             type="number"
                             min="1"
                             max="180"

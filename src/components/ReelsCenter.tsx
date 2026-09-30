@@ -2488,7 +2488,7 @@ export default function ReelsCenter({
                     className={`text-sm font-bold font-display flex items-center gap-1.5 text-[var(--acc)]`}
                   >
                     <Video className={`w-4 h-4 text-[var(--acc)]`} />{" "}
-                    Extraer Highlights de Vídeos de Ensayos / Directos
+                    Extraer highlights de vídeos de ensayos / directos
                   </h3>
                   <p className={`text-micro font-sans mt-1 ${textSub}`}>
                     Sube tu metraje bruto en formato vídeo o pega un enlace de
@@ -3167,7 +3167,7 @@ export default function ReelsCenter({
                             <span className="text-micro font-sans text-[var(--ink-2)]">
                               TÍTULO DEL CORTE (EDITABLE):
                             </span>
-                            <input
+                            <input data-raw
                               type="text"
                               value={
                                 highlights[selectedHighlightIndex]?.title || ""

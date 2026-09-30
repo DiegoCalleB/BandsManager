@@ -2595,7 +2595,7 @@ export function ReelsMetricsView({
                     </div>
                   </li>
                   <li>
-                    Haz clic en <strong>Generate Access Token</strong> y pega el
+                    Haz clic en <strong>Generate access token</strong> y pega el
                     token arriba para sincronizar alcances, impresiones y
                     reproducciones de Reels.
                   </li>
@@ -2639,7 +2639,7 @@ export function ReelsMetricsView({
                 </div>
                 <div>
                   <h3 className="text-sm font-bold font-display flex items-center gap-2">
-                    Escanear Métricas con Visión IA
+                    Escanear métricas con visión IA
                     <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/20 text-[var(--tentative)] font-sans font-normal flex items-center gap-1">
                       Gemini Multimodal
                     </span>

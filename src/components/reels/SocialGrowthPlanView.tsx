@@ -689,7 +689,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 >
                   <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5 mb-3">
                     <Flame className="w-4 h-4" />
-                    Ganchos Líricos y Visuales de Alto Impacto
+                    Ganchos líricos y visuales de alto impacto
                   </h4>
                   <div className="space-y-2.5">
                     {currentChannel.hookFormulas.map((hook, hIdx) => (
@@ -724,7 +724,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     >
                       <h4 className="text-xs font-sans font-bold text-[var(--tentative)] flex items-center gap-1.5 mb-3">
                         <Lightbulb className="w-4 h-4" />
-                        Conceptos Virales Adaptados a Tu Sonido
+                        Conceptos virales adaptados a Tu sonido
                       </h4>
                       <div className="space-y-3">
                         {currentChannel.viralConcepts.map((v, vIdx) => (
@@ -754,7 +754,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)] space-y-3">
                   <h4 className="text-xs font-sans font-bold text-[var(--alert)] flex items-center gap-1.5">
                     <AlertCircle className="w-4 h-4" />
-                    Errores Típicos de Músicos a Evitar
+                    Errores típicos de músicos a evitar
                   </h4>
                   <ul className="space-y-2 text-xs font-sans text-[var(--ink-2)]">
                     {currentChannel.donts.map((d, dIdx) => (

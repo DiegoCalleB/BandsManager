@@ -216,7 +216,7 @@ export default function BookingCampaignPanel({
                   className="flex items-center gap-1.5 hover:bg-[var(--surface)] hover:bg-[var(--surface)]/80 px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors"
                 >
                   <Calendar className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
-                  <input
+                  <input data-raw
                     type="date"
                     value={date}
                     onChange={(e) => {
@@ -254,7 +254,7 @@ export default function BookingCampaignPanel({
                 <span className="text-xs font-semibold shrink-0">
                   Añadir Fecha:
                 </span>
-                <input aria-label="Fechas clave del concierto"
+                <input data-raw aria-label="Fechas clave del concierto"
                   type="date"
                   onChange={(e) => {
                     if (

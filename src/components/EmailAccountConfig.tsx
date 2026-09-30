@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 import { BandEmailAccountStatus } from "../types";
+import { Input } from './ui';
 
 interface EmailAccountConfigProps {
   bandId: string;
@@ -286,7 +287,6 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     }
   };
 
-  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-sans transition-ui outline-none bg-[var(--surface)] text-[var(--ink-2)]`;
   const labelClass =
     "text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-2";
 
@@ -482,12 +482,12 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                 <Mail className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Email de la banda</span>
               </label>
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="booking@tubanda.com"
-                className={inputClass}
+                
               />
             </div>
             <div className="space-y-2">
@@ -495,13 +495,13 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                 <KeyRound className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Contraseña de aplicación</span>
               </label>
-              <input
+              <Input
                 type="password"
                 value={appPassword}
                 onChange={(e) => setAppPassword(e.target.value)}
                 placeholder="•••• •••• •••• ••••"
                 autoComplete="new-password"
-                className={inputClass}
+                
               />
             </div>
           </div>
@@ -534,19 +534,19 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                   <span>Servidor SMTP (envío)</span>
                 </label>
                 <div className="flex gap-2">
-                  <input
+                  <Input
                     type="text"
                     value={smtpHost}
                     onChange={(e) => setSmtpHost(e.target.value)}
                     placeholder="smtp.tudominio.com"
-                    className={`${inputClass} flex-1`}
+                    className="flex-1"
                   />
-                  <input
+                  <Input
                     type="number"
                     value={smtpPort}
                     onChange={(e) => setSmtpPort(Number(e.target.value))}
                     placeholder="465"
-                    className={`${inputClass} w-20`}
+                    className="w-20"
                   />
                 </div>
                 <label className="flex items-center gap-1.5 text-xs font-sans text-[var(--ink-2)] cursor-pointer">
@@ -564,19 +564,19 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                   <span>Servidor IMAP (lectura)</span>
                 </label>
                 <div className="flex gap-2">
-                  <input
+                  <Input
                     type="text"
                     value={imapHost}
                     onChange={(e) => setImapHost(e.target.value)}
                     placeholder="imap.tudominio.com"
-                    className={`${inputClass} flex-1`}
+                    className="flex-1"
                   />
-                  <input
+                  <Input
                     type="number"
                     value={imapPort}
                     onChange={(e) => setImapPort(Number(e.target.value))}
                     placeholder="993"
-                    className={`${inputClass} w-20`}
+                    className="w-20"
                   />
                 </div>
               </div>

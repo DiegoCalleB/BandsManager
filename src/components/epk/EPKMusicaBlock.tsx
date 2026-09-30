@@ -378,7 +378,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 Duración del directo
               </label>
               <div className="flex items-center bg-[var(--sunken)] rounded-[var(--r-s)] focus-within:">
-                <input
+                <input data-raw
                   type="number"
                   value={config.datosContratacion?.duracionDirecto ?? ""}
                   onChange={(e) =>

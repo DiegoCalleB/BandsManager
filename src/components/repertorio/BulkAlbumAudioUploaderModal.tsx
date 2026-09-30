@@ -20,7 +20,7 @@ import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
-import { Input } from '../ui';
+import { Input, Select } from '../ui';
 
 interface BulkAlbumAudioUploaderModalProps {
   isOpen: boolean;
@@ -888,17 +888,14 @@ export function BulkAlbumAudioUploaderModal({
                       {/* Right: Assigned song dropdown for existing album */}
                       {!isCreatingBrandNewAlbum && (
                         <div className="flex items-center gap-2 min-w-0 md:w-[320px]">
-                          <select
+                          <Select
+                            size="sm"
                             value={item.matchedSongId || ""}
                             disabled={isUploading || item.status === "success"}
                             onChange={(e) =>
                               handleAssignChange(idx, e.target.value)
                             }
-                            className={`w-full text-xs font-sans rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
-                              item.matchedSongId
-                                ? "bg-[var(--sunken)] text-[var(--ink)] font-bold"
-                                : "bg-[var(--sunken)] text-[var(--ink-2)]"
-                            }`}
+                            wrapperClassName="w-full"
                           >
                             <option value="">-- No asignar a ninguna --</option>
                             {albumSongs.map((s, sIdx) => (
@@ -907,7 +904,7 @@ export function BulkAlbumAudioUploaderModal({
                                 {s.duracion || "3:30"})
                               </option>
                             ))}
-                          </select>
+                          </Select>
 
                           {/* Status Icon */}
                           {item.status === "success" && (

@@ -4,7 +4,7 @@ import { User as UserType } from '../types';
 import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { ModalPortal } from './common/ModalPortal';
-import { Button } from './ui';
+import { Button, Input } from './ui';
 
 // Ventana de acceso simplificada para la fase beta (bandas del festival Buskers y primeros
 // usuarios): a diferencia de LoginModal.tsx, el registro NO ofrece selector de planes — crea
@@ -348,8 +348,6 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
     }
   };
 
-  const inputClass =
-    'w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none focus:ring-2 focus:ring-[var(--ink)]/30 transition-colors duration-200';
 
   return (
     <ModalPortal isOpen={true}>
@@ -386,23 +384,26 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 <form onSubmit={handleLoginSubmit} className="w-full space-y-3.5">
                   <div className="relative flex items-center">
                     <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
+                      size="lg"
+                      className="pl-11 pr-4"
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder="Correo electrónico o Usuario"
-                      className={inputClass}
+                      
                       required
                     />
                   </div>
                   <div className="relative flex items-center">
                     <Lock className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Contraseña"
-                      className={`${inputClass} pr-12`}
+                      size="lg"
+                      className="pl-11 pr-12"
                       required
                     />
                     <button
@@ -446,7 +447,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <div className="w-full h-px bg-[var(--hair)]"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="px-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-medium">O continuar con</span>
+                    <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O continuar con</span>
                   </div>
                 </div>
 
@@ -497,45 +498,52 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
                   <div className="relative flex items-center">
                     <Guitar className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
+                      size="lg"
+                      className="pl-11 pr-4"
                       type="text"
                       value={regBandName}
                       onChange={(e) => setRegBandName(e.target.value)}
                       placeholder="Nombre de tu banda"
-                      className={inputClass}
+                      
                       required
                     />
                   </div>
                   <div className="relative flex items-center">
                     <UserIcon className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
+                      size="lg"
+                      className="pl-11 pr-4"
                       type="text"
                       value={regLeaderName}
                       onChange={(e) => setRegLeaderName(e.target.value)}
                       placeholder="Tu nombre"
-                      className={inputClass}
+                      
                       required
                     />
                   </div>
                   <div className="relative flex items-center">
                     <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
+                      size="lg"
+                      className="pl-11 pr-4"
                       type="email"
                       value={regEmail}
                       onChange={(e) => setRegEmail(e.target.value)}
                       placeholder="Correo electrónico"
-                      className={inputClass}
+                      
                       required
                     />
                   </div>
                   <div className="relative flex items-center">
                     <Lock className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
                       type={showRegPassword ? 'text' : 'password'}
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
                       placeholder="Contraseña"
-                      className={`${inputClass} pr-12`}
+                      size="lg"
+                      className="pl-11 pr-12"
                       required
                     />
                     <button
@@ -619,12 +627,14 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <form onSubmit={handleRequestReset} className="w-full space-y-3.5">
                     <div className="relative flex items-center">
                       <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                      <input
+                      <Input
+                        size="lg"
+                        className="pl-11 pr-4"
                         type="text"
                         value={resetEmailOrUsername}
                         onChange={(e) => setResetEmailOrUsername(e.target.value)}
                         placeholder="Tu correo o usuario"
-                        className={inputClass}
+                        
                         required
                       />
                     </div>
@@ -639,28 +649,28 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 ) : (
                   <form onSubmit={handleConfirmReset} className="w-full space-y-3.5">
                     {resetMaskedEmail && <p className="text-xs text-[var(--ink-2)]">Código enviado a {resetMaskedEmail}</p>}
-                    <input
+                    <Input
                       type="text"
                       value={resetCode}
                       onChange={(e) => setResetCode(e.target.value)}
                       placeholder="Código de 6 dígitos"
-                      className={`${inputClass} pl-4`}
+                      className="pl-4"
                       required
                     />
-                    <input
+                    <Input
                       type="password"
                       value={resetNewPassword}
                       onChange={(e) => setResetNewPassword(e.target.value)}
                       placeholder="Nueva contraseña"
-                      className={`${inputClass} pl-4`}
+                      className="pl-4"
                       required
                     />
-                    <input
+                    <Input
                       type="password"
                       value={resetConfirmPassword}
                       onChange={(e) => setResetConfirmPassword(e.target.value)}
                       placeholder="Confirma la nueva contraseña"
-                      className={`${inputClass} pl-4`}
+                      className="pl-4"
                       required
                     />
                     <button

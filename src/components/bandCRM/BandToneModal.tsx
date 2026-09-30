@@ -334,7 +334,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
     }
   };
 
-  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-xs focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 bg-[var(--surface)] text-[var(--ink)]`;
   const labelClass =
     "text-micro font-sans font-bold text-[var(--ink-2)] block mb-1";
 
@@ -507,8 +506,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
                     <div>
                       <label className={labelClass}>Tono general</label>
-                      <input
-                        className={inputClass}
+                      <Input
+                        
                         value={draft.tono_comunicacion}
                         onChange={(e) =>
                           setDraft({
@@ -521,8 +520,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </div>
                     <div>
                       <label className={labelClass}>Tratamiento</label>
-                      <input
-                        className={inputClass}
+                      <Input
+                        
                         value={draft.tratamiento_habitual}
                         onChange={(e) =>
                           setDraft({
@@ -535,8 +534,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </div>
                     <div>
                       <label className={labelClass}>Nivel de energía</label>
-                      <input
-                        className={inputClass}
+                      <Input
+                        
                         value={draft.nivel_energia}
                         onChange={(e) =>
                           setDraft({ ...draft, nivel_energia: e.target.value })
@@ -550,8 +549,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <label className={labelClass}>
                       Vocabulario Clave y Muletillas (separadas por comas)
                     </label>
-                    <input
-                      className={inputClass}
+                    <Input
+                      
                       value={draft.vocabulario_clave}
                       onChange={(e) =>
                         setDraft({
@@ -567,8 +566,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <label className={labelClass}>
                       Emojis que usáis (separados por espacios)
                     </label>
-                    <input
-                      className={inputClass}
+                    <Input
+                      
                       value={draft.emojis_frecuentes}
                       onChange={(e) =>
                         setDraft({
@@ -585,8 +584,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       Matices de tono por red (no hablan igual en todas)
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      <input
-                        className={inputClass}
+                      <Input
+                        
                         value={draft.matiz_instagram}
                         onChange={(e) =>
                           setDraft({
@@ -596,24 +595,24 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         }
                         placeholder="Instagram: igual que el tono general…"
                       />
-                      <input
-                        className={inputClass}
+                      <Input
+                        
                         value={draft.matiz_tiktok}
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_tiktok: e.target.value })
                         }
                         placeholder="TikTok: más gamberro y directo…"
                       />
-                      <input
-                        className={inputClass}
+                      <Input
+                        
                         value={draft.matiz_youtube}
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_youtube: e.target.value })
                         }
                         placeholder="YouTube: más explicativo…"
                       />
-                      <input
-                        className={inputClass}
+                      <Input
+                        
                         value={draft.matiz_facebook}
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_facebook: e.target.value })
@@ -627,9 +626,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <label className={labelClass}>
                       Expresiones reales suyas (una por línea)
                     </label>
-                    <textarea
+                    <Textarea
                       rows={5}
-                      className={`${inputClass} min-h-[110px] resize-y`}
+                      className="min-h-[110px]"
                       value={draft.frases_emblematicas_extraidas}
                       onChange={(e) =>
                         setDraft({
@@ -643,9 +642,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
                   <div>
                     <label className={labelClass}>Punto de conexión</label>
-                    <textarea aria-label="Punto de conexión"
+                    <Textarea aria-label="Punto de conexión"
                       rows={4}
-                      className={`${inputClass} min-h-[90px] resize-y`}
+                      className="min-h-[90px]"
                       value={draft.puntos_fuertes_para_conectar}
                       onChange={(e) =>
                         setDraft({
@@ -660,9 +659,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <label className={labelClass}>
                       Recomendación de contacto
                     </label>
-                    <textarea aria-label="Recomendación de contacto"
+                    <Textarea aria-label="Recomendación de contacto"
                       rows={4}
-                      className={`${inputClass} min-h-[90px] resize-y`}
+                      className="min-h-[90px]"
                       value={draft.recomendacion_pitch}
                       onChange={(e) =>
                         setDraft({
@@ -743,7 +742,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="text-micro font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                         <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
-                        Vocabulario Clave y Muletillas
+                        Vocabulario clave y muletillas
                       </span>
                       {toneData.emojis_frecuentes &&
                         toneData.emojis_frecuentes.length > 0 && (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface ShowItemModalProps {
   isOpen: boolean;
@@ -98,42 +98,42 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
           <div>
             <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Nombre / título del momento</label>
-            <input
+            <Input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Ej: Intro de Teclado + Presentación, Solo de Batería, Biset…"
-              className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}
+              className="w-full"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Tipo de Elemento</label>
-              <select aria-label="Tipo de Elemento"
+              <Select aria-label="Tipo de Elemento"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}
+                wrapperClassName="w-full"
               >
                 <option value="interlude">Interludio / transición</option>
                 <option value="speech">Presentación / Hablado</option>
                 <option value="solo">Solo instrumental</option>
                 <option value="pause">Pausa / descanso</option>
                 <option value="encore">Biset / final</option>
-              </select>
+              </Select>
             </div>
 
             <div>
               <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Duración Est. (minutos)</label>
-              <input
+              <Input
                 type="number"
                 min="0"
                 step="0.5"
                 value={durationMin}
                 onChange={(e) => setDurationMin(e.target.value === '' ? '' : Number(e.target.value))}
                 placeholder="2.5"
-                className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}
+                className="w-full"
               />
             </div>
           </div>
@@ -141,44 +141,47 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
           <div className="grid grid-cols-3 gap-3">
             <div>
               <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Tono / Key</label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
                 placeholder="Ej: Am"
-                className={`w-full p-2 rounded-[var(--r-m)] outline-none ${colors.input}`}
+                className="w-full"
               />
             </div>
             <div>
               <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">BPM / Tempo</label>
-              <input
+              <Input
+                size="sm"
                 type="number"
                 value={tempo}
                 onChange={(e) => setTempo(e.target.value === '' ? '' : Number(e.target.value))}
                 placeholder="120"
-                className={`w-full p-2 rounded-[var(--r-m)] outline-none ${colors.input}`}
+                className="w-full"
               />
             </div>
             <div>
               <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Afinación</label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={tuning}
                 onChange={(e) => setTuning(e.target.value)}
                 placeholder="Drop D"
-                className={`w-full p-2 rounded-[var(--r-m)] outline-none ${colors.input}`}
+                className="w-full"
               />
             </div>
           </div>
 
           <div>
             <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Notas para los músicos / atril</label>
-            <textarea
+            <Textarea
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Ej: Luces rojas fijas, no hablar por micro, entrar directo al bombo…"
-              className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}
+              className="w-full"
             />
           </div>
 

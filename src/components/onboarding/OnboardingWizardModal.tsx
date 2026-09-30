@@ -1352,7 +1352,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-semibold">
-                  Configuración Inicial · Plan{" "}
+                  Configuración inicial · plan{" "}
                   {userPlanId.toUpperCase().replace("_", " ")}
                 </span>
                 {!isCelebrationStep && (

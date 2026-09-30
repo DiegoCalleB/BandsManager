@@ -734,7 +734,7 @@ export default function Finanzas({
                 <div className="flex items-center justify-between pb-3">
                   <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
                     <Calculator className="w-5 h-5 text-[var(--acc)]" />{" "}
-                    Desglose Real de Gastos de Bolo
+                    Desglose real de gastos de bolo
                   </h3>
                   <button
                     onClick={() => setEditingConcertId(null)}
@@ -887,13 +887,14 @@ export default function Finanzas({
             >
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[var(--ink-2)] pointer-events-none" />
-                <input
+                <Input
+                  size="sm"
                   id="finanzas-search"
                   type="text"
                   placeholder="Buscar transacciones por concepto…"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ? "pr-8" : "pr-3"} py-1.5 text-xs focus:outline-none font-sans transition-ui ${"bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50 placeholder:text-[var(--ink-2)]"}`}
+                  className={`w-full pl-9 ${searchTerm ? "pr-8" : "pr-3"}`}
                 />
                 {searchTerm && (
                   <button

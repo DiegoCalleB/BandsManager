@@ -1393,7 +1393,8 @@ export const AgentAutonomySettingsModal: React.FC<
                               {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
                             </label>
                             <div className="relative">
-                              <input
+                              <Input
+                                size="sm"
                                 type="number"
                                 disabled={!isAdmin}
                                 value={negStartVal || ""}
@@ -1409,7 +1410,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                     },
                                   });
                                 }}
-                                className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:outline-none disabled:opacity-60 ${isBelowMin ? "ring-1 ring-[var(--alert)]" : ""}`}
+                                className="w-full"
                                 placeholder="—"
                               />
                               <span className="absolute right-3 top-2.5 text-xs text-[var(--ink-2)] font-sans">
@@ -1802,8 +1803,8 @@ export const AgentAutonomySettingsModal: React.FC<
                 {/* Timezone Selector */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-sans text-[var(--ink-2)] font-semibold flex items-center gap-1.5">
-                    <Globe className="w-4 h-4 text-[var(--acc)]" /> Zona Horaria
-                    de la Banda
+                    <Globe className="w-4 h-4 text-[var(--acc)]" /> Zona horaria
+                    de la banda
                   </label>
                   <Select size="sm" aria-label="Zona horaria de la banda"
                     disabled={!isAdmin}

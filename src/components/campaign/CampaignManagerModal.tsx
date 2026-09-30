@@ -304,7 +304,7 @@ export function CampaignManagerModal({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold font-display text-[var(--ink)] flex items-center gap-2">
-                Gestor de Campañas de Booking
+                Gestor de campañas de booking
                 <span className="text-micro font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)]/20 text-[var(--hair)]/80">
                   {campaigns.length} disponibles
                 </span>
@@ -487,7 +487,7 @@ export function CampaignManagerModal({
                       >
                         <div className="flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                          <input
+                          <input data-raw
                             type="date"
                             value={date}
                             onChange={(e) => {
@@ -517,7 +517,7 @@ export function CampaignManagerModal({
                       <span className="text-xs font-sans font-bold">
                         Añadir Fecha:
                       </span>
-                      <input aria-label="Fechas objetivo (se marcarán en calendario y pitches IA)"
+                      <input data-raw aria-label="Fechas objetivo (se marcarán en calendario y pitches IA)"
                         type="date"
                         onChange={(e) => {
                           handleAddDate(e.target.value);
@@ -556,7 +556,7 @@ export function CampaignManagerModal({
               <div className="space-y-2">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <label className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center gap-2">
-                    Plantillas de Pitch de Campaña por Caso de Uso
+                    Plantillas de pitch de campaña por caso de uso
                     {filledPitchCategoriesCount > 0 && (
                       <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--hair)]/20 text-[var(--hair)]/80">
                         {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length}{" "}

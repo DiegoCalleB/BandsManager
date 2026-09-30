@@ -80,7 +80,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/10">
         <span className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
           <Filter className="w-3.5 h-3.5" />
-          Filtros y Búsquedas Avanzadas
+          Filtros y búsquedas avanzadas
         </span>
         <button type="button" onClick={() => onClose()} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] cursor-pointer">
           <X className="w-4 h-4" />
@@ -255,7 +255,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
 
           <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2.5 py-1.5 rounded-[var(--r-m)] text-xs">
             <span className="text-[var(--ink-2)]">Aforo mín:</span>
-            <input
+            <input data-raw
               type="number"
               placeholder="Ej: 300"
               value={minCapacityFilter || ''}

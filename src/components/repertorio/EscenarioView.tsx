@@ -235,7 +235,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
-                Modo Offline Activo
+                Modo offline activo
               </span>
             ) : isCached ? (
               <span
@@ -243,7 +243,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 title="Repertorio, letras, acordes y tempos guardados localmente para tocar sin red"
               >
                 <Check className="w-3 h-3 text-[var(--ok)]" />
-                Caché Offline Listo
+                Caché offline listo
               </span>
             ) : null}
           </div>

@@ -400,7 +400,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                   className="items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  Procesar e Importar Lista
+                  Procesar e importar lista
                 </Button>
               </div>
             </div>
@@ -440,7 +440,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />
             <h4 className="text-xs font-semibold text-[var(--acc)]/70">
-              <ShowIcon inline emoji="⚡" />Generador Automático de Setlist Debut
+              <ShowIcon inline emoji="⚡" />Generador automático de setlist debut
             </h4>
           </div>
           {createdSetlistName && (
@@ -475,7 +475,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             className="items-center gap-1.5"
           >
             <Clock className="w-3.5 h-3.5" />
-            Crear Setlist Festival / Showcase (45 min)
+            Crear setlist festival / showcase (45 min)
           </Button>
         </div>
       </div>

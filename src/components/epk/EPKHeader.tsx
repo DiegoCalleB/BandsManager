@@ -266,7 +266,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
         </button>
 
         <div className="relative flex-1">
-          <select
+          <select data-raw
             value={activeBlock}
             onChange={(e) => onSelectBlock(e.target.value as EPKBlockId)}
             className="w-full appearance-none bg-[var(--sunken)] rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-sans text-[var(--acc-ink)] focus:outline-none focus:cursor-pointer"

@@ -1667,7 +1667,7 @@ export function PdfExportModal({
           <div
             className={`p-3 sm:px-6 flex flex-col gap-3 text-xs font-sans shrink-0 ${"bg-[var(--sunken)]"}`}
           >
-            {/* Row 1: Mode & Target Selector — en móvil un <select> compacto (los 3 botones en
+            {/* Row 1: Mode & Target Selector — en móvil un selector compacto (los 3 botones en
  fila no cabían sin apretarse); en desktop, los botones de siempre, más cómodos con
  mouse y con espacio de sobra en pantallas grandes. */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">

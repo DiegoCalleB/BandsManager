@@ -560,7 +560,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
               <div>
                 <h4 className="text-xs font-sans font-bold text-[var(--alert)] mb-1.5">
-                  <ShowIcon inline emoji="🔴" />A Repasar Próximo Día
+                  <ShowIcon inline emoji="🔴" />A repasar próximo día
                 </h4>
                 <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
                   {(

@@ -492,7 +492,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
               </div>
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-2">
-                  Afinador Pro Guitarra, Bajo y Ukelele
+                  Afinador Pro guitarra, bajo y ukelele
                   <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink)]">
                     Precision Autocorrelation
                   </span>

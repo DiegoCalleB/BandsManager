@@ -2235,7 +2235,7 @@ export default function CalendarView({
                 }`}
               >
                 <Search className="w-4 h-4 ml-3 text-[var(--ink-2)] shrink-0" />
-                <input
+                <input data-raw
                   type="text"
                   value={calendarSearchTerm}
                   onChange={(e) => setCalendarSearchTerm(e.target.value)}

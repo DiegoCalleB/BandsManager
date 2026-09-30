@@ -163,7 +163,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           {concerts.length > 0 && (
             <div className="flex items-center bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1">
               <Calendar className="w-3.5 h-3.5 text-[var(--acc)] mr-1.5 shrink-0" />
-              <select
+              <select data-raw
                 value={selectedConcertId}
                 onChange={(e) => setSelectedConcertId(e.target.value)}
                 className="bg-transparent text-xs font-sans text-[var(--ink-2)] outline-none cursor-pointer max-w-[160px] truncate"

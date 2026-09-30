@@ -631,7 +631,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                         {/* User Actions */}
                         <div className="flex flex-wrap items-center gap-2">
                           {/* Role Select Dropdown */}
-                          <select
+                          <Select
+                            size="sm"
                             value={u.role || "member"}
                             onChange={(e) =>
                               handleChangeRole(
@@ -646,11 +647,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 ? "No puedes cambiar tu propio rol desde aquí"
                                 : "Cambiar rol del usuario"
                             }
-                            className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-ui ${
-                              u.role === "leader"
-                                ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] -[var(--acc)]/40 hover:bg-[var(--acc)]/25"
-                                : "bg-[var(--surface)] text-[var(--acc)]/80 hover:bg-[var(--surface)]/80"
-                            } ${isSelf ? "opacity-70 cursor-not-allowed" : ""}`}
+                            
                           >
                             <option
                               value="member"
@@ -664,7 +661,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             >
                               Rol: Admin
                             </option>
-                          </select>
+                          </Select>
 
                           <button
                             type="button"

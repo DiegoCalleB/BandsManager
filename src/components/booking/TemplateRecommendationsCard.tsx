@@ -175,7 +175,7 @@ export function TemplateRecommendationsCard({
               }`}
             >
               <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
-                <ShowIcon inline emoji="📬" />Cierre y Llamada a la Acción (CTA)
+                <ShowIcon inline emoji="📬" />Cierre y llamada a la acción (CTA)
               </span>
               <p className="italic text-micro opacity-90">{rec.ctaSuggestion}</p>
             </div>

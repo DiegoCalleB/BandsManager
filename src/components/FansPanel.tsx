@@ -741,7 +741,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
                     <Sparkles className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />{" "}
-                    Guía Rápida y Tutorial
+                    Guía rápida y tutorial
                   </button>
                   <button
                     type="button"
@@ -985,7 +985,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </div>
               <div className="relative w-full sm:w-64">
                 <Filter className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
-                <select
+                <select data-raw
                   value={filterOrigen}
                   onChange={(e) => setFilterOrigen(e.target.value)}
                   className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] pl-9 pr-3 py-2 text-xs text-[var(--ink)] outline-none appearance-none font-sans"
@@ -1534,7 +1534,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold text-[var(--acc)] font-sans flex items-center gap-2">
                       <Gift className="w-4 h-4 text-[var(--acc)]" />
-                      Recompensa / Incentivo para el Fan
+                      Recompensa / incentivo para el fan
                     </label>
                     {savedIncentive && (
                       <span className="text-xs font-sans text-[var(--ok)] flex items-center gap-1">
@@ -1717,7 +1717,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         <span className="text-xs font-sans text-[var(--ink-2)]">
                           /
                         </span>
-                        <input
+                        <input data-raw
                           type="text"
                           value={routePrefix}
                           onChange={(e) =>
@@ -1857,7 +1857,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             <div className="flex items-center justify-between pb-3">
               <h3 className="text-lg font-bold text-[var(--ink)] font-display flex items-center gap-2">
                 <Users className="w-5 h-5 text-[var(--acc)]" />
-                Registrar Fan / Seguidor Manual
+                Registrar fan / seguidor manual
               </h3>
               <button
                 type="button"

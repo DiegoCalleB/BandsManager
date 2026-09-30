@@ -15,7 +15,7 @@ const show = process.argv.includes('--show');
 const files = execSync("git ls-files ':(glob)src/**/*.tsx' ':(glob)src/**/*.ts'", { cwd: ROOT }).toString().split('\n')
   .filter((f) => f && !/(__tests__|\.test\.|db_seed|mouredevBandsSeed|\/i18n\/|\.d\.ts|epkTranslations)/.test(f));
 
-const PROPER = new Set(['Google','Calendar','Gmail','Outlook','Spotify','Places','Gemini','YouTube','Instagram','TikTok','WhatsApp','Stripe','Revolut','PayPal','Bizum','BandManager','Supabase','Ko-fi','Excel','Meta','Cubase','Zoom','Notion','Studio','Reels','Stories','Bandcamp','SoundCloud','Facebook','Twitter','Telegram','Drive','Maps','Airbnb','Tone','DNA','Hook','Doctor','Pro','Plus']);
+const PROPER = new Set(['Google','Calendar','Gmail','Outlook','Spotify','Places','Gemini','YouTube','Instagram','TikTok','WhatsApp','Stripe','Revolut','PayPal','Bizum','BandManager','Supabase','Ko-fi','Excel','Meta','Cubase','Zoom','Notion','Studio','Reels','Stories','Bandcamp','SoundCloud','Facebook','Twitter','Telegram','Drive','Maps','Airbnb','Tone','DNA','Hook','Doctor','Pro','Plus','Bakandeya','Apple','Mac','Mail','Windows','Android','Linux','Chrome','Safari','Firefox','Logic','Ableton','Reaper','Repercusion','Buskers','Ruta','Master','Prompts','Herdeiros','Código']);
 const KEEP_AMP = /(Rock & Roll|R&B|Q&A|AT&T|B&B)/;
 const ATTR = new Set(['title', 'aria-label']);
 
@@ -57,7 +57,9 @@ for (const rel of files) {
   (function visit(n) {
     if (ts.isJsxText(n)) {
       const raw = n.getText(sf);
-      const solo = ts.isJsxElement(n.parent) && n.parent.children.filter((c) => !(ts.isJsxText(c) && !/\S/.test(c.getText(sf)))).length === 1;
+      // Rótulo: único texto de una etiqueta de título/etiqueta/botón (puede convivir con un icono u otro elemento).
+      const solo = ts.isJsxElement(n.parent) && /^(h[1-6]|label|legend|span|button|th|option|strong|b|Button)$/.test(n.parent.openingElement.tagName.getText(sf)) &&
+        n.parent.children.filter((c) => ts.isJsxText(c) && /\S/.test(c.getText(sf))).length === 1;
       if (/\S/.test(raw) && !/^\s*[{}]/.test(raw)) consider(n.getStart(sf, true), n.getEnd(), raw, solo);
     } else if (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n)) {
       // Solo texto que se PINTA: atributos de etiqueta y literales dentro de {…} de JSX (incl. ternarios).

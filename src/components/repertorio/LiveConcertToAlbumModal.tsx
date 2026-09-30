@@ -50,7 +50,7 @@ import { Song, ThemeColors } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, Input, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 export interface TrackCutItem {
   index: number;
@@ -2057,7 +2057,8 @@ export const LiveConcertToAlbumModal: React.FC<
                               #{String(track.index).padStart(2, "0")}
                             </span>
 
-                            <select
+                            <Select
+                              size="sm"
                               value={track.type}
                               onChange={(e) => {
                                 const newType = e.target.value as
@@ -2086,11 +2087,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   );
                                 }
                               }}
-                              className={`text-xs font-bold px-2.5 py-1 rounded-[var(--r-s)] transition-ui cursor-pointer ${
-                                track.type === "musica"
-                                  ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]  hover:bg-[var(--acc)]/30"
-                                  : "bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30"
-                              }`}
+                              
                               title="Haz clic para alternar entre canción y speech/Presentación"
                             >
                               <option value="musica">
@@ -2099,7 +2096,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               <option value="dialogo">
                                 Speech / presentación
                               </option>
-                            </select>
+                            </Select>
                           </div>
 
                           {/* Timestamps & Actions */}
@@ -2292,7 +2289,8 @@ export const LiveConcertToAlbumModal: React.FC<
                             </div>
 
                             <div className="flex-1 relative">
-                              <input
+                              <Input
+                                size="sm"
                                 type="text"
                                 value={track.title}
                                 onChange={(e) =>
@@ -2302,11 +2300,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     e.target.value,
                                   )
                                 }
-                                className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-ui ${
-                                  track.type === "musica"
-                                    ? "bg-[var(--sunken)] text-[var(--acc)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
-                                    : "bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
-                                }`}
+                                className="w-full"
                                 placeholder={
                                   track.type === "musica"
                                     ? `Ej: Tema ${track.index} (o escribe el nombre de la canción)...`
@@ -3276,7 +3270,8 @@ export const LiveConcertToAlbumModal: React.FC<
 
                           {/* Title Input */}
                           <div className="flex-1 min-w-0 relative">
-                            <input
+                            <Input
+                              size="sm"
                               type="text"
                               value={tr.title}
                               onChange={(e) =>
@@ -3291,11 +3286,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   ? "Nombre del tema..."
                                   : "Nombre de la presentación o speech..."
                               }
-                              className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-ui ${
-                                tr.type === "musica"
-                                  ? "bg-[var(--sunken)] text-[var(--acc)]"
-                                  : "bg-[var(--sunken)] text-[var(--ink)]"
-                              }`}
+                              className="w-full"
                             />
                             {tr.title && (
                               <button

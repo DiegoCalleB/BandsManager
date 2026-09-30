@@ -470,7 +470,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/80 space-y-4">
                 <h3 className="text-sm font-bold text-[var(--ink-2)] flex items-center gap-2">
                   <Mail className="w-4 h-4 text-[var(--acc)]" />
-                  Configuración de Despacho por Correo (Email Digest)
+                  Configuración de despacho por correo (email digest)
                 </h3>
 
                 <div className="space-y-3">
@@ -517,7 +517,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/80 space-y-3">
                 <h3 className="text-sm font-bold text-[var(--ink-2)] flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
-                  Control de Accesos y Destinatarios por Rol
+                  Control de accesos y destinatarios por rol
                 </h3>
 
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">

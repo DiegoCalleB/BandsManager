@@ -13,7 +13,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { BandContact, BookingCampaign } from "../../types";
 import { apiFetch } from "../../utils/api";
-import { Button } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface AIBandScoutModalProps {
   isOpen: boolean;
@@ -171,12 +171,13 @@ export function AIBandScoutModal({
                 </label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="Ej: Barcelona, Valencia…"
-                    className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
+                    className="w-full pl-9 pr-3"
                   />
                 </div>
               </div>
@@ -189,12 +190,13 @@ export function AIBandScoutModal({
                 </label>
                 <div className="relative">
                   <Music className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
                     placeholder="Ej: Balkan Ska, Punk Rock…"
-                    className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
+                    className="w-full pl-9 pr-3"
                   />
                 </div>
               </div>
@@ -205,15 +207,15 @@ export function AIBandScoutModal({
                 >
                   Cantidad (Max 10)
                 </label>
-                <select aria-label="Cantidad (Max 10)"
+                <Select size="sm" aria-label="Cantidad (Max 10)"
                   value={count}
                   onChange={(e) => setCount(Number(e.target.value))}
-                  className={`w-full px-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
+                  wrapperClassName="w-full"
                 >
                   <option value={3}>3 bandas</option>
                   <option value={5}>5 bandas</option>
                   <option value={10}>10 bandas</option>
-                </select>
+                </Select>
               </div>
             </div>
 

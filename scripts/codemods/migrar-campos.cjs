@@ -42,6 +42,7 @@ for (const rel of files) {
   const sf = ts.createSourceFile(rel, src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const edits = [];
   const used = new Set();
+  let did = false;
 
   const handle = (open, closing) => {
     const tag = open.tagName.getText();
@@ -60,18 +61,37 @@ for (const rel of files) {
     if (tag === 'input' && (typeVal && SKIP_TYPES.has(typeVal))) return skip('tipo ' + typeVal);
     if (hasSize) return skip('size nativo');
     if (hasStyle) return skip('style inline');
-    let cls = '';
+    let cls = ''; let dynParts = [];
     if (clsAttr) {
       const init = clsAttr.initializer;
       if (init && ts.isStringLiteral(init)) cls = init.text;
       else if (init && ts.isJsxExpression(init) && init.expression && ts.isNoSubstitutionTemplateLiteral(init.expression)) cls = init.expression.text;
-      else if (init && ts.isJsxExpression(init) && init.expression && ts.isTemplateExpression(init.expression) &&
-        init.expression.templateSpans.every((sp) => ts.isStringLiteral(sp.expression) || ts.isNoSubstitutionTemplateLiteral(sp.expression))) {
-        // plantilla cuyas partes variables son literales fijas (restos de ternarios de tema ya resueltos)
+      else if (init && ts.isJsxExpression(init) && init.expression && ts.isTemplateExpression(init.expression)) {
+        // Plantilla con partes variables: se conserva solo el LAYOUT estático y los ternarios de literales
+        // que aporten layout (p. ej. pr-8 / pr-3); el resto de expresiones (colores de tema…) es visual y se descarta.
         const t = init.expression;
-        cls = t.head.text + t.templateSpans.map((sp) => sp.expression.text + sp.literal.text).join('');
+        cls = t.head.text + t.templateSpans.map((sp) => {
+          const e = sp.expression;
+          if (ts.isStringLiteral(e) || ts.isNoSubstitutionTemplateLiteral(e)) return ' ' + e.text + ' ' + sp.literal.text;
+          return ' ' + sp.literal.text;
+        }).join('');
+        const dyn = t.templateSpans.filter((sp) => ts.isConditionalExpression(sp.expression) &&
+          ts.isStringLiteral(sp.expression.whenTrue) && ts.isStringLiteral(sp.expression.whenFalse) &&
+          (splitClasses(sp.expression.whenTrue.text, tag) || splitClasses(sp.expression.whenFalse.text, tag)));
+        if (dyn.length) {
+          dynParts = dyn.map((sp) => `\${${sp.expression.condition.getText(sf)} ? "${splitClasses(sp.expression.whenTrue.text, tag)}" : "${splitClasses(sp.expression.whenFalse.text, tag)}"}`);
+        }
+      } else if (init && ts.isJsxExpression(init) && init.expression && ts.isIdentifier(init.expression) && /^(input|field|select|textarea)\w*(Class|Classes|Styles?)$/i.test(init.expression.text)) {
+        cls = '';
       } else return skip('className dinámico');
-      if (SKIP_CLASS.test(' ' + cls + ' ')) return skip('estilo especial');
+      if (SKIP_CLASS.test(' ' + cls + ' ')) {
+        // Excepción justificada (campo dentro de un contenedor propio, invisible, etc.): se marca con data-raw
+        if (!open.attributes.properties.some((a) => ts.isJsxAttribute(a) && a.name.getText() === 'data-raw')) {
+          edits.push({ start: open.tagName.getEnd(), end: open.tagName.getEnd(), text: ' data-raw' });
+          did = true;
+        }
+        return skip('estilo especial');
+      }
     }
     const layout = splitClasses(cls, tag);
     // 1) nombre de etiqueta
@@ -83,7 +103,9 @@ for (const rel of files) {
     // 2) className
     const attrName = tag === 'select' ? 'wrapperClassName' : 'className';
     if (clsAttr) {
-      const text = layout ? `${attrName}="${layout}"` : '';
+      const text = dynParts.length
+        ? `${attrName}={\`${layout}${dynParts.length ? ' ' : ''}${dynParts.join(' ')}\`}`
+        : (layout ? `${attrName}="${layout}"` : '');
       edits.push({ start: clsAttr.getStart(sf), end: clsAttr.getEnd(), text });
     }
     stats[tag]++;
@@ -102,6 +124,7 @@ for (const rel of files) {
   for (const e of edits) out = out.slice(0, e.start) + e.text + out.slice(e.end);
   // Evita dobles espacios donde se quitó el className
   out = out.replace(/<(Input|Select|Textarea)( +)\n/g, '<$1\n');
+  if (used.size) {
   // import
   const uiDir = path.join(ROOT, 'src/components/ui');
   let relImp = path.relative(path.dirname(abs), uiDir).split(path.sep).join('/');
@@ -119,6 +142,7 @@ for (const rel of files) {
       const idx = lastImport.index + lastImport[0].length;
       out = out.slice(0, idx) + '\n' + importLine.trimEnd() + out.slice(idx);
     } else out = importLine + out;
+  }
   }
   if (!dry) fs.writeFileSync(abs, out);
 }

@@ -111,7 +111,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
         <div>
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
             <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
-            Sitio Web Oficial / Linktree
+            Sitio web oficial / linktree
           </label>
           <Input
             size="sm"

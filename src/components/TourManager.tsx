@@ -1077,12 +1077,12 @@ export default function TourManager({
                       >
                         Nombre de la Gira *
                       </label>
-                      <input
+                      <Input
                         required
                         value={formNombre}
                         onChange={(e) => setFormNombre(e.target.value)}
                         placeholder="Ej. Tour Peninsular Primavera 2026"
-                        className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ${colors.text} focus:outline-none transition-colors text-sm`}
+                        className="w-full"
                       />
                     </div>
 
@@ -1092,16 +1092,16 @@ export default function TourManager({
                       >
                         Estado de la Gira
                       </label>
-                      <select aria-label="Estado de la Gira"
+                      <Select aria-label="Estado de la Gira"
                         value={formEstado}
                         onChange={(e) => setFormEstado(e.target.value as any)}
-                        className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ${colors.text} focus:outline-none transition-colors text-sm cursor-pointer`}
+                        wrapperClassName="w-full"
                       >
                         <option value="planificacion">En Planificación</option>
                         <option value="confirmada">Confirmada</option>
                         <option value="completada">Completada</option>
                         <option value="cancelada">Cancelada</option>
-                      </select>
+                      </Select>
                     </div>
 
                     {/* SELECCIÓN DE MIEMBROS DE LA BANDA (FORMACIÓN COMPLETA VS PARCIAL) */}
@@ -1110,7 +1110,7 @@ export default function TourManager({
                         <div>
                           <span className="text-xs font-sans font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
                             <Users className="w-4 h-4 text-[var(--acc-ink)]" />{" "}
-                            Miembros y Formación de la Gira
+                            Miembros y formación de la gira
                           </span>
                           <p className="text-xs text-[var(--ink-2)] mt-0.5">
                             Selecciona si viaja toda la banda o una formación
@@ -1147,7 +1147,7 @@ export default function TourManager({
                                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                             }`}
                           >
-                            <ShowIcon inline emoji="👤" />Formación Parcial / Reducida
+                            <ShowIcon inline emoji="👤" />Formación parcial / reducida
                           </button>
                         </div>
                       </div>
@@ -1740,7 +1740,7 @@ export default function TourManager({
                   {/* Sincronización Automática Checkboxes */}
                   <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)]/30 space-y-2.5">
                     <span className="text-xs font-sans font-bold text-[var(--ink-2)] block">
-                      <ShowIcon inline emoji="⚡" />Integración con Calendario y Finanzas
+                      <ShowIcon inline emoji="⚡" />Integración con calendario y finanzas
                     </span>
 
                     <label className="flex items-center gap-2.5 text-xs text-[var(--ink)] cursor-pointer">

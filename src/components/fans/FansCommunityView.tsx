@@ -284,7 +284,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 </span>
               </div>
               <h3 className="text-[var(--ink)] font-bold text-base font-display">
-                Comunidad y Red Social de {effectiveBandName}
+                Comunidad y red social de {effectiveBandName}
               </h3>
             </div>
           </div>
@@ -680,7 +680,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             <div className="flex items-center justify-between pb-3">
               <h3 className="text-base font-bold text-[var(--ink)] font-display flex items-center gap-2">
                 <Megaphone className="w-5 h-5 text-[var(--acc)]" />
-                Publicar Comunicado en el Muro Social
+                Publicar comunicado en el muro social
               </h3>
               <button
                 onClick={() => setShowNewPostModal(false)}

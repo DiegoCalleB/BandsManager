@@ -1228,7 +1228,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                           className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold transition-ui cursor-pointer text-xs flex items-center justify-center gap-2"
                         >
                           <Zap className="w-3.5 h-3.5" />
-                          <span>Crear Banda Nueva con {activateEmail}</span>
+                          <span>Crear banda nueva con {activateEmail}</span>
                         </button>
                       </div>
                     )}

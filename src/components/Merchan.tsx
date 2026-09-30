@@ -586,7 +586,7 @@ export default function Merchan({
               className={`block text-micro font-sans font-bold flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
             >
               <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de
-              Fondo (Canvas Layering)
+              fondo (canvas layering)
             </label>
             <p className="text-micro font-sans text-[var(--ink-2)]">
               Aplica el arte directamente en capas sobre la tela sin redibujar

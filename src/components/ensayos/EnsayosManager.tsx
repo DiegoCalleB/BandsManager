@@ -230,7 +230,7 @@ export function EnsayosManager({
             <div className="flex flex-wrap items-center gap-2">
               {/* Session Selector Dropdown */}
               <div className="relative">
-                <select
+                <select data-raw
                   value={currentRehearsal?.id || ""}
                   onChange={(e) => setSelectedRehearsalId(e.target.value)}
                   className="appearance-none bg-[var(--sunken)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover:focus:outline-none cursor-pointer"

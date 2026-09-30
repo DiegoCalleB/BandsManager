@@ -3845,7 +3845,7 @@ export default function SongStudioModal({
                     const myReadiness = getMemberReadiness(song, myKey, myName);
                     const levelInfo = READINESS_LEVELS.find((l) => l.value === myReadiness);
                     return (
-                      <select
+                      <select data-raw
                         value={myReadiness || ''}
                         onChange={(e) => {
                           const val = e.target.value as ReadinessLevel;
@@ -3908,7 +3908,8 @@ export default function SongStudioModal({
                             const myReadiness = getMemberReadiness(song, myKey, myName);
                             const levelInfo = READINESS_LEVELS.find((l) => l.value === myReadiness);
                             return (
-                              <select
+                              <Select
+                                size="sm"
                                 value={myReadiness || ''}
                                 onChange={(e) => {
                                   const val = e.target.value as ReadinessLevel;
@@ -3919,9 +3920,7 @@ export default function SongStudioModal({
                                   });
                                 }}
                                 title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold cursor-pointer outline-none ${
-                                  levelInfo ? levelInfo.colorClass : 'bg-[var(--ink)]/5 text-[var(--ink-2)]'
-                                }`}
+                                wrapperClassName="w-full"
                               >
                                 <option value="" disabled>
                                   Mi preparación…
@@ -3931,7 +3930,7 @@ export default function SongStudioModal({
                                     <ShowIcon inline emoji={l.icon} /> {l.label}
                                   </option>
                                 ))}
-                              </select>
+                              </Select>
                             );
                           })()}
                         </div>
@@ -3953,7 +3952,7 @@ export default function SongStudioModal({
                           }}
                           className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--tentative)]/80 flex items-center gap-2"
                         >
-                          <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Arreglos IA (Músico Virtual)
+                          <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Arreglos IA (músico virtual)
                         </button>
                         <button
                           type="button"
@@ -5900,7 +5899,7 @@ export default function SongStudioModal({
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
-                    Atajos de Teclado Tipo Cubase DAW
+                    Atajos de teclado tipo Cubase DAW
                     <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--ink)]">
                       Modo Studio
                     </span>

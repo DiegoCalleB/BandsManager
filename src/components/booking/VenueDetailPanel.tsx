@@ -1482,7 +1482,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <span className="text-micro text-[var(--acc)] font-sans font-bold">
                 Tipo:
               </span>
-              <select
+              <select data-raw
                 value={String(selectedLead.tipo || "sala").toLowerCase()}
                 onChange={(e) => {
                   const newType = e.target.value as LeadType;
@@ -1559,7 +1559,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <span
                 className={`w-2 h-2 rounded-[var(--r-pill)] ${getStatusDotColor(selectedLead.estado)}`}
               />
-              <select
+              <select data-raw
                 value={normalizeStatus(selectedLead.estado)}
                 onChange={(e) =>
                   handleCorrectStatus(e.target.value as LeadStatus)
@@ -2665,7 +2665,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {/* DIRECCIÓN / CALLE */}
                 <div>
                   <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
-                    <ShowIcon inline emoji="📍" />Dirección Exacta (Calle, Número…)
+                    <ShowIcon inline emoji="📍" />Dirección exacta (calle, número…)
                   </label>
                   <Input
                     size="sm"
@@ -2762,7 +2762,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div>
                   <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1">
-                    <ShowIcon inline emoji="✉️" />Email Secundario / Promotora / Alternativo
+                    <ShowIcon inline emoji="✉️" />Email secundario / promotora / alternativo
                   </label>
                   <Input
                     size="sm"
@@ -2806,7 +2806,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
                   <div>
                     <label className="block text-micro font-mono text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
-                      <span><ShowIcon inline emoji="☎️" />Teléfono Fijo (Sala / Oficina)</span>
+                      <span><ShowIcon inline emoji="☎️" />Teléfono fijo (sala / oficina)</span>
                     </label>
                     <Input
                       size="sm"
@@ -3506,7 +3506,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[var(--acc)]/70 font-sans flex items-center gap-1.5">
-                    Aprendizaje Agéntico y ADN de Tono
+                    Aprendizaje agéntico y ADN de tono
                     <span className="text-micro bg-[var(--acc)]/20 text-[var(--acc-ink)] px-1.5 py-0.5 rounded font-sans font-normal">
                       Dynamic Few-Shot
                     </span>
@@ -4469,7 +4469,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span className="text-[var(--ink-2)] text-xs">
                     Origen:
                   </span>
-                  <input
+                  <input data-raw
                     type="text"
                     value={routeOrigin}
                     onChange={(e) => setRouteOrigin(e.target.value)}

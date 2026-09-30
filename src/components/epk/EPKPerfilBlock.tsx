@@ -98,8 +98,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <FileText className="w-5 h-5" /> Biografía Oficial / Resumen
-              Ejecutivo
+              <FileText className="w-5 h-5" /> Biografía oficial / resumen
+              ejecutivo
             </h3>
             <span
               className={`text-micro font-bold px-2.5 py-1 rounded-[var(--r-pill)] ${
@@ -182,8 +182,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <Info className="w-5 h-5" /> Información Adicional y Notas del
-              Dossier
+              <Info className="w-5 h-5" /> Información adicional y notas del
+              dossier
             </h3>
             <div className="flex items-center gap-2">
               <span

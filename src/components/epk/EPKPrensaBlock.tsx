@@ -38,7 +38,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <BarChart3 className="w-5 h-5" /> Cifras Clave (Social Proof)
+              <BarChart3 className="w-5 h-5" /> Cifras clave (social proof)
             </h3>
             <span className="text-micro font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               {config.cifrasClave?.habilitado ? "✓ Visible en EPK" : "Oculto"}
