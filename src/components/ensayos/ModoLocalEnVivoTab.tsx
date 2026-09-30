@@ -45,6 +45,7 @@ import {
 } from "../../utils/chordUtils";
 import { SongChordsViewerModal } from "../SongChordsViewerModal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -515,9 +516,11 @@ export function ModoLocalEnVivoTab({
           </div>
 
           {/* Fullscreen Button */}
-          <button
+          <Button
+            variant="neutral"
+            size="sm"
             onClick={toggleFullscreen}
-            className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]  transition-ui cursor-pointer"
+            
             title={
               isFullscreen
                 ? "Salir de pantalla completa"
@@ -529,7 +532,7 @@ export function ModoLocalEnVivoTab({
             ) : (
               <Maximize2 className="w-4 h-4" />
             )}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -597,12 +600,14 @@ export function ModoLocalEnVivoTab({
                 ¿Necesitas ver los acordes y la letra completa para tocar?
               </span>
             </div>
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               onClick={() => setViewMode("atril")}
-              className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] text-xs font-sans font-bold cursor-pointer transition-ui active:scale-[0.97]"
+              
             >
               Abrir atril <ShowIcon inline emoji="📜" />
-            </button>
+            </Button>
           </div>
 
           {/* Middle Body: Structure Pills & Instrument Notes */}
@@ -744,12 +749,14 @@ export function ModoLocalEnVivoTab({
                 +5
               </button>
 
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 onClick={handleTapTempo}
-                className="px-2.5 sm:px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 text-xs font-sans font-bold cursor-pointer active:scale-[0.97] transition-transform"
+                
               >
                 Tap
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -809,14 +816,15 @@ export function ModoLocalEnVivoTab({
                 <span>Anterior</span>
               </button>
 
-              <button
+              <Button
+                variant="primary"
                 disabled={activeIndex === agenda.length - 1}
                 onClick={() => setActiveIndex((prev) => prev + 1)}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] disabled:opacity-30 font-sans font-bold text-xs cursor-pointer transition-ui"
+                className="flex-1 sm:flex-none items-center justify-center gap-1"
               >
                 <span>Siguiente</span>
                 <ChevronRight className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -927,13 +935,15 @@ export function ModoLocalEnVivoTab({
               </div>
 
               {/* Notation ES/EN */}
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 onClick={() => setNotation((n) => (n === "ES" ? "EN" : "ES"))}
-                className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
+                
                 title="Cambiar notación Do-Re-Mi vs C-D-E"
               >
                 {notation}
-              </button>
+              </Button>
 
               {/* Font Size */}
               <div className="flex items-center gap-0.5 bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
@@ -972,13 +982,15 @@ export function ModoLocalEnVivoTab({
 
               {/* Edit Chords in Studio Modal */}
               {currentSong && (
-                <button
+                <Button
+                  variant="neutral"
+                  size="sm"
                   onClick={() => setEditingSongModal(currentSong)}
-                  className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--acc)] transition-ui cursor-pointer"
+                  
                   title="Editar letra y acordes"
                 >
                   <Edit3 className="w-4 h-4" />
-                </button>
+                </Button>
               )}
             </div>
           </div>
@@ -1097,13 +1109,15 @@ export function ModoLocalEnVivoTab({
                   ← Anterior
                 </button>
 
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   disabled={activeIndex === agenda.length - 1}
                   onClick={() => setActiveIndex((prev) => prev + 1)}
-                  className="flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] text-xs font-sans font-bold disabled:opacity-30 cursor-pointer transition-ui"
+                  className="flex-1 sm:flex-none"
                 >
                   Siguiente →
-                </button>
+                </Button>
               </div>
             </div>
           </div>

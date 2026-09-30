@@ -7,7 +7,7 @@ import {
   Plus,
   Image as ImageIcon,
 } from "lucide-react";
-import { Input } from '../../ui';
+import { Button, Input } from '../../ui';
 
 interface StepPhotosProps {
   photos: string[];
@@ -58,14 +58,16 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-[var(--scrim)]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-              <button
+              <Button
+                variant="danger"
+                size="xs"
                 type="button"
                 onClick={() => onRemovePhoto(idx)}
-                className="p-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] transition-colors"
+                
                 title="Eliminar foto"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -106,14 +108,16 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
           placeholder="O añade una URL de imagen directa (https://…)"
           className="flex-1"
         />
-        <button
+        <Button
+          variant="neutral"
+          size="sm"
           type="button"
           onClick={onAddPhotoUrl}
           disabled={!newPhotoUrl.trim()}
-          className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1"
+          className="items-center gap-1"
         >
           <Plus className="w-3.5 h-3.5" /> Añadir
-        </button>
+        </Button>
       </div>
     </div>
   );

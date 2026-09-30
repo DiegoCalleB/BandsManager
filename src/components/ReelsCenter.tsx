@@ -96,7 +96,7 @@ import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ViralGrowthStudio, SUBTITLE_STYLES } from "./reels/ViralGrowthStudio";
 import { ReelsPhoneMockup } from "./reels/ReelsPhoneMockup";
 import { ReelsTheaterModal } from "./reels/ReelsTheaterModal";
-import { Input, Select, Textarea } from './ui';
+import { Button, Input, Select, Textarea } from './ui';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
@@ -3723,15 +3723,17 @@ export default function ReelsCenter({
                               </span>
                             </button>
 
-                            <button
+                            <Button
+                              variant="neutral"
+                              size="sm"
                               type="button"
                               onClick={handleCopyFormattedPost}
-                              className="py-2 px-3 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--sunken)] text-micro font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
+                              className="items-center justify-center gap-1.5"
                               title="Copia el texto formateado al portapapeles"
                             >
                               <Copy className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                               <span>Copiar copy</span>
-                            </button>
+                            </Button>
                           </div>
 
                           {/* Action Buttons: Publicar Ahora (1-Clic) vs Programar en Calendario */}

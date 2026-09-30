@@ -94,6 +94,7 @@ import {
   Settings,
   Eye,
 } from "lucide-react";
+import { Button } from './ui';
 
 export type NavigationOptions = {
   sectionTab?: "salas" | "medios" | "grupos";
@@ -739,14 +740,16 @@ export default function Dashboard({
 
         <div className="flex items-center gap-2">
           <div className="relative">
-            <button
+            <Button
+              variant="neutral"
+              size="sm"
               type="button"
               onClick={() => setShowQuickAddMenu((v) => !v)}
               title="Añadir rápido"
-              className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] transition-[filter] cursor-pointer"
+              
             >
               <Plus className="w-4 h-4" />
-            </button>
+            </Button>
             {showQuickAddMenu && (
               <>
                 <div
@@ -780,7 +783,9 @@ export default function Dashboard({
               </>
             )}
           </div>
-          <button
+          <Button
+            variant="neutral"
+            size="xs"
             type="button"
             id="quick-toggle-density-btn"
             onClick={() =>
@@ -788,7 +793,7 @@ export default function Dashboard({
                 prev === "clean" ? "full" : "clean",
               )
             }
-            className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="items-center gap-1.5"
             title="Alternar entre vista esencial y vista completa"
           >
             <Eye className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
@@ -797,7 +802,7 @@ export default function Dashboard({
                 ? "Vista Esencial"
                 : "Vista Completa"}
             </span>
-          </button>
+          </Button>
 
           {/* Engranaje Único de Ajustes del Dashboard */}
           <div className="relative">

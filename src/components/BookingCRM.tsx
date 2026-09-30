@@ -258,6 +258,7 @@ interface BookingCRMProps {
 
 import { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
+import { Button } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1373,7 +1374,9 @@ export default function BookingCRM({
                 </div>
                 {/* UNIFIED ACTION BUTTONS */}
                 <div className="flex items-center gap-1.5 w-full sm:w-auto justify-stretch sm:justify-end">
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     id="add-new-lead-btn"
                     type="button"
                     onClick={() => {
@@ -1400,30 +1403,34 @@ export default function BookingCRM({
                       });
                       setIsAddingLeadModalOpen(true);
                     }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] active:scale-[0.97] cursor-pointer"
+                    className="items-center gap-1.5"
                     title="Añadir contacto"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span>+ {sectionTab === 'medios' ? 'Medio' : sectionTab === 'grupos' ? 'Contacto' : 'Escenario'}</span>
-                  </button>
+                  </Button>
 
                   <div className="hidden sm:inline-flex">
                     <ModuleTutorialTrigger moduleId="booking" onClick={bookingTutorial.openTutorial} />
                   </div>
 
                   {/* Botón Exportar — Solo en PC */}
-                  <button
+                  <Button
+                    variant="neutral"
+                    size="xs"
                     id="export-leads-btn"
                     type="button"
                     onClick={() => setIsExportLeadsOpen(true)}
-                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-[0.97] cursor-pointer"
+                    className="hidden items-center gap-1.5"
                     title="Exportar base de datos a Excel / CSV o JSON"
                   >
                     <Download className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                     <span>Exportar leads</span>
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant="soft"
+                    size="xs"
                     id="open-templates-direct-btn"
                     type="button"
                     onClick={() => {
@@ -1432,12 +1439,12 @@ export default function BookingCRM({
                         document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       }, 60);
                     }}
-                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] transition-[filter] cursor-pointer"
+                    className="hidden items-center gap-1.5"
                     title="Configurar plantillas de correo y entrenar el Redactor con hilos reales de conversación"
                   >
                     <MessageSquareText className="w-3.5 h-3.5" />
                     <span>Plantillas y hilos IA</span>
-                  </button>
+                  </Button>
 
                   {/* Botón Herramientas & IA */}
                   <button
@@ -1661,18 +1668,19 @@ export default function BookingCRM({
                       <span>Exportar leads (A la vista / todos / Excel)</span>
                     </button>
 
-                    <button
+                    <Button
+                      variant="neutral"
                       type="button"
                       disabled={isEnrichingAddresses}
                       onClick={() => {
                         setIsMobileToolsOpen(false);
                         handleEnrichAddresses();
                       }}
-                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
+                      className="items-center justify-center gap-1.5"
                     >
                       <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}

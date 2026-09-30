@@ -5836,17 +5836,18 @@ export default function RepertorioSetlists({
                 <div className="flex-1" />
 
                 {/* Add song button */}
-                <button
+                <Button
+                  variant="primary"
                   id="btn-add-song-filter"
                   onClick={() => {
                     setEditingSong(null);
                     setShowSongModal(true);
                   }}
-                  className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-medium text-sm flex items-center gap-2 transition-ui active:scale-[0.97]"
+                  className="items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   <span className="hidden sm:inline">Tema</span>
-                </button>
+                </Button>
 
                 {/* More actions menu */}
                 <button

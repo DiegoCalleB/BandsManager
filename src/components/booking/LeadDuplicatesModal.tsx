@@ -27,6 +27,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface LeadDuplicatesModalProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -349,15 +350,17 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
             {/* Bulk Action */}
             {duplicateGroups.length > 0 && (
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 type="button"
                 disabled={isProcessing}
                 onClick={handleMergeAllAuto}
-                className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
+                className="items-center gap-1.5 shrink-0 ml-auto"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Fusionar todos automáticamente</span>
-              </button>
+              </Button>
             )}
           </div>
 

@@ -58,7 +58,7 @@ import {
   WHATSAPP_WINDOW_NAME,
 } from "../utils/whatsapp";
 import { decodeBandIdClient } from "../utils/bandHash";
-import { Input, Textarea } from './ui';
+import { Button, Input, Textarea } from './ui';
 
 export interface FansLandingProps {
   currentBandId?: string;
@@ -1216,10 +1216,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 "¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos."}
             </p>
             <div className="grid grid-cols-2 gap-2 pt-1">
-              <button
+              <Button
+                variant="primary"
                 type="button"
                 onClick={handleShareWithFriend}
-                className="py-2.5 px-3 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97]"
+                className="items-center justify-center gap-1.5"
               >
                 {copiedShareLink ? (
                   <>
@@ -1232,7 +1233,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     {t("shareWithFriend") || "Compartir"}
                   </>
                 )}
-              </button>
+              </Button>
               <a
                 href={getWhatsAppUrl(
                   undefined,
@@ -2097,12 +2098,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
 
             <div className="pt-4 text-right">
-              <button
+              <Button
+                variant="primary"
                 onClick={() => setShowPrivacyModal(false)}
-                className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--on-acc)] font-bold font-sans text-xs rounded-[var(--r-pill)] transition-colors"
+                
               >
                 {t("understood")}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -31,7 +31,7 @@ import { FinanceSummaryCards } from "./finanzas/FinanceSummaryCards";
 import { AddTransactionModal } from "./finanzas/AddTransactionModal";
 import { calculateFinancialSummary } from "../utils/financeUtils";
 import { ShowIcon } from './ui/ShowIcon';
-import { Input, Select, Textarea } from './ui';
+import { Button, Input, Select, Textarea } from './ui';
 
 interface FinanzasProps {
   colors: ThemeColors;
@@ -838,13 +838,17 @@ export default function Finanzas({
                 </div>
 
                 <div className="pt-2 flex justify-end gap-2">
-                  <button
+                  <Button
+                    variant="neutral"
+                    size="sm"
                     onClick={() => setEditingConcertId(null)}
-                    className="px-4 py-2 bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-bold rounded-[var(--r-pill)]"
+                    
                   >
                     Cancelar
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
                     onClick={async () => {
                       if (editingConcertId && onUpdateConcert) {
                         const breakdown: ConcertExpenseBreakdown = {
@@ -861,10 +865,10 @@ export default function Finanzas({
                       }
                       setEditingConcertId(null);
                     }}
-                    className="px-4 py-2 bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-pill)]"
+                    
                   >
                     Guardar gastos
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

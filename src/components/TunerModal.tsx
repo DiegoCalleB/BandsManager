@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
+import { Button } from './ui';
 
 interface TunerModalProps {
   isOpen: boolean;
@@ -733,7 +734,9 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                     <p className="leading-snug">{micError}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 pt-1 ">
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       onClick={() => {
                         if (currentPreset.strings[0]) {
                           setSelectedStringIndex(0);
@@ -742,11 +745,11 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                           );
                         }
                       }}
-                      className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold text-micro font-sans hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
+                      className="items-center gap-1"
                     >
                       <Volume2 className="w-3 h-3" />
                       Afinar con Sintetizador ({currentPreset.strings[0]?.note})
-                    </button>
+                    </Button>
                     <button
                       onClick={startTuner}
                       className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-sans text-micro transition-colors flex items-center gap-1 cursor-pointer"

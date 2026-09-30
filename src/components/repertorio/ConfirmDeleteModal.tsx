@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { Button } from '../ui';
 
 export interface ConfirmDeleteData {
   title: string;
@@ -37,17 +38,19 @@ export function ConfirmDeleteModal({ data, onClose }: ConfirmDeleteModalProps) {
             >
               Cancelar
             </button>
-            <button
+            <Button
+              variant="danger"
+              size="sm"
               type="button"
               onClick={() => {
                 const action = data.onConfirm;
                 onClose();
                 action();
               }}
-              className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold text-[var(--on-alert)] bg-[var(--alert)] hover:brightness-95 transition-ui cursor-pointer"
+              
             >
               Sí, Eliminar
-            </button>
+            </Button>
           </div>
         </div>
       </div>

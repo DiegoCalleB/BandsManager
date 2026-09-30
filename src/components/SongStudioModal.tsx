@@ -97,7 +97,7 @@ import {
   GripVertical,
   Zap,
 } from 'lucide-react';
-import { Input, Select, Textarea } from './ui';
+import { Button, Input, Select, Textarea } from './ui';
 
 // Live microphone waveform visualization component for Cubase-style real-time recording
 const LiveMicWaveformCanvas: React.FC<{
@@ -4208,13 +4208,15 @@ export default function SongStudioModal({
                         {/* Mic Recording */}
                         <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col items-center justify-center gap-2">
                           {!isRecording ? (
-                            <button
+                            <Button
+                              variant="danger"
+                              size="xs"
                               type="button"
                               onClick={startRecording}
-                              className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] font-bold text-xs flex items-center gap-1.5 cursor-pointer"
+                              className="items-center gap-1.5"
                             >
                               <Mic className="w-3.5 h-3.5" /> Grabar micrófono
-                            </button>
+                            </Button>
                           ) : (
                             <div className="w-full space-y-2">
                               <button
@@ -4815,17 +4817,19 @@ export default function SongStudioModal({
  idea (es una acción ocasional, no algo que hace falta tener siempre a mano) */}
                                 <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                                   {selectedSongBaseUrl && !tracks.some((t) => t.audioUrl === selectedSongBaseUrl) && (
-                                    <button
+                                    <Button
+                                      variant="soft"
+                                      size="xs"
                                       type="button"
                                       onClick={() => {
                                         saveNewTrackToIdea(idea, selectedSongBaseUrl, `🎵 Base: ${song.titulo} (Original)`, 'Tema Base');
                                       }}
-                                      className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                                      className="items-center gap-1.5"
                                       title="Cargar tema original como base"
                                     >
                                       <Disc className="w-3.5 h-3.5 text-[var(--acc)]" />
                                       <span>+ Base tema</span>
-                                    </button>
+                                    </Button>
                                   )}
                                 </div>
                               </div>
@@ -5377,13 +5381,15 @@ export default function SongStudioModal({
                                                       <ChevronDown className="w-3.5 h-3.5" />
                                                     </button>
                                                   </div>
-                                                  <button
+                                                  <Button
+                                                    variant="danger"
+                                                    size="xs"
                                                     type="button"
                                                     onClick={() => handleDeleteTrack(idea, tr.id)}
-                                                    className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] font-bold text-micro flex items-center gap-1.5 cursor-pointer transition-ui"
+                                                    className="items-center gap-1.5"
                                                   >
                                                     <X className="w-3 h-3" /> Borrar pista
-                                                  </button>
+                                                  </Button>
                                                 </div>
                                               </div>
                                             )}
@@ -5420,15 +5426,17 @@ export default function SongStudioModal({
                                                 {formatTime(recordingTrackTime)}
                                               </div>
 
-                                              <button
+                                              <Button
+                                                variant="danger"
+                                                size="xs"
                                                 type="button"
                                                 onClick={stopRecordingTrackOverdub}
-                                                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] font-sans text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97] shrink-0"
+                                                className="items-center gap-1.5 shrink-0"
                                                 title="Detener y guardar pista en la idea"
                                               >
                                                 <Square className="w-3.5 h-3.5 fill-current" />
                                                 <span>Detener y guardar</span>
-                                              </button>
+                                              </Button>
                                             </div>
                                           </div>
 
@@ -5586,22 +5594,26 @@ export default function SongStudioModal({
                                   {/* Option 1: Live Mic Recording while backing tracks play */}
                                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col items-center justify-center gap-2">
                                     {!isRecordingTrack ? (
-                                      <button
+                                      <Button
+                                        variant="primary"
+                                        size="sm"
                                         type="button"
                                         onClick={() => startRecordingTrackOverdub(idea)}
-                                        className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-110 text-[var(--on-acc)] font-bold text-xs flex items-center gap-2 cursor-pointer active:scale-[0.97]"
+                                        className="items-center gap-2"
                                       >
                                         <Mic className="w-4 h-4" /> Grabar encima (Mic)
-                                      </button>
+                                      </Button>
                                     ) : (
-                                      <button
+                                      <Button
+                                        variant="danger"
+                                        size="sm"
                                         type="button"
                                         onClick={stopRecordingTrackOverdub}
-                                        className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] font-bold text-xs flex items-center gap-2 cursor-pointer"
+                                        className="items-center gap-2"
                                       >
                                         <Square className="w-4 h-4 fill-current" />
                                         <span>Detener ({formatTime(recordingTrackTime)})</span>
-                                      </button>
+                                      </Button>
                                     )}
                                   </div>
 
@@ -6000,17 +6012,19 @@ export default function SongStudioModal({
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="danger"
+                  size="sm"
                   type="button"
                   onClick={() => {
                     const action = confirmDeleteModal.onConfirm;
                     setConfirmDeleteModal(null);
                     action();
                   }}
-                  className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold text-[var(--on-alert)] bg-[var(--alert)] hover:bg-[var(--alert)] transition-ui cursor-pointer/10/50"
+                  
                 >
                   Sí, Eliminar
-                </button>
+                </Button>
               </div>
             </div>
           </div>

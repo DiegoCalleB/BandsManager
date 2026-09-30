@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Fan, Concert, ThemeColors } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface BandAnnouncement {
   id: string;
@@ -290,12 +290,14 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={() => setShowNewPostModal(true)}
-              className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold rounded-[var(--r-pill)] transition flex items-center gap-2 cursor-pointer active:scale-[0.97]"
+              className="items-center gap-2"
             >
               <Send className="w-3.5 h-3.5" /> Publicar Comunicado
-            </button>
+            </Button>
             <button
               onClick={onOpenAddModal}
               className="px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] text-xs font-sans font-bold rounded-[var(--r-pill)] transition flex items-center gap-2 cursor-pointer"
@@ -429,12 +431,14 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
               Comparte el código QR o el enlace público de captura en tus
               conciertos y redes para que tus seguidores se unan a la comunidad.
             </p>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={onOpenAddModal}
-              className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold rounded-[var(--r-pill)] transition cursor-pointer"
+              
             >
               Registrar primer fan
-            </button>
+            </Button>
           </div>
         ) : (
           fans.map((fan) => {
@@ -717,19 +721,23 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
               </div>
 
               <div className="pt-2 flex justify-end gap-3">
-                <button
+                <Button
+                  variant="neutral"
+                  size="sm"
                   type="button"
                   onClick={() => setShowNewPostModal(false)}
-                  className="px-4 py-2 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-xs font-bold rounded-[var(--r-pill)] transition hover:bg-[var(--surface)] cursor-pointer"
+                  
                 >
                   Cancelar
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
                   type="submit"
-                  className="px-5 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-xs font-bold rounded-[var(--r-pill)] transition cursor-pointer flex items-center gap-1.5"
+                  className="items-center gap-1.5"
                 >
                   <Send className="w-3.5 h-3.5" /> Publicar en el muro
-                </button>
+                </Button>
               </div>
             </form>
           </div>

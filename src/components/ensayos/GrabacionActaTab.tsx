@@ -28,7 +28,7 @@ import {
 import { formatTime } from "./EnsayoCronometro";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface GrabacionActaTabProps {
   rehearsal: Rehearsal;
@@ -315,14 +315,15 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   })}
                 </div>
 
-                <button
+                <Button
+                  variant="danger"
                   type="button"
                   onClick={stopRecording}
-                  className="px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-[0.97] transition-ui"
+                  className="items-center gap-2 mx-auto"
                 >
                   <Square className="w-4 h-4 fill-current" />
                   <span>Detener Grabación ({formatTime(recordDuration)})</span>
-                </button>
+                </Button>
               </div>
             ) : (
               <button
@@ -481,10 +482,12 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
           </div>
 
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={handleGenerateAIActa}
               disabled={isGeneratingActa}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-ui cursor-pointer"
+              className="items-center gap-1.5"
             >
               {isGeneratingActa ? (
                 <>
@@ -499,7 +502,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   </span>
                 </>
               )}
-            </button>
+            </Button>
 
             {acta && (
               <button

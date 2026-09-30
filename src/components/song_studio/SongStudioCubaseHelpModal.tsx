@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Keyboard } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface SongStudioCubaseHelpModalProps {
   onClose: () => void;
@@ -102,13 +103,15 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
               <ShowIcon inline emoji="💡" />Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">K</kbd> o{' '}
               <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
             </span>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-ui cursor-pointer"
+              
             >
               Entendido
-            </button>
+            </Button>
           </div>
         </div>
       </div>

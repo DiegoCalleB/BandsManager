@@ -28,7 +28,7 @@ import {
   Briefcase,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Select } from '../ui';
+import { Button, Select } from '../ui';
 
 interface MorningBriefingRadarProps {
   leads: Lead[];
@@ -292,14 +292,16 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
             </button>
           </div>
 
-          <button
+          <Button
+            variant="neutral"
+            size="sm"
             type="button"
             onClick={() => toggleExpanded()}
-            className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+            
             title={isExpanded ? 'Plegar radar' : 'Desplegar radar'}
           >
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
+          </Button>
         </div>
       </div>
 

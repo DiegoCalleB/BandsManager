@@ -1,7 +1,7 @@
 import React from "react";
 import { Video, Youtube, Plus, Trash2, Award } from "lucide-react";
 import { EPKVideo } from "../../../types";
-import { Input, Select } from '../../ui';
+import { Button, Input, Select } from '../../ui';
 
 interface StepVideosProps {
   videos: EPKVideo[];
@@ -158,15 +158,17 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             className="w-2/3"
           />
 
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             type="button"
             onClick={onAddVideo}
             disabled={!newVideoUrl.trim()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+            className="items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir vídeo
-          </button>
+          </Button>
         </div>
       </div>
     </div>

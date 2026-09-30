@@ -14,7 +14,7 @@ import { apiFetch } from "../../utils/api";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { LeadAvatar } from "./LeadAvatar";
 import { ModalPortal } from "../common/ModalPortal";
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface ChangeLeadImageModalProps {
   lead: Lead | null;
@@ -289,14 +289,16 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                     onChange={(e) => setCustomUrl(e.target.value)}
                     className="flex-1"
                   />
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     type="button"
                     onClick={handleSaveCustomUrl}
                     disabled={!customUrl.trim()}
-                    className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] hover:bg-[var(--acc)]/60 transition-colors disabled:opacity-50"
+                    
                   >
                     Guardar
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

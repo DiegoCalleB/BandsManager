@@ -34,6 +34,7 @@ import {
   Key,
 } from "lucide-react";
 import { api } from "../../services/api";
+import { Button } from '../ui';
 
 interface ProfileCompletenessCardProps {
   epkConfig?: Partial<EPKConfig>;
@@ -561,12 +562,14 @@ export const ProfileCompletenessCard: React.FC<
                   </div>
 
                   {!pillar.completed && (
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       onClick={() => handlePillarClick(pillar.view)}
-                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-micro shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
+                      className="shrink-0"
                     >
                       Configurar
-                    </button>
+                    </Button>
                   )}
                 </div>
               ))}
@@ -660,12 +663,14 @@ export const ProfileCompletenessCard: React.FC<
             </div>
 
             <div className="pt-2 flex justify-end">
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={() => setShowAuditModal(false)}
-                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold font-sans text-xs hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
+                
               >
                 Entendido
-              </button>
+              </Button>
             </div>
           </div>
         </div>

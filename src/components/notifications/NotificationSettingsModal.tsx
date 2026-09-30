@@ -19,6 +19,7 @@ import {
 import { ModalPortal } from '../common/ModalPortal';
 import { BrowserNotificationConfig, NotificationPermissionStatus } from '../../types/browserNotifications';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface NotificationSettingsModalProps {
   isOpen: boolean;
@@ -118,13 +119,15 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     </p>
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs shrink-0 transition-colors cursor-pointer"
+                  className="shrink-0"
                 >
                   Solicitar permiso
-                </button>
+                </Button>
               </div>
             )}
 
@@ -298,13 +301,15 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               <span>Probar notificación push</span>
             </button>
 
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer"
+              
             >
               Guardar y cerrar
-            </button>
+            </Button>
           </div>
         </div>
       </div>

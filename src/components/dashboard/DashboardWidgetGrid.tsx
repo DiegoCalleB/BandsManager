@@ -68,6 +68,7 @@ import { hasModuleAccess } from "../../utils/planPermissions";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
+import { Button } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -592,13 +593,15 @@ export function DashboardWidgetGrid({
 
           <div className="flex items-center gap-2 flex-wrap">
             {saveError && (
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 type="button"
                 onClick={() => saveLayoutToDb(widgets)}
-                className="text-xs text-[var(--alert)] bg-[var(--sunken)] px-2.5 py-1 rounded-[var(--r-pill)] flex items-center gap-1 cursor-pointer"
+                className="items-center gap-1"
               >
                 No se pudo guardar · Reintentar
-              </button>
+              </Button>
             )}
             {saveSuccessMsg && (
               <span className="text-xs text-[var(--ok)] bg-[var(--ok-soft)] px-2.5 py-1 rounded-[var(--r-pill)] flex items-center gap-1 animate-fade-in">
@@ -606,33 +609,39 @@ export function DashboardWidgetGrid({
               </span>
             )}
 
-            <button
+            <Button
+              variant="soft"
+              size="sm"
               type="button"
               onClick={() => setIsAddModalOpen(true)}
-              className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5"
+              className="items-center gap-1.5"
             >
               <Plus className="w-4 h-4" />
               <span>Añadir widget</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="neutral"
+              size="sm"
               type="button"
               onClick={handleResetDefault}
-              className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs transition-colors cursor-pointer flex items-center gap-1"
+              className="items-center gap-1"
               title="Restablecer disposición por defecto"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Por Defecto</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               type="button"
               onClick={() => setIsEditMode(false)}
-              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-semibold transition-[filter] hover:brightness-110 cursor-pointer flex items-center gap-1.5"
+              className="items-center gap-1.5"
             >
               <Check className="w-4 h-4" />
               <span>Finalizar edición</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}

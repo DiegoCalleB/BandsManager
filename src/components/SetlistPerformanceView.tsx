@@ -49,6 +49,7 @@ import { cacheActiveStageSetlist } from "../utils/stageOfflineCache";
 import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { ShowIcon } from './ui/ShowIcon';
+import { Button } from './ui';
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
@@ -533,12 +534,13 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               Añade canciones a tu repertorio para comenzar a ensayar.
             </p>
           </div>
-          <button
+          <Button
+            variant="danger"
             onClick={onClose}
-            className="mt-4 px-6 py-2 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] rounded-[var(--r-pill)] font-medium text-sm"
+            className="mt-4"
           >
             Cerrar
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -1042,14 +1044,16 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 <span>Separar en Studio</span>
               </button>
             )}
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               type="button"
               onClick={() => handleLaunchStudio()}
-              className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-semibold flex items-center gap-1700 transition active:scale-[0.97] cursor-pointer"
+              className="items-center gap-1700"
             >
               <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]/50" />
               <span>Studio</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -1463,31 +1467,35 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                         </button>
                       )}
 
-                      <button
+                      <Button
+                        variant="neutral"
+                        size="xs"
                         type="button"
                         onClick={() => {
                           setShowSongListDrawer(false);
                           handleLaunchStudio(song);
                         }}
-                        className="py-1.5 px-2.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
+                        className="items-center justify-center gap-1"
                         title="Abrir Studio multipista completo de este tema"
                       >
                         <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]/50" />
                         <span className="hidden sm:inline">Studio</span>
-                      </button>
+                      </Button>
 
-                      <button
+                      <Button
+                        variant="neutral"
+                        size="xs"
                         type="button"
                         onClick={() => {
                           setCurrentIndex(idx);
                           setShowSongListDrawer(false);
                         }}
-                        className="py-1.5 px-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
+                        className="items-center justify-center gap-1"
                         title="Mostrar en el atril"
                       >
                         <Play className="w-3 h-3 text-[var(--acc)]" />
                         <span>Atril</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 );
@@ -1940,12 +1948,13 @@ const ChordSheetPage: React.FC<{
             >
               <ShowIcon inline emoji="◀" />Parte anterior
             </button>
-            <button
+            <Button
+              variant="primary"
               onClick={onAdvanceSection}
-              className="flex-1 py-2.5 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] rounded-[var(--r-pill)] text-sm font-sans font-bold transition"
+              className="flex-1"
             >
               Siguiente parte <ShowIcon inline emoji="▶" />
-            </button>
+            </Button>
           </div>
         </div>
       ) : (

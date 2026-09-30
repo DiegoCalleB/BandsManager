@@ -14,7 +14,7 @@ import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 interface MemberNotesModalProps {
   isOpen: boolean;
@@ -326,13 +326,15 @@ export function MemberNotesModal({
                     className="flex-1 min-w-[140px]"
                   />
                   <div className="flex items-center gap-1.5">
-                    <button
+                    <Button
+                      variant="neutral"
+                      size="sm"
                       type="button"
                       onClick={handleAddCustomMember}
-                      className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] font-bold text-xs rounded-[var(--r-pill)] cursor-pointer transition-transform active:scale-[0.97]"
+                      
                     >
                       Añadir
-                    </button>
+                    </Button>
                     <button
                       type="button"
                       onClick={() => setShowAddCustomMember(false)}

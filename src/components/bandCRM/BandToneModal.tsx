@@ -31,7 +31,7 @@ import { api } from "../../services/api";
 import { ExampleThreadsSection } from "../booking/ExampleThreadsSection";
 import type { TemplateCategory } from "../booking/TemplateConfigSection";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -688,13 +688,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       <Save className="w-3.5 h-3.5" />{" "}
                       {isSaving ? "Guardando..." : "Guardar cambios"}
                     </button>
-                    <button
+                    <Button
+                      variant="neutral"
                       onClick={handleCancelEdit}
                       disabled={isSaving}
-                      className="py-2.5 px-4 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
+                      className="items-center justify-center gap-2"
                     >
                       <XCircle className="w-3.5 h-3.5" /> Cancelar
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ) : toneData ? (
@@ -1312,12 +1313,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       audiencia.
                     </p>
                   </div>
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     onClick={onReAnalyze}
-                    className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans font-bold text-xs cursor-pointer"
+                    
                   >
                     Iniciar análisis de tono
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

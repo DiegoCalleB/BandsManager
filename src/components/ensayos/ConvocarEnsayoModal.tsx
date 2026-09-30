@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { Rehearsal, ThemeColors, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface ConvocarEnsayoModalProps {
   isOpen: boolean;
@@ -320,13 +320,15 @@ export function ConvocarEnsayoModal({
                         }}
                         className="flex-1"
                       />
-                      <button
+                      <Button
+                        variant="neutral"
+                        size="xs"
                         type="button"
                         onClick={handleAddObjetivo}
-                        className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        className="items-center gap-1"
                       >
                         <Plus className="w-3.5 h-3.5" />
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
@@ -354,12 +356,14 @@ export function ConvocarEnsayoModal({
               >
                 Cancelar
               </button>
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 type="submit"
-                className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
+                
               >
                 {isEditing ? 'Guardar Cambios' : 'Convocar Ensayo'}
-              </button>
+              </Button>
             </div>
           </form>
         </div>

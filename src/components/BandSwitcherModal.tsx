@@ -41,7 +41,7 @@ import {
 import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
-import { Input } from './ui';
+import { Button, Input } from './ui';
 
 // Fase beta: crear una banda nueva desde aquí va directa al plan Promo, sin pasar por la
 // parrilla de planes de pago (mismo criterio que SimplePromoLoginModal.tsx). El selector de
@@ -610,14 +610,16 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         {/* Main Container */}
         <div className="relative w-full max-w-4xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col p-6 md:p-10 text-center my-auto max-h-[90vh] overflow-y-auto">
           {/* Close Button */}
-          <button
+          <Button
+            variant="neutral"
+            size="sm"
             onClick={onClose}
             disabled={!!switchingBandId}
-            className="absolute top-5 right-5 p-2 text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-pill)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
+            className="absolute top-5 right-5"
             title="Cerrar"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
 
           {/* Top Header */}
           <div className="flex flex-col items-center mb-6 md:mb-8">
@@ -926,12 +928,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                 ? "proyecto disponible"
                 : "proyectos disponibles"}
             </span>
-            <button
+            <Button
+              variant="neutral"
+              size="sm"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer font-medium"
+              
             >
               Mantener banda actual
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -1091,7 +1095,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               {/* Actions: Team Management + Close */}
               <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-2 border-t border-[var(--hair)]">
                 {onOpenBandManagement && (
-                  <button
+                  <Button
+                    variant="neutral"
                     type="button"
                     onClick={async () => {
                       const bId = selectedBandForSettings.band_id;
@@ -1105,20 +1110,21 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       onClose();
                       onOpenBandManagement(bId);
                     }}
-                    className="w-full sm:flex-1 py-2.5 px-3 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    className="w-full sm:flex-1 items-center justify-center gap-2"
                   >
                     <Users className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                     <span>Gestionar músicos</span>
-                  </button>
+                  </Button>
                 )}
 
-                <button
+                <Button
+                  variant="neutral"
                   type="button"
                   onClick={() => setSelectedBandForSettings(null)}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
+                  className="w-full sm:w-auto"
                 >
                   Listo
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -1229,20 +1235,22 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
 
                     <div className="flex items-center justify-end gap-3 pt-4">
-                      <button
+                      <Button
+                        variant="neutral"
                         type="button"
                         onClick={() => setShowCreateBandModal(false)}
-                        className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
+                        
                       >
                         Cancelar
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="primary"
                         type="submit"
                         disabled={
                           !newBandName.trim() ||
                           (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)
                         }
-                        className="px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="items-center gap-2"
                       >
                         {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
                           isCreatingBand ? (
@@ -1262,7 +1270,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             <ArrowRight className="w-4 h-4" />
                           </>
                         )}
-                      </button>
+                      </Button>
                     </div>
                   </form>
                 </div>
@@ -1272,15 +1280,17 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               {createBandStep === 2 && (
                 <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
                   <div className="flex items-center justify-between">
-                    <button
+                    <Button
+                      variant="neutral"
+                      size="xs"
                       type="button"
                       onClick={() => setCreateBandStep(1)}
                       disabled={isCreatingBand}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer disabled:opacity-50"
+                      className="items-center gap-2"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
                       <span>Volver a datos de la banda</span>
-                    </button>
+                    </Button>
                     <button
                       type="button"
                       onClick={() => setShowCreateBandModal(false)}
@@ -1713,21 +1723,25 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               </p>
 
               <div className="flex items-center justify-end gap-2 pt-2">
-                <button
+                <Button
+                  variant="neutral"
+                  size="xs"
                   type="button"
                   onClick={() => setBandToDelete(null)}
-                  className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
+                  
                 >
                   Cancelar
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="danger"
+                  size="xs"
                   type="button"
                   onClick={handleConfirmLeaveBand}
-                  className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5"
+                  className="items-center gap-1.5"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Sí, eliminar</span>
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -1842,7 +1856,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                     <span>Activo</span>
                                   </span>
                                 ) : (
-                                  <button
+                                  <Button
+                                    variant="primary"
+                                    size="xs"
                                     type="button"
                                     onClick={async () => {
                                       const isLeaderOrAdmin =
@@ -1917,11 +1933,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                         );
                                       }
                                     }}
-                                    className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
+                                    className="items-center gap-1"
                                   >
                                     <Sparkles className="w-3 h-3 fill-[var(--ink-3)]" />
                                     <span>Seleccionar {plan.name}</span>
-                                  </button>
+                                  </Button>
                                 )}
                               </div>
                             </div>

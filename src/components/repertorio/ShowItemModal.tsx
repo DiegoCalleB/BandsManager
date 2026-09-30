@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface ShowItemModalProps {
   isOpen: boolean;
@@ -192,12 +193,14 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
             >
               Cancelar
             </button>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               type="submit"
-              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] text-xs font-mono cursor-pointer flex items-center gap-1.5"
+              className="items-center gap-1.5"
             >
               <span>Guardar en Setlist</span>
-            </button>
+            </Button>
           </div>
         </form>
       </div>

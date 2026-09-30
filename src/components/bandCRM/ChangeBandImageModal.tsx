@@ -4,7 +4,7 @@ import { BandContact } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { uploadFileToServer } from '../../utils/audioStorage';
 import { ModalPortal } from '../common/ModalPortal';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface ChangeBandImageModalProps {
   band: BandContact | null;
@@ -201,13 +201,15 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                   onChange={(e) => setCustomUrl(e.target.value)}
                   className="w-full"
                 />
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   onClick={handleSaveCustomUrl}
                   disabled={!customUrl.trim()}
-                  className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] hover:bg-[var(--acc)]/60"
+                  
                 >
                   Guardar
-                </button>
+                </Button>
               </div>
             )}
 

@@ -43,7 +43,7 @@ import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -532,14 +532,16 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         </button>
 
         <div className="relative">
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             type="button"
             onClick={() => setShowCreateAlbumMenu((v) => !v)}
-            className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+            className="items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Nuevo disco</span>
-          </button>
+          </Button>
           {showCreateAlbumMenu && (
             <>
               <div

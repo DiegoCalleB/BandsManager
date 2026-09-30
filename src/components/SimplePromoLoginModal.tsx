@@ -4,6 +4,7 @@ import { User as UserType } from '../types';
 import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { ModalPortal } from './common/ModalPortal';
+import { Button } from './ui';
 
 // Ventana de acceso simplificada para la fase beta (bandas del festival Buskers y primeros
 // usuarios): a diferencia de LoginModal.tsx, el registro NO ofrece selector de planes — crea
@@ -449,15 +450,16 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   </div>
                 </div>
 
-                <button
+                <Button
+                  variant="neutral"
                   type="button"
                   onClick={handleGoogleSocialSignIn}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2.5 py-3 bg-[var(--sunken)] hover:brightness-110 rounded-[var(--r-pill)] text-sm font-medium text-[var(--ink)] transition-[filter] cursor-pointer disabled:opacity-50"
+                  className="w-full items-center justify-center gap-2.5"
                 >
                   <GoogleIcon />
                   <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
-                </button>
+                </Button>
 
                 <p className="text-center text-xs text-[var(--ink-2)] pt-1">
                   ¿Primera vez por aquí?{' '}
@@ -573,15 +575,16 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   </div>
                 </div>
 
-                <button
+                <Button
+                  variant="neutral"
                   type="button"
                   onClick={handleGoogleSocialSignIn}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2.5 py-3 bg-[var(--sunken)] hover:brightness-110 rounded-[var(--r-pill)] text-sm font-medium text-[var(--ink)] transition-[filter] cursor-pointer disabled:opacity-50"
+                  className="w-full items-center justify-center gap-2.5"
                 >
                   <GoogleIcon />
                   <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
-                </button>
+                </Button>
 
                 <p className="text-center text-xs text-[var(--ink-2)]">
                   ¿Ya tienes cuenta?{' '}

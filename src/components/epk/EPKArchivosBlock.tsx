@@ -13,7 +13,7 @@ import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { AILogoGeneratorModal } from "./AILogoGeneratorModal";
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface EPKArchivosBlockProps {
   config: EPKConfig;
@@ -128,14 +128,15 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </label>
 
                 {config.logoUrl && (
-                  <button
+                  <Button
+                    variant="neutral"
                     type="button"
                     onClick={() => setConfig({ ...config, logoUrl: "" })}
-                    className="p-2.5 bg-[var(--sunken)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] transition cursor-pointer"
+                    
                     title="Eliminar logo"
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </Button>
                 )}
               </div>
 

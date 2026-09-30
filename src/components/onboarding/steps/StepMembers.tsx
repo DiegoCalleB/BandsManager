@@ -9,7 +9,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { WizardMemberItem } from "../types";
-import { Input } from '../../ui';
+import { Button, Input } from '../../ui';
 
 interface StepMembersProps {
   members: WizardMemberItem[];
@@ -149,15 +149,17 @@ export const StepMembers: React.FC<StepMembersProps> = ({
         </div>
 
         <div className="flex justify-end pt-1">
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             type="button"
             onClick={onAddMember}
             disabled={!newMemberName.trim()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+            className="items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir a la formación
-          </button>
+          </Button>
         </div>
       </div>
     </div>

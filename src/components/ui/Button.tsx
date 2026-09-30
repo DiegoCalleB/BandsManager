@@ -32,6 +32,8 @@ export const buttonVariants = cva(
         danger: 'bg-[var(--alert-soft)] text-[var(--alert)] hover:brightness-95',
       },
       size: {
+        /** Compacto para barras densas (28 px); en táctil el área de pulsación se amplía sola. */
+        xs: 'h-7 px-3 text-xs',
         sm: 'h-9 px-3.5 text-xs',
         md: 'h-10 px-4.5 text-sm',
         lg: 'h-11 px-5 text-sm',

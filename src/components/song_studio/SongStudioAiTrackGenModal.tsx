@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Wand2, RefreshCw, Music, CheckCircle2, Check } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Textarea } from '../ui';
+import { Button, Textarea } from '../ui';
 
 interface SongStudioAiTrackGenModalProps {
   showAiTrackGenModal: SongAudioIdea | null;
@@ -143,11 +143,12 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
               <Check className="w-4 h-4" /> Añadir a la mezcla
             </button>
           )}
-          <button
+          <Button
+            variant="primary"
             type="button"
             disabled={isGeneratingAiTrack}
             onClick={handleSubmit}
-            className="px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold flex items-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
+            className="items-center gap-2"
           >
             {isGeneratingAiTrack ? (
               <>
@@ -160,7 +161,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                 <span>{aiTrackGenPreview ? 'Regenerar' : 'Generar Pista con IA'}</span>
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

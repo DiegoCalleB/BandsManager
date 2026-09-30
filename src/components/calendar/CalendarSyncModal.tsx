@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Radio, Download, Copy, Check } from 'lucide-react';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface CalendarSyncModalProps {
   isOpen: boolean;
@@ -69,10 +69,12 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
                 value={rutaFeed}
                 className="flex-1"
               />
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 type="button"
                 onClick={handleCopy}
-                className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer shrink-0"
+                className="items-center gap-1 shrink-0"
               >
                 {copiedSyncUrl ? (
                   <>
@@ -85,7 +87,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
                     <span>Copiar URL</span>
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -133,12 +135,14 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
             <Download className="w-3 h-3" />
             <span>O si prefieres, descargar archivo .ics puntual</span>
           </a>
-          <button
+          <Button
+            variant="neutral"
+            size="xs"
             onClick={onClose}
-            className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
+            
           >
             Cerrar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

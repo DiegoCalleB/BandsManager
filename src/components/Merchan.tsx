@@ -30,7 +30,7 @@ import { ThemeColors, ThemeName } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
 import { ShowIcon } from './ui/ShowIcon';
-import { Input } from './ui';
+import { Button, Input } from './ui';
 
 const ResolvedBgImage: React.FC<{
   url: string;
@@ -849,13 +849,15 @@ export default function Merchan({
                           <Download className="w-4 h-4" />
                           Descargar gráfico
                         </button>
-                        <button
+                        <Button
+                          variant="danger"
+                          size="sm"
                           onClick={() => handleDelete(design.id)}
-                          className="px-4 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)] transition"
+                          className="items-center gap-2"
                         >
                           <Trash2 className="w-4 h-4" />
                           Eliminar
-                        </button>
+                        </Button>
                       </div>
 
                       <div
@@ -1133,14 +1135,15 @@ export default function Merchan({
                     Cancelar
                   </button>
 
-                  <button
+                  <Button
+                    variant="primary"
                     type="button"
                     onClick={() => setClaimStep("success")}
-                    className="px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans active:scale-[0.97] cursor-pointer flex items-center gap-2"
+                    className="items-center gap-2"
                   >
                     <PackageCheck className="w-4 h-4" />
                     <span>Pedir mis pegatinas</span>
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <div className="w-full flex justify-end">

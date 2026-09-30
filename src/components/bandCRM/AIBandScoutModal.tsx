@@ -8,10 +8,12 @@ import {
   UserPlus,
   CheckCircle2,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { BandContact, BookingCampaign } from "../../types";
 import { apiFetch } from "../../utils/api";
+import { Button } from '../ui';
 
 interface AIBandScoutModalProps {
   isOpen: boolean;
@@ -216,14 +218,15 @@ export function AIBandScoutModal({
             </div>
 
             <div className="flex justify-center mb-8">
-              <button
+              <Button
+                variant="primary"
                 onClick={handleSearch}
                 disabled={isSearching}
-                className="px-6 py-2.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] transition-ui disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="items-center gap-2"
               >
                 {isSearching ? (
                   <>
-                    <div className="w-5 h-5 border-t-[var(--hair)] rounded-[var(--r-pill)] animate-spin" />
+                    <Loader2 aria-hidden className="w-5 h-5 animate-spin text-[var(--ink-2)]" />
                     Buscando bandas compatibles…
                   </>
                 ) : (
@@ -232,7 +235,7 @@ export function AIBandScoutModal({
                     Scoutear bandas con IA
                   </>
                 )}
-              </button>
+              </Button>
             </div>
 
             {error && (
@@ -312,14 +315,15 @@ export function AIBandScoutModal({
             >
               Cancelar
             </button>
-            <button
+            <Button
+              variant="neutral"
               onClick={handleImport}
               disabled={selectedBands.size === 0}
-              className="px-6 py-2 bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-pill)] transition-ui shadow disabled:opacity-50 flex items-center gap-2"
+              className="items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               Importar {selectedBands.size} Bandas al CRM
-            </button>
+            </Button>
           </div>
         </div>
       </div>

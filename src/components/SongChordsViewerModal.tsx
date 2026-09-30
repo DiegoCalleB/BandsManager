@@ -39,7 +39,7 @@ import {
   parseRootNote,
 } from "../utils/chordUtils";
 import { ShowIcon } from './ui/ShowIcon';
-import { Input, Textarea } from './ui';
+import { Button, Input, Textarea } from './ui';
 
 interface SongChordsViewerModalProps {
   song: Song;
@@ -322,14 +322,16 @@ export function SongChordsViewerModal({
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
         <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden text-[var(--ink)] my-auto">
           {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
-          <button
+          <Button
+            variant="neutral"
+            size="xs"
             type="button"
             onClick={onClose}
-            className="absolute top-3 right-3 z-20 p-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--alert)]/30 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
+            className="absolute top-3 right-3 z-20"
             title="Cerrar"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
 
           {/* MODAL HEADER */}
           <div className="bg-[var(--sunken)] p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
@@ -418,11 +420,13 @@ export function SongChordsViewerModal({
 
             <div className="flex items-center gap-1.5">
               {/* AI Generate — the main action, keeps its label */}
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 type="button"
                 onClick={handleGenerateWithAi}
                 disabled={isGeneratingAi}
-                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                className="items-center gap-1.5"
                 title={
                   song.audioPrincipalUrl
                     ? "Reanalizar escuchando el audio real de la canción"
@@ -433,7 +437,7 @@ export function SongChordsViewerModal({
                   className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
                 />
                 <span>{isGeneratingAi ? "Generando..." : "IA Cifrado"}</span>
-              </button>
+              </Button>
 
               {/* Secondary actions — icon-only to keep the header clean */}
               <button
@@ -613,19 +617,21 @@ export function SongChordsViewerModal({
                 </div>
 
                 {/* NOTATION TOGGLE (Latino / C-D-E) */}
-                <button
+                <Button
+                  variant="neutral"
+                  size="xs"
                   type="button"
                   onClick={() =>
                     setNotation((prev) => (prev === "ES" ? "EN" : "ES"))
                   }
-                  className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer flex items-center gap-1"
+                  className="items-center gap-1"
                   title="Cambiar entre cifrado latino (Do, Re, Mi) e inglés (C, D, E)"
                 >
                   <span>Cifrado:</span>
                   <span className="text-[var(--acc)]">
                     {notation === "ES" ? "Do - Re - Mi" : "C - D - E"}
                   </span>
-                </button>
+                </Button>
 
                 {/* AUTO-SCROLL CONTROLLER */}
                 <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
@@ -838,14 +844,16 @@ export function SongChordsViewerModal({
                     </div>
 
                     <div className="pt-2 flex justify-end">
-                      <button
+                      <Button
+                        variant="primary"
+                        size="sm"
                         type="button"
                         onClick={() => setActiveTab("edit")}
-                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
+                        className="items-center gap-2"
                       >
                         <Edit3 className="w-4 h-4" />
                         <span>Editar esta ficha de sustitución</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Award, Plus, Trash2, Radio, Users, CheckCircle2, TrendingUp } from 'lucide-react';
 import { PressQuoteItem } from '../types';
-import { Input } from '../../ui';
+import { Button, Input } from '../../ui';
 
 interface StepPressProofProps {
   pressQuotes: PressQuoteItem[];
@@ -155,14 +155,16 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
             </div>
           </div>
           <div className="flex justify-end">
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={onAddQuote}
               disabled={!newQuoteText.trim() || !newQuoteMedia.trim()}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+              className="items-center gap-1.5"
             >
               <Plus className="w-3.5 h-3.5" /> Añadir cita
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
+import { Button } from '../ui';
 
 interface EmailTemplatesModalProps {
   isOpen: boolean;
@@ -206,14 +207,16 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                   </h4>
                 </div>
 
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   onClick={() =>
                     handleCopy(
                       currentTpl.id,
                       `Asunto: ${currentTpl.subject}\n\n${currentTpl.body}`,
                     )
                   }
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-xs hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+                  className="items-center gap-1.5 shrink-0"
                 >
                   {copiedId === currentTpl.id ? (
                     <>
@@ -226,7 +229,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                       <span>Copiar plantilla</span>
                     </>
                   )}
-                </button>
+                </Button>
               </div>
 
               {/* Subject preview */}

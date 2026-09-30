@@ -46,7 +46,7 @@ import { Sparkles,
   Zap,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 export interface CalendarEventDetailModalProps {
   showEventFichaModal: boolean;
@@ -371,18 +371,20 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               {/* Barra de Acciones del Evento (Editar, WhatsApp, Notificar, Copiar, Eliminar) */}
               {modalEvent && (
                 <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-                  <button
+                  <Button
+                    variant="neutral"
+                    size="xs"
                     type="button"
                     onClick={() => {
                       setShowEventFichaModal(false);
                       if (selectedConcert) setViewingConcert(selectedConcert);
                       if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
                     }}
-                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--sunken)] text-[var(--acc)] hover:brightness-110 flex items-center gap-1"
+                    className="items-center gap-1"
                     title="Editar todos los campos de este evento"
                   >
                     ✎ Editar
-                  </button>
+                  </Button>
 
                   <div className="hidden sm:flex flex-wrap items-center gap-1.5">
                   <button
@@ -432,15 +434,17 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                   {/* Móvil: lo secundario detrás de ⋯ (AGENTS.md §6) */}
                   <div className="relative sm:hidden">
-                    <button
+                    <Button
+                      variant="neutral"
+                      size="sm"
                       type="button"
                       onClick={() => setShowFichaMenu((v) => !v)}
-                      className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] cursor-pointer"
+                      
                       aria-label="Más acciones"
                       aria-expanded={showFichaMenu}
                     >
                       <MoreHorizontal className="w-4 h-4" />
-                    </button>
+                    </Button>
                     {showFichaMenu && (
                       <>
                         <div className="fixed inset-0 z-[9998]" onClick={() => setShowFichaMenu(false)} />
@@ -480,20 +484,24 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
+                  <Button
+                    variant="neutral"
+                    size="xs"
                     type="button"
                     onClick={() => setDeletingEventConfirmId(null)}
-                    className="px-3 py-1.5 text-xs font-mono rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-110 text-[var(--ink-2)] transition-colors cursor-pointer"
+                    
                   >
                     Cancelar
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="xs"
                     type="button"
                     onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
-                    className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] transition-colors cursor-pointer"
+                    
                   >
                     Sí, eliminar definitivamente
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -1243,14 +1251,16 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
                           <span>{merchCopiedToast ? '¡Copiado!' : 'Copiar Arqueo (WhatsApp)'}</span>
                         </button>
-                        <button
+                        <Button
+                          variant="primary"
+                          size="xs"
                           type="button"
                           onClick={() => setShowAddMerchForm(!showAddMerchForm)}
-                          className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1 cursor-pointer"
+                          className="items-center gap-1"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>{showAddMerchForm ? 'Cerrar' : '+ Añadir Producto'}</span>
-                        </button>
+                        </Button>
                       </div>
                     </div>
 
@@ -1461,13 +1471,15 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           </div>
 
                           <div className="flex justify-end pt-1">
-                            <button
+                            <Button
+                              variant="primary"
+                              size="xs"
                               type="submit"
-                              className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1.5 cursor-pointer"
+                              className="items-center gap-1.5"
                             >
                               <Check className="w-3.5 h-3.5" />
                               <span>Guardar producto en el bolo</span>
-                            </button>
+                            </Button>
                           </div>
                         </motion.form>
                       )}
@@ -1856,17 +1868,19 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     </h3>
                   </div>
                   {selectedConcert && (
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() => {
                         setShowEventFichaModal(false);
                         setViewingConcert(selectedConcert);
                       }}
-                      className="px-2.5 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-colors flex items-center gap-1 cursor-pointer"
+                      className="items-center gap-1"
                     >
                       <Edit className="w-3.5 h-3.5" />
                       <span>Editar convocatoria / dictar nota</span>
-                    </button>
+                    </Button>
                   )}
                 </div>
 
@@ -2111,13 +2125,15 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)…"
                     className="flex-1 min-w-[200px]"
                   />
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     type="submit"
                     disabled={!newCierreItemText.trim()}
-                    className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                    
                   >
                     + Añadir ítem
-                  </button>
+                  </Button>
                 </form>
               </div>
             )}

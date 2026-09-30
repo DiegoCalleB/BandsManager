@@ -17,6 +17,7 @@ import {
   Maximize2,
   Copy,
 } from 'lucide-react';
+import { Button } from '../ui';
 
 const IrisPrismBanner: React.FC = () => {
   return (
@@ -215,20 +216,24 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-[var(--hair)]/10">
-          <button
+          <Button
+            variant="neutral"
+            size="sm"
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
-            className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+            
           >
             Seguir en segundo plano
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
             type="button"
             onClick={() => setStemProgressModal(null)}
-            className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold cursor-pointer"
+            
           >
             Cerrar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

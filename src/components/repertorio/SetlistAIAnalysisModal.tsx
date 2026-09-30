@@ -22,6 +22,7 @@ import {
 } from "../../utils/setlistActionPositionAdjust";
 import { openWhatsAppChat } from "../../utils/whatsapp";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -614,14 +615,16 @@ export function SetlistAIAnalysisModal({
               </div>
               <div className="flex items-center gap-1.5">
                 {canUndo && (
-                  <button
+                  <Button
+                    variant="soft"
+                    size="xs"
                     onClick={onUndo}
                     onMouseDown={(e) => e.stopPropagation()}
-                    className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
+                    className="items-center gap-1"
                     title="Deshacer el último reordenamiento del setlist"
                   >
                     <ShowIcon inline emoji="↩️" />Deshacer
-                  </button>
+                  </Button>
                 )}
                 <button
                   onClick={onClose}
@@ -726,12 +729,14 @@ export function SetlistAIAnalysisModal({
                   sugerencias personalizadas sobre pacing, narrativa y
                   psicología del público.
                 </p>
-                <button
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={handleAnalyze}
-                  className="bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
+                  
                 >
                   Iniciar análisis IA
-                </button>
+                </Button>
               </div>
             )}
 
@@ -1024,12 +1029,13 @@ export function SetlistAIAnalysisModal({
               </button>
             </div>
             <div className="flex gap-3">
-              <button
+              <Button
+                variant="primary"
                 onClick={handleAnalyze}
-                className="flex-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm"
+                className="flex-1"
               >
                 <ShowIcon inline emoji="🔄" />Re-analizar
-              </button>
+              </Button>
               <button
                 onClick={onClose}
                 className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm"

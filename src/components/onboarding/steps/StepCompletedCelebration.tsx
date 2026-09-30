@@ -13,6 +13,7 @@ import {
   Calendar,
   Users,
 } from "lucide-react";
+import { Button } from '../../ui';
 
 interface StepCompletedCelebrationProps {
   bandName: string;
@@ -121,10 +122,12 @@ export const StepCompletedCelebration: React.FC<
             >
               <ExternalLink className="w-3.5 h-3.5" /> Ver Dossier EPK
             </a>
-            <button
+            <Button
+              variant="neutral"
+              size="sm"
               type="button"
               onClick={() => copyToClipboard(epkUrl, "epk")}
-              className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+              className="items-center justify-center"
               title="Copiar enlace EPK"
             >
               {copiedEpk ? (
@@ -132,7 +135,7 @@ export const StepCompletedCelebration: React.FC<
               ) : (
                 <Copy className="w-4 h-4" />
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -164,10 +167,12 @@ export const StepCompletedCelebration: React.FC<
             >
               <ExternalLink className="w-3.5 h-3.5" /> Ver landing fans
             </a>
-            <button
+            <Button
+              variant="neutral"
+              size="sm"
               type="button"
               onClick={() => copyToClipboard(fansUrl, "fans")}
-              className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+              className="items-center justify-center"
               title="Copiar enlace Fans"
             >
               {copiedFans ? (
@@ -175,7 +180,7 @@ export const StepCompletedCelebration: React.FC<
               ) : (
                 <Copy className="w-4 h-4" />
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

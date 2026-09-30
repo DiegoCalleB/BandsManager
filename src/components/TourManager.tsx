@@ -34,7 +34,7 @@ import {
   Target,
 } from "lucide-react";
 import { ShowIcon } from './ui/ShowIcon';
-import { Input, Select } from './ui';
+import { Button, Input, Select } from './ui';
 
 interface TourManagerProps {
   colors: ThemeColors;
@@ -694,13 +694,14 @@ export default function TourManager({
             </p>
           </div>
 
-          <button
+          <Button
+            variant="primary"
             onClick={handleOpenCreateModal}
-            className="px-4 py-2.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:brightness-95 transition-ui active:scale-[0.97] flex items-center gap-2 cursor-pointer"
+            className="items-center gap-2"
           >
             <Plus className="w-4 h-4 shrink-0" />
             <span>Nueva gira</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -739,12 +740,14 @@ export default function TourManager({
               Agrupa tus conciertos en una gira y calcula gasolina, dietas, alojamiento y lo que
               queda por cabeza.
             </p>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={handleOpenCreateModal}
-              className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:opacity-90 transition-ui inline-flex items-center gap-2 cursor-pointer"
+              className="items-center gap-2"
             >
               <Plus className="w-4 h-4" /> Crear primera gira
-            </button>
+            </Button>
           </div>
         ) : (
           (() => {
@@ -1840,14 +1843,15 @@ export default function TourManager({
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="primary"
                   type="submit"
                   form="tour-form"
-                  className="px-5 py-2 rounded-[var(--r-pill)] text-sm font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:brightness-95 active:scale-[0.97] transition-ui flex items-center gap-2 cursor-pointer"
+                  className="items-center gap-2"
                 >
                   <Activity className="w-4 h-4" />
                   {editingTour ? "Guardar Cambios" : "Crear Gira"}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -1893,14 +1897,16 @@ export default function TourManager({
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="danger"
+                  size="sm"
                   type="button"
                   onClick={confirmDelete}
-                  className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] active:scale-[0.97] transition-ui flex items-center gap-1.5 cursor-pointer"
+                  className="items-center gap-1.5"
                 >
                   <Trash2 className="w-4 h-4" />
                   Sí, eliminar Gira
-                </button>
+                </Button>
               </div>
             </div>
           </div>

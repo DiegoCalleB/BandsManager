@@ -19,7 +19,7 @@ import {
 import { SpotifyAlbum, SpotifyTrack, ManualSongItem } from "../types";
 import { Song } from "../../../types";
 import { ShowIcon } from '../../ui/ShowIcon';
-import { Input, Textarea } from '../../ui';
+import { Button, Input, Textarea } from '../../ui';
 
 interface StepMusicSetlistProps {
   musicSubTab: "spotify" | "upload" | "manual";
@@ -164,17 +164,18 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                 className="w-full pl-10 pr-4"
               />
             </div>
-            <button
+            <Button
+              variant="primary"
               type="submit"
               disabled={isSearchingSpotify || !spotifyQuery.trim()}
-              className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              className="items-center gap-1.5"
             >
               {isSearchingSpotify ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 "Buscar"
               )}
-            </button>
+            </Button>
           </form>
 
           {spotifyAlbums.length > 0 && (
@@ -239,11 +240,13 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                   <span className="text-xs text-[var(--acc)]/70 font-medium">
                     {selectedSpotifyTracks.size} canciones seleccionadas
                   </span>
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     type="button"
                     onClick={onImportSpotifyTracks}
                     disabled={isImportingSpotify}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors"
+                    className="items-center gap-1.5"
                   >
                     {isImportingSpotify ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -251,7 +254,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                       <Check className="w-3.5 h-3.5" />
                     )}
                     Importar al Repertorio
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
@@ -347,15 +350,17 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
               </div>
 
               <div className="flex justify-end">
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="button"
                   onClick={onAddManualSong}
                   disabled={!newManualTitle.trim()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+                  className="items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Añadir canción
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
@@ -382,7 +387,9 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                 className="w-full"
               />
               <div className="flex justify-end">
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="button"
                   onClick={() => {
                     onBulkAddManualSongs(bulkText);
@@ -390,11 +397,11 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     setShowBulkInput(false);
                   }}
                   disabled={!bulkText.trim()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+                  className="items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Procesar e Importar Lista
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -459,15 +466,17 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             Crear Setlist directo (60 min)
           </button>
 
-          <button
+          <Button
+            variant="neutral"
+            size="xs"
             type="button"
             onClick={() => onGenerateSetlist(45)}
             disabled={isCreatingSetlist || totalImportedSongsCount === 0}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs font-medium transition-colors disabled:opacity-50"
+            className="items-center gap-1.5"
           >
             <Clock className="w-3.5 h-3.5" />
             Crear Setlist Festival / Showcase (45 min)
-          </button>
+          </Button>
         </div>
       </div>
     </div>

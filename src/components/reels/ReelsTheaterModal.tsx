@@ -7,7 +7,7 @@ import {
 import { ThemeColors } from '../../types';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 export interface ReelsTheaterModalProps {
   isOpen: boolean;
@@ -154,12 +154,14 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
           <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]" />
           <span className="text-xs font-mono font-bold text-[var(--ink)] ">Modo cine · Reels</span>
         </div>
-        <button
+        <Button
+          variant="neutral"
+          size="xs"
           onClick={onClose}
-          className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--acc-ink)] hover:text-[var(--ink)] font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer "
+          className="items-center gap-1.5"
         >
           <X className="w-4 h-4" /> <span>Cerrar</span>
-        </button>
+        </Button>
       </div>
 
       <div 
@@ -332,10 +334,12 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
           {/* Sound Toggle */}
           <div className="mt-4 flex items-center gap-2">
-            <button
+            <Button
+              variant="neutral"
+              size="sm"
               id="expanded-mute-btn"
               onClick={() => setIsPreviewMuted(!isPreviewMuted)}
-              className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-neutral-850 active:scale-[0.97] transition-ui cursor-pointer select-none text-xs font-mono font-bold"
+              className="items-center gap-2"
             >
               {isPreviewMuted ? (
                 <>
@@ -348,7 +352,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                   <span>Silenciar audio</span>
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -511,46 +515,54 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       <div className="space-y-1.5 text-left">
                         <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block"><ShowIcon inline emoji="⬅️" />Ajustar inicio</span>
                         <div className="flex gap-2">
-                          <button
+                          <Button
+                            variant="neutral"
+                            size="sm"
                             type="button"
                             onClick={() => handleAdjustCrop('start_minus')}
-                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 items-center justify-center gap-1"
                           >
                             <ChevronLeft className="w-4 h-4 text-[var(--ok)]" />
                             <span>-1s</span>
-                          </button>
-                          <button
+                          </Button>
+                          <Button
+                            variant="neutral"
+                            size="sm"
                             type="button"
                             disabled={start >= end - 1}
                             onClick={() => handleAdjustCrop('start_plus')}
-                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 disabled:opacity-30 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 items-center justify-center gap-1"
                           >
                             <span>+1s</span>
                             <ChevronRight className="w-4 h-4 text-[var(--acc-ink)]" />
-                          </button>
+                          </Button>
                         </div>
                       </div>
 
                       <div className="space-y-1.5 text-left">
                         <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block"><ShowIcon inline emoji="➡️" />Ajustar Fin</span>
                         <div className="flex gap-2">
-                          <button
+                          <Button
+                            variant="neutral"
+                            size="sm"
                             type="button"
                             disabled={end <= start + 1}
                             onClick={() => handleAdjustCrop('end_minus')}
-                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 disabled:opacity-30 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 items-center justify-center gap-1"
                           >
                             <ChevronLeft className="w-4 h-4 text-[var(--acc-ink)]" />
                             <span>-1s</span>
-                          </button>
-                          <button
+                          </Button>
+                          <Button
+                            variant="neutral"
+                            size="sm"
                             type="button"
                             onClick={() => handleAdjustCrop('end_plus')}
-                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 items-center justify-center gap-1"
                           >
                             <span>+1s</span>
                             <ChevronRight className="w-4 h-4 text-[var(--ok)]" />
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -746,14 +758,15 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 Salir
               </button>
 
-              <button
+              <Button
+                variant="primary"
                 type="button"
                 onClick={(e) => handleSchedulePost(e)}
                 disabled={isScheduling || !editedCopy.trim()}
-                className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] active:scale-[0.97] transition-ui text-xs font-mono cursor-pointer disabled:opacity-40"
+                className="flex-1 sm:flex-none"
               >
                 {isScheduling ? 'Guardando...' : 'Aprobar y Programar Post'}
-              </button>
+              </Button>
             </div>
           </div>
 

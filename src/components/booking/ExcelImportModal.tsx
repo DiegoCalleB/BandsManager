@@ -22,7 +22,7 @@ import { Lead, LeadType } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface ExcelImportModalProps {
   isOpen: boolean;
@@ -765,15 +765,17 @@ export function ExcelImportModal({
             </div>
 
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 type="button"
                 onClick={handleDownloadTemplate}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] transition-ui cursor-pointer"
+                className="hidden items-center gap-1.5"
                 title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
               >
                 <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>Plantilla ejemplo</span>
-              </button>
+              </Button>
               <button
                 type="button"
                 onClick={onClose}
@@ -1364,20 +1366,24 @@ export function ExcelImportModal({
                       </button>
                     )}
 
-                    <button
+                    <Button
+                      variant="neutral"
+                      size="xs"
                       type="button"
                       onClick={() => handleToggleSelectAll(true)}
-                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
+                      
                     >
                       Seleccionar todos
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="neutral"
+                      size="xs"
                       type="button"
                       onClick={() => handleToggleSelectAll(false)}
-                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
+                      
                     >
                       Deseleccionar todos
-                    </button>
+                    </Button>
                   </div>
                 </div>
 

@@ -19,6 +19,7 @@ import {
   Instagram,
   Globe,
   Ticket,
+  Loader2,
 } from "lucide-react";
 import { EPKConfig, Song, Concert, EPKSectionId } from "../types";
 import { SocialPlatformsList } from "./SocialPlatformsList";
@@ -129,7 +130,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center p-6">
-        <div className="w-12 h-12 rounded-[var(--r-pill)] animate-spin mb-4"></div>
+        <Loader2 aria-hidden className="w-10 h-10 animate-spin text-[var(--acc)] mb-4" />
         <p className="text-[var(--acc)] font-medium">{t("cargando")}</p>
       </div>
     );

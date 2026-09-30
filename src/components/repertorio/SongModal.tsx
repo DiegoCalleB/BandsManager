@@ -6,7 +6,7 @@ import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -518,12 +518,14 @@ export function SongModal({
               >
                 Cancelar
               </button>
-              <button
+              <Button
+                variant="neutral"
+                size="sm"
                 type="submit"
-                className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer"
+                
               >
                 Guardar canción
-              </button>
+              </Button>
             </div>
           </form>
         </div>

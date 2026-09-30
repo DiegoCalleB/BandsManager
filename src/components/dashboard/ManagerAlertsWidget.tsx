@@ -192,7 +192,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               'bg-[var(--surface)]/40 border-b border-[var(--hair)]'
             } flex items-center justify-between gap-2 overflow-x-auto`}
           >
-            <div className="flex items-center gap-1.5 text-xs">
+            <div className="flex items-center gap-1.5 text-xs [&>button]:shrink-0 [&>button]:whitespace-nowrap">
               <span className={`${'text-[var(--ink-2)]'} font-medium text-xs mr-1 hidden sm:inline`}>
                 Filtrar:
               </span>
@@ -212,7 +212,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-unread"
                 onClick={() => setFilterMode('unread')}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer shrink-0 whitespace-nowrap ${
                   filterMode === 'unread'
                     ? 'bg-[var(--sunken)] text-[var(--ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -225,7 +225,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-urgent"
                 onClick={() => setFilterMode('urgent')}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer shrink-0 whitespace-nowrap ${
                   filterMode === 'urgent'
                     ? 'bg-[var(--alert)]/15 text-[var(--ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'

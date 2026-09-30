@@ -13,6 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from "./epkBlocks";
+import { Button } from '../ui';
 
 interface EPKHeaderProps {
   activeBlock: EPKBlockId;
@@ -131,14 +132,16 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
           <div className="flex items-center gap-1.5 shrink-0">
             {/* BOTÓN PRIMARIO GUARDAR */}
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={onSave}
-              className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition active:scale-[0.97] cursor-pointer"
+              className="items-center gap-1.5"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Guardar</span>
-            </button>
+            </Button>
 
             {/* MENÚ DE ACCIONES SECUNDARIAS (⋯) */}
             <div className="relative">
@@ -335,11 +338,13 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             </button>
           )}
 
-          <button
+          <Button
+            variant="neutral"
+            size="sm"
             id="epk-header-copy-btn"
             type="button"
             onClick={onCopyUrl}
-            className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] text-xs font-semibold rounded-[var(--r-pill)] flex items-center gap-1.5 transition cursor-pointer"
+            className="items-center gap-1.5"
             title="Copiar enlace web público del EPK"
           >
             {copiedPublicUrl ? (
@@ -348,7 +353,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               <Copy className="w-3.5 h-3.5 text-[var(--acc)]" />
             )}
             <span>{copiedPublicUrl ? "¡Copiado!" : "Copiar URL"}</span>
-          </button>
+          </Button>
 
           <a
             id="epk-header-public-btn"
@@ -362,14 +367,16 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             <span>Ver EPK</span>
           </a>
 
-          <button
+          <Button
+            variant="primary"
+            size="sm"
             type="button"
             onClick={onSave}
-            className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs sm:text-sm rounded-[var(--r-pill)] flex items-center gap-2 transition cursor-pointer"
+            className="items-center gap-2"
           >
             <Save className="w-4 h-4" />
             <span>Guardar cambios</span>
-          </button>
+          </Button>
         </div>
       </div>
 

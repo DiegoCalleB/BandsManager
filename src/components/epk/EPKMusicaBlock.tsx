@@ -10,7 +10,7 @@ import {
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface EPKMusicaBlockProps {
   config: EPKConfig;
@@ -275,13 +275,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 Vídeos de Directo ({videos.length})
               </h3>
             </div>
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={anadirVideo}
-              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-pill)] transition cursor-pointer"
+              
             >
               + Añadir vídeo
-            </button>
+            </Button>
           </div>
           <p className="text-xs text-[var(--ink-2)]">
             Pega enlaces de YouTube o Vimeo. El vídeo marcado con la estrella se

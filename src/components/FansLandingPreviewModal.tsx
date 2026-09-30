@@ -9,6 +9,7 @@ import {
   FAN_FORM_TRANSLATIONS,
   interpolate,
 } from '../i18n/fansTranslations';
+import { Button } from './ui';
 
 interface FansLandingPreviewModalProps {
   isOpen: boolean;
@@ -182,25 +183,29 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
 
         {/* Lado Derecho: Acciones Rápidas */}
         <div className="flex items-center gap-2 shrink-0">
-          <button
+          <Button
+            variant="neutral"
+            size="xs"
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer text-xs font-sans"
+            className="items-center gap-1.5"
             title={t('previewReset')}
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">{t('previewReset')}</span>
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             type="button"
             onClick={onClose}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold transition cursor-pointer text-xs font-sans active:scale-[0.97]"
+            className="items-center gap-1.5"
             title={t('previewClose')}
           >
             <X className="w-4 h-4" />
             <span>{t('previewClose')}</span>
-          </button>
+          </Button>
         </div>
       </header>
 

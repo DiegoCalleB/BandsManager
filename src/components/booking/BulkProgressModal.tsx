@@ -7,6 +7,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
+import { Button } from '../ui';
 
 export interface BulkProgressItem {
   id: string;
@@ -76,13 +77,15 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
             </div>
 
             {isCompleted && (
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 type="button"
                 onClick={onClose}
-                className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 transition-colors cursor-pointer"
+                
               >
                 <X className="w-4 h-4" />
-              </button>
+              </Button>
             )}
           </div>
 
@@ -176,22 +179,26 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
           {/* Footer */}
           <div className="p-4800 bg-[var(--bg)] flex items-center justify-end gap-2">
             {!isCompleted && onCancel && (
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 type="button"
                 onClick={onCancel}
-                className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
+                
               >
                 Cancelar
-              </button>
+              </Button>
             )}
             {isCompleted && (
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-colors cursor-pointer"
+                
               >
                 Cerrar y ver resultados
-              </button>
+              </Button>
             )}
           </div>
         </div>

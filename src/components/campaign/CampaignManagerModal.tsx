@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -647,14 +647,16 @@ export function CampaignManagerModal({
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="primary"
+                  size="sm"
                   type="button"
                   onClick={handleSave}
-                  className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--hair)] text-[var(--on-acc)] active:scale-[0.97] flex items-center gap-2"
+                  className="items-center gap-2"
                 >
                   <Check className="w-4 h-4" />
                   Guardar campaña
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
@@ -829,13 +831,15 @@ export function CampaignManagerModal({
                               </button>
                             </div>
                           ) : (
-                            <button
+                            <Button
+                              variant="primary"
+                              size="xs"
                               type="button"
                               onClick={() => onSetActiveCampaign(camp)}
-                              className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--hair)] text-[var(--on-acc)] flex items-center gap-1.5 transition-ui active:scale-[0.97]"
+                              className="items-center gap-1.5"
                             >
                               <Target className="w-3.5 h-3.5" /> Activar
-                            </button>
+                            </Button>
                           )}
 
                           <button

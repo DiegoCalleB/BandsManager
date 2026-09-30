@@ -187,6 +187,7 @@ import {
   Sun,
   Moon,
 } from "lucide-react";
+import { Button } from './components/ui';
 
 export default function App() {
   const { t, language, isTranslating, refreshTranslation } = useLanguage();
@@ -1202,18 +1203,20 @@ export default function App() {
                     className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === "synced" ? "bg-[var(--ok)]/30" : syncStatus === "error" ? "bg-[var(--alert)]" : "bg-[var(--ink-3)]"}`}
                   />
                 </div>
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowUserProfileModal(true);
                   }}
-                  className="inline-flex items-center gap-1 px-1.5 py-0.5 mt-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] w-fit cursor-pointer transition-colors"
+                  className="items-center gap-1 mt-0.5 w-fit"
                   title="Plan actual. Clic para gestionar suscripción (Upgrade / Downgrade)"
                 >
                   <Sparkles className="w-2 h-2" />
                   <span>{getPlanDefinition(currentActiveBandPlan).name}</span>
-                </button>
+                </Button>
               </div>
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -1232,15 +1235,17 @@ export default function App() {
                 }
                 variant="mobile"
               />
-              <button
+              <Button
+                variant="soft"
+                size="xs"
                 type="button"
                 onClick={() => setShowOnboardingModal(true)}
-                className="px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:brightness-95"
+                className="items-center gap-1.5"
                 title="Guía rápida: ¿Por dónde empezar?"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span className="text-micro hidden xs:inline">Guía</span>
-              </button>
+              </Button>
               {!isPromoPlan && (
                 <button
                   onClick={() => setShowCampaignModal(true)}
@@ -1726,15 +1731,17 @@ export default function App() {
           </div>
 
           <div className="px-3 pt-2.5 pb-1">
-            <button
+            <Button
+              variant="soft"
+              size="xs"
               type="button"
               onClick={() => setShowOnboardingModal(true)}
-              className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] transition-colors cursor-pointer active:scale-[0.97]"
+              className="w-full items-center justify-center gap-1.5"
               title="Guía interactiva para nuevos músicos"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>¿Por dónde empezar?</span>
-            </button>
+            </Button>
           </div>
 
           {/* Navigation */}

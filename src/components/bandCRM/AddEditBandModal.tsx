@@ -2,7 +2,7 @@ import React from 'react';
 import { Music, X, Sparkles, Loader2, Upload, Check } from 'lucide-react';
 import { BandRelationshipStatus, BandContact } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 export interface AddEditBandModalProps {
   isOpen: boolean;
@@ -174,14 +174,16 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <span>Propuesta de la IA (Revisa antes de confirmar):</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={handleApplyAllAiData}
-                      className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-micro hover:brightness-95 transition-ui cursor-pointer flex items-center gap-1 shadow"
+                      className="items-center gap-1"
                     >
                       <Check className="w-3.5 h-3.5" />
                       <span>Aplicar todo</span>
-                    </button>
+                    </Button>
                     <button
                       type="button"
                       onClick={() => setAiProposal(null)}
@@ -541,19 +543,23 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
           {/* Buttons */}
           <div className="flex items-center justify-end gap-3 pt-3">
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               type="button"
               onClick={() => onClose()}
-              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-micro rounded-[var(--r-pill)] transition-colors cursor-pointer"
+              
             >
               Cancelar
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="neutral"
+              size="xs"
               type="submit"
-              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer"
+              
             >
               {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

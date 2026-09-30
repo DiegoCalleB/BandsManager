@@ -23,7 +23,7 @@ import {
   copyToClipboard,
 } from '../../utils/whatsappUtils';
 import { ModalPortal } from '../common/ModalPortal';
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 interface WhatsAppPreviewModalProps {
   isOpen: boolean;
@@ -328,10 +328,12 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
           {/* Footer Actions */}
           <div className="px-5 py-3.5 bg-[var(--surface)]/80 border-t border-[var(--hair)] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant="neutral"
+                size="sm"
                 type="button"
                 onClick={handleCopy}
-                className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer "
+                className="items-center gap-1.5"
               >
                 {copied ? (
                   <>
@@ -344,7 +346,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                     <span>Copiar texto</span>
                   </>
                 )}
-              </button>
+              </Button>
 
               {onLogInteraction && (
                 <button

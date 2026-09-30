@@ -65,7 +65,7 @@ import {
 } from "./booking/BulkProgressModal";
 import { AddEditBandModal } from "./bandCRM/AddEditBandModal";
 import { ShowIcon } from './ui/ShowIcon';
-import { Input, Select } from './ui';
+import { Button, Input, Select } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -1188,15 +1188,17 @@ ${myBandName}`;
             <span>Scout IA</span>
           </button>
 
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             id="band-btn-add-new"
             type="button"
             onClick={handleOpenCreateModal}
-            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+            className="items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5 shrink-0" />
             <span>Nueva banda</span>
-          </button>
+          </Button>
 
           <a
             href="/api/export-excel"
@@ -1518,13 +1520,15 @@ ${myBandName}`;
                 búsqueda o filtros seleccionados. Prorroga tu búsqueda o añade
                 una nueva banda.
               </p>
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 onClick={handleOpenCreateModal}
-                className="mt-2 inline-flex items-center gap-2 px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-sans font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer"
+                className="mt-2 items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir primera banda</span>
-              </button>
+              </Button>
             </div>
           ) : viewMode === "map" ? (
             <BandMap

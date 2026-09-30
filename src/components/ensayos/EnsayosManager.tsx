@@ -25,6 +25,7 @@ import { GrabacionActaTab } from "./GrabacionActaTab";
 import { ConvocarEnsayoModal } from "./ConvocarEnsayoModal";
 import { api } from "../../services/api";
 import { SAMPLER_SONGS, SAMPLER_SETLISTS } from "../../config/sampleRepertoire";
+import { Button } from '../ui';
 
 interface EnsayosManagerProps {
   rehearsals: Rehearsal[];
@@ -311,16 +312,18 @@ export function EnsayosManager({
               />
             )}
 
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={() => {
                 setEditingRehearsal(null);
                 setShowConvocarModal(true);
               }}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
+              className="items-center justify-center gap-1.5"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ Convocar ensayo</span>
-            </button>
+            </Button>
           </div>
         </div>
 

@@ -41,7 +41,7 @@ import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface OrdenDelDiaTabProps {
   rehearsal: Rehearsal;
@@ -458,13 +458,14 @@ export function OrdenDelDiaTab({
             </button>
           )}
 
-          <button
+          <Button
+            variant="primary"
             onClick={onGoToLiveMode}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--on-acc)] font-sans font-bold text-xs hover:brightness-110 transition-ui cursor-pointer active:scale-[0.97]"
+            className="flex-1 md:flex-none items-center justify-center gap-2"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>Iniciar modo local en vivo</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -545,13 +546,15 @@ export function OrdenDelDiaTab({
                 }}
                 className="flex-1"
               />
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 type="button"
                 onClick={handleAddObjetivo}
-                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-sans font-bold flex items-center gap-1 cursor-pointer"
+                className="items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -596,17 +599,19 @@ export function OrdenDelDiaTab({
                 <span>+ Bloque / pausa</span>
               </button>
 
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 type="button"
                 onClick={() => {
                   setSelectedSongIds([]);
                   setShowAddSongModal(true);
                 }}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer"
+                className="items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>+ Añadir canciones</span>
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -624,16 +629,18 @@ export function OrdenDelDiaTab({
                 </p>
               </div>
               <div className="flex flex-wrap justify-center gap-2 pt-2">
-                <button
+                <Button
+                  variant="primary"
+                  size="sm"
                   type="button"
                   onClick={() => {
                     setSelectedSongIds([]);
                     setShowAddSongModal(true);
                   }}
-                  className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold hover:bg-[var(--acc)] cursor-pointer"
+                  
                 >
                   + Añadir canciones del repertorio
-                </button>
+                </Button>
                 {setlists.length > 0 && (
                   <button
                     type="button"
@@ -910,22 +917,26 @@ export function OrdenDelDiaTab({
                     <span>Solo favoritos</span>
                   </button>
 
-                  <button
+                  <Button
+                    variant="neutral"
+                    size="xs"
                     type="button"
                     onClick={selectAllFiltered}
-                    className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                    
                   >
                     Seleccionar todo ({filteredSongs.length})
-                  </button>
+                  </Button>
 
                   {selectedSongIds.length > 0 && (
-                    <button
+                    <Button
+                      variant="neutral"
+                      size="xs"
                       type="button"
                       onClick={clearSelection}
-                      className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                      
                     >
                       Vaciar selección
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -1016,11 +1027,13 @@ export function OrdenDelDiaTab({
                   >
                     Cancelar
                   </button>
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     type="button"
                     disabled={selectedSongIds.length === 0}
                     onClick={handleConfirmAddSongs}
-                    className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--on-acc)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                    className="items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4 stroke-[3]" />
                     <span>
@@ -1029,7 +1042,7 @@ export function OrdenDelDiaTab({
                         ? `${selectedSongIds.length} Canciones en Orden`
                         : "Canciones"}
                     </span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1233,12 +1246,14 @@ export function OrdenDelDiaTab({
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="submit"
-                  className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] cursor-pointer"
+                  
                 >
                   Añadir bloque
-                </button>
+                </Button>
               </div>
             </form>
           </div>

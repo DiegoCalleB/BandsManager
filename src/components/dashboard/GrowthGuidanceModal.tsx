@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { GrowthPlan, ActionItem } from '../../utils/growthPlanEngine';
 import { ThemeColors } from '../../types';
+import { Button } from '../ui';
 
 interface GrowthGuidanceModalProps {
   isOpen: boolean;
@@ -347,13 +348,15 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               </button>
             )}
 
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer"
+              
             >
               Cerrar y empezar
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { captureFrontendError } from '../utils/errorTracking';
+import { Button } from './ui';
 
 interface Props {
   children: ReactNode;
@@ -54,18 +55,22 @@ export class ErrorBoundary extends React.Component<Props, State> {
             {this.state.error?.message || 'Error no especificado en la renderización.'}
           </p>
           <div className="flex items-center gap-3 pt-2">
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={this.handleReset}
-              className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-pill)] flex items-center gap-2 transition"
+              className="items-center gap-2"
             >
               <RefreshCw className="w-4 h-4" /> Reintentar Cargar Módulo
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="neutral"
+              size="sm"
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold rounded-[var(--r-pill)] transition"
+              
             >
               Recargar aplicación
-            </button>
+            </Button>
           </div>
         </div>
       );

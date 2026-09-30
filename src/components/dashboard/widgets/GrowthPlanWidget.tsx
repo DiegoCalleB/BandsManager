@@ -2,6 +2,7 @@ import React from 'react';
 import { Rocket, Sparkles, ArrowRight, CheckCircle2, TrendingUp, Compass, Calendar, Zap, ChevronRight, Target } from 'lucide-react';
 import { GrowthPlan, ActionItem } from '../../../utils/growthPlanEngine';
 import { ModuleWidgetProps } from './ModuleWidgets';
+import { Button } from '../../ui';
 
 export interface GrowthGuidanceWidgetProps extends ModuleWidgetProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -83,14 +84,16 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               {todayBlueprint.optimalPostingTime}
             </span>
             {onOpenGuidanceModal && (
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 type="button"
                 onClick={onOpenGuidanceModal}
-                className="mt-2 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-mono font-bold transition-ui cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                className="mt-2 items-center gap-1"
               >
                 <span>Detalles</span>
                 <ChevronRight className="w-3 h-3" />
-              </button>
+              </Button>
             )}
           </div>
         </div>

@@ -20,7 +20,7 @@ import { EPKConfig, BandMember } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 interface EPKPerfilBlockProps {
   config: EPKConfig;
@@ -389,15 +389,17 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   className="w-full"
                 />
               </div>
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 type="button"
                 onClick={handleAddSimilarBand}
                 disabled={!similarBandInput.trim()}
-                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                className="items-center gap-1.5 shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir</span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -411,13 +413,15 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 Formación de la Banda ({miembros.length})
               </h3>
             </div>
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={anadirMiembro}
-              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-pill)] transition cursor-pointer"
+              
             >
               + Añadir miembro
-            </button>
+            </Button>
           </div>
           <div className="text-xs text-[var(--ink-2)] space-y-1">
             <p>

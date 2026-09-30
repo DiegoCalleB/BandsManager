@@ -53,7 +53,7 @@ import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ModalPortal } from "./common/ModalPortal";
 import { AgentAutonomySettingsModal } from "./dashboard/AgentAutonomySettingsModal";
 import { textOnColor } from '../utils/contrastText';
-import { Input } from './ui';
+import { Button, Input } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -543,14 +543,16 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                 <div className="flex flex-wrap items-center gap-2">
                   {!isHighestPlan && !isPromoUser && (
-                    <button
+                    <Button
+                      variant="primary"
+                      size="sm"
                       type="button"
                       onClick={() => setShowUpgradeModal(true)}
-                      className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans transition-ui duration-200 active:scale-[0.97] flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="items-center gap-1.5 shrink-0"
                     >
                       <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
                       <span>Upgrade</span>
-                    </button>
+                    </Button>
                   )}
 
                   {onOpenProfileWizard && (
@@ -660,16 +662,18 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           <span>{currentPlanDef.name}</span>
                         </span>
                       ) : (
-                        <button
+                        <Button
+                          variant="primary"
+                          size="xs"
                           type="button"
                           onClick={() => setShowUpgradeModal(true)}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-extrabold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer transition-colors"
+                          className="items-center gap-1"
                           title="Cambiar o mejorar suscripción"
                         >
                           <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
                           <span>{currentPlanDef.name}</span>
                           <ArrowUpDown className="w-2.5 h-2.5 text-[var(--acc)] ml-0.5" />
-                        </button>
+                        </Button>
                       )}
                     </div>
                     <p className="text-micro text-[var(--ink-2)] font-sans">
@@ -911,11 +915,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     >
                       Cancelar
                     </button>
-                    <button
+                    <Button
+                      variant="danger"
+                      size="xs"
                       type="button"
                       onClick={handleConfirmDeleteBandInProfile}
                       disabled={!!deletingBandId}
-                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="items-center gap-1.5"
                     >
                       {deletingBandId ? (
                         <>
@@ -928,7 +934,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           <span>Sí, Eliminar</span>
                         </>
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -1454,7 +1460,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           mantener tus funciones.
                         </span>
                       </div>
-                      <button
+                      <Button
+                        variant="danger"
+                        size="xs"
                         type="button"
                         onClick={async () => {
                           try {
@@ -1468,10 +1476,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               window.location.href = res.url;
                           } catch (e) {}
                         }}
-                        className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer whitespace-nowrap"
+                        className="whitespace-nowrap"
                       >
                         Actualizar tarjeta
-                      </button>
+                      </Button>
                     </div>
                   )}
 
@@ -1608,7 +1616,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 <span>Activo</span>
                               </span>
                             ) : (
-                              <button
+                              <Button
+                                variant="primary"
+                                size="xs"
                                 type="button"
                                 onClick={async () => {
                                   try {
@@ -1656,11 +1666,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                     );
                                   }
                                 }}
-                                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
+                                className="items-center gap-1"
                               >
                                 <Sparkles className="w-3 h-3 fill-neutral-950" />
                                 <span>Seleccionar {plan.name}</span>
-                              </button>
+                              </Button>
                             )}
                           </div>
                         </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
 import { EPKBlockMeta } from './epkBlocks';
+import { Button } from '../ui';
 
 interface EPKBlockWrapperProps {
   meta: EPKBlockMeta;
@@ -71,15 +72,17 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
 
           <div className="flex items-center gap-1.5 sm:gap-2.5">
             {onSave && (
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 type="button"
                 onClick={onSave}
-                className="px-3 sm:px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-xs flex items-center gap-1.5 shadow transition cursor-pointer shrink-0"
+                className="items-center gap-1.5 shrink-0"
               >
                 <Save className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Guardar cambios</span>
                 <span className="sm:hidden">Guardar</span>
-              </button>
+              </Button>
             )}
 
             {nextBlock && (

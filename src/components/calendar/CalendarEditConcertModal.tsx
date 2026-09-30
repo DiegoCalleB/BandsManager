@@ -4,7 +4,7 @@ import { ModalPortal } from '../common/ModalPortal';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import { Music, MapPin, Ticket, Flame, Trash2 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface CalendarEditConcertModalProps {
   viewingConcert: Concert | null;
@@ -240,12 +240,14 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="submit"
-                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer font-bold"
+                  
                 >
                   Guardar cambios
-                </button>
+                </Button>
               </div>
             </div>
           </form>

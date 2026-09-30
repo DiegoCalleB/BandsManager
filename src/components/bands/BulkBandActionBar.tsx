@@ -19,6 +19,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface BulkBandActionBarProps {
   selectedCount: number;
@@ -250,14 +251,16 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             </button>
 
             {/* Delete button */}
-            <button
+            <Button
+              variant="danger"
+              size="xs"
               type="button"
               onClick={() => setIsConfirmDeleteOpen(true)}
-              className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-pill)] transition-ui cursor-pointer"
+              
               title={`Eliminar ${selectedCount} bandas`}
             >
               <Trash2 className="w-4 h-4 text-[var(--alert)]" />
-            </button>
+            </Button>
 
             {/* Deselect Close Button (Desktop) */}
             <button
@@ -299,23 +302,27 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-2800/80">
-              <button
+              <Button
+                variant="neutral"
+                size="sm"
                 type="button"
                 onClick={() => setIsConfirmDeleteOpen(false)}
-                className="px-3.5 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
+                
               >
                 Cancelar
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
                 type="button"
                 onClick={() => {
                   setIsConfirmDeleteOpen(false);
                   onBulkDelete();
                 }}
-                className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] transition-colors cursor-pointer"
+                
               >
                 Sí, eliminar {selectedCount}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

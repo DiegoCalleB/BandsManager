@@ -11,7 +11,7 @@ import {
   Search,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface BookingCampaignPanelProps {
   onCampaignChange: (campaign: BookingCampaign | null) => void;
@@ -116,12 +116,14 @@ export default function BookingCampaignPanel({
             Define objetivos de aforo y fechas para activar el Scout IA.
           </p>
         </div>
-        <button
+        <Button
+          variant="primary"
+          size="sm"
           onClick={() => setIsEditing(true)}
-          className="flex items-center gap-1 text-xs font-semibold text-[var(--on-acc)] hover:text-[var(--ink)] bg-[var(--acc)] px-3 py-2 rounded-[var(--r-pill)]"
+          className="items-center gap-1"
         >
           <Plus className="w-3.5 h-3.5" /> Configurar campaña
-        </button>
+        </Button>
       </div>
     );
   }
@@ -337,12 +339,13 @@ export default function BookingCampaignPanel({
           >
             Cancelar
           </button>
-          <button
+          <Button
+            variant="neutral"
             onClick={handleSave}
-            className="px-4 py-2 text-sm bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)] rounded-[var(--r-pill)] font-medium flex items-center gap-2"
+            className="items-center gap-2"
           >
             <Check className="w-4 h-4" /> Guardar y activar
-          </button>
+          </Button>
         </div>
       </div>
     );

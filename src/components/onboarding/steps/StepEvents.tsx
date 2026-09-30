@@ -2,7 +2,7 @@ import React from "react";
 import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from "lucide-react";
 import { QuickEventItem } from "../types";
 import { ShowIcon } from '../../ui/ShowIcon';
-import { Input, Select, Textarea } from '../../ui';
+import { Button, Input, Select, Textarea } from '../../ui';
 
 interface StepEventsProps {
   events: QuickEventItem[];
@@ -268,15 +268,17 @@ export const StepEvents: React.FC<StepEventsProps> = ({
         </div>
 
         <div className="flex justify-end pt-1">
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             type="button"
             onClick={onAddEvent}
             disabled={!newEventTitle.trim() || !newEventDate}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+            className="items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir a la agenda
-          </button>
+          </Button>
         </div>
       </div>
     </div>

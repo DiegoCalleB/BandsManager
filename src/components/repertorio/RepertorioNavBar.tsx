@@ -3,6 +3,7 @@ import { Music, Layers, Disc3, Plus, ImagePlus, ChevronDown, Check } from 'lucid
 import { Setlist } from '../../types';
 import { ModuleTutorialTrigger } from '../common/ModuleTutorialTrigger';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface RepertorioNavBarProps {
   activeTab: 'catalogo' | 'setlists';
@@ -197,16 +198,18 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
 
             {/* Setlist Quick Action Buttons */}
             <div className="flex items-center gap-1.5 shrink-0">
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 id="btn-create-setlist"
                 type="button"
                 onClick={onCreateSetlist}
-                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="items-center gap-1.5"
                 title="Crear un nuevo setlist de concierto"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span className="hidden xs:inline">Nuevo Setlist</span>
-              </button>
+              </Button>
 
               <button
                 type="button"
@@ -261,15 +264,17 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
 
             {/* Quick Actions for Catálogo */}
             <div className="flex items-center gap-1.5 sm:gap-2 justify-end shrink-0">
-              <button
+              <Button
+                variant="primary"
+                size="xs"
                 id="btn-add-song"
                 type="button"
                 onClick={onOpenNewSongModal}
-                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 active:scale-[0.97]"
+                className="items-center gap-1 sm:gap-1.5 shrink-0"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Nueva canción</span>
-              </button>
+              </Button>
               <button
                 id="btn-add-album"
                 type="button"

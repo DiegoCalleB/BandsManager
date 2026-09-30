@@ -14,6 +14,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { isImageDocument, isPdfDocument } from "../../utils/documentType";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface SongStudioStructureUploadModalProps {
   song: Song;
@@ -396,13 +397,14 @@ export const SongStudioStructureUploadModal: React.FC<
                         >
                           Cambiar archivo
                         </button>
-                        <button
+                        <Button
+                          variant="primary"
                           onClick={handleProcessWithAI}
                           disabled={isProcessing}
-                          className="flex-1 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 disabled:bg-[var(--sunken)] text-[var(--on-acc)] text-sm font-semibold transition"
+                          className="flex-1"
                         >
                           <ShowIcon inline emoji="✨" />Procesar con IA
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   )}

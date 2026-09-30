@@ -2,7 +2,7 @@ import React from 'react';
 import { Bell, Loader2, Send } from 'lucide-react';
 import { Concert, Rehearsal } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Textarea } from '../ui';
+import { Button, Textarea } from '../ui';
 
 interface CalendarReminderModalProps {
   isOpen: boolean;
@@ -165,11 +165,13 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           >
             Cancelar
           </button>
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             type="button"
             disabled={reminderSending}
             onClick={handleSendEventReminder}
-            className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-xs font-bold text-[var(--on-acc)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-ui"
+            className="items-center gap-1.5"
           >
             {reminderSending ? (
               <>
@@ -182,7 +184,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
                 <span>Enviar recordatorio</span>
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

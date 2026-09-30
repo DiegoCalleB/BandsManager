@@ -87,7 +87,7 @@ import { EventWeatherCard } from './EventWeatherCard';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 export interface CalendarSidebarLogisticsProps {
   colors: ThemeColors;
@@ -393,7 +393,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       </button>
                     )}
 
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() => {
                         setConcCiudad(camp.targetCities?.[0] || 'Madrid');
@@ -401,11 +403,11 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setConcNotas(`Concierto agendado para la campaña "${camp.name}".`);
                         setShowCreateModal('concert');
                       }}
-                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
+                      className="flex-1 items-center justify-center gap-1.5"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Confirmar concierto</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -997,19 +999,21 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                 {assignedSetlist && (
                   <div className="mt-2.5 flex items-center gap-2">
-                    <button
+                    <Button
+                      variant="primary"
+                      size="sm"
                       type="button"
                       id="calendar-launch-stage-mode-btn"
                       onClick={() => {
                         setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
                         setActiveStageSetlist(assignedSetlist);
                       }}
-                      className="flex-1 py-2 px-3 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-ui cursor-pointer"
+                      className="flex-1 items-center justify-center gap-2/20"
                       title="Lanzar modo escenario / vista de directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
                       <span>{selectedConcert ? 'Lanzar Modo Escenario' : 'Lanzar Modo Ensayo'}</span>
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Filter, X, Building2, Radio, Briefcase, LayoutGrid, List, Map as MapIcon, BookmarkCheck, RefreshCw } from 'lucide-react';
 import { Lead } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 export interface BookingFiltersPanelProps {
   isOpen: boolean;
@@ -297,13 +297,15 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               >
                 Guardar
               </button>
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 type="button"
                 onClick={() => setIsSavingFilterOpen(false)}
-                className="p-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-pill)] cursor-pointer"
+                
               >
                 <X className="w-3.5 h-3.5" />
-              </button>
+              </Button>
             </form>
           )}
         </div>
@@ -453,13 +455,15 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <span>Limpiar filtros</span>
         </button>
 
-        <button
+        <Button
+          variant="primary"
+          size="xs"
           type="button"
           onClick={() => onClose()}
-          className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer"
+          
         >
           Ver {filteredCount} resultados
-        </button>
+        </Button>
       </div>
     </div>
   );

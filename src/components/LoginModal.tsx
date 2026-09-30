@@ -24,7 +24,7 @@ import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ShowIcon } from './ui/ShowIcon';
-import { Input } from './ui';
+import { Button, Input } from './ui';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -623,18 +623,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   error.includes("OAuth") ||
                   error.includes("bloqueado")) && (
                   <div className="pt-1 flex justify-end">
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() => {
                         if (username) setRegEmail(username);
                         setError(null);
                         setView("register");
                       }}
-                      className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] hover:bg-[var(--acc)]/30 transition-ui cursor-pointer flex items-center gap-1.5"
+                      className="items-center gap-1.5"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       <span>Crear / acceder con email en 10s</span>
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -780,7 +782,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <div className="relative mt-5 mb-1">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full "></div>
+                    <div className="w-full h-px bg-[var(--hair)]"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
                     <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">
@@ -1136,7 +1138,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <div className="relative mt-6 mb-2">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full"></div>
+                    <div className="w-full h-px bg-[var(--hair)]"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
                     <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
@@ -1233,7 +1235,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                     <div className="relative mt-5 mb-2">
                       <div className="absolute inset-0 flex items-center">
-                        <div className="w-full"></div>
+                        <div className="w-full h-px bg-[var(--hair)]"></div>
                       </div>
                       <div className="relative flex justify-center text-xs">
                         <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
@@ -1350,7 +1352,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                     <div className="relative mt-5 mb-2">
                       <div className="absolute inset-0 flex items-center">
-                        <div className="w-full"></div>
+                        <div className="w-full h-px bg-[var(--hair)]"></div>
                       </div>
                       <div className="relative flex justify-center text-xs">
                         <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">

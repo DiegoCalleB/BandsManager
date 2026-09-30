@@ -27,6 +27,7 @@ import { CalendarWeatherBadge } from './AnimatedWeatherIcon';
 import { WeatherAlert } from '../../services/weatherService';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 export interface CalendarViewsContainerProps {
   calendarViewMode: '1m' | '2m' | 'week' | 'agenda';
@@ -666,13 +667,15 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
               </button>
             </div>
 
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               onClick={() => setShowCreateModal('concert')}
-              className="px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+              className="items-center gap-1.5"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Añadir evento</span>
-            </button>
+            </Button>
           </div>
         </div>
 

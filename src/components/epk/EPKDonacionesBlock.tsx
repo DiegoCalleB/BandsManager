@@ -19,7 +19,7 @@ import {
   tieneTraduccion,
   traduccionDesactualizada,
 } from "../../utils/epkTraducciones";
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 interface EPKDonacionesBlockProps {
   config: EPKConfig;
@@ -501,11 +501,13 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         <ExternalLink className="w-3.5 h-3.5" /> Ver página
                       </a>
                     )}
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() => traducirConIA(idioma.code)}
                       disabled={estaTraduciendo}
-                      className="text-xs bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-pill)] flex items-center gap-1.5 transition cursor-pointer"
+                      className="items-center gap-1.5"
                     >
                       {estaTraduciendo ? (
                         <>
@@ -521,7 +523,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                             : "Traducir con IA"}
                         </>
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
 

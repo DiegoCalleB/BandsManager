@@ -28,7 +28,7 @@ import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from "../RepertorioSetlists";
 import { cacheActiveStageSetlist } from "../../utils/stageOfflineCache";
 import { formatSongTitle } from "../../utils/formatSongTitle";
-import { Select } from '../ui';
+import { Button, Select } from '../ui';
 
 interface EscenarioViewProps {
   activeSetlist: Setlist | null;
@@ -270,13 +270,15 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               ))}
             </Select>
 
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               onClick={() => setShowPdfPreview(true)}
-              className="px-2 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-sans font-extrabold text-micro rounded-[var(--r-pill)] hover:bg-[var(--acc)]/50 transition-ui flex items-center gap-2 cursor-pointer"
+              className="items-center gap-2"
             >
               <Printer className="w-4 h-4" />
               <span>Imprimir / exportar</span>
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -428,13 +430,15 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
               {/* Modify Audio Button for Show Items in Stage Mode */}
               {currentStageItem && currentStageItem.tipoItem !== "cancion" && (
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   onClick={() => {
                     setEditingShowItem(currentStageItem);
                     setShowItemAudioUrl(currentStageItem.audioUrl || "");
                     setShowShowItemModal(true);
                   }}
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer shrink-0 ml-1 "
+                  className="items-center gap-1.5 shrink-0 ml-1"
                   title="Grabar o subir audio para esta presentación / interludio"
                 >
                   <Mic className="w-4 h-4 text-[var(--acc)]" />
@@ -443,7 +447,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       ? "Modificar Audio"
                       : "+ Subir / Grabar Audio"}
                   </span>
-                </button>
+                </Button>
               )}
             </div>
 
@@ -955,7 +959,9 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                             </div>
                           )}
                         </div>
-                        <button
+                        <Button
+                          variant="primary"
+                          size="xs"
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -963,14 +969,14 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                             setShowItemAudioUrl(it.audioUrl || "");
                             setShowShowItemModal(true);
                           }}
-                          className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 self-start sm:self-auto"
+                          className="items-center gap-1 shrink-0 self-start sm:self-auto"
                           title="Modificar audio o grabación de este evento"
                         >
                           <Mic className="w-3 h-3 text-[var(--acc)]" />
                           <span>
                             {it.audioUrl ? "Modificar Audio" : "+ Audio"}
                           </span>
-                        </button>
+                        </Button>
                       </div>
 
                       <div className="col-span-2 text-center">

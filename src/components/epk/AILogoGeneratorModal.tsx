@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, X, Loader2, Check, RefreshCw, Palette, Wand2, AlertCircle } from 'lucide-react';
 import { api } from '../../services/api';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface AILogoGeneratorModalProps {
   isOpen: boolean;
@@ -190,11 +190,12 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
           </button>
 
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="neutral"
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold text-xs flex items-center gap-2 transition disabled:opacity-50 "
+              className="items-center gap-2"
             >
               {isGenerating ? (
                 <>
@@ -209,16 +210,17 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
                   <Sparkles className="w-4 h-4 text-[var(--acc)]" /> Crear logotipo con IA
                 </>
               )}
-            </button>
+            </Button>
 
             {generatedLogo && (
-              <button
+              <Button
+                variant="primary"
                 type="button"
                 onClick={handleApplyLogo}
-                className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition"
+                className="items-center gap-1.5"
               >
                 <Check className="w-4 h-4" /> Aplicar al EPK
-              </button>
+              </Button>
             )}
           </div>
         </div>

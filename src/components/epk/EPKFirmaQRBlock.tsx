@@ -26,7 +26,7 @@ import {
   copyRichSignatureToClipboard,
 } from "../../utils/emailFormatter";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface EPKFirmaQRBlockProps {
   config: EPKConfig;
@@ -841,10 +841,12 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 {publicEpkUrl}
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <button
+                <Button
+                  variant="primary"
+                  size="sm"
                   type="button"
                   onClick={handleCopyUrl}
-                  className="flex-1 px-3 py-2 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
+                  className="flex-1 items-center justify-center gap-2"
                 >
                   {copiado ? (
                     <Check className="w-4 h-4" />
@@ -852,7 +854,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     <Copy className="w-4 h-4" />
                   )}
                   {copiado ? "¡Copiado!" : "Copiar Enlace"}
-                </button>
+                </Button>
                 <a
                   href={publicEpkUrl}
                   target="_blank"

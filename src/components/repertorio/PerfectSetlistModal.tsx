@@ -3,7 +3,7 @@ import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Textarea } from '../ui';
+import { Button, Textarea } from '../ui';
 
 /** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
@@ -268,13 +268,15 @@ export function PerfectSetlistModal({
             </div>
             <div className="flex items-center gap-1.5">
               {canUndo && (
-                <button
+                <Button
+                  variant="soft"
+                  size="xs"
                   onClick={onUndo}
-                  className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
+                  className="items-center gap-1"
                   title="Deshacer el último cambio del setlist"
                 >
                   <ShowIcon inline emoji="↩️" />Deshacer
-                </button>
+                </Button>
               )}
               <button onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition">
                 <X className="w-4 h-4" />

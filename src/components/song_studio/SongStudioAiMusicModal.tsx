@@ -11,7 +11,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 interface SongStudioAiMusicModalProps {
   isOpen: boolean;
@@ -223,11 +223,12 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
             >
               Cerrar
             </button>
-            <button
+            <Button
+              variant="primary"
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating || !prompt.trim()}
-              className="px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold text-xs flex items-center gap-2 cursor-pointer"
+              className="items-center gap-2"
             >
               {isGenerating ? (
                 <>
@@ -240,7 +241,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                   Generar Soundtrack IA
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

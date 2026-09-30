@@ -3,7 +3,7 @@ import { Wand2, X, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { SongAudioIdea, DrumPatternStyle } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 interface SongStudioAiGeneratorModalProps {
   // Solo se usa como"hay idea seleccionada o no", pero el estado real es la idea completa.
@@ -187,11 +187,12 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
             >
               Cancelar
             </button>
-            <button
+            <Button
+              variant="primary"
               type="button"
               onClick={handleGenerateAccompaniment}
               disabled={isGeneratingAccompaniment || (!includeDrums && !includeBass)}
-              className="px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold text-xs flex items-center gap-2 cursor-pointer"
+              className="items-center gap-2"
             >
               {isGeneratingAccompaniment ? (
                 <>
@@ -204,7 +205,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                   Sintetizar y Añadir al Mezclador
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

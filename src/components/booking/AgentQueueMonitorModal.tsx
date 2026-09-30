@@ -19,6 +19,7 @@ import {
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface QueueJobItem {
   id: string;
@@ -276,15 +277,17 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   PostgreSQL.
                 </p>
               </div>
-              <button
+              <Button
+                variant="neutral"
+                size="sm"
                 type="button"
                 onClick={handlePruneCompleted}
                 disabled={isPruning}
-                className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition-ui text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+                className="items-center gap-1.5 shrink-0"
               >
                 <Trash2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span>{isPruning ? 'Podando...' : 'Podar Completados'}</span>
-              </button>
+              </Button>
             </div>
 
             {/* Recent Jobs Feed */}

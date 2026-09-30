@@ -133,6 +133,7 @@ import {
   getDetailedDateInfo,
 } from './calendar/calendarTypes';
 import { useCalendarRoadbook } from './calendar/useCalendarRoadbook';
+import { Button } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -2194,15 +2195,17 @@ export default function CalendarView({
                   <Search className="w-4 h-4" />
                 </button>
                 <div className="relative sm:hidden">
-                  <button
+                  <Button
+                    variant="neutral"
+                    size="sm"
                     type="button"
                     onClick={() => setShowCalMoreMenu((v) => !v)}
-                    className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] cursor-pointer"
+                    
                     aria-label="Más opciones del calendario"
                     aria-expanded={showCalMoreMenu}
                   >
                     <MoreHorizontal className="w-4 h-4" />
-                  </button>
+                  </Button>
                   {showCalMoreMenu && (
                     <>
                       <div className="fixed inset-0 z-[9998]" onClick={() => setShowCalMoreMenu(false)} />
@@ -2935,17 +2938,19 @@ export default function CalendarView({
                             <ShieldCheck className="w-3 h-3" />
                             <span>5. Cierre material</span>
                           </button>
-                          <button
+                          <Button
+                            variant="primary"
+                            size="xs"
                             type="button"
                             onClick={() => {
                               setModalActiveTab('resumen');
                               setShowEventFichaModal(true);
                             }}
-                            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                            className="items-center gap-1.5"
                           >
                             <Maximize2 className="w-3.5 h-3.5" />
                             <span>Abrir ficha completa</span>
-                          </button>
+                          </Button>
                         </div>
                       </div>
 

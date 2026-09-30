@@ -46,7 +46,7 @@ import { BandSchedule } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { EmailAccountConfig } from "../EmailAccountConfig";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
   salas: "🏛️ Salas",
@@ -1722,14 +1722,16 @@ export const AgentAutonomySettingsModal: React.FC<
                   </div>
                   {isAdmin && (
                     <div className="flex flex-wrap items-center gap-2">
-                      <button
+                      <Button
+                        variant="primary"
+                        size="xs"
                         type="button"
                         onClick={applyPresetRecommendedBooking}
-                        className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] flex items-center gap-1.5/10/20"
+                        className="items-center gap-1.5/10/20"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>Sugerir mejores días (M-X-J)</span>
-                      </button>
+                      </Button>
                       <button
                         type="button"
                         onClick={applyPresetCommercial}
@@ -2152,16 +2154,18 @@ export const AgentAutonomySettingsModal: React.FC<
                     </p>
                   </div>
                   {onOpenBandProfile ? (
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() => {
                         onClose();
                         onOpenBandProfile();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="shrink-0"
                     >
                       Ir a Gestión de Banda ➔
-                    </button>
+                    </Button>
                   ) : (
                     <span className="text-micro text-[var(--ink-2)] font-sans shrink-0 max-w-[160px] text-right">
                       Búscalo en gestión de banda ➔ ADN de tono
@@ -2181,16 +2185,18 @@ export const AgentAutonomySettingsModal: React.FC<
                     </p>
                   </div>
                   {onOpenTemplatesSection && (
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() => {
                         onClose();
                         onOpenTemplatesSection();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="shrink-0"
                     >
                       Ver Plantillas ➔
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -2320,16 +2326,18 @@ export const AgentAutonomySettingsModal: React.FC<
                     </p>
                   </div>
                   {onOpenTemplatesSection ? (
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       type="button"
                       onClick={() => {
                         onClose();
                         onOpenTemplatesSection();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="shrink-0"
                     >
                       Ver hilos de ejemplo ➔
-                    </button>
+                    </Button>
                   ) : (
                     <span className="text-micro text-[var(--ink-2)] font-sans shrink-0 max-w-[160px] text-right">
                       Búscalo en plantillas de email
@@ -2509,17 +2517,19 @@ export const AgentAutonomySettingsModal: React.FC<
                       <Download className="w-3.5 h-3.5" />
                       <span>Exportar CSV</span>
                     </button>
-                    <button
+                    <Button
+                      variant="neutral"
+                      size="xs"
                       type="button"
                       onClick={loadAuditLogs}
                       disabled={loadingAuditLogs}
-                      className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer"
+                      className="items-center gap-1.5"
                     >
                       <RefreshCw
                         className={`w-3.5 h-3.5 ${loadingAuditLogs ? "animate-spin" : ""}`}
                       />
                       <span>Refrescar</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -2739,10 +2749,12 @@ export const AgentAutonomySettingsModal: React.FC<
               </button>
 
               {isAdmin && (
-                <button
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={handleSave}
                   disabled={isSaving || isLoading}
-                  className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold hover:bg-[var(--acc)]/60 disabled:opacity-50 transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
+                  className="items-center gap-1.5"
                 >
                   {isSaving ? (
                     <>
@@ -2760,7 +2772,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       <span>Guardar cambios</span>
                     </>
                   )}
-                </button>
+                </Button>
               )}
             </div>
           </div>

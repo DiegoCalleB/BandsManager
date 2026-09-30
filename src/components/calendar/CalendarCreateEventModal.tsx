@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Concert, Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface CalendarCreateEventModalProps {
   showCreateModal: 'rehearsal' | 'concert' | 'reunion' | null;
@@ -356,12 +356,14 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 >
                   Cancelar
                 </button>
-                <button
+                <Button
+                  variant="primary"
+                  size="xs"
                   type="submit"
-                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer"
+                  
                 >
                   Convocar Reunión
-                </button>
+                </Button>
               </div>
             </form>
           )}

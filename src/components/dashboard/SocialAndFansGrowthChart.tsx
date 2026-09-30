@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { OndaSeries } from "../ui/Onda";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 export type TimePeriod = "7d" | "30d" | "90d" | "1y" | "all";
 
@@ -1007,13 +1008,15 @@ export const SocialAndFansGrowthChart: React.FC<
               Haz clic en cualquiera de las etiquetas superiores para activar
               sus curvas y reescalar el gráfico.
             </p>
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={selectAllChannels}
-              className="mt-3 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-micro font-bold transition-ui cursor-pointer"
+              className="mt-3"
             >
               Activar todos los canales
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="h-full w-full flex items-end">

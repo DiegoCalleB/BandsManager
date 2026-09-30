@@ -3,7 +3,7 @@ import { LeadType } from "../../types";
 import { Plus, X } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select, Textarea } from '../ui';
+import { Button, Input, Select, Textarea } from '../ui';
 
 interface AddLeadModalProps {
   isOpen: boolean;
@@ -228,21 +228,25 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             </div>
 
             <div className="flex gap-3 justify-end pt-3">
-              <button
+              <Button
+                variant="neutral"
+                size="xs"
                 id="btn-add-cancel"
                 type="button"
                 onClick={onClose}
-                className="px-2 py-1 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer"
+                
               >
                 Cancelar
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="neutral"
+                size="xs"
                 id="btn-add-submit"
                 type="submit"
-                className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] font-sans font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer"
+                
               >
                 Confirmar registro
-              </button>
+              </Button>
             </div>
           </form>
         </div>

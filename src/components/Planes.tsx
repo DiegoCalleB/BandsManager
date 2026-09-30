@@ -40,6 +40,7 @@ import {
   getPlanDefinition,
 } from "../utils/planPermissions";
 import { ShowIcon } from './ui/ShowIcon';
+import { Button } from './ui';
 
 interface PlanesProps {
   colors?: ThemeColors;
@@ -489,11 +490,12 @@ export const Planes: React.FC<PlanesProps> = ({
               </p>
             </div>
           </div>
-          <button
+          <Button
+            variant="danger"
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="shrink-0 items-center gap-2"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -501,7 +503,7 @@ export const Planes: React.FC<PlanesProps> = ({
               <CreditCard className="w-4 h-4" />
             )}
             <span>Actualizar tarjeta en Stripe</span>
-          </button>
+          </Button>
         </div>
       )}
 
@@ -625,17 +627,19 @@ export const Planes: React.FC<PlanesProps> = ({
             </div>
 
             <div className="flex items-center gap-2.5 shrink-0">
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 type="button"
                 onClick={() => {
                   const deGiraBtn = document.getElementById("btn-plan-de_gira");
                   if (deGiraBtn)
                     deGiraBtn.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                className="items-center gap-1.5"
               >
                 <span>Probar ahora</span>
-              </button>
+              </Button>
               <button
                 type="button"
                 onClick={() => setShowBanner(false)}

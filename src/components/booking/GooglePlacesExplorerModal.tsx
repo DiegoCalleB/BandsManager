@@ -31,7 +31,7 @@ import { api } from "../../services/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input, Select } from '../ui';
+import { Button, Input, Select } from '../ui';
 
 export interface PlaceResult {
   place_id: string;
@@ -1314,16 +1314,18 @@ export function GooglePlacesExplorerModal({
                 </button>
 
                 <div className="flex flex-wrap items-center gap-2 ml-auto">
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     type="button"
                     onClick={() => handleSearchMultiSource()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--on-acc)] font-semibold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="items-center justify-center gap-1.5"
                     title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
                   >
                     <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" />
                     <span>Radar multi-Fuente (wegow/Songkick/TM)</span>
-                  </button>
+                  </Button>
 
                   <button
                     type="button"
@@ -1336,11 +1338,13 @@ export function GooglePlacesExplorerModal({
                     <span>Radar cultural público</span>
                   </button>
 
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     type="button"
                     onClick={() => handleSearch()}
                     disabled={isSearching}
-                    className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-2 transition-ui cursor-pointer disabled:opacity-50"
+                    className="items-center justify-center gap-2"
                   >
                     {isSearching ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1352,7 +1356,7 @@ export function GooglePlacesExplorerModal({
                         ? "Buscando..."
                         : `Google Places (${searchLimit})`}
                     </span>
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -1501,10 +1505,12 @@ export function GooglePlacesExplorerModal({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button
+                    <Button
+                      variant="primary"
+                      size="xs"
                       onClick={handleExtractBatchEmails}
                       disabled={isExtractingBatch || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                      className="items-center gap-1.5"
                       title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
                     >
                       {isExtractingBatch ? (
@@ -1513,7 +1519,7 @@ export function GooglePlacesExplorerModal({
                         <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]/70" />
                       )}
                       <span><ShowIcon inline emoji="⚡" />Agente Enriquecedor ({selectedCount})</span>
-                    </button>
+                    </Button>
 
                     <button
                       onClick={handleImportToCRM}
@@ -1837,13 +1843,15 @@ export function GooglePlacesExplorerModal({
                       <span>Restablecer todas</span>
                     </button>
 
-                    <button
+                    <Button
+                      variant="neutral"
+                      size="xs"
                       type="button"
                       onClick={() => setShowDiscardedModal(false)}
-                      className="px-4 py-1.5 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-pill)] text-xs font-bold cursor-pointer"
+                      
                     >
                       Cerrar
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>

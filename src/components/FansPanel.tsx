@@ -69,7 +69,7 @@ import { encodeBandIdClient } from "../utils/bandHash";
 import { ShowIcon } from './ui/ShowIcon';
 
 import { FansDashboardView } from "./fans/FansDashboardView";
-import { Input, Select, Textarea } from './ui';
+import { Button, Input, Select, Textarea } from './ui';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -716,14 +716,15 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           />
 
           <div className="relative shrink-0">
-            <button
+            <Button
+              variant="neutral"
               type="button"
               onClick={() => setShowFansHeaderMenu((v) => !v)}
               title="Previsualizar formulario, copiar enlace, registrar fan manual, exportar CSV o ver guía"
-              className="p-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
+              
             >
               <MoreHorizontal className="w-4 h-4" />
-            </button>
+            </Button>
             {showFansHeaderMenu && (
               <>
                 <div
@@ -932,33 +933,39 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     onChange={(e) => setNewCityInput(e.target.value)}
                     className="w-36"
                   />
-                  <button
+                  <Button
+                    variant="primary"
+                    size="xs"
                     type="submit"
-                    className="p-1 bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-pill)] hover:bg-[var(--acc)]/60 transition cursor-pointer"
+                    
                     title="Guardar ciudad"
                   >
                     <Check className="w-3.5 h-3.5" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="neutral"
+                    size="xs"
                     type="button"
                     onClick={() => {
                       setIsAddingCity(false);
                       setNewCityInput("");
                     }}
-                    className="p-1 bg-[var(--sunken)] text-[var(--ink-2)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition cursor-pointer"
+                    
                   >
                     <X className="w-3.5 h-3.5" />
-                  </button>
+                  </Button>
                 </form>
               ) : (
-                <button
+                <Button
+                  variant="neutral"
+                  size="xs"
                   type="button"
                   onClick={() => setIsAddingCity(true)}
-                  className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] flex items-center gap-1 transition cursor-pointer"
+                  className="items-center gap-1"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Añadir ciudad</span>
-                </button>
+                </Button>
               )}
             </div>
           </div>
@@ -1604,13 +1611,15 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     </div>
 
                     <div className="flex justify-end pt-1">
-                      <button
+                      <Button
+                        variant="primary"
+                        size="sm"
                         type="button"
                         onClick={() => handleSaveIncentive()}
-                        className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-pill)] shadow transition flex items-center gap-1.5 cursor-pointer"
+                        className="items-center gap-1.5"
                       >
                         <Save className="w-3.5 h-3.5" /> Guardar Incentivo
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -1629,14 +1638,16 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
                       : "Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios."}
                   </p>
-                  <button
+                  <Button
+                    variant="primary"
+                    size="sm"
                     type="button"
                     onClick={() => onNavigate?.("epk")}
-                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-pill)] shadow transition flex items-center gap-1.5 cursor-pointer"
+                    className="items-center gap-1.5"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> Configurar en el
                     dossier EPK
-                  </button>
+                  </Button>
                 </div>
 
                 {/* Ruta Limpia y Dominio */}
@@ -1983,19 +1994,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </div>
 
               <div className="pt-2 flex justify-end gap-3">
-                <button
+                <Button
+                  variant="neutral"
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-5 py-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-xs font-bold rounded-[var(--r-pill)] transition hover:bg-[var(--surface)] cursor-pointer"
+                  
                 >
                   Cancelar
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
                   type="submit"
-                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--on-acc)] font-sans text-xs font-bold rounded-[var(--r-pill)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
+                  className="items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" /> Guardar Fan
-                </button>
+                </Button>
               </div>
             </form>
           </div>

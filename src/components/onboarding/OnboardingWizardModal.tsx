@@ -58,6 +58,7 @@ import { StepEvents } from "./steps/StepEvents";
 import { StepPhotos } from "./steps/StepPhotos";
 import { StepFansPayments } from "./steps/StepFansPayments";
 import { StepCompletedCelebration } from "./steps/StepCompletedCelebration";
+import { Button } from '../ui';
 
 export interface OnboardingWizardModalProps {
   isOpen: boolean;
@@ -1738,10 +1739,11 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                   <SkipForward className="w-3.5 h-3.5" /> Saltar paso
                 </button>
 
-                <button
+                <Button
+                  variant="primary"
                   type="button"
                   onClick={handleNextStep}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-ui"
+                  className="items-center gap-2"
                 >
                   {currentStepIndex === activeSteps.length - 1 ? (
                     <>
@@ -1754,7 +1756,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
-                </button>
+                </Button>
               </div>
             </div>
           )}

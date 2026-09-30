@@ -21,7 +21,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface MultiModelPitchComparatorModalProps {
   isOpen: boolean;
@@ -321,10 +321,12 @@ export const MultiModelPitchComparatorModal: React.FC<
                 />
               </div>
 
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={handleRunComparison}
                 disabled={isLoading || selectedProviders.length === 0}
-                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans shrink-0"
+                className="items-center justify-center gap-2 shrink-0"
               >
                 {isLoading ? (
                   <>
@@ -337,7 +339,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                     <span>Generar y comparar propuestas</span>
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
 

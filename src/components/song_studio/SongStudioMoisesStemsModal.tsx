@@ -2,6 +2,7 @@ import React from 'react';
 import { Sliders, X, Sparkles, Upload, Info } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from '../SongStudioModal';
+import { Button } from '../ui';
 
 interface SongStudioMoisesStemsModalProps {
   showMoisesStemsModal: SongAudioIdea | null;
@@ -115,14 +116,18 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--hair)]/10">
-              <button
+              <Button
+                variant="neutral"
+                size="sm"
                 type="button"
                 onClick={() => setShowMoisesStemsModal(null)}
-                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+                
               >
                 Cancelar
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
                 type="button"
                 onClick={() => {
                   if (handlePerformAiStemSeparation && targetIdea) {
@@ -130,11 +135,11 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                     setShowMoisesStemsModal(null);
                   }
                 }}
-                className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                className="items-center gap-1.5"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Comenzar separación</span>
-              </button>
+              </Button>
             </div>
           </div>
         )}

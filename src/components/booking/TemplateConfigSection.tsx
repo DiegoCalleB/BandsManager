@@ -24,7 +24,7 @@ import { ThemeColors } from '../../types';
 import { ExampleThreadsSection } from './ExampleThreadsSection';
 import { TemplateRecommendationsCard } from './TemplateRecommendationsCard';
 import { GenerateAllTemplatesModal } from './GenerateAllTemplatesModal';
-import { Input, Textarea } from '../ui';
+import { Button, Input, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -167,15 +167,17 @@ export function TemplateConfigSection({
             </button>
           )}
 
-          <button
+          <Button
+            variant="primary"
+            size="xs"
             id="template-btn-save"
             type="button"
             onClick={onSaveTemplates}
-            className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer"
+            className="items-center gap-1.5"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Guardar</span>
-          </button>
+          </Button>
         </div>
       </div>
 

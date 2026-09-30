@@ -17,7 +17,7 @@ import {
   Save,
   Check,
 } from 'lucide-react';
-import { Input } from '../ui';
+import { Button, Input } from '../ui';
 
 interface AlertSettingsModalProps {
   isOpen: boolean;
@@ -589,15 +589,17 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
         {/* Modal Footer */}
         <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)]/80 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="neutral"
+              size="xs"
               type="button"
               onClick={handleSendTestDigest}
               disabled={sendingTestDigest}
-              className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] hover:text-[var(--acc)] text-xs font-semibold transition-ui flex items-center gap-1.5 disabled:opacity-50"
+              className="items-center gap-1.5"
             >
               <Mail className="w-3.5 h-3.5" />
               <span>{sendingTestDigest ? 'Enviando...' : 'Probar Email de Resumen'}</span>
-            </button>
+            </Button>
             {testDigestResult && <span className="text-xs font-mono text-[var(--ok)] animate-fade-in">{testDigestResult}</span>}
           </div>
 
@@ -611,11 +613,13 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               Cancelar
             </button>
 
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               id="save-alert-settings-btn"
               type="button"
               onClick={handleSave}
-              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97]"
+              className="items-center gap-1.5"
             >
               {savedSuccess ? (
                 <>
@@ -628,7 +632,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                   <span>Guardar reglas</span>
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

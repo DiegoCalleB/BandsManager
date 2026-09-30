@@ -55,6 +55,7 @@ import {
   generateFollowupTemplate,
 } from "../../utils/bookingFollowup";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Button } from '../ui';
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -864,11 +865,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               </span>
             )}
 
-            <button
+            <Button
+              variant="primary"
+              size="xs"
               type="button"
               onClick={handleBatchScanDates}
               disabled={isScanningBatchDates}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] hover:text-[var(--ink)] transition-ui cursor-pointer shadow-xs disabled:opacity-50 text-xs font-sans font-semibold"
+              className="items-center gap-1.5"
               title="Escanea las carteleras de los recintos de la campaña para detectar sus fines de semana libres"
             >
               {isScanningBatchDates ? (
@@ -881,7 +884,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   ? "Escaneando carteleras..."
                   : `📡 Radar Fechas Libres (${selectedLeadIds.length > 0 ? selectedLeadIds.length : "Campaña"})`}
               </span>
-            </button>
+            </Button>
           </div>
         )}
       </div>
