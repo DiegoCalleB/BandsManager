@@ -546,7 +546,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 onClick={() => setShowCreateAlbumMenu(false)}
               />
               <div
-                className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                className={`absolute left-0 sm:left-auto sm:right-0 top-full mt-1.5 z-40 w-[min(18rem,calc(100vw-2.5rem))] max-h-[70vh] overflow-y-auto rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ring-1 ring-[var(--line)] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               >
                 {onCreateAlbum && (
                   <button

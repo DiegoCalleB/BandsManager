@@ -27,6 +27,7 @@ import { Sparkles,
   Edit,
   MapPin,
   MessageSquare,
+  MoreHorizontal,
   Music,
   Navigation,
   Phone,
@@ -190,6 +191,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
   const textTitle = 'text-[var(--ink)]';
   const textSub = 'text-[var(--ink-2)]';
 
+  const [showFichaMenu, setShowFichaMenu] = useState(false);
   const [showAddContactForm, setShowAddContactForm] = useState(false);
   const [newContactTelefono, setNewContactTelefono] = useState('');
   const [newContactNotas, setNewContactNotas] = useState('');
@@ -294,7 +296,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
             </button>
 
             <div className="flex flex-col items-center min-w-0">
-              <span className="text-micro font-mono text-[var(--acc)]/80 font-bold">Ficha de evento</span>
+              <span className="text-micro font-sans text-[var(--acc-ink)] font-semibold">Ficha de evento</span>
               {modalPosLabel && (
                 <span className={`text-micro font-mono font-bold ${'text-[var(--ink-2)]'}`}>
                   {modalPosLabel}
@@ -334,7 +336,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <img
                     src={modalBandInfo.logoUrl}
                     alt={modalBandInfo.name}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0"
+                    className="w-11 h-11 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0"
                     onError={(e) => {
                       (e.currentTarget as HTMLElement).style.display = 'none';
                       const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
@@ -343,7 +345,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   />
                 ) : null}
                 <span
-                  className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-bold ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
+                  className={`fallback-initials-modal w-11 h-11 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-bold ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
                 >
                   {modalBandInfo.initials}
                 </span>
@@ -351,7 +353,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] inline-flex items-center gap-1">
                     <ShowIcon inline emoji="🎸" />{modalBandInfo.name}
                   </span>
-                  <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>{selectedEventTitle}</h3>
+                  <h3 className={`text-lg sm:text-xl font-bold font-display mt-1 line-clamp-2 sm:truncate ${textTitle}`}>{selectedEventTitle}</h3>
                   <p className={`text-xs font-mono mt-0.5 ${textSub}`}>
                     {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                   </p>
@@ -381,6 +383,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     ✎ Editar
                   </button>
 
+                  <div className="hidden sm:flex flex-wrap items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
@@ -424,6 +427,39 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <Trash2 className="w-3.5 h-3.5" />
                     <span className="hidden xs:inline">Eliminar</span>
                   </button>
+                  </div>
+
+                  {/* Móvil: lo secundario detrás de ⋯ (AGENTS.md §6) */}
+                  <div className="relative sm:hidden">
+                    <button
+                      type="button"
+                      onClick={() => setShowFichaMenu((v) => !v)}
+                      className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] cursor-pointer"
+                      aria-label="Más acciones"
+                      aria-expanded={showFichaMenu}
+                    >
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                    {showFichaMenu && (
+                      <>
+                        <div className="fixed inset-0 z-[9998]" onClick={() => setShowFichaMenu(false)} />
+                        <div className="absolute right-0 mt-1.5 w-52 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 z-[9999] shadow-none ring-1 ring-[var(--line)]">
+                          <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleShareEventWhatsApp(modalEvent, isConcert); }}>
+                            <Share2 className="w-4 h-4 text-[var(--ink-2)]" /> Compartir por WhatsApp
+                          </button>
+                          <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleNotifyBandMembers(modalEvent, isConcert); }}>
+                            <Bell className="w-4 h-4 text-[var(--ink-2)]" /> Avisar a la banda
+                          </button>
+                          <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleCopyEventFicha(modalEvent, isConcert); }}>
+                            <Copy className="w-4 h-4 text-[var(--ink-2)]" /> Copiar convocatoria
+                          </button>
+                          <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--alert)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); setDeletingEventConfirmId(modalEvent.id); }}>
+                            <Trash2 className="w-4 h-4" /> Eliminar evento
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -464,6 +500,8 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
             {/* Previsión Meteorológica Open-Meteo para el Evento */}
             {eventCity && eventDateStr && (
               <EventWeatherCard
+                collapsible
+                defaultExpanded={typeof window !== 'undefined' && window.matchMedia('(min-width: 640px)').matches}
                 city={eventCity}
                 dateStr={eventDateStr}
                 timeStr={eventTimeStr}

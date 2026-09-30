@@ -54,6 +54,8 @@ import {
   Eye,
   QrCode,
   Settings,
+  MoreHorizontal,
+  HelpCircle,
   Smartphone,
   Monitor,
   Cloud,
@@ -364,6 +366,8 @@ export default function CalendarView({
   // Form state for selected band when creating rehearsal/concert
   const [selectedBandIdForNewEvent, setSelectedBandIdForNewEvent] = useState(activeBandId);
   const [showSyncModal, setShowSyncModal] = useState(false);
+  const [showCalMoreMenu, setShowCalMoreMenu] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [syncScope, setSyncScope] = useState<'all' | 'active'>('all');
   const [copiedFeed, setCopiedFeed] = useState(false);
   // La URL del feed .ics la firma el servidor: el enlace lleva una firma para que no baste con
@@ -2116,8 +2120,8 @@ export default function CalendarView({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0">
                 <h4 className="page-title">Calendario</h4>
-                <p className="text-xs text-[var(--ink-2)] mt-0.5">Directos, ensayos y reuniones</p>
-                <div className="flex items-center gap-1.5 text-micro font-sans font-bold mt-2 flex-wrap max-w-full">
+                <p className="hidden sm:block text-xs text-[var(--ink-2)] mt-0.5">Directos, ensayos y reuniones</p>
+                <div className="hidden sm:flex items-center gap-1.5 text-micro font-sans font-bold mt-2 flex-wrap max-w-full">
                   <span
                     className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1"
                     title="Eventos visibles vs Total"
@@ -2151,7 +2155,7 @@ export default function CalendarView({
 
               {/* Action buttons */}
               <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
-                <ModuleTutorialTrigger moduleId="calendario" onClick={openTutorial} label="Guía rápida" />
+                <div className="hidden sm:block"><ModuleTutorialTrigger moduleId="calendario" onClick={openTutorial} label="Guía rápida" /></div>
 
                 {/* Unified Add Event Button (Prevents button clutter) */}
                 <div className="relative inline-block text-left">
@@ -2230,19 +2234,56 @@ export default function CalendarView({
                   <button
                     id="export-ics-btn"
                     onClick={() => setShowSyncModal(true)}
-                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'}`}
+                    className={`hidden sm:inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'}`}
                     title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
                   >
                     <Radio className="w-3.5 h-3.5 text-[var(--acc)]" />
                     <span>Sincronizar</span>
                   </button>
                 )}
+
+                {/* Móvil: lo secundario, fuera de la vista (AGENTS.md §6) */}
+                <button
+                  type="button"
+                  onClick={() => setShowMobileSearch((v) => !v)}
+                  className={`sm:hidden p-2 rounded-[var(--r-pill)] cursor-pointer ${showMobileSearch ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                  aria-label="Buscar en el calendario"
+                  aria-expanded={showMobileSearch}
+                >
+                  <Search className="w-4 h-4" />
+                </button>
+                <div className="relative sm:hidden">
+                  <button
+                    type="button"
+                    onClick={() => setShowCalMoreMenu((v) => !v)}
+                    className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] cursor-pointer"
+                    aria-label="Más opciones del calendario"
+                    aria-expanded={showCalMoreMenu}
+                  >
+                    <MoreHorizontal className="w-4 h-4" />
+                  </button>
+                  {showCalMoreMenu && (
+                    <>
+                      <div className="fixed inset-0 z-[9998]" onClick={() => setShowCalMoreMenu(false)} />
+                      <div className="absolute right-0 mt-1.5 w-52 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 z-[9999] ring-1 ring-[var(--line)]">
+                        <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowCalMoreMenu(false); openTutorial(); }}>
+                          <HelpCircle className="w-4 h-4 text-[var(--ink-2)]" /> Guía rápida
+                        </button>
+                        {!isPromoPlan && (
+                          <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowCalMoreMenu(false); setShowSyncModal(true); }}>
+                            <Radio className="w-4 h-4 text-[var(--ink-2)] shrink-0" /> <span className="whitespace-nowrap">Sincronizar con mi móvil</span>
+                          </button>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Quick Search Bar across calendar events (Palabras clave, sala, ciudad, banda, evento) */}
-          <div className="mt-3 pt-2">
+          <div className={`mt-3 pt-2 ${showMobileSearch || calendarSearchTerm ? "" : "hidden"} sm:block`}>
             <div className="flex items-center gap-2">
               <div
                 className={`relative flex-1 flex items-center rounded-[var(--r-m)] transition-ui ${
@@ -2373,7 +2414,7 @@ export default function CalendarView({
                     title={
                       devicePrefs[currentDeviceType] === '2' ? 'Ver 2 meses (predeterminado al iniciar en este dispositivo)' : 'Ver 2 meses'
                     }
-                    className={`px-2 py-0.5 text-micro font-sans font-bold rounded transition-ui cursor-pointer ${
+                    className={`hidden sm:inline-block px-2 py-0.5 text-micro font-sans font-bold rounded transition-ui cursor-pointer ${
                       calendarViewMode === '2m'
                         ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                         : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -2411,7 +2452,7 @@ export default function CalendarView({
                     id="calendar-view-config-btn"
                     onClick={() => setShowViewConfigPopover((prev) => !prev)}
                     title="Configurar vista por defecto (1M o 2M) diferenciada por tipo de dispositivo y sincronizada en Supabase"
-                    className={`px-1.5 py-0.5 text-micro rounded transition-ui cursor-pointer flex items-center justify-center relative ${
+                    className={`hidden sm:flex px-1.5 py-0.5 text-micro rounded transition-ui cursor-pointer items-center justify-center relative ${
                       showViewConfigPopover ? 'bg-[var(--surface)]/80 text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
@@ -2430,7 +2471,7 @@ export default function CalendarView({
                   id="calendar-fullscreen-btn"
                   onClick={toggleCalendarFullscreen}
                   title={isCalendarFullscreen ? 'Salir de pantalla completa (Esc)' : 'Ver el calendario a pantalla completa'}
-                  className={`px-2 py-1 text-micro font-sans font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                  className={`hidden sm:flex px-2 py-1 text-micro font-sans font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer items-center gap-1.5 shrink-0 ${
                     isCalendarFullscreen
                       ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                       : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
@@ -2605,7 +2646,7 @@ export default function CalendarView({
                   <Users className="w-3 h-3 shrink-0" />
                   <span className="truncate">Todas las bandas</span>
                   <span
-                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-micro font-sans font-extrabold shrink-0 ${
+                    className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-micro font-sans font-extrabold shrink-0 ${
                       filterBandMode === 'all' ? 'bg-[var(--sunken)] text-[var(--ink)]' : 'bg-[var(--sunken)]/50 text-[var(--ink-2)]'
                     }`}
                   >
@@ -2637,7 +2678,7 @@ export default function CalendarView({
                   <Music className="w-3 h-3 shrink-0" />
                   <span className="truncate max-w-[90px] sm:max-w-none">{activeBandName}</span>
                   <span
-                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-micro font-sans font-extrabold shrink-0 ${
+                    className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-micro font-sans font-extrabold shrink-0 ${
                       filterBandMode === 'active' ? 'bg-[var(--sunken)] text-[var(--ink)]' : 'bg-[var(--sunken)]/50 text-[var(--ink-2)]'
                     }`}
                   >

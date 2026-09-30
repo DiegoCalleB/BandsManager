@@ -74,7 +74,9 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
       if (data.alerts && onAlertsDetected) {
         onAlertsDetected(data.alerts);
       }
-      if (data.alerts && data.alerts.some((a) => a.severity === "danger")) {
+      // En móvil el aviso ya se ve en la píldora compacta: no se abre solo y empuja la ficha.
+      const esMovil = typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches;
+      if (!esMovil && data.alerts && data.alerts.some((a) => a.severity === "danger")) {
         setIsExpanded(true);
       }
     } catch (err) {

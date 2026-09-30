@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import {
@@ -101,17 +102,39 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const popRef = useRef<HTMLDivElement>(null);
+  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
 
-  // Close menu on outside click
+  // El menú se pinta en un portal con posición fija: la fila tiene overflow-x-auto y un menú
+  // absoluto dentro quedaba recortado (en móvil solo se veía la primera línea).
+  useLayoutEffect(() => {
+    if (!showMenu || !menuRef.current) return;
+    const r = menuRef.current.getBoundingClientRect();
+    const alto = 320; // alto aproximado del menú
+    const abajo = window.innerHeight - r.bottom;
+    setMenuPos({
+      top: abajo < alto && r.top > alto ? Math.max(8, r.top - alto - 6) : r.bottom + 6,
+      right: Math.max(8, window.innerWidth - r.right),
+    });
+  }, [showMenu]);
+
+  // Cierra al pulsar fuera, al hacer scroll o al cambiar el tamaño
   useEffect(() => {
     if (!showMenu) return;
+    const cerrar = () => setShowMenu(false);
     const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setShowMenu(false);
-      }
+      const t = e.target as Node;
+      if (menuRef.current?.contains(t) || popRef.current?.contains(t)) return;
+      setShowMenu(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', cerrar, true);
+    window.addEventListener('resize', cerrar);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', cerrar, true);
+      window.removeEventListener('resize', cerrar);
+    };
   }, [showMenu]);
 
   const isPlaying = isPlayingCurrent && isPlayerPlaying;
@@ -146,7 +169,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 : 'bg-[var(--sunken)] hover:bg-[var(--bg)] text-[var(--ink)]'
       } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
-      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto no-scrollbar shrink-0">
         {/* Drag Handle (when draggable) */}
         {draggable && (
           <div
@@ -372,10 +395,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               <MoreVertical className="w-4 h-4" />
             </button>
 
-            {/* Menu Popover */}
-            {showMenu && (
+            {/* Menu Popover (portal: no lo recorta la fila) */}
+            {showMenu && menuPos && createPortal(
               <div
-                className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
+                ref={popRef}
+                style={{ position: 'fixed', top: menuPos?.top ?? 0, right: menuPos?.right ?? 8 }}
+                className={`z-[10000] max-h-[70vh] overflow-y-auto w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
               >
                 <div className="py-1 space-y-0.5">
                   {/* Acordes */}
@@ -533,7 +558,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                   </div>
                 )}
               </div>
-            )}
+              , document.body)}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { abrirApp, irAEscritorio, irAMovil } from './helpers-visual';
+import { abrirApp, cerrarModales, irAEscritorio, irAMovil } from './helpers-visual';
 
 /**
  * RESPONSIVE — la app no puede desbordar en ningún ancho.
@@ -140,4 +140,48 @@ test('menú móvil · el drawer recibe los toques, no el scrim', async ({ page }
     return !!el?.closest('.w-\\[280px\\]');
   });
   expect(dentroDelPanel, 'en (120,300) debería estar el panel del drawer, no el scrim').toBe(true);
+});
+
+/**
+ * MENÚS DESPLEGABLES EN MÓVIL — un menú que se sale de la pantalla o queda recortado por la fila
+ * que lo contiene es un menú que no existe. Dos casos reales de Discografía:
+ *  · «Nuevo disco»: el panel se anclaba a la derecha de un botón a la izquierda y salía por el borde.
+ *  · «⋮» de canción: la fila tiene overflow-x-auto y recortaba un menú absoluto (solo se veía 1 línea).
+ */
+test('menús de Discografía caben en pantalla y reciben los toques (móvil)', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await abrirApp(page, true);
+  await irAMovil(page, 'repertorio');
+  await page.getByRole('button', { name: /Discografía/ }).first().click();
+  await page.waitForTimeout(900);
+  await cerrarModales(page);
+
+  // 1) Nuevo disco
+  await page.getByRole('button', { name: /Nuevo disco/ }).first().click();
+  const opcion = page.getByText('Disco vacío').first();
+  await expect(opcion).toBeVisible();
+  const caja = (await opcion.boundingBox())!;
+  expect(caja.x, 'opción del menú fuera por la izquierda').toBeGreaterThanOrEqual(0);
+  expect(caja.x + caja.width, 'opción del menú fuera por la derecha').toBeLessThanOrEqual(390);
+  const encima = await page.evaluate(([x, y]) => (document.elementFromPoint(x, y) as HTMLElement | null)?.textContent ?? '', [caja.x + 10, caja.y + caja.height / 2]);
+  expect(encima).toContain('Disco vacío');
+  await page.keyboard.press('Escape');
+  await page.locator('div.fixed.inset-0.z-30').first().click({ position: { x: 5, y: 5 }, force: true }).catch(() => {});
+
+  // 2) ⋮ de una canción (abre el primer disco que tenga canciones)
+  const chevrons = page.locator('button:has(svg.lucide-chevron-down)');
+  for (let i = 0; i < await chevrons.count(); i++) {
+    const b = chevrons.nth(i);
+    if (await b.isVisible()) { await b.click().catch(() => {}); await page.waitForTimeout(400); if (await page.getByRole('button', { name: 'Más opciones' }).count()) break; }
+  }
+  const mas = page.getByRole('button', { name: 'Más opciones' }).first();
+  await mas.scrollIntoViewIfNeeded();
+  await mas.click();
+  const acordes = page.getByText('Ver acordes y letra').first();
+  await expect(acordes).toBeVisible();
+  const c2 = (await acordes.boundingBox())!;
+  expect(c2.y + c2.height, 'menú de canción por debajo de la pantalla').toBeLessThanOrEqual(844);
+  const enc2 = await page.evaluate(([x, y]) => (document.elementFromPoint(x, y) as HTMLElement | null)?.textContent ?? '', [c2.x + 10, c2.y + c2.height / 2]);
+  expect(enc2, 'el menú de canción está tapado o recortado').toContain('Ver acordes');
 });
