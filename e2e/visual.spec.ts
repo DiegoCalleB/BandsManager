@@ -131,7 +131,7 @@ test.describe('regresión visual — móvil', () => {
     await page.getByText('Personalizar / Reordenar').click();
     await page.getByText('Añadir Widget').click();
 
-    const cerrar = page.getByRole('button', { name: 'Cerrar' });
+    const cerrar = page.getByRole('button', { name: 'Cerrar', exact: true }).last();
     await expect(cerrar).toBeVisible();
 
     const viewport = page.viewportSize();
