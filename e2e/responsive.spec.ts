@@ -92,3 +92,35 @@ for (const tema of ['light', 'dark']) {
     });
   }
 }
+
+/**
+ * MODALES EN MÓVIL — hoja inferior. En <640 px el panel del modal se pega abajo, ocupa todo el
+ * ancho y no se sale por arriba; en escritorio sigue centrado.
+ */
+test.describe('modales · hoja inferior', () => {
+  const abrirNuevoEscenario = async (page: Page) => {
+    await abrirApp(page, true);
+    await irAMovil(page, 'calendario');
+    await page.getByRole('button', { name: /\+ Evento/ }).first().click();
+    await page.getByRole('button', { name: /\+ Concierto/ }).first().click();
+    await page.waitForTimeout(500);
+  };
+  const geometria = (page: Page) => page.evaluate(() => {
+    const raiz = document.querySelector('[data-modal-root]');
+    const panel = raiz?.querySelector('.fixed.inset-0 > *') as HTMLElement | null;
+    if (!panel) return null;
+    const r = panel.getBoundingClientRect();
+    return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, vw: innerWidth, vh: innerHeight };
+  });
+
+  test('en 390 px el modal es una hoja: pegado abajo y a todo el ancho', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await abrirNuevoEscenario(page);
+    const g = await geometria(page);
+    expect(g, 'no se abrió ningún modal').not.toBeNull();
+    expect(Math.abs(g!.bottom - g!.vh)).toBeLessThanOrEqual(2);
+    expect(g!.left).toBeLessThanOrEqual(1);
+    expect(g!.right).toBeGreaterThanOrEqual(g!.vw - 1);
+    expect(g!.top).toBeGreaterThanOrEqual(0);
+  });
+});

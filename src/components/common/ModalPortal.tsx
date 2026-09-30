@@ -50,7 +50,9 @@ export const ModalPortal: React.FC<ModalPortalProps> = ({ children, isOpen = tru
     return null;
   }
 
-  return createPortal(children, document.body);
+  // `display: contents` no altera el posicionamiento fijo de los hijos; sirve de ancla para el CSS
+  // global de modales (hoja inferior en móvil, entrada suave) en index.css › «MODALES».
+  return createPortal(<div data-modal-root style={{ display: 'contents' }}>{children}</div>, document.body);
 };
 
 export default ModalPortal;

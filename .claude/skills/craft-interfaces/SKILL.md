@@ -75,7 +75,7 @@ description: Detalle y movimiento de la interfaz de BandManager.io — escala ti
 
 ## 📱 5. Móvil de verdad (~390 px)
 
-- **Modales < 640 px → hoja inferior** (entra con `--ease-sheet`, esquinas superiores `--r-xl`, asa de arrastre). La acción principal queda en la zona del pulgar, abajo.
+- **Modales < 640 px → hoja inferior** (entra con `--ease-sheet`, esquinas superiores `--r-xl`, asa de arrastre). La acción principal queda en la zona del pulgar, abajo. **Ya es automático** para todo modal que pase por `<ModalPortal>` (CSS global en `index.css › MODALES`); un modal nuevo debe usarlo, no reimplementar el overlay. La red `e2e/responsive.spec.ts` lo comprueba.
 - Máximo 3 bloques antes del primer scroll (AGENTS.md §6). Acciones secundarias tras `⋯`.
 - Campos a 16 px (regla global ya aplicada). Sin scroll horizontal del documento.
 - Teclado y móvil comparten regla: todo lo que se hace con el dedo se puede hacer con teclado.

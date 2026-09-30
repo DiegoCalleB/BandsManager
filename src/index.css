@@ -436,3 +436,47 @@ textarea::-webkit-resizer {
   transition-timing-function: var(--default-transition-timing-function);
   transition-duration: var(--default-transition-duration);
 }
+
+/* ═══════════ MODALES — entrada suave y hoja inferior en móvil (craft-interfaces §4, §5) ═══════════
+   Se aplica a todo modal que pase por <ModalPortal>. El overlay es el `fixed inset-0` y el panel su
+   hijo no absoluto (un fondo `absolute inset-0` aparte se ignora). Solo transform y opacity; la entrada dura --dur-modal y no hay salida animada (el
+   componente se desmonta al cerrar). */
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-pop { from { opacity: 0; transform: scale(0.96) translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes modal-sheet { from { transform: translateY(24px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+
+[data-modal-root] > .fixed.inset-0 {
+  animation: modal-fade var(--dur-pop) var(--ease-out) both;
+}
+[data-modal-root] > .fixed.inset-0 > :not(.absolute):not(.fixed) {
+  animation: modal-pop var(--dur-modal) var(--ease-out) both;
+}
+
+@media (max-width: 639px) {
+  /* Hoja inferior: pegada abajo, ancho completo, esquinas superiores redondeadas, asa de arrastre.
+     Solo si el overlay es flex (centra su panel); los demás se quedan como estaban. */
+  [data-modal-root] > .fixed.inset-0.flex {
+    align-items: flex-end;
+    padding: 0;
+  }
+  [data-modal-root] > .fixed.inset-0.flex > :not(.absolute):not(.fixed) {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    max-height: 92dvh;
+    overflow-y: auto;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+    animation: modal-sheet var(--dur-modal) var(--ease-sheet) both;
+  }
+  [data-modal-root] > .fixed.inset-0.flex > :not(.absolute):not(.fixed)::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 4px;
+    margin: 8px auto 4px;
+    border-radius: 999px;
+    background: var(--ink-3);
+    opacity: 0.45;
+  }
+}
