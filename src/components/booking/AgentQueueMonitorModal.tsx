@@ -234,7 +234,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)] animate-spin" />
                 </div>
                 <span className="text-2xl font-black text-[var(--acc)] font-mono">{stats.processing}</span>
-                <span className="text-micro text-[var(--ink-2)] mt-1">Ejecutando en worker</span>
+                <span className="text-micro text-[var(--ink-2)] mt-1">En marcha</span>
               </div>
 
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col">
@@ -294,13 +294,13 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>Historial de Trabajos en la Cola (Últimos 10 eventos)</span>
                 </h3>
-                <span className="text-xs text-[var(--ink-2)] font-mono">Sondeo worker: 3s</span>
+                <span className="text-xs text-[var(--ink-2)] font-mono">Se actualiza cada 3 s</span>
               </div>
 
               {loading ? (
                 <div className="py-12 text-center text-[var(--ink-2)] text-xs flex items-center justify-center gap-2">
                   <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
-                  <span>Cargando telemetría de Supabase…</span>
+                  <span>Cargando actividad…</span>
                 </div>
               ) : recentJobs.length === 0 ? (
                 <div className="py-10 text-center text-[var(--ink-2)] text-xs bg-[var(--sunken)] rounded-[var(--r-m)] ">

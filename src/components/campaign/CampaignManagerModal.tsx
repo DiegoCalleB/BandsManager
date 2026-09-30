@@ -874,7 +874,7 @@ export function CampaignManagerModal({
         <div className="p-4 bg-[var(--sunken)] flex justify-between items-center text-xs text-[var(--ink-2)]">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[var(--ok)]" />
-            <span>Persistencia en Supabase PostgreSQL</span>
+            <span>Se guarda en tu cuenta</span>
           </div>
           <button
             onClick={onClose}

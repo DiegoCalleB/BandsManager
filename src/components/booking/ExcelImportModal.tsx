@@ -1590,7 +1590,7 @@ export function ExcelImportModal({
                   {isImporting ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Guardando en Supabase…</span>
+                      <span>Guardando…</span>
                     </>
                   ) : (
                     <>

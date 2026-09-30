@@ -2609,7 +2609,7 @@ export default function Chatbot({
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-[var(--alert)] font-bold flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
-                    <span>Incidencia en motor de agentes Supabase</span>
+                    <span>Incidencia en los agentes</span>
                   </p>
                 </div>
                 <p className="text-micro leading-normal text-[var(--ink-2)]/90">

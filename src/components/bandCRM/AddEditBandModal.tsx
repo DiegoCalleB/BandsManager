@@ -357,7 +357,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
                 {/* Upload file button */}
                 <div className="shrink-0 space-y-1">
-                  <span className="text-micro text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
+                  <span className="text-micro text-[var(--ink-2)] block font-mono">O subir un logo:</span>
                   <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-m)] text-micro font-mono text-[var(--ink-2)] flex items-center gap-1.5 transition-ui active:scale-[0.97]">
                     {isUploadingLogo ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />

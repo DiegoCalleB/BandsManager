@@ -2452,7 +2452,7 @@ export default function CalendarView({
                         </div>
                         <div>
                           <h4 className="text-xs font-bold font-display">Vista por defecto</h4>
-                          <p className={`text-micro font-sans ${'text-[var(--ink-2)]'}`}>Diferenciada por dispositivo · Supabase</p>
+                          <p className={`text-micro font-sans ${'text-[var(--ink-2)]'}`}>Distinta en móvil y en ordenador</p>
                         </div>
                       </div>
                       <button
@@ -2578,7 +2578,7 @@ export default function CalendarView({
                     <div className={`mt-3 pt-2.510 flex items-center justify-between text-micro font-sans ${'text-[var(--ink-2)]'}`}>
                       <span className="flex items-center gap-1.5">
                         <Cloud className="w-3.5 h-3.5 text-[var(--acc)]" />
-                        <span>Sincronizado con Supabase</span>
+                        <span>Sincronizado con tu cuenta</span>
                       </span>
                       <span className="font-bold text-[var(--acc)]">
                         {selectedConfigDevice === 'mobile' ? 'Móvil' : 'Ordenador'}: {devicePrefs[selectedConfigDevice]}M

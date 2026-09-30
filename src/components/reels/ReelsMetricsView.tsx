@@ -2744,7 +2744,7 @@ export function ReelsMetricsView({
                   ) : (
                     <>
                       <ScanLine className="w-4 h-4 text-[var(--tentative)]/80" />
-                      <span>Escanear y guardar en Supabase</span>
+                      <span>Escanear y guardar</span>
                     </>
                   )}
                 </button>

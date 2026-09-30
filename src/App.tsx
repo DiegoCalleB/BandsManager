@@ -2021,9 +2021,8 @@ export default function App() {
               <div className="flex gap-2 items-center">
                 <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
                 <span>
-                  <strong>Modo simulación activo:</strong> No se pudo conectar
-                  con el servidor Express backend local. Los cambios actuales se
-                  almacenarán temporalmente en memoria.
+                  <strong>Sin conexión con el servidor.</strong> Lo que hagas
+                  ahora se guarda solo en este navegador hasta que vuelva.
                 </span>
               </div>
               <button
