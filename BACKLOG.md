@@ -10,7 +10,47 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ## 🏛️ Planes Maestros de Arquitectura, IA y Negocio (Listos para Implementación)
 
-### 1. Plan Maestro Defensivo, Acuerdos 1-Click y Directo (`plan_anti_fraude.md`)
+### 1. Sistema Operativo de Management Digital 360° & Definición de Buyer Personas
+* **Qué:** Unificación de las 5 figuras clásicas del equipo de un artista (Booker, Tour Manager, Director Musical de Ensayos, Contable/CFO y Community Manager) en una plataforma asistida por IA para 5 perfiles clave:
+  1. *El Líder Multitarea (Banda DIY)*: Prospección de salas con Agentes IA, pitches personalizados y finanzas de carretera.
+  2. *La Solista / Artista Emergente*: Generador de Reels virales con Tone DNA y EPK interactivo de alto impacto.
+  3. *El Músico de Sesión / Multi-Banda (Mercenario del Directo)*: Selector instantáneo multi-banda en cabecera, calendario unificado sin solapes de fechas, notas técnicas por instrumento en canciones (`src/components/ensayos/`) y control de cachés personales por bolo.
+  4. *El Manager / Booker Boutique (3 a 8 bandas)*: Control multi-inquilino de múltiples agrupaciones y campañas masivas segmentadas.
+  5. *El Programador de Sala (Facilitador B2B)*: Dossier en 1 clic (EPK sin adjuntos pesados), rider verificado y firma de acuerdo desde el móvil en 30 segundos.
+* **Por qué importa:** Posiciona a BandManager.io no como un simple CRM de bolos, sino como el sistema operativo integral e indispensable para cualquier profesional de la música en directo.
+* **Estado:** Especificado y validado conceptualmente.
+
+### 2. Módulo de Contratos Digitales, Reserva de Bolos y Custodia (Estilo Airbnb / Escrow Universal)
+* **Qué:** Formalización de acuerdos de concierto con enlace público 1-Click (`/deal/:token` o `/contract/:token`) que cubre el 100% de los casos de la industria musical sin fricción:
+  1. *Los 4 Modelos Económicos:* Caché Fijo, Taquilla Compartida (Door-Split), Garantía Mínima vs Taquilla y Alquiler de Sala.
+  2. *Los 3 Métodos de Liquidación (Neutros y Libres de Fricción Fiscal):*
+     - **100% Digital con Custodia (Stripe Escrow):** Retención de señal/total y liberación post-concierto con take-rate para la plataforma.
+     - **Liquidación Directa entre Partes:** *Hoja de Coordinación Técnica y Condiciones de Producción* (sin pasarela obligatoria, lenguaje neutro que protege horarios, rider, comidas y liquidación en sala).
+     - **Híbrido:** Pequeña señal digital de fianza de viaje por Stripe (ej. 100-150€) para garantizar el compromiso de furgoneta + resto liquidado en sala.
+  3. *Políticas de Cancelación Claras:* Flexible (hasta 15 días), Moderada (50% con <10 días para gastos de viaje), Estricta (100% con <72h) y Cláusula de Fuerza Mayor.
+  4. *Firma Táctil Móvil:* Canvas de firma manuscrita para el programador de la sala sin necesidad de registro ni descargas de apps.
+* **Por qué importa:** Elimina el pánico al plantón y al impago para las bandas, profesionaliza la relación con la sala y abre una vía de monetización masiva mediante Booking Fees y Take-Rate.
+* **Documentos relacionados:** `plan_anti_fraude.md`
+* **Estado:** Especificado. Listo para crear tabla `booking_deals`, endpoints `/api/contracts` bajo `getTargetBandId` y vista pública responsive.
+
+### 3. Motor de Crecimiento Viral y Automatización de Redes con ManyChat (Doble Nivel)
+* **Qué:** Integración de automatizaciones en Instagram DMs, TikTok y WhatsApp a dos niveles:
+  1. *Nivel Plataforma (@bandmanager.io):* Embudos automáticos en Reels ("Comenta SALAS / RIDER / CONTRATO") para captar miles de músicos y crearles cuentas gratuitas en BandManager.
+  2. *Nivel Banda (Integrado en Dashboard / Fans):*
+     - Bucle "De Reel a Entrada Vendida": la IA redacta el post con CTA ("Comenta DIRECTO para 20% dto"), ManyChat envía la entrada por DM al instante y el fan queda registrado en el CRM de Fans (`fans`) etiquetado por ciudad.
+     - Auto-respuesta a Salas por DM: Si un promotor escribe por Instagram, se le envía el EPK interactivo y se crea automáticamente un Lead en el CRM de Booking.
+* **Por qué importa:** Multiplica el alcance orgánico de los Reels de las bandas en el algoritmo de Instagram (al disparar comentarios) y automatiza la venta de entradas y captación de datos de fans sin trabajo manual.
+* **Estado:** Especificado. Arquitectura de Webhook `POST /api/webhooks/manychat` y componentes de configuración de embudos listos para diseño.
+
+### 4. Motor de SEO Programático y Adquisición Orgánica (Sin WordPress)
+* **Qué:** Infraestructura de captación de tráfico orgánico en Google integrada directamente en la aplicación:
+  1. *Directorio Público de Salas por Ciudad (`/salas/:ciudad`):* Páginas indexables optimizadas para búsquedas de alta intención (*"Salas para tocar en Madrid"*, *"Dónde enviar dossier en Barcelona"*), con llamada a la acción para probar BandManager.
+  2. *Herramientas Gancho Públicas (Lead Magnets):* Calculadora pública de caché y gastos de gira + Generador rápido de rider técnico interactivo con exportación en PDF.
+  3. *Metadata Estructurada (Schema.org, JSON-LD, OpenGraph):* Marcado enriquecido para eventos, salas y fichas de artistas para dominar las SERPs de Google.
+* **Por qué importa:** Genera un flujo constante y gratuito de nuevas bandas y salas hacia la plataforma sin necesidad de mantener un blog externo en WordPress ni pagar campañas de publicidad caras.
+* **Estado:** Diseñado. Listo para montar las rutas públicas dinámicas y componentes de captación.
+
+### 5. Plan Maestro Defensivo, Acuerdos 1-Click y Directo (`plan_anti_fraude.md`)
 * **Qué:** Sistema completo de cierre de conciertos sin fricción con enlace público 1-Click (`/deal/view/:token`), firma electrónica simple válida bajo Reglamento eIDAS (UE 910/2014) con hash SHA-256 inmutable, minimización estricta de datos RGPD, detección de atribución CRM sin espionaje (el *Nudge Elegante* de reactivación) y las 6 innovaciones agénticas de directo:
   1. *WhatsApp Magic Share* para técnico de sonido (ficha de cabina live) y portero (lista de puerta táctil).
   2. *Modo Escenario Offline* con Service Workers e IndexedDB a prueba de sótanos sin cobertura.
@@ -22,7 +62,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Documento maestro:** `plan_anti_fraude.md`
 * **Estado:** Especificado y validado en arquitectura. Listo para implementar P0 (Esquema SQL + Endpoints `/api/deals` bajo `getTargetBandId` + Vista Web Responsive 1-Click).
 
-### 2. Plan Económico y Técnico de IA (`plan_gestion_tokens_ia.md`)
+### 6. Plan Económico y Técnico de IA (`plan_gestion_tokens_ia.md`)
 * **Qué:** Modelo híbrido de dos niveles para el uso de modelos de lenguaje y generación multimedia:
   1. *Texto Ilimitado con Fair Use* (Scout, Redactor, Lector, Contestador, Chat) protegido por una ventana móvil de 5 horas que resetea cuota cada 15 minutos, sin que el usuario sienta barreras artificiales de recarga.
   2. *Cupos de Estudio Multimedia* para tareas pesadas de GPU/CPU (Separación de Stems con Replicate/Iris y Renderizado de Reels con Remotion/FFmpeg), con pases mensuales + acumulador permanente (*Rollover con tope*) y bonificaciones vitalicias por conciertos confirmados (`studio_bonus_stems`, `studio_bonus_reels`).
@@ -30,7 +70,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Documento maestro:** `plan_gestion_tokens_ia.md`
 * **Estado:** Especificado y validado económicamente. Listo para aterrizar en `planLimits.ts` y controladores de billing.
 
-### 3. BandSplit / TourCount: El "CFO de Banda con IA" para Gira y Local (`splitband.md`)
+### 7. BandSplit / TourCount: El "CFO de Banda con IA" para Gira y Local (`splitband.md`)
 * **Qué:** Mucho más que un Splitwise tradicional: el primer Director Financiero de Banda con IA (AI Band CFO) para bolos y vida de local:
   1. *Dualidad Gira vs. Día a Día*: Cubre tanto los gastos del viaje (gasoil, furgoneta, peajes) como la rutina del local de ensayo (Dani compró una pantalla 4x12, Javi compró cuerdas/cables, alquiler mensual del local, camisetas de merch).
   2. *Los 4 Caminos de Compensación*:
