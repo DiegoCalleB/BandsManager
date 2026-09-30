@@ -251,14 +251,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     vars?: Record<string, string | undefined>,
   ) => (vars ? interpolate(dict[key], vars) : dict[key]);
 
-  const DEFAULT_BAKANDEYA_SOCIALS: SocialLinks = {
-    instagram: "https://instagram.com/bakandeya_oficial",
-    spotify: "https://open.spotify.com/artist/bakandeya",
-    youtube: "https://youtube.com/@bakandeya_oficial",
-    tiktok: "https://tiktok.com/@bakandeya_oficial",
-    website: "https://bandmanager.io",
-  };
-
   const [resolvedBandId, setResolvedBandId] = useState<string>("band-active");
   const [bandName, setBandName] = useState<string>("");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
@@ -480,7 +472,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     if (cleanId === "bakandeya") {
       setBandName("Bakandeya");
       setLogoUrl("/logo_bakandeya.jpg");
-      setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
+      setSocialLinks(undefined);
       setContactoBooking(null);
       setMiembros([]);
     } else if (queryBand) {
@@ -543,8 +535,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             Object.keys(data.epkConfig.enlacesRedes).length > 0
           ) {
             setSocialLinks(data.epkConfig.enlacesRedes);
-          } else if (cleanId === "bakandeya") {
-            setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
           }
 
           if (data.epkConfig?.contactoBooking) {

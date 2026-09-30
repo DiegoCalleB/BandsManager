@@ -9,10 +9,11 @@ interface BandPitchModalProps {
   onClose: () => void;
   band: BandContact | null;
   activeCampaign?: any;
-  proposedBakandeyaCity: 'Madrid' | 'Sevilla' | 'Ambas';
-  setProposedBakandeyaCity: (val: 'Madrid' | 'Sevilla' | 'Ambas') => void;
-  proposedVenueBakandeya: string;
-  setProposedVenueBakandeya: (val: string) => void;
+  myBandName: string;
+  proposedCity: string;
+  setProposedCity: (val: string) => void;
+  proposedVenue: string;
+  setProposedVenue: (val: string) => void;
   proposedMonth: string;
   setProposedMonth: (val: string) => void;
   generatePitchText: (band: BandContact) => string;
@@ -24,10 +25,11 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
   onClose,
   band,
   activeCampaign,
-  proposedBakandeyaCity,
-  setProposedBakandeyaCity,
-  proposedVenueBakandeya,
-  setProposedVenueBakandeya,
+  myBandName,
+  proposedCity,
+  setProposedCity,
+  proposedVenue,
+  setProposedVenue,
   proposedMonth,
   setProposedMonth,
   generatePitchText,
@@ -49,7 +51,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
             <div className="flex items-center gap-2">
               <Repeat className="w-5 h-5 text-[var(--acc)]" />
               <h3 className="text-base font-bold font-display text-[var(--acc)]">
-                Generador de Pitch Date Swap: Bakandeya x {band.nombre_banda}
+                Generador de pitch Date Swap: {myBandName} x {band.nombre_banda}
               </h3>
             </div>
             <button onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer">
@@ -61,24 +63,23 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
           {!activeCampaign?.isActive && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-micro font-sans">
               <div>
-                <label className="block text-micro text-[var(--ink-2)] mb-1">Ciudad de Bakandeya</label>
-                <select aria-label="Ciudad de Bakandeya"
-                  value={proposedBakandeyaCity}
-                  onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
+                <label className="block text-micro text-[var(--ink-2)] mb-1">Ciudad donde os recibís</label>
+                <input aria-label="Ciudad donde os recibís"
+                  type="text"
+                  value={proposedCity}
+                  placeholder="Madrid"
+                  onChange={(e) => setProposedCity(e.target.value)}
                   className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
-                >
-                  <option value="Madrid">Madrid</option>
-                  <option value="Sevilla">Sevilla</option>
-                  <option value="Ambas">Madrid y Sevilla</option>
-                </select>
+                />
               </div>
 
               <div>
-                <label className="block text-micro text-[var(--ink-2)] mb-1">Sala propuesta en Madrid/Sevilla</label>
-                <input aria-label="Sala propuesta en Madrid/Sevilla"
+                <label className="block text-micro text-[var(--ink-2)] mb-1">Sala propuesta</label>
+                <input aria-label="Sala propuesta"
                   type="text"
-                  value={proposedVenueBakandeya}
-                  onChange={(e) => setProposedVenueBakandeya(e.target.value)}
+                  value={proposedVenue}
+                  placeholder="Nombre de la sala"
+                  onChange={(e) => setProposedVenue(e.target.value)}
                   className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
                 />
               </div>
@@ -146,7 +147,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               {/* Mailto Link if email is present */}
               {band.email && (
                 <a
-                  href={`mailto:${band.email}?subject=${encodeURIComponent(`Propuesta Date Swap: Bakandeya x ${band.nombre_banda}`)}&body=${encodeURIComponent(pitchText)}`}
+                  href={`mailto:${band.email}?subject=${encodeURIComponent(`Propuesta Date Swap: ${myBandName} x ${band.nombre_banda}`)}&body=${encodeURIComponent(pitchText)}`}
                   className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5"
                 >
                   <Send className="w-4 h-4" />

@@ -2121,6 +2121,7 @@ export default function App() {
                     onUpdateLead={handleUpdateLead}
                     onDeleteBand={handleDeleteBand}
                     currentBandId={currentActiveBandId}
+                    bandName={currentActiveBandName}
                     onNavigate={handleNavigate}
                   />
                 )}

@@ -226,21 +226,10 @@ export default function CalendarView({
       if (!resolvedLogo && isSameBandId(id, activeBandId) && currentBandLogo) {
         resolvedLogo = currentBandLogo;
       }
-      if (
-        !resolvedLogo &&
-        (cleanKey === 'bakandeya' || name?.toLowerCase().includes('bakandeya') || id.toLowerCase().includes('bakandeya'))
-      ) {
-        resolvedLogo = '/logo_bakandeya_bueno_sin_fondo.png';
-      }
 
       if (!map.has(cleanKey)) {
         const displayName =
-          name ||
-          (cleanKey === 'bakandeya'
-            ? 'Bakandeya'
-            : cleanKey === 'repercusion'
-              ? 'Repercusion'
-              : cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1));
+          name || cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1);
         map.set(cleanKey, {
           band_id: id,
           bandName: displayName,
@@ -289,8 +278,6 @@ export default function CalendarView({
       if (e.band_id) {
         const found = effectiveBandsList.find((b) => isSameBandId(b.band_id, e.band_id));
         if (found?.bandName) return found.bandName;
-        if (isSameBandId(e.band_id, 'band-bakandeya')) return 'Bakandeya';
-        if (isSameBandId(e.band_id, 'band-repercusion')) return 'Repercusion';
         if (e.band_id.startsWith('band-') || e.band_id.startsWith('reg-')) {
           const slug = e.band_id.replace(/^(band|reg)-/, '');
           return slug.charAt(0).toUpperCase() + slug.slice(1);
@@ -334,9 +321,6 @@ export default function CalendarView({
         logoUrl = currentBandLogo || '';
       }
 
-      if (!logoUrl && (cleanId === 'bakandeya' || cleanName.includes('bakandeya') || cleanId === '' || !bandId)) {
-        logoUrl = '/logo_bakandeya_bueno_sin_fondo.png';
-      }
 
       const words = name.trim().split(/\s+/).filter(Boolean);
       const initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : name.slice(0, 2).toUpperCase();
@@ -1270,7 +1254,7 @@ export default function CalendarView({
           ciudad: camp.targetCities?.[0] || 'Madrid',
           direccion: undefined,
           locationQuery: `Salas ${camp.targetCities?.join(' ')}, España`,
-          bandName: activeBandName || 'Bakandeya',
+          bandName: activeBandName || 'Tu banda',
           badge: camp.isActive ? 'Campaña Activa' : 'Objetivo Campaña',
           campaign: camp,
         });
@@ -1631,51 +1615,8 @@ export default function CalendarView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDateKey, showEventFichaModal]);
 
-  const defaultInitialRunOfShow: Record<string, RunOfShowItem[]> = {
-    '2026-07-23': [
-      { id: 'ros-1', time: '17:00', activity: 'Llegada a la sala y descarga de bártulos', done: true },
-      { id: 'ros-2', time: '17:30', activity: 'Montaje de escenario e in-ears', done: true },
-      { id: 'ros-3', time: '18:15', activity: 'Prueba de sonido (Soundcheck de violín, sintes y bases)', done: true },
-      { id: 'ros-4', time: '19:30', activity: 'Cena de la banda / Catering', done: false },
-      { id: 'ros-5', time: '21:00', activity: 'Apertura de puertas', done: false },
-      { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎻💥', done: false },
-      { id: 'ros-7', time: '23:30', activity: 'Merchandising, firmas y recogida de equipo', done: false },
-    ],
-    '2026-07-15': [
-      {
-        id: 'ros-10',
-        time: '17:00',
-        activity: 'Camerinos Rock Palace - Montaje y chequeo',
-        done: true,
-      },
-      {
-        id: 'ros-11',
-        time: '18:00',
-        activity: 'Prueba de loops con Jon y violín',
-        done: true,
-      },
-      {
-        id: 'ros-12',
-        time: '20:30',
-        activity: 'Cierre del ensayo y notas generales',
-        done: false,
-      },
-    ],
-  };
-
-  const defaultInitialGear: Record<string, GearItem[]> = {
-    '2026-07-23': [
-      { id: 'gear-1', label: 'Teclado Korg SV-2 + Stand', checked: true },
-      { id: 'gear-2', label: 'Estuche Violín electroacústico + Arco y resina', checked: true },
-      { id: 'gear-3', label: 'Banderola de Escenario Bakandeya', checked: false },
-      { id: 'gear-4', label: 'Merchandising (Camisetas, Pegatinas, CDs)', checked: false },
-      { id: 'gear-5', label: 'Cables Jack / XLR de recambio', checked: true },
-      { id: 'gear-6', label: 'DI-Box estéreo para teclados', checked: false },
-    ],
-  };
-
-  const [allRunOfShow, setAllRunOfShow] = useState<Record<string, RunOfShowItem[]>>(defaultInitialRunOfShow);
-  const [allGear, setAllGear] = useState<Record<string, GearItem[]>>(defaultInitialGear);
+  const [allRunOfShow, setAllRunOfShow] = useState<Record<string, RunOfShowItem[]>>({});
+  const [allGear, setAllGear] = useState<Record<string, GearItem[]>>({});
 
   // Fetch server logistics state on mount
   useEffect(() => {

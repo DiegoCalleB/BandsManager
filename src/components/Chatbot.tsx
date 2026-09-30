@@ -1008,7 +1008,7 @@ export default function Chatbot({
         const nowStr = `${today} ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
 
         const emailBody = action.body || targetLead.pitch_generado || '';
-        const emailSubject = action.subject || `Propuesta de Concierto - Bakandeya en ${targetLead.nombre_sala}`;
+        const emailSubject = action.subject || `Propuesta de concierto - ${bandDisplayName} en ${targetLead.nombre_sala}`;
         const recipientEmail = targetLead.email_contacto;
         const isDraftOnly = autonomyConfig.dispatchLevel === 'draft_only' || autonomyConfig.dispatchLevel !== 'autonomous_first_contact';
 
@@ -1392,7 +1392,7 @@ export default function Chatbot({
       };
       setMessages((prev) => [...prev, successMsg]);
     } else if (action.type === 'propose_add_lead' || action.lead) {
-      const activeBandId = currentUser?.band_id || 'band-bakandeya';
+      const activeBandId = currentUser?.band_id || '';
       const isMedio = action.lead?.tipo === 'medio' || action.lead?.tipo === 'radio' || action.lead?.tipo === 'prensa';
       const newLeadData: Lead = {
         id: action.lead?.id || `lead-${Date.now()}`,

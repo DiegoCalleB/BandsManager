@@ -2442,7 +2442,7 @@ export default function ReelsCenter({
                         disabled={isGenerating}
                         className={`w-full py-3 font-sans font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.97] transition-ui disabled:opacity-50 bg-[var(--acc)] text-[var(--on-acc)]`}
                       >
-                        <Flame className="w-4 h-4" /> Balkan Hype <ShowIcon inline emoji="🎺" /><ShowIcon inline emoji="🔥" />
+                        <Flame className="w-4 h-4" /> Hype festivo <ShowIcon inline emoji="🎺" /><ShowIcon inline emoji="🔥" />
                       </button>
                       <button
                         id="btn-reels-chill"

@@ -3395,7 +3395,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {
                     id: "rider",
                     label: "Confirmar D.I. y Rider",
-                    text: "\n\nEn cuanto a producción: llevamos violín electroacústico, sintes y bases, por lo que requerimos 3 líneas directas D.I. activas y envíos para nuestros in-ears. ¿Nos podéis facilitar el rider técnico de la sala para revisarlo con el equipo?",
+                    text: "\n\nEn cuanto a producción: os pasamos nuestro rider técnico para que lo reviséis. ¿Nos podéis facilitar el rider técnico de la sala para revisarlo con el equipo?",
                     color:
                       "text-[var(--acc-ink)] bg-[var(--acc)]/10 hover:brightness-95",
                   },

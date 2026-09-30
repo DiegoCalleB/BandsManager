@@ -49,7 +49,7 @@ export function AIBandScoutModal({
       } else {
         setCity("Barcelona");
       }
-      setGenre("Mestizaje / Balkan / Ska"); // Default Bakandeya style
+      setGenre("");
       setResults([]);
       setSelectedBands(new Set());
       setError("");

@@ -106,6 +106,13 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   * **Riesgo de alcance:** acordes complejos (7maj9, sus4, inversiones, jazz) son mucho más difíciles de acertar que triadas simples. MVP recomendado: tónica + mayor/menor por compás (cubre la mayoría de rock/pop/indie), dejar acordes extendidos para una v2.
 * **Estado:** idea capturada, sin prototipar. Siguiente paso si se retoma: probar `essentia.js` contra un stem de guitarra ya separado por Iris y medir precisión real antes de comprometer tiempo de desarrollo en la UI.
 
+### Deuda: datos de bandas concretas (Bakandeya, Ruta 66, Master of Prompts…) todavía en código
+* **Qué:** auditoría de octubre 2026. Ya limpiado (fase 1): pitches y firmas de BandCRM, asunto del Chatbot, redes de ejemplo en FansLanding, logos y nombres por defecto y hoja de ruta / material de ejemplo del Calendario, texto del rider en Booking, líneas inventadas del dossier PDF, géneros por defecto (“Balkan Ska”) y etiqueta “Balkan Hype”.
+* **Pendiente (fase 1b — solo afecta a la propia banda demo):** `RepertorioSetlists.tsx` (`BAKANDEYA_DEMO_MEMBERS`, `DEFAULT_SONGS`, `DEFAULT_SETLISTS`, ramas `isBakandeya` / `isMasterOfPrompts`), `Merchan.tsx` (álbumes y catálogo demo), `EPKManager.tsx` (`DEFAULT_EPK_CONFIG`), `ReelsCenter.tsx` (nombres de variables “Bakandeya…”). Mover a semillas del servidor y que el componente lea solo de la API.
+* **Pendiente (fase 2 — servidor, toca login y multi-tenant):** caso especial `isBraisUser` en `/auth/me` y `server/routes/users.ts`, `server/auth.ts`, `server/db/sync.ts` (bio por defecto), `server/utils/emailTemplate.ts` (pie de Bakandeya), `server/utils/bandProfile.ts` (Ruta 66) y la regla “evento sin `band_id` = Bakandeya” en `App.tsx`, `Dashboard.tsx`, `CalendarView.tsx` (migrar datos antiguos y borrar la regla).
+* **Por qué importa:** cada rama por nombre de banda es una fuga potencial de datos o textos entre bandas y frena el multi-inquilino real.
+* **Estado:** fase 1 hecha; fases 1b y 2 sin empezar.
+
 ---
 
 ## 🔨 En curso

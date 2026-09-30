@@ -77,6 +77,8 @@ interface BandCRMProps {
   onUpdateLead?: (id: string, updatedFields: Partial<Lead>) => void;
   onDeleteBand?: (id: string) => void;
   currentBandId?: string;
+  /** Nombre de la banda activa: firma los pitches (nunca el de otra banda). */
+  bandName?: string;
   onNavigate?: (view: any, options?: any) => void;
 }
 
@@ -87,8 +89,10 @@ export default function BandCRM({
   onUpdateLead,
   onDeleteBand,
   currentBandId,
+  bandName,
   onNavigate,
 }: BandCRMProps) {
+  const myBandName = bandName?.trim() || "nuestra banda";
   // Local state for band contacts with persistence
   const [bands, setBands] = useState<BandContact[]>([]);
   const [selectedBandIds, setSelectedBandIds] = useState<string[]>([]);
@@ -289,15 +293,11 @@ export default function BandCRM({
   const [isPitchModalOpen, setIsPitchModalOpen] = useState(false);
   const [selectedPitchBand, setSelectedPitchBand] =
     useState<BandContact | null>(null);
-  const [proposedBakandeyaCity, setProposedBakandeyaCity] = useState<
-    "Madrid" | "Sevilla" | "Ambas"
-  >("Madrid");
+  const [proposedCity, setProposedCity] = useState<string>("");
   const [proposedMonth, setProposedMonth] = useState(
     "Octubre / Noviembre 2026",
   );
-  const [proposedVenueBakandeya, setProposedVenueBakandeya] = useState(
-    "Sala Caracol / Gruta 77",
-  );
+  const [proposedVenue, setProposedVenue] = useState<string>("");
   const [copiedPitch, setCopiedPitch] = useState(false);
   const [customPitchText, setCustomPitchText] = useState<string>("");
 
@@ -375,7 +375,7 @@ export default function BandCRM({
 
   // Form Fields State
   const [formName, setFormName] = useState("");
-  const [formStyle, setFormStyle] = useState("Balkan Ska / Mestizaje");
+  const [formStyle, setFormStyle] = useState("");
   const [formLocation, setFormLocation] = useState("Madrid");
   const [formStatus, setFormStatus] =
     useState<BandRelationshipStatus>("sin_contactar");
@@ -492,7 +492,7 @@ export default function BandCRM({
   const handleOpenCreateModal = () => {
     setEditingBand(null);
     setFormName("");
-    setFormStyle("Balkan Ska / Mestizaje");
+    setFormStyle("");
     setFormLocation("Madrid");
     setFormStatus("sin_contactar");
     setFormLastContact(new Date().toISOString().split("T")[0]);
@@ -648,7 +648,7 @@ export default function BandCRM({
           contacto_nombre: newBand.contacto_nombre || "",
           fuente: "Red de Co-Booking Bandas",
           estado: "pendiente_aprobacion",
-          pitch_generado: `Propuesta Date Swap: Bakandeya x ${newBand.nombre_banda}`,
+          pitch_generado: `Propuesta Date Swap: ${myBandName} x ${newBand.nombre_banda}`,
           notas: newBand.notas_colaboracion || "",
           icono: newBand.icono,
           imagen_url: newBand.imagen_url,
@@ -926,7 +926,7 @@ export default function BandCRM({
         const pitchText =
           data.pitch ||
           data.data?.pitch ||
-          `Hola compas de ${band.nombre_banda},\n\nOs escribimos desde Bakandeya. Nos encanta vuestro estilo ${band.estilo_musical} y estamos planeando fechas por vuestra zona (${band.localizacion}). ¿Os cuadraría plantear un intercambio de fechas (Date Swap)? Nosotros os montamos fecha en nuestra ciudad y vosotros nos abrís en la vuestra.\n\n¡Un abrazo grande!`;
+          `Hola compas de ${band.nombre_banda},\n\nOs escribimos desde ${myBandName}. Nos encanta vuestro estilo ${band.estilo_musical} y estamos planeando fechas por vuestra zona (${band.localizacion}). ¿Os cuadraría plantear un intercambio de fechas (Date Swap)? Nosotros os montamos fecha en nuestra ciudad y vosotros nos abrís en la vuestra.\n\n¡Un abrazo grande!`;
 
         const updatedBand = {
           ...band,
@@ -1070,7 +1070,7 @@ export default function BandCRM({
     if (activeCampaign && activeCampaign.isActive) {
       return `¡Buenas chavales de ${band.nombre_banda}! 🎸🔥
 
-Os escribimos directamente desde Bakandeya (banda de Balkan-Ska, violín enérgico, loops analógicos y electrónica).
+Os escribimos directamente desde ${myBandName}.
 
 Nos mola mucho vuestra propuesta en ${band.estilo_musical} y vemos que tenéis fuerte tirón en ${band.localizacion}. Os escribimos porque estamos armando una campaña de conciertos muy especial y creemos que podríamos montar un cartelazo juntos.
 
@@ -1078,31 +1078,25 @@ Nuestro objetivo es un aforo de ${activeCampaign.minCapacity}-${activeCampaign.m
 
 Nuestra idea es montar un CO-BOOKING donde nosotros aportamos la producción y nuestro público en la ciudad, y vosotros sumáis vuestra fuerza para asegurar un *sold out* brutal. Además, dejamos la puerta abierta para devolveros la visita en ${band.localizacion} en el futuro compartiendo escenario y backline.
 
-Podéis escuchar nuestra música y directo aquí:
-https://youtube.com/bakandeya_live
-
 ¿Os cuadran las fechas? ¿Qué os parece la idea? Si os mola, hablamos por WhatsApp esta semana para cerrar los detalles de sala.
 
 ¡Un fuerte abrazo!
-Bakandeya Agent Manager`;
+${myBandName}`;
     }
 
     return `¡Buenas chavales de ${band.nombre_banda}! 🎸🔥
 
-Os escribimos directamente desde Bakandeya (banda de Balkan-Ska, violín enérgico, loops analógicos y electrónica de Madrid/Sevilla).
+Os escribimos directamente desde ${myBandName}.
 
 Nos mola mucho vuestra propuesta en ${band.estilo_musical} y vemos que tenéis fuerte tirón en ${band.localizacion}. Queremos proponer un INTERCAMBIO DE FECHAS / CO-BOOKING (Date Swap) para la temporada de ${proposedMonth}:
 
-1. Os invitamos a tocar con nosotros en ${proposedBakandeyaCity} (${proposedVenueBakandeya}), compartiendo escenario, cartel y taquilla al 50%.
+1. Os invitamos a tocar con nosotros${proposedCity ? ` en ${proposedCity}` : ""}${proposedVenue ? ` (${proposedVenue})` : ""}, compartiendo escenario, cartel y taquilla al 50%.
 2. Montamos la fecha de vuelta en ${band.localizacion} en vuestro local habitual para sumar ambos públicos locales y abaratar gastos de furgoneta y backline.
-
-Podéis escuchar nuestros directos de alta intensidad aquí:
-https://youtube.com/bakandeya_live
 
 ¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos una breve llamada esta semana para cuadrar fechas?
 
 ¡Un fuerte abrazo!
-Bakandeya Agent Manager IA & Músicos`;
+${myBandName}`;
   };
 
   return (
@@ -2027,10 +2021,11 @@ Bakandeya Agent Manager IA & Músicos`;
         onClose={() => setIsPitchModalOpen(false)}
         band={selectedPitchBand}
         activeCampaign={activeCampaign}
-        proposedBakandeyaCity={proposedBakandeyaCity}
-        setProposedBakandeyaCity={setProposedBakandeyaCity}
-        proposedVenueBakandeya={proposedVenueBakandeya}
-        setProposedVenueBakandeya={setProposedVenueBakandeya}
+        myBandName={myBandName}
+        proposedCity={proposedCity}
+        setProposedCity={setProposedCity}
+        proposedVenue={proposedVenue}
+        setProposedVenue={setProposedVenue}
         proposedMonth={proposedMonth}
         setProposedMonth={setProposedMonth}
         generatePitchText={generatePitchText}

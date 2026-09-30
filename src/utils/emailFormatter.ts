@@ -321,7 +321,7 @@ export async function copyRichSignatureToClipboard(params: SignatureDataParams):
 }
 
 /**
- * Builds a valid binary PDF 1.4 base64 encoded document for Bakandeya's Dossier & EPK
+ * Builds a valid binary PDF 1.4 base64 encoded document for the active band's Dossier & EPK
  */
 export function buildBakandeyaDossierPdfBase64(params?: {
   bandName?: string;
@@ -354,18 +354,12 @@ export function buildBakandeyaDossierPdfBase64(params?: {
     '50 730 Td',
     `(${band.toUpperCase()} - DOSSIER OFICIAL & KIT DE PRENSA) Tj`,
     '/F1 11 Tf',
-    '0 -28 Td',
-    '(Proyecto de Electronica-Fusion, Electro-Basureo & Directo de Escenario) Tj',
     '0 -20 Td',
     `(Contacto Directo Booking: ${email} | Tel: ${phone}) Tj`,
     '0 -30 Td',
     '------------------------------------------------------------------------- Tj',
     '0 -25 Td',
     '(RESUMEN DEL DOSSIER & FICHA TECNICA 2025) Tj',
-    '0 -22 Td',
-    '(- Musicos de trayectoria internacional: ex-Cirque du Soleil, STOMP, Toompak) Tj',
-    '0 -18 Td',
-    '(- Estilo: Percusion reciclada, Balkan, Reggae, Klezmer y DJ Live) Tj',
     '0 -18 Td',
     '(- Directo energico, festivo y muy participativo para todo tipo de publicos) Tj',
     '0 -18 Td',
