@@ -167,7 +167,7 @@ router.post('/templates/preview', requireAuth, async (req, res) => {
     const syntheticLead = {
       id: 'preview-synth',
       nombre_sala:
-        category.charAt(0).toUpperCase() + category.slice(1) + 'Ejemplo',
+        category.charAt(0).toUpperCase() + category.slice(1) + ' Ejemplo',
       ciudad: 'Madrid',
       tipo: categoryToType[category] || category,
       aforo: 500,

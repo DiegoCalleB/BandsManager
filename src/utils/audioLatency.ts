@@ -276,7 +276,7 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   /* RIFF type */
   writeString(view, 8, 'WAVE');
   /* format chunk identifier */
-  writeString(view, 12, 'fmt');
+  writeString(view, 12, 'fmt ');
   /* format chunk length */
   view.setUint32(16, 16, true);
   /* sample format (raw) */

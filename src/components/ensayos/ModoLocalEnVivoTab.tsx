@@ -182,7 +182,7 @@ export function ModoLocalEnVivoTab({
           e.preventDefault();
           setActiveIndex((prev) => prev - 1);
         }
-      } else if (e.key === "" && viewMode === "atril") {
+      } else if (e.key === " " && viewMode === "atril") {
         e.preventDefault();
         setIsAutoScrolling((prev) => !prev);
       }
@@ -1224,34 +1224,34 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
 // SAMPLE DEFAULT CHORD SHEETS FOR SONGS WITHOUT CUSTOM CHORD TEXT
 function getSampleCifrado(title: string): string {
   return `[Intro]
-Lam Fa Sol Lam
-Lam Fa Sol Lam
+Lam   Fa   Sol   Lam
+Lam   Fa   Sol   Lam
 
 [Verso 1]
-Lam Fa
+Lam                Fa
 Arrancamos la noche en la ciudad
-Sol Lam
+Sol                 Lam
 Buscando el sonido de la libertad
-Lam Fa
+Lam                Fa
 Guitarras encendidas y el viento a favor
-Sol Lam
+Sol                 Lam
 Marcando el ritmo con el corazón.
 
 [Estribillo]
-Do Sol
+Do                 Sol
 Siente la fuerza del rock en las venas
-Rem Lam
+Rem                Lam
 Rompiendo juntos todas las cadenas
-Do Sol
+Do                 Sol
 Noche de ensayo, fuego y pasión
-Fa Sol Lam
+Fa                 Sol        Lam
 Cantando juntos la misma canción.
 
 [Solo de Guitarra]
-Fa Sol Lam Lam
-Fa Sol Lam Lam
+Fa   Sol   Lam   Lam
+Fa   Sol   Lam   Lam
 
 [Outro]
-Fa Sol Lam
+Fa        Sol        Lam
 Cierre con final seco en Lam!`;
 }

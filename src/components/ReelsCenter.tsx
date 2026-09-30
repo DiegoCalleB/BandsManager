@@ -1478,8 +1478,8 @@ export default function ReelsCenter({
       // Try to auto-extract context from file name
       const cleanName = file.name
         .replace(/\.[^/.]+$/, "")
-        .replace(/_/g, "")
-        .replace(/-/g, "");
+        .replace(/_/g, " ")
+        .replace(/-/g, " ");
       setVideoTopic(cleanName);
     }
   };
@@ -1495,8 +1495,8 @@ export default function ReelsCenter({
       cambiarVideoLocal(file);
       const cleanName = file.name
         .replace(/\.[^/.]+$/, "")
-        .replace(/_/g, "")
-        .replace(/-/g, "");
+        .replace(/_/g, " ")
+        .replace(/-/g, " ");
       setVideoTopic(cleanName);
     }
   };

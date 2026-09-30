@@ -189,7 +189,7 @@ export default function Chatbot({
     ) {
       return 'equipo';
     }
-    const firstName = rawName.split('')[0].trim();
+    const firstName = rawName.split(' ')[0].trim();
     return firstName || 'equipo';
   })();
 
@@ -844,7 +844,7 @@ export default function Chatbot({
     const lines = text.split('\n');
     return lines.map((line, idx) => {
       // Bullets
-      if (line.trim().startsWith('-')) {
+      if (line.trim().startsWith('- ')) {
         const bulletText = line.trim().slice(2);
         return (
           <li key={idx} className="ml-4 list-disc mt-1 text-xs">
@@ -1141,7 +1141,7 @@ export default function Chatbot({
         const targetLead = leads.find((l) => l.id === action.leadId);
         if (targetLead) {
           const today = new Date().toISOString().split('T')[0];
-          const updatedNotes = `*** [${today}] Clasificación editada vía Chatbot AI a'${action.newStatus}' ***\n${targetLead.notas || ''}`;
+          const updatedNotes = `*** [${today}] Clasificación editada vía Chatbot AI a '${action.newStatus}' ***\n${targetLead.notas || ''}`;
 
           onUpdateLead(
             action.leadId,
@@ -1747,7 +1747,7 @@ export default function Chatbot({
         if (!data) {
           data = {
             success: true,
-            message: `Agente'${action.agentName}' ejecutado con éxito en Supabase.`,
+            message: `Agente '${action.agentName}' ejecutado con éxito en Supabase.`,
           };
         }
 
@@ -1763,8 +1763,8 @@ export default function Chatbot({
           id: `sys-${Date.now()}`,
           sender: 'bot',
           text: isSim
-            ? `⚙️ **Simulación del Agente'${action.agentName}':**\n\n${data.message || 'Ejecución completada.'}`
-            : `🚀 **Agente'${action.agentName}' Iniciado:**\n\n${data.message || 'Ejecución completada.'}`,
+            ? `⚙️ **Simulación del Agente '${action.agentName}':**\n\n${data.message || 'Ejecución completada.'}`
+            : `🚀 **Agente '${action.agentName}' Iniciado:**\n\n${data.message || 'Ejecución completada.'}`,
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, successMsg]);
@@ -1784,7 +1784,7 @@ export default function Chatbot({
               { name: 'Configurar entorno', status: 'completed', conclusion: 'success', number: 1 },
               { name: 'Verificar repositorio', status: 'completed', conclusion: 'success', number: 2 },
               { name: 'Instalar dependencias', status: 'completed', conclusion: 'success', number: 3 },
-              { name: `Ejecutar Agente de Supabase'${action.agentName}'`, status: 'in_progress', conclusion: null, number: 4 },
+              { name: `Ejecutar Agente de Supabase '${action.agentName}'`, status: 'in_progress', conclusion: null, number: 4 },
             ],
             isDemo: true,
             initialLeadIds: leads.map((l) => l.id),
@@ -1800,7 +1800,7 @@ export default function Chatbot({
             triggeredAt: Date.now(),
             steps: [
               { name: 'Conectar con Supabase', status: 'completed', conclusion: 'success', number: 1 },
-              { name: `Ejecutar Agente'${action.agentName}' en Supabase`, status: 'completed', conclusion: 'success', number: 2 },
+              { name: `Ejecutar Agente '${action.agentName}' en Supabase`, status: 'completed', conclusion: 'success', number: 2 },
               { name: 'Actualizar base de datos y auditoría', status: 'completed', conclusion: 'success', number: 3 },
             ],
             isDemo: false,
@@ -1891,7 +1891,7 @@ export default function Chatbot({
     recognition.onresult = (event: any) => {
       const transcript = Array.from(event.results)
         .map((result: any) => result[0].transcript)
-        .join('')
+        .join(' ')
         .trim();
       if (!transcript) return;
       setInputText((prev) => (prev.trim() ? `${prev.trim()} ${transcript}` : transcript));
@@ -2079,7 +2079,7 @@ export default function Chatbot({
                                               {audioState.saving
                                                 ? 'Guardando...'
                                                 : acc.songTitle || acc.songId
-                                                  ? `Guardar en"${acc.songTitle || 'la canción'}"`
+                                                  ? `Guardar en "${acc.songTitle || 'la canción'}"`
                                                   : 'Guardar en el repertorio'}
                                             </button>
                                           )}
@@ -2197,7 +2197,7 @@ export default function Chatbot({
                                               {audioState.saving
                                                 ? 'Guardando...'
                                                 : idea.songTitle || idea.songId
-                                                  ? `Guardar en"${idea.songTitle || 'la canción'}"`
+                                                  ? `Guardar en "${idea.songTitle || 'la canción'}"`
                                                   : 'Guardar en el repertorio'}
                                             </button>
                                           )}

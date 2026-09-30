@@ -596,7 +596,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <Code className="w-3.5 h-3.5 text-[var(--acc)]" />
                     )}
                     <span>
-                      {copiadoFirma === "html" ? "¡HTML Copiado! " : "HTML"}
+                      {copiadoFirma === "html" ? "¡HTML Copiado!" : "HTML"}
                     </span>
                   </button>
 
@@ -617,7 +617,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <FileText className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                     )}
                     <span>
-                      {copiadoFirma === "text" ? "¡Texto Copiado! " : "Texto"}
+                      {copiadoFirma === "text" ? "¡Texto Copiado!" : "Texto"}
                     </span>
                   </button>
                 </div>
@@ -847,7 +847,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
-                  {copiado ? "¡Copiado! " : "Copiar Enlace"}
+                  {copiado ? "¡Copiado!" : "Copiar Enlace"}
                 </button>
                 <a
                   href={publicEpkUrl}

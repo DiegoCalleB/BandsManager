@@ -282,7 +282,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[var(--ink)] max-w-3xl mx-auto leading-[1.15]">
             {t.heroTitle}
-            {""}
+            {" "}
             <span className="bg-[var(--acc)]  bg-clip-text text-transparent">
               {t.heroHighlight}
             </span>
@@ -342,7 +342,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             <span className="text-[var(--acc)] font-bold">
               {t.roadmapTeaserLead}
             </span>
-            {""}
+            {" "}
             {t.roadmapTeaserText}
           </p>
         </section>

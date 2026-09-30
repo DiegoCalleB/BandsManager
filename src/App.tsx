@@ -828,7 +828,7 @@ export default function App() {
 
     if (paymentStatus === "success") {
       const planName = planParam
-        ? planParam.toUpperCase().replace("_", "")
+        ? planParam.toUpperCase().replace("_", " ")
         : "PRO";
 
       // Clean URL params immediately

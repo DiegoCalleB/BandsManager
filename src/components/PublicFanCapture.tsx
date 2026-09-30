@@ -284,7 +284,7 @@ export const PublicFanCapture: React.FC = () => {
 
             <div className="space-y-2">
               <h2 className="text-xl font-bold text-[var(--ink)]">
-                ¡MUCHAS GRACIAS, {nombre.split("")[0].toUpperCase()}!
+                ¡MUCHAS GRACIAS, {nombre.split(" ")[0].toUpperCase()}!
               </h2>
               <p className="text-[var(--ink-2)] text-sm leading-relaxed">
                 ¡Ya estás apuntado! Te avisaremos por correo de próximas fechas

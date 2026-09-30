@@ -2000,7 +2000,7 @@ export default function RepertorioSetlists({
     } catch (err: any) {
       console.warn("Microphone access warning:", err?.message || err);
       alert(
-        "No se pudo acceder al micrófono ( " +
+        "No se pudo acceder al micrófono (" +
           (err?.message || "permisos denegados") +
           "). Por favor, comprueba los permisos de audio en tu navegador.",
       );
@@ -2115,7 +2115,7 @@ export default function RepertorioSetlists({
       !song.audioPrincipalUrl.startsWith("/")
     ) {
       setStatusBanner({
-        text: `El audio de"${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
+        text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
         type: "error",
       });
       setTimeout(() => setStatusBanner(null), 6000);
@@ -2123,7 +2123,7 @@ export default function RepertorioSetlists({
     }
 
     setStatusBanner({
-      text: `🎵 Analizando letra y acordes de"${song.titulo}" con IA…`,
+      text: `🎵 Analizando letra y acordes de "${song.titulo}" con IA…`,
       type: "loading",
     });
     try {
@@ -2178,35 +2178,35 @@ export default function RepertorioSetlists({
         // una transcripción real o una propuesta honesta de la IA.
         if (data.chordsSource === "audio_real") {
           setStatusBanner({
-            text: `✓ Letra y acordes de"${song.titulo}" transcritos del audio`,
+            text: `✓ Letra y acordes de "${song.titulo}" transcritos del audio`,
             type: "success",
           });
         } else if (data.chordsSource === "ia_sin_audio" && !data.esAproximado) {
           setStatusBanner({
-            text: `✓ Cifrado propuesto por IA para"${song.titulo}" (no se pudo leer el audio: revísalo)`,
+            text: `✓ Cifrado propuesto por IA para "${song.titulo}" (no se pudo leer el audio: revísalo)`,
             type: "success",
           });
         } else if (data.chordsSource === "ia_sin_audio" && data.esAproximado) {
           setStatusBanner({
-            text: `⚠️ Acordes aproximados de"${song.titulo}" (de memoria, sin audio ni certeza): verifícalos de oído antes de tocarlos`,
+            text: `⚠️ Acordes aproximados de "${song.titulo}" (de memoria, sin audio ni certeza): verifícalos de oído antes de tocarlos`,
             type: "warning",
           });
         } else {
           setStatusBanner({
-            text: `⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico en"${song.titulo}", revísalo antes de usarlo`,
+            text: `⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico en "${song.titulo}", revísalo antes de usarlo`,
             type: "warning",
           });
         }
       } else {
         setStatusBanner({
-          text: `No se pudieron analizar los acordes de"${song.titulo}"`,
+          text: `No se pudieron analizar los acordes de "${song.titulo}"`,
           type: "error",
         });
       }
     } catch (err) {
       console.error("Error auto-generating chords from audio:", err);
       setStatusBanner({
-        text: `No se pudieron analizar los acordes de"${song.titulo}"`,
+        text: `No se pudieron analizar los acordes de "${song.titulo}"`,
         type: "error",
       });
     } finally {
@@ -2362,7 +2362,7 @@ export default function RepertorioSetlists({
     const song = songs.find((s) => s.id === songId);
     setConfirmDeleteModal({
       title: "Eliminar Canción",
-      description: `¿Seguro que deseas eliminar"${song?.titulo || "esta canción"}" del catálogo del grupo?`,
+      description: `¿Seguro que deseas eliminar "${song?.titulo || "esta canción"}" del catálogo del grupo?`,
       onConfirm: () => {
         setSongs((prev) => prev.filter((s) => s.id !== songId));
         setSetlists((prev) =>
@@ -2425,7 +2425,7 @@ export default function RepertorioSetlists({
     if (songIds.length === 0) return;
     if (!activeSetlist) {
       setStatusBanner({
-        text: 'Selecciona o crea primero un repertorio en la pestaña"Setlists & Directos" para añadir estas canciones.',
+        text: 'Selecciona o crea primero un repertorio en la pestaña "Setlists & Directos" para añadir estas canciones.',
         type: "error",
       });
       setTimeout(() => setStatusBanner(null), 5000);
@@ -2433,7 +2433,7 @@ export default function RepertorioSetlists({
     }
     handleAddMultipleSongsToSetlist(songIds);
     setStatusBanner({
-      text: `✓ ${songIds.length} canciones añadidas a"${activeSetlist.nombre}"`,
+      text: `✓ ${songIds.length} canciones añadidas a "${activeSetlist.nombre}"`,
       type: "success",
     });
     setTimeout(() => setStatusBanner(null), 4000);
@@ -2791,7 +2791,7 @@ export default function RepertorioSetlists({
     const st = setlists.find((s) => s.id === stId);
     setConfirmDeleteModal({
       title: "Eliminar Repertorio",
-      description: `¿Seguro que deseas eliminar el repertorio"${st?.nombre || "este repertorio"}"?`,
+      description: `¿Seguro que deseas eliminar el repertorio "${st?.nombre || "este repertorio"}"?`,
       onConfirm: () => {
         const remaining = setlists.filter((s) => s.id !== stId);
         setSetlists(remaining);
@@ -4155,7 +4155,7 @@ export default function RepertorioSetlists({
                                   <b>"{chapaSuggestion.cancionAntes}"</b> y{" "}
                                   <b>"{chapaSuggestion.cancionDespues}"</b>
                                   {motivos.length > 0
-                                    ? ` — ${motivos.join(",")}.`
+                                    ? ` — ${motivos.join(", ")}.`
                                     : "."}
                                 </span>
                                 <button
@@ -4301,7 +4301,7 @@ export default function RepertorioSetlists({
                                         className={reorderBtnClass}
                                         title={
                                           prevName
-                                            ? `Mover antes de"${prevName}"`
+                                            ? `Mover antes de "${prevName}"`
                                             : "Mover una posición hacia atrás"
                                         }
                                       >
@@ -4352,7 +4352,7 @@ export default function RepertorioSetlists({
                                         className={reorderBtnClass}
                                         title={
                                           nextName
-                                            ? `Mover después de"${nextName}"`
+                                            ? `Mover después de "${nextName}"`
                                             : "Mover una posición hacia adelante"
                                         }
                                       >
@@ -4399,8 +4399,8 @@ export default function RepertorioSetlists({
                                                 }`}
                                                 title={
                                                   evalPrev
-                                                    ? `${evalPrev.title}: ${evalPrev.motivos.join(",")}`
-                                                    : `Comprobar cómo suena la unión de"${prevName}" con"${point.name}"`
+                                                    ? `${evalPrev.title}: ${evalPrev.motivos.join(", ")}`
+                                                    : `Comprobar cómo suena la unión de "${prevName}" con "${point.name}"`
                                                 }
                                               >
                                                 <span
@@ -4453,8 +4453,8 @@ export default function RepertorioSetlists({
                                                 }`}
                                                 title={
                                                   evalNext
-                                                    ? `${evalNext.title}: ${evalNext.motivos.join(",")}`
-                                                    : `Comprobar cómo suena la unión de"${point.name}" con"${nextName}"`
+                                                    ? `${evalNext.title}: ${evalNext.motivos.join(", ")}`
+                                                    : `Comprobar cómo suena la unión de "${point.name}" con "${nextName}"`
                                                 }
                                               >
                                                 <span
@@ -4564,7 +4564,7 @@ export default function RepertorioSetlists({
                                     }}
                                     title={
                                       hasSongs
-                                        ? `Resalta: ${w.songTitles!.join(",")}`
+                                        ? `Resalta: ${w.songTitles!.join(", ")}`
                                         : undefined
                                     }
                                   >
@@ -4664,7 +4664,7 @@ export default function RepertorioSetlists({
                                         }}
                                         title={
                                           hasSongs
-                                            ? `Resalta: ${songsToHighlight.join(",")}`
+                                            ? `Resalta: ${songsToHighlight.join(", ")}`
                                             : s.title
                                         }
                                       >
@@ -5094,7 +5094,7 @@ export default function RepertorioSetlists({
                                   setEditingEnergyItemId(it.id);
                                 }}
                                 className={`text-micro font-sans px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-[var(--ink)]/40 ${energy.bgClass} ${energy.textClass}`}
-                                title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? "— fijada a mano" : ""}. Clic para cambiarla.`}
+                                title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? " — fijada a mano" : ""}. Clic para cambiarla.`}
                               >
                                 <span><ShowIcon inline emoji={energy.icon} /></span>
                                 {song.energiaManual && (
@@ -5218,7 +5218,7 @@ export default function RepertorioSetlists({
                                 }`}
                                 title={
                                   evalUnion
-                                    ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(",")}`
+                                    ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(", ")}`
                                     : "Probar unión y transición con la canción anterior"
                                 }
                               >

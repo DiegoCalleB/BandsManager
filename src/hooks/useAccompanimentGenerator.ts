@@ -45,9 +45,9 @@ export function useAccompanimentGenerator(
       const parts = [];
       if (includeDrums) parts.push('Batería');
       if (includeBass) parts.push('Bajo');
-      const trackLabel = `Ref IA: ${parts.join('+') || 'Acompañamiento'} (${genKey})`;
+      const trackLabel = `Ref IA: ${parts.join(' + ') || 'Acompañamiento'} (${genKey})`;
 
-      saveNewTrackToIdea(showGenModalForIdea, serverUrl, trackLabel, parts.join('+') || 'IA Synth');
+      saveNewTrackToIdea(showGenModalForIdea, serverUrl, trackLabel, parts.join(' + ') || 'IA Synth');
 
       setShowGenModalForIdea(null);
       alert(

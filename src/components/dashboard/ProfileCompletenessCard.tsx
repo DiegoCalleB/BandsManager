@@ -471,7 +471,7 @@ export const ProfileCompletenessCard: React.FC<
                 ) : (
                   <AlertCircle className="w-2.5 h-2.5 text-[var(--acc)]/80 shrink-0" />
                 )}
-                <span>{p.title.split("")[0]}</span>
+                <span>{p.title.split(" ")[0]}</span>
               </span>
             ))}
           </div>

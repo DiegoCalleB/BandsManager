@@ -118,7 +118,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
       setIgnoredGroupIds((prev) => new Set(prev).add(group.id));
       window.dispatchEvent(new CustomEvent("app-data-updated"));
-      setSuccessMessage(`Sala"${mergedLead.nombre_sala}" fusionada con éxito.`);
+      setSuccessMessage(`Sala "${mergedLead.nombre_sala}" fusionada con éxito.`);
       setTimeout(() => setSuccessMessage(null), 3500);
     } catch (err: any) {
       console.error("Error al fusionar grupo:", err);
@@ -134,7 +134,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
   const handleDeleteSingleLead = async (leadId: string, leadName: string) => {
     if (
       !confirm(
-        `¿Seguro que deseas eliminar el registro duplicado"${leadName}"?`,
+        `¿Seguro que deseas eliminar el registro duplicado "${leadName}"?`,
       )
     )
       return;
@@ -144,7 +144,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
       await apiFetch(`/api/leads/${leadId}`, { method: "DELETE" });
       onDeleteLead?.(leadId);
       window.dispatchEvent(new CustomEvent("app-data-updated"));
-      setSuccessMessage(`Registro"${leadName}" eliminado.`);
+      setSuccessMessage(`Registro "${leadName}" eliminado.`);
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       console.error("Error deleting lead:", err);

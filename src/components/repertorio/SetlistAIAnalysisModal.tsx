@@ -378,17 +378,17 @@ export function SetlistAIAnalysisModal({
  <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🔍 Problema:</strong> ${escapeHtml(sugg.issue)}</p>
  <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">💡 Sugerencia:</strong> ${escapeHtml(sugg.suggestion)}</p>
  <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">⭐ Impacto:</strong> ${escapeHtml(sugg.impact)}</p>
- ${sugg.songs_involved?.length ? `<p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🎵 Canciones:</strong> ${escapeHtml(sugg.songs_involved.join(","))}</p>` : ""}
- </div>
- `,
+        ${sugg.songs_involved?.length ? `<p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🎵 Canciones:</strong> ${escapeHtml(sugg.songs_involved.join(", "))}</p>` : ""}
+      </div>
+    `,
       )
       .join("");
 
     printWindow.document.write(`
- <!DOCTYPE html>
- <html>
- <head>
- <title>Análisis IA - ${escapeHtml(setlistName || setlistId)}</title>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Análisis IA - ${escapeHtml(setlistName || setlistId)}</title>
  <style>
  body { font-family: system-ui, -apple-system, sans-serif; margin: 24px; background: #0a0a0a; color: #eee; }
  .header { padding-bottom: 14px; margin-bottom: 20px; }
@@ -419,53 +419,53 @@ export function SetlistAIAnalysisModal({
  <div style="display:flex; justify-content:space-between; align-items:center;">
  <span style="font-size:13px; color:#999;">Score General</span>
  <strong style="font-size:20px; color:#c084fc;">${analysis.overallScore}/100</strong>
- </div>
- <div class="score-bar-bg"><div class="score-bar-fill" style="width:${analysis.overallScore}%;"></div></div>
- </div>
+          </div>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:${analysis.overallScore}%;"></div></div>
+        </div>
 
- ${chartSvgUrl ? `<div class="chart-box"><img src="${chartSvgUrl}" alt="Mapa de Energía" /></div>` : ""}
+        ${chartSvgUrl ? `<div class="chart-box"><img src="${chartSvgUrl}" alt="Mapa de Energía" /></div>` : ""}
 
- <div class="info-box">
- <p class="label">📖 Arco Narrativo</p>
- <p class="value">${escapeHtml(analysis.narrativeArc)}</p>
- </div>
+        <div class="info-box">
+          <p class="label">📖 Arco Narrativo</p>
+          <p class="value">${escapeHtml(analysis.narrativeArc)}</p>
+        </div>
 
- <div class="info-box">
- <p class="label">🧠 Flujo Psicológico</p>
- <p class="value">${escapeHtml(analysis.psychologicalFlow)}</p>
- </div>
+        <div class="info-box">
+          <p class="label">🧠 Flujo Psicológico</p>
+          <p class="value">${escapeHtml(analysis.psychologicalFlow)}</p>
+        </div>
 
- ${
+        ${
    analysis.strengths.length > 0
      ? `
  <div class="strengths">
  <p class="label" style="color:var(--ok);">✓ Fortalezas</p>
  <ul>${analysis.strengths.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ul>
- </div>`
+        </div>`
      : ""
  }
 
  <h2 style="font-size:16px; margin-bottom:10px;">⚡ Sugerencias (${analysis.suggestions.length})</h2>
- ${suggestionsHtml}
+        ${suggestionsHtml}
 
- ${
+        ${
    analysis.areasForImprovement.length > 0
      ? `
  <div class="improvements">
  <p class="label" style="color:var(--acc);">🎯 Áreas de Mejora</p>
  <ul>${analysis.areasForImprovement.map((a) => `<li>${escapeHtml(a)}</li>`).join("")}</ul>
- </div>`
+        </div>`
      : ""
  }
 
- <div class="footer">Análisis IA exportado • BandManager.io</div>
+        <div class="footer">Análisis IA exportado • BandManager.io</div>
 
- <script>
- window.onload = function() { window.print(); }
- </script>
- </body>
- </html>
- `);
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `);
     printWindow.document.close();
   };
 
@@ -686,7 +686,7 @@ export function SetlistAIAnalysisModal({
                       }}
                       title={
                         hasSongs
-                          ? `Resalta: ${w.songTitles!.join(",")}`
+                          ? `Resalta: ${w.songTitles!.join(", ")}`
                           : undefined
                       }
                     >

@@ -462,7 +462,7 @@ export default function TourManager({
         formVehiculos
           .map((v) => v.nombre)
           .filter(Boolean)
-          .join(",") || primaryVehicle.nombre,
+          .join(", ") || primaryVehicle.nombre,
       consumoL100km: primaryVehicle.consumoL100km,
       precioCarburanteEUR: primaryVehicle.precioCarburanteEUR,
       tipoCombustible: primaryVehicle.tipoCombustible,
@@ -484,7 +484,7 @@ export default function TourManager({
 
     setSyncFeedback({
       tourId,
-      message: `Gira"${tourData.nombre}" guardada y sincronizada con ${updatedStops.length} paradas en el Calendario.`,
+      message: `Gira "${tourData.nombre}" guardada y sincronizada con ${updatedStops.length} paradas en el Calendario.`,
       type: "success",
     });
     setTimeout(() => setSyncFeedback(null), 5000);
@@ -588,7 +588,7 @@ export default function TourManager({
 
     setSyncFeedback({
       tourId: tour.id,
-      message: `¡Volcado exitoso! Se han registrado ${count} movimientos contables en Finanzas para la gira"${tour.nombre}".`,
+      message: `¡Volcado exitoso! Se han registrado ${count} movimientos contables en Finanzas para la gira "${tour.nombre}".`,
       type: "success",
     });
     setTimeout(() => setSyncFeedback(null), 6000);
@@ -847,7 +847,7 @@ export default function TourManager({
                                 : "bg-[var(--ok)]/10 text-[var(--ink-2)]/20"
                             }`}
                             title={
-                              tour.convocados_nombres?.join(",") ||
+                              tour.convocados_nombres?.join(", ") ||
                               "Toda la banda"
                             }
                           >
@@ -866,7 +866,7 @@ export default function TourManager({
                               className="text-micro text-[var(--acc)]/70 bg-[var(--acc)]/10 px-2 py-0.5 rounded font-sans flex items-center gap-1"
                               title={tour.vehiculos
                                 ?.map((v) => v.nombre)
-                                .join(" +")}
+                                .join(" + ")}
                             >
                               <Truck className="w-3 h-3 text-[var(--acc)]" />
                               {vehiclesCount} vehículos

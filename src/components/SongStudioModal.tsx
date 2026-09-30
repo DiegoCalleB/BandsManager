@@ -2953,7 +2953,7 @@ export default function SongStudioModal({
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
     } catch (err: any) {
       console.error('Error al exportar la mezcla máster:', err);
-      alert('No se pudo exportar la mezcla máster:' + (err.message || err));
+      alert('No se pudo exportar la mezcla máster: ' + (err.message || err));
     } finally {
       setIsExportingMaster(false);
     }
@@ -2977,7 +2977,7 @@ export default function SongStudioModal({
     if (tracks.length <= 1) {
       setConfirmDeleteModal({
         title: 'Eliminar Idea Completa',
-        description: `Esta pista es la única de la idea"${idea.titulo}". ¿Deseas eliminar la idea completa del tema?`,
+        description: `Esta pista es la única de la idea "${idea.titulo}". ¿Deseas eliminar la idea completa del tema?`,
         onConfirm: () => {
           handleDeleteIdea(undefined, idea.id, true);
         },
@@ -2987,7 +2987,7 @@ export default function SongStudioModal({
 
     setConfirmDeleteModal({
       title: 'Eliminar Pista de Audio',
-      description: `¿Deseas eliminar la pista"${track?.nombre || 'Pista'}" de la mezcla de"${idea.titulo}"?`,
+      description: `¿Deseas eliminar la pista "${track?.nombre || 'Pista'}" de la mezcla de "${idea.titulo}"?`,
       onConfirm: () => {
         const el = trackAudioRefs.current[trackId];
         if (el) el.pause();
@@ -3563,12 +3563,12 @@ export default function SongStudioModal({
         const parts = [];
         if (newIdeaIncludeDrums) parts.push('Batería');
         if (newIdeaIncludeBass) parts.push('Bajo');
-        const aiTrackLabel = `Ref AI: ${parts.join('+') || 'IA Synth'} (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
+        const aiTrackLabel = `Ref AI: ${parts.join(' + ') || 'IA Synth'} (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
 
         const aiTrackInfo = {
           url: aiServerUrl,
           label: aiTrackLabel,
-          instrument: parts.join('+') || 'IA Synth',
+          instrument: parts.join(' + ') || 'IA Synth',
         };
 
         if (useSongBaseTrack && selectedSongBaseUrl) {
@@ -3736,7 +3736,7 @@ export default function SongStudioModal({
     const idea = (song.audioIdeas || []).find((i) => i.id === ideaId);
     setConfirmDeleteModal({
       title: 'Eliminar Idea de Audio',
-      description: `¿Estás seguro de que deseas eliminar la idea"${idea?.titulo || 'sin título'}"? Se borrarán todas las pistas y comentarios asociados.`,
+      description: `¿Estás seguro de que deseas eliminar la idea "${idea?.titulo || 'sin título'}"? Se borrarán todas las pistas y comentarios asociados.`,
       onConfirm: executeDelete,
     });
   };
@@ -4177,7 +4177,7 @@ export default function SongStudioModal({
                           <Disc className={`w-5 h-5 text-[var(--acc)] ${useSongBaseTrack ? 'animate-spin-slow' : ''}`} />
                           <span className="text-xs font-bold text-center">Tema Original</span>
                           <span className="text-micro text-[var(--acc)]/70/80 text-center font-sans">
-                            {useSongBaseTrack ? '✓ Base Cargada' : `Usar"${song.titulo}"`}
+                            {useSongBaseTrack ? '✓ Base Cargada' : `Usar "${song.titulo}"`}
                           </span>
                         </button>
 
@@ -4475,7 +4475,7 @@ export default function SongStudioModal({
                 <p className="text-sm text-[var(--ink-2)] font-sans">
                   {activeSectionFilter === 'todas'
                     ? 'Aún no hay ideas de audio subidas para este tema.'
-                    : `No hay propuestas grabadas para la sección"${activeSectionFilter}".`}
+                    : `No hay propuestas grabadas para la sección "${activeSectionFilter}".`}
                 </p>
                 <button
                   type="button"
@@ -5631,7 +5631,7 @@ export default function SongStudioModal({
                                         setAddingTrackIdeaId(null);
                                       }}
                                       className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-[var(--ink)] active:scale-[0.97]"
-                                      title={`Importar la pista base del tema"${song.titulo}" directamente a esta mezcla multipista`}
+                                      title={`Importar la pista base del tema "${song.titulo}" directamente a esta mezcla multipista`}
                                     >
                                       <Disc className="w-5 h-5 text-[var(--acc)] animate-spin-slow" />
                                       <span className="text-xs font-bold text-center">Base Tema Original</span>

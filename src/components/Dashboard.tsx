@@ -638,7 +638,7 @@ export default function Dashboard({
       address: undefined,
       badge: r.estado === "completado" ? "Completado" : "Programado",
       bandName: getEventBandName(r.band_id, r.bandName),
-      details: `Horario: ${r.hora || "18:00"} • Asistentes: ${r.asistentes ? (Array.isArray(r.asistentes) ? r.asistentes.join(",") : r.asistentes) : "Todos"}`,
+      details: `Horario: ${r.hora || "18:00"} • Asistentes: ${r.asistentes ? (Array.isArray(r.asistentes) ? r.asistentes.join(", ") : r.asistentes) : "Todos"}`,
     });
   });
 

@@ -151,7 +151,7 @@ export function CalendarWidget({
         month,
         time: (c as any).hora || undefined,
         location:
-          [c.sala, c.ciudad].filter(Boolean).join("•") || "Por determinar",
+          [c.sala, c.ciudad].filter(Boolean).join(" • ") || "Por determinar",
         badge: c.contrato_firmado ? "Contrato Firmado" : "Programado",
         bandName: (c as any).bandName || activeBandName,
         details: c.cache ? `Caché: ${c.cache}€` : undefined,

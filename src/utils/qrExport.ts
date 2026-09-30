@@ -49,7 +49,7 @@ export function getCleanSvgString(svgEl: SVGElement, includeLogo?: { dataUrl: st
   cloned.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
   const viewBox = cloned.getAttribute('viewBox') || '0 0 256 256';
-  const [, , vbWidth, vbHeight] = viewBox.split('').map(Number);
+  const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
   const w = vbWidth || 256;
   const h = vbHeight || 256;
 
@@ -408,11 +408,11 @@ export function printHighQualityFlyer(options: {
   const subtitle = options.subtitle || 'Únete a nuestra comunidad oficial, accede a canciones inéditas, sorpresas exclusivas y sorteos.';
 
   printWin.document.write(`
- <!DOCTYPE html>
- <html lang="es">
- <head>
- <meta charset="UTF-8">
- <title>Cartel QR A4 - ${bandName} ${concertTitle ? `(${concertTitle})` : ''}</title>
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <title>Cartel QR A4 - ${bandName} ${concertTitle ? `(${concertTitle})` : ''}</title>
  <style>
  @page {
  size: A4 portrait;
@@ -568,36 +568,36 @@ export function printHighQualityFlyer(options: {
  <body>
  <div class="poster">
  ${logoUrl ? `<div class="logo-box"><img src="${logoUrl}" alt="${bandName}" /></div>` : ''}
- <h1 class="band-title">${bandName}</h1>
- ${concertTitle ? `<h2 class="concert-title">${concertTitle}</h2>` : ''}
- ${dateCity ? `<p class="date-city">${dateCity}</p>` : ''}
- 
- <div class="cta-banner">${cta}</div>
- <p class="desc">${subtitle}</p>
+          <h1 class="band-title">${bandName}</h1>
+          ${concertTitle ? `<h2 class="concert-title">${concertTitle}</h2>` : ''}
+          ${dateCity ? `<p class="date-city">${dateCity}</p>` : ''}
+          
+          <div class="cta-banner">${cta}</div>
+          <p class="desc">${subtitle}</p>
 
- <div class="qr-wrapper">
- <div id="svg-container">${svgString}</div>
- ${
+          <div class="qr-wrapper">
+            <div id="svg-container">${svgString}</div>
+            ${
    logoUrl
      ? `
- <div class="qr-center-logo">
- <img src="${logoUrl}" alt="Logo" />
- </div>
- `
+              <div class="qr-center-logo">
+                <img src="${logoUrl}" alt="Logo" />
+              </div>
+            `
      : ''
  }
- </div>
+          </div>
 
- <div class="url-box">${url}</div>
- <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
- </div>
- <script>
- setTimeout(() => {
- window.print();
- }, 350);
- </script>
- </body>
- </html>
- `);
+          <div class="url-box">${url}</div>
+          <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
+        </div>
+        <script>
+          setTimeout(() => {
+            window.print();
+          }, 350);
+        </script>
+      </body>
+    </html>
+  `);
   printWin.document.close();
 }

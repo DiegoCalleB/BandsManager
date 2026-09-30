@@ -458,7 +458,7 @@ export function GooglePlacesExplorerModal({
 
         setPlaces(mapped);
         setSearchSource(
-          `Scout Masivo de Campaña (${citiesToSearch.length} ciudades · Género: ${res.bandGenre || "Banda"} · Tipos: ${massFilterTipos.join(",")})`,
+          `Scout Masivo de Campaña (${citiesToSearch.length} ciudades · Género: ${res.bandGenre || "Banda"} · Tipos: ${massFilterTipos.join(", ")})`,
         );
       } else {
         setSearchError(
@@ -903,7 +903,7 @@ export function GooglePlacesExplorerModal({
         const chunk = selectedPlaces.slice(i, i + CHUNK_SIZE);
         const currentProgress = Math.min(i + CHUNK_SIZE, selectedPlaces.length);
         setExtractStatus(
-          `⚡ Investigando webs oficiales (${currentProgress}/${selectedPlaces.length}): ${chunk.map((c) => c.nombre_sala).join(",")}...`,
+          `⚡ Investigando webs oficiales (${currentProgress}/${selectedPlaces.length}): ${chunk.map((c) => c.nombre_sala).join(", ")}...`,
         );
 
         try {
@@ -1228,7 +1228,7 @@ export function GooglePlacesExplorerModal({
                       >
                         <span><ShowIcon inline emoji={cat.icon} /></span>
                         <span className="truncate">
-                          {cat.label.split("")[0]}
+                          {cat.label.split(" ")[0]}
                         </span>
                       </button>
                     );

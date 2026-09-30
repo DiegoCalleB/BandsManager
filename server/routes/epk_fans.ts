@@ -547,7 +547,7 @@ router.get('/public/epk', async (req, res) => {
           : cleanBandId
               .split(/[-_]+/)
               .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-              .join('');
+              .join(' ');
     }
 
     // La fuente de verdad de temas y conciertos es Supabase, igual que para el epkConfig de

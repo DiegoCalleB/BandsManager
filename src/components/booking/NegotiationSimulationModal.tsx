@@ -80,9 +80,9 @@ export function NegotiationSimulationModal({
                 <h3 className="text-sm font-bold font-display">Simulador de Negociación Personalizado</h3>
               </div>
               <p className={`text-micro font-sans mt-0.5 ${textMuted}`}>
-                Trato actual con{''}
+                Trato actual con{' '}
                 <strong className="text-[var(--acc)]">{selectedLead.nombre_sala}</strong>
-                {''}({selectedLead.ciudad}) — Estado: {selectedLead.estado}
+                {' '}({selectedLead.ciudad}) — Estado: {selectedLead.estado}
               </p>
             </div>
             <button

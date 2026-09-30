@@ -70,7 +70,7 @@ export default function BookingCampaignPanel({
         });
       })
       .filter(Boolean);
-    return formatted.join(",");
+    return formatted.join(", ");
   };
 
   const handleSave = () => {
@@ -373,7 +373,7 @@ export default function BookingCampaignPanel({
         <div className="flex flex-wrap gap-4">
           <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
             <MapPin className="w-4 h-4 text-[var(--acc)]/80" />
-            <span>{activeCampaign?.targetCities.join(",")}</span>
+            <span>{activeCampaign?.targetCities.join(", ")}</span>
           </div>
           <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
             <Users className="w-4 h-4 text-[var(--acc)]/80" />

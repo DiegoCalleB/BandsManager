@@ -98,7 +98,7 @@ describe('chordUtils', () => {
     });
 
     it('transposes standalone chord lines', () => {
-      const text = 'Do Sol Lam\nEsta es la letra de la canción';
+      const text = 'Do      Sol     Lam\nEsta es la letra de la canción';
       const result = processChordText(text, 2, 'ES');
       expect(result).toContain('Re');
       expect(result).toContain('La');

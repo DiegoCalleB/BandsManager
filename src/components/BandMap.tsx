@@ -294,11 +294,11 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
           return L.divIcon({
             html: `
- <div style="
- width: ${size}px;
- height: ${size}px;
- background-color: ${bgColor};
- color: ${textColor};
+              <div style="
+                width: ${size}px;
+                height: ${size}px;
+                background-color: ${bgColor};
+                color: ${textColor};
  border-radius: 50%;
  font-weight: 800;
  font-family: monospace;
@@ -308,8 +308,8 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
  justify-content: center;
  cursor: pointer;">
  ${count}
- </div>
- `,
+              </div>
+            `,
             className: "custom-cluster-badge",
             iconSize: [size, size],
             iconAnchor: [size / 2, size / 2],
@@ -460,8 +460,8 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
  font-size: 11px;
  margin-right: 4px;">
  ${escapeHtml(band.icono || "🎸")}
- </div>
- `;
+        </div>
+      `;
 
       const customIcon = L.divIcon({
         className: "custom-band-pin",

@@ -44,7 +44,7 @@ describe('ExportLeadsModal Data Formatting', () => {
   it('formatea celdas de CSV con comillas dobles y escapado seguro', () => {
     const cleanCsvCell = (val: any) => {
       if (val === undefined || val === null) return '""';
-      const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, '');
+      const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, ' ');
       return `"${str}"`;
     };
 

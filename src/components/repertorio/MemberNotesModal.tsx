@@ -441,7 +441,7 @@ export function MemberNotesModal({
               ) : (
                 <Save className="w-4 h-4" />
               )}
-              {savedSuccess ? "¡Guardado! " : "Guardar Notas"}
+              {savedSuccess ? "¡Guardado!" : "Guardar Notas"}
             </button>
           </div>
         </div>

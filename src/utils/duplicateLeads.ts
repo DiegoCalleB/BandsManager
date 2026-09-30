@@ -9,8 +9,8 @@ export function normalizeText(str?: string | null): string {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // Elimina tildes
-    .replace(/[^a-z0-9\s]/g, '') // Convierte puntuación a espacios
-    .replace(/\s+/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ') // Convierte puntuación a espacios
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -45,7 +45,7 @@ export function normalizeVenueName(name?: string | null): string {
   if (!normalized) return '';
 
   for (const prefix of VENUE_PREFIXES) {
-    if (normalized.startsWith(prefix + '')) {
+    if (normalized.startsWith(prefix + ' ')) {
       normalized = normalized.slice(prefix.length).trim();
       break;
     }

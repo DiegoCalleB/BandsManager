@@ -52,7 +52,7 @@ describe('reelsUtils', () => {
     });
 
     it('avisa si el copy está vacío', () => {
-      const problemas = validateScheduleReadiness({ copy: '', scheduledDate: '2026-08-30', scheduledTime: '20:30', now: ahora });
+      const problemas = validateScheduleReadiness({ copy: '   ', scheduledDate: '2026-08-30', scheduledTime: '20:30', now: ahora });
       expect(problemas).toContain('Falta el texto del copy.');
     });
 

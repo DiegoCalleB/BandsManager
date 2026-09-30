@@ -441,7 +441,7 @@ export const SpotifyDiscographyModal: React.FC<
                       <>
                         <span>•</span>
                         <span className="capitalize">
-                          {artistProfile.genres.slice(0, 2).join(",")}
+                          {artistProfile.genres.slice(0, 2).join(", ")}
                         </span>
                       </>
                     )}

@@ -536,7 +536,7 @@ export function PdfExportModal({
       case "courier":
         return "'Courier Prime', monospace";
       default:
-        return "-apple-system, BlinkMacSystemFont,'Segoe UI', Roboto, sans-serif";
+        return "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
     }
   };
 
@@ -575,7 +575,7 @@ export function PdfExportModal({
     const handFont = getHandwritingFontFamily();
     const titleFontFamily =
       stylePreset === "rock_stage"
-        ? "'Anton','Oswald', sans-serif"
+        ? "'Anton', 'Oswald', sans-serif"
         : "'Oswald', sans-serif";
 
     // Construye el HTML de UNA fila (canción o divisor) a un tamaño de título dado — reutilizada
@@ -706,54 +706,54 @@ export function PdfExportModal({
             : `font-size:${titleFontPt}pt;white-space:normal;overflow:visible;text-overflow:clip;`;
 
         return `
- <div class="setlist-song-item">
- <div class="song-line">
- <div class="song-left">
- ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
- <span class="song-title" style="${titleStyle}">${layout?.truncatedTitle ?? s.titulo.toUpperCase()}</span>
- ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ""}
- ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ""}
- ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ""}
- </div>
- ${layout && layout.mode === "inline" ? notesHtml : ""}
- </div>
- ${layout && layout.mode === "below" ? notesHtml : ""}
- </div>
- `;
+            <div class="setlist-song-item">
+              <div class="song-line">
+                <div class="song-left">
+                  ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
+                  <span class="song-title" style="${titleStyle}">${layout?.truncatedTitle ?? s.titulo.toUpperCase()}</span>
+                  ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ""}
+                  ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ""}
+                  ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ""}
+                </div>
+                ${layout && layout.mode === "inline" ? notesHtml : ""}
+              </div>
+              ${layout && layout.mode === "below" ? notesHtml : ""}
+            </div>
+          `;
       } else if (
         item.tipoItem === "bloque" &&
         item.bloqueSubtipo === "header"
       ) {
         return `
- <div class="block-divider-item">
- <div class="divider-line"></div>
- <div class="block-title">${(item.tituloCustom || "BLOQUE").toUpperCase()}</div>
- <div class="divider-line"></div>
- </div>
- `;
+            <div class="block-divider-item">
+              <div class="divider-line"></div>
+              <div class="block-title">${(item.tituloCustom || "BLOQUE").toUpperCase()}</div>
+              <div class="divider-line"></div>
+            </div>
+          `;
       } else if (item.tipoItem === "bloque" && item.bloqueSubtipo === "bis") {
         return `
- <div class="bis-divider-item">
- <div class="divider-line"></div>
- <div class="bis-text">${(item.tituloCustom || "BIS / ENCORE").toUpperCase()}</div>
- <div class="divider-line"></div>
- </div>
- `;
+            <div class="bis-divider-item">
+              <div class="divider-line"></div>
+              <div class="bis-text">${(item.tituloCustom || "BIS / ENCORE").toUpperCase()}</div>
+              <div class="divider-line"></div>
+            </div>
+          `;
       } else {
         return `
- <div class="interlude-item">
- <span class="interlude-bracket">****</span>
- <span class="interlude-title">${(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase()}</span>
- <span class="interlude-bracket">****</span>
- ${
+            <div class="interlude-item">
+              <span class="interlude-bracket">****</span>
+              <span class="interlude-title">${(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase()}</span>
+              <span class="interlude-bracket">****</span>
+              ${
    (item.notas || (item as any).notaTema) && item.tituloCustom
      ? `
- <span class="interlude-note">(${item.notas || (item as any).notaTema})</span>
- `
+                <span class="interlude-note">(${item.notas || (item as any).notaTema})</span>
+              `
      : ""
  }
- </div>
- `;
+            </div>
+          `;
       }
     };
 
@@ -772,7 +772,7 @@ export function PdfExportModal({
  box-sizing: border-box;
  }
  body {
- font-family: ${stylePreset === "rock_stage" ? "'Anton','Oswald', -apple-system, sans-serif" : stylePreset === "festival_bold" ? "'Oswald', sans-serif" : "-apple-system, BlinkMacSystemFont, sans-serif"};
+ font-family: ${stylePreset === "rock_stage" ? "'Anton', 'Oswald', -apple-system, sans-serif" : stylePreset === "festival_bold" ? "'Oswald', sans-serif" : "-apple-system, BlinkMacSystemFont, sans-serif"};
  color: #000;
  background: #fff;
  margin: 0;
@@ -974,7 +974,7 @@ export function PdfExportModal({
  /* font-size inline por fila (no aquí): mismo motivo que .song-num de arriba.
  line-height:1 (antes 1.1) por el mismo motivo que el gap:0 de arriba — con
  muchas filas, cada décima de interlineado de sobra se multiplica. */
- font-family: ${stylePreset === "rock_stage" ? "'Anton','Oswald', sans-serif" : "'Oswald', sans-serif"};
+ font-family: ${stylePreset === "rock_stage" ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif"};
  font-weight: 900;
  letter-spacing: 0.5px;
  color: #000;
@@ -1182,30 +1182,30 @@ export function PdfExportModal({
       member: (typeof membersToExport)[number],
       isMaster: boolean,
     ): string => `
- <div class="page-header">
- <div class="header-left">
- ${
+        <div class="page-header">
+          <div class="header-left">
+            ${
    showBandLogo && customLogoUrl
      ? `
- <img src="${customLogoUrl}" alt="${bandName}" class="band-logo-img" onerror="this.style.display='none'" />
- `
+              <img src="${customLogoUrl}" alt="${bandName}" class="band-logo-img" onerror="this.style.display='none'" />
+            `
      : ""
  }
  <div class="band-text-block">
  <h1 class="band-heading">${bandName.toUpperCase()}</h1>
- <div class="setlist-meta">${activeSetlist.nombre.toUpperCase()}</div>
- </div>
- </div>
+              <div class="setlist-meta">${activeSetlist.nombre.toUpperCase()}</div>
+            </div>
+          </div>
 
- <div class="header-right">
- <div class="member-stage-tag">
- <div class="tag-title">${!isMaster ? "COPIA PARA MÚSICO" : "COPIA CONTROL"}</div>
- <div class="tag-name">${member.name.toUpperCase()}</div>
- <div class="tag-instrument">${member.instrument.toUpperCase()}</div>
- </div>
- </div>
- </div>
- `;
+          <div class="header-right">
+            <div class="member-stage-tag">
+              <div class="tag-title">${!isMaster ? "COPIA PARA MÚSICO" : "COPIA CONTROL"}</div>
+              <div class="tag-name">${member.name.toUpperCase()}</div>
+              <div class="tag-instrument">${member.instrument.toUpperCase()}</div>
+            </div>
+          </div>
+        </div>
+      `;
 
     const buildFooterHtml = (
       member: (typeof membersToExport)[number],
@@ -1214,19 +1214,19 @@ export function PdfExportModal({
     ): string =>
       showAppBranding
         ? `
- <div class="page-footer">
- <div class="footer-left">
- <span class="app-logo-badge">⚡ BandManager</span>
- <span class="footer-sep">•</span>
- <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
- </div>
- <div class="footer-right">
- <span>Hoja ${pageNum} de ${totalPages} (${member.name})</span>
- <span class="footer-sep">•</span>
- <span>${new Date().toLocaleDateString("es-ES")}</span>
- </div>
- </div>
- `
+        <div class="page-footer">
+          <div class="footer-left">
+            <span class="app-logo-badge">⚡ BandManager</span>
+            <span class="footer-sep">•</span>
+            <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
+          </div>
+          <div class="footer-right">
+            <span>Hoja ${pageNum} de ${totalPages} (${member.name})</span>
+            <span class="footer-sep">•</span>
+            <span>${new Date().toLocaleDateString("es-ES")}</span>
+          </div>
+        </div>
+      `
         : "";
 
     // Auto-ajuste (ver setlistAutoFit.ts): mide la altura REAL del contenido en un iframe
@@ -1257,17 +1257,17 @@ export function PdfExportModal({
     // las fuentes ya cargadas.
     measureDoc.open();
     measureDoc.write(`
- <!DOCTYPE html>
- <html>
- <head>
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link id="measure-fonts-link" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
- <style>${printCss}</style>
- </head>
- <body><div id="measure-target"></div></body>
- </html>
- `);
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link id="measure-fonts-link" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+            <style>${printCss}</style>
+          </head>
+          <body><div id="measure-target"></div></body>
+        </html>
+      `);
     measureDoc.close();
     // Esperar solo a `fonts.ready` no basta: si en ese momento el navegador aún no ha
     // descargado/parseado la hoja de estilos externa del <link> de Google Fonts, esa promesa
@@ -1530,15 +1530,15 @@ export function PdfExportModal({
             const isLastPageOverall = globalPageIdx === totalPagesCount;
 
             return `
- <div class="sheet-page ${!isLastPageOverall ? "page-break" : ""}">
- <div class="page-watermark">${watermarkInnerHtml}</div>
- ${buildHeaderHtml(member, isMaster)}
+                <div class="sheet-page ${!isLastPageOverall ? "page-break" : ""}">
+                  <div class="page-watermark">${watermarkInnerHtml}</div>
+                  ${buildHeaderHtml(member, isMaster)}
  <div class="setlist-items-container">
  ${rowsHtml}
- </div>
- ${buildFooterHtml(member, globalPageIdx, totalPagesCount)}
- </div>
- `;
+                  </div>
+                  ${buildFooterHtml(member, globalPageIdx, totalPagesCount)}
+                </div>
+              `;
           })
           .filter((html) => html !== "")
           .join("");
@@ -1546,18 +1546,18 @@ export function PdfExportModal({
       .join("");
 
     printWindow.document.write(`
- <!DOCTYPE html>
- <html>
- <head>
- <meta charset="utf-8">
- <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
- <style>${printCss}</style>
- </head>
- <body>
- ${pagesHtml}
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+          <style>${printCss}</style>
+        </head>
+        <body>
+          ${pagesHtml}
  <script>
  window.onload = () => {
  //'onload' solo garantiza que el CSS de Google Fonts (el texto de las reglas
@@ -2002,7 +2002,7 @@ export function PdfExportModal({
                 minHeight: "297mm",
                 fontFamily:
                   stylePreset === "rock_stage"
-                    ? "'Anton','Oswald', sans-serif"
+                    ? "'Anton', 'Oswald', sans-serif"
                     : "'Oswald', sans-serif",
               }}
             >
@@ -2147,7 +2147,7 @@ export function PdfExportModal({
                           numberFontSizePx: ptToPx(20),
                           titleText: s.titulo,
                           titleFontSizePx: ptToPx(titleFontPt),
-                          titleFontFamily: "'Anton','Oswald', sans-serif",
+                          titleFontFamily: "'Anton', 'Oswald', sans-serif",
                           badges,
                           noteFontFamily: getHandwritingFontFamily(),
                           noteMaxFontSizePx: ptToPx(noteFontPt),
@@ -2265,7 +2265,7 @@ export function PdfExportModal({
                                       : ""
                                   }`}
                                   style={{
-                                    fontFamily: "'Anton','Oswald', sans-serif",
+                                    fontFamily: "'Anton', 'Oswald', sans-serif",
                                     fontSize: `${titleFontPt}pt`,
                                   }}
                                 >

@@ -163,11 +163,11 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       lines.push(`${num}. ${song.titulo} (${dur})${key}${bpm}${album}`);
 
       if (includeChords && song.cifradoTexto) {
-        lines.push(` --- Letra / Cifrado ---`);
+        lines.push(`   --- Letra / Cifrado ---`);
         lines.push(
           song.cifradoTexto
             .split("\n")
-            .map((l) => ` ${l}`)
+            .map((l) => `   ${l}`)
             .join("\n"),
         );
         lines.push(``);
@@ -176,7 +176,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       if (includeAudioUrls) {
         const audio = song.audioPrincipalUrl || (song as any).audioUrl;
         if (audio) {
-          lines.push(` Audio: ${audio}`);
+          lines.push(`   Audio: ${audio}`);
         }
       }
     });
@@ -319,7 +319,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
             `Incluye: Archivos MP3/WAV, 00_TRACKLIST.txt, 00_DATOS_ALBUM.json` +
             (includeChords ? `, 00_LETRAS_Y_CIFRADOS.txt` : "") +
             `\n\n` +
-            `Haz clic en"DESCARGAR ZIP (.ZIP)" para empaquetar y bajar el disco.`,
+            `Haz clic en "DESCARGAR ZIP (.ZIP)" para empaquetar y bajar el disco.`,
           mimeType: "application/zip;",
           extension: "zip",
         };
@@ -410,7 +410,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
         setZipProgress({
           current: i + 1,
           total: audioTargets.length,
-          status: `Descargando audio (${i + 1}/${audioTargets.length}):"${target.song.titulo}"...`,
+          status: `Descargando audio (${i + 1}/${audioTargets.length}): "${target.song.titulo}"...`,
         });
 
         try {
@@ -433,7 +433,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
           );
           folder.file(
             `${numStr}_${cleanTitle}_NOTA_AUDIO.txt`,
-            `No se pudo descargar directamente el archivo de audio para"${target.song.titulo}".\nEnlace original: ${target.audioUrl}`,
+            `No se pudo descargar directamente el archivo de audio para "${target.song.titulo}".\nEnlace original: ${target.audioUrl}`,
           );
         }
       }
@@ -662,11 +662,11 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                 <div className="flex items-center gap-2 text-[var(--ink-2)]">
                   <Music className="w-4 h-4 text-[var(--ok)] shrink-0" />
                   <span>
-                    Audios listos para comprimir:{""}
+                    Audios listos para comprimir:{" "}
                     <strong className="text-[var(--ink)] font-sans">
                       {songsWithAudio.length}
                     </strong>{" "}
-                    de{""}
+                    de{" "}
                     <strong className="text-[var(--ink)] font-sans">
                       {targetSongs.length}
                     </strong>{" "}

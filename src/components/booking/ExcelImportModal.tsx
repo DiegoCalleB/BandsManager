@@ -367,7 +367,7 @@ export function ExcelImportModal({
   const buildParsedRows = () => {
     if (!mapping.nombre_sala) {
       alert(
-        'Debes asignar al menos la columna correspondiente al"Nombre de la Sala / Contacto / Banda".',
+        'Debes asignar al menos la columna correspondiente al "Nombre de la Sala / Contacto / Banda".',
       );
       return;
     }
@@ -438,7 +438,7 @@ export function ExcelImportModal({
             lower === "null"
           )
             return "";
-          if (val.includes("\n") || (val.includes("") && !val.includes("http")))
+          if (val.includes("\n") || (val.includes(" ") && !val.includes("http")))
             return "";
           return val;
         };

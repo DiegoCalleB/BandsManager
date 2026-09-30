@@ -100,7 +100,7 @@ export function formatSongShareText(
   if (song.duracion) details.push(`⏳ ${song.duracion}`);
   if (song.afinacion) details.push(`🎸 Afinación: ${song.afinacion}`);
   if (details.length > 0) {
-    parts.push(details.join('| '));
+    parts.push(details.join(' | '));
   }
 
   if (song.estadoTema) {
@@ -164,7 +164,7 @@ export function formatSongIdeaShareText(song: Song, idea: SongAudioIdea, bandNam
   if (idea.pistas && idea.pistas.length > 1) {
     parts.push(`\n🎛️ *Pistas multipista (${idea.pistas.length}):*`);
     idea.pistas.forEach((p, idx) => {
-      parts.push(` ${idx + 1}. ${p.nombre}${p.instrumento ? ` (${p.instrumento})` : ''}`);
+      parts.push(`  ${idx + 1}. ${p.nombre}${p.instrumento ? ` (${p.instrumento})` : ''}`);
     });
   }
 
@@ -217,7 +217,7 @@ export function formatSetlistShareText(setlist: Setlist, songsMap: Record<string
         if (s.duracion) info.push(s.duracion);
         if (s.afinacion && s.afinacion !== 'E Standard') info.push(`Af: ${s.afinacion}`);
 
-        const infoStr = info.length > 0 ? ` (${info.join('| ')})` : '';
+        const infoStr = info.length > 0 ? ` (${info.join(' | ')})` : '';
         const notesStr = item.notaTema ? ` ➔ _${item.notaTema}_` : '';
         parts.push(`${songNum}. *${s.titulo}*${infoStr}${notesStr}`);
         songNum++;
@@ -239,7 +239,7 @@ export function formatSetlistShareText(setlist: Setlist, songsMap: Record<string
         const title = item.tituloCustom || item.tipoItem;
         const dur = item.duracionEstimadaMinutos ? ` (${item.duracionEstimadaMinutos} min)` : '';
         const note = item.notas ? ` - _${item.notas}_` : '';
-        parts.push(` ${icon} _${title}${dur}_${note}`);
+        parts.push(`  ${icon} _${title}${dur}_${note}`);
       }
     });
   }

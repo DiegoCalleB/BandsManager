@@ -483,7 +483,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         e.preventDefault();
         handleAdvance();
       }
-      if (e.key === "") {
+      if (e.key === " ") {
         e.preventDefault();
         if (teleprompterMode === "scroll") {
           setIsTeleprompterPlaying((p) => !p);
@@ -1018,7 +1018,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 {currentSong.bpm ? ` · ${currentSong.bpm} BPM` : ""}
                 {irisStemIdea
                   ? ` · ${getIdeaTracks(irisStemIdea).length} pistas Iris`
-                  : "· Sin pistas separadas"}
+                  : " · Sin pistas separadas"}
               </span>
             </div>
           </div>

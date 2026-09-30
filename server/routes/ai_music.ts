@@ -1253,7 +1253,7 @@ export async function processDemucsStems(
     const tPreloadEnd = Date.now();
 
     console.log(
-      `[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL de entrada: ${resolvedUrl.startsWith('data:') ? 'Data URI ( ' + resolvedUrl.substring(0, 30) + '...)' : resolvedUrl}`
+      `[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL de entrada: ${resolvedUrl.startsWith('data:') ? 'Data URI (' + resolvedUrl.substring(0, 30) + '...)' : resolvedUrl}`
     );
     const DEMUCS_VERSION =
       '25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953';
@@ -1349,7 +1349,7 @@ export async function processDemucsStems(
           .split('\n')
           .filter(Boolean)
           .slice(-4)
-          .join('| ');
+          .join(' | ');
         return {
           stemsMap: null,
           provider: 'replicate',

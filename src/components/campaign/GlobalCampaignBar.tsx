@@ -201,7 +201,7 @@ export function GlobalCampaignBar({
           <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-medium">
             <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span>
-              {campaign.targetCities?.join(",") || "Todas las ciudades"}
+              {campaign.targetCities?.join(", ") || "Todas las ciudades"}
             </span>
           </div>
           <div className="flex items-center justify-between text-[var(--ink-2)]">

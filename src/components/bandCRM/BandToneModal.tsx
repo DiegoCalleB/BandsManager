@@ -116,11 +116,11 @@ function toDraft(toneData: ToneAnalysisData | null): ToneDraft {
     tono_comunicacion: toneData?.tono_comunicacion || "",
     tratamiento_habitual: toneData?.tratamiento_habitual || "",
     nivel_energia: toneData?.nivel_energia || "",
-    vocabulario_clave: (toneData?.vocabulario_clave || []).join(","),
+    vocabulario_clave: (toneData?.vocabulario_clave || []).join(", "),
     frases_emblematicas_extraidas: (
       toneData?.frases_emblematicas_extraidas || []
     ).join("\n"),
-    emojis_frecuentes: (toneData?.emojis_frecuentes || []).join(""),
+    emojis_frecuentes: (toneData?.emojis_frecuentes || []).join(" "),
     matiz_instagram: toneData?.matices_por_red?.instagram || "",
     matiz_tiktok: toneData?.matices_por_red?.tiktok || "",
     matiz_youtube: toneData?.matices_por_red?.youtube || "",

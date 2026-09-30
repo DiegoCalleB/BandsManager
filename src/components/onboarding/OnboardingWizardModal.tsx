@@ -916,7 +916,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         });
         const cleanName = file.name
           .replace(/\.[^/.]+$/, "")
-          .replace(/[_-]/g, "");
+          .replace(/[_-]/g, " ");
         const newSong: Song = {
           id: `aud_${Date.now()}_${i}`,
           titulo: cleanName,
@@ -1352,7 +1352,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
               <div className="flex items-center gap-2">
                 <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold">
                   Configuración Inicial · Plan{" "}
-                  {userPlanId.toUpperCase().replace("_", "")}
+                  {userPlanId.toUpperCase().replace("_", " ")}
                 </span>
                 {!isCelebrationStep && (
                   <span className="text-xs text-[var(--ink-2)]">
@@ -1361,7 +1361,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 )}
               </div>
               <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)] mt-1">
-                {isCelebrationStep ? "¡Todo Listo! " : currentStepDef?.title}
+                {isCelebrationStep ? "¡Todo Listo!" : currentStepDef?.title}
               </h2>
             </div>
 

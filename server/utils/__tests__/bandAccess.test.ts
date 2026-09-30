@@ -119,7 +119,7 @@ describe('bandaDelAgente', () => {
 
   it('acepta la banda propia pedida por params', () => {
     const req = peticion({ user: miembroDeBakandeya });
-    expect(bandaDelAgente(req, { band_id: 'reg-bakandeya ' })).toBe('reg-bakandeya');
+    expect(bandaDelAgente(req, { band_id: ' reg-bakandeya ' })).toBe('reg-bakandeya');
   });
 
   it('sin usuario (llamada de cron) manda el params.band_id', () => {
@@ -143,7 +143,7 @@ describe('bandaDelAgente', () => {
 describe('mismaBanda', () => {
   it('ignora prefijos, mayúsculas y espacios', () => {
     expect(mismaBanda('band-bakandeya', 'reg-BAKANDEYA')).toBe(true);
-    expect(mismaBanda( 'bakandeya ', 'band-bakandeya')).toBe(true);
+    expect(mismaBanda( '  bakandeya ', 'band-bakandeya')).toBe(true);
   });
 
   it('dos bandas distintas no son la misma', () => {

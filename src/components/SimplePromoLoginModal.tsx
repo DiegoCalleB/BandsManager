@@ -460,7 +460,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 </button>
 
                 <p className="text-center text-xs text-[var(--ink-2)] pt-1">
-                  ¿Primera vez por aquí?{''}
+                  ¿Primera vez por aquí?{' '}
                   <button
                     type="button"
                     onClick={() => {
@@ -584,7 +584,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 </button>
 
                 <p className="text-center text-xs text-[var(--ink-2)]">
-                  ¿Ya tienes cuenta?{''}
+                  ¿Ya tienes cuenta?{' '}
                   <button
                     type="button"
                     onClick={() => {

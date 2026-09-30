@@ -1074,7 +1074,7 @@ Os escribimos directamente desde Bakandeya (banda de Balkan-Ska, violín enérgi
 
 Nos mola mucho vuestra propuesta en ${band.estilo_musical} y vemos que tenéis fuerte tirón en ${band.localizacion}. Os escribimos porque estamos armando una campaña de conciertos muy especial y creemos que podríamos montar un cartelazo juntos.
 
-Nuestro objetivo es un aforo de ${activeCampaign.minCapacity}-${activeCampaign.maxCapacity} personas en ${activeCampaign.targetCities.join(",")} para las fechas: ${activeCampaign.targetDatesText || "la próxima temporada"}. 
+Nuestro objetivo es un aforo de ${activeCampaign.minCapacity}-${activeCampaign.maxCapacity} personas en ${activeCampaign.targetCities.join(", ")} para las fechas: ${activeCampaign.targetDatesText || "la próxima temporada"}. 
 
 Nuestra idea es montar un CO-BOOKING donde nosotros aportamos la producción y nuestro público en la ciudad, y vosotros sumáis vuestra fuerza para asegurar un *sold out* brutal. Además, dejamos la puerta abierta para devolveros la visita en ${band.localizacion} en el futuro compartiendo escenario y backline.
 

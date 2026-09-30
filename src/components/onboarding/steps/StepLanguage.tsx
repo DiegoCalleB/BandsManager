@@ -133,7 +133,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
               tabIndex={0}
               onClick={() => handleSelectLanguage(lang.code, lang.label)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === "") {
+                if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
                   handleSelectLanguage(lang.code, lang.label);
                 }

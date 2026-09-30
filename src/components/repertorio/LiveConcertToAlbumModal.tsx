@@ -670,13 +670,13 @@ export const LiveConcertToAlbumModal: React.FC<
     if (!track || !track.speechTranscription) return;
 
     const cleanSpeech = track.speechTranscription
-      .replace(/[\n\r]+/g, "")
+      .replace(/[\n\r]+/g, " ")
       .trim();
     const firstPhrase = cleanSpeech.split(/[.!?]/)[0].trim();
     const suggested =
       firstPhrase.length > 45 ? `${firstPhrase.slice(0, 42)}...` : firstPhrase;
     if (suggested) {
-      handleUpdateTrack(trackIndex, "title", `Speech:"${suggested}"`);
+      handleUpdateTrack(trackIndex, "title", `Speech: "${suggested}"`);
     }
   };
 
@@ -1058,7 +1058,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
     const minStart = Math.min(...targetTracks.map((t) => t.start));
     const maxEnd = Math.max(...targetTracks.map((t) => t.end));
-    const mergedTitle = targetTracks.map((t) => t.title).join("+");
+    const mergedTitle = targetTracks.map((t) => t.title).join(" + ");
     const mergedSpeech = targetTracks
       .map((t) => t.speechTranscription)
       .filter(Boolean)
@@ -2052,8 +2052,8 @@ export const LiveConcertToAlbumModal: React.FC<
                                 handleUpdateTrack(track.index, "type", newType);
                                 if (
                                   newType === "dialogo" &&
-                                  (track.title.startsWith("Tema") ||
-                                    track.title.startsWith("Pista"))
+                                  (track.title.startsWith("Tema ") ||
+                                    track.title.startsWith("Pista "))
                                 ) {
                                   handleUpdateTrack(
                                     track.index,
@@ -2270,7 +2270,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               )}
                               <label className="text-xs font-bold tracking-wide text-[var(--ink-2)]">
                                 {track.type === "musica"
-                                  ? "Nombre del Tema: "
+                                  ? "Nombre del Tema:"
                                   : "Nombre del Speech:"}
                               </label>
                             </div>
@@ -2510,7 +2510,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                         .split("\n")
                                         .filter(Boolean)
                                         .slice(0, 2)
-                                        .join("/")}
+                                        .join(" / ")}
                                       "
                                     </span>
                                   </div>
@@ -3064,7 +3064,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         rows={5}
                         value={cookiesInputText}
                         onChange={(e) => setCookiesInputText(e.target.value)}
-                        placeholder="# Netscape HTTP Cookie File&#10;.youtube.com TRUE / TRUE 1789000000 SID ..."
+                        placeholder="# Netscape HTTP Cookie File&#10;.youtube.com  TRUE  /  TRUE  1789000000  SID  ..."
                         className="w-full font-sans text-xs p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)]"
                       />
                     </div>
@@ -3212,8 +3212,8 @@ export const LiveConcertToAlbumModal: React.FC<
                                 handleUpdateTrack(tr.index, "type", newType);
                                 if (
                                   newType === "dialogo" &&
-                                  (tr.title.startsWith("Tema") ||
-                                    tr.title.startsWith("Pista"))
+                                  (tr.title.startsWith("Tema ") ||
+                                    tr.title.startsWith("Pista "))
                                 ) {
                                   handleUpdateTrack(
                                     tr.index,
@@ -3425,7 +3425,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                     <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
                       <span>
-                        Líneas detectadas:{""}
+                        Líneas detectadas:{" "}
                         <strong className="text-[var(--ink-2)]">
                           {
                             batchPastedText
@@ -3433,7 +3433,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               .filter((l) => l.trim().length > 0).length
                           }
                         </strong>
-                        {""}/ Cortes en concierto:{" "}
+                        {" "}/ Cortes en concierto:{" "}
                         <strong className="text-[var(--acc)]">
                           {tracks.length}
                         </strong>

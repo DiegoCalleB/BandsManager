@@ -443,7 +443,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       runningTotal += newCount;
       const [y, m] = month.split("-");
       const mIdx = m ? parseInt(m, 10) - 1 : 0;
-      const label = `${monthNames[mIdx] || m}'${y ? y.slice(2) : "26"}`;
+      const label = `${monthNames[mIdx] || m} '${y ? y.slice(2) : "26"}`;
       return {
         month,
         date: label,
@@ -1381,7 +1381,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 onClick={handleCopyQrUrl}
                 className="shrink-0 text-xs text-[var(--acc)] hover:underline font-sans cursor-pointer"
               >
-                {copiedQrUrl ? "¡Copiado! " : "Copiar"}
+                {copiedQrUrl ? "¡Copiado!" : "Copiar"}
               </button>
             </div>
 
@@ -1617,7 +1617,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <p className="text-xs text-[var(--ink-2)] font-sans">
                     {epkConfig?.donacionRevolut?.habilitado !== false &&
                     epkConfig?.donacionRevolut?.revolutTag
-                      ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público"Únete" y en la pantalla de confirmación.`
+                      ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
                       : "Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios."}
                   </p>
                   <button

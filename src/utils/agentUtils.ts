@@ -65,9 +65,9 @@ ESTRUCTURA REQUERIDA:
 1. Titular llamativo e impactante.
 2. Subtitular resumen.
 3. Cuerpo principal (3 párrafos cortos):
- - Párrafo 1: El concepto musical y la propuesta sonora.
- - Párrafo 2: La historia detrás del tema o álbum.
- - Párrafo 3: Fechas de gira o eventos de presentación.
+   - Párrafo 1: El concepto musical y la propuesta sonora.
+   - Párrafo 2: La historia detrás del tema o álbum.
+   - Párrafo 3: Fechas de gira o eventos de presentación.
 4. Ficha técnica y contacto para acreditaciones / entrevistas.
 `.trim();
 }

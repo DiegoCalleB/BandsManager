@@ -4,7 +4,7 @@ import { cleanBandId, normalizePlan } from '../core';
 describe('cleanBandId: filtro de tenant de la capa de datos', () => {
   it('devuelve el bandId recortado cuando es válido', () => {
     expect(cleanBandId('band-la-vanda')).toBe('band-la-vanda');
-    expect(cleanBandId( 'band-la-vanda  ')).toBe('band-la-vanda');
+    expect(cleanBandId( '  band-la-vanda  ')).toBe('band-la-vanda');
   });
 
   it('lanza en vez de caer en band-bakandeya cuando falta el bandId', () => {
@@ -12,7 +12,7 @@ describe('cleanBandId: filtro de tenant de la capa de datos', () => {
     // nueva que se olvidara de pasarlo acababa leyendo o escribiendo en la banda insignia.
     expect(() => cleanBandId(undefined)).toThrow();
     expect(() => cleanBandId('')).toThrow();
-    expect(() => cleanBandId( '  ')).toThrow();
+    expect(() => cleanBandId( '   ')).toThrow();
   });
 
   it('lanza con un tipo que no es string', () => {

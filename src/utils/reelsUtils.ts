@@ -202,7 +202,7 @@ export function getCadenceWarnings(input: CadenceCheckInput): string[] {
   const conFecha = (input.posts || [])
     .map((p) => ({
       ...p,
-      ts: new Date((p.fecha || "").replace("", "T")).getTime(),
+      ts: new Date((p.fecha || "").replace(" ", "T")).getTime(),
     }))
     .filter((p) => !Number.isNaN(p.ts));
 

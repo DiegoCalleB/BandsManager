@@ -53,7 +53,7 @@ describe('baseHashtags', () => {
   });
 
   it('quita tildes y caracteres raros', () => {
-    expect(baseHashtags({ name: 'Bakandeya! '})[0]).toBe('#Bakandeya');
+    expect(baseHashtags({ name: 'Bakandeya!'})[0]).toBe('#Bakandeya');
     expect(baseHashtags({ name: 'Música Rara' })[0]).toBe('#MusicaRara');
   });
 

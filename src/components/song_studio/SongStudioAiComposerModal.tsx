@@ -111,7 +111,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
     onAddIdea(newIdea);
     onClose();
-    alert(`¡Idea de arreglo"${newIdea.titulo}" añadida al estudio con éxito!`);
+    alert(`¡Idea de arreglo "${newIdea.titulo}" añadida al estudio con éxito!`);
   };
 
   return (

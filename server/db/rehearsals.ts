@@ -167,7 +167,7 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
     error.message.includes("' column of 'rehearsals'")
   ) {
     const match = error.message.match(
-      /Could not find the '([^']+)'column of 'rehearsals'/
+      /Could not find the '([^']+)' column of 'rehearsals'/
     );
     if (match && match[1] && currentPayload[match[1]] !== undefined) {
       const missingCol = match[1];

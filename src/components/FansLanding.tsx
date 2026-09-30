@@ -487,7 +487,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       const formatted = cleanId
         .split("-")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join("");
+        .join(" ");
       setBandName(formatted);
       setLogoUrl(null);
       setSocialLinks(undefined);
@@ -508,7 +508,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       const formatted = cleanId
         .split("-")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join("");
+        .join(" ");
       setBandName(formatted);
       setLogoUrl(null);
       setMiembros([]);
@@ -673,7 +673,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       const formattedName = slug
         .split("-")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join("");
+        .join(" ");
       setConcertName(sanitizeConcertDisplayName(formattedName));
       setFormData((prev) => ({ ...prev, comoConocio: "Concierto" }));
       setIsConcertLink(true);

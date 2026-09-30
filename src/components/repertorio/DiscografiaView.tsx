@@ -479,7 +479,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           );
         } catch (err) {
           console.warn(
-            `No se pudo analizar la dinámica interna de"${song.titulo}":`,
+            `No se pudo analizar la dinámica interna de "${song.titulo}":`,
             err,
           );
           fallidas.push(song.titulo);

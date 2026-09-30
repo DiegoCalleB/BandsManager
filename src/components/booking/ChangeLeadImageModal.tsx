@@ -58,7 +58,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
 
       if (uploadedUrl) {
         onUpdateLead(lead.id, { imagen_url: uploadedUrl });
-        setStatusMsg({ type: "success", text: "¡Imagen subida con éxito! " });
+        setStatusMsg({ type: "success", text: "¡Imagen subida con éxito!" });
         setTimeout(() => {
           onClose();
         }, 600);
@@ -107,7 +107,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
         if (newImg) {
           setStatusMsg({
             type: "success",
-            text: "¡Logo encontrado e instalado! ",
+            text: "¡Logo encontrado e instalado!",
           });
         } else {
           setStatusMsg({

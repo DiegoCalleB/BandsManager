@@ -293,7 +293,7 @@ export function EnsayosManager({
                 <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
                   <Users className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                   {Array.isArray(currentRehearsal.convocados_nombres)
-                    ? currentRehearsal.convocados_nombres.join(",")
+                    ? currentRehearsal.convocados_nombres.join(", ")
                     : String(currentRehearsal.convocados_nombres)}
                 </span>
               )}

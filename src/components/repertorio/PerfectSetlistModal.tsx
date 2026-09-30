@@ -126,13 +126,13 @@ function describeAction(a: PerfectSetlistAction): { icon: string; label: string 
     case 'reorder':
       return { icon: '↕️', label: `Reordenar: mover la posición ${a.from_position} a la ${a.to_position}` };
     case 'remove_song':
-      return { icon: '➖', label: `Quitar del setlist:"${a.song_title || 'canción'}"` };
+      return { icon: '➖', label: `Quitar del setlist: "${a.song_title || 'canción'}"` };
     case 'add_song':
-      return { icon: '➕', label: `Añadir del catálogo:"${a.song_title || 'canción'}" en la posición ${a.insert_at_position}` };
+      return { icon: '➕', label: `Añadir del catálogo: "${a.song_title || 'canción'}" en la posición ${a.insert_at_position}` };
     case 'add_block':
       return {
         icon: '📋',
-        label: `Añadir bloque"${a.title}" (${BLOCK_TYPE_LABELS[a.block_type || ''] || a.block_type}) en la posición ${a.insert_at_position}`,
+        label: `Añadir bloque "${a.title}" (${BLOCK_TYPE_LABELS[a.block_type || ''] || a.block_type}) en la posición ${a.insert_at_position}`,
       };
     default:
       return { icon: '•', label: 'Acción' };
@@ -445,7 +445,7 @@ export function PerfectSetlistModal({
                 rows={2}
                 value={comentarioFeedback}
                 onChange={(e) => setComentarioFeedback(e.target.value)}
-                placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
+                placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'..."
                 className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
               />
               <div className="flex items-center gap-1.5 text-micro font-sans">

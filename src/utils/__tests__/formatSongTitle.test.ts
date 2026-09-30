@@ -34,7 +34,7 @@ describe('formatSongTitle', () => {
 
   it('handles words with apostrophes and accents', () => {
     expect(formatSongTitle("don't stop believin'")).toBe("Don't Stop Believin'");
-    expect(formatSongTitle("rock'n' roll")).toBe("Rock'N' Roll");
+    expect(formatSongTitle("rock 'n' roll")).toBe("Rock 'N' Roll");
     expect(formatSongTitle('CANCIONES Y SUEÑOS')).toBe('Canciones Y Sueños');
   });
 
@@ -42,7 +42,7 @@ describe('formatSongTitle', () => {
     expect(formatSongTitle('')).toBe('');
     expect(formatSongTitle(null as any)).toBe('');
     expect(formatSongTitle(undefined as any)).toBe('');
-    expect(formatSongTitle('')).toBe('');
+    expect(formatSongTitle('   ')).toBe('');
   });
 });
 

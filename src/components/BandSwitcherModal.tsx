@@ -346,7 +346,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         }
 
         setSuccessMessage(
-          `¡Proyecto"${newBandName.trim()}" creado y configurado correctamente!`,
+          `¡Proyecto "${newBandName.trim()}" creado y configurado correctamente!`,
         );
         setShowCreateBandModal(false);
         setCreateBandStep(1);

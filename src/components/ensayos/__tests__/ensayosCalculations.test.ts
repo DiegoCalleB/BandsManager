@@ -17,7 +17,7 @@ Lam Fa Sol Lam
 [Estribillo]
 Do Sol Rem Lam
 Fa Sol Lam
- `;
+    `;
     const uniqueChords = extractUniqueChords(rawChordSheet);
     expect(uniqueChords).toContain('Lam');
     expect(uniqueChords).toContain('Fa');
@@ -27,7 +27,7 @@ Fa Sol Lam
   });
 
   it('correctly processes and transposes chord lines', () => {
-    const chordLine = 'Lam Fa Sol';
+    const chordLine = 'Lam   Fa   Sol';
     const transposed = processChordText(chordLine, 2, 'ES');
     expect(transposed).toContain('Sim');
     expect(transposed).toContain('Sol');

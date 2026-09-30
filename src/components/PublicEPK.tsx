@@ -706,7 +706,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   <p className="text-xs opacity-75">
                     {[song.albumDisco, song.genero, song.duracion]
                       .filter(Boolean)
-                      .join("•")}
+                      .join(" • ")}
                   </p>
                 </div>
                 {song.audioPrincipalUrl && (

@@ -169,7 +169,7 @@ export function CampaignManagerModal({
   const handleStartCreate = () => {
     setEditingCampaignId(null);
     setFormData({
-      name: "Nueva Campaña" + new Date().getFullYear(),
+      name: "Nueva Campaña " + new Date().getFullYear(),
       targetCities: ["Madrid"],
       minCapacity: 250,
       maxCapacity: 500,
@@ -220,7 +220,7 @@ export function CampaignManagerModal({
         }
         return d;
       })
-      .join(",");
+      .join(", ");
 
     const payload = {
       id: editingCampaignId || undefined,
@@ -625,7 +625,7 @@ export function CampaignManagerModal({
                       e.target.value,
                     )
                   }
-                  placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para"${PITCH_CATEGORIES.find((c) => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
+                  placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para "${PITCH_CATEGORIES.find((c) => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
                   className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
                 />
                 <p className="text-xs text-[var(--ink-2)] italic mt-1">
@@ -766,7 +766,7 @@ export function CampaignManagerModal({
                           <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-2)] pt-0.5">
                             <span className="flex items-center gap-1 text-[var(--ink-2)]">
                               <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                              {camp.targetCities?.join(",") ||
+                              {camp.targetCities?.join(", ") ||
                                 "Cualquier ciudad"}
                             </span>
                             <span className="flex items-center gap-1 text-[var(--acc)]/70">
@@ -851,7 +851,7 @@ export function CampaignManagerModal({
                             onClick={() => {
                               if (
                                 window.confirm(
-                                  `¿Eliminar la campaña"${camp.name}"?`,
+                                  `¿Eliminar la campaña "${camp.name}"?`,
                                 )
                               ) {
                                 onDeleteCampaign(camp.id);

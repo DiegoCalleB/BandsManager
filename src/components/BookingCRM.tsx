@@ -1097,7 +1097,7 @@ export default function BookingCRM({
 
     const today = new Date().toISOString().split('T')[0];
     const nuevaNota =
-      `*** [${today}] Correo personal manual enviado por ${manualEmailSender}:"${manualEmailSubject}" ***\n` + (selectedLead.notas || '');
+      `*** [${today}] Correo personal manual enviado por ${manualEmailSender}: "${manualEmailSubject}" ***\n` + (selectedLead.notas || '');
 
     onUpdateLead(selectedLead.id, {
       hilo_emails: nuevoHilo,
@@ -1293,7 +1293,7 @@ export default function BookingCRM({
   const handleRejectLead = () => {
     if (!selectedLead || !rejectionNotes) return;
     const today = new Date().toISOString().split('T')[0];
-    const updatedNotes = `*** [${today}] RECHAZADO EN PANEL DE REVISIÓN:"${rejectionNotes}" ***\n${selectedLead.notas || ''}`;
+    const updatedNotes = `*** [${today}] RECHAZADO EN PANEL DE REVISIÓN: "${rejectionNotes}" ***\n${selectedLead.notas || ''}`;
 
     onUpdateLead(
       selectedLead.id,
@@ -1310,7 +1310,7 @@ export default function BookingCRM({
   const handleCorrectStatus = (newStatus: LeadStatus) => {
     if (!selectedLead) return;
     const today = new Date().toISOString().split('T')[0];
-    const correctionMsg = `*** [${today}] Clasificación corregida a'${newStatus}' manualmente ***\n`;
+    const correctionMsg = `*** [${today}] Clasificación corregida a '${newStatus}' manualmente ***\n`;
 
     onUpdateLead(
       selectedLead.id,
@@ -2230,7 +2230,7 @@ export default function BookingCRM({
                         updatedItems[i] = {
                           ...updatedItems[i],
                           status: 'success',
-                          detail: `Actualizado: ${Object.keys(updates).join(',')}`,
+                          detail: `Actualizado: ${Object.keys(updates).join(', ')}`,
                         };
                       } else {
                         updatedItems[i] = {

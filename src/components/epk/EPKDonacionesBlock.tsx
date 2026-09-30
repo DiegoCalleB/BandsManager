@@ -513,7 +513,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       ) : (
                         <>
                           <Sparkles className="w-3.5 h-3.5" />
-                          {""}
+                          {" "}
                           {hayTraduccion
                             ? "Volver a traducir"
                             : "Traducir con IA"}

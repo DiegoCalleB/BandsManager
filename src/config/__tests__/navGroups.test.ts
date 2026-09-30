@@ -50,7 +50,7 @@ describe('navGroups config', () => {
     expect(findNavGroupIdForItem('discografia')).toBe('musica');
     expect(findNavGroupIdForItem('metronome')).toBe('herramientas');
     expect(findNavGroupIdForItem('tuner')).toBe('herramientas');
-    expect(findNavGroupIdForItem('booking')).toBe('contactos');
+    expect(findNavGroupIdForItem('booking')).toBe('directorio');
     expect(findNavGroupIdForItem('epk')).toBe('promocion');
     expect(findNavGroupIdForItem('giras')).toBe('negocio');
     // Resumen, Calendario y Chat están fijos (arriba y abajo), fuera de cualquier grupo colapsable.

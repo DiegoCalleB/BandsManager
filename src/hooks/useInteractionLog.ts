@@ -17,7 +17,7 @@ export function useInteractionLog(
     e.preventDefault();
     if (!selectedLead || !interactionNotes.trim()) return;
 
-    const nowStr = new Date().toISOString().replace('T', '').slice(0, 16);
+    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
     const newLog: InteractionLog = {
       id: `log-${Date.now()}`,
       fecha: nowStr,

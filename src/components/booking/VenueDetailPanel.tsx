@@ -1240,7 +1240,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     e.preventDefault();
     if (!interactionNotes.trim()) return;
 
-    const nowStr = new Date().toISOString().replace("T", "").slice(0, 16);
+    const nowStr = new Date().toISOString().replace("T", " ").slice(0, 16);
     const newLog: InteractionLog = {
       id: `log-${Date.now()}`,
       fecha: nowStr,
@@ -3174,7 +3174,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 rounded text-xs text-[var(--ink)] font-sans flex items-center gap-1 cursor-pointer"
                 >
                   <Copy className="w-3 h-3" />
-                  <span>{copiedPitch ? "¡Copiado! " : "Copiar"}</span>
+                  <span>{copiedPitch ? "¡Copiado!" : "Copiar"}</span>
                 </button>
 
                 <button
@@ -5322,7 +5322,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           : type === "Reunión"
                             ? "🤝"
                             : "📝"}
-                    {""}
+                    {" "}
                     {type}
                   </button>
                 ))}

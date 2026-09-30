@@ -48,8 +48,8 @@ export function useGmailIntegration(
         isIframeEnv
       ) {
         setGmailStatusMsg(
-          '⚠️ Restricción de Iframe: El navegador bloqueó o cerró el popup de Google.' +
-            'Para poder conectar tu cuenta, haz clic en el botón"Abrir en pestaña nueva"' +
+          '⚠️ Restricción de Iframe: El navegador bloqueó o cerró el popup de Google. ' +
+            'Para poder conectar tu cuenta, haz clic en el botón"Abrir en pestaña nueva" ' +
             'que ves abajo o en la barra de AI Studio.'
         );
       } else {

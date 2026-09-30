@@ -335,7 +335,7 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   writeString('RIFF');
   setUint32(length - 8);
   writeString('WAVE');
-  writeString('fmt');
+  writeString('fmt ');
   setUint32(16); // Subchunk1Size
   setUint16(1); // PCM
   setUint16(numOfChan);

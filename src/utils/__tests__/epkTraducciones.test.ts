@@ -119,7 +119,7 @@ describe('traduccionDesactualizada / tieneTraduccion', () => {
   });
 
   it('una traducción con todos los campos vacíos no cuenta como traducción', () => {
-    expect(tieneTraduccion({ ...base, traducciones: { en: { biografia: '' } } }, 'en')).toBe(false);
+    expect(tieneTraduccion({ ...base, traducciones: { en: { biografia: '   ' } } }, 'en')).toBe(false);
     expect(tieneTraduccion(conTraduccion('abc'), 'en')).toBe(true);
   });
 });
@@ -166,7 +166,7 @@ describe('resolverContenidoEpk', () => {
   });
 
   it('una traducción en blanco no borra el texto original', () => {
-    const cfg: EPKConfig = { ...base, traducciones: { en: { biografia: '', riderTecnico: '' } } };
+    const cfg: EPKConfig = { ...base, traducciones: { en: { biografia: '   ', riderTecnico: '' } } };
     const c = resolverContenidoEpk(cfg, 'en');
     expect(c.biografia).toBe(base.biografia);
     expect(c.riderTecnico).toBe(base.riderTecnico);

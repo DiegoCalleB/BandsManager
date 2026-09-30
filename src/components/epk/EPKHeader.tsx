@@ -187,7 +187,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                         <Copy className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
                       )}
                       <span>
-                        {copiedPublicUrl ? "¡Copiado! " : "Copiar URL pública"}
+                        {copiedPublicUrl ? "¡Copiado!" : "Copiar URL pública"}
                       </span>
                     </button>
 
@@ -347,7 +347,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             ) : (
               <Copy className="w-3.5 h-3.5 text-[var(--acc)]" />
             )}
-            <span>{copiedPublicUrl ? "¡Copiado! " : "Copiar URL"}</span>
+            <span>{copiedPublicUrl ? "¡Copiado!" : "Copiar URL"}</span>
           </button>
 
           <a

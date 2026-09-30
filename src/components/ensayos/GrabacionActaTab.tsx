@@ -434,7 +434,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                         {rec.titulo}
                       </span>
                       <span className="px-2 py-0.5 rounded text-micro font-sans bg-[var(--surface)]/80 text-[var(--acc)]/70">
-                        {rec.tipo.replace("_", "")}
+                        {rec.tipo.replace("_", " ")}
                       </span>
                     </div>
 
@@ -509,7 +509,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 ) : (
                   <Copy className="w-3.5 h-3.5" />
                 )}
-                <span>{copied ? "¡Copiado! " : "Copiar para WhatsApp"}</span>
+                <span>{copied ? "¡Copiado!" : "Copiar para WhatsApp"}</span>
               </button>
             )}
           </div>

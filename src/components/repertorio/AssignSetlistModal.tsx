@@ -39,7 +39,7 @@ export function AssignSetlistModal({
           </div>
 
           <p className="text-micro text-[var(--ink-2)] font-sans">
-            Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
+            Selecciona el concierto o ensayo al que deseas vincular el repertorio{' '}
             <strong className="text-[var(--acc)] font-sans">"{assigningSetlist.nombre}"</strong>:
           </p>
 

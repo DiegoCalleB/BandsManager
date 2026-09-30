@@ -221,8 +221,8 @@ export function detectWeatherAlerts(params: DetectAlertsParams): WeatherAlert[] 
       title: isExtremeWind ? `Alerta por Viento Extremo (Rachas ${windGusts} km/h)` : `Aviso por Viento Fuerte (Rachas ${windGusts} km/h)`,
       badge: `💨 Viento ${windGusts} km/h`,
       shortAdvice: isExtremeWind
-        ? `Viento extremo con rachas de ${windGusts} km/h. Peligro de'efecto vela' en telones y desestabilización de trusses.`
-        : `Rachas de viento de ${windGusts} km/h. Peligro de'efecto vela' en telones y desestabilización de trusses.`,
+        ? `Viento extremo con rachas de ${windGusts} km/h. Peligro de 'efecto vela' en telones y desestabilización de trusses.`
+        : `Rachas de viento de ${windGusts} km/h. Peligro de 'efecto vela' en telones y desestabilización de trusses.`,
       fullAdvice: [
         'Seguridad estructural: Normativa técnica de escenario obliga a retirar o perforar telones traseros (backdrops) opacos con vientos fuertes, bajar tiros y vigilar torres de PA.',
         'Asegurar y lastrar con sacos de arena o pesas los pies de micro, torres de focos y monitores de cuña en el borde de tarima.',
@@ -377,7 +377,7 @@ export async function fetchEventWeather(params: {
     });
 
     const isOutdoorAlert = alerts.length > 0;
-    const outdoorAlertMessage = alerts.map((a) => a.shortAdvice).join('| ');
+    const outdoorAlertMessage = alerts.map((a) => a.shortAdvice).join(' | ');
 
     const resultData: EventWeatherData = {
       status: 'success',

@@ -249,7 +249,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             >
               {song.tonalidad || '—'}
               {song.bpm ? ` • ${song.bpm} BPM` : ''}
-              {song.bpmDetectadoEn || song.tonalidadDetectadaEn ? '🤖' : ''}
+              {song.bpmDetectadoEn || song.tonalidadDetectadaEn ? ' 🤖' : ''}
             </span>
 
             {/* Duration */}

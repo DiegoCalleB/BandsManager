@@ -430,7 +430,7 @@ export const KEYWORDS_ANGLOFONOS = [
   'irlanda',
   'estados unidos',
   'united states',
-  'usa',
+  ' usa',
   'u.s.a.',
 ];
 

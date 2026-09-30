@@ -879,7 +879,7 @@ export function SongChordsViewerModal({
                         onChange={(e) => setCifradoTexto(e.target.value)}
                         rows={14}
                         className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-[var(--ink)] font-sans text-xs focus:outline-none focus:leading-relaxed"
-                        placeholder={`[Intro]\nMim Do Re Mim\n\n[Estribillo]\n[Sol] Que tiene tu [Re] veneno [Mim] ...`}
+                        placeholder={`[Intro]\nMim  Do  Re  Mim\n\n[Estribillo]\n[Sol] Que tiene tu [Re] veneno [Mim] ...`}
                       />
                     </div>
 
@@ -1197,41 +1197,41 @@ function getSampleCifrado(song: Song): string {
     song.titulo.toLowerCase().includes("rojitas")
   ) {
     return `[Intro]
-Lam Fa Sol Lam
-Lam Fa Sol Lam
+Lam   Fa   Sol   Lam
+Lam   Fa   Sol   Lam
 
 [Verso 1]
-Lam Fa
+Lam                Fa
 Que tiene tu veneno
- Sol Lam
+             Sol                 Lam
 Que me quita la vida, solo con un beso
- Fa Sol
+            Fa                Sol
 Y me lleva a la luna y me ofrece la droga
- Lam
+              Lam
 Que todo lo cura.
 
 [Estribillo]
-Lam Fa
+Lam                Fa
 Dependencia bendita
- Sol Lam
+            Sol                 Lam
 Invisible cadena que me ata a la vida
- Fa Sol
+                 Fa               Sol
 Y en momentos oscuros palmadita en la espalda
- Lam
+              Lam
 Y ya estoy más seguro.
 
 [Solo]
-Fa Sol Lam Lam
-Fa Sol Lam Lam
+Fa   Sol   Lam   Lam
+Fa   Sol   Lam   Lam
 
 [Outro]
-Fa Sol Lam
+Fa        Sol        Lam
 Rojitas las orejas...`;
   }
 
   return `[Intro]
-Mim Do Re Mim
-Mim Do Re Mim
+Mim   Do   Re   Mim
+Mim   Do   Re   Mim
 
 [Verso 1]
 [Mim] Arrancamos la noche en la [Do] ciudad
@@ -1246,7 +1246,7 @@ Mim Do Re Mim
 [Mim] Cantando juntos la [Do] misma canción.
 
 [Solo]
-Mim Do Re Mim
+Mim   Do   Re   Mim
 
 [Outro]
 [Mim] Cierre con final seco en [Do] [Re] [Mim]`;

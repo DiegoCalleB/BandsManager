@@ -1067,7 +1067,7 @@ export default function PracticeModePanel({
                           <>
                             <p className={`text-micro font-sans ${chordsSourceLabel(chords.chordsSource).tone}`}>
                               {chordsSourceLabel(chords.chordsSource).text}
-                              {chords.esAproximado && '· ⚠️ aproximado, verifica de oído'}
+                              {chords.esAproximado && ' · ⚠️ aproximado, verifica de oído'}
                             </p>
                             <pre className="text-xs font-sans whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-[var(--sunken)] rounded-[var(--r-s)] p-2">
                               {chords.cifradoTexto}

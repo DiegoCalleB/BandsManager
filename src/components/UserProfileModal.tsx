@@ -326,7 +326,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         }
 
         setSuccessMsg(
-          `¡Proyecto"${createBandName.trim()}" creado y configurado con éxito!`,
+          `¡Proyecto "${createBandName.trim()}" creado y configurado con éxito!`,
         );
         setShowCreateBandSection(false);
         setCreateBandName("");
@@ -842,7 +842,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                   }`}
                                 >
                                   <p className="font-bold truncate text-micro">
-                                    {planDef.name.split("")[0]}
+                                    {planDef.name.split(" ")[0]}
                                   </p>
                                   <p className="text-micro font-sans text-[var(--acc)]/90">
                                     {planDef.price}

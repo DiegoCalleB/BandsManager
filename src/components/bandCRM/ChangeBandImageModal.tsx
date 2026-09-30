@@ -31,7 +31,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
       const uploadedUrl = await uploadFileToServer(file, { category: 'grupos' });
       if (uploadedUrl) {
         onUpdateBand(band.id, { imagen_url: uploadedUrl });
-        setStatusMsg({ type: 'success', text: '¡Imagen subida con éxito! ' });
+        setStatusMsg({ type: 'success', text: '¡Imagen subida con éxito!' });
         setTimeout(() => onClose(), 600);
       } else {
         setStatusMsg({ type: 'error', text: 'Error al subir la imagen' });
@@ -69,7 +69,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
         });
 
         if (newImg) {
-          setStatusMsg({ type: 'success', text: '¡Logo encontrado e instalado! ' });
+          setStatusMsg({ type: 'success', text: '¡Logo encontrado e instalado!' });
         } else {
           setStatusMsg({ type: 'error', text: 'No se encontró una imagen oficial pública' });
         }

@@ -173,8 +173,8 @@ export function buildEmailSignatureHtml(params: SignatureDataParams): string {
  </a>`;
    })
    .join('')}
- </div>
- `
+      </div>
+    `
       : '';
 
   return `
@@ -184,8 +184,8 @@ export function buildEmailSignatureHtml(params: SignatureDataParams): string {
  ${
    data.logoUrl
      ? `
- <td valign="top" style="padding-right: 14px; width: 50px;">
- <img src="${data.logoUrl}" alt="${data.resolvedBandName}" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: contain; display: block;" />
+      <td valign="top" style="padding-right: 14px; width: 50px;">
+        <img src="${data.logoUrl}" alt="${data.resolvedBandName}" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: contain; display: block;" />
  </td>
  `
      : ''
@@ -196,45 +196,45 @@ export function buildEmailSignatureHtml(params: SignatureDataParams): string {
  </div>
  <div style="color: #475569; font-size: 12px; font-weight: 500; margin-top: 2px;">
  ${data.cargo}
- </div>
- ${
+        </div>
+        ${
    data.textoPie
      ? `
  <div style="color: #64748b; font-size: 11px; margin-top: 3px; font-style: italic;">
  ${data.textoPie}
- </div>
- `
+        </div>
+        `
      : ''
  }
  <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
  ${data.telefono ? `<span><a href="tel:${data.telefono.replace(/\s+/g, '')}" style="color: #475569; text-decoration: none;">${data.telefono}</a></span>` : ''}
- ${data.telefono && data.email ? ` &nbsp;•&nbsp; ` : ''}
- ${data.email ? `<span><a href="mailto:${data.email}" style="color: #0284c7; text-decoration: none;">${data.email}</a></span>` : ''}
- </div>
- </td>
- </tr>
- </table>
+          ${data.telefono && data.email ? ` &nbsp;•&nbsp; ` : ''}
+          ${data.email ? `<span><a href="mailto:${data.email}" style="color: #0284c7; text-decoration: none;">${data.email}</a></span>` : ''}
+        </div>
+      </td>
+    </tr>
+  </table>
 
- ${
+  ${
    data.adjuntarDossier
      ? `
- <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
- <div style="margin-top: 12px; margin-bottom: 8px;">
- <a href="${data.effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
+  <div style="margin-top: 12px; margin-bottom: 8px;">
+    <a href="${data.effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
  📄 Ver ${data.dossierLabel} ↗
- </a>
- </div>
- `
+    </a>
+  </div>
+  `
      : ''
  }
 
- ${
+  ${
    activeSocialLinksHtml
      ? `
  <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted #e2e8f0; font-size: 12px; color: #64748b;">
  ${activeSocialLinksHtml}
- </div>
- `
+  </div>
+  `
      : ''
  }
 </div>
@@ -257,7 +257,7 @@ export function buildEmailSignaturePlainText(params: SignatureDataParams): strin
 ${data.remitenteNombre}
 ${data.cargo}
 ${data.textoPie ? `${data.textoPie}\n` : ''}Tel: ${data.telefono} | Email: ${data.email}
-${linksTextArray.length > 0 ? linksTextArray.join('| ') : ''}
+${linksTextArray.length > 0 ? linksTextArray.join(' | ') : ''}
 `.trim();
 }
 
@@ -601,8 +601,8 @@ export function formatEmailWithSignatureAndDossier(params: {
  </a>`;
    })
    .join('')}
- </div>
- `
+      </div>
+    `
       : '';
 
   const logoUrl = (firma?.incluirLogo ?? true) ? epkConfig?.logoUrl || '' : '';
@@ -632,8 +632,8 @@ export function formatEmailWithSignatureAndDossier(params: {
  ${
    logoUrl
      ? `
- <td valign="top" style="padding-right: 12px; width: 48px;">
- <img src="${logoUrl}" alt="${resolvedBandName}" width="44" height="44" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain; display: block;" />
+          <td valign="top" style="padding-right: 12px; width: 48px;">
+            <img src="${logoUrl}" alt="${resolvedBandName}" width="44" height="44" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain; display: block;" />
  </td>
  `
      : ''
@@ -644,50 +644,50 @@ export function formatEmailWithSignatureAndDossier(params: {
  </div>
  <div style="color: #475569; font-size: 12px; font-weight: 500; margin-top: 2px;">
  ${cargo}
- </div>
- ${
+            </div>
+            ${
    textoPie
      ? `
  <div style="color: #64748b; font-size: 11px; margin-top: 3px; font-style: italic;">
  ${textoPie}
- </div>
- `
+            </div>
+            `
      : ''
  }
  <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
  ${telefono ? `<span><a href="tel:${telefono.replace(/\s+/g, '')}" style="color: #475569; text-decoration: none;">${telefono}</a></span>` : ''}
- ${telefono && email ? ` &nbsp;•&nbsp; ` : ''}
- ${email ? `<span><a href="mailto:${email}" style="color: #0284c7; text-decoration: none;">${email}</a></span>` : ''}
- </div>
- </td>
- </tr>
- </table>
+              ${telefono && email ? ` &nbsp;•&nbsp; ` : ''}
+              ${email ? `<span><a href="mailto:${email}" style="color: #0284c7; text-decoration: none;">${email}</a></span>` : ''}
+            </div>
+          </td>
+        </tr>
+      </table>
 
- ${
+      ${
    adjuntarDossier
      ? `
- <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
- <div style="margin-top: 12px; margin-bottom: 8px;">
- <a href="${effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
+      <div style="margin-top: 12px; margin-bottom: 8px;">
+        <a href="${effectiveEpkLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; letter-spacing: 0.2px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
  📄 Ver ${dossierLabel} ↗
- </a>
- </div>
- `
+        </a>
+      </div>
+      `
      : ''
  }
 
- ${
+      ${
    activeSocialLinksHtml
      ? `
  <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted #e2e8f0; font-size: 12px; color: #64748b;">
  ${activeSocialLinksHtml}
- </div>
- `
+      </div>
+      `
      : ''
  }
- </div>
+    </div>
 
- </div>
+  </div>
 </body>
 </html>`.trim();
 
@@ -707,7 +707,7 @@ ${bodyContent}
 ${remitenteNombre}
 ${cargo}
 ${textoPie ? `${textoPie}\n` : ''}Tel: ${telefono} | Email: ${email}
-${linksTextArray.length > 0 ? linksTextArray.join('| ') : ''}
+${linksTextArray.length > 0 ? linksTextArray.join(' | ') : ''}
 `.trim();
 
   // 5. Generate REAL PDF attachment

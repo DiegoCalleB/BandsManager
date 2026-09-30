@@ -143,7 +143,7 @@ export function BulkAlbumAudioUploaderModal({
     const k = 1024;
     const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + "" + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
   };
 
   // Helper to clean up filenames into clean song titles
@@ -157,14 +157,14 @@ export function BulkAlbumAudioUploaderModal({
     const leadNumMatch = rawNoExt.match(/^0?(\d+)[\s._-]+(.+)$/);
     if (leadNumMatch) {
       trackNumber = parseInt(leadNumMatch[1], 10) || 1;
-      const cleanTitle = leadNumMatch[2].replace(/[-_]+/g, "").trim();
+      const cleanTitle = leadNumMatch[2].replace(/[-_]+/g, " ").trim();
       return {
         title: cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1),
         trackNumber,
       };
     }
 
-    const cleanTitle = rawNoExt.replace(/[-_]+/g, "").trim();
+    const cleanTitle = rawNoExt.replace(/[-_]+/g, " ").trim();
     return {
       title: cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1),
       trackNumber: 1,
@@ -624,7 +624,7 @@ export function BulkAlbumAudioUploaderModal({
 
     setFeedbackMsg({
       type: "success",
-      text: `¡${successCount} pistas completas guardadas con éxito en el álbum"${finalAlbumTitle}"!`,
+      text: `¡${successCount} pistas completas guardadas con éxito en el álbum "${finalAlbumTitle}"!`,
     });
   };
 
@@ -964,7 +964,7 @@ export function BulkAlbumAudioUploaderModal({
                               }
                             >
                               <Check className="w-3.5 h-3.5" />
-                              {""}
+                              {" "}
                               {item.chordsSource === "plantilla_generica"
                                 ? "Plantilla"
                                 : "Guardado"}

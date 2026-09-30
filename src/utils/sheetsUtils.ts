@@ -37,7 +37,7 @@ export function validateLeadConcurrency(leadInDatabase: Lead, expectedStatus?: s
   if (expectedStatus && leadInDatabase.estado !== expectedStatus) {
     return {
       isConflict: true,
-      message: `El lead "${leadInDatabase.nombre_sala}" cambió de estado (de'${expectedStatus}' a'${leadInDatabase.estado}') antes de tu guardado.`,
+      message: `El lead "${leadInDatabase.nombre_sala}" cambió de estado (de '${expectedStatus}' a '${leadInDatabase.estado}') antes de tu guardado.`,
     };
   }
   return { isConflict: false };

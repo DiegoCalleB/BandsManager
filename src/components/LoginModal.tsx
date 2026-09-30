@@ -1148,7 +1148,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <div className="text-center mt-8">
                   <p className="text-sm text-[var(--ink-2)]">
-                    ¿Ya tienes cuenta?{""}
+                    ¿Ya tienes cuenta?{" "}
                     <button
                       onClick={() => setView("login")}
                       className="text-[var(--acc)] hover:underline font-medium cursor-pointer"
@@ -1364,7 +1364,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <div className="text-center mt-8">
                   <p className="text-sm text-[var(--ink-2)]">
-                    ¿Prefieres iniciar sesión?{""}
+                    ¿Prefieres iniciar sesión?{" "}
                     <button
                       type="button"
                       onClick={() => {

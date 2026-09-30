@@ -29,7 +29,7 @@ describe('esLeadDescubiertoValido', () => {
 describe('limpiarCampoContacto', () => {
   it('deja pasar un dato real', () => {
     expect(limpiarCampoContacto('booking@salacaracol.es')).toBe('booking@salacaracol.es');
-    expect(limpiarCampoContacto( '+34 915 27 35 94  ')).toBe('+34 915 27 35 94');
+    expect(limpiarCampoContacto( '  +34 915 27 35 94  ')).toBe('+34 915 27 35 94');
   });
 
   it('vacía los rellenos que suelta el modelo cuando no sabe el dato', () => {

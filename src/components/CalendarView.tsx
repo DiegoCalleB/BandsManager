@@ -534,7 +534,7 @@ export default function CalendarView({
       }
 
       if (pushSent || emailSent) {
-        const messages = [pushSent ? pushMsg : null, emailSent ? emailMsg : null].filter(Boolean).join('y');
+        const messages = [pushSent ? pushMsg : null, emailSent ? emailMsg : null].filter(Boolean).join(' y ');
         setReminderSuccessMsg(`¡Recordatorio enviado con éxito! (${messages})`);
         onShowNotification?.('🔔 Recordatorio enviado correctamente', 'success');
         setTimeout(() => {
@@ -543,7 +543,7 @@ export default function CalendarView({
           setReminderNotes('');
         }, 2200);
       } else {
-        const errDetails = [reminderSendPush ? pushMsg : null, reminderSendEmail ? emailMsg : null].filter(Boolean).join('.');
+        const errDetails = [reminderSendPush ? pushMsg : null, reminderSendEmail ? emailMsg : null].filter(Boolean).join('. ');
         setReminderErrorMsg(`No se pudo enviar el recordatorio: ${errDetails}`);
       }
     } catch (err: any) {
@@ -1262,10 +1262,10 @@ export default function CalendarView({
           fecha: tDate,
           day,
           month,
-          salaOrLugar: `Salas en ${camp.targetCities?.join(',') || 'Ciudad objetivo'}`,
+          salaOrLugar: `Salas en ${camp.targetCities?.join(', ') || 'Ciudad objetivo'}`,
           ciudad: camp.targetCities?.[0] || 'Madrid',
           direccion: undefined,
-          locationQuery: `Salas ${camp.targetCities?.join('')}, España`,
+          locationQuery: `Salas ${camp.targetCities?.join(' ')}, España`,
           bandName: activeBandName || 'Bakandeya',
           badge: camp.isActive ? 'Campaña Activa' : 'Objetivo Campaña',
           campaign: camp,

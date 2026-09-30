@@ -9,7 +9,7 @@ describe('buildFanIncentive', () => {
   });
 
   it('no inventa un código de descuento cuando la banda no lo ha rellenado', () => {
-    const incentivo = buildFanIncentive({ mensajeAgradecimiento: '¡Gracias por unirte! '});
+    const incentivo = buildFanIncentive({ mensajeAgradecimiento: '¡Gracias por unirte!'});
     expect(incentivo.codigoDescuento).toBeUndefined();
     expect(incentivo.enlaceDescarga).toBeUndefined();
     expect(incentivo.mensajeAgradecimiento).toBe('¡Gracias por unirte!');
@@ -27,8 +27,8 @@ describe('buildFanIncentive', () => {
   it('conserva y recorta los valores que la banda sí ha rellenado', () => {
     const incentivo = buildFanIncentive({
       mensajeAgradecimiento: '  ¡Bienvenido a la familia!  ',
-      enlaceDescarga: 'https://ejemplo.com/tema.mp3 ',
-      codigoDescuento: 'MIBANDA-FAN-10 '
+      enlaceDescarga: ' https://ejemplo.com/tema.mp3 ',
+      codigoDescuento: ' MIBANDA-FAN-10 '
     });
     expect(incentivo).toEqual({
       mensajeAgradecimiento: '¡Bienvenido a la familia!',
