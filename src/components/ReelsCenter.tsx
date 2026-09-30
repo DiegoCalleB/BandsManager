@@ -4085,7 +4085,7 @@ export default function ReelsCenter({
       {showConnectModal && (
         <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-[var(--sunken)] w-full max-w-md rounded-[var(--r-m)] p-6 space-y-5 text-left relative">
-            <button
+            <button aria-label="Cerrar"
               onClick={() => setShowConnectModal(false)}
               className="absolute top-4 right-4 p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
             >

@@ -84,7 +84,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               </p>
             </div>
           </div>
-          <button
+          <button aria-label="Cerrar"
             onClick={() => {
               onClose();
               setEditingShowItem(null);

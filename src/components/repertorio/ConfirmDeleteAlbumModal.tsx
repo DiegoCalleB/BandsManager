@@ -31,7 +31,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
                 <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">"{data.albumName}"</p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               type="button"
               onClick={onClose}
               className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-colors cursor-pointer"

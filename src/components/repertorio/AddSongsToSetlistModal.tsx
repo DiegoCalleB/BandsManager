@@ -105,7 +105,7 @@ export function AddSongsToSetlistModal({
                 Añadir varias canciones al repertorio
               </h3>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
             >

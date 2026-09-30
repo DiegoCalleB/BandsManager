@@ -119,7 +119,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                 <p className="text-xs text-[var(--ink-2)] font-sans">{band.nombre_banda}</p>
               </div>
             </div>
-            <button onClick={onClose} className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-pill)] text-[var(--ink-2)]">
+            <button aria-label="Cerrar" onClick={onClose} className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-pill)] text-[var(--ink-2)]">
               <X className="w-5 h-5" />
             </button>
           </div>

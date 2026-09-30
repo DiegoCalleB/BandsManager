@@ -107,7 +107,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
                 <p className="text-xs text-[var(--ink-2)]">Búsqueda automática de emails, teléfonos e Instagram</p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               disabled={isProcessing}
               className="p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors"

@@ -1352,7 +1352,7 @@ ${myBandName}`;
                   className="w-full pl-9 pr-3"
                 />
                 {searchTerm && (
-                  <button
+                  <button aria-label="Cerrar"
                     onClick={() => setSearchTerm("")}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)]"
                   >

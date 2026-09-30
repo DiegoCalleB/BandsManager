@@ -62,7 +62,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             <h3 className="text-sm font-bold font-display text-[var(--ink)] flex items-center gap-1.5">
               <Plus className="w-4 h-4" /> Agregar nueva sala a la hoja
             </h3>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             >

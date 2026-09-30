@@ -127,7 +127,7 @@ export function AddLeadModal({
                 <p className="text-xs text-[var(--ink-2)] font-normal">Añade un contacto a tu pipeline CRM de booking</p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] transition-colors cursor-pointer"
             >

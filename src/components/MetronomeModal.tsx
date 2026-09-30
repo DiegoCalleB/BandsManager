@@ -236,7 +236,7 @@ export function MetronomeModal({
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-1.5 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             >

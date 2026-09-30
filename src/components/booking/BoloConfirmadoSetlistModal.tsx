@@ -206,7 +206,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 {lead.ciudad} {lead.region ? `• ${lead.region}` : ""}
               </p>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
             >

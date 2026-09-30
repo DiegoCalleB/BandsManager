@@ -86,7 +86,7 @@ export function NegotiationSimulationModal({
                 {' '}({selectedLead.ciudad}) — Estado: {selectedLead.estado}
               </p>
             </div>
-            <button
+            <button aria-label="Cerrar"
               type="button"
               onClick={onClose}
               className={`p-1 rounded-[var(--r-pill)] transition-colors cursor-pointer hover:bg-[var(--surface)]/80 ${textSub}`}

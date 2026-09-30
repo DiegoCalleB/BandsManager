@@ -233,7 +233,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
 
         {/* Selector de Dispositivo */}
         <div className="flex bg-[var(--sunken)] rounded-[var(--r-s)] p-0.5 shrink-0">
-          <button
+          <button aria-label="Vista móvil"
             type="button"
             onClick={() => setDeviceMode('mobile')}
             className={`p-1 rounded text-xs transition-ui ${
@@ -242,7 +242,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           >
             <Smartphone className="w-3.5 h-3.5" />
           </button>
-          <button
+          <button aria-label="Vista escritorio"
             type="button"
             onClick={() => setDeviceMode('desktop')}
             className={`p-1 rounded text-xs transition-ui ${

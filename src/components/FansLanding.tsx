@@ -2076,7 +2076,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm">
                 <Shield className="w-5 h-5" /> {t("privacyModalTitle")}
               </div>
-              <button
+              <button aria-label="Cerrar"
                 onClick={() => setShowPrivacyModal(false)}
                 className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
               >

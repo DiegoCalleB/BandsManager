@@ -1060,7 +1060,7 @@ export function GooglePlacesExplorerModal({
                 </button>
               )}
 
-              <button
+              <button aria-label="Cerrar"
                 onClick={onClose}
                 className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
               >
@@ -1184,7 +1184,7 @@ export function GooglePlacesExplorerModal({
                   <Ban className="w-4 h-4 text-[var(--alert)] shrink-0" />
                   <span>{discardToast}</span>
                 </div>
-                <button
+                <button aria-label="Cerrar"
                   onClick={() => setDiscardToast("")}
                   className="text-[var(--alert)] hover:text-[var(--ink)] p-1 cursor-pointer"
                 >
@@ -1779,7 +1779,7 @@ export function GooglePlacesExplorerModal({
                       Sugerencias No Deseadas ({discardedList.length})
                     </h3>
                   </div>
-                  <button
+                  <button aria-label="Cerrar"
                     onClick={() => setShowDiscardedModal(false)}
                     className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
                   >

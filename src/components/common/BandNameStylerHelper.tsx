@@ -81,7 +81,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                   </p>
                 </div>
               </div>
-              <button
+              <button aria-label="Cerrar"
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"

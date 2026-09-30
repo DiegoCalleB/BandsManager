@@ -66,7 +66,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 <p className="text-xs text-[var(--ink-2)] font-normal">Configura los detalles principales de tu setlist</p>
               </div>
             </div>
-            <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+            <button aria-label="Cerrar" onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
               <X className="w-5 h-5" />
             </button>
           </div>

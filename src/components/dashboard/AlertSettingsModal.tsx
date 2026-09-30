@@ -289,7 +289,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             </div>
           </div>
 
-          <button
+          <button aria-label="Cerrar"
             id="close-alert-settings-modal-btn"
             onClick={onClose}
             className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"

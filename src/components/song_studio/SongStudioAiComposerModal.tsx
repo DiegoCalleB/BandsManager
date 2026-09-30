@@ -129,7 +129,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                 <p className="text-xs text-[var(--acc)] font-sans">Aporta arreglos, riffs y creatividad como un músico de sesión real</p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               type="button"
               onClick={onClose}
               className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"

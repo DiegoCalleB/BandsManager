@@ -1449,7 +1449,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                <button
+                <button aria-label="Cerrar"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--sunken)] cursor-pointer"
                 >

@@ -1309,7 +1309,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="flex items-center gap-2">
             <span>{feedbackBoloMsg}</span>
           </div>
-          <button
+          <button aria-label="Cerrar"
             onClick={() => setFeedbackBoloMsg(null)}
             className="text-[var(--ok)] hover:text-[var(--ink)] cursor-pointer"
           >

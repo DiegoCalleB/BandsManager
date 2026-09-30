@@ -76,7 +76,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <p className="text-xs text-[var(--ink-2)]">Configura los avisos en tiempo real para leads, respuestas y agentes</p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >

@@ -82,7 +82,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                 <p className="text-xs text-[var(--ink-2)]">Genera una respuesta realista con IA para probar el flujo de hilo de correos</p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors"
             >

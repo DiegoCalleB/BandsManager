@@ -598,7 +598,7 @@ export const ProfileCompletenessCard: React.FC<
                 </div>
               </div>
 
-              <button
+              <button aria-label="Cerrar"
                 onClick={() => setShowAuditModal(false)}
                 className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
               >

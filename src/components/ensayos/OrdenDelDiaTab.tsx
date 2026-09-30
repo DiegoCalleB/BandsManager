@@ -518,7 +518,7 @@ export function OrdenDelDiaTab({
                         {obj.texto}
                       </span>
                     </button>
-                    <button
+                    <button aria-label="Eliminar"
                       type="button"
                       onClick={() => handleDeleteObjetivo(obj.id)}
                       className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 cursor-pointer"
@@ -866,7 +866,7 @@ export function OrdenDelDiaTab({
                     </p>
                   </div>
                 </div>
-                <button
+                <button aria-label="Cerrar"
                   type="button"
                   onClick={() => setShowAddSongModal(false)}
                   className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
@@ -1065,7 +1065,7 @@ export function OrdenDelDiaTab({
                     Cargar repertorio al ensayo
                   </h3>
                 </div>
-                <button
+                <button aria-label="Cerrar"
                   type="button"
                   onClick={() => setShowImportSetlistModal(false)}
                   className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
@@ -1155,7 +1155,7 @@ export function OrdenDelDiaTab({
                     Añadir bloque de sesión
                   </h4>
                 </div>
-                <button
+                <button aria-label="Cerrar"
                   type="button"
                   onClick={() => setShowAddBlockModal(false)}
                   className="text-[var(--ink-2)] hover:text-[var(--ink)]"

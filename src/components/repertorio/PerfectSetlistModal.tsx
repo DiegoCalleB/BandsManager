@@ -278,7 +278,7 @@ export function PerfectSetlistModal({
                   <ShowIcon inline emoji="↩️" />Deshacer
                 </Button>
               )}
-              <button onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition">
+              <button aria-label="Cerrar" onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition">
                 <X className="w-4 h-4" />
               </button>
             </div>

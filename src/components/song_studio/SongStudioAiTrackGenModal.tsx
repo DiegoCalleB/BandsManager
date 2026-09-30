@@ -41,7 +41,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           <div className="flex items-center gap-2.5 text-[var(--acc)] font-mono font-bold text-sm">
             <span>Generador de pista de acompañamiento IA</span>
           </div>
-          <button
+          <button aria-label="Cerrar"
             type="button"
             onClick={() => {
               setShowAiTrackGenModal(null);

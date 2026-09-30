@@ -502,7 +502,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={() => {
                 stopTuner();
                 stopReferenceTone();

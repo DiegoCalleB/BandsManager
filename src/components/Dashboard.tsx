@@ -824,7 +824,7 @@ export default function Dashboard({
                   <span className="text-xs font-semibold text-[var(--ink-2)] block">
                     Ajustes del Dashboard
                   </span>
-                  <button
+                  <button aria-label="Cerrar"
                     onClick={() => setIsDashboardSettingsOpen(false)}
                     className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                   >

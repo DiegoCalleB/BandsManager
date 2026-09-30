@@ -677,7 +677,7 @@ export default function PracticeModePanel({
                   <span className="hidden sm:inline">Modo Studio</span>
                 </button>
               )}
-              <button
+              <button aria-label="Cerrar"
                 onClick={onClose}
                 className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] shrink-0 cursor-pointer"
               >

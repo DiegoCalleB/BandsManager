@@ -1330,7 +1330,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   </p>
                 </div>
               </div>
-              <button
+              <button aria-label="Cerrar"
                 onClick={() => setShowSongListDrawer(false)}
                 className="p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
               >

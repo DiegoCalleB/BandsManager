@@ -84,7 +84,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
         <div className="relative w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)] p-6 sm:p-8 space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
           {/* Close Button */}
-          <button
+          <button aria-label="Cerrar"
             onClick={onClose}
             className="absolute top-4 right-4 p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
           >

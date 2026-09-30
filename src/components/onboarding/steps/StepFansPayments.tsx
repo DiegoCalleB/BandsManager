@@ -147,7 +147,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 >
                   Cambiar
                 </button>
-                <button
+                <button aria-label="Eliminar"
                   type="button"
                   onClick={() => {
                     setFanRewardLink('');

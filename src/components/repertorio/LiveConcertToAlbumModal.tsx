@@ -1442,7 +1442,7 @@ export const LiveConcertToAlbumModal: React.FC<
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className={`p-2 rounded-[var(--r-pill)] transition-colors ${"hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
             >
@@ -3012,7 +3012,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       </p>
                     </div>
                   </div>
-                  <button
+                  <button aria-label="Cerrar"
                     onClick={() => setCookieModalOpen(false)}
                     className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)]"
                   >
@@ -3149,7 +3149,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       </p>
                     </div>
                   </div>
-                  <button
+                  <button aria-label="Cerrar"
                     onClick={() => setShowQuickNamingModal(false)}
                     className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition-colors"
                   >
@@ -3289,7 +3289,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               className="w-full"
                             />
                             {tr.title && (
-                              <button
+                              <button aria-label="Cerrar"
                                 type="button"
                                 onClick={() =>
                                   handleUpdateTrack(tr.index, "title", "")

@@ -855,7 +855,7 @@ export function DashboardWidgetGrid({
                 </div>
               </div>
 
-              <button
+              <button aria-label="Cerrar"
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
                 className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"

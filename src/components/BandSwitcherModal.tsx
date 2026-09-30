@@ -960,7 +960,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </p>
                   </div>
                 </div>
-                <button
+                <button aria-label="Cerrar"
                   type="button"
                   onClick={() => setSelectedBandForSettings(null)}
                   className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
@@ -1154,7 +1154,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         </p>
                       </div>
                     </div>
-                    <button
+                    <button aria-label="Cerrar"
                       type="button"
                       onClick={() => setShowCreateBandModal(false)}
                       className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
@@ -1289,7 +1289,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       <ArrowLeft className="w-3.5 h-3.5" />
                       <span>Volver a datos de la banda</span>
                     </Button>
-                    <button
+                    <button aria-label="Cerrar"
                       type="button"
                       onClick={() => setShowCreateBandModal(false)}
                       disabled={isCreatingBand}
@@ -1772,7 +1772,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         </p>
                       </div>
                     </div>
-                    <button
+                    <button aria-label="Cerrar"
                       onClick={() => setShowUpgradeModal(false)}
                       className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                     >

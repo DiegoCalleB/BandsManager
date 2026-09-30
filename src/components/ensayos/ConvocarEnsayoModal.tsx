@@ -131,7 +131,7 @@ export function ConvocarEnsayoModal({
                 <p className="text-xs text-[var(--ink-2)] font-sans">Sincronizado automáticamente con tu Calendario</p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
@@ -294,7 +294,7 @@ export function ConvocarEnsayoModal({
                             <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] shrink-0" />
                             <span className="truncate">{obj.texto}</span>
                           </div>
-                          <button
+                          <button aria-label="Cerrar"
                             type="button"
                             onClick={() => handleRemoveObjetivo(obj.id)}
                             className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 shrink-0"

@@ -121,7 +121,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                 </div>
               </div>
 
-              <button
+              <button aria-label="Eliminar"
                 type="button"
                 onClick={() => onRemoveEvent(ev.id)}
                 className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"

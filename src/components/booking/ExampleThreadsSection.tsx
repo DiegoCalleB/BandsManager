@@ -299,7 +299,7 @@ export function ExampleThreadsSection({
                 className="flex-1"
               />
               {mensajes.length > 1 && (
-                <button
+                <button aria-label="Eliminar"
                   type="button"
                   onClick={() => handleRemoveMessageRow(idx)}
                   className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] cursor-pointer shrink-0"

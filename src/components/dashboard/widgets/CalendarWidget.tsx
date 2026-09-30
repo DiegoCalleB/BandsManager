@@ -427,7 +427,7 @@ export function CalendarWidget({
         <div className="space-y-3">
           {/* Calendar Controls */}
           <div className="flex items-center justify-between bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)]">
-            <button
+            <button aria-label="Anterior"
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
               className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
@@ -437,7 +437,7 @@ export function CalendarWidget({
             <span className="text-sm font-bold capitalize text-[var(--ink-2)]">
               {fullMonthName}
             </span>
-            <button
+            <button aria-label="Siguiente"
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month + 1, 1))}
               className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"

@@ -135,7 +135,7 @@ export default function BookingCampaignPanel({
           <h3 className="font-semibold text-lg flex items-center gap-2">
             <Target className="w-5 h-5" /> Configurar campaña
           </h3>
-          <button
+          <button aria-label="Cerrar"
             onClick={() => setIsEditing(false)}
             className="text-[var(--ink-2)] hover:text-[var(--ink-2)]"
           >

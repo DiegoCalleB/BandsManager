@@ -316,7 +316,7 @@ export function CampaignManagerModal({
               </p>
             </div>
           </div>
-          <button
+          <button aria-label="Cerrar"
             onClick={onClose}
             className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors"
           >
@@ -402,7 +402,7 @@ export function CampaignManagerModal({
                     >
                       <MapPin className="w-3 h-3 text-[var(--ink-2)]" />
                       {city}
-                      <button
+                      <button aria-label="Cerrar"
                         type="button"
                         onClick={() => handleRemoveCity(city)}
                         className="hover:text-[var(--alert)] ml-1"

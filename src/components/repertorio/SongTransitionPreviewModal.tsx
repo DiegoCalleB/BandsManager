@@ -701,7 +701,7 @@ export function SongTransitionPreviewModal({
                 </div>
               )}
 
-              <button
+              <button aria-label="Cerrar"
                 type="button"
                 onClick={onClose}
                 className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"

@@ -260,7 +260,7 @@ export function ImportSetlistModal({
               Importar repertorio de foto/PDF
             </h2>
           </div>
-          <button
+          <button aria-label="Cerrar"
             onClick={handleClose}
             className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition"
           >

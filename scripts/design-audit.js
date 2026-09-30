@@ -108,6 +108,11 @@ const CHECKS = {
     severity: 'error',
     skipUi: true,
   },
+  botonIconoSinNombre: {
+    description: '<button> cuyo único contenido es un icono y no lleva aria-label/title — un lector de pantalla lo anuncia como «botón» a secas. Añade aria-label (scripts/codemods/aria-iconos.cjs lo hace por diccionario)',
+        pattern: /<button\b(?!(?:[^>]|=>)*?(?:aria-label|title=|aria-labelledby|\{\.\.\.))(?:[^>]|=>)*?[^=]>\s*<[A-Z]\w*\b[^>]*\/>\s*<\/button>/g,
+    severity: 'error',
+  },
   textoSobreRelleno: {
     description: 'texto que no es --on-* sobre un relleno sólido de acento/estado (bg-[var(--acc|ok|alert)] + text-[var(--ink|ink-2|acc-ink|mismo tono)]) — contraste insuficiente (en Oscuro, invisible); usa text-[var(--on-acc|on-ok|on-alert)]',
     pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w\/-])/g,

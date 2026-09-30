@@ -663,7 +663,7 @@ export function BulkAlbumAudioUploaderModal({
             </div>
           </div>
 
-          <button
+          <button aria-label="Cerrar"
             type="button"
             onClick={onClose}
             disabled={isUploading}

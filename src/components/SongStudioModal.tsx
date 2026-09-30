@@ -4049,7 +4049,7 @@ export default function SongStudioModal({
                 )}
               </button>
 
-              <button
+              <button aria-label="Cerrar"
                 type="button"
                 onClick={onClose}
                 className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
@@ -4095,7 +4095,7 @@ export default function SongStudioModal({
                       <h4 className="text-sm font-bold text-[var(--ink-2)] font-sans flex items-center gap-2">
                         <Mic className="w-4 h-4 text-[var(--ok)]" /> Aportar idea o arreglo de audio
                       </h4>
-                      <button type="button" onClick={() => setShowAddIdea(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
+                      <button aria-label="Cerrar" type="button" onClick={() => setShowAddIdea(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
                         <X className="w-4 h-4" />
                       </button>
                     </div>
@@ -5037,7 +5037,7 @@ export default function SongStudioModal({
                                                           className="w-full min-w-0"
                                                           autoFocus
                                                         />
-                                                        <button
+                                                        <button aria-label="Confirmar"
                                                           type="button"
                                                           onClick={() => handleSaveTrackName(idea, tr.id, editingTrackName)}
                                                           className="p-0.5 text-[var(--ok)] hover:text-[var(--ink-2)] shrink-0"
@@ -5465,7 +5465,7 @@ export default function SongStudioModal({
                                     <Radio className="w-4 h-4 text-[var(--ink-2)]" />
                                     Añadir Nueva Pista (Overdub / Superponer Audio)
                                   </span>
-                                  <button
+                                  <button aria-label="Cerrar"
                                     type="button"
                                     onClick={() => setAddingTrackIdeaId(null)}
                                     className="text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -5806,7 +5806,7 @@ export default function SongStudioModal({
                                   className="flex-1"
                                 />
 
-                                <button
+                                <button aria-label="Enviar"
                                   type="button"
                                   onClick={() => handleAddComment(idea)}
                                   className="p-2 rounded-[var(--r-pill)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] cursor-pointer"
@@ -5885,7 +5885,7 @@ export default function SongStudioModal({
         {showCubaseHelp && (
           <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4">
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] relative">
-              <button
+              <button aria-label="Cerrar"
                 type="button"
                 onClick={() => setShowCubaseHelp(false)}
                 className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"

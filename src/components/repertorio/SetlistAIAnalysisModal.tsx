@@ -626,7 +626,7 @@ export function SetlistAIAnalysisModal({
                     <ShowIcon inline emoji="↩️" />Deshacer
                   </Button>
                 )}
-                <button
+                <button aria-label="Cerrar"
                   onClick={onClose}
                   onMouseDown={(e) => e.stopPropagation()}
                   className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition"

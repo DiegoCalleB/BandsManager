@@ -776,7 +776,7 @@ export function ExcelImportModal({
                 <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>Plantilla ejemplo</span>
               </Button>
-              <button
+              <button aria-label="Cerrar"
                 type="button"
                 onClick={onClose}
                 className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"

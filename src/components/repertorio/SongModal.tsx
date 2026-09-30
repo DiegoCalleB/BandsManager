@@ -142,7 +142,7 @@ export function SongModal({
                 </p>
               </div>
             </div>
-            <button onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer p-1">
+            <button aria-label="Cerrar" onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer p-1">
               <X className="w-4 h-4" />
             </button>
           </div>

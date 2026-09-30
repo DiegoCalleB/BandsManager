@@ -161,7 +161,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               </p>
             </div>
           </div>
-          <button
+          <button aria-label="Cerrar"
             onClick={onClose}
             className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
           >

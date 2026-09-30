@@ -241,7 +241,7 @@ export const SongStudioStructureUploadModal: React.FC<
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               type="button"
               onClick={() => {
                 stopCamera();

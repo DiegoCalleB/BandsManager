@@ -134,7 +134,7 @@ export function AIBandScoutModal({
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-2 hover:bg-[var(--sunken)] rounded-[var(--r-pill)] transition-colors text-[var(--ink-2)] hover:text-[var(--ink-2)]"
             >

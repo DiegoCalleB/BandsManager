@@ -159,7 +159,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
             >

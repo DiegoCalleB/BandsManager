@@ -2340,7 +2340,7 @@ export function ReelsMetricsView({
                   </p>
                 </div>
               </div>
-              <button
+              <button aria-label="Cerrar"
                 onClick={() => setShowIgModal(false)}
                 className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
               >
@@ -2648,7 +2648,7 @@ export function ReelsMetricsView({
                   </p>
                 </div>
               </div>
-              <button
+              <button aria-label="Cerrar"
                 onClick={() => setShowScanModal(false)}
                 className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-ui cursor-pointer"
               >

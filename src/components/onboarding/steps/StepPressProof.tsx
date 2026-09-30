@@ -119,7 +119,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
                   <p className="text-[var(--ink)] italic mb-1">"{q.texto}"</p>
                   <span className="text-[var(--acc)] font-semibold">— {q.medio}</span>
                 </div>
-                <button
+                <button aria-label="Eliminar"
                   type="button"
                   onClick={() => onRemoveQuote(q.id)}
                   className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)]"

@@ -173,7 +173,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
               >
                 Cambiar
               </button>
-              <button
+              <button aria-label="Eliminar"
                 type="button"
                 onClick={() => {
                   setRiderPdfUrl("");

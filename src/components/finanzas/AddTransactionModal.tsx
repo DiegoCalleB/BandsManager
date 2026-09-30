@@ -60,7 +60,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
             color: colors.text,
           }}
         >
-          <button
+          <button aria-label="Cerrar"
             id="close-add-transaction-modal"
             onClick={onClose}
             className="absolute top-4 right-4 p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"

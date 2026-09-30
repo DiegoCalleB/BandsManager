@@ -88,7 +88,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             </div>
           </div>
 
-          <button
+          <button aria-label="Cerrar"
             type="button"
             onClick={onClose}
             className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"

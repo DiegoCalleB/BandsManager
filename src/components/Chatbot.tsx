@@ -2656,7 +2656,7 @@ export default function Chatbot({
         >
           <Mic className="w-4 h-4" />
         </Button>
-        <button
+        <button aria-label="Enviar"
           id="chatbot-send-btn"
           type="submit"
           disabled={!inputText.trim() || isLoading}

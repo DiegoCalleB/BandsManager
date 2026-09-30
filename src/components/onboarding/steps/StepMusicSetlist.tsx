@@ -413,7 +413,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                   <div className="flex items-center gap-3 text-[var(--ink-2)]">
                     {s.tonalidad && <span>{s.tonalidad}</span>}
                     {s.duracion && <span>{s.duracion}</span>}
-                    <button
+                    <button aria-label="Eliminar"
                       type="button"
                       onClick={() => onRemoveManualSong(s.id)}
                       className="text-[var(--ink-2)] hover:text-[var(--alert)]"

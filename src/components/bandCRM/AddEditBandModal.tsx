@@ -109,7 +109,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
             </h3>
           </div>
-          <button onClick={() => onClose()} className="p-1 hover:bg-[var(--sunken)] rounded-[var(--r-pill)] transition-colors">
+          <button aria-label="Cerrar" onClick={() => onClose()} className="p-1 hover:bg-[var(--sunken)] rounded-[var(--r-pill)] transition-colors">
             <X className="w-5 h-5 text-[var(--ink-2)]" />
           </button>
         </div>
@@ -161,7 +161,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {aiError && (
               <div className="md:col-span-2 p-3 bg-[var(--alert)]/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--ink)] font-mono">
                 <span><ShowIcon inline emoji="⚠️" />{aiError}</span>
-                <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert)]/50 rounded">
+                <button aria-label="Cerrar" type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert)]/50 rounded">
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>

@@ -446,7 +446,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                       <span className="text-micro font-sans text-[var(--ink-2)]">
                         {formatTime(rec.duracionSegundos)}
                       </span>
-                      <button
+                      <button aria-label="Eliminar"
                         onClick={() => handleDeleteRecording(rec.id)}
                         className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 cursor-pointer"
                       >

@@ -55,7 +55,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 Generador de pitch Date Swap: {myBandName} x {band.nombre_banda}
               </h3>
             </div>
-            <button onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer">
+            <button aria-label="Cerrar" onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer">
               <X className="w-5 h-5 text-[var(--ink-2)]" />
             </button>
           </div>

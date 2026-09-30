@@ -1484,7 +1484,7 @@ export default function BookingCRM({
                       <Wrench className="w-3.5 h-3.5" />
                       Herramientas e inteligencia artificial
                     </span>
-                    <button
+                    <button aria-label="Cerrar"
                       type="button"
                       onClick={() => setIsMobileToolsOpen(false)}
                       className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
@@ -1883,7 +1883,7 @@ export default function BookingCRM({
                   />
                   <span>{enrichStatusMsg}</span>
                 </div>
-                <button
+                <button aria-label="Cerrar"
                   type="button"
                   onClick={() => setEnrichStatusMsg('')}
                   className="p-0.5 rounded-[var(--r-s)] hover:opacity-75 cursor-pointer"
@@ -1936,7 +1936,7 @@ export default function BookingCRM({
                 {selectedCityFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="📍" />{selectedCityFilter}
-                    <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-[var(--ink)] cursor-pointer">
+                    <button aria-label="Cerrar" type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -1944,7 +1944,7 @@ export default function BookingCRM({
                 {typeFilter !== 'todos' && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="🏛️" />{typeFilter}
-                    <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-[var(--ink)] cursor-pointer">
+                    <button aria-label="Cerrar" type="button" onClick={() => setTypeFilter('todos')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -1952,7 +1952,7 @@ export default function BookingCRM({
                 {onlyFavoritesFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="⭐" />Favoritos
-                    <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <button aria-label="Cerrar" type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -1960,7 +1960,7 @@ export default function BookingCRM({
                 {onlyVerifiedFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     <ShowIcon inline emoji="✔" />Verificados
-                    <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <button aria-label="Cerrar" type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -1968,7 +1968,7 @@ export default function BookingCRM({
                 {minCapacityFilter > 0 && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     &gt;{minCapacityFilter} pax
-                    <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <button aria-label="Cerrar" type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -1976,7 +1976,7 @@ export default function BookingCRM({
                 {activeSavedFilterId && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
                     <ShowIcon inline emoji="📌" />{savedFilters.find((f) => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
-                    <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer">
+                    <button aria-label="Cerrar" type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>

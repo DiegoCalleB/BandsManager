@@ -82,7 +82,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <Filter className="w-3.5 h-3.5" />
           Filtros y búsquedas avanzadas
         </span>
-        <button type="button" onClick={() => onClose()} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] cursor-pointer">
+        <button aria-label="Cerrar" type="button" onClick={() => onClose()} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] cursor-pointer">
           <X className="w-4 h-4" />
         </button>
       </div>
@@ -263,7 +263,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
             />
             {minCapacityFilter > 0 && (
-              <button type="button" onClick={() => setMinCapacityFilter(0)} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+              <button aria-label="Cerrar" type="button" onClick={() => setMinCapacityFilter(0)} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
                 <X className="w-3 h-3" />
               </button>
             )}

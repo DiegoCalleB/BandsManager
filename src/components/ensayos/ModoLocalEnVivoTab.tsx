@@ -985,7 +985,7 @@ export function ModoLocalEnVivoTab({
                 <span>
                   Diagramas de Acordes de este Tema ({uniqueChords.length})
                 </span>
-                <button
+                <button aria-label="Cerrar"
                   onClick={() => setShowChordDiagrams(false)}
                   className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                 >

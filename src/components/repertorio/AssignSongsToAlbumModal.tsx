@@ -93,7 +93,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                 {albumName ? `Editar Disco: ${albumName}` : 'Crear Nuevo Disco / Lanzamiento'}
               </h3>
             </div>
-            <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+            <button aria-label="Cerrar" onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
               <X className="w-5 h-5" />
             </button>
           </div>

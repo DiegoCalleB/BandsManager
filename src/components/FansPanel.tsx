@@ -1277,7 +1277,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           )}
                         </td>
                         <td className="p-3 text-right">
-                          <button
+                          <button aria-label="Eliminar"
                             onClick={() => {
                               if (confirm(`¿Eliminar fan ${fan.nombre}?`)) {
                                 onDeleteFan(fan.id);

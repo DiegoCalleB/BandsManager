@@ -350,7 +350,7 @@ export const SpotifyDiscographyModal: React.FC<
             </div>
           </div>
 
-          <button
+          <button aria-label="Cerrar"
             type="button"
             onClick={onClose}
             className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"

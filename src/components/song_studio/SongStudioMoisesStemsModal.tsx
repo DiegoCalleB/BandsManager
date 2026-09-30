@@ -39,7 +39,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             <Sliders className="w-5 h-5 text-[var(--acc)]" />
             <span>Iris Espectro — Separador de Pistas con IA</span>
           </div>
-          <button
+          <button aria-label="Cerrar"
             type="button"
             onClick={() => setShowMoisesStemsModal(null)}
             className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 cursor-pointer"

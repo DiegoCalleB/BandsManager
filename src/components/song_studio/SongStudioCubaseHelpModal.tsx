@@ -13,7 +13,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] relative my-auto max-h-[90vh] overflow-y-auto">
-          <button
+          <button aria-label="Cerrar"
             type="button"
             onClick={onClose}
             className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"

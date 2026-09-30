@@ -206,7 +206,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-[var(--acc)]' : ''}`} />
               </button>
-              <button
+              <button aria-label="Cerrar"
                 type="button"
                 onClick={onClose}
                 className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"

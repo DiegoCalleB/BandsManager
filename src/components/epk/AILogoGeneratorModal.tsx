@@ -103,7 +103,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <p className="text-xs text-[var(--ink-2)]">Genera una identidad visual profesional para {bandName || 'tu banda'}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition">
+          <button aria-label="Cerrar" onClick={onClose} className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition">
             <X className="w-5 h-5" />
           </button>
         </div>

@@ -179,7 +179,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                 </p>
               </div>
             </div>
-            <button
+            <button aria-label="Cerrar"
               onClick={onClose}
               className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
             >

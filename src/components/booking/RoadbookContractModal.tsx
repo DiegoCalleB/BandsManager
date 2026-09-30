@@ -182,7 +182,7 @@ Firmado en conformidad por ambas partes.`;
               </div>
             </div>
 
-            <button
+            <button aria-label="Cerrar"
               type="button"
               onClick={onClose}
               className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
