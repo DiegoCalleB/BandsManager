@@ -127,12 +127,20 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
       if (menuRef.current?.contains(t) || popRef.current?.contains(t)) return;
       setShowMenu(false);
     };
+    // Un scroll solo cierra el menú si desplaza de verdad su ancla: un evento rezagado de un
+    // scroll anterior (o el de otro contenedor) no debe cerrarlo nada más abrirse.
+    const anclaTop = menuRef.current?.getBoundingClientRect().top ?? 0;
+    const alHacerScroll = (e: Event) => {
+      if (popRef.current?.contains(e.target as Node)) return;
+      const top = menuRef.current?.getBoundingClientRect().top ?? anclaTop;
+      if (Math.abs(top - anclaTop) > 4) setShowMenu(false);
+    };
     document.addEventListener('mousedown', handleClickOutside);
-    window.addEventListener('scroll', cerrar, true);
+    window.addEventListener('scroll', alHacerScroll, true);
     window.addEventListener('resize', cerrar);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('scroll', cerrar, true);
+      window.removeEventListener('scroll', alHacerScroll, true);
       window.removeEventListener('resize', cerrar);
     };
   }, [showMenu]);

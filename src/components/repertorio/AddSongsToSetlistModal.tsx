@@ -5,6 +5,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { formatSongTitle } from "../../utils/formatSongTitle";
+import { Input, Select } from '../ui';
 
 interface AddSongsToSetlistModalProps {
   isOpen: boolean;
@@ -115,27 +116,29 @@ export function AddSongsToSetlistModal({
           <div className="pt-3 space-y-2 shrink-0">
             <div className="relative">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)]" />
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar por título o tonalidad…"
-                className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                className="w-full pl-8 pr-3"
               />
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <select
+              <Select
+                size="sm"
                 value={albumFilter}
                 onChange={(e) => setAlbumFilter(e.target.value)}
-                className={`text-micro font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${"bg-[var(--sunken)] text-[var(--acc)]"}`}
+                
               >
                 {albumsList.map((alb) => (
                   <option key={alb} value={alb}>
                     {alb === "todos" ? "Todos los álbumes" : alb}
                   </option>
                 ))}
-              </select>
+              </Select>
 
               <button
                 type="button"

@@ -10,6 +10,7 @@ import {
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 interface EPKMusicaBlockProps {
   config: EPKConfig;
@@ -115,7 +116,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       </span>
                     )}
                   </label>
-                  <select aria-label="Elegir tema de vuestro repertorio"
+                  <Select size="sm" aria-label="Elegir tema de vuestro repertorio"
                     value={config.audioPreview?.cancionId || ""}
                     onChange={(e) => {
                       const selectedId = e.target.value;
@@ -137,7 +138,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         },
                       }));
                     }}
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                    wrapperClassName="w-full"
                   >
                     <option value="">
                       -- Seleccionar tema del repertorio o usar personalizado --
@@ -149,7 +150,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         {song.audioPrincipalUrl ? "(Con audio subido)" : ""}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               )}
 
@@ -159,7 +160,8 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   <label className="text-xs font-semibold text-[var(--ink-2)]">
                     Título mostrado en el reproductor
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={config.audioPreview?.tituloTema ?? ""}
                     onChange={(e) =>
@@ -172,14 +174,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       })
                     }
                     placeholder="Ej: Single Debut / Directo Preview"
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                    className="w-full"
                   />
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-[var(--ink-2)]">
                     Subtítulo / Mensaje de escucha
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={config.audioPreview?.subtitulo ?? ""}
                     onChange={(e) =>
@@ -192,7 +195,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       })
                     }
                     placeholder="Ej: Dale al play para escuchar cómo sonamos"
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -202,7 +205,8 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
                   URL del archivo de audio (MP3 / OGG / WAV)
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="url"
                   value={config.audioPreview?.audioUrl ?? ""}
                   onChange={(e) =>
@@ -215,7 +219,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     })
                   }
                   placeholder="https://.../tema-adelanto.mp3"
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -310,14 +314,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   >
                     ★
                   </button>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={v.titulo}
                     onChange={(e) =>
                       editarVideo(v.id, { titulo: e.target.value })
                     }
                     placeholder="Título (ej. Directo en Sala Caracol, 2026)"
-                    className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none"
+                    className="flex-1"
                   />
                   <button
                     type="button"
@@ -328,12 +333,13 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <input
+                <Input
+                  size="sm"
                   type="url"
                   value={v.url}
                   onChange={(e) => editarVideo(v.id, { url: e.target.value })}
                   placeholder="https://www.youtube.com/watch?v=…"
-                  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs font-sans text-[var(--ink)] focus:outline-none"
+                  className="w-full"
                 />
               </div>
             ))}
@@ -354,14 +360,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">
                 Nº de músicos en escena
               </label>
-              <input
+              <Input
+                size="sm"
                 type="number"
                 value={config.datosContratacion?.numMusicos ?? ""}
                 onChange={(e) =>
                   editarDatoContratacion("numMusicos", e.target.value)
                 }
                 placeholder="4"
-                className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none"
+                className="w-full"
               />
             </div>
             <div>
@@ -387,28 +394,30 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">
                 Ciudad base
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={config.datosContratacion?.ciudadBase ?? ""}
                 onChange={(e) =>
                   editarDatoContratacion("ciudadBase", e.target.value)
                 }
                 placeholder="Madrid"
-                className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none"
+                className="w-full"
               />
             </div>
             <div>
               <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">
                 Formatos disponibles
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={config.datosContratacion?.formatos ?? ""}
                 onChange={(e) =>
                   editarDatoContratacion("formatos", e.target.value)
                 }
                 placeholder="Banda completa / Acústico"
-                className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none"
+                className="w-full"
               />
             </div>
           </div>
@@ -416,14 +425,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">
               Necesidades de escenario (resumen corto)
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={config.datosContratacion?.necesidadesEscenario || ""}
               onChange={(e) =>
                 editarDatoContratacion("necesidadesEscenario", e.target.value)
               }
               placeholder="Escenario mínimo 5x4m, 4 tomas de corriente, PA con 8 canales"
-              className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none"
+              className="w-full"
             />
           </div>
           {/* PARÁMETROS OPERATIVOS PARA EL AGENTE DE BOOKING (ANTI-ALUCINACIONES) */}
@@ -488,7 +498,8 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   </button>
                 </div>
                 {config.datosContratacion?.tieneMerchandising && (
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={
                       config.datosContratacion?.detallesMerchandising || ""
@@ -500,7 +511,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       )
                     }
                     placeholder="Ej: Camisetas y vinilos con TPV propio"
-                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                    className="w-full"
                   />
                 )}
               </div>

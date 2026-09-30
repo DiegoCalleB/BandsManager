@@ -11,6 +11,7 @@ import {
   Search,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface BookingCampaignPanelProps {
   onCampaignChange: (campaign: BookingCampaign | null) => void;
@@ -145,20 +146,20 @@ export default function BookingCampaignPanel({
             <label className="block text-xs text-[var(--ink-2)] font-medium mb-1">
               Nombre
             </label>
-            <input aria-label="Nombre"
+            <Input aria-label="Nombre"
               type="text"
               value={campaignForm.name}
               onChange={(e) =>
                 setCampaignForm({ ...campaignForm, name: e.target.value })
               }
-              className="w-full text-sm rounded-[var(--r-s)] focus:ring-black"
+              className="w-full"
             />
           </div>
           <div>
             <label className="block text-xs text-[var(--ink-2)] font-medium mb-1">
               Ciudad/Región
             </label>
-            <input
+            <Input
               type="text"
               value={campaignForm.targetCities?.join(",")}
               onChange={(e) =>
@@ -167,7 +168,7 @@ export default function BookingCampaignPanel({
                   targetCities: e.target.value.split(",").map((s) => s.trim()),
                 })
               }
-              className="w-full text-sm rounded-[var(--r-s)] focus:ring-black"
+              className="w-full"
               placeholder="Ej: Madrid, Barcelona"
             />
           </div>
@@ -176,7 +177,7 @@ export default function BookingCampaignPanel({
               Aforo objetivo
             </label>
             <div className="flex items-center gap-2">
-              <input aria-label="Aforo objetivo"
+              <Input aria-label="Aforo objetivo"
                 type="number"
                 value={campaignForm.minCapacity}
                 onChange={(e) =>
@@ -185,10 +186,10 @@ export default function BookingCampaignPanel({
                     minCapacity: parseInt(e.target.value) || 0,
                   })
                 }
-                className="w-full text-sm rounded-[var(--r-s)] focus:ring-black"
+                className="w-full"
               />
               <span className="text-[var(--ink-2)]">-</span>
-              <input aria-label="Aforo objetivo"
+              <Input aria-label="Aforo objetivo"
                 type="number"
                 value={campaignForm.maxCapacity}
                 onChange={(e) =>
@@ -197,7 +198,7 @@ export default function BookingCampaignPanel({
                     maxCapacity: parseInt(e.target.value) || 0,
                   })
                 }
-                className="w-full text-sm rounded-[var(--r-s)] focus:ring-black"
+                className="w-full"
               />
             </div>
           </div>
@@ -297,7 +298,7 @@ export default function BookingCampaignPanel({
                 <label className="block text-xs text-[var(--ink-2)] mb-1">
                   Desde
                 </label>
-                <input aria-label="Desde"
+                <Input aria-label="Desde"
                   type="date"
                   value={campaignForm.campaignStartDate || ""}
                   onChange={(e) =>
@@ -306,14 +307,14 @@ export default function BookingCampaignPanel({
                       campaignStartDate: e.target.value,
                     })
                   }
-                  className="w-full text-sm rounded-[var(--r-s)] focus:ring-[var(--acc)]"
+                  className="w-full"
                 />
               </div>
               <div>
                 <label className="block text-xs text-[var(--ink-2)] mb-1">
                   Hasta
                 </label>
-                <input aria-label="Hasta"
+                <Input aria-label="Hasta"
                   type="date"
                   value={campaignForm.campaignEndDate || ""}
                   onChange={(e) =>
@@ -322,7 +323,7 @@ export default function BookingCampaignPanel({
                       campaignEndDate: e.target.value,
                     })
                   }
-                  className="w-full text-sm rounded-[var(--r-s)] focus:ring-[var(--acc)]"
+                  className="w-full"
                 />
               </div>
             </div>

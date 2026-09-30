@@ -53,6 +53,7 @@ import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ModalPortal } from "./common/ModalPortal";
 import { AgentAutonomySettingsModal } from "./dashboard/AgentAutonomySettingsModal";
 import { textOnColor } from '../utils/contrastText';
+import { Input } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -572,12 +573,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <UserIcon className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>Nombre Completo / Apodo</span>
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Tu nombre…"
-                className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                className="w-full"
                 required
               />
             </div>
@@ -587,12 +589,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <Music className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>Instrumento / Puesto</span>
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={instrument}
                 onChange={(e) => setInstrument(e.target.value)}
                 placeholder="Ej: Violín, Percusión, Batería, Técnico de Sonido"
-                className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
+                className="w-full"
               />
             </div>
 
@@ -771,13 +774,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
                         Nombre del proyecto / banda *
                       </label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         required
                         value={createBandName}
                         onChange={(e) => setCreateBandName(e.target.value)}
                         placeholder="Ej. Los Nocturnos, Cuarteto Acústico…"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                        className="w-full"
                       />
                     </div>
 
@@ -786,26 +790,28 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
                           Estilo / género
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={createBandStyle}
                           onChange={(e) => setCreateBandStyle(e.target.value)}
                           placeholder="Ej. Indie Rock, Pop…"
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                          className="w-full"
                         />
                       </div>
                       <div>
                         <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
                           Ubicación
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={createBandLocation}
                           onChange={(e) =>
                             setCreateBandLocation(e.target.value)
                           }
                           placeholder="Ej. Madrid, Barcelona…"
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -1287,12 +1293,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <label className="text-xs font-sans text-[var(--ink-2)]">
                   Nueva Contraseña Secreta
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Dejar en blanco para mantener la actual…"
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                  className="w-full"
                 />
               </div>
 
@@ -1301,12 +1308,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <label className="text-xs font-sans text-[var(--ink-2)]">
                     Confirmar nueva contraseña
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repite la nueva contraseña…"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
+                    className="w-full"
                   />
                 </div>
               )}

@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   Sparkles,
 } from 'lucide-react';
+import { Input, Select } from '../ui';
 
 interface DealAndLogisticsCopilotProps {
   lead: Lead;
@@ -224,22 +225,23 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
-            <select aria-label="Tipo de Acuerdo"
+            <Select size="sm" aria-label="Tipo de Acuerdo"
               value={dealType}
               onChange={(e: any) => setDealType(e.target.value)}
-              className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none"
+              wrapperClassName="w-full"
             >
               <option value="taquilla">Taquilla (%)</option>
               <option value="cache">Caché fijo (€)</option>
               <option value="mixto">Fijo + taquilla</option>
-            </select>
+            </Select>
           </div>
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">
               {dealType === 'cache' ? 'Caché Fijo (€)' : 'Precio Entrada (€)'}
             </label>
-            <input
+            <Input
+              size="sm"
               type="number"
               value={dealType === 'cache' ? guaranteedCache : ticketPrice}
               onChange={(e) => {
@@ -247,23 +249,23 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 if (dealType === 'cache') setGuaranteedCache(val);
                 else setTicketPrice(val);
               }}
-              className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none font-mono"
+              className="w-full"
             />
           </div>
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
-            <input aria-label="Distancia Ida (km)"
+            <Input size="sm" aria-label="Distancia Ida (km)"
               type="number"
               value={vanKmEstimated}
               onChange={(e) => setVanKmEstimated(Number(e.target.value))}
-              className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none font-mono"
+              className="w-full"
             />
           </div>
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Hotel + dietas (€)</label>
-            <input aria-label="Hotel + dietas (€)"
+            <Input size="sm" aria-label="Hotel + dietas (€)"
               type="number"
               value={hotelCost + dietsCost}
               onChange={(e) => {
@@ -271,7 +273,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
                 setHotelCost(Math.round(total * 0.6));
                 setDietsCost(Math.round(total * 0.4));
               }}
-              className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none font-mono"
+              className="w-full"
             />
           </div>
         </div>

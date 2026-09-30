@@ -69,6 +69,8 @@ import { encodeBandIdClient } from "../utils/bandHash";
 import { ShowIcon } from './ui/ShowIcon';
 
 import { FansDashboardView } from "./fans/FansDashboardView";
+import { Input, Select, Textarea } from './ui';
+
 interface FansPanelProps {
   fans: Fan[];
   concerts: Concert[];
@@ -921,13 +923,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   onSubmit={handleAddCityTab}
                   className="flex items-center gap-1"
                 >
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     autoFocus
                     placeholder="Nueva ciudad…"
                     value={newCityInput}
                     onChange={(e) => setNewCityInput(e.target.value)}
-                    className="bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1 text-xs text-[var(--ink)] font-sans outline-none w-36"
+                    className="w-36"
                   />
                   <button
                     type="submit"
@@ -964,12 +967,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
               <div className="relative w-full sm:w-80">
                 <Search className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   placeholder="Buscar por nombre, email o ciudad…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] pl-9 pr-3 py-2 text-xs text-[var(--ink)] outline-none"
+                  className="w-full pl-9 pr-3"
                 />
               </div>
               <div className="relative w-full sm:w-64">
@@ -989,17 +993,18 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </select>
               </div>
               <div className="relative w-full sm:w-48">
-                <select
+                <Select
+                  size="sm"
                   value={selectedNivelFilter}
                   onChange={(e) => setSelectedNivelFilter(e.target.value)}
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans cursor-pointer"
+                  wrapperClassName="w-full"
                 >
                   <option value="">Todos los niveles</option>
                   <option value="superfan">Superfan</option>
                   <option value="fundador">Fan Fundador</option>
                   <option value="fiel">Fan Fiel</option>
                   <option value="backstage">VIP Backstage</option>
-                </select>
+                </Select>
               </div>
             </div>
 
@@ -1318,11 +1323,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             >
               Vincular a:
             </label>
-            <select
+            <Select
+              size="sm"
               id="fans-concert-selector"
               value={selectedConcertId}
               onChange={(e) => setSelectedConcertId(e.target.value)}
-              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
+              wrapperClassName="w-full"
             >
               <option value="">
                 -- Campaña general / QR genérico de la banda --
@@ -1332,7 +1338,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   {c.fecha} — {c.sala} ({c.ciudad})
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           {/* Contenido principal: el QR, grande y arriba del todo */}
@@ -1541,7 +1547,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         {" "}
                         Mensaje de Bienvenida / Agradecimiento:
                       </label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={incentivo.mensajeAgradecimiento}
                         onChange={(e) =>
@@ -1551,7 +1558,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           }))
                         }
                         placeholder="¡Muchas gracias por unirte a la familia de la banda!"
-                        className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none"
+                        className="w-full"
                       />
                     </div>
 
@@ -1561,7 +1568,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           <Music className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                           Enlace de Descarga (Tema inédito/directo):
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="url"
                           value={incentivo.enlaceDescarga}
                           onChange={(e) =>
@@ -1571,7 +1579,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             }))
                           }
                           placeholder="https://…"
-                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
+                          className="w-full"
                         />
                       </div>
                       <div>
@@ -1579,7 +1587,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           <Tag className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                           Código Cupón Merchandising:
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={incentivo.codigoDescuento}
                           onChange={(e) =>
@@ -1589,7 +1598,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             }))
                           }
                           placeholder="TUBANDA-FAN-10"
-                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--acc-ink)] font-bold outline-none font-sans"
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -1676,12 +1685,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         <span className="text-xs font-sans text-[var(--ink-2)] bg-[var(--surface)] px-3 py-2.5 rounded-[var(--r-s)]">
                           https://
                         </span>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={customDomain}
                           onChange={(e) => setCustomDomain(e.target.value)}
                           placeholder="bandmanager.io"
-                          className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -1713,7 +1723,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           /
                         </span>
                       </div>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={customSlug}
                         onChange={(e) =>
@@ -1725,7 +1736,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           )
                         }
                         placeholder="ej. madrid-sala-siroco"
-                        className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -1851,26 +1862,28 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Nombre *
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     required
                     placeholder="Nombre completo o alias"
                     value={newNombre}
                     onChange={(e) => setNewNombre(e.target.value)}
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                    className="w-full"
                   />
                 </div>
                 <div>
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Email *
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="email"
                     required
                     placeholder="email@ejemplo.com"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -1880,22 +1893,23 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Ciudad
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Ej: Madrid, Sevilla…"
                     value={newCiudad}
                     onChange={(e) => setNewCiudad(e.target.value)}
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                    className="w-full"
                   />
                 </div>
                 <div>
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Origen / canal
                   </label>
-                  <select aria-label="Origen / canal"
+                  <Select size="sm" aria-label="Origen / canal"
                     value={newOrigen}
                     onChange={(e) => setNewOrigen(e.target.value)}
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                    wrapperClassName="w-full"
                   >
                     <option value="Manual">Registro manual</option>
                     <option value="Concierto Directo">
@@ -1906,7 +1920,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <option value="Spotify">Spotify / Streaming</option>
                     <option value="Web Oficial">Web Oficial / QR</option>
                     <option value="Recomendación">Recomendación / Amigo</option>
-                  </select>
+                  </Select>
                 </div>
               </div>
 
@@ -1915,27 +1929,28 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Nivel Fan
                   </label>
-                  <select aria-label="Nivel Fan"
+                  <Select size="sm" aria-label="Nivel Fan"
                     value={newNivel}
                     onChange={(e) => setNewNivel(e.target.value as any)}
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                    wrapperClassName="w-full"
                   >
                     <option value="fiel">Oyente Fiel</option>
                     <option value="superfan">Superfan directos</option>
                     <option value="fundador">Fan Fundador</option>
                     <option value="backstage">Backstage VIP</option>
-                  </select>
+                  </Select>
                 </div>
                 <div>
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Instagram (Opcional)
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="@usuario"
                     value={newInstagram}
                     onChange={(e) => setNewInstagram(e.target.value)}
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -1944,12 +1959,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Canción Favorita (Opcional)
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   placeholder="Ej: La Noche Entera, Balada…"
                   value={newCancionFavorita}
                   onChange={(e) => setNewCancionFavorita(e.target.value)}
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full"
                 />
               </div>
 
@@ -1957,12 +1973,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Mensaje / Dedicatoria para el Muro (Opcional)
                 </label>
-                <textarea
+                <Textarea
                   rows={2}
                   placeholder="Dedicatoria o saludo que aparecerá en el muro de la comunidad…"
                   value={newMensaje}
                   onChange={(e) => setNewMensaje(e.target.value)}
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
+                  className="w-full"
                 />
               </div>
 

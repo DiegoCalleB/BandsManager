@@ -3,6 +3,7 @@ import { Lead, ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { Bot, Sparkles, X, CheckCircle2 } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { Input, Select, Textarea } from '../ui';
 
 interface BookingSimulationModalProps {
   colors: ThemeColors;
@@ -93,53 +94,53 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[var(--ink-2)] mb-1 font-semibold">Rol del Remitente</label>
-                <select aria-label="Rol del Remitente"
+                <Select aria-label="Rol del Remitente"
                   value={simulationRole}
                   onChange={(e) => {
                     const role = e.target.value as 'sala' | 'banda';
                     setSimulationRole(role);
                     setSimulationSenderName(role === 'sala' ? `Programador de ${lead.nombre_sala}` : 'Booking Bakandeya');
                   }}
-                  className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] outline-none"
+                  wrapperClassName="w-full"
                 >
                   <option value="sala">Sala / Promotor (Respuesta Entrante)</option>
                   <option value="banda">Banda Bakandeya (Respuesta Saliente)</option>
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="block text-[var(--ink-2)] mb-1 font-semibold">Escenario</label>
-                <select aria-label="Escenario"
+                <Select aria-label="Escenario"
                   value={simulationScenario}
                   onChange={(e) => setSimulationScenario(e.target.value)}
-                  className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] outline-none"
+                  wrapperClassName="w-full"
                 >
                   <option value="taquilla">Propuesta de taquilla (70/30)</option>
                   <option value="cache">Propuesta de caché fijo</option>
                   <option value="rechazo">Agenda Llena / Rechazo Amable</option>
                   <option value="mas_info">Petición de EPK / Dossier técnico</option>
-                </select>
+                </Select>
               </div>
             </div>
 
             <div>
               <label className="block text-[var(--ink-2)] mb-1 font-semibold">Nombre del remitente</label>
-              <input aria-label="Nombre del remitente"
+              <Input aria-label="Nombre del remitente"
                 type="text"
                 value={simulationSenderName}
                 onChange={(e) => setSimulationSenderName(e.target.value)}
-                className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] outline-none"
+                className="w-full"
               />
             </div>
 
             <div>
               <label className="block text-[var(--ink-2)] mb-1 font-semibold">Instrucción Especial / Contexto</label>
-              <textarea
+              <Textarea
                 rows={2}
                 value={simulationCustomInstruction}
                 onChange={(e) => setSimulationCustomInstruction(e.target.value)}
                 placeholder="Ej: La sala acepta la fecha del 15 de noviembre y pide cartel…"
-                className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] outline-none"
+                className="w-full"
               />
             </div>
 
@@ -164,11 +165,11 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                   <span className="font-semibold text-[var(--ink-2)]">Vista previa del mensaje</span>
                   <span className="text-micro px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">Listo para registrar</span>
                 </div>
-                <textarea
+                <Textarea
                   rows={5}
                   value={simulationMessage}
                   onChange={(e) => setSimulationMessage(e.target.value)}
-                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] font-sans text-xs outline-none"
+                  className="w-full"
                 />
               </div>
             )}

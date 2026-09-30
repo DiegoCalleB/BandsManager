@@ -28,6 +28,7 @@ import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from "../RepertorioSetlists";
 import { cacheActiveStageSetlist } from "../../utils/stageOfflineCache";
 import { formatSongTitle } from "../../utils/formatSongTitle";
+import { Select } from '../ui';
 
 interface EscenarioViewProps {
   activeSetlist: Setlist | null;
@@ -256,17 +257,18 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  aquí también sería un control duplicado en la misma pantalla. */}
         {!embedded && (
           <div className="flex items-center gap-2">
-            <select
+            <Select
+              size="sm"
               value={activeSetlistId}
               onChange={(e) => setActiveSetlistId(e.target.value)}
-              className="bg-[var(--surface)] text-[var(--acc)] text-micro font-sans py-2 px-3 rounded-[var(--r-m)] focus:outline-none"
+              
             >
               {setlists.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.nombre}
                 </option>
               ))}
-            </select>
+            </Select>
 
             <button
               onClick={() => setShowPdfPreview(true)}

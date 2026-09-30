@@ -24,6 +24,7 @@ import {
 } from "../config/stemInstruments";
 import { uploadFileToServer } from "../utils/audioStorage";
 import { textOnColor } from '../utils/contrastText';
+import { Input, Select } from './ui';
 
 interface UserManagementModalProps {
   currentUser: User;
@@ -699,14 +700,15 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       {/* Quick Password Reset Subform */}
                       {isEditingThisUser && (
                         <div className="mt-3 pt-3 bg-[var(--surface)]/80 flex items-center gap-2 animate-in fade-in duration-200">
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={changePasswordValue}
                             onChange={(e) =>
                               setChangePasswordValue(e.target.value)
                             }
                             placeholder="Nueva contraseña secreta…"
-                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none bg-[var(--sunken)]`}
+                            className="flex-1"
                           />
                           <button
                             type="button"
@@ -731,12 +733,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                       Usuario (para login) *
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       value={newUsername}
                       onChange={(e) => setNewUsername(e.target.value)}
                       placeholder="Ej: pablo, carlos, ana"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
+                      className="w-full"
                       required
                     />
                   </div>
@@ -745,12 +748,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                       Email *
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="email"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
                       placeholder="Ej: pablo@gmail.com"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
+                      className="w-full"
                       required
                     />
                   </div>
@@ -761,12 +765,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                       Nombre completo *
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="Ej: Pablo (Violín / Sintetizador)"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
+                      className="w-full"
                       required
                     />
                   </div>
@@ -775,12 +780,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                       Contraseña inicial *
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Contraseña del usuario"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
+                      className="w-full"
                       required
                     />
                   </div>
@@ -790,27 +796,28 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                     Rol en la App
                   </label>
-                  <select aria-label="Rol en la App"
+                  <Select size="sm" aria-label="Rol en la App"
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
+                    wrapperClassName="w-full"
                   >
                     <option value="member">Miembro de banda (Músico)</option>
                     <option value="leader">Admin / dirección de banda</option>
-                  </select>
+                  </Select>
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                     Instrumento / Puesto
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     list="instrument-suggestions"
                     value={newInstrument}
                     onChange={(e) => setNewInstrument(e.target.value)}
                     placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
+                    className="w-full"
                   />
                   <p className="text-micro text-[var(--ink-2)]">
                     Usa uno de los nombres sugeridos (Voz, Batería, Bajo,
@@ -874,12 +881,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                     Email del músico registrado *
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="email"
                     value={assocEmail}
                     onChange={(e) => setAssocEmail(e.target.value)}
                     placeholder="Introduce su email exacto…"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
+                    className="w-full"
                     required
                   />
                 </div>
@@ -888,27 +896,28 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                     Rol en esta Banda
                   </label>
-                  <select aria-label="Rol en esta Banda"
+                  <Select size="sm" aria-label="Rol en esta Banda"
                     value={assocRole}
                     onChange={(e) => setAssocRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
+                    wrapperClassName="w-full"
                   >
                     <option value="member">Miembro de banda (Músico)</option>
                     <option value="leader">Admin / dirección de banda</option>
-                  </select>
+                  </Select>
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
                     Instrumento / Puesto (opcional)
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     list="instrument-suggestions"
                     value={assocInstrument}
                     onChange={(e) => setAssocInstrument(e.target.value)}
                     placeholder="Ej: Guitarra, Bajista, Manager, Coros"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
+                    className="w-full"
                   />
                 </div>
 

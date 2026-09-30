@@ -9,6 +9,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { WizardMemberItem } from "../types";
+import { Input } from '../../ui';
 
 interface StepMembersProps {
   members: WizardMemberItem[];
@@ -110,36 +111,40 @@ export const StepMembers: React.FC<StepMembersProps> = ({
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input
+          <Input
+            size="sm"
             type="text"
             value={newMemberName}
             onChange={(e) => setNewMemberName(e.target.value)}
             placeholder="Nombre y Apellidos *"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            
           />
 
-          <input
+          <Input
+            size="sm"
             type="text"
             value={newMemberRole}
             onChange={(e) => setNewMemberRole(e.target.value)}
             placeholder="Instrumento / Rol (ej. Batería, Bajo, Teclados) *"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            
           />
 
-          <input
+          <Input
+            size="sm"
             type="email"
             value={newMemberEmail}
             onChange={(e) => setNewMemberEmail(e.target.value)}
             placeholder="Email (para invitarle a acceder al panel)"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            
           />
 
-          <input
+          <Input
+            size="sm"
             type="text"
             value={newMemberInstagram}
             onChange={(e) => setNewMemberInstagram(e.target.value)}
             placeholder="Instagram (ej. @nombremusico)"
-            className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            
           />
         </div>
 

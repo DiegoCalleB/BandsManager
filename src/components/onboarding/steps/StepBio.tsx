@@ -1,5 +1,6 @@
 import React from "react";
 import { FileText, Sparkles, Clock, Users } from "lucide-react";
+import { Input, Textarea } from '../../ui';
 
 interface StepBioProps {
   slogan: string;
@@ -42,12 +43,12 @@ export const StepBio: React.FC<StepBioProps> = ({
         <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
           Slogan / Frase de Impacto
         </label>
-        <input
+        <Input
           type="text"
           value={slogan}
           onChange={(e) => setSlogan(e.target.value)}
           placeholder="Ej. Guitarras afiladas y melodías directas al corazón"
-          className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
+          className="w-full"
         />
         <p className="text-xs text-[var(--ink-2)] mt-1">
           Aparece en la cabecera del Dossier de Prensa interactivo (EPK) y en el
@@ -70,12 +71,12 @@ export const StepBio: React.FC<StepBioProps> = ({
             Redactar con IA / sugerencia
           </button>
         </div>
-        <textarea
+        <Textarea
           rows={5}
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           placeholder="Cuenta la trayectoria de la banda, influencias, lanzamientos destacados y lo que transmitís en vuestros conciertos…"
-          className="w-full px-4 py-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm leading-relaxed"
+          className="w-full"
         />
       </div>
 
@@ -85,12 +86,13 @@ export const StepBio: React.FC<StepBioProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
             Formato de escenario
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={formato}
             onChange={(e) => setFormato(e.target.value)}
             placeholder="Ej. Banda completa, Trío acústico…"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
+            className="w-full"
           />
         </div>
 
@@ -98,13 +100,13 @@ export const StepBio: React.FC<StepBioProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
             Músicos en escenario
           </label>
-          <input aria-label="Músicos en escenario"
+          <Input size="sm" aria-label="Músicos en escenario"
             type="number"
             min={1}
             max={25}
             value={numMusicos}
             onChange={(e) => setNumMusicos(Number(e.target.value))}
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] focus:outline-none focus:text-sm"
+            className="w-full"
           />
         </div>
 
@@ -112,12 +114,13 @@ export const StepBio: React.FC<StepBioProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
             Duración Típica del Show
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={duracionDirecto}
             onChange={(e) => setDuracionDirecto(e.target.value)}
             placeholder="Ej. 60 - 75 min"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
+            className="w-full"
           />
         </div>
       </div>

@@ -9,6 +9,7 @@ import {
 import { ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 export interface ViralHookVariant {
   id: string;
@@ -377,12 +378,13 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                 <span className="text-micro text-[var(--ink-2)]">{currentHook.length} caracteres</span>
               </label>
               <div className="relative">
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={currentHook}
                   onChange={(e) => onUpdateHook(e.target.value)}
                   placeholder="Ej: El fallo en el segundo 14 que el público convirtió en estribillo…"
-                  className="w-full rounded-[var(--r-s)] bg-[var(--sunken)] px-3.5 py-2.5 text-xs font-sans font-bold text-[var(--ink)] focus:outline-none pr-52 bg-[var(--acc)]/10"
+                  className="w-full pr-52"
                 />
                 <div className="absolute right-1.5 top-1.5 bottom-1.5 flex items-center gap-1">
                   <button
@@ -848,12 +850,13 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   className="rounded bg-[var(--sunken)] text-[var(--acc-ink)] focus:ring-0 cursor-pointer"
                 />
               </div>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={tourStickerText}
                 onChange={(e) => onUpdateTourStickerText(e.target.value)}
                 placeholder="Ej: 🎟️ Gira 2026 · Próxima parada: Madrid"
-                className="w-full text-micro font-mono rounded bg-[var(--scrim)]/60 px-2 py-1 text-[var(--on-scrim)] focus:outline-none"
+                className="w-full"
               />
               {onSyncFromTourCRM && (
                 <button

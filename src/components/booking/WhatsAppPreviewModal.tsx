@@ -23,6 +23,7 @@ import {
   copyToClipboard,
 } from '../../utils/whatsappUtils';
 import { ModalPortal } from '../common/ModalPortal';
+import { Input, Textarea } from '../ui';
 
 interface WhatsAppPreviewModalProps {
   isOpen: boolean;
@@ -203,12 +204,13 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               {/* Selector / Editor de teléfono */}
               {isEditingPhone ? (
                 <div className="flex items-center gap-2 pt-1">
-                  <input
+                  <Input
+                    size="sm"
                     type="tel"
                     value={targetPhone}
                     onChange={(e) => setTargetPhone(e.target.value)}
                     placeholder="Ej. +34 612 345 678"
-                    className="flex-1 bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--ok)] font-mono"
+                    className="flex-1"
                   />
                   <button
                     type="button"
@@ -300,12 +302,12 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               </div>
 
               <div className="relative">
-                <textarea
+                <Textarea
                   rows={9}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Redacta el mensaje para el programador…"
-                  className="w-full bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-[var(--ink-2)] text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-[var(--ok)] resize-y font-sans selection:bg-[var(--ok)]/30"
+                  className="w-full"
                 />
               </div>
             </div>

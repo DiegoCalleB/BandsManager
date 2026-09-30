@@ -50,6 +50,7 @@ import { Song, ThemeColors } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Textarea } from '../ui';
 
 export interface TrackCutItem {
   index: number;
@@ -1503,12 +1504,13 @@ export const LiveConcertToAlbumModal: React.FC<
                       )}
                     </button>
                   </div>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="https://www.youtube.com/watch?v=…"
                     value={youtubeUrl}
                     onChange={(e) => setYoutubeUrl(e.target.value)}
-                    className={`w-full px-3 py-2 text-sm rounded-[var(--r-s)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                    className="w-full"
                   />
                 </div>
 
@@ -1769,11 +1771,11 @@ export const LiveConcertToAlbumModal: React.FC<
                       <label className="text-xs font-semibold text-[var(--ink-2)]">
                         Título Disco:
                       </label>
-                      <input aria-label="Título disco"
+                      <Input size="sm" aria-label="Título disco"
                         type="text"
                         value={albumTitle}
                         onChange={(e) => setAlbumTitle(e.target.value)}
-                        className={`px-2.5 py-1 text-xs font-bold rounded ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                        
                       />
                     </div>
 
@@ -2094,7 +2096,8 @@ export const LiveConcertToAlbumModal: React.FC<
                               <span className="text-[var(--ink-2)] text-xs">
                                 Inicio:
                               </span>
-                              <input
+                              <Input
+                                size="sm"
                                 type="text"
                                 value={formatSeconds(track.start)}
                                 onChange={(e) =>
@@ -2104,13 +2107,14 @@ export const LiveConcertToAlbumModal: React.FC<
                                     parseTimeToSeconds(e.target.value),
                                   )
                                 }
-                                className="w-14 px-1 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] text-xs font-bold"
+                                className="w-14 text-center"
                                 title="Tiempo de inicio (MM:SS)"
                               />
                               <span className="text-[var(--ink-2)] text-xs">
                                 Fin:
                               </span>
-                              <input
+                              <Input
+                                size="sm"
                                 type="text"
                                 value={formatSeconds(track.end)}
                                 onChange={(e) =>
@@ -2120,7 +2124,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     parseTimeToSeconds(e.target.value),
                                   )
                                 }
-                                className="w-14 px-1 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] text-xs font-bold"
+                                className="w-14 text-center"
                                 title="Tiempo de fin (MM:SS)"
                               />
                               <span className="text-[var(--ink-2)] font-bold text-xs">
@@ -2403,7 +2407,8 @@ export const LiveConcertToAlbumModal: React.FC<
                                 <span className="text-[var(--ink-2)] font-semibold text-xs">
                                   Ton:
                                 </span>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="text"
                                   value={track.tonalidad || "Mim"}
                                   onChange={(e) =>
@@ -2413,13 +2418,14 @@ export const LiveConcertToAlbumModal: React.FC<
                                       e.target.value,
                                     )
                                   }
-                                  className="w-14 px-2 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] font-bold text-xs"
+                                  className="w-14 text-center"
                                   placeholder="Mim"
                                 />
                                 <span className="text-[var(--ink-2)] font-semibold text-xs">
                                   BPM:
                                 </span>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="number"
                                   value={track.bpm || 120}
                                   onChange={(e) =>
@@ -2429,7 +2435,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                       parseInt(e.target.value) || 120,
                                     )
                                   }
-                                  className="w-14 px-2 py-0.5 text-center bg-[var(--sunken)] rounded text-[var(--acc)] font-bold text-xs"
+                                  className="w-14 text-center"
                                   placeholder="120"
                                 />
                                 {track.lyricsWithChords ? (
@@ -2534,7 +2540,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     superiores de acordes
                                   </span>
                                 </div>
-                                <textarea
+                                <Textarea
                                   value={track.lyricsWithChords || ""}
                                   onChange={(e) =>
                                     handleUpdateTrack(
@@ -2545,7 +2551,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   }
                                   placeholder="[Intro]&#10;[Mim] [Do] [Sol] [Re]&#10;&#10;[Verso 1]&#10;[Mim]En la noche del concierto [Do]cantamos juntos…"
                                   rows={8}
-                                  className="w-full p-3 font-sans text-xs rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--acc)] placeholder-[var(--ink-2)] focus:outline-none focus:leading-relaxed"
+                                  className="w-full"
                                 />
                               </div>
                             )}
@@ -2570,7 +2576,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   : "Re-Transcribir Speech"}
                               </button>
                             </div>
-                            <textarea
+                            <Textarea
                               value={track.speechTranscription || ""}
                               onChange={(e) =>
                                 handleUpdateTrack(
@@ -2581,7 +2587,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               }
                               placeholder="[Intro musical / Palabras del artista al público]…"
                               rows={2}
-                              className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none leading-relaxed font-sans"
+                              className="w-full"
                             />
                           </div>
                         )}
@@ -3059,12 +3065,12 @@ export const LiveConcertToAlbumModal: React.FC<
                           />
                         </label>
                       </div>
-                      <textarea
+                      <Textarea
                         rows={5}
                         value={cookiesInputText}
                         onChange={(e) => setCookiesInputText(e.target.value)}
                         placeholder="# Netscape HTTP Cookie File&#10;.youtube.com  TRUE  /  TRUE  1789000000  SID  ..."
-                        className="w-full font-sans text-xs p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)]"
+                        className="w-full"
                       />
                     </div>
 
@@ -3413,12 +3419,12 @@ export const LiveConcertToAlbumModal: React.FC<
                       </p>
                     </div>
 
-                    <textarea
+                    <Textarea
                       value={batchPastedText}
                       onChange={(e) => setBatchPastedText(e.target.value)}
                       rows={10}
                       placeholder={`1. Intro y Saludo al Público\n2. Noches de Garaje\n3. Charla sobre el nuevo disco\n4. Ska del Norte\n5. Canto a la Sombra\n6. Presentación de los músicos\n7. Gira Sin Fin`}
-                      className="w-full p-3 font-sans text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] placeholder-[var(--ink-2)] focus:outline-none leading-relaxed"
+                      className="w-full"
                     />
 
                     <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">

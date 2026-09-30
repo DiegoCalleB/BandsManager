@@ -18,6 +18,7 @@ import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
 } from "../../../context/LanguageContext";
+import { Input } from '../../ui';
 
 interface StepIdentityProps {
   localBandName: string;
@@ -91,12 +92,12 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               Nombre de la Banda o Proyecto Musical{" "}
               <span className="text-[var(--acc)]">*</span>
             </label>
-            <input
+            <Input
               type="text"
               value={localBandName}
               onChange={(e) => setLocalBandName(e.target.value)}
               placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves…"
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
+              className="w-full"
             />
           </div>
 
@@ -106,12 +107,12 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               Ciudad / Región de Origen{" "}
               <span className="text-[var(--acc)]">*</span>
             </label>
-            <input
+            <Input
               type="text"
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles…"
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
+              className="w-full"
             />
           </div>
 
@@ -121,12 +122,12 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               Género / Estilo Musical{" "}
               <span className="text-[var(--acc)]">*</span>
             </label>
-            <input
+            <Input
               type="text"
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock…"
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm mb-2"
+              className="w-full mb-2"
             />
             <div className="flex flex-wrap gap-1.5">
               {commonGenres.slice(0, 8).map((g) => (
@@ -309,12 +310,13 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   : "Subir Imagen desde el dispositivo"}
               </button>
             </div>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={logoUrl}
               onChange={(e) => setLogoUrl(e.target.value)}
               placeholder="O pega aquí una URL directa (https://…)"
-              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]/60 text-[var(--ink-2)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>

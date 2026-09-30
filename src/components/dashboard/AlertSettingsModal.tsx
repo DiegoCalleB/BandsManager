@@ -17,6 +17,7 @@ import {
   Save,
   Check,
 } from 'lucide-react';
+import { Input } from '../ui';
 
 interface AlertSettingsModalProps {
   isOpen: boolean;
@@ -475,12 +476,13 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                 <div className="space-y-3">
                   <div>
                     <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Correo electrónico destinatario de alertas:</label>
-                    <input
+                    <Input
+                      size="sm"
                       type="email"
                       value={config.recipientEmail || ''}
                       onChange={(e) => setConfig((prev) => ({ ...prev, recipientEmail: e.target.value }))}
                       placeholder="manager@labanda.com"
-                      className="w-full px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full"
                     />
                   </div>
 

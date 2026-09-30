@@ -1,6 +1,7 @@
 import React from "react";
 import { Video, Youtube, Plus, Trash2, Award } from "lucide-react";
 import { EPKVideo } from "../../../types";
+import { Input, Select } from '../../ui';
 
 interface StepVideosProps {
   videos: EPKVideo[];
@@ -122,36 +123,39 @@ export const StepVideos: React.FC<StepVideosProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="md:col-span-2">
-            <input
+            <Input
+              size="sm"
               type="text"
               value={newVideoUrl}
               onChange={(e) => setNewVideoUrl(e.target.value)}
               placeholder="URL de YouTube (https://www.youtube.com/watch?v=… o youtu.be/…)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
           <div>
-            <select
+            <Select
+              size="sm"
               value={newVideoType}
               onChange={(e) => setNewVideoType(e.target.value as any)}
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
+              wrapperClassName="w-full"
             >
               <option value="videoclip">Videoclip oficial</option>
               <option value="directo">Directo en concierto</option>
               <option value="acustico">Sesión acústica</option>
               <option value="entrevista">Entrevista / prensa</option>
-            </select>
+            </Select>
           </div>
         </div>
 
         <div className="flex items-center justify-between pt-1">
-          <input
+          <Input
+            size="sm"
             type="text"
             value={newVideoTitle}
             onChange={(e) => setNewVideoTitle(e.target.value)}
             placeholder="Título del vídeo (opcional, se extraerá de la URL si se omite)"
-            className="w-2/3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-2/3"
           />
 
           <button

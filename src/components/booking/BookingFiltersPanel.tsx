@@ -2,6 +2,7 @@ import React from 'react';
 import { Filter, X, Building2, Radio, Briefcase, LayoutGrid, List, Map as MapIcon, BookmarkCheck, RefreshCw } from 'lucide-react';
 import { Lead } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 export interface BookingFiltersPanelProps {
   isOpen: boolean;
@@ -171,10 +172,11 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
 
         <div>
           <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Tipo de espacio</p>
-          <select
+          <Select
+            size="sm"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as any)}
-            className="w-full px-3 py-2 bg-[var(--sunken)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-semibold font-sans focus:ring-1 focus:ring-[var(--ink-3)] focus:ring-1 focus:ring-[var(--acc)]/30 cursor-pointer"
+            wrapperClassName="w-full"
           >
             {sectionTab === 'medios' ? (
               <>
@@ -217,7 +219,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 <option value="grupo">Bandas Amigas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'grupo').length})</option>
               </>
             )}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -280,13 +282,14 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             </button>
           ) : (
             <form onSubmit={handleSaveCurrentFilter} className="flex items-center gap-1.5 animate-fadeIn">
-              <input
+              <Input
+                size="sm"
                 type="text"
                 autoFocus
                 placeholder="Nombre del filtro (ej: Salas BCN > 300)…"
                 value={newFilterName}
                 onChange={(e) => setNewFilterName(e.target.value)}
-                className="px-2.5 py-1.5 text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] focus:outline-none w-48 sm:w-56"
+                className="w-48 sm:w-56"
               />
               <button
                 type="submit"

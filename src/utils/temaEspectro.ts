@@ -69,11 +69,26 @@ export function leerPreferencia(): PreferenciaTema {
   return TEMA_POR_DEFECTO;
 }
 
+/** Fondo (--bg) de cada tema: es el color de la barra del navegador y de la barra de estado del móvil. */
+export const COLOR_BARRA: Readonly<Record<TemaResuelto, string>> = {
+  light: '#F6F7F9',
+  dark: '#101216',
+  classic: '#121110',
+};
+
+/** Sincroniza <meta name="theme-color"> con el tema pintado (index.html trae dos con media para el primer pintado). */
+function sincronizarColorBarra(resuelto: TemaResuelto) {
+  document.querySelectorAll?.<HTMLMetaElement>('meta[name="theme-color"]').forEach((m) => {
+    m.content = COLOR_BARRA[resuelto];
+  });
+}
+
 /** Estampa el tema resuelto en <html data-theme="…">. */
 export function aplicarTema(pref: PreferenciaTema): TemaResuelto {
   const resuelto = resolverTema(pref);
   if (typeof document !== 'undefined') {
     document.documentElement.dataset.theme = resuelto;
+    sincronizarColorBarra(resuelto);
   }
   return resuelto;
 }

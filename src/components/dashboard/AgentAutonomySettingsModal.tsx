@@ -46,6 +46,7 @@ import { BandSchedule } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { EmailAccountConfig } from "../EmailAccountConfig";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
   salas: "🏛️ Salas",
@@ -1328,7 +1329,8 @@ export const AgentAutonomySettingsModal: React.FC<
                           {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
                         </label>
                         <div className="relative">
-                          <input
+                          <Input
+                            size="sm"
                             type="number"
                             disabled={!isAdmin}
                             value={config.minCacheByType?.[type] || ""}
@@ -1344,7 +1346,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 },
                               });
                             }}
-                            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
+                            className="w-full"
                             placeholder="—"
                           />
                           <span className="absolute right-3 top-2.5 text-xs text-[var(--ink-2)] font-sans">
@@ -1501,7 +1503,8 @@ export const AgentAutonomySettingsModal: React.FC<
                           Obligatorio
                         </span>
                       </label>
-                      <input
+                      <Input
+                        size="sm"
                         type="email"
                         disabled={!isAdmin}
                         value={config.agentSenderEmail || ""}
@@ -1511,7 +1514,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             agentSenderEmail: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
+                        className="w-full"
                         placeholder="ej: booking@tubanda.com o mibanda@gmail.com"
                       />
                       <p className="text-micro text-[var(--ink-2)]">
@@ -1524,7 +1527,8 @@ export const AgentAutonomySettingsModal: React.FC<
                       <label className="text-xs font-sans text-[var(--ink-2)] font-semibold block">
                         Nombre / Cargo del Remitente
                       </label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         disabled={!isAdmin}
                         value={config.agentSenderName || ""}
@@ -1534,7 +1538,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             agentSenderName: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
+                        className="w-full"
                         placeholder={`ej: ${bandName} Booking & Management`}
                       />
                       <p className="text-micro text-[var(--ink-2)]">
@@ -1547,7 +1551,8 @@ export const AgentAutonomySettingsModal: React.FC<
                       <label className="text-xs font-sans text-[var(--ink-2)] font-semibold block">
                         Email de respuesta (Reply-To) (Opcional)
                       </label>
-                      <input
+                      <Input
+                        size="sm"
                         type="email"
                         disabled={!isAdmin}
                         value={config.agentReplyToEmail || ""}
@@ -1557,7 +1562,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             agentReplyToEmail: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
+                        className="w-full"
                         placeholder="ej: contacto@tubanda.com (si es diferente al remitente)"
                       />
                     </div>
@@ -1798,18 +1803,18 @@ export const AgentAutonomySettingsModal: React.FC<
                     <Globe className="w-4 h-4 text-[var(--acc)]" /> Zona Horaria
                     de la Banda
                   </label>
-                  <select aria-label="Zona Horaria de la Banda"
+                  <Select size="sm" aria-label="Zona Horaria de la Banda"
                     disabled={!isAdmin}
                     value={timezone}
                     onChange={(e) => setTimezone(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60 cursor-pointer"
+                    wrapperClassName="w-full"
                   >
                     {TIMEZONES.map((tz) => (
                       <option key={tz.value} value={tz.value}>
                         {tz.label}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
 
                 {/* DÍAS Y HORAS ENVIADOR */}
@@ -2357,7 +2362,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         <label className="text-xs font-sans text-[var(--ink-2)] font-semibold block">
                           Instrucción para la IA (opcional)
                         </label>
-                        <textarea
+                        <Textarea
                           disabled={!isAdmin}
                           rows={2}
                           value={strategy.guidancePrompt}
@@ -2377,7 +2382,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                   ? "Pregunta si hay otras fechas disponibles más adelante en la temporada."
                                   : "Responde de forma breve y concreta a lo que pregunten, sin extenderte."
                           }`}
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:outline-none disabled:opacity-60 resize-none"
+                          className="w-full"
                         />
                         <p className="text-micro text-[var(--ink-2)]">
                           Si lo dejas vacío, el agente usa una guía automática

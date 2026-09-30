@@ -28,6 +28,7 @@ import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils'
 import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { usePlayer } from '../context/PlayerContext';
+import { Select } from './ui';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -871,10 +872,11 @@ export default function SpotifyPlayerBar({
                 </button>
 
                 {/* Speed multiplier selector */}
-                <select
+                <Select
+                  size="sm"
                   value={playbackRate}
                   onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-                  className="bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui"
+                  
                   title="Velocidad de reproducción"
                 >
                   <option value={0.5}>0.5x</option>
@@ -882,7 +884,7 @@ export default function SpotifyPlayerBar({
                   <option value={1.0}>1.0x</option>
                   <option value={1.25}>1.25x</option>
                   <option value={1.5}>1.5x</option>
-                </select>
+                </Select>
 
                 {/* Pitch Transpose selector (Spotify Pedalboard DSP) */}
                 <select

@@ -96,6 +96,7 @@ import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ViralGrowthStudio, SUBTITLE_STYLES } from "./reels/ViralGrowthStudio";
 import { ReelsPhoneMockup } from "./reels/ReelsPhoneMockup";
 import { ReelsTheaterModal } from "./reels/ReelsTheaterModal";
+import { Input, Select, Textarea } from './ui';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
@@ -2421,13 +2422,13 @@ export default function ReelsCenter({
                     <label className="block text-micro font-sans text-[var(--ink-2)]">
                       Idea de Contenido o Anécdota
                     </label>
-                    <textarea
+                    <Textarea
                       id="reels-idea-input"
                       rows={3}
                       value={reelIdea}
                       onChange={(e) => setReelIdea(e.target.value)}
                       placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino…"
-                      className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50`}
+                      className="w-full"
                     />
                   </div>
 
@@ -2465,12 +2466,12 @@ export default function ReelsCenter({
                       <span className="block text-micro font-sans text-[var(--ink-2)]">
                         Publicación generada (Listo para copiar)
                       </span>
-                      <textarea
+                      <Textarea
                         id="reels-generated-output"
                         rows={6}
                         value={generatedCopy}
                         onChange={(e) => setGeneratedCopy(e.target.value)}
-                        className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/30`}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -2638,13 +2639,14 @@ export default function ReelsCenter({
                         </p>
                       </div>
                       <div className="relative">
-                        <input
+                        <Input
+                          size="sm"
                           id="youtube-url-input"
                           type="url"
                           value={youtubeUrl}
                           onChange={(e) => setYoutubeUrl(e.target.value)}
                           placeholder="https://www.youtube.com/watch?v=… o https://youtu.be/…"
-                          className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
+                          className="w-full pl-3 pr-10"
                         />
                         {youtubeUrl && (
                           <button
@@ -2750,43 +2752,46 @@ export default function ReelsCenter({
                         </span>
                       )}
                     </label>
-                    <select
+                    <Select
+                      size="sm"
                       id="video-content-type-select"
                       value={contentType}
                       onChange={(e) =>
                         setContentType(e.target.value as typeof contentType)
                       }
                       title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50`}
+                      wrapperClassName="w-full"
                     >
                       <option value="auto">Detectar automáticamente</option>
                       <option value="concierto">Concierto / directo</option>
                       <option value="videoclip">Videoclip</option>
                       <option value="ensayo">Ensayo / local</option>
-                    </select>
+                    </Select>
                   </div>
                   <div className="space-y-1">
                     <label className="block text-micro font-sans text-[var(--ink-2)]">
                       Contexto / Anécdota de apoyo (IA)
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       id="video-topic-input"
                       type="text"
                       value={videoTopic}
                       onChange={(e) => setVideoTopic(e.target.value)}
                       placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión…"
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
+                      className="w-full"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="block text-micro font-sans text-[var(--ink-2)]">
                       Límite de Duración Deseado
                     </label>
-                    <select
+                    <Select
+                      size="sm"
                       id="video-duration-select"
                       value={videoDuration}
                       onChange={(e) => setVideoDuration(Number(e.target.value))}
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50`}
+                      wrapperClassName="w-full"
                     >
                       <option value={15}>
                         15 segundos (Ideal para Reels cortos / Stories)
@@ -2797,7 +2802,7 @@ export default function ReelsCenter({
                       <option value={60}>
                         60 segundos (Explicativo completo de bases)
                       </option>
-                    </select>
+                    </Select>
                   </div>
                 </div>
 
@@ -3225,12 +3230,13 @@ export default function ReelsCenter({
                               ej:"En este tramo toca el bajo Jon","Sólo
                               instrumental","Presentación de la banda")
                             </label>
-                            <input
+                            <Input
+                              size="sm"
                               type="text"
                               value={clipUserNote}
                               onChange={(e) => setClipUserNote(e.target.value)}
                               placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín…"
-                              className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
+                              className="w-full"
                             />
                           </div>
 
@@ -3456,12 +3462,12 @@ export default function ReelsCenter({
                             </div>
                           </div>
 
-                          <textarea
+                          <Textarea
                             id="highlight-copy-editor"
                             rows={4}
                             value={editedCopy}
                             onChange={(e) => setEditedCopy(e.target.value)}
-                            className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none bg-[var(--sunken)] text-[var(--ink)] `}
+                            className="w-full"
                           />
 
                           {/* Quick action: 1-Click Formatted Copy for Instagram/TikTok */}
@@ -3576,22 +3582,24 @@ export default function ReelsCenter({
                             <span className="block text-micro font-sans text-[var(--ink-2)]">
                               Fecha de envío
                             </span>
-                            <input
+                            <Input
+                              size="sm"
                               type="date"
                               value={scheduledDate}
                               onChange={(e) => setScheduledDate(e.target.value)}
-                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)]/50`}
+                              className="w-full"
                             />
                           </div>
                           <div className="space-y-1">
                             <span className="block text-micro font-sans text-[var(--ink-2)]">
                               Hora sugerida
                             </span>
-                            <input
+                            <Input
+                              size="sm"
                               type="time"
                               value={scheduledTime}
                               onChange={(e) => setScheduledTime(e.target.value)}
-                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)]/50`}
+                              className="w-full"
                             />
                           </div>
                         </div>
@@ -4106,12 +4114,13 @@ export default function ReelsCenter({
               <label className="text-micro font-mono font-bold text-[var(--ink-2)] block">
                 Nombre de usuario / Handle oficial:
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={connectHandleInput}
                 onChange={(e) => setConnectHandleInput(e.target.value)}
                 placeholder="@tubanda_oficial"
-                className="w-full rounded-[var(--r-s)] bg-[var(--surface)] px-3.5 py-2.5 text-xs font-mono text-[var(--ink)] focus:outline-none bg-[var(--acc)]/10"
+                className="w-full"
               />
             </div>
 

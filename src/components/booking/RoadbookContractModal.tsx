@@ -22,6 +22,7 @@ import {
   Info,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 interface RoadbookContractModalProps {
   isOpen: boolean;
@@ -195,17 +196,18 @@ Firmado en conformidad por ambas partes.`;
             {/* Selector de sala activa */}
             <div className="flex items-center gap-2 text-xs">
               <span className="text-[var(--ink-2)] font-mono text-micro">Evento / Sala:</span>
-              <select
+              <Select
+                size="sm"
                 value={currentLead.id}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
-                className="bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                
               >
                 {leads.map((l) => (
                   <option key={l.id} value={l.id}>
                     {l.nombre_sala} ({l.ciudad}) {l.estado === 'confirmado' ? '★ Confirmado' : ''}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {/* Pestañas */}
@@ -252,38 +254,38 @@ Firmado en conformidad por ambas partes.`;
                 <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Fecha evento</label>
-                    <input aria-label="Fecha evento"
+                    <Input size="sm" aria-label="Fecha evento"
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Salida furgoneta</label>
-                    <input aria-label="Salida furgoneta"
+                    <Input size="sm" aria-label="Salida furgoneta"
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Prueba sonido</label>
-                    <input aria-label="Prueba sonido"
+                    <Input size="sm" aria-label="Prueba sonido"
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Inicio show</label>
-                    <input aria-label="Inicio show"
+                    <Input size="sm" aria-label="Inicio show"
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -391,21 +393,22 @@ Firmado en conformidad por ambas partes.`;
                 <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Régimen Económico</label>
-                    <select aria-label="Régimen Económico"
+                    <Select size="sm" aria-label="Régimen Económico"
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      wrapperClassName="w-full"
                     >
                       <option value="taquilla">Taquilla (%)</option>
                       <option value="cache">Caché fijo (€)</option>
                       <option value="mixto">Fijo + taquilla</option>
-                    </select>
+                    </Select>
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">
                       {dealType === 'cache' ? 'Caché Neto (€)' : 'Precio Entrada (€)'}
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       value={dealType === 'cache' ? cacheAmount : ticketPrice}
                       onChange={(e) => {
@@ -413,25 +416,25 @@ Firmado en conformidad por ambas partes.`;
                         if (dealType === 'cache') setCacheAmount(val);
                         else setTicketPrice(val);
                       }}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Reparto banda (%)</label>
-                    <input aria-label="Reparto banda (%)"
+                    <Input size="sm" aria-label="Reparto banda (%)"
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Aforo sala</label>
-                    <input aria-label="Aforo sala"
+                    <Input size="sm" aria-label="Aforo sala"
                       type="number"
                       value={venueCapacity}
                       disabled
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 font-mono"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -461,11 +464,12 @@ Firmado en conformidad por ambas partes.`;
                   </div>
 
                   <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       readOnly
                       value={`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`}
-                      className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-3 py-2 font-mono"
+                      className="w-full"
                     />
                     <button
                       type="button"

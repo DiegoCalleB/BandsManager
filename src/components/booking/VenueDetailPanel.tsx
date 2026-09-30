@@ -105,6 +105,7 @@ import {
 } from "../../utils/whatsapp";
 import { WhatsAppPreviewModal } from "./WhatsAppPreviewModal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -2478,7 +2479,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Nombre sala / espacio / contacto
                     </label>
-                    <input aria-label="Nombre sala / espacio / contacto"
+                    <Input size="sm" aria-label="Nombre sala / espacio / contacto"
                       type="text"
                       value={editedLeadInfo.nombre_sala || ""}
                       onChange={(e) =>
@@ -2487,7 +2488,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           nombre_sala: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
 
@@ -2495,7 +2496,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1">
                       Tipo / categoría de lead
                     </label>
-                    <select aria-label="Tipo / categoría de lead"
+                    <Select size="sm" aria-label="Tipo / categoría de lead"
                       value={String(
                         editedLeadInfo.tipo || "sala",
                       ).toLowerCase()}
@@ -2505,7 +2506,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           tipo: e.target.value as LeadType,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--acc-ink)] font-bold focus:outline-none focus:cursor-pointer"
+                      wrapperClassName="w-full"
                     >
                       <option value="sala">Sala de conciertos</option>
                       <option value="festival">Festival</option>
@@ -2523,7 +2524,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       </option>
                       <option value="sello">Discográfica / Sello</option>
                       <option value="medio">Medio / Prensa / Radio</option>
-                    </select>
+                    </Select>
                   </div>
                 </div>
 
@@ -2656,7 +2657,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
                     <ShowIcon inline emoji="📍" />Dirección Exacta (Calle, Número…)
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Ej. Calle San Vicente Ferrer 33, 28004 Madrid"
                     value={editedLeadInfo.direccion || ""}
@@ -2666,7 +2668,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         direccion: e.target.value,
                       })
                     }
-                    className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                    className="w-full"
                   />
                 </div>
 
@@ -2675,7 +2677,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Ciudad
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="Ej. Madrid"
                       value={editedLeadInfo.ciudad || ""}
@@ -2685,14 +2688,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           ciudad: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Región / provincia
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="Ej. Comunidad de Madrid"
                       value={editedLeadInfo.region || ""}
@@ -2702,7 +2706,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           region: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -2712,7 +2716,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Persona de contacto
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="Ej. Carlos (Programador)"
                       value={editedLeadInfo.contacto_nombre || ""}
@@ -2722,14 +2727,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           contacto_nombre: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Email principal (Contratación)
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="email"
                       placeholder="info@salanazcaconciertos.com"
                       value={editedLeadInfo.email_contacto || ""}
@@ -2739,7 +2745,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           email_contacto: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -2748,7 +2754,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1">
                     <ShowIcon inline emoji="✉️" />Email Secundario / Promotora / Alternativo
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="email"
                     placeholder="info@magnetikproducciones.com (o varios separados por coma)"
                     value={editedLeadInfo.email_secundario || ""}
@@ -2758,7 +2765,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         email_secundario: e.target.value,
                       })
                     }
-                    className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none text-xs"
+                    className="w-full"
                   />
                 </div>
 
@@ -2767,7 +2774,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-mono text-[var(--ok)] font-bold mb-1 flex items-center gap-1">
                       <span><ShowIcon inline emoji="📱" />Teléfono móvil (WhatsApp)</span>
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="tel"
                       placeholder="Ej. +34 612 345 678"
                       value={editedLeadInfo.telefono_movil || ""}
@@ -2783,14 +2791,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             "",
                         });
                       }}
-                      className="w-full p-2 rounded bg-[var(--sunken)] text-[var(--ok)] focus:outline-none text-xs"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-micro font-mono text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
                       <span><ShowIcon inline emoji="☎️" />Teléfono Fijo (Sala / Oficina)</span>
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="tel"
                       placeholder="Ej. +34 912 345 678"
                       value={editedLeadInfo.telefono_fijo || ""}
@@ -2806,7 +2815,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             "",
                         });
                       }}
-                      className="w-full p-2 rounded bg-[var(--sunken)] text-[var(--acc)] focus:outline-none text-xs"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -2816,7 +2825,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Aforo (personas)
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       placeholder="Ej. 500"
                       value={editedLeadInfo.aforo || 0}
@@ -2826,14 +2836,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           aforo: Number(e.target.value),
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
                       Contacto / programador
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="Ej. Laura González (Directora Artística)"
                       value={editedLeadInfo.contacto_nombre || ""}
@@ -2843,7 +2854,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           contacto_nombre: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none text-xs"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -2852,7 +2863,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <label className="block text-micro font-sans text-[var(--acc)] mb-1">
                     Róster de Artistas / Bandas que representa
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Ej. Ska-P, Boikot, Zoo, La Raíz…"
                     value={editedLeadInfo.roster || ""}
@@ -2862,7 +2874,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         roster: e.target.value,
                       })
                     }
-                    className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none text-xs"
+                    className="w-full"
                   />
                 </div>
 
@@ -2891,7 +2903,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                         Inicio Festival (dd/mm/yyyy)
                       </label>
-                      <input aria-label="Inicio Festival (dd/mm/yyyy)"
+                      <Input size="sm" aria-label="Inicio Festival (dd/mm/yyyy)"
                         type="date"
                         value={toIsoDateString(
                           editedLeadInfo.festival_start_date,
@@ -2902,14 +2914,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             festival_start_date: e.target.value || undefined,
                           })
                         }
-                        className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className="block text-micro font-sans text-[var(--acc)] mb-1">
                         <ShowIcon inline emoji="🎪" />Fin Festival (dd/mm/yyyy)
                       </label>
-                      <input aria-label="Fin Festival (dd/mm/yyyy)"
+                      <Input size="sm" aria-label="Fin Festival (dd/mm/yyyy)"
                         type="date"
                         value={toIsoDateString(
                           editedLeadInfo.festival_end_date,
@@ -2920,7 +2932,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             festival_end_date: e.target.value || undefined,
                           })
                         }
-                        className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -2931,7 +2943,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Sitio Web
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="url"
                       placeholder="https://…"
                       value={editedLeadInfo.website || ""}
@@ -2941,14 +2954,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           website: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Instagram
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="@salaeltren"
                       value={editedLeadInfo.instagram || ""}
@@ -2958,7 +2972,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           instagram: e.target.value,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -3423,11 +3437,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {isEditingPitch ? (
               <div className="space-y-2">
-                <textarea
+                <Textarea
                   rows={10}
                   value={editedPitch}
                   onChange={(e) => setEditedPitch(e.target.value)}
-                  className="w-full p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--acc)] min-h-[180px] resize-y"
+                  className="w-full min-h-[180px]"
                 />
                 <div className="flex items-center justify-between gap-2">
                   <span
@@ -3565,12 +3579,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     Sugerencias o comentarios para mejorar este pitch:
                   </span>
                 </label>
-                <textarea
+                <Textarea
                   rows={4}
                   value={feedbackComment}
                   onChange={(e) => setFeedbackComment(e.target.value)}
                   placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'…"
-                  className="w-full p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none min-h-[90px] resize-y"
+                  className="w-full min-h-[90px]"
                 />
               </div>
 
@@ -5087,11 +5101,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🎟️" />Anticipada (€)
                 </label>
-                <input aria-label="Anticipada (€)"
+                <Input size="sm" aria-label="Anticipada (€)"
                   type="number"
                   value={simAnticipada}
                   onChange={(e) => setSimAnticipada(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold text-xs"
+                  className="w-full"
                 />
               </div>
 
@@ -5099,11 +5113,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🚪" />Puerta (€)
                 </label>
-                <input aria-label="Puerta (€)"
+                <Input size="sm" aria-label="Puerta (€)"
                   type="number"
                   value={simTaquilla}
                   onChange={(e) => setSimTaquilla(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold text-xs"
+                  className="w-full"
                 />
               </div>
 
@@ -5111,11 +5125,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🏢" />Alquiler sala (€)
                 </label>
-                <input aria-label="Alquiler sala (€)"
+                <Input size="sm" aria-label="Alquiler sala (€)"
                   type="number"
                   value={simAlquiler}
                   onChange={(e) => setSimAlquiler(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold text-xs"
+                  className="w-full"
                 />
               </div>
 
@@ -5123,11 +5137,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   % Sala / taquilla
                 </label>
-                <input aria-label="% Sala / taquilla"
+                <Input size="sm" aria-label="% Sala / taquilla"
                   type="number"
                   value={simPctSala}
                   onChange={(e) => setSimPctSala(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold text-xs"
+                  className="w-full"
                 />
               </div>
 
@@ -5135,11 +5149,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🚐" />Gastos Viaje/Prod (€)
                 </label>
-                <input aria-label="Gastos Viaje/Prod (€)"
+                <Input size="sm" aria-label="Gastos Viaje/Prod (€)"
                   type="number"
                   value={simGastosProd}
                   onChange={(e) => setSimGastosProd(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold text-xs"
+                  className="w-full"
                 />
               </div>
 
@@ -5147,11 +5161,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <label className="text-micro text-[var(--ink-2)] block font-medium">
                   <ShowIcon inline emoji="🎸" />Nº Músicos
                 </label>
-                <input aria-label="Nº Músicos"
+                <Input size="sm" aria-label="Nº Músicos"
                   type="number"
                   value={simNumMusicos}
                   onChange={(e) => setSimNumMusicos(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 text-[var(--ink-2)] font-bold text-xs"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -5318,12 +5332,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
 
               {/* Author input */}
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={interactionAutor}
                 onChange={(e) => setInteractionAutor(e.target.value)}
                 placeholder="Tu nombre…"
-                className="px-2 py-1 text-micro bg-[var(--bg)] rounded text-[var(--ink)] w-28 focus:outline-none"
+                className="w-28"
               />
             </div>
 
@@ -5364,13 +5379,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
 
             {/* Notes textarea */}
-            <textarea
+            <Textarea
               rows={4}
               required
               value={interactionNotes}
               onChange={(e) => setInteractionNotes(e.target.value)}
               placeholder="Ej: Hablé con Carlos por WhatsApp. Pide propuesta de fechas para Noviembre…"
-              className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans resize-y min-h-[90px]"
+              className="w-full min-h-[90px]"
             />
 
             <button

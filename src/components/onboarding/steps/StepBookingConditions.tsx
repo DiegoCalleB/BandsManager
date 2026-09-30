@@ -9,6 +9,7 @@ import {
   Car,
   Hotel,
 } from "lucide-react";
+import { Input } from '../../ui';
 
 interface StepBookingConditionsProps {
   cacheAcustico: number;
@@ -69,14 +70,15 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             Caché Acústico / Showcase (€)
           </label>
           <div className="relative">
-            <input
+            <Input
+              size="sm"
               type="number"
               min={0}
               step={50}
               value={cacheAcustico}
               onChange={(e) => setCacheAcustico(Number(e.target.value))}
               placeholder="400"
-              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>
@@ -86,14 +88,15 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             Caché sala / concierto estándar (€)
           </label>
           <div className="relative">
-            <input
+            <Input
+              size="sm"
               type="number"
               min={0}
               step={50}
               value={cacheSala}
               onChange={(e) => setCacheSala(Number(e.target.value))}
               placeholder="850"
-              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>
@@ -103,14 +106,15 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             Caché Festival / Fiesta Mayor (€)
           </label>
           <div className="relative">
-            <input
+            <Input
+              size="sm"
               type="number"
               min={0}
               step={100}
               value={cacheFestival}
               onChange={(e) => setCacheFestival(Number(e.target.value))}
               placeholder="1800"
-              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>
@@ -123,12 +127,13 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             <Car className="w-3.5 h-3.5 text-[var(--acc)]" />
             Condiciones de kilometraje / furgoneta
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={condicionesKm}
             onChange={(e) => setCondicionesKm(e.target.value)}
             placeholder="Ej. 0,25 €/km a partir de 100 km desde Madrid"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -171,12 +176,13 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
               Nombre / Cargo
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={contactoBookingNombre}
               onChange={(e) => setContactoBookingNombre(e.target.value)}
               placeholder="Ej. Carlos (Booking & Manager)"
-              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
@@ -184,12 +190,13 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
               Email de contratación
             </label>
-            <input
+            <Input
+              size="sm"
               type="email"
               value={contactoBookingEmail}
               onChange={(e) => setContactoBookingEmail(e.target.value)}
               placeholder="booking@tubanda.com"
-              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
@@ -197,12 +204,13 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
               Teléfono directo
             </label>
-            <input
+            <Input
+              size="sm"
               type="tel"
               value={contactoBookingTelefono}
               onChange={(e) => setContactoBookingTelefono(e.target.value)}
               placeholder="+34 600 000 000"
-              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>

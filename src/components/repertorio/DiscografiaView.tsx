@@ -43,6 +43,7 @@ import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -634,12 +635,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         {/* Search Input Bar */}
         <div className="relative w-full">
           <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] pointer-events-none" />
-          <input
+          <Input
+            size="sm"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar canción, tono, letra…"
-            className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-ui focus:outline-none focus:ring-2 focus:ring-[var(--acc)]/40 ${"bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-[var(--surface)]"}`}
+            className="w-full pl-8 pr-7"
           />
           {searchQuery && (
             <button

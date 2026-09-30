@@ -7,6 +7,7 @@ import {
   Plus,
   Image as ImageIcon,
 } from "lucide-react";
+import { Input } from '../../ui';
 
 interface StepPhotosProps {
   photos: string[];
@@ -97,12 +98,13 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
 
       {/* Add via URL */}
       <div className="pt-2 flex gap-2">
-        <input
+        <Input
+          size="sm"
           type="text"
           value={newPhotoUrl}
           onChange={(e) => setNewPhotoUrl(e.target.value)}
           placeholder="O añade una URL de imagen directa (https://…)"
-          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+          className="flex-1"
         />
         <button
           type="button"

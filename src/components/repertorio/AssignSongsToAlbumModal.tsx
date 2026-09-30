@@ -4,6 +4,7 @@ import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+import { Input, Select, Textarea } from '../ui';
 
 interface AssignSongsToAlbumModalProps {
   isOpen: boolean;
@@ -102,24 +103,26 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Nombre del álbum / disco *</label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     required
                     value={customAlbumName}
                     onChange={(e) => setCustomAlbumName(e.target.value)}
                     placeholder="ej. Lanzamiento Verano 2026"
-                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                    className="w-full"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Año de Lanzamiento</label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={albumYear}
                     onChange={(e) => setAlbumYear(e.target.value)}
                     placeholder="ej. 2026"
-                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -127,28 +130,29 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Tipo de trabajo</label>
-                  <select aria-label="Tipo de trabajo"
+                  <Select size="sm" aria-label="Tipo de trabajo"
                     value={albumType}
                     onChange={(e) => setAlbumType(e.target.value)}
-                    className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                    wrapperClassName="w-full"
                   >
                     <option value="Álbum Estudio">Álbum estudio</option>
                     <option value="EP">EP (Extended Play)</option>
                     <option value="Single">Single / Sencillo</option>
                     <option value="Directo">Álbum en directo</option>
                     <option value="Maqueta">Maqueta / demo</option>
-                  </select>
+                  </Select>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Imagen de portada (Upload o URL)</label>
                   <div className="flex gap-2 items-center">
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       value={coverUrl}
                       onChange={(e) => setCoverUrl(e.target.value)}
                       placeholder="https://… o sube imagen"
-                      className={`flex-1 p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                      className="flex-1"
                     />
                     <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 flex items-center gap-1 text-xs">
                       <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -160,12 +164,12 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
 
               <div>
                 <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Descripción / Notas de Lanzamiento</label>
-                <textarea
+                <Textarea
                   rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Notas sobre la producción, estudio de grabación, concepto…"
-                  className={`w-full p-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                  className="w-full"
                 />
               </div>
             </div>
@@ -180,12 +184,13 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
 
               <div className="relative mb-2">
                 <Search className="w-4 h-4 absolute left-3 top-2.5 text-[var(--ink-2)]" />
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar canción en el catálogo para incluir…"
-                  className={`w-full pl-9 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                  className="w-full pl-9 pr-3"
                 />
               </div>
 

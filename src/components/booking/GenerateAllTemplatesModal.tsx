@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Wand2, X, Check, Loader2, Info, Building2, Tent, Disc3, Radio, Users, Briefcase, Landmark } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Textarea } from '../ui';
 
 export interface GenerateAllTemplatesModalProps {
   isOpen: boolean;
@@ -186,14 +187,12 @@ export function GenerateAllTemplatesModal({
                 {isCampaign ? 'Detalles clave de la gira o lanzamiento' : 'Pega aquí tu biografía, instrumentos o formato'}
               </span>
             </div>
-            <textarea
+            <Textarea
               rows={6}
               value={baseProposal}
               onChange={(e) => setBaseProposal(e.target.value)}
               disabled={isGenerating}
-              className={`w-full p-4 rounded-[var(--r-m)] text-xs font-sans leading-relaxed focus:outline-none transition-ui resize-y ${
-                'bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--ink-3)] focus:ring-1 focus:ring-[var(--acc)]'
-              }`}
+              className="w-full"
               placeholder={
                 isCampaign
                   ? 'Ejemplo: Presentación de nuevo disco con escenografía de directo especial. Queremos cerrar fines de semana en salas medianas y festivales de otoño. Ofrecemos formato completo con 4 músicos y opción de colaborar con bandas locales para compartir gastos de sala.'

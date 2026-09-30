@@ -105,7 +105,7 @@ Para cada pantalla, en este orden y **una sola pasada acotada** (capturar → an
 5. **Prueba de los 200 px:** un recorte de 200 px debe ser reconocible como BandManager.
 6. **Prueba de la tercera hora:** ¿cansa la vista? Si dudas, sube la letra y el aire.
 
-Regla de oro contra "hecho por varias IAs": **un solo botón, un solo campo, una sola tarjeta, un solo modal** (`src/components/ui/`). Ya existen `Button` (primary · soft · neutral · ghost · danger; sm · md · lg · icon), `Chip` (neutral · acc · ok · alert) y `ShowIcon` (emoji guardado → Lucide); úsalos en lugar de escribir el botón a mano. Referencia de pantalla resuelta: Repertorio › Setlist. Si vas a escribir la cuarta variante de un botón, estás creando la deriva.
+Regla de oro contra "hecho por varias IAs": **un solo botón, un solo campo, una sola tarjeta, un solo modal** (`src/components/ui/`). Ya existen `Button` (primary · soft · neutral · ghost · danger; sm · md · lg · icon), `Chip` (neutral · acc · ok · alert), `Input` · `Textarea` · `Select` (un solo campo: borde `--line` en reposo, 16 px en móvil, `invalid`), `Field` (etiqueta + ayuda/error, `<label>` envolvente), `Switch` (`role="switch"`), `Card` (sin borde, radio concéntrico), `EmptyState` (El Público + frase con voz) y `ShowIcon` (emoji guardado → Lucide); úsalos en lugar de escribir el control a mano. `design-audit` avisa de `<input>/<select>/<textarea>` sueltos (excepción justificada: `data-raw`). Referencia de pantalla resuelta: Repertorio › Setlist. Si vas a escribir la cuarta variante de un botón, estás creando la deriva.
 
 ## ✅ Checklist antes de dar por cerrada una pantalla
 

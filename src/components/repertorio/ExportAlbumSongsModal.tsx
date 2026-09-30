@@ -24,6 +24,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Select } from '../ui';
 
 interface ExportAlbumSongsModalProps {
   isOpen: boolean;
@@ -530,10 +531,10 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   {formattedTotalDuration})
                 </span>
               </label>
-              <select aria-label="Seleccionar álbum / disco ( )"
+              <Select aria-label="Seleccionar álbum / disco ( )"
                 value={selectedAlbum}
                 onChange={(e) => setSelectedAlbum(e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui bg-[var(--sunken)] text-[var(--ink)]`}
+                wrapperClassName="w-full"
               >
                 <option value="all">
                   Discografía completa (Todas las canciones)
@@ -547,7 +548,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                         : `💽 ${album}`}
                     </option>
                   ))}
-              </select>
+              </Select>
             </div>
 
             {/* 2. Format Selection Tabs */}

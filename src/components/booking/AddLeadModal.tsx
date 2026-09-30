@@ -4,6 +4,7 @@ import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -160,7 +161,8 @@ export function AddLeadModal({
                   <span>{isModalScraping ? 'Buscando...' : 'Autocompletar con IA'}</span>
                 </button>
               </div>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 required
                 placeholder={sectionTab === 'medios' ? 'Ej. Radio 3, Mondosonoro' : 'Ej. Sala El Sol, Festival Cabo de Plata'}
@@ -171,7 +173,7 @@ export function AddLeadModal({
                     nombre_sala: e.target.value,
                   }))
                 }
-                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-micro focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                className="w-full"
               />
             </div>
 
@@ -195,7 +197,8 @@ export function AddLeadModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className={`block text-micro font-sans mb-1 ${textSub}`}>Ciudad</label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   placeholder="Ej. Madrid, Barcelona"
                   value={newLeadData.ciudad}
@@ -205,7 +208,7 @@ export function AddLeadModal({
                       ciudad: e.target.value,
                     }))
                   }
-                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-micro focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                  className="w-full"
                 />
               </div>
 
@@ -214,26 +217,24 @@ export function AddLeadModal({
                   {sectionTab === 'medios' ? 'Tipo de Medio' : 'Tipo de Espacio'}
                 </label>
                 {sectionTab === 'medios' ? (
-                  <select
+                  <Select
+                    size="sm"
                     value={newLeadData.genero}
                     onChange={(e) => setNewLeadData((prev) => ({ ...prev, genero: e.target.value }))}
-                    className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs focus:outline-none cursor-pointer ${
-                      'bg-[var(--sunken)] text-[var(--ink)] '
-                    }`}
+                    wrapperClassName="w-full"
                   >
                     <option value="Radio">Radio / Programa</option>
                     <option value="Televisión">Televisión / vídeo</option>
                     <option value="Prensa">Prensa / Revista</option>
                     <option value="Redes Sociales">Redes / Creadores</option>
                     <option value="Podcasts">Podcasts / Entrevistas</option>
-                  </select>
+                  </Select>
                 ) : (
-                  <select
+                  <Select
+                    size="sm"
                     value={newLeadData.tipo}
                     onChange={(e) => setNewLeadData((prev) => ({ ...prev, tipo: e.target.value as LeadType }))}
-                    className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs focus:outline-none cursor-pointer ${
-                      'bg-[var(--sunken)] text-[var(--ink)] '
-                    }`}
+                    wrapperClassName="w-full"
                   >
                     <option value="sala">Sala de conciertos</option>
                     <option value="festival">Festival</option>
@@ -246,7 +247,7 @@ export function AddLeadModal({
                     <option value="supervisor_sync">Supervisor musical (Sync)</option>
                     <option value="sello">Sello Discográfico</option>
                     <option value="grupo">Banda Amiga</option>
-                  </select>
+                  </Select>
                 )}
               </div>
             </div>
@@ -255,7 +256,8 @@ export function AddLeadModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Email principal</label>
-                <input
+                <Input
+                  size="sm"
                   type="email"
                   placeholder="info@sala.com"
                   value={newLeadData.email_contacto}
@@ -265,13 +267,14 @@ export function AddLeadModal({
                       email_contacto: e.target.value,
                     }))
                   }
-                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-micro focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                  className="w-full"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Teléfono (WhatsApp)</label>
-                <input
+                <Input
+                  size="sm"
                   type="tel"
                   placeholder="+34 612 345 678"
                   value={newLeadData.telefono_movil || ''}
@@ -283,9 +286,7 @@ export function AddLeadModal({
                       telefono: val || prev.telefono_fijo || prev.telefono || '',
                     }));
                   }}
-                  className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs focus:outline-none ${
-                    'bg-[var(--sunken)] text-[var(--ink)] '
-                  }`}
+                  className="w-full"
                 />
               </div>
             </div>
@@ -391,26 +392,24 @@ export function AddLeadModal({
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Dirección</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         placeholder="Calle San Vicente 33"
                         value={newLeadData.direccion || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, direccion: e.target.value }))}
-                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--surface)] text-[var(--ink)] '
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Región / Alcance</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         placeholder="Comunidad / provincia"
                         value={newLeadData.region}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, region: e.target.value }))}
-                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--surface)] text-[var(--ink)] '
-                        }`}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -419,19 +418,19 @@ export function AddLeadModal({
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Email Secundario</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="email"
                         placeholder="promotora@mail.com"
                         value={newLeadData.email_secundario || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, email_secundario: e.target.value }))}
-                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--surface)] text-[var(--ink)] '
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Teléfono fijo</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="tel"
                         placeholder="+34 912 345 678"
                         value={newLeadData.telefono_fijo || ''}
@@ -443,9 +442,7 @@ export function AddLeadModal({
                             telefono: prev.telefono_movil || val || prev.telefono || '',
                           }));
                         }}
-                        className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                          'bg-[var(--surface)] text-[var(--ink)] '
-                        }`}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -453,28 +450,25 @@ export function AddLeadModal({
                   {/* Pitch / Proposal */}
                   <div>
                     <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Propuesta de concierto</label>
-                    <textarea
+                    <Textarea
                       rows={2}
                       placeholder="Propuesta de fecha, caché o taquilla…"
                       value={newLeadData.pitch_generado}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, pitch_generado: e.target.value }))}
-                      className={`w-full rounded-[var(--r-m)] p-2.5 text-xs focus:outline-none ${
-                        'bg-[var(--surface)] text-[var(--ink)] '
-                      }`}
+                      className="w-full"
                     />
                   </div>
 
                   {/* Internal Notes */}
                   <div>
                     <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Notas Internas</label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="Programador principal, aforo 300, etc."
                       value={newLeadData.notas}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, notas: e.target.value }))}
-                      className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
-                        'bg-[var(--surface)] text-[var(--ink)] '
-                      }`}
+                      className="w-full"
                     />
                   </div>
                 </div>

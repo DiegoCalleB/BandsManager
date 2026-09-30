@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Rehearsal, ThemeColors, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
+import { Input, Select, Textarea } from '../ui';
 
 interface ConvocarEnsayoModalProps {
   isOpen: boolean;
@@ -146,24 +147,24 @@ export function ConvocarEnsayoModal({
                 <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                   Fecha <span className="text-[var(--acc)]">*</span>
                 </label>
-                <input aria-label="Fecha"
+                <Input size="sm" aria-label="Fecha"
                   type="date"
                   required
                   value={fecha}
                   onChange={(e) => setFecha(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs font-sans outline-none"
+                  className="w-full"
                 />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
                   Hora de inicio <span className="text-[var(--acc)]">*</span>
                 </label>
-                <input aria-label="Hora de inicio"
+                <Input size="sm" aria-label="Hora de inicio"
                   type="time"
                   required
                   value={hora}
                   onChange={(e) => setHora(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none font-medium"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -175,13 +176,14 @@ export function ConvocarEnsayoModal({
               </label>
               <div className="relative">
                 <MapPin className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[var(--ink-2)]" />
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   required
                   placeholder="Ej. Local 4 - Rock Palace, Madrid"
                   value={lugar}
                   onChange={(e) => setLugar(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none font-medium"
+                  className="w-full pl-9 pr-3"
                 />
               </div>
             </div>
@@ -191,10 +193,10 @@ export function ConvocarEnsayoModal({
               <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Repertorio a Repasar (Opcional)</label>
               <div className="relative">
                 <Disc3 className="w-3.5 h-3.5 absolute left-3 top-3 text-[var(--acc)]" />
-                <select aria-label="Repertorio a Repasar (Opcional)"
+                <Select size="sm" aria-label="Repertorio a Repasar (Opcional)"
                   value={setlistId}
                   onChange={(e) => setSetlistId(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] text-xs outline-none cursor-pointer"
+                  wrapperClassName="w-full pl-9 pr-3"
                 >
                   <option value="">Sin setlist específico (ensayo libre)</option>
                   {setlists.map((s) => (
@@ -202,7 +204,7 @@ export function ConvocarEnsayoModal({
                       {s.nombre} ({s.items?.length || 0} temas)
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
 
@@ -227,23 +229,23 @@ export function ConvocarEnsayoModal({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Hora fin estimada</label>
-                      <input aria-label="Hora fin estimada"
+                      <Input size="sm" aria-label="Hora fin estimada"
                         type="time"
                         value={horaFin}
                         onChange={(e) => setHoraFin(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Duración (Minutos)</label>
-                      <input aria-label="Duración (Minutos)"
+                      <Input size="sm" aria-label="Duración (Minutos)"
                         type="number"
                         min="15"
                         max="480"
                         step="15"
                         value={duracionEstimadaMin}
                         onChange={(e) => setDuracionEstimadaMin(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -304,7 +306,8 @@ export function ConvocarEnsayoModal({
                     </div>
 
                     <div className="flex gap-2">
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         placeholder="Ej. Pulir la intro…"
                         value={nuevoObjetivo}
@@ -315,7 +318,7 @@ export function ConvocarEnsayoModal({
                             handleAddObjetivo();
                           }
                         }}
-                        className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink-2)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                        className="flex-1"
                       />
                       <button
                         type="button"
@@ -330,12 +333,12 @@ export function ConvocarEnsayoModal({
                   {/* Notas Generales */}
                   <div>
                     <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Notas / Material a llevar</label>
-                    <textarea
+                    <Textarea
                       rows={2}
                       placeholder="Ej. Traer juego nuevo de cuerdas…"
                       value={notas}
                       onChange={(e) => setNotas(e.target.value)}
-                      className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs outline-none focus:ring-1 focus:ring-[var(--ink-3)] resize-none"
+                      className="w-full"
                     />
                   </div>
                 </div>

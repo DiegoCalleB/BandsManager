@@ -2,6 +2,7 @@ import React from "react";
 import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from "lucide-react";
 import { QuickEventItem } from "../types";
 import { ShowIcon } from '../../ui/ShowIcon';
+import { Input, Select, Textarea } from '../../ui';
 
 interface StepEventsProps {
   events: QuickEventItem[];
@@ -141,64 +142,70 @@ export const StepEvents: React.FC<StepEventsProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="sm:col-span-2">
-            <input
+            <Input
+              size="sm"
               type="text"
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)}
               placeholder="Título / sala (ej. Concierto presentación disco) *"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
           <div>
-            <select
+            <Select
+              size="sm"
               value={newEventType}
               onChange={(e) => setNewEventType(e.target.value as any)}
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
+              wrapperClassName="w-full"
             >
               <option value="concierto">Concierto en sala</option>
               <option value="festival">Festival</option>
               <option value="ensayo">Ensayo general</option>
               <option value="privado">Evento Privado</option>
-            </select>
+            </Select>
           </div>
 
           <div>
-            <input
+            <Input
+              size="sm"
               type="date"
               value={newEventDate}
               onChange={(e) => setNewEventDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
           <div>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={newEventCity}
               onChange={(e) => setNewEventCity(e.target.value)}
               placeholder="Ciudad (ej. Madrid)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
           <div>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={newEventVenue}
               onChange={(e) => setNewEventVenue(e.target.value)}
               placeholder="Sala / Recinto (ej. Sala Copérnico)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
           <div className="sm:col-span-3">
-            <input
+            <Input
+              size="sm"
               type="text"
               value={newEventTicketUrl}
               onChange={(e) => setNewEventTicketUrl(e.target.value)}
               placeholder="Enlace de venta de entradas (Wegow, DICE, Eventbrite…)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
@@ -223,35 +230,37 @@ export const StepEvents: React.FC<StepEventsProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
-                <input
+                <Input
+                  size="sm"
                   type="number"
                   value={newEventAttendancePropia || ""}
                   onChange={(e) =>
                     setNewEventAttendancePropia?.(Number(e.target.value))
                   }
                   placeholder="Asistentes propios (ej. 250 espect.)"
-                  className="w-full px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                  className="w-full"
                 />
               </div>
               <div>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={newEventSharedBands}
                   onChange={(e) => setNewEventSharedBands?.(e.target.value)}
                   placeholder="Grupos compartidos (ej. La Pegatina)"
-                  className="w-full px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                  className="w-full"
                 />
               </div>
             </div>
 
             {setNewEventPostShowReview && (
               <div>
-                <textarea
+                <Textarea
                   rows={2}
                   value={newEventPostShowReview}
                   onChange={(e) => setNewEventPostShowReview(e.target.value)}
                   placeholder="Resumen del directo o nota de voz (ej. Lleno absoluto en la sala, respuesta brutal del público)"
-                  className="w-full px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                  className="w-full"
                 />
               </div>
             )}

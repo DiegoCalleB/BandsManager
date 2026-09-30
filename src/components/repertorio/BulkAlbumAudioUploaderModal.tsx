@@ -20,6 +20,7 @@ import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
+import { Input } from '../ui';
 
 interface BulkAlbumAudioUploaderModalProps {
   isOpen: boolean;
@@ -681,12 +682,12 @@ export function BulkAlbumAudioUploaderModal({
                 <label className="text-xs font-sans font-bold text-[var(--ink-2)]">
                   Nombre del álbum / disco
                 </label>
-                <input
+                <Input
                   type="text"
                   value={currentAlbumName}
                   onChange={(e) => setCurrentAlbumName(e.target.value)}
                   placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut…"
-                  className="w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition bg-[var(--sunken)] text-[var(--ink)]"
+                  className="w-full"
                 />
               </div>
 
@@ -860,13 +861,14 @@ export function BulkAlbumAudioUploaderModal({
                               <span className="text-xs font-sans text-[var(--ink-2)] w-5">
                                 #{item.trackNumber || idx + 1}
                               </span>
-                              <input
+                              <Input
+                                size="sm"
                                 type="text"
                                 value={item.title}
                                 onChange={(e) =>
                                   handleTitleChange(idx, e.target.value)
                                 }
-                                className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full bg-[var(--sunken)] text-[var(--ink)]`}
+                                className="w-full"
                                 placeholder="Título de la canción"
                               />
                             </div>

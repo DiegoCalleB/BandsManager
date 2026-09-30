@@ -54,6 +54,7 @@ import {
 import { SocialGrowthPlanView } from "./SocialGrowthPlanView";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface ReelsMetricsViewProps {
   colors: ThemeColors;
@@ -1890,12 +1891,12 @@ export function ReelsMetricsView({
                   <label className="text-micro font-sans text-[var(--ink-2)]">
                     Fecha del snapshot
                   </label>
-                  <input aria-label="Fecha del snapshot"
+                  <Input size="sm" aria-label="Fecha del snapshot"
                     type="date"
                     required
                     value={metricDate}
                     onChange={(e) => setMetricDate(e.target.value)}
-                    className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
+                    className="w-full"
                   />
                 </div>
 
@@ -1905,12 +1906,13 @@ export function ReelsMetricsView({
                       <Instagram className="w-3 h-3 text-[var(--alert)]" />{" "}
                       Insta Segs.
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       placeholder="1385"
                       value={metricInsta}
                       onChange={(e) => setMetricInsta(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
+                      className="w-full"
                     />
                   </div>
 
@@ -1919,12 +1921,13 @@ export function ReelsMetricsView({
                       <Video className="w-3 h-3 text-[var(--acc)]" /> TikTok
                       Segs.
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       placeholder="253"
                       value={metricTiktok}
                       onChange={(e) => setMetricTiktok(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
+                      className="w-full"
                     />
                   </div>
 
@@ -1933,12 +1936,13 @@ export function ReelsMetricsView({
                       <Youtube className="w-3 h-3 text-[var(--alert)]" />{" "}
                       YouTube Subs.
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       placeholder="42"
                       value={metricYoutube}
                       onChange={(e) => setMetricYoutube(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
+                      className="w-full"
                     />
                   </div>
 
@@ -1947,12 +1951,13 @@ export function ReelsMetricsView({
                       <Music2 className="w-3 h-3 text-[var(--ok)]" /> Spotify
                       oyentes
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       placeholder="150"
                       value={metricSpotify}
                       onChange={(e) => setMetricSpotify(e.target.value)}
-                      className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -1975,52 +1980,56 @@ export function ReelsMetricsView({
                         <label className="text-micro font-sans text-[var(--ink-2)]">
                           Spotify seguidores
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="number"
                           placeholder="85"
                           value={metricSpotifyFollowers}
                           onChange={(e) =>
                             setMetricSpotifyFollowers(e.target.value)
                           }
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
+                          className="w-full"
                         />
                       </div>
                       <div>
                         <label className="text-micro font-sans text-[var(--ink-2)]">
                           Popularidad (0-100)
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="number"
                           placeholder="18"
                           value={metricSpotifyPopularity}
                           onChange={(e) =>
                             setMetricSpotifyPopularity(e.target.value)
                           }
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
+                          className="w-full"
                         />
                       </div>
                       <div>
                         <label className="text-micro font-sans text-[var(--ink-2)]">
                           YT Views Totales
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="number"
                           placeholder="14500"
                           value={metricYtViews}
                           onChange={(e) => setMetricYtViews(e.target.value)}
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
+                          className="w-full"
                         />
                       </div>
                       <div>
                         <label className="text-micro font-sans text-[var(--ink-2)]">
                           TikTok Likes
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="number"
                           placeholder="1200"
                           value={metricTkLikes}
                           onChange={(e) => setMetricTkLikes(e.target.value)}
-                          className="w-full p-1.5 rounded text-xs font-sans bg-[var(--surface)] text-[var(--ink)]"
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -2031,12 +2040,13 @@ export function ReelsMetricsView({
                   <label className="text-micro font-sans text-[var(--ink-2)]">
                     Notas / eventos (Opcional)
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Ej. Lanzamiento single / Concierto Apolo"
                     value={metricNotes}
                     onChange={(e) => setMetricNotes(e.target.value)}
-                    className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
+                    className="w-full"
                   />
                 </div>
 
@@ -2491,12 +2501,13 @@ export function ReelsMetricsView({
                 </div>
 
                 <div className="relative">
-                  <input
+                  <Input
+                    size="sm"
                     type="password"
                     placeholder="Pega aquí tu User Access Token con permiso instagram_manage_insights (EAA…)"
                     value={igTokenInput}
                     onChange={(e) => setIgTokenInput(e.target.value)}
-                    className={`w-full px-4 py-3 rounded-[var(--r-m)] font-sans text-xs focus:outline-none focus:ring-2 bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]`}
+                    className="w-full"
                   />
                   <div className="absolute right-3 top-3 text-[var(--ink-2)]">
                     <Key className="w-4 h-4" />

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard } from 'lucide-react';
+import { Input } from '../../ui';
 
 interface StepFansPaymentsProps {
   fanCallToAction: string;
@@ -68,23 +69,25 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Gancho / Titular en el QR de Concierto</label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={fanCallToAction}
             onChange={(e) => setFanCallToAction(e.target.value)}
             placeholder="Ej. ¡Únete al club y descarga nuestra maqueta inédita!"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Mensaje de bienvenida para nuevos fans</label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={fanWelcomeMessage}
             onChange={(e) => setFanWelcomeMessage(e.target.value)}
             placeholder="Ej. ¡Gracias por apoyarnos en directo! Aquí tienes tu regalo."
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
       </div>
@@ -100,23 +103,25 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Descripción del regalo</label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={fanRewardDescription}
               onChange={(e) => setFanRewardDescription(e.target.value)}
               placeholder="Ej. Canción acústica inédita en MP3 + Libreto PDF"
-              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
           <div>
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Código de descuento en Merch (opcional)</label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={discountCode}
               onChange={(e) => setDiscountCode(e.target.value)}
               placeholder="Ej. DIRECTO10"
-              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>
@@ -165,12 +170,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 {isUploadingLeadMagnet ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                 Subir Archivo de Regalo
               </button>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={fanRewardLink}
                 onChange={(e) => setFanRewardLink(e.target.value)}
                 placeholder="O pega un enlace de descarga externo (Dropbox, Drive, Mega…)"
-                className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+                className="flex-1"
               />
             </div>
           )}
@@ -189,12 +195,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <Smartphone className="w-3 h-3 text-[var(--acc)]" /> Bizum (Teléfono)
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={bizumNumber}
               onChange={(e) => setBizumNumber(e.target.value)}
               placeholder="600 000 000"
-              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
@@ -202,12 +209,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <CreditCard className="w-3 h-3 text-[var(--acc)]" /> Revolut (@Tag)
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={revolutTag}
               onChange={(e) => setRevolutTag(e.target.value)}
               placeholder="@tubandatag"
-              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
@@ -215,12 +223,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <DollarSign className="w-3 h-3 text-[var(--tentative)]" /> PayPal (Email / Me)
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={paypalEmail}
               onChange={(e) => setPaypalEmail(e.target.value)}
               placeholder="paypal.me/tubanda"
-              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
@@ -228,12 +237,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <CreditCard className="w-3 h-3 text-[var(--ok)]" /> IBAN / Transferencia
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={ibanNumber}
               onChange={(e) => setIbanNumber(e.target.value)}
               placeholder="ES00 0000…"
-              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>

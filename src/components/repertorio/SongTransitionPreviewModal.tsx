@@ -61,6 +61,7 @@ import {
 } from "../../utils/audioCueDetector";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Select } from '../ui';
 
 interface SongTransitionPreviewModalProps {
   isOpen: boolean;
@@ -858,7 +859,8 @@ export function SongTransitionPreviewModal({
                         </span>
                       )}
                       {audioSourceTypeA === "sample" && (
-                        <select
+                        <Select
+                          size="sm"
                           value={selectedSampleA.id}
                           onChange={(e) => {
                             const s = STUDIO_SAMPLE_TRACKS.find(
@@ -869,14 +871,14 @@ export function SongTransitionPreviewModal({
                               setSelectedSampleA(s);
                             }
                           }}
-                          className="bg-[var(--sunken)] text-micro rounded p-0.5 text-[var(--acc-ink)] focus:outline-none max-w-[160px] cursor-pointer"
+                          wrapperClassName="max-w-[160px]"
                         >
                           {STUDIO_SAMPLE_TRACKS.map((st) => (
                             <option key={st.id} value={st.id}>
                               {st.name} ({st.bpm} BPM)
                             </option>
                           ))}
-                        </select>
+                        </Select>
                       )}
                       {isDetectingCuesA && (
                         <span className="text-micro text-[var(--ink-2)]">
@@ -1033,7 +1035,8 @@ export function SongTransitionPreviewModal({
                         </span>
                       )}
                       {audioSourceTypeB === "sample" && (
-                        <select
+                        <Select
+                          size="sm"
                           value={selectedSampleB.id}
                           onChange={(e) => {
                             const s = STUDIO_SAMPLE_TRACKS.find(
@@ -1044,14 +1047,14 @@ export function SongTransitionPreviewModal({
                               setSelectedSampleB(s);
                             }
                           }}
-                          className="bg-[var(--sunken)] text-micro rounded p-0.5 text-[var(--ink-2)] focus:outline-none max-w-[160px] cursor-pointer"
+                          wrapperClassName="max-w-[160px]"
                         >
                           {STUDIO_SAMPLE_TRACKS.map((st) => (
                             <option key={st.id} value={st.id}>
                               {st.name} ({st.bpm} BPM)
                             </option>
                           ))}
-                        </select>
+                        </Select>
                       )}
                       {isDetectingCuesB && (
                         <span className="text-micro text-[var(--ink-2)]">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Concert, Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 interface CalendarCreateEventModalProps {
   showCreateModal: 'rehearsal' | 'concert' | 'reunion' | null;
@@ -276,31 +277,28 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <form onSubmit={handleSaveNewReunion} className="space-y-4">
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / banda</label>
-                <select aria-label="Proyecto / banda"
+                <Select size="sm" aria-label="Proyecto / banda"
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  wrapperClassName="w-full"
                 >
                   {effectiveBandsList.map((b) => (
                     <option key={b.band_id} value={b.band_id}>
                       {b.bandName}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Asunto de la Reunión</label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={reuAsunto}
                   onChange={(e) => setReuAsunto(e.target.value)}
                   placeholder="Ej: Repaso de repertorio y presupuestos"
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                   required
                 />
               </div>
@@ -308,51 +306,45 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Horario</label>
-                  <input aria-label="Horario"
+                  <Input size="sm" aria-label="Horario"
                     type="text"
                     value={reuHora}
                     onChange={(e) => setReuHora(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Lugar / Plataforma</label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={reuLugar}
                     onChange={(e) => setReuLugar(e.target.value)}
                     placeholder="Online (Meet, zoom, etc)"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Enlace de Videollamada (Opcional)</label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={reuEnlace}
                   onChange={(e) => setReuEnlace(e.target.value)}
                   placeholder="https://meet.google.com/xyz-abc"
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Orden del día / notas</label>
-                <textarea aria-label="Orden del día / notas"
+                <Textarea aria-label="Orden del día / notas"
                   value={reuNotas}
                   onChange={(e) => setReuNotas(e.target.value)}
                   rows={3}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                 />
               </div>
 
@@ -379,42 +371,36 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / banda</label>
-                <select aria-label="Proyecto / banda"
+                <Select size="sm" aria-label="Proyecto / banda"
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  wrapperClassName="w-full"
                 >
                   {effectiveBandsList.map((b) => (
                     <option key={b.band_id} value={b.band_id}>
                       {b.bandName}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Horario</label>
-                  <input aria-label="Horario"
+                  <Input size="sm" aria-label="Horario"
                     type="text"
                     value={rehTime}
                     onChange={(e) => setRehTime(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Local / ubicación</label>
-                  <input aria-label="Local / ubicación"
+                  <Input size="sm" aria-label="Local / ubicación"
                     type="text"
                     value={rehLugar}
                     onChange={(e) => setRehLugar(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -422,12 +408,10 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               {availableSetlists.length > 0 && (
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Repertorio Asociado</label>
-                  <select aria-label="Repertorio Asociado"
+                  <Select size="sm" aria-label="Repertorio Asociado"
                     value={rehSetlistId}
                     onChange={(e) => setRehSetlistId(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    wrapperClassName="w-full"
                   >
                     <option value="">Sin repertorio específico</option>
                     {availableSetlists.map((s) => (
@@ -435,19 +419,17 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                         {s.nombre || s.title}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               )}
 
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Objetivos del ensayo / notas</label>
-                <textarea aria-label="Objetivos del ensayo / notas"
+                <Textarea aria-label="Objetivos del ensayo / notas"
                   value={rehNotas}
                   onChange={(e) => setRehNotas(e.target.value)}
                   rows={2}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                 />
               </div>
 
@@ -474,45 +456,41 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
               <div>
                 <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Proyecto / banda</label>
-                <select aria-label="Proyecto / banda"
+                <Select size="sm" aria-label="Proyecto / banda"
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  wrapperClassName="w-full"
                 >
                   {effectiveBandsList.map((b) => (
                     <option key={b.band_id} value={b.band_id}>
                       {b.bandName}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Ciudad / Municipio</label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={concCiudad}
                     onChange={(e) => setConcCiudad(e.target.value)}
                     placeholder="Ej: Madrid"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Sala / espacio</label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={concSala}
                     onChange={(e) => setConcSala(e.target.value)}
                     placeholder="Ej: Sala El Sol"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                     required
                   />
                 </div>
@@ -521,24 +499,20 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Caché Acordado (€)</label>
-                  <input aria-label="Caché Acordado (€)"
+                  <Input size="sm" aria-label="Caché Acordado (€)"
                     type="number"
                     value={concCache}
                     onChange={(e) => setConcCache(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Aforo del espacio</label>
-                  <input aria-label="Aforo del espacio"
+                  <Input size="sm" aria-label="Aforo del espacio"
                     type="number"
                     value={concAforo}
                     onChange={(e) => setConcAforo(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -546,12 +520,10 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               {availableSetlists.length > 0 && (
                 <div>
                   <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Setlist programado</label>
-                  <select aria-label="Setlist programado"
+                  <Select size="sm" aria-label="Setlist programado"
                     value={concSetlistId}
                     onChange={(e) => setConcSetlistId(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono focus:outline-hidden ${
-                      'bg-[var(--sunken)] text-[var(--ink)]'
-                    }`}
+                    wrapperClassName="w-full"
                   >
                     <option value="">Seleccionar repertorio…</option>
                     {availableSetlists.map((s) => (
@@ -559,7 +531,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                         {s.nombre || s.title}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               )}
 

@@ -34,6 +34,7 @@ import {
   Target,
 } from "lucide-react";
 import { ShowIcon } from './ui/ShowIcon';
+import { Input, Select } from './ui';
 
 interface TourManagerProps {
   colors: ThemeColors;
@@ -1233,14 +1234,15 @@ export default function TourManager({
                           <span className="text-[var(--ink-2)] font-sans text-xs">
                             Dieta / pers. / día:
                           </span>
-                          <input
+                          <Input
+                            size="sm"
                             type="number"
                             min="0"
                             value={dietaPerPersona}
                             onChange={(e) =>
                               setDietaPerPersona(Number(e.target.value))
                             }
-                            className="w-16 p-1 rounded bg-[var(--surface)] text-xs font-sans text-center font-bold text-[var(--acc)]/70"
+                            className="w-16 text-center"
                           />
                           <span className="text-[var(--ink-2)] text-xs font-sans">
                             €
@@ -1331,7 +1333,7 @@ export default function TourManager({
                                 <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
                                   Cargar plantilla
                                 </label>
-                                <select aria-label="Cargar plantilla"
+                                <Select size="sm" aria-label="Cargar plantilla"
                                   onChange={(e) =>
                                     handleApplyPresetToVehicle(
                                       vIdx,
@@ -1339,7 +1341,7 @@ export default function TourManager({
                                     )
                                   }
                                   defaultValue=""
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs text-[var(--ink)] cursor-pointer"
+                                  wrapperClassName="w-full"
                                 >
                                   <option value="" disabled>
                                     -- Seleccionar Modelo --
@@ -1352,14 +1354,15 @@ export default function TourManager({
                                       {p.label}
                                     </option>
                                   ))}
-                                </select>
+                                </Select>
                               </div>
 
                               <div>
                                 <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
                                   Nombre / Identificador
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   value={veh.nombre}
                                   onChange={(e) =>
                                     handleUpdateVehicle(
@@ -1369,7 +1372,7 @@ export default function TourManager({
                                     )
                                   }
                                   placeholder="Ej. Furgoneta Principal (Banda)"
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs text-[var(--ink)]"
+                                  className="w-full"
                                 />
                               </div>
 
@@ -1381,7 +1384,7 @@ export default function TourManager({
                                     : "L/100km"}
                                   )
                                 </label>
-                                <input aria-label="Consumo ( )"
+                                <Input size="sm" aria-label="Consumo ( )"
                                   type="number"
                                   step="0.1"
                                   min="0.1"
@@ -1393,7 +1396,7 @@ export default function TourManager({
                                       Number(e.target.value),
                                     )
                                   }
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-bold text-[var(--acc)]/70"
+                                  className="w-full"
                                 />
                               </div>
 
@@ -1406,7 +1409,7 @@ export default function TourManager({
                                   )
                                 </label>
                                 <div className="flex gap-1">
-                                  <input aria-label="Precio (€/ )"
+                                  <Input size="sm" aria-label="Precio (€/ )"
                                     type="number"
                                     step="0.01"
                                     min="0.01"
@@ -1418,9 +1421,9 @@ export default function TourManager({
                                         Number(e.target.value),
                                       )
                                     }
-                                    className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-bold text-[var(--ink-2)]"
+                                    className="w-full"
                                   />
-                                  <select aria-label="Precio (€/ )"
+                                  <Select size="sm" aria-label="Precio (€/ )"
                                     value={veh.tipoCombustible || "diesel"}
                                     onChange={(e) =>
                                       handleUpdateVehicle(
@@ -1429,13 +1432,13 @@ export default function TourManager({
                                         e.target.value,
                                       )
                                     }
-                                    className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-micro text-[var(--ink)] cursor-pointer"
+                                    
                                   >
                                     <option value="diesel">Diésel</option>
                                     <option value="gasolina95">G95</option>
                                     <option value="gasolina98">G98</option>
                                     <option value="electrico">kWh</option>
-                                  </select>
+                                  </Select>
                                 </div>
                               </div>
                             </div>
@@ -1532,7 +1535,8 @@ export default function TourManager({
                             <div className="text-xs font-bold text-[var(--ink-2)] font-sans mb-3 flex items-center gap-2">
                               <span>PARADA #{idx + 1}</span>
                               {leads.length > 0 && (
-                                <select
+                                <Select
+                                  size="sm"
                                   onChange={(e) =>
                                     handleSelectVenueForStop(
                                       idx,
@@ -1540,7 +1544,7 @@ export default function TourManager({
                                     )
                                   }
                                   defaultValue=""
-                                  className="ml-auto text-micro bg-[var(--sunken)] text-[var(--ink-2)] p-1 rounded focus:outline-none cursor-pointer"
+                                  wrapperClassName="ml-auto"
                                 >
                                   <option value="" disabled>
                                     -- Cargar desde Salas BD --
@@ -1553,7 +1557,7 @@ export default function TourManager({
                                       {lead.nombre_sala} ({lead.ciudad})
                                     </option>
                                   ))}
-                                </select>
+                                </Select>
                               )}
                             </div>
 
@@ -1562,39 +1566,41 @@ export default function TourManager({
                                 <label className="text-micro font-sans text-[var(--ink-2)] block">
                                   Ciudad
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   value={stop.ciudad}
                                   onChange={(e) =>
                                     updateStop(idx, "ciudad", e.target.value)
                                   }
                                   placeholder="Ciudad"
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
+                                  className="w-full"
                                 />
                               </div>
                               <div className="space-y-1">
                                 <label className="text-micro font-sans text-[var(--ink-2)] block">
                                   Sala / festival
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   value={stop.sala}
                                   onChange={(e) =>
                                     updateStop(idx, "sala", e.target.value)
                                   }
                                   placeholder="Nombre de la sala"
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
+                                  className="w-full"
                                 />
                               </div>
                               <div className="space-y-1">
                                 <label className="text-micro font-sans text-[var(--ink-2)] block">
                                   Fecha
                                 </label>
-                                <input aria-label="Fecha"
+                                <Input size="sm" aria-label="Fecha"
                                   type="date"
                                   value={stop.fecha}
                                   onChange={(e) =>
                                     updateStop(idx, "fecha", e.target.value)
                                   }
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
+                                  className="w-full"
                                 />
                               </div>
                               <div className="space-y-1">
@@ -1615,7 +1621,8 @@ export default function TourManager({
                                     </span>
                                   ) : null}
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="number"
                                   min="0"
                                   value={stop.distanciaAnteriorKm || ""}
@@ -1627,7 +1634,7 @@ export default function TourManager({
                                     )
                                   }
                                   placeholder="Km desde anterior"
-                                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
+                                  className="w-full"
                                 />
                               </div>
                             </div>
@@ -1644,7 +1651,8 @@ export default function TourManager({
                                 <label className="text-micro text-[var(--ok)] block font-sans">
                                   Caché / taquilla (€)
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="number"
                                   min="0"
                                   value={stop.ingresoCacheEstimated || ""}
@@ -1656,14 +1664,15 @@ export default function TourManager({
                                     )
                                   }
                                   placeholder="0 €"
-                                  className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs text-[var(--ink-2)] font-bold"
+                                  className="w-full"
                                 />
                               </div>
                               <div>
                                 <label className="text-micro text-[var(--acc)]/70 block font-sans flex items-center justify-between">
                                   <span>Gasolina flota (€)</span>
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="number"
                                   min="0"
                                   value={stop.gastosGasolina || ""}
@@ -1675,14 +1684,15 @@ export default function TourManager({
                                     )
                                   }
                                   placeholder="0 €"
-                                  className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs text-[var(--ink)] font-semibold"
+                                  className="w-full"
                                 />
                               </div>
                               <div>
                                 <label className="text-micro text-[var(--ink-2)] block font-sans">
                                   Alojamiento (€)
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="number"
                                   min="0"
                                   value={stop.gastosAlojamiento || ""}
@@ -1694,14 +1704,15 @@ export default function TourManager({
                                     )
                                   }
                                   placeholder="0 €"
-                                  className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs"
+                                  className="w-full"
                                 />
                               </div>
                               <div>
                                 <label className="text-micro text-[var(--ink-2)] block font-sans">
                                   Dietas Expedición (€)
                                 </label>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="number"
                                   min="0"
                                   value={stop.gastosDietas || ""}
@@ -1713,7 +1724,7 @@ export default function TourManager({
                                     )
                                   }
                                   placeholder="0 €"
-                                  className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs"
+                                  className="w-full"
                                 />
                               </div>
                             </div>

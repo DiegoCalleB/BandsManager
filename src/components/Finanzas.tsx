@@ -31,6 +31,7 @@ import { FinanceSummaryCards } from "./finanzas/FinanceSummaryCards";
 import { AddTransactionModal } from "./finanzas/AddTransactionModal";
 import { calculateFinancialSummary } from "../utils/financeUtils";
 import { ShowIcon } from './ui/ShowIcon';
+import { Input, Select, Textarea } from './ui';
 
 interface FinanzasProps {
   colors: ThemeColors;
@@ -749,22 +750,22 @@ export default function Finanzas({
                       <label className="text-[var(--ink-2)] font-semibold">
                         Gasolina y peajes (€)
                       </label>
-                      <input aria-label="Gasolina y peajes (€)"
+                      <Input aria-label="Gasolina y peajes (€)"
                         type="number"
                         value={editingGasolina}
                         onChange={(e) => setEditingGasolina(e.target.value)}
-                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className="text-[var(--ink-2)] font-semibold">
                         Dietas / Comidas (€)
                       </label>
-                      <input aria-label="Dietas / Comidas (€)"
+                      <Input aria-label="Dietas / Comidas (€)"
                         type="number"
                         value={editingDietas}
                         onChange={(e) => setEditingDietas(e.target.value)}
-                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -774,22 +775,22 @@ export default function Finanzas({
                       <label className="text-[var(--ink-2)] font-semibold">
                         Alquiler furgoneta / backline (€)
                       </label>
-                      <input aria-label="Alquiler furgoneta / backline (€)"
+                      <Input aria-label="Alquiler furgoneta / backline (€)"
                         type="number"
                         value={editingAlquiler}
                         onChange={(e) => setEditingAlquiler(e.target.value)}
-                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className="text-[var(--ink-2)] font-semibold">
                         Alojamiento / hoteles (€)
                       </label>
-                      <input aria-label="Alojamiento / hoteles (€)"
+                      <Input aria-label="Alojamiento / hoteles (€)"
                         type="number"
                         value={editingAlojamiento}
                         onChange={(e) => setEditingAlojamiento(e.target.value)}
-                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -798,11 +799,11 @@ export default function Finanzas({
                     <label className="text-[var(--ink-2)] font-semibold">
                       Otros gastos extra (€)
                     </label>
-                    <input aria-label="Otros gastos extra (€)"
+                    <Input aria-label="Otros gastos extra (€)"
                       type="number"
                       value={editingOtros}
                       onChange={(e) => setEditingOtros(e.target.value)}
-                      className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
+                      className="w-full"
                     />
                   </div>
 
@@ -810,12 +811,12 @@ export default function Finanzas({
                     <label className="text-[var(--ink-2)] font-semibold">
                       Notas sobre gastos
                     </label>
-                    <textarea
+                    <Textarea
                       rows={2}
                       value={editingNotasGastos}
                       onChange={(e) => setEditingNotasGastos(e.target.value)}
                       placeholder="Detalles de facturas, tickets guardados…"
-                      className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)]"
+                      className="w-full"
                     />
                   </div>
 
@@ -905,21 +906,23 @@ export default function Finanzas({
 
               <div className="flex gap-2 flex-wrap md:flex-nowrap">
                 {/* Type filter */}
-                <select
+                <Select
+                  size="sm"
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value as any)}
-                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                  
                 >
                   <option value="todos">Tipo: Todos</option>
                   <option value="ingreso">Ingreso (+)</option>
                   <option value="gasto">Gasto (-)</option>
-                </select>
+                </Select>
 
                 {/* Category filter */}
-                <select
+                <Select
+                  size="sm"
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                  
                 >
                   <option value="todos">Categoría: Todas</option>
                   {categories.map((cat) => (
@@ -927,18 +930,19 @@ export default function Finanzas({
                       {cat.toUpperCase()}
                     </option>
                   ))}
-                </select>
+                </Select>
 
                 {/* Status filter */}
-                <select
+                <Select
+                  size="sm"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as any)}
-                  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                  
                 >
                   <option value="todos">Estado: Todos</option>
                   <option value="pendiente">Pendiente</option>
                   <option value="pagado">Pagado</option>
-                </select>
+                </Select>
               </div>
             </div>
 

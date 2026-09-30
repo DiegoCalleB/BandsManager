@@ -10,7 +10,7 @@ import { cn } from '../../utils/cn';
 export const fieldVariants = cva(
   [
     'w-full min-w-0 rounded-[var(--r-s)] border bg-[var(--surface)] text-[var(--ink)]',
-    'text-base sm:text-sm placeholder:text-[var(--ink-3)]',
+    'text-base sm:text-sm placeholder:text-[var(--ink-2)]',
     'transition-ui hover:border-[var(--line-strong)] focus:border-[var(--line-strong)]',
     'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-[var(--line)]',
     'read-only:bg-[var(--sunken)]',

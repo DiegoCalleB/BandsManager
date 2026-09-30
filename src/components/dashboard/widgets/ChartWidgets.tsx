@@ -12,6 +12,7 @@ import { getEnergyInfo } from "../../../utils/energyPacingUtils";
 import { Onda, OndaSeries } from "../../ui/Onda";
 import { EnergyCurve } from "./EnergyCurve";
 import { api } from "../../../services/api";
+import { Select } from '../../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -217,10 +218,10 @@ export function RepertorioEnergyChartWidget({
           Repertorio
         </label>
         <div className="relative">
-          <select aria-label="Repertorio"
+          <Select size="sm" aria-label="Repertorio"
             value={selectedRepertorioId}
             onChange={(e) => setSelectedRepertorioId(e.target.value)}
-            className="w-full bg-[var(--sunken)] text-[var(--ink)] text-xs font-medium rounded-[var(--r-s)] px-3 py-2 pr-8 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"
+            wrapperClassName="w-full pr-8"
           >
             <option value="all">Todos los setlists</option>
             {setlistsList.length > 0 ? (
@@ -232,7 +233,7 @@ export function RepertorioEnergyChartWidget({
             ) : (
               <option disabled>Sin setlists disponibles</option>
             )}
-          </select>
+          </Select>
         </div>
       </div>
 

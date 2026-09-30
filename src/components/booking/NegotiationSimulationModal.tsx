@@ -3,6 +3,7 @@ import { Sparkles, X, Building, Users, Loader2, Check } from 'lucide-react';
 import { Lead } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 interface PredefinedScenario {
   key: string;
@@ -128,39 +129,41 @@ export function NegotiationSimulationModal({
             {/* Scenario selector */}
             <div className="space-y-1.5">
               <label className={`block text-micro font-sans ${textSub}`}>Instrucciones de Situación / Pauta Inicial</label>
-              <select aria-label="Instrucciones de Situación / Pauta Inicial"
+              <Select size="sm" aria-label="Instrucciones de Situación / Pauta Inicial"
                 value={simulationScenario}
                 onChange={(e) => onScenarioChange(e.target.value)}
-                className={`w-full rounded-[var(--r-s)] px-2 py-1 text-micro focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}
+                wrapperClassName="w-full"
               >
                 {(simulationRole === 'sala' ? predefinedScenarios.sala : predefinedScenarios.banda).map((sc) => (
                   <option key={sc.key} value={sc.key}>
                     {sc.label}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {/* Sender Name & Subject */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label className={`block text-micro font-sans ${textSub}`}>Nombre del Emisor</label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={simulationSenderName}
                   onChange={(e) => onSenderNameChange(e.target.value)}
                   placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
-                  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-micro focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}
+                  className="w-full"
                 />
               </div>
               <div className="space-y-1.5">
                 <label className={`block text-micro font-sans ${textSub}`}>Asunto del correo</label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={simulationSubject}
                   onChange={(e) => onSubjectChange(e.target.value)}
                   placeholder="Ej. Re: Propuesta…"
-                  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-micro focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}
+                  className="w-full"
                 />
               </div>
             </div>
@@ -173,12 +176,12 @@ export function NegotiationSimulationModal({
                 </label>
                 <span className={`text-micro font-sans ${textMuted}`}>Cualquier cambio aquí personalizará el correo</span>
               </div>
-              <textarea
+              <Textarea
                 rows={3}
                 value={simulationCustomInstruction}
                 onChange={(e) => onCustomInstructionChange(e.target.value)}
                 placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)…"
-                className={`w-full rounded-[var(--r-s)] p-2.5 text-micro focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink)]`}
+                className="w-full"
               />
             </div>
 
@@ -213,11 +216,11 @@ export function NegotiationSimulationModal({
                     Listo para ajustar
                   </span>
                 </div>
-                <textarea
+                <Textarea
                   rows={6}
                   value={simulationMessage}
                   onChange={(e) => onMessageChange(e.target.value)}
-                  className={`w-full rounded-[var(--r-s)] p-3 text-micro focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink-2)]`}
+                  className="w-full"
                 />
                 <p className={`text-micro font-sans ${textMuted} leading-tight`}>
                   <ShowIcon inline emoji="💡" />Tip: Puedes retocar el texto directamente para añadir detalles personalizados específicos antes de confirmarlo.

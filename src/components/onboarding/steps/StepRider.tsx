@@ -8,6 +8,7 @@ import {
   Trash2,
   Check,
 } from "lucide-react";
+import { Input, Textarea } from '../../ui';
 
 interface StepRiderProps {
   riderTecnicoText: string;
@@ -68,13 +69,13 @@ export const StepRider: React.FC<StepRiderProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)]">
             Canales de Mesa Mínimos
           </label>
-          <input aria-label="Canales de Mesa Mínimos"
+          <Input size="sm" aria-label="Canales de Mesa Mínimos"
             type="number"
             min={4}
             max={64}
             value={canalesMesa}
             onChange={(e) => setCanalesMesa(Number(e.target.value))}
-            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -211,12 +212,12 @@ export const StepRider: React.FC<StepRiderProps> = ({
         <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
           Notas de Escenario & Requerimientos Adicionales (Texto)
         </label>
-        <textarea
+        <Textarea
           rows={3}
           value={riderTecnicoText}
           onChange={(e) => setRiderTecnicoText(e.target.value)}
           placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m…"
-          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:leading-relaxed"
+          className="w-full"
         />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Globe, Instagram, Youtube, Music, Smartphone, ExternalLink, ShoppingBag } from 'lucide-react';
+import { Input } from '../../ui';
 
 interface StepSocialsMerchProps {
   socialLinks: {
@@ -48,12 +49,13 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
             Instagram (Perfil o URL)
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={socialLinks.instagram}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, instagram: e.target.value }))}
             placeholder="https://instagram.com/tubanda o @tubanda"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -63,12 +65,13 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             <Music className="w-3.5 h-3.5 text-[var(--ok)]" />
             Spotify (Perfil de artista)
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={socialLinks.spotify}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, spotify: e.target.value }))}
             placeholder="https://open.spotify.com/artist/…"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -78,12 +81,13 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" />
             Canal de YouTube
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={socialLinks.youtube}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, youtube: e.target.value }))}
             placeholder="https://youtube.com/@tubanda"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -93,12 +97,13 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             <Smartphone className="w-3.5 h-3.5 text-[var(--acc)]" />
             TikTok
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={socialLinks.tiktok}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, tiktok: e.target.value }))}
             placeholder="https://tiktok.com/@tubanda"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -108,12 +113,13 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
             Sitio Web Oficial / Linktree
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={socialLinks.website}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, website: e.target.value }))}
             placeholder="https://www.tubanda.com"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -123,12 +129,13 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             <ExternalLink className="w-3.5 h-3.5 text-[var(--ok)]" />
             WhatsApp de contacto directo
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={socialLinks.whatsapp}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, whatsapp: e.target.value }))}
             placeholder="+34 600 000 000"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
       </div>
@@ -145,23 +152,25 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
               Enlace a Tienda de Merch (Bandcamp, BigCartel, Tienda Online)
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={merchStoreUrl}
               onChange={(e) => setMerchStoreUrl(e.target.value)}
               placeholder="https://tubanda.bandcamp.com/merch"
-              className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
 
           <div>
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Artículos destacados en directo</label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={merchHighlight}
               onChange={(e) => setMerchHighlight(e.target.value)}
               placeholder="Ej. Vinilo Edición Limitada + Camisetas de Gira (15€)"
-              className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+              className="w-full"
             />
           </div>
         </div>

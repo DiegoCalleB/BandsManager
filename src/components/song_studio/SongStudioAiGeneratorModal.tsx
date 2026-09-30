@@ -3,6 +3,7 @@ import { Wand2, X, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { SongAudioIdea, DrumPatternStyle } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 interface SongStudioAiGeneratorModalProps {
   // Solo se usa como"hay idea seleccionada o no", pero el estado real es la idea completa.
@@ -78,21 +79,21 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tempo (BPM)</label>
-                <input aria-label="Tempo (BPM)"
+                <Input size="sm" aria-label="Tempo (BPM)"
                   type="number"
                   min={60}
                   max={220}
                   value={genBpm}
                   onChange={(e) => setGenBpm(parseInt(e.target.value) || 120)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
+                  className="w-full"
                 />
               </div>
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tonalidad (Raíz del bajo)</label>
-                <select aria-label="Tonalidad (Raíz del bajo)"
+                <Select size="sm" aria-label="Tonalidad (Raíz del bajo)"
                   value={genKey}
                   onChange={(e) => setGenKey(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
+                  wrapperClassName="w-full"
                 >
                   <option value="Do">Do (C)</option>
                   <option value="Re">Re (D)</option>
@@ -101,7 +102,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                   <option value="Sol">Sol (G)</option>
                   <option value="La">La (A)</option>
                   <option value="Si">Si (B)</option>
-                </select>
+                </Select>
               </div>
             </div>
 

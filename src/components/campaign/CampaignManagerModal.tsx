@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Textarea } from '../ui';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -348,14 +349,15 @@ export function CampaignManagerModal({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Nombre de la campaña *
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={formData.name || ""}
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
                     placeholder="Ej: Campaña Diciembre 2026"
-                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]"
+                    className="w-full"
                   />
                 </div>
                 <div>
@@ -411,7 +413,8 @@ export function CampaignManagerModal({
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={newCityInput}
                     onChange={(e) => setNewCityInput(e.target.value)}
@@ -422,7 +425,7 @@ export function CampaignManagerModal({
                       }
                     }}
                     placeholder="Añadir ciudad (ej. Barcelona) y pulsar Enter"
-                    className="flex-1 bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
+                    className="flex-1"
                   />
                   <button
                     type="button"
@@ -440,7 +443,7 @@ export function CampaignManagerModal({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Aforo mínimo (pax)
                   </label>
-                  <input aria-label="Aforo mínimo (pax)"
+                  <Input size="sm" aria-label="Aforo mínimo (pax)"
                     type="number"
                     value={formData.minCapacity || 0}
                     onChange={(e) =>
@@ -449,14 +452,14 @@ export function CampaignManagerModal({
                         minCapacity: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
+                    className="w-full"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Aforo Máximo (pax)
                   </label>
-                  <input aria-label="Aforo Máximo (pax)"
+                  <Input size="sm" aria-label="Aforo Máximo (pax)"
                     type="number"
                     value={formData.maxCapacity || 0}
                     onChange={(e) =>
@@ -465,7 +468,7 @@ export function CampaignManagerModal({
                         maxCapacity: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -538,14 +541,14 @@ export function CampaignManagerModal({
                 <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                   Notas de Enfoque y Co-booking
                 </label>
-                <textarea
+                <Textarea
                   rows={2}
                   value={formData.notes || ""}
                   onChange={(e) =>
                     setFormData({ ...formData, notes: e.target.value })
                   }
                   placeholder="Ej: Intercambio con bandas de ska/mestizaje locales para compartir backline y taquilla al 50%."
-                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
+                  className="w-full"
                 />
               </div>
 
@@ -612,7 +615,7 @@ export function CampaignManagerModal({
                     );
                   })}
                 </div>
-                <textarea
+                <Textarea
                   key={activePitchCategory}
                   rows={3}
                   value={
@@ -625,7 +628,7 @@ export function CampaignManagerModal({
                     )
                   }
                   placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para "${PITCH_CATEGORIES.find((c) => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
-                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
+                  className="w-full"
                 />
                 <p className="text-xs text-[var(--ink-2)] italic mt-1">
                   <ShowIcon inline emoji="💡" />Cada caso de uso tiene su propio mensaje. Mientras esta

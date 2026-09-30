@@ -13,6 +13,7 @@ import {
 import { Song, ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
+import { Select } from './ui';
 
 interface MetronomeModalProps {
   isOpen: boolean;
@@ -252,10 +253,10 @@ export function MetronomeModal({
                   <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
                   Sincronizar BPM desde Repertorio:
                 </label>
-                <select aria-label="Sincronizar BPM desde Repertorio"
+                <Select size="sm" aria-label="Sincronizar BPM desde Repertorio"
                   value={selectedSongId}
                   onChange={handleSelectSong}
-                  className="w-full bg-[var(--bg)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none "
+                  wrapperClassName="w-full"
                 >
                   <option value="">-- Seleccionar canción --</option>
                   {songs.map((song) => (
@@ -264,7 +265,7 @@ export function MetronomeModal({
                       {song.bpm ? `(${song.bpm} BPM)` : "(Sin BPM definido)"}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             )}
 

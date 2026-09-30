@@ -21,6 +21,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface MultiModelPitchComparatorModalProps {
   isOpen: boolean;
@@ -307,12 +308,13 @@ export const MultiModelPitchComparatorModal: React.FC<
             {/* Prompt adjustments */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <div className="flex-1 relative">
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={customComment}
                   onChange={(e) => setCustomComment(e.target.value)}
                   placeholder="Ajuste puntual opcional: Ej. 'Destacar que tenemos 100k streams', 'Proponer viernes o sábado'…"
-                  className="w-full px-3 py-2 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
+                  className="w-full"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleRunComparison();
                   }}

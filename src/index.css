@@ -79,8 +79,15 @@ html, body {
 }
 
 /* Espectro: los controles nativos no traen borde propio; si lo llevan, es con token. */
-button, input, textarea, select, iframe {
+button, iframe {
   border: none;
+}
+/* Los campos SÍ pueden llevar borde con token (Ley 1: «campo en reposo»). Va en @layer base para que las
+   utilidades de Tailwind (`border`, `border-[var(--line)]`) le ganen; sin capa, este reset las anulaba. */
+@layer base {
+  input, textarea, select {
+    border: 0 solid transparent;
+  }
 }
 /* Foco: el ratón no dibuja anillo, el teclado SIEMPRE (accesibilidad). Antes se apagaba el
    outline de button/input en todo caso y navegar con Tab era a ciegas. */

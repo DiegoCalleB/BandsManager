@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { sanitizeConcertDisplayName } from "../utils/fanUtils";
 import { ShowIcon } from './ui/ShowIcon';
+import { Input } from './ui';
 
 export const PublicFanCapture: React.FC = () => {
   const [nombre, setNombre] = useState("");
@@ -187,13 +188,13 @@ export const PublicFanCapture: React.FC = () => {
               <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5" /> Nombre y Apellidos *
               </label>
-              <input
+              <Input
                 type="text"
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="Ej: Laura García"
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                className="w-full"
               />
             </div>
 
@@ -201,13 +202,13 @@ export const PublicFanCapture: React.FC = () => {
               <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
                 <Mail className="w-3.5 h-3.5" /> Correo electrónico *
               </label>
-              <input
+              <Input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tuemail@ejemplo.com"
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                className="w-full"
               />
             </div>
 
@@ -216,12 +217,13 @@ export const PublicFanCapture: React.FC = () => {
                 <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-[var(--acc)]" /> Ciudad
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={ciudad}
                   onChange={(e) => setCiudad(e.target.value)}
                   placeholder="Ej: Madrid"
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                  className="w-full"
                 />
               </div>
 
@@ -229,12 +231,13 @@ export const PublicFanCapture: React.FC = () => {
                 <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1">
                   <Music className="w-3 h-3 text-[var(--acc)]" /> ¿Origen?
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={comoConocio}
                   onChange={(e) => setComoConocio(e.target.value)}
                   placeholder="Ej: Directo / Instagram"
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                  className="w-full"
                 />
               </div>
             </div>

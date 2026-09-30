@@ -10,6 +10,7 @@ import {
 import { Song, Setlist, SetlistItem } from "../../types";
 import { getAuthHeaders } from "../../services/api";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 type SongAction = "link_matched" | "link_other" | "create_new" | "discard";
 
@@ -313,11 +314,11 @@ export function ImportSetlistModal({
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
                   Nombre del repertorio
                 </label>
-                <input aria-label="Nombre del repertorio"
+                <Input size="sm" aria-label="Nombre del repertorio"
                   type="text"
                   value={setlistName}
                   onChange={(e) => setSetlistName(e.target.value)}
-                  className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink-2)] focus:outline-none"
+                  className="w-full"
                 />
               </div>
 
@@ -370,14 +371,15 @@ export function ImportSetlistModal({
                         )}
                       </div>
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <select
+                        <Select
+                          size="sm"
                           value={it.action}
                           onChange={(e) =>
                             updateSongItem(idx, {
                               action: e.target.value as SongAction,
                             })
                           }
-                          className="text-micro bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] font-sans"
+                          
                         >
                           {it.matchedSongId && (
                             <option value="link_matched">
@@ -393,27 +395,29 @@ export function ImportSetlistModal({
                           <option value="discard">
                             Descartar (no incluir)
                           </option>
-                        </select>
+                        </Select>
                         {it.action === "create_new" && (
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={it.newTitle}
                             onChange={(e) =>
                               updateSongItem(idx, { newTitle: e.target.value })
                             }
                             placeholder="Título de la canción nueva"
-                            className="text-micro bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
+                            className="flex-1 min-w-[140px]"
                           />
                         )}
                         {it.action === "link_other" && (
-                          <select
+                          <Select
+                            size="sm"
                             value={it.linkedSongId}
                             onChange={(e) =>
                               updateSongItem(idx, {
                                 linkedSongId: e.target.value,
                               })
                             }
-                            className="text-micro bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
+                            wrapperClassName="flex-1 min-w-[140px]"
                           >
                             <option value="">
                               Elige una canción del catálogo…
@@ -423,7 +427,7 @@ export function ImportSetlistModal({
                                 {s.titulo}
                               </option>
                             ))}
-                          </select>
+                          </Select>
                         )}
                       </div>
                     </div>

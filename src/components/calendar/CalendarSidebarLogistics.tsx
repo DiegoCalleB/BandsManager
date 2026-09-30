@@ -87,6 +87,7 @@ import { EventWeatherCard } from './EventWeatherCard';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 export interface CalendarSidebarLogisticsProps {
   colors: ThemeColors;
@@ -973,7 +974,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   )}
                 </div>
 
-                <select
+                <Select
+                  size="sm"
                   value={currentSetlistId || ''}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -983,9 +985,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onUpdateRehearsal(selectedRehearsal.id, { setlistId: val });
                     }
                   }}
-                  className={`w-full text-micro font-mono p-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  wrapperClassName="w-full"
                 >
                   <option value="">-- Sin repertorio asignado --</option>
                   {availableSetlists.map((s: any) => (
@@ -993,7 +993,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       {s.nombre} ({s.tipoFormato})
                     </option>
                   ))}
-                </select>
+                </Select>
 
                 {assignedSetlist && (
                   <div className="mt-2.5 flex items-center gap-2">
@@ -1127,41 +1127,41 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <div className="grid grid-cols-2 gap-2 text-micro">
                         <div>
                           <label className={`block text-micro font-mono ${textSub}`}>Promotor / sala</label>
-                          <input aria-label="Promotor / sala"
+                          <Input size="sm" aria-label="Promotor / sala"
                             type="text"
                             value={currentRb.contactoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, contactoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
+                            className="w-full"
                           />
                         </div>
                         <div>
                           <label className={`block text-micro font-mono ${textSub}`}>Teléfono</label>
-                          <input aria-label="Teléfono"
+                          <Input size="sm" aria-label="Teléfono"
                             type="text"
                             value={currentRb.telefonoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, telefonoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
+                            className="w-full"
                           />
                         </div>
                       </div>
 
                       <div>
                         <label className={`block text-micro font-mono ${textSub}`}>Hotel Alojamientos</label>
-                        <input aria-label="Hotel Alojamientos"
+                        <Input size="sm" aria-label="Hotel Alojamientos"
                           type="text"
                           value={currentRb.hotelNombre}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, hotelNombre: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
+                          className="w-full"
                         />
                       </div>
 
                       <div>
                         <label className={`block text-micro font-mono ${textSub}`}>Catering y Menús</label>
-                        <input aria-label="Catering & Menús"
+                        <Input size="sm" aria-label="Catering & Menús"
                           type="text"
                           value={currentRb.cateringInfo}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, cateringInfo: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -1170,11 +1170,11 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
                         <ShowIcon inline emoji="🎸" />Input List / Rider de Canales
                       </span>
-                      <textarea
+                      <Textarea
                         rows={4}
                         value={currentRb.inputList}
                         onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, inputList: e.target.value })}
-                        className={`w-full p-2 rounded font-mono text-micro ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                        className="w-full"
                       />
                     </div>
 
@@ -1616,23 +1616,21 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               <div className="mb-3">
                 {activeTab === 'runofshow' ? (
                   <form onSubmit={handleAddRunOfShow} className="flex gap-1.5 items-center">
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="17:30"
                       value={newRunTime}
                       onChange={(e) => setNewRunTime(e.target.value)}
-                      className={`w-16 px-2 py-1 text-micro font-mono rounded outline-none ${
-                        'bg-[var(--sunken)] text-[var(--ink)]'
-                      }`}
+                      className="w-16"
                     />
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="Nueva actividad/horario…"
                       value={newRunActivity}
                       onChange={(e) => setNewRunActivity(e.target.value)}
-                      className={`flex-1 px-2 py-1 text-micro rounded outline-none ${
-                        'bg-[var(--sunken)] text-[var(--ink)]'
-                      }`}
+                      className="flex-1"
                     />
                     <button
                       type="submit"
@@ -1646,14 +1644,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   </form>
                 ) : (
                   <form onSubmit={handleAddGear} className="flex gap-1.5 items-center">
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       placeholder="Añadir instrumento, cable o cacharro de directo…"
                       value={newGearLabel}
                       onChange={(e) => setNewGearLabel(e.target.value)}
-                      className={`flex-1 px-2 py-1 text-micro rounded outline-none ${
-                        'bg-[var(--sunken)] text-[var(--ink)]'
-                      }`}
+                      className="flex-1"
                     />
                     <button
                       type="submit"

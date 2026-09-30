@@ -6,6 +6,7 @@ import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
+import { Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -203,7 +204,7 @@ export function SongModal({
                 <label className="block text-[var(--ink-2)] font-semibold mb-1">
                   Título de la canción <span className="text-[var(--ok)]">*</span>
                 </label>
-                <input
+                <Input
                   name="titulo"
                   type="text"
                   required
@@ -213,7 +214,7 @@ export function SongModal({
                       e.target.value = formatSongTitle(e.target.value);
                     }
                   }}
-                  className={`w-full p-2.5 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                  className="w-full"
                   placeholder="ej. Brisa y Cacharros"
                 />
               </div>
@@ -225,10 +226,10 @@ export function SongModal({
                     <Disc3 className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span>Álbum / disco</span>
                   </label>
-                  <select aria-label="Álbum / disco"
+                  <Select size="sm" aria-label="Álbum / disco"
                     value={selectedAlbum}
                     onChange={(e) => setSelectedAlbum(e.target.value)}
-                    className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${'bg-[var(--sunken)] text-[var(--ok)]'}`}
+                    wrapperClassName="w-full"
                   >
                     <option value="">Single (Sin disco)</option>
                     {albumsList
@@ -239,17 +240,16 @@ export function SongModal({
                         </option>
                       ))}
                     <option value="__CUSTOM__">+ Crear nuevo álbum…</option>
-                  </select>
+                  </Select>
 
                   {selectedAlbum === '__CUSTOM__' && (
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       value={customAlbumInput}
                       onChange={(e) => setCustomAlbumInput(e.target.value)}
                       placeholder="Nombre del nuevo disco…"
-                      className={`w-full mt-2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none ${
-                        'bg-[var(--sunken)] text-[var(--ink)]'
-                      }`}
+                      className="w-full mt-2"
                     />
                   )}
                 </div>
@@ -257,28 +257,26 @@ export function SongModal({
                 <div>
                   <label className="block text-[var(--ink-2)] font-semibold mb-1">Duración (Min : Seg)</label>
                   <div className="flex gap-2 items-center">
-                    <input
+                    <Input
+                      size="sm"
                       name="duracionMin"
                       type="number"
                       min="0"
                       value={minutos}
                       onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
-                      className={`w-1/2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none text-center font-bold text-[var(--ok)] ${
-                        'bg-[var(--sunken)] text-[var(--ink)] '
-                      }`}
+                      className="w-1/2 text-center"
                       placeholder="3"
                     />
                     <span className="text-[var(--ink-2)] font-bold">:</span>
-                    <input
+                    <Input
+                      size="sm"
                       name="duracionSeg"
                       type="number"
                       min="0"
                       max="59"
                       value={segundos}
                       onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
-                      className={`w-1/2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none text-center font-bold text-[var(--ok)] ${
-                        'bg-[var(--sunken)] text-[var(--ink)] '
-                      }`}
+                      className="w-1/2 text-center"
                       placeholder="30"
                     />
                   </div>
@@ -289,42 +287,40 @@ export function SongModal({
               <div className="grid grid-cols-3 gap-2.5">
                 <div>
                   <label className="block text-[var(--ink-2)] text-xs font-semibold mb-1">Tonalidad</label>
-                  <input
+                  <Input
+                    size="sm"
                     name="tonalidad"
                     type="text"
                     defaultValue={editingSong?.tonalidad || ''}
-                    className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                      'bg-[var(--sunken)] text-[var(--ink)] '
-                    }`}
+                    className="w-full"
                     placeholder="ej. Am"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[var(--ink-2)] text-xs font-semibold mb-1">BPM</label>
-                  <input
+                  <Input
+                    size="sm"
                     name="bpm"
                     type="number"
                     defaultValue={editingSong?.bpm || 120}
-                    className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                      'bg-[var(--sunken)] text-[var(--ink)] '
-                    }`}
+                    className="w-full"
                     placeholder="120"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[var(--ink-2)] text-xs font-semibold mb-1">Energía</label>
-                  <select aria-label="Energía"
+                  <Select size="sm" aria-label="Energía"
                     name="energia"
                     defaultValue={energiaDefault}
-                    className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                    wrapperClassName="w-full"
                   >
                     <option value="20">Explosiva</option>
                     <option value="18">Alta</option>
                     <option value="12">Media</option>
                     <option value="6">Balada</option>
-                  </select>
+                  </Select>
                 </div>
               </div>
 
@@ -359,30 +355,27 @@ export function SongModal({
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Género / estilo</label>
-                        <input
+                        <Input
+                          size="sm"
                           name="genero"
                           type="text"
                           defaultValue={editingSong?.genero || ''}
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--surface)] text-[var(--ink)] '
-                          }`}
+                          className="w-full"
                           placeholder="ej. Rock, Rumba"
                         />
                       </div>
 
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Tipo de tema</label>
-                        <select aria-label="Tipo de tema"
+                        <Select size="sm" aria-label="Tipo de tema"
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
-                            'bg-[var(--surface)] text-[var(--ink)] '
-                          }`}
+                          wrapperClassName="w-full"
                         >
                           <option value="propio">Propio / original</option>
                           <option value="cover">Cover / versión</option>
                           <option value="instrumental">Instrumental / Intro</option>
-                        </select>
+                        </Select>
                       </div>
                     </div>
 
@@ -390,29 +383,26 @@ export function SongModal({
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Estado de Madurez</label>
-                        <select aria-label="Estado de Madurez"
+                        <Select size="sm" aria-label="Estado de Madurez"
                           name="estadoTema"
                           defaultValue={editingSong?.estadoTema || 'listo'}
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
-                            'bg-[var(--surface)] text-[var(--ink)] '
-                          }`}
+                          wrapperClassName="w-full"
                         >
                           <option value="listo">Listo para directo</option>
                           <option value="ensayando">En Ensayo</option>
                           <option value="componiendo">En Composición</option>
                           <option value="descartado">Archivo</option>
-                        </select>
+                        </Select>
                       </div>
 
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Voz Principal</label>
-                        <input
+                        <Input
+                          size="sm"
                           name="cantantePrincipal"
                           type="text"
                           defaultValue={editingSong?.cantantePrincipal || ''}
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--surface)] text-[var(--ink)] '
-                          }`}
+                          className="w-full"
                           placeholder="Cantante"
                         />
                       </div>
@@ -422,26 +412,24 @@ export function SongModal({
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Afinación</label>
-                        <input
+                        <Input
+                          size="sm"
                           name="afinacion"
                           type="text"
                           defaultValue={editingSong?.afinacion || 'E Standard'}
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--surface)] text-[var(--ink)] '
-                          }`}
+                          className="w-full"
                           placeholder="E Standard"
                         />
                       </div>
 
                       <div>
                         <label className="block text-[var(--ink-2)] text-xs mb-1">Enlace a Partitura / Drive</label>
-                        <input
+                        <Input
+                          size="sm"
                           name="enlaceAcordes"
                           type="url"
                           defaultValue={editingSong?.enlaceAcordes || ''}
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
-                            'bg-[var(--surface)] text-[var(--ink)] '
-                          }`}
+                          className="w-full"
                           placeholder="https://drive.google.com/…"
                         />
                       </div>
@@ -450,13 +438,11 @@ export function SongModal({
                     {/* Internal Notes */}
                     <div>
                       <label className="block text-[var(--ink-2)] text-xs mb-1">Notas internas de ejecución</label>
-                      <textarea
+                      <Textarea
                         name="notasInternas"
                         rows={2}
                         defaultValue={editingSong?.notasInternas || ''}
-                        className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none text-xs ${
-                          'bg-[var(--surface)] text-[var(--ink)] '
-                        }`}
+                        className="w-full"
                         placeholder="ej. Entrar directos tras el solo de batería…"
                       />
                     </div>
@@ -483,14 +469,13 @@ export function SongModal({
                         <div className="space-y-2 pt-1">
                           <div>
                             <label className="block text-[var(--ink-2)] text-micro mb-1"><ShowIcon inline emoji="📌" />Nota General para todo el grupo</label>
-                            <input
+                            <Input
+                              size="sm"
                               name="notasRepertorio"
                               type="text"
                               defaultValue={editingSong?.notasRepertorio || ''}
                               placeholder="ej. Parón en seco antes del último coro"
-                              className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none text-xs ${
-                                'bg-[var(--surface)] text-[var(--ink)]'
-                              }`}
+                              className="w-full"
                             />
                           </div>
 
@@ -505,14 +490,13 @@ export function SongModal({
                                   />
                                   {member.name} <span className="text-[var(--ink-2)] font-normal">({member.instrument})</span>
                                 </span>
-                                <input
+                                <Input
+                                  size="sm"
                                   type="text"
                                   value={memberNotesState[memberKey] || ''}
                                   onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
                                   placeholder={`Notas para ${member.name}...`}
-                                  className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none text-xs ${
-                                    'bg-[var(--surface)] text-[var(--ink)]'
-                                  }`}
+                                  className="w-full"
                                 />
                               </div>
                             );

@@ -41,6 +41,7 @@ import {
 import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
+import { Input } from './ui';
 
 // Fase beta: crear una banda nueva desde aquí va directa al plan Promo, sin pasar por la
 // parrilla de planes de pago (mismo criterio que SimplePromoLoginModal.tsx). El selector de
@@ -638,12 +639,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
             {uniqueBands.length > 2 && (
               <div className="relative w-full max-w-xs mt-4">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--ink-2)]" />
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Buscar proyecto…"
-                  className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none "
+                  className="w-full pl-9 pr-3"
                 />
               </div>
             )}
@@ -1168,14 +1170,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           onChange={(styled) => setNewBandName(styled)}
                         />
                       </div>
-                      <input
+                      <Input
                         type="text"
                         value={newBandName}
                         onChange={(e) => setNewBandName(e.target.value)}
                         placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑, Bakandeya…"
                         required
                         autoFocus
-                        className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors font-bold"
+                        className="w-full"
                       />
                     </div>
 
@@ -1184,12 +1186,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <UserIcon className="w-3.5 h-3.5 text-[var(--acc)]" />
                         <span>Tu Rol o Nombre en este Proyecto</span>
                       </label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={newBandLeaderName}
                         onChange={(e) => setNewBandLeaderName(e.target.value)}
                         placeholder="Ej: Kurt Cobain (Guitarra & Mánager)"
-                        className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors"
+                        className="w-full"
                       />
                     </div>
 
@@ -1199,12 +1202,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
                           <span>Estilo musical / género</span>
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={newBandStyle}
                           onChange={(e) => setNewBandStyle(e.target.value)}
                           placeholder="Ej: Rock, Indie, Mestizaje, Ska…"
-                          className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors"
+                          className="w-full"
                         />
                       </div>
 
@@ -1213,12 +1217,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
                           <span>Ciudad / ubicación base</span>
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={newBandLocation}
                           onChange={(e) => setNewBandLocation(e.target.value)}
                           placeholder="Ej: Madrid, Barcelona, Valencia…"
-                          className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors"
+                          className="w-full"
                         />
                       </div>
                     </div>

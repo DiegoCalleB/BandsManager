@@ -14,6 +14,7 @@ import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
+import { Input, Textarea } from '../ui';
 
 interface MemberNotesModalProps {
   isOpen: boolean;
@@ -278,12 +279,12 @@ export function MemberNotesModal({
               >
                 <ShowIcon inline emoji="📌" />Nota general para todo el grupo (Opcional)
               </label>
-              <textarea
+              <Textarea
                 rows={2}
                 value={generalRepertorioNote}
                 onChange={(e) => setGeneralRepertorioNote(e.target.value)}
                 placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco…"
-                className="w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none bg-[var(--surface)] text-[var(--ink)]"
+                className="w-full"
               />
             </div>
 
@@ -308,19 +309,21 @@ export function MemberNotesModal({
                 <div
                   className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${"bg-[var(--tentative)]/5"}`}
                 >
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Nombre (ej. Músico Invitado)"
                     value={newMemberName}
                     onChange={(e) => setNewMemberName(e.target.value)}
-                    className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${"bg-[var(--sunken)]"}`}
+                    className="flex-1 min-w-[140px]"
                   />
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Instrumento (ej. Teclados)"
                     value={newMemberInstrument}
                     onChange={(e) => setNewMemberInstrument(e.target.value)}
-                    className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${"bg-[var(--sunken)]"}`}
+                    className="flex-1 min-w-[140px]"
                   />
                   <div className="flex items-center gap-1.5">
                     <button
@@ -404,14 +407,14 @@ export function MemberNotesModal({
                       ))}
                     </div>
 
-                    <textarea
+                    <Textarea
                       rows={2}
                       value={currentNote}
                       onChange={(e) =>
                         handleNoteChange(member.name, e.target.value)
                       }
                       placeholder={`Notas específicas para ${member.name} (${member.instrument})... ej. Entrada en compás 8, solo con sordina, cambio de afinación...`}
-                      className="w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors bg-[var(--sunken)] text-[var(--ink)]"
+                      className="w-full"
                     />
                   </div>
                 );

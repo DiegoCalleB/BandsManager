@@ -17,6 +17,7 @@ import {
   downloadQrAsHighResPng,
   printHighQualityFlyer,
 } from "../utils/qrExport";
+import { Input } from './ui';
 
 interface QrExportModalProps {
   isOpen: boolean;
@@ -262,12 +263,13 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               <label className="text-xs font-sans text-[var(--ink-2)]">
                 Texto de llamada a la acción (Titular):
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={customCta}
                 onChange={(e) => setCustomCta(e.target.value)}
                 placeholder="¡ESCANEA CON LA CÁMARA DE TU MÓVIL!"
-                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                className="w-full"
               />
             </div>
           )}

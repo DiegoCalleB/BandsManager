@@ -15,7 +15,7 @@ import {
   Megaphone,
   type LucideIcon,
 } from "lucide-react";
-import { Button } from "../ui";
+import { Button, Input, Select } from '../ui';
 import { Song, Setlist, SetlistShortcut } from "../../types";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 
@@ -130,7 +130,8 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           Añadir temas
         </Button>
 
-        <select
+        <Select
+          size="sm"
           onChange={(e) => {
             if (e.target.value) {
               handleAddItemToSetlist(e.target.value, "cancion");
@@ -139,7 +140,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           }}
           defaultValue=""
           aria-label="Añadir un tema del catálogo"
-          className="h-9 min-w-0 flex-1 basis-40 cursor-pointer truncate rounded-[var(--r-pill)] bg-[var(--sunken)] px-3.5 text-xs font-medium text-[var(--ink)] transition-ui hover:brightness-95 sm:max-w-[16rem] sm:flex-none"
+          wrapperClassName="min-w-0 flex-1 basis-40 truncate sm:max-w-[16rem] sm:flex-none"
         >
           <option value="">Añadir un tema…</option>
           {sortedSongsByAlbumAndOrder.map((s, idx) => {
@@ -152,7 +153,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
               </option>
             );
           })}
-        </select>
+        </Select>
 
         <div className="relative ml-auto flex shrink-0 items-center gap-2">
           <Button
@@ -249,14 +250,16 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                   {isAddingShortcut && (
                     <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/90 space-y-2 mb-1.5">
                       <div className="flex items-center gap-1.5">
-                        <input
+                        <Input
+                          size="sm"
                           value={newShortcutIcon}
                           onChange={(e) => setNewShortcutIcon(e.target.value)}
                           maxLength={2}
                           placeholder="Icono"
-                          className="w-8 bg-[var(--sunken)] rounded-[var(--r-s)] p-1 text-center text-xs focus:outline-none"
+                          className="w-8 text-center"
                         />
-                        <input
+                        <Input
+                          size="sm"
                           value={newShortcutLabel}
                           onChange={(e) => setNewShortcutLabel(e.target.value)}
                           placeholder="Nombre del acceso"
@@ -266,13 +269,14 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                             if (e.key === "Enter") handleCreateShortcut();
                             if (e.key === "Escape") setIsAddingShortcut(false);
                           }}
-                          className="flex-1 min-w-0 bg-[var(--sunken)] rounded-[var(--r-s)] px-2 py-1 text-xs focus:outline-none"
+                          className="flex-1 min-w-0"
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pt-0.5">
                         <div className="flex items-center gap-1 text-xs text-[var(--ink-2)]">
                           <span>Duración:</span>
-                          <input
+                          <Input
+                            size="sm"
                             type="number"
                             min={0}
                             value={newShortcutMinutes}
@@ -281,7 +285,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                                 Math.max(0, parseInt(e.target.value, 10) || 0),
                               )
                             }
-                            className="w-10 bg-[var(--sunken)] rounded text-center text-xs py-0.5 focus:outline-none"
+                            className="w-10 text-center"
                           />
                           <span>min</span>
                         </div>

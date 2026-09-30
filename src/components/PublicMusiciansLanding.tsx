@@ -29,6 +29,7 @@ import {
   getMusiciansTranslations,
   MusiciansLandingDict,
 } from "../i18n/musiciansTranslations";
+import { Input, Select, Textarea } from './ui';
 
 export const PublicMusiciansLanding: React.FC = () => {
   // 1. Detect language from query params or browser
@@ -427,7 +428,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           imprescindible
                         </span>
                       </label>
-                      <input
+                      <Input
                         type="text"
                         required
                         value={formData.nombreBanda}
@@ -438,7 +439,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           })
                         }
                         placeholder={t.placeholderBandName}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full"
                       />
                     </div>
 
@@ -450,7 +451,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           imprescindible
                         </span>
                       </label>
-                      <input
+                      <Input
                         type="email"
                         required
                         value={formData.email}
@@ -458,7 +459,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           setFormData({ ...formData, email: e.target.value })
                         }
                         placeholder={t.placeholderEmail}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -472,7 +473,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           recomendado
                         </span>
                       </label>
-                      <input
+                      <Input
                         type="text"
                         value={formData.instagram}
                         onChange={(e) =>
@@ -482,7 +483,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           })
                         }
                         placeholder={t.placeholderInstagram}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full"
                       />
                     </div>
 
@@ -494,7 +495,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           opcional
                         </span>
                       </label>
-                      <input
+                      <Input
                         type="text"
                         value={formData.nombreContacto}
                         onChange={(e) =>
@@ -504,7 +505,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           })
                         }
                         placeholder={t.placeholderContactName}
-                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -546,14 +547,14 @@ export const PublicMusiciansLanding: React.FC = () => {
                         <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelGenre}
                         </label>
-                        <input
+                        <Input
                           type="text"
                           value={formData.genero}
                           onChange={(e) =>
                             setFormData({ ...formData, genero: e.target.value })
                           }
                           placeholder={t.placeholderGenre}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full"
                         />
                       </div>
 
@@ -562,14 +563,14 @@ export const PublicMusiciansLanding: React.FC = () => {
                         <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelCity}
                         </label>
-                        <input
+                        <Input
                           type="text"
                           value={formData.ciudad}
                           onChange={(e) =>
                             setFormData({ ...formData, ciudad: e.target.value })
                           }
                           placeholder={t.placeholderCity}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -580,7 +581,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                         <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelPhone}
                         </label>
-                        <input
+                        <Input
                           type="tel"
                           value={formData.telefono}
                           onChange={(e) =>
@@ -590,7 +591,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             })
                           }
                           placeholder={t.placeholderPhone}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full"
                         />
                       </div>
 
@@ -599,7 +600,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                         <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelMusicLink}
                         </label>
-                        <input
+                        <Input
                           type="text"
                           value={formData.enlaceMusica}
                           onChange={(e) =>
@@ -609,7 +610,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             })
                           }
                           placeholder={t.placeholderMusicLink}
-                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans"
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -619,7 +620,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                       <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                         {t.labelMainInterest}
                       </label>
-                      <select
+                      <Select
                         value={formData.interesPrincipal}
                         onChange={(e) =>
                           setFormData({
@@ -627,7 +628,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                             interesPrincipal: e.target.value,
                           })
                         }
-                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] outline-none transition font-sans"
+                        wrapperClassName="w-full"
                       >
                         <option value="">{t.optionSelectInterest}</option>
                         <option value="fans">{t.optionInterestFans}</option>
@@ -636,7 +637,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           {t.optionInterestRepertoire}
                         </option>
                         <option value="todo">{t.optionInterestAll}</option>
-                      </select>
+                      </Select>
                     </div>
 
                     {/* Notes */}
@@ -644,14 +645,14 @@ export const PublicMusiciansLanding: React.FC = () => {
                       <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                         {t.labelNotes}
                       </label>
-                      <textarea
+                      <Textarea
                         rows={2}
                         value={formData.notas}
                         onChange={(e) =>
                           setFormData({ ...formData, notas: e.target.value })
                         }
                         placeholder={t.placeholderNotes}
-                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none transition font-sans resize-none"
+                        className="w-full"
                       />
                     </div>
                   </div>

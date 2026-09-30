@@ -1,6 +1,7 @@
 import React from 'react';
 import { Award, Plus, Trash2, Radio, Users, CheckCircle2, TrendingUp } from 'lucide-react';
 import { PressQuoteItem } from '../types';
+import { Input } from '../../ui';
 
 interface StepPressProofProps {
   pressQuotes: PressQuoteItem[];
@@ -54,12 +55,13 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)] flex items-center gap-1">
             <TrendingUp className="w-3.5 h-3.5 text-[var(--ok)]" /> Oyentes Mensuales Spotify
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={cifrasOyentes}
             onChange={(e) => setCifrasOyentes(e.target.value)}
             placeholder="Ej. 12.500 oyentes / mes"
-            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -67,12 +69,13 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)] flex items-center gap-1">
             <Radio className="w-3.5 h-3.5 text-[var(--acc)]" /> Conciertos Realizados
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={cifrasDirectos}
             onChange={(e) => setCifrasDirectos(e.target.value)}
             placeholder="Ej. +35 directos en 2025"
-            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
 
@@ -80,12 +83,13 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           <label className="block text-xs font-medium text-[var(--ink-2)] flex items-center gap-1">
             <Users className="w-3.5 h-3.5 text-[var(--alert)]" /> Comunidad / seguidores
           </label>
-          <input
+          <Input
+            size="sm"
             type="text"
             value={cifrasComunidad}
             onChange={(e) => setCifrasComunidad(e.target.value)}
             placeholder="Ej. +4.800 en Instagram & TikTok"
-            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none"
+            className="w-full"
           />
         </div>
       </div>
@@ -93,12 +97,13 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
       {/* Festivales & Salas donde han tocado */}
       <div>
         <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Festivales, Salas o Concursos Destacados</label>
-        <input
+        <Input
+          size="sm"
           type="text"
           value={festivalesDestacados}
           onChange={(e) => setFestivalesDestacados(e.target.value)}
           placeholder="Ej. Sonorama Ribera 2024, Sala Sol (Madrid), Finalistas Villa de Madrid, Monkey Week…"
-          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+          className="w-full"
         />
       </div>
 
@@ -129,21 +134,23 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             <div className="sm:col-span-2">
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={newQuoteText}
                 onChange={(e) => setNewQuoteText(e.target.value)}
                 placeholder="Cita destacada (ej. Una de las propuestas más frescas del año…)"
-                className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+                className="w-full"
               />
             </div>
             <div>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={newQuoteMedia}
                 onChange={(e) => setNewQuoteMedia(e.target.value)}
                 placeholder="Medio (ej. MondoSonoro, Radio 3)"
-                className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+                className="w-full"
               />
             </div>
           </div>

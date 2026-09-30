@@ -68,8 +68,8 @@ const CHECKS = {
     severity: 'warning',
   },
   bordeDeAcento: {
-    description: 'borde de color de acento (border-[var(--acc|ok|alert|tentative)] sin opacidad ≤40, o border-2/4) — Ley 1 de visual-identity: ningún borde; separa el escalón de luminancia (un borde hairline --hair es lo máximo tolerado; las barras border-l-4 intencionadas quedan fuera)',
-    pattern: /(?<![:\w-])border(?:-[tblrxy])?-\[var\(--(?:acc|acc-ink|ok|alert|tentative)\)\](?!\/(?:[0-3][0-9]|40|[0-9])\b)/g,
+    description: 'borde de color de acento (border-[var(--acc|ok|tentative)]; el de --alert en un campo inválido SÍ significa algo y se permite sin opacidad ≤40, o border-2/4) — Ley 1 de visual-identity: ningún borde; separa el escalón de luminancia (un borde hairline --hair es lo máximo tolerado; las barras border-l-4 intencionadas quedan fuera)',
+    pattern: /(?<![:\w-])border(?:-[tblrxy])?-\[var\(--(?:acc|acc-ink|ok|tentative)\)\](?!\/(?:[0-3][0-9]|40|[0-9])\b)/g,
     severity: 'error',
   },
   bordeDeCaja: {
@@ -95,6 +95,16 @@ const CHECKS = {
   hoverScale: {
     description: 'hover:scale-* — craft-interfaces: el movimiento al pasar el ratón cansa y es firma de plantilla; el feedback de hover es de color/brillo. La escala es solo para :active (scale-[0.97])',
     pattern: /(?<![\w\[-])(?:group-)?hover:scale-/g,
+    severity: 'warning',
+  },
+  radioFueraDeEscala: {
+    description: 'rounded-md/lg/xl/2xl/3xl de Tailwind — visual-identity §5: los radios salen de la escala (--r-s 12 · --r-m 18 · --r-l 24 · --r-xl 32 · --r-pill). El radio es información: dice cuánto pesa el objeto',
+    pattern: /(?<![\w\[-])(?:[a-z0-9-]+:)*rounded-(?:md|lg|xl|2xl|3xl)(?![\w-])/g,
+    severity: 'error',
+  },
+  campoSinPrimitiva: {
+    description: '<input>/<select>/<textarea> escrito a mano — craft-interfaces: un solo campo. Usa <Input>, <Select> o <Textarea> de components/ui (checkbox, radio, range, file, hidden y color quedan fuera; para una excepción justificada añade data-raw)',
+    pattern: /<(?:select|textarea)\b(?![^>]*\bdata-raw\b)|<input\b(?![^>]*(?:type=["'](?:checkbox|radio|range|file|hidden|color)["']|\bdata-raw\b))/g,
     severity: 'warning',
   },
   textoSobreRelleno: {

@@ -3,6 +3,7 @@ import { LeadType } from "../../types";
 import { Plus, X } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 interface AddLeadModalProps {
   isOpen: boolean;
@@ -78,14 +79,15 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Nombre de la sala*
                 </label>
-                <input
+                <Input
+                  size="sm"
                   id="new-lead-sala"
                   type="text"
                   required
                   value={newSala}
                   onChange={(e) => setNewSala(e.target.value)}
                   placeholder="Ej: Sala Apolo"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
+                  className="w-full"
                 />
               </div>
 
@@ -93,14 +95,15 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Ciudad*
                 </label>
-                <input
+                <Input
+                  size="sm"
                   id="new-lead-ciudad"
                   type="text"
                   required
                   value={newCiudad}
                   onChange={(e) => setNewCiudad(e.target.value)}
                   placeholder="Ej: Barcelona"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
+                  className="w-full"
                 />
               </div>
 
@@ -108,13 +111,14 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Región / provincia
                 </label>
-                <input
+                <Input
+                  size="sm"
                   id="new-lead-region"
                   type="text"
                   value={newRegion}
                   onChange={(e) => setNewRegion(e.target.value)}
                   placeholder="Ej: Cataluña"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
+                  className="w-full"
                 />
               </div>
 
@@ -122,12 +126,13 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Aforo estimado (Pax)
                 </label>
-                <input
+                <Input
+                  size="sm"
                   id="new-lead-aforo"
                   type="number"
                   value={newAforo}
                   onChange={(e) => setNewAforo(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
+                  className="w-full"
                 />
               </div>
 
@@ -135,12 +140,13 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Género Musical Preferente
                 </label>
-                <input
+                <Input
+                  size="sm"
                   id="new-lead-genero"
                   type="text"
                   value={newGenero}
                   onChange={(e) => setNewGenero(e.target.value)}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
+                  className="w-full"
                 />
               </div>
 
@@ -148,11 +154,12 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Categoría de contacto
                 </label>
-                <select
+                <Select
+                  size="sm"
                   id="new-lead-tipo"
                   value={newTipo}
                   onChange={(e) => setNewTipo(e.target.value as LeadType)}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans cursor-pointer"
+                  wrapperClassName="w-full"
                 >
                   <option value="sala">
                     Sala / Teatro (Booking directo)
@@ -172,20 +179,21 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                   <option value="medio">
                     Medio de comunicación (Radio 3 / prensa / TV)
                   </option>
-                </select>
+                </Select>
               </div>
 
               <div className="space-y-1.5">
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Usuario de Instagram (@)
                 </label>
-                <input
+                <Input
+                  size="sm"
                   id="new-lead-instagram"
                   type="text"
                   value={newInstagram}
                   onChange={(e) => setNewInstagram(e.target.value)}
                   placeholder="Ej: @sala_apolo"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -194,13 +202,14 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               <label className="block text-micro font-sans text-[var(--ink-2)]">
                 Email de Contacto (Opcional, sino Scout lo buscará)
               </label>
-              <input
+              <Input
+                size="sm"
                 id="new-lead-email"
                 type="email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="Ej: booking@salaapolo.com"
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
+                className="w-full"
               />
             </div>
 
@@ -208,13 +217,13 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               <label className="block text-micro font-sans text-[var(--ink-2)]">
                 Notas iniciales
               </label>
-              <textarea
+              <Textarea
                 id="new-lead-notes"
                 rows={3}
                 value={newNotas}
                 onChange={(e) => setNewNotas(e.target.value)}
                 placeholder="Alguna instrucción de booking, contacto recomendado…"
-                className="w-full bg-[var(--sunken)] rounded p-3 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans leading-relaxed"
+                className="w-full"
               />
             </div>
 

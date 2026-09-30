@@ -26,6 +26,7 @@ import {
   copyRichSignatureToClipboard,
 } from "../../utils/emailFormatter";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface EPKFirmaQRBlockProps {
   config: EPKConfig;
@@ -127,7 +128,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               <label className="text-xs font-bold text-[var(--ink-2)]">
                 Nombre del remitente
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={config.firmaEmail?.nombreRemitente || ""}
                 onChange={(e) =>
@@ -140,7 +142,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="Ej: Booking & Management"
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                className="w-full"
               />
             </div>
 
@@ -148,7 +150,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               <label className="text-xs font-bold text-[var(--ink-2)]">
                 Cargo / Puesto
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={config.firmaEmail?.cargo || ""}
                 onChange={(e) =>
@@ -161,7 +164,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="Ej: Booking & Management Team"
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                className="w-full"
               />
             </div>
 
@@ -169,7 +172,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               <label className="text-xs font-bold text-[var(--ink-2)]">
                 Teléfono de contacto
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={config.firmaEmail?.telefono || ""}
                 onChange={(e) =>
@@ -182,7 +186,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="+34 600 00 00 00"
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                className="w-full"
               />
             </div>
 
@@ -190,7 +194,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               <label className="text-xs font-bold text-[var(--ink-2)]">
                 Email oficial
               </label>
-              <input
+              <Input
+                size="sm"
                 type="email"
                 value={config.firmaEmail?.email || ""}
                 onChange={(e) =>
@@ -203,7 +208,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="booking@tubanda.com"
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                className="w-full"
               />
             </div>
           </div>
@@ -216,7 +221,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               Una frase corta que sale al pie de los emails y también como
               subtítulo en el EPK.
             </p>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={config.firmaEmail?.textoPie || ""}
               onChange={(e) =>
@@ -229,7 +235,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 })
               }
               placeholder="Música en directo, energía y directo arrollador"
-              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+              className="w-full"
             />
           </div>
 

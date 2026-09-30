@@ -22,6 +22,7 @@ import { Lead, LeadType } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 interface ExcelImportModalProps {
   isOpen: boolean;
@@ -924,17 +925,18 @@ export function ExcelImportModal({
                   {sheetNames.length > 1 && (
                     <div className="flex items-center gap-2 text-xs">
                       <span className="text-[var(--ink-2)]">Pestaña:</span>
-                      <select
+                      <Select
+                        size="sm"
                         value={selectedSheet}
                         onChange={(e) => handleSheetChange(e.target.value)}
-                        className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                        
                       >
                         {sheetNames.map((s) => (
                           <option key={s} value={s}>
                             {s}
                           </option>
                         ))}
-                      </select>
+                      </Select>
                     </div>
                   )}
                 </div>
@@ -976,7 +978,7 @@ export function ExcelImportModal({
                         Requerido
                       </span>
                     </label>
-                    <select aria-label="Nombre Sala / Contacto / Banda * Requerido"
+                    <Select size="sm" aria-label="Nombre Sala / Contacto / Banda * Requerido"
                       value={mapping.nombre_sala}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -984,7 +986,7 @@ export function ExcelImportModal({
                           nombre_sala: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- Seleccionar columna --</option>
                       {rawHeaders.map((h) => (
@@ -992,7 +994,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Ciudad */}
@@ -1000,7 +1002,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Ciudad / Población
                     </label>
-                    <select aria-label="Ciudad / Población"
+                    <Select size="sm" aria-label="Ciudad / Población"
                       value={mapping.ciudad}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1008,7 +1010,7 @@ export function ExcelImportModal({
                           ciudad: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar (Usar 'España') --</option>
                       {rawHeaders.map((h) => (
@@ -1016,7 +1018,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Email */}
@@ -1024,7 +1026,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Email de contacto
                     </label>
-                    <select aria-label="Email de contacto"
+                    <Select size="sm" aria-label="Email de contacto"
                       value={mapping.email_contacto}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1032,7 +1034,7 @@ export function ExcelImportModal({
                           email_contacto: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1040,7 +1042,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Teléfono Móvil (WhatsApp) */}
@@ -1049,7 +1051,7 @@ export function ExcelImportModal({
                       <span><ShowIcon inline emoji="📱" /></span>
                       <span>Teléfono móvil (WhatsApp)</span>
                     </label>
-                    <select aria-label="Teléfono móvil (WhatsApp)"
+                    <Select size="sm" aria-label="Teléfono móvil (WhatsApp)"
                       value={mapping.telefono_movil}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1057,7 +1059,7 @@ export function ExcelImportModal({
                           telefono_movil: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1065,7 +1067,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Teléfono Fijo */}
@@ -1074,7 +1076,7 @@ export function ExcelImportModal({
                       <span><ShowIcon inline emoji="☎️" /></span>
                       <span>Teléfono fijo</span>
                     </label>
-                    <select aria-label="Teléfono fijo"
+                    <Select size="sm" aria-label="Teléfono fijo"
                       value={mapping.telefono_fijo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1082,7 +1084,7 @@ export function ExcelImportModal({
                           telefono_fijo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1090,7 +1092,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Teléfono General */}
@@ -1099,7 +1101,7 @@ export function ExcelImportModal({
                       <span><ShowIcon inline emoji="📞" /></span>
                       <span>Teléfono general / otro</span>
                     </label>
-                    <select aria-label="Teléfono general / otro"
+                    <Select size="sm" aria-label="Teléfono general / otro"
                       value={mapping.telefono}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1107,7 +1109,7 @@ export function ExcelImportModal({
                           telefono: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1115,7 +1117,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Aforo */}
@@ -1123,7 +1125,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Aforo / Capacidad
                     </label>
-                    <select aria-label="Aforo / Capacidad"
+                    <Select size="sm" aria-label="Aforo / Capacidad"
                       value={mapping.aforo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1131,7 +1133,7 @@ export function ExcelImportModal({
                           aforo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">
                         -- No asignar (Usar por defecto) --
@@ -1141,7 +1143,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Instagram */}
@@ -1149,7 +1151,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Instagram / redes
                     </label>
-                    <select aria-label="Instagram / redes"
+                    <Select size="sm" aria-label="Instagram / redes"
                       value={mapping.instagram}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1157,7 +1159,7 @@ export function ExcelImportModal({
                           instagram: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1165,7 +1167,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Website */}
@@ -1173,7 +1175,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Sitio Web / Link
                     </label>
-                    <select aria-label="Sitio Web / Link"
+                    <Select size="sm" aria-label="Sitio Web / Link"
                       value={mapping.website}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1181,7 +1183,7 @@ export function ExcelImportModal({
                           website: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1189,7 +1191,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Tipo / Categoría */}
@@ -1197,7 +1199,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Tipo de Entidad (Columna)
                     </label>
-                    <select aria-label="Tipo de Entidad (Columna)"
+                    <Select size="sm" aria-label="Tipo de Entidad (Columna)"
                       value={mapping.tipo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1205,7 +1207,7 @@ export function ExcelImportModal({
                           tipo: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- Usar categoría por defecto --</option>
                       {rawHeaders.map((h) => (
@@ -1213,7 +1215,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Contacto Nombre */}
@@ -1221,7 +1223,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Persona de Contacto / Booker
                     </label>
-                    <select aria-label="Persona de Contacto / Booker"
+                    <Select size="sm" aria-label="Persona de Contacto / Booker"
                       value={mapping.contacto_nombre}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1229,7 +1231,7 @@ export function ExcelImportModal({
                           contacto_nombre: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1237,7 +1239,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Género / Estilo */}
@@ -1245,7 +1247,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Género / estilo musical
                     </label>
-                    <select aria-label="Género / estilo musical"
+                    <Select size="sm" aria-label="Género / estilo musical"
                       value={mapping.genero}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1253,7 +1255,7 @@ export function ExcelImportModal({
                           genero: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1261,7 +1263,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Dirección */}
@@ -1269,7 +1271,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Dirección Física
                     </label>
-                    <select aria-label="Dirección Física"
+                    <Select size="sm" aria-label="Dirección Física"
                       value={mapping.direccion}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1277,7 +1279,7 @@ export function ExcelImportModal({
                           direccion: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1285,7 +1287,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
 
                   {/* Notas / Observaciones */}
@@ -1293,7 +1295,7 @@ export function ExcelImportModal({
                     <label className="text-xs font-bold text-[var(--ink-2)]">
                       Notas / comentarios
                     </label>
-                    <select aria-label="Notas / comentarios"
+                    <Select size="sm" aria-label="Notas / comentarios"
                       value={mapping.notas}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1301,7 +1303,7 @@ export function ExcelImportModal({
                           notas: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
+                      wrapperClassName="w-full"
                     >
                       <option value="">-- No asignar --</option>
                       {rawHeaders.map((h) => (
@@ -1309,7 +1311,7 @@ export function ExcelImportModal({
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
                 </div>
               </div>
@@ -1335,12 +1337,13 @@ export function ExcelImportModal({
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="relative">
                       <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-[var(--ink-2)]" />
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         placeholder="Buscar en la vista previa…"
                         value={searchPreview}
                         onChange={(e) => setSearchPreview(e.target.value)}
-                        className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
+                        className="pl-8 pr-3"
                       />
                     </div>
 
@@ -1482,7 +1485,8 @@ export function ExcelImportModal({
                             {row.ciudad}
                           </td>
                           <td className="p-2.5">
-                            <select
+                            <Select
+                              size="sm"
                               value={row.tipo}
                               onChange={(e) =>
                                 handleRowTypeChange(
@@ -1490,14 +1494,14 @@ export function ExcelImportModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              className="px-2 py-1 rounded bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none cursor-pointer"
+                              
                             >
                               {CATEGORY_OPTIONS.map((c) => (
                                 <option key={c.id} value={c.id}>
                                   <ShowIcon inline emoji={c.icon} /> {c.label}
                                 </option>
                               ))}
-                            </select>
+                            </Select>
                           </td>
                           <td className="p-2.5">
                             {row.email_contacto ? (

@@ -7,6 +7,7 @@ import {
 import { ThemeColors } from '../../types';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 export interface ReelsTheaterModalProps {
   isOpen: boolean;
@@ -674,12 +675,12 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                   <span>{copySuccess ? '¡Copiado!' : 'Copiar texto'}</span>
                 </button>
               </div>
-              <textarea
+              <Textarea
                 value={editedCopy}
                 onChange={(e) => setEditedCopy(e.target.value)}
                 rows={5}
                 placeholder="Escribe el copy para tus redes…"
-                className="w-full text-xs font-sans bg-[var(--sunken)] rounded-[var(--r-s)] p-3 text-[var(--ink)] focus:outline-none"
+                className="w-full"
               />
             </div>
 
@@ -687,39 +688,39 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-[var(--r-s)] bg-[var(--sunken)]/30 ">
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Plataforma</label>
-                <select aria-label="Plataforma"
+                <Select size="sm" aria-label="Plataforma"
                   value={selectedPlatform}
                   onChange={(e) => {
                     const nueva = e.target.value;
                     setSelectedPlatform(nueva);
                     setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nueva));
                   }}
-                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)]"
+                  wrapperClassName="w-full"
                 >
                   <option value="Instagram">Instagram Reel</option>
                   <option value="TikTok">TikTok Video</option>
                   <option value="YouTube">YouTube Shorts</option>
                   <option value="Facebook">Facebook</option>
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Fecha</label>
-                <input aria-label="Fecha"
+                <Input size="sm" aria-label="Fecha"
                   type="date"
                   value={scheduledDate}
                   onChange={(e) => setScheduledDate(e.target.value)}
-                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)]"
+                  className="w-full"
                 />
               </div>
 
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Hora</label>
-                <input aria-label="Hora"
+                <Input size="sm" aria-label="Hora"
                   type="time"
                   value={scheduledTime}
                   onChange={(e) => setScheduledTime(e.target.value)}
-                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)]"
+                  className="w-full"
                 />
               </div>
             </div>

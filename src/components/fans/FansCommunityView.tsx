@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { Fan, Concert, ThemeColors } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 interface BandAnnouncement {
   id: string;
@@ -640,7 +641,8 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   {/* Level Switcher */}
                   <div className="flex items-center gap-1 text-xs font-sans text-[var(--ink-2)]">
                     <span className="hidden sm:inline">Nivel:</span>
-                    <select
+                    <Select
+                      size="sm"
                       value={
                         fan.nivelFan ||
                         (fan.conciertoOrigenId ? "superfan" : "fiel")
@@ -652,13 +654,13 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                           });
                         }
                       }}
-                      className="bg-[var(--sunken)] rounded-[var(--r-s)] px-2 py-0.5 text-micro text-[var(--acc)] font-sans outline-none cursor-pointer"
+                      
                     >
                       <option value="fiel">Oyente Fiel</option>
                       <option value="superfan">Superfan</option>
                       <option value="fundador">Fundador</option>
                       <option value="backstage">Backstage VIP</option>
-                    </select>
+                    </Select>
                   </div>
                 </div>
               </div>
@@ -689,13 +691,14 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Título o Titular *
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   required
                   placeholder="Ej: ¡Nuevo single este viernes! / Concierto en Sevilla"
                   value={newPostTitle}
                   onChange={(e) => setNewPostTitle(e.target.value)}
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full"
                 />
               </div>
 
@@ -703,13 +706,13 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Mensaje para la comunidad de fans *
                 </label>
-                <textarea
+                <Textarea
                   rows={4}
                   required
                   placeholder="Escribe las novedades, agradecimiento o anuncio exclusivo para tus seguidores…"
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
+                  className="w-full"
                 />
               </div>
 

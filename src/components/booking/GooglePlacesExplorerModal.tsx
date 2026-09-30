@@ -31,6 +31,7 @@ import { api } from "../../services/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 export interface PlaceResult {
   place_id: string;
@@ -1241,13 +1242,14 @@ export function GooglePlacesExplorerModal({
                 {/* City Input */}
                 <div className="relative md:col-span-4">
                   <MapPin className="w-4 h-4 absolute left-3 top-3 text-[var(--acc)]" />
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={selectedCity}
                     onChange={(e) => setSelectedCity(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     placeholder="Ciudad (ej. Granada, Madrid…)"
-                    className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                    className="w-full pl-9 pr-7"
                   />
                   {selectedCity && (
                     <button
@@ -1263,7 +1265,8 @@ export function GooglePlacesExplorerModal({
                 {/* Free Text / Venue Query */}
                 <div className="relative md:col-span-5">
                   <Search className="w-4 h-4 absolute left-3 top-3 text-[var(--ink-2)]" />
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -1272,7 +1275,7 @@ export function GooglePlacesExplorerModal({
                       CATEGORIES.find((c) => c.id === selectedType)
                         ?.placeholder || "Búsqueda opcional..."
                     }
-                    className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                    className="w-full pl-9 pr-3"
                   />
                 </div>
 
@@ -1359,24 +1362,26 @@ export function GooglePlacesExplorerModal({
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Aforo Mínimo (personas)
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       placeholder="Ej. 150"
                       value={aforoMin}
                       onChange={(e) => setAforoMin(e.target.value)}
-                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Aforo Máximo (personas)
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       placeholder="Ej. 800"
                       value={aforoMax}
                       onChange={(e) => setAforoMax(e.target.value)}
-                      className="w-full p-2 bg-[var(--bg)] rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none"
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -1617,7 +1622,8 @@ export function GooglePlacesExplorerModal({
                             <span className="text-[var(--ink-2)] font-sans">
                               Categoría:
                             </span>
-                            <select
+                            <Select
+                              size="sm"
                               value={String(place.tipo || "sala").toLowerCase()}
                               onChange={(e) =>
                                 handlePlaceCategoryChange(
@@ -1625,14 +1631,14 @@ export function GooglePlacesExplorerModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              className="bg-[var(--bg)] text-[var(--acc-ink)] font-bold rounded px-2 py-0.5 text-micro focus:outline-none focus:cursor-pointer"
+                              
                             >
                               {CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>
                                   <ShowIcon inline emoji={c.icon} /> {c.label}
                                 </option>
                               ))}
-                            </select>
+                            </Select>
                           </div>
 
                           <div className="flex items-center gap-1.5">

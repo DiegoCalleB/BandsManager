@@ -13,6 +13,7 @@ import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 import { AILogoGeneratorModal } from "./AILogoGeneratorModal";
+import { Input, Select, Textarea } from '../ui';
 
 interface EPKArchivosBlockProps {
   config: EPKConfig;
@@ -142,14 +143,15 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
                   O introduce URL de la imagen:
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={config.logoUrl || ""}
                   onChange={(e) =>
                     setConfig({ ...config, logoUrl: e.target.value })
                   }
                   placeholder="https://ejemplo.com/logo.jpg"
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -267,7 +269,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <label className="text-xs font-semibold text-[var(--ink-2)]">
               O enlace externo al Dossier (Google Drive, Dropbox, etc.):
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={config.dossierPdfUrl || ""}
               onChange={(e) =>
@@ -280,7 +283,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 })
               }
               placeholder="https://drive.google.com/file/d/…"
-              className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
+              className="w-full"
             />
           </div>
         </div>
@@ -396,14 +399,14 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               <label className="text-xs font-semibold text-[var(--ink-2)]">
                 Rider técnico (Texto)
               </label>
-              <textarea
+              <Textarea
                 value={config.riderTecnico || ""}
                 onChange={(e) =>
                   setConfig({ ...config, riderTecnico: e.target.value })
                 }
                 placeholder="Canales, microfonía, DIs, etc…"
                 rows={4}
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
+                className="w-full"
               />
             </div>
             {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
@@ -419,7 +422,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Sistema de Monitoreo
                   </label>
-                  <select aria-label="Sistema de Monitoreo"
+                  <Select size="sm" aria-label="Sistema de Monitoreo"
                     value={
                       config.riderConfig?.tipoMonitoreo || "sin_preferencia"
                     }
@@ -432,7 +435,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         },
                       })
                     }
-                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                    wrapperClassName="w-full"
                   >
                     <option value="sin_preferencia">
                       Sin preferencia / Sala
@@ -440,7 +443,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     <option value="cuñas_escenario">Cuñas de suelo</option>
                     <option value="in_ear">In-Ears propios (IEM)</option>
                     <option value="mixto">Mixto (In-Ears + Cuñas)</option>
-                  </select>
+                  </Select>
                   <p className="text-micro text-[var(--ink-2)]">
                     Evita pedir monitores extra si lleváis IEM.
                   </p>
@@ -450,7 +453,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Backline (Amplis / batería)
                   </label>
-                  <select aria-label="Backline (Amplis / batería)"
+                  <Select size="sm" aria-label="Backline (Amplis / batería)"
                     value={config.riderConfig?.backlinePropio || "completo"}
                     onChange={(e) =>
                       setConfig({
@@ -461,7 +464,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         },
                       })
                     }
-                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1.5 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                    wrapperClassName="w-full"
                   >
                     <option value="completo">Backline completo propio</option>
                     <option value="parcial">
@@ -470,7 +473,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     <option value="sin_backline">
                       Necesitamos backline de sala
                     </option>
-                  </select>
+                  </Select>
                   <p className="text-micro text-[var(--ink-2)]">
                     Crucial para pactar dobles carteles.
                   </p>
@@ -522,7 +525,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     Prueba / Canales Mínimos
                   </label>
                   <div className="flex gap-2">
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       value={config.riderConfig?.tiempoPruebaMinutos ?? ""}
                       onChange={(e) =>
@@ -537,9 +541,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         })
                       }
                       placeholder="30 min"
-                      className="w-1/2 bg-[var(--sunken)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-1/2"
                     />
-                    <input
+                    <Input
+                      size="sm"
                       type="number"
                       value={config.riderConfig?.canalesMinimos ?? ""}
                       onChange={(e) =>
@@ -554,7 +559,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         })
                       }
                       placeholder="12 ch"
-                      className="w-1/2 bg-[var(--sunken)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                      className="w-1/2"
                     />
                   </div>
                   <p className="text-micro text-[var(--ink-2)]">

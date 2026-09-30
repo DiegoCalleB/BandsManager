@@ -47,6 +47,7 @@ import {
   MeasureRangeFn,
 } from "../../utils/setlistAutoFit";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Select } from '../ui';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -1670,7 +1671,8 @@ export function PdfExportModal({
  fila no cabían sin apretarse); en desktop, los botones de siempre, más cómodos con
  mouse y con espacio de sobra en pantallas grandes. */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <select
+              <Select
+                size="sm"
                 value={printMode}
                 onChange={(e) => {
                   setPrintMode(
@@ -1681,14 +1683,14 @@ export function PdfExportModal({
                   );
                   setPreviewPageIndex(0);
                 }}
-                className={`sm:hidden flex-1 min-w-0 p-2 rounded-[var(--r-s)] font-bold cursor-pointer ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                wrapperClassName="flex-1 min-w-0"
               >
                 <option value="all_members">
                   Todos los Músicos ({resolvedMembers.length} hojas)
                 </option>
                 <option value="single_member">1 Músico específico</option>
                 <option value="master">Master escenario / sonido</option>
-              </select>
+              </Select>
 
               <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <button
@@ -1739,17 +1741,18 @@ export function PdfExportModal({
                   <span className="hidden sm:inline text-[var(--ink-2)] font-bold">
                     Músico:
                   </span>
-                  <select
+                  <Select
+                    size="sm"
                     value={selectedMemberId}
                     onChange={(e) => setSelectedMemberId(e.target.value)}
-                    className={`flex-1 sm:flex-none min-w-0 p-1.5 px-3 rounded-[var(--r-s)] font-bold cursor-pointer ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                    wrapperClassName="flex-1 sm:flex-none min-w-0"
                   >
                     {resolvedMembers.map((m) => (
                       <option key={m.id} value={m.id}>
                         {m.name} ({m.instrument})
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               )}
 
@@ -1832,10 +1835,11 @@ export function PdfExportModal({
                   <Palette className="w-3.5 h-3.5 text-[var(--ink-2)]" /> Letra
                   Manuscrita:
                 </span>
-                <select
+                <Select
+                  size="sm"
                   value={handwritingFont}
                   onChange={(e) => setHandwritingFont(e.target.value as any)}
-                  className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
+                  
                 >
                   <option value="caveat">Rotulador fino (Caveat)</option>
                   <option value="permanent_marker">
@@ -1843,7 +1847,7 @@ export function PdfExportModal({
                   </option>
                   <option value="courier">Máquina (Courier)</option>
                   <option value="sans">Imprenta limpia (Sans)</option>
-                </select>
+                </Select>
 
                 {/* Ink color selector */}
                 <div className="flex items-center gap-1 bg-[var(--surface)] p-1 rounded-[var(--r-s)]">

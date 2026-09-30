@@ -14,6 +14,7 @@ import { apiFetch } from "../../utils/api";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { LeadAvatar } from "./LeadAvatar";
 import { ModalPortal } from "../common/ModalPortal";
+import { Input } from '../ui';
 
 interface ChangeLeadImageModalProps {
   lead: Lead | null;
@@ -280,12 +281,13 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                   Pegar enlace de imagen (URL)
                 </label>
                 <div className="flex gap-2">
-                  <input
+                  <Input
+                    size="sm"
                     type="url"
                     placeholder="https://ejemplo.com/logo.png"
                     value={customUrl}
                     onChange={(e) => setCustomUrl(e.target.value)}
-                    className="flex-1 bg-[var(--sunken)]/70 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none"
+                    className="flex-1"
                   />
                   <button
                     type="button"

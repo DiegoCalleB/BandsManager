@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lead } from '../../types';
 import { Calculator, Coins, TrendingUp, ChevronDown, ChevronUp, RefreshCw, Check, AlertCircle } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface QuickDealSimulatorProps {
   lead: Lead;
@@ -106,61 +107,61 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🎟️" />Anticipada (€)</label>
-              <input aria-label="Anticipada (€)"
+              <Input size="sm" aria-label="Anticipada (€)"
                 type="number"
                 value={anticipada}
                 onChange={(e) => setAnticipada(Number(e.target.value))}
-                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full"
               />
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🚪" />Puerta (€)</label>
-              <input aria-label="Puerta (€)"
+              <Input size="sm" aria-label="Puerta (€)"
                 type="number"
                 value={taquilla}
                 onChange={(e) => setTaquilla(Number(e.target.value))}
-                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full"
               />
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🏢" />Alquiler sala (€)</label>
-              <input aria-label="Alquiler sala (€)"
+              <Input size="sm" aria-label="Alquiler sala (€)"
                 type="number"
                 value={alquiler}
                 onChange={(e) => setAlquiler(Number(e.target.value))}
-                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full"
               />
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium">% Comisión sala</label>
-              <input aria-label="% Comisión sala"
+              <Input size="sm" aria-label="% Comisión sala"
                 type="number"
                 value={pctSala}
                 onChange={(e) => setPctSala(Number(e.target.value))}
-                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full"
               />
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🚐" />Gastos Viaje (€)</label>
-              <input aria-label="Gastos Viaje (€)"
+              <Input size="sm" aria-label="Gastos Viaje (€)"
                 type="number"
                 value={gastosViaje}
                 onChange={(e) => setGastosViaje(Number(e.target.value))}
-                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full"
               />
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
               <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🎸" />Nº Músicos</label>
-              <input aria-label="Nº Músicos"
+              <Input size="sm" aria-label="Nº Músicos"
                 type="number"
                 value={numMusicos}
                 onChange={(e) => setNumMusicos(Number(e.target.value))}
-                className="w-full bg-[var(--surface)] rounded px-2 py-1 text-[var(--ink-2)] font-bold font-mono text-xs focus:ring-1 focus:ring-[var(--ink-3)] outline-none"
+                className="w-full"
               />
             </div>
           </div>

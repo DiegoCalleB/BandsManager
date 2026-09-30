@@ -20,12 +20,12 @@ export function Field({ label, hint, error, optional, className, children, ...pr
       <label className="grid gap-1.5">
         <span className="text-xs font-medium text-[var(--ink-2)]">
           {label}
-          {optional && <span className="font-normal text-[var(--ink-3)]"> (opcional)</span>}
+          {optional && <span className="font-normal text-[var(--ink-2)]"> (opcional)</span>}
         </span>
         {children}
       </label>
       {(error || hint) && (
-        <p role={error ? 'alert' : undefined} className={cn('text-xs', error ? 'text-[var(--alert)]' : 'text-[var(--ink-3)]')}>
+        <p role={error ? 'alert' : undefined} className={cn('text-xs', error ? 'text-[var(--alert)]' : 'text-[var(--ink-2)]')}>
           {error || hint}
         </p>
       )}

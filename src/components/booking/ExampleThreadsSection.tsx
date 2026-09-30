@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import type { TemplateCategory } from "./TemplateConfigSection";
+import { Input, Select, Textarea } from '../ui';
 
 interface ThreadMessage {
   rol: "banda" | "sala";
@@ -262,27 +263,29 @@ export function ExampleThreadsSection({
               Editando hilo guardado
             </div>
           )}
-          <input
+          <Input
+            size="sm"
             type="text"
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
             placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
-            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-micro focus:outline-none font-sans ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+            className="w-full"
           />
 
           {mensajes.map((m, idx) => (
             <div key={idx} className="flex gap-2 items-start">
-              <select
+              <Select
+                size="sm"
                 value={m.rol}
                 onChange={(e) =>
                   handleMessageChange(idx, "rol", e.target.value)
                 }
-                className="text-micro rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--sunken)] text-[var(--ink)] shrink-0"
+                wrapperClassName="shrink-0"
               >
                 <option value="banda">Banda</option>
                 <option value="sala">Sala</option>
-              </select>
-              <textarea
+              </Select>
+              <Textarea
                 rows={2}
                 value={m.texto}
                 onChange={(e) =>
@@ -293,7 +296,7 @@ export function ExampleThreadsSection({
                     ? "Lo que escribimos nosotros..."
                     : "Lo que respondió la sala..."
                 }
-                className={`flex-1 rounded-[var(--r-s)] p-2 text-micro focus:outline-none font-sans leading-relaxed ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                className="flex-1"
               />
               {mensajes.length > 1 && (
                 <button

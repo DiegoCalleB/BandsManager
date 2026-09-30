@@ -3,6 +3,7 @@ import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Textarea } from '../ui';
 
 /** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
@@ -441,12 +442,12 @@ export function PerfectSetlistModal({
                   ))}
                 </div>
               </div>
-              <textarea
+              <Textarea
                 rows={2}
                 value={comentarioFeedback}
                 onChange={(e) => setComentarioFeedback(e.target.value)}
                 placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'…"
-                className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
+                className="w-full"
               />
               <div className="flex items-center gap-1.5 text-micro font-sans">
                 <span className="text-[var(--ink-2)]">Alcance:</span>

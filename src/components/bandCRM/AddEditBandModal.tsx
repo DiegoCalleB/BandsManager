@@ -2,6 +2,7 @@ import React from 'react';
 import { Music, X, Sparkles, Loader2, Upload, Check } from 'lucide-react';
 import { BandRelationshipStatus, BandContact } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 export interface AddEditBandModalProps {
   isOpen: boolean;
@@ -138,13 +139,14 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
                 </button>
               </div>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 required
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
                 placeholder="Ej: Pardiez, La Señora Tomasa, Tarraco Ska…"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
+                className="w-full"
               />
             </div>
 
@@ -391,36 +393,38 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {/* Estilo Musical */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Estilo musical *</label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 required
                 value={formStyle}
                 onChange={(e) => setFormStyle(e.target.value)}
                 placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje…"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
 
             {/* Localización / Ciudad */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Localización / ciudad principal *</label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 required
                 value={formLocation}
                 onChange={(e) => setFormLocation(e.target.value)}
                 placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla…"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
 
             {/* Estado de la Relación */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Estado de la Relación</label>
-              <select aria-label="Estado de la Relación"
+              <Select size="sm" aria-label="Estado de la Relación"
                 value={formStatus}
                 onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
+                wrapperClassName="w-full"
               >
                 <option value="sin_contactar">Sin Contactar</option>
                 <option value="intercambio_propuesto">Intercambio Propuesto (Date Swap)</option>
@@ -428,77 +432,82 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 <option value="colegas_aliados">Colegas / Aliados de Gira</option>
                 <option value="pendiente_respuesta">Pendiente respuesta</option>
                 <option value="no_disponible">No Disponible</option>
-              </select>
+              </Select>
             </div>
 
             {/* Persona de Contacto */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Persona de contacto / rol</label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={formContactName}
                 onChange={(e) => setFormContactName(e.target.value)}
                 placeholder="Ej: Carlos (Mánager / Teclista)"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
 
             {/* Último Contacto */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Fecha de último contacto</label>
-              <input aria-label="Fecha de último contacto"
+              <Input size="sm" aria-label="Fecha de último contacto"
                 type="date"
                 value={formLastContact}
                 onChange={(e) => setFormLastContact(e.target.value)}
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
 
             {/* Email */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Email de contacto / Booking</label>
-              <input
+              <Input
+                size="sm"
                 type="email"
                 value={formEmail}
                 onChange={(e) => setFormEmail(e.target.value)}
                 placeholder="ejemplo@banda.com"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
 
             {/* Teléfono */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Teléfono / WhatsApp</label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={formPhone}
                 onChange={(e) => setFormPhone(e.target.value)}
                 placeholder="+34 600 000 000"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
 
             {/* Instagram */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Instagram</label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={formInstagram}
                 onChange={(e) => setFormInstagram(e.target.value)}
                 placeholder="@nombrebanda"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
 
             {/* Aforo habitual */}
             <div className="space-y-1">
               <label className="block text-micro font-mono text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
-              <input
+              <Input
+                size="sm"
                 type="number"
                 value={formAforo}
                 onChange={(e) => setFormAforo(Number(e.target.value))}
                 placeholder="300"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full"
               />
             </div>
           </div>
@@ -506,12 +515,13 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
           {/* Enlace Spotify / YouTube */}
           <div className="space-y-1">
             <label className="block text-micro font-mono text-[var(--ink-2)]">Enlace Spotify / YouTube / dossier</label>
-            <input
+            <Input
+              size="sm"
               type="url"
               value={formSpotifyYoutube}
               onChange={(e) => setFormSpotifyYoutube(e.target.value)}
               placeholder="https://open.spotify.com/artist/…"
-              className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
+              className="w-full"
             />
           </div>
 
@@ -520,12 +530,12 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             <label className="block text-micro font-mono text-[var(--ink-2)]">
               Notas de Colaboración / Salas propuestas / Intercambios
             </label>
-            <textarea
+            <Textarea
               rows={3}
               value={formNotes}
               onChange={(e) => setFormNotes(e.target.value)}
               placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)…"
-              className="w-full bg-[var(--sunken)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-micro font-sans leading-relaxed focus:outline-none focus:-[#f2ca50]/50"
+              className="w-full"
             />
           </div>
 

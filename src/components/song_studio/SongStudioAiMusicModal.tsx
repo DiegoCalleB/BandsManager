@@ -11,6 +11,7 @@ import {
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Textarea } from '../ui';
 
 interface SongStudioAiMusicModalProps {
   isOpen: boolean;
@@ -133,12 +134,13 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
                 Estilo musical de la banda
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={style}
                 onChange={(e) => setStyle(e.target.value)}
                 placeholder="Ej: Rock alternativo, post-punk, psicodelia…"
-                className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:font-sans"
+                className="w-full"
               />
             </div>
 
@@ -146,12 +148,12 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
                 Prompt / Descripción del Soundtrack o Jingle
               </label>
-              <textarea
+              <Textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={3}
                 placeholder="Describe la atmósfera, energía, instrumentación o propósito…"
-                className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:font-sans resize-none leading-relaxed"
+                className="w-full"
               />
             </div>
 

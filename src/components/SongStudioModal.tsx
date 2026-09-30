@@ -97,6 +97,7 @@ import {
   GripVertical,
   Zap,
 } from 'lucide-react';
+import { Input, Select, Textarea } from './ui';
 
 // Live microphone waveform visualization component for Cubase-style real-time recording
 const LiveMicWaveformCanvas: React.FC<{
@@ -4103,50 +4104,52 @@ export default function SongStudioModal({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Título de la idea / arreglo *</label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={ideaTitle}
                           onChange={(e) => setIdeaTitle(e.target.value)}
                           placeholder="Ej: Riff Estribillo / Arreglo Vientos / Base Acústica"
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                          className="w-full"
                         />
                       </div>
 
                       <div>
                         <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Sección del tema *</label>
-                        <select aria-label="Sección del tema"
+                        <Select size="sm" aria-label="Sección del tema"
                           value={ideaSection}
                           onChange={(e) => setIdeaSection(e.target.value as any)}
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none"
+                          wrapperClassName="w-full"
                         >
                           {SECCIONES_TEMA.map((sec) => (
                             <option key={sec.key} value={sec.key} className="bg-[var(--bg)] text-[var(--ink)]">
                               <ShowIcon inline emoji={sec.icon} /> {sec.label}
                             </option>
                           ))}
-                        </select>
+                        </Select>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Aportado por (Tu nombre)</label>
-                        <input aria-label="Aportado por (Tu nombre)"
+                        <Input size="sm" aria-label="Aportado por (Tu nombre)"
                           type="text"
                           value={ideaUploader}
                           onChange={(e) => setIdeaUploader(e.target.value)}
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none"
+                          className="w-full"
                         />
                       </div>
 
                       <div>
                         <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Instrumento / rol (Opcional)</label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={ideaInstrument}
                           onChange={(e) => setIdeaInstrument(e.target.value)}
                           placeholder="Ej: Guitarra, Trompeta, Batería, Voz"
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none"
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -4243,7 +4246,8 @@ export default function SongStudioModal({
                           <span className="text-micro font-sans font-bold text-[var(--acc)]/70 flex items-center gap-1">
                             <Music className="w-3 h-3 text-[var(--acc)]" /> Enlace Google Drive:
                           </span>
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={driveAudioUrl}
                             onChange={(e) => {
@@ -4252,7 +4256,7 @@ export default function SongStudioModal({
                               setRecordedAudioUrl(null);
                             }}
                             placeholder="https://drive.google.com/…"
-                            className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-micro text-[var(--ink)] focus:outline-none font-sans"
+                            className="w-full"
                           />
                         </div>
 
@@ -4294,10 +4298,11 @@ export default function SongStudioModal({
                           {((song.audioIdeas && song.audioIdeas.length > 0) || song.audioPrincipalUrl) && (
                             <div className="flex items-center gap-2 shrink-0 bg-[var(--sunken)] p-2 rounded-[var(--r-m)] w-full sm:w-auto">
                               <span className="text-micro text-[var(--acc)] font-bold">Seleccionar Maqueta:</span>
-                              <select
+                              <Select
+                                size="sm"
                                 value={selectedSongBaseUrl}
                                 onChange={(e) => setSelectedSongBaseUrl(e.target.value)}
-                                className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-xs text-[var(--ink)] font-sans focus:outline-none flex-1 min-w-0"
+                                wrapperClassName="flex-1 min-w-0"
                               >
                                 {song.audioPrincipalUrl && <option value={song.audioPrincipalUrl}>Tema Original ({song.titulo})</option>}
                                 {song.audioIdeas?.map((idItem) => (
@@ -4305,7 +4310,7 @@ export default function SongStudioModal({
                                     Idea: {idItem.titulo} ({idItem.seccion})
                                   </option>
                                 ))}
-                              </select>
+                              </Select>
                             </div>
                           )}
                         </div>
@@ -4328,10 +4333,10 @@ export default function SongStudioModal({
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                             <div>
                               <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Estilo Rítmico</label>
-                              <select aria-label="Estilo Rítmico"
+                              <Select size="sm" aria-label="Estilo Rítmico"
                                 value={newIdeaStyle}
                                 onChange={(e) => setNewIdeaStyle(e.target.value as any)}
-                                className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-sans"
+                                wrapperClassName="w-full"
                               >
                                 <option value="rock">Rock / Pop Standard</option>
                                 <option value="pop">Pop / Disco 4-on-floor</option>
@@ -4340,26 +4345,27 @@ export default function SongStudioModal({
                                 <option value="ska">Ska Skank</option>
                                 <option value="cumbia">Cumbia Tresillo</option>
                                 <option value="punk">Punk Corcheas</option>
-                              </select>
+                              </Select>
                             </div>
 
                             <div>
                               <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Tempo (BPM)</label>
-                              <input aria-label="Tempo (BPM)"
+                              <Input size="sm" aria-label="Tempo (BPM)"
                                 type="number"
                                 value={newIdeaBpm}
                                 onChange={(e) => setNewIdeaBpm(parseInt(e.target.value) || 120)}
-                                className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-sans"
+                                className="w-full"
                               />
                             </div>
 
                             <div>
                               <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Tonalidad base</label>
-                              <input
+                              <Input
+                                size="sm"
                                 type="text"
                                 value={newIdeaKey}
                                 onChange={(e) => setNewIdeaKey(e.target.value)}
-                                className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-sans"
+                                className="w-full"
                                 placeholder="Do, Re, Mi…"
                               />
                             </div>
@@ -4397,12 +4403,12 @@ export default function SongStudioModal({
 
                     <div>
                       <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Notas o explicación para el grupo</label>
-                      <textarea
+                      <Textarea
                         value={ideaNotes}
                         onChange={(e) => setIdeaNotes(e.target.value)}
                         placeholder="Explica qué has grabado o la propuesta…"
                         rows={2}
-                        className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none resize-none"
+                        className="w-full"
                       />
                     </div>
 
@@ -5017,14 +5023,15 @@ export default function SongStudioModal({
 
                                                     {isEditing ? (
                                                       <div className="flex items-center gap-1 min-w-0 flex-1">
-                                                        <input
+                                                        <Input
+                                                          size="sm"
                                                           type="text"
                                                           value={editingTrackName}
                                                           onChange={(e) => setEditingTrackName(e.target.value)}
                                                           onKeyDown={(e) =>
                                                             e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)
                                                           }
-                                                          className="w-full min-w-0 px-1.5 py-0.5 rounded bg-[var(--surface)] text-xs text-[var(--ink)] font-bold"
+                                                          className="w-full min-w-0"
                                                           autoFocus
                                                         />
                                                         <button
@@ -5552,23 +5559,25 @@ export default function SongStudioModal({
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                   <div>
                                     <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Nombre de la pista *</label>
-                                    <input
+                                    <Input
+                                      size="sm"
                                       type="text"
                                       value={newTrackName}
                                       onChange={(e) => setNewTrackName(e.target.value)}
                                       placeholder="Ej: Voz Segunda / Solo Guitarra / Batería"
-                                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none"
+                                      className="w-full"
                                     />
                                   </div>
 
                                   <div>
                                     <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Instrumento (Opcional)</label>
-                                    <input
+                                    <Input
+                                      size="sm"
                                       type="text"
                                       value={newTrackInstrument}
                                       onChange={(e) => setNewTrackInstrument(e.target.value)}
                                       placeholder="Ej: Voz, Guitarra, Bajo, Teclado"
-                                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none"
+                                      className="w-full"
                                     />
                                   </div>
                                 </div>
@@ -5750,7 +5759,8 @@ export default function SongStudioModal({
                                 </button>
 
                                 {getIdeaTracks(idea).length > 1 && (
-                                  <select
+                                  <Select
+                                    size="sm"
                                     value={commentTrackTagMap[idea.id] || ''}
                                     onChange={(e) =>
                                       setCommentTrackTagMap((prev) => ({
@@ -5759,7 +5769,7 @@ export default function SongStudioModal({
                                       }))
                                     }
                                     title="Referir este comentario a una pista concreta"
-                                    className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-micro font-sans text-[var(--ok)] font-bold cursor-pointer outline-none"
+                                    
                                   >
                                     <option value="">General</option>
                                     {getIdeaTracks(idea).map((tr) => (
@@ -5767,10 +5777,11 @@ export default function SongStudioModal({
                                         {tr.nombre}
                                       </option>
                                     ))}
-                                  </select>
+                                  </Select>
                                 )}
 
-                                <input
+                                <Input
+                                  size="sm"
                                   type="text"
                                   value={commentTextMap[idea.id] || ''}
                                   onChange={(e) =>
@@ -5781,7 +5792,7 @@ export default function SongStudioModal({
                                   }
                                   onKeyDown={(e) => e.key === 'Enter' && handleAddComment(idea)}
                                   placeholder="Escribe tu crítica o sugerencia…"
-                                  className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
+                                  className="flex-1"
                                 />
 
                                 <button

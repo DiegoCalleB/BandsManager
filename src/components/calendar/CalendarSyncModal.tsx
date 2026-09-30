@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Radio, Download, Copy, Check } from 'lucide-react';
+import { Input } from '../ui';
 
 interface CalendarSyncModalProps {
   isOpen: boolean;
@@ -62,13 +63,11 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               URL de Suscripción iCal (Privada)
             </label>
             <div className="flex items-center gap-2">
-              <input aria-label="URL de Suscripción iCal (Privada)"
+              <Input size="sm" aria-label="URL de Suscripción iCal (Privada)"
                 type="text"
                 readOnly
                 value={rutaFeed}
-                className={`flex-1 p-2 text-xs rounded-[var(--r-m)] outline-none font-mono ${
-                  'bg-[var(--surface)] text-[var(--ink)]'
-                }`}
+                className="flex-1"
               />
               <button
                 type="button"

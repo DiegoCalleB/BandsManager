@@ -3,6 +3,7 @@ import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -73,41 +74,39 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-sans">
             <div>
               <label className="block text-[var(--ink-2)] font-semibold mb-1">Nombre del repertorio *</label>
-              <input
+              <Input
                 type="text"
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="ej. Festival Rumba & Rock 2026"
-                className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                className="w-full"
               />
             </div>
 
             <div>
               <label className="block text-[var(--ink-2)] font-semibold mb-1">Formato de concierto</label>
-              <select aria-label="Formato de concierto"
+              <Select aria-label="Formato de concierto"
                 value={tipoFormato}
                 onChange={(e) => setTipoFormato(e.target.value as any)}
-                className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                wrapperClassName="w-full"
               >
                 <option value="festival">Festival (45-60m Caña Directa)</option>
                 <option value="sala_larga">Sala / Show Largo (90-120m)</option>
                 <option value="acustico">Acústico / Íntimo</option>
                 <option value="ensayo">Ensayo / local</option>
                 <option value="otro">Otro formato</option>
-              </select>
+              </Select>
             </div>
 
             <div>
               <label className="block text-[var(--ink-2)] font-semibold mb-1">Notas de escenario / descripción</label>
-              <textarea
+              <Textarea
                 rows={3}
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
                 placeholder="ej. Repertorio de ritmo alto pensado para festivales…"
-                className={`w-full p-3 rounded-[var(--r-m)] font-medium text-xs focus:outline-none ${
-                  'bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--ink-3)]'
-                }`}
+                className="w-full"
               />
             </div>
 

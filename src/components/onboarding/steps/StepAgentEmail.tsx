@@ -8,6 +8,7 @@ import {
   Bot,
   Lock,
 } from "lucide-react";
+import { Input } from '../../ui';
 
 interface StepAgentEmailProps {
   signatureName: string;
@@ -65,12 +66,13 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
             <Mail className="w-3.5 h-3.5 text-[var(--acc)]" />
             Email Oficial desde el que contactarás a las salas
           </label>
-          <input
+          <Input
+            size="sm"
             type="email"
             value={senderEmail}
             onChange={(e) => setSenderEmail(e.target.value)}
             placeholder="contacto@tubanda.com o tubandaoficial@gmail.com"
-            className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+            className="w-full"
           />
           <p className="text-xs text-[var(--ink-2)] mt-1">
             Podrás conectar tu cuenta de Gmail con 1-clic o configurar IMAP/SMTP
@@ -89,12 +91,13 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
               <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
                 Nombre del remitente
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={signatureName}
                 onChange={(e) => setSignatureName(e.target.value)}
                 placeholder="Ej. Martín"
-                className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+                className="w-full"
               />
             </div>
 
@@ -102,12 +105,13 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
               <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
                 Cargo / Rol
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={signatureCargo}
                 onChange={(e) => setSignatureCargo(e.target.value)}
                 placeholder="Ej. Cantante & Booking"
-                className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+                className="w-full"
               />
             </div>
 
@@ -115,12 +119,13 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
               <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
                 Teléfono en la firma
               </label>
-              <input
+              <Input
+                size="sm"
                 type="tel"
                 value={signaturePhone}
                 onChange={(e) => setSignaturePhone(e.target.value)}
                 placeholder="+34 600 000 000"
-                className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
+                className="w-full"
               />
             </div>
           </div>

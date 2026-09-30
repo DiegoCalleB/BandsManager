@@ -2,6 +2,7 @@ import React from 'react';
 import { Bell, Loader2, Send } from 'lucide-react';
 import { Concert, Rehearsal } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Textarea } from '../ui';
 
 interface CalendarReminderModalProps {
   isOpen: boolean;
@@ -115,14 +116,12 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
               Nota adicional / Indicaciones (Opcional)
             </label>
-            <textarea
+            <Textarea
               value={reminderNotes}
               onChange={(e) => setReminderNotes(e.target.value)}
               placeholder="Ej: Traer la lista de repertorio revisada o llegar 15 min antes para probar sonido…"
               rows={3}
-              className={`w-full p-2 text-xs rounded-[var(--r-m)] outline-none font-sans ${
-                'bg-[var(--sunken)] text-[var(--ink)]'
-              }`}
+              className="w-full"
             />
           </div>
 

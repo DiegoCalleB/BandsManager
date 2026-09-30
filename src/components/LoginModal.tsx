@@ -24,6 +24,7 @@ import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
 import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ShowIcon } from './ui/ShowIcon';
+import { Input } from './ui';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -691,24 +692,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 >
                   <div className="relative flex items-center">
                     <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder="Correo electrónico o Usuario"
-                      className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] focus:ring-2 focus:ring-[var(--ink)]/20 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui duration-200"
+                      className="w-full pl-11 pr-4"
                       required
                     />
                   </div>
 
                   <div className="relative flex items-center">
                     <Lock className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Contraseña"
-                      className="w-full pl-11 pr-11 py-3.5 bg-[var(--sunken)] focus:ring-2 focus:ring-[var(--ink)]/20 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui duration-200"
+                      className="w-full pl-11 pr-11"
                       required
                     />
                     <button
@@ -869,14 +870,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <form onSubmit={handleRequestReset} className="space-y-3.5">
                     <div className="relative flex items-center">
                       <Mail className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                      <input
+                      <Input
                         type="text"
                         value={resetEmailOrUsername}
                         onChange={(e) =>
                           setResetEmailOrUsername(e.target.value)
                         }
                         placeholder="Correo electrónico o Usuario"
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                        className="w-full pl-11 pr-4"
                         required
                       />
                     </div>
@@ -906,13 +907,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     <div className="space-y-1">
                       <div className="relative flex items-center">
                         <KeyRound className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                        <input
+                        <Input
                           type="text"
                           value={resetCode}
                           onChange={(e) => setResetCode(e.target.value)}
                           placeholder="Código de 6 dígitos"
                           maxLength={6}
-                          className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] font-sans placeholder:font-sans placeholder:tracking-normal placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                          className="w-full pl-11 pr-4"
                           required
                         />
                       </div>
@@ -921,12 +922,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     <div className="space-y-1">
                       <div className="relative flex items-center">
                         <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                        <input
+                        <Input
                           type={showResetNewPassword ? "text" : "password"}
                           value={resetNewPassword}
                           onChange={(e) => setResetNewPassword(e.target.value)}
                           placeholder="Nueva contraseña (mín. 6 caracteres)"
-                          className="w-full pl-11 pr-11 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                          className="w-full pl-11 pr-11"
                           required
                         />
                         <button
@@ -957,14 +958,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     <div className="space-y-1">
                       <div className="relative flex items-center">
                         <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                        <input
+                        <Input
                           type={showResetNewPassword ? "text" : "password"}
                           value={resetConfirmPassword}
                           onChange={(e) =>
                             setResetConfirmPassword(e.target.value)
                           }
                           placeholder="Repite la nueva contraseña"
-                          className="w-full pl-11 pr-11 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                          className="w-full pl-11 pr-11"
                           required
                         />
                       </div>
@@ -1038,12 +1039,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 >
                   <div className="relative flex items-center">
                     <User className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
                       type="text"
                       value={regLeaderName}
                       onChange={(e) => setRegLeaderName(e.target.value)}
                       placeholder="Tu Nombre o Apodo"
-                      className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                      className="w-full pl-11 pr-4"
                       required
                     />
                   </div>
@@ -1060,12 +1061,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     </div>
                     <div className="relative flex items-center">
                       <Music className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                      <input
+                      <Input
                         type="text"
                         value={regBandName}
                         onChange={(e) => setRegBandName(e.target.value)}
                         placeholder="Nombre de la Banda / Artista (Ej: KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑)"
-                        className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui font-semibold"
+                        className="w-full pl-11 pr-4"
                         required
                       />
                     </div>
@@ -1073,12 +1074,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                   <div className="relative flex items-center">
                     <Mail className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                    <input
+                    <Input
                       type="email"
                       value={regEmail}
                       onChange={(e) => setRegEmail(e.target.value)}
                       placeholder="Correo electrónico"
-                      className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                      className="w-full pl-11 pr-4"
                       required
                     />
                   </div>
@@ -1086,12 +1087,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <div className="space-y-1">
                     <div className="relative flex items-center">
                       <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                      <input
+                      <Input
                         type={showRegPassword ? "text" : "password"}
                         value={regPassword}
                         onChange={(e) => setRegPassword(e.target.value)}
                         placeholder="Contraseña"
-                        className="w-full pl-11 pr-11 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                        className="w-full pl-11 pr-11"
                         required
                       />
                       <button
@@ -1183,12 +1184,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     >
                       <div className="relative flex items-center">
                         <Mail className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                        <input
+                        <Input
                           type="email"
                           value={activateEmail}
                           onChange={(e) => setActivateEmail(e.target.value)}
                           placeholder="Correo electrónico de invitación"
-                          className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                          className="w-full pl-11 pr-4"
                           required
                         />
                       </div>
@@ -1276,36 +1277,36 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     >
                       <div className="relative flex items-center">
                         <User className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                        <input
+                        <Input
                           type="text"
                           value={activateName}
                           onChange={(e) => setActivateName(e.target.value)}
                           placeholder="Nombre real completo"
-                          className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                          className="w-full pl-11 pr-4"
                           required
                         />
                       </div>
 
                       <div className="relative flex items-center">
                         <User className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                        <input
+                        <Input
                           type="text"
                           value={activateUsername}
                           onChange={(e) => setActivateUsername(e.target.value)}
                           placeholder="Nombre de usuario elegido"
-                          className="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                          className="w-full pl-11 pr-4"
                           required
                         />
                       </div>
 
                       <div className="relative flex items-center">
                         <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
-                        <input
+                        <Input
                           type={showActivatePassword ? "text" : "password"}
                           value={activatePassword}
                           onChange={(e) => setActivatePassword(e.target.value)}
                           placeholder="Crea tu contraseña"
-                          className="w-full pl-11 pr-11 py-3.5 bg-[var(--sunken)] rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-ui"
+                          className="w-full pl-11 pr-11"
                           required
                         />
                         <button

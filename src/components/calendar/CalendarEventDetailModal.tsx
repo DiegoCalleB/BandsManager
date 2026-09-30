@@ -46,6 +46,7 @@ import { Sparkles,
   Zap,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 export interface CalendarEventDetailModalProps {
   showEventFichaModal: boolean;
@@ -811,62 +812,57 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Llegada / descarga</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={modalRoadbook.horaLlegada || '17:00'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaLlegada: e.target.value })}
                         placeholder="17:00"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Prueba sonido</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={modalRoadbook.horaPruebaSonido || '18:00 - 19:30'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaPruebaSonido: e.target.value })}
                         placeholder="18:00 - 19:30"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={modalRoadbook.horaAperturaPuertas || '20:30'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaAperturaPuertas: e.target.value })}
                         placeholder="20:30"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 text-[var(--acc)]`}>Show / directo</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={modalRoadbook.horaShow || '21:30'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaShow: e.target.value })}
                         placeholder="21:30"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold ${
-                          'bg-[var(--acc-soft)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Toque de Queda</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={modalRoadbook.horaCierreToque || '01:00'}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaCierreToque: e.target.value })}
                         placeholder="01:00"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -885,28 +881,24 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                         Especificaciones P.A. de sala
                       </label>
-                      <textarea
+                      <Textarea
                         rows={2}
                         value={modalRoadbook.paEspecificaciones || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { paEspecificaciones: e.target.value })}
                         placeholder="Ej: Line Array L-Acoustics / D&B, subwoofers estéreo, presión homogénea"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                         Monitoreo (In-Ears / Cuñas)
                       </label>
-                      <textarea
+                      <Textarea
                         rows={2}
                         value={modalRoadbook.monitoresTipo || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { monitoresTipo: e.target.value })}
                         placeholder="Ej: In-Ears estéreo de la banda (traemos transmisores) + 2 cuñas de refuerzo"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -914,14 +906,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                       Canales de envíos auxiliares
                     </label>
-                    <input
+                    <Input
+                      size="sm"
                       type="text"
                       value={modalRoadbook.canalesMonitores || ''}
                       onChange={(e) => updateRoadbookField(modalRoadbookKey, { canalesMonitores: e.target.value })}
                       placeholder="Ej: 4 envíos auxiliares XLR independientes a rack de IEMs"
-                      className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                        'bg-[var(--surface)] text-[var(--ink)]'
-                      }`}
+                      className="w-full"
                     />
                   </div>
                 </div>
@@ -937,28 +928,24 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Backline (Sala vs banda)</label>
-                      <textarea
+                      <Textarea
                         rows={3}
                         value={modalRoadbook.backlineInfo || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { backlineInfo: e.target.value })}
                         placeholder="Sala aporta: Batería básica. Banda trae: Platos, pedal, guitarras, amplificadores y teclado."
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                         Potencia y Tomas Eléctricas en Escenario
                       </label>
-                      <textarea
+                      <Textarea
                         rows={3}
                         value={modalRoadbook.potenciaElectrica || ''}
                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { potenciaElectrica: e.target.value })}
                         placeholder="Ej: 2 líneas independientes Schuko 220V 16A limpias (frontal y trasera)"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--surface)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -977,14 +964,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       {(modalRoadbook.inputList || '').split('\n').filter(Boolean).length} canales especificados
                     </span>
                   </div>
-                  <textarea
+                  <Textarea
                     rows={6}
                     value={modalRoadbook.inputList || ''}
                     onChange={(e) => updateRoadbookField(modalRoadbookKey, { inputList: e.target.value })}
                     placeholder="1. Bombo (Beta 52)&#10;2. Caja Top (SM57)&#10;3. Bajo (D.I. Radial)&#10;4. Guitarra (e906)&#10;5. Voz (Beta 58)…"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono leading-relaxed ${
-                      'bg-[var(--surface)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
 
@@ -995,14 +980,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <label className={`block text-micro font-mono font-bold ${textSub}`}>
                     Notas de Acceso, Muelle de Carga & Observaciones
                   </label>
-                  <textarea
+                  <Textarea
                     rows={2}
                     value={modalRoadbook.notasTecnicas || ''}
                     onChange={(e) => updateRoadbookField(modalRoadbookKey, { notasTecnicas: e.target.value })}
                     placeholder="Ej: Acceso por puerta trasera calle peatonal. Se requiere autorización de matrícula para la furgoneta."
-                    className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                      'bg-[var(--surface)] text-[var(--ink)]'
-                    }`}
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -1041,25 +1024,22 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">
                           Nombre y Apellidos *
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           required
                           value={newContactNombre}
                           onChange={(e) => setNewContactNombre(e.target.value)}
                           placeholder="Ej: Manuel Producción"
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--sunken)] text-[var(--ink)]'
-                          }`}
+                          className="w-full"
                         />
                       </div>
                       <div>
                         <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">Rol / Cargo</label>
-                        <select aria-label="Rol / Cargo"
+                        <Select size="sm" aria-label="Rol / Cargo"
                           value={newContactRol}
                           onChange={(e) => setNewContactRol(e.target.value)}
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--sunken)] text-[var(--ink)]'
-                          }`}
+                          wrapperClassName="w-full"
                         >
                           <option value="Promotor / Sala">Promotor / sala</option>
                           <option value="Técnico de Sonido (P.A.)">Técnico de sonido (P.A.)</option>
@@ -1069,46 +1049,43 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <option value="Hotel / Alojamiento">Hotel / Alojamiento</option>
                           <option value="Seguridad / Acceso">Seguridad / acceso</option>
                           <option value="Road Manager">Road Manager</option>
-                        </select>
+                        </Select>
                       </div>
                       <div>
                         <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">
                           Teléfono (WhatsApp) *
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="tel"
                           required
                           value={newContactTelefono}
                           onChange={(e) => setNewContactTelefono(e.target.value)}
                           placeholder="+34 600 000 000"
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--sunken)] text-[var(--ink)]'
-                          }`}
+                          className="w-full"
                         />
                       </div>
                       <div>
                         <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">Email</label>
-                        <input
+                        <Input
+                          size="sm"
                           type="email"
                           value={newContactEmail}
                           onChange={(e) => setNewContactEmail(e.target.value)}
                           placeholder="produccion@sala.com"
-                          className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                            'bg-[var(--sunken)] text-[var(--ink)]'
-                          }`}
+                          className="w-full"
                         />
                       </div>
                     </div>
                     <div>
                       <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">Notas u observaciones</label>
-                      <input
+                      <Input
+                        size="sm"
                         type="text"
                         value={newContactNotas}
                         onChange={(e) => setNewContactNotas(e.target.value)}
                         placeholder="Ej: Contacto para cobro de taquilla y apertura de puerta muelle"
-                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                          'bg-[var(--sunken)] text-[var(--ink)]'
-                        }`}
+                        className="w-full"
                       />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
@@ -1420,72 +1397,64 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs font-mono">
                             <div className="md:col-span-2">
                               <label className={`block text-micro mb-1 ${textSub}`}>Nombre del Producto *</label>
-                              <input
+                              <Input
+                                size="sm"
                                 type="text"
                                 required
                                 placeholder="Ej: Camiseta Gira Oficial, Vinilo LP…"
                                 value={newMerchNombre}
                                 onChange={(e) => setNewMerchNombre(e.target.value)}
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
-                                  'bg-[var(--sunken)] text-[var(--ink)]'
-                                }`}
+                                className="w-full"
                               />
                             </div>
 
                             <div>
                               <label className={`block text-micro mb-1 ${textSub}`}>Categoría</label>
-                              <select aria-label="Categoría"
+                              <Select size="sm" aria-label="Categoría"
                                 value={newMerchCategoria}
                                 onChange={(e) => setNewMerchCategoria(e.target.value as any)}
-                                className={`w-full px-2 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
-                                  'bg-[var(--sunken)] text-[var(--ink)]'
-                                }`}
+                                wrapperClassName="w-full"
                               >
                                 <option value="camisetas">Camisetas</option>
                                 <option value="vinilos">Vinilos</option>
                                 <option value="musica">Música (CD/Tape)</option>
                                 <option value="accesorios">Púas / Accesorios</option>
                                 <option value="otro">Otro</option>
-                              </select>
+                              </Select>
                             </div>
 
                             <div>
                               <label className={`block text-micro mb-1 ${textSub}`}>Talla / versión</label>
-                              <input
+                              <Input
+                                size="sm"
                                 type="text"
                                 placeholder="Ej: M, L, XL, 12'', Pack…"
                                 value={newMerchTalla}
                                 onChange={(e) => setNewMerchTalla(e.target.value)}
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
-                                  'bg-[var(--sunken)] text-[var(--ink)]'
-                                }`}
+                                className="w-full"
                               />
                             </div>
 
                             <div className="grid grid-cols-2 gap-1.5">
                               <div>
                                 <label className={`block text-micro mb-1 ${textSub}`}>Precio (€)</label>
-                                <input aria-label="Precio (€)"
+                                <Input size="sm" aria-label="Precio (€)"
                                   type="number"
                                   step="0.5"
                                   min="0"
                                   value={newMerchPrecio}
                                   onChange={(e) => setNewMerchPrecio(Number(e.target.value) || 0)}
-                                  className={`w-full px-2 py-1.5 rounded-[var(--r-m)] outline-none text-xs font-mono ${
-                                    'bg-[var(--sunken)] text-[var(--ink)]'
-                                  }`}
+                                  className="w-full"
                                 />
                               </div>
                               <div>
                                 <label className={`block text-micro mb-1 ${textSub}`}>Furgón (uds)</label>
-                                <input aria-label="Furgón (uds)"
+                                <Input size="sm" aria-label="Furgón (uds)"
                                   type="number"
                                   min="0"
                                   value={newMerchStockInicial}
                                   onChange={(e) => setNewMerchStockInicial(Number(e.target.value) || 0)}
-                                  className={`w-full px-2 py-1.5 rounded-[var(--r-m)] outline-none text-xs font-mono ${
-                                    'bg-[var(--sunken)] text-[var(--ink)]'
-                                  }`}
+                                  className="w-full"
                                 />
                               </div>
                             </div>
@@ -1588,7 +1557,8 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                       >
                                         -
                                       </button>
-                                      <input
+                                      <Input
+                                        size="sm"
                                         type="number"
                                         min="0"
                                         value={item.stockInicial}
@@ -1597,9 +1567,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                             stockInicial: Math.max(0, parseInt(e.target.value, 10) || 0),
                                           })
                                         }
-                                        className={`w-12 text-center text-xs font-mono font-bold py-0.5 rounded outline-none ${
-                                          'bg-[var(--sunken)] text-[var(--ink)]'
-                                        }`}
+                                        className="w-12 text-center"
                                       />
                                       <button
                                         type="button"
@@ -1644,7 +1612,8 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                       >
                                         -
                                       </button>
-                                      <input
+                                      <Input
+                                        size="sm"
                                         type="number"
                                         min="0"
                                         value={item.stockFinal}
@@ -1653,9 +1622,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                             stockFinal: Math.max(0, parseInt(e.target.value, 10) || 0),
                                           })
                                         }
-                                        className={`w-12 text-center text-xs font-mono font-bold py-0.5 rounded outline-none ${
-                                          'bg-[var(--sunken)] text-[var(--ink)]'
-                                        }`}
+                                        className="w-12 text-center"
                                       />
                                       <button
                                         type="button"
@@ -1732,7 +1699,8 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           </div>
                           <p className="text-micro text-[var(--ink-2)] font-mono mb-2">Billetes y monedas cobrados en el bolo</p>
                           <div className="flex items-center gap-1.5">
-                            <input
+                            <Input
+                              size="sm"
                               type="number"
                               step="1"
                               min="0"
@@ -1742,9 +1710,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   ingresosEfectivo: Math.max(0, parseFloat(e.target.value) || 0),
                                 })
                               }
-                              className={`w-full px-3 py-1.5 rounded-[var(--r-m)] font-mono font-bold text-sm outline-none ${
-                                'bg-[var(--sunken)] text-[var(--ink)]'
-                              }`}
+                              className="w-full"
                             />
                             <span className="font-mono text-xs font-bold text-[var(--ink-2)]">€</span>
                           </div>
@@ -1762,7 +1728,8 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           </div>
                           <p className="text-micro text-[var(--ink-2)] font-mono mb-2">Pagos por móvil y datáfono del bolo</p>
                           <div className="flex items-center gap-1.5">
-                            <input
+                            <Input
+                              size="sm"
                               type="number"
                               step="1"
                               min="0"
@@ -1772,9 +1739,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   ingresosBizum: Math.max(0, parseFloat(e.target.value) || 0),
                                 })
                               }
-                              className={`w-full px-3 py-1.5 rounded-[var(--r-m)] font-mono font-bold text-sm outline-none ${
-                                'bg-[var(--sunken)] text-[var(--ink)]'
-                              }`}
+                              className="w-full"
                             />
                             <span className="font-mono text-xs font-bold text-[var(--ink-2)]">€</span>
                           </div>
@@ -1792,7 +1757,8 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           </div>
                           <p className="text-micro text-[var(--ink-2)] font-mono mb-2">Cambio que se llevó al inicio para la mesa</p>
                           <div className="flex items-center gap-1.5">
-                            <input
+                            <Input
+                              size="sm"
                               type="number"
                               step="1"
                               min="0"
@@ -1802,9 +1768,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   fondoCajaInicial: Math.max(0, parseFloat(e.target.value) || 0),
                                 })
                               }
-                              className={`w-full px-3 py-1.5 rounded-[var(--r-m)] font-mono font-bold text-sm outline-none ${
-                                'bg-[var(--sunken)] text-[var(--ink)]'
-                              }`}
+                              className="w-full"
                             />
                             <span className="font-mono text-xs font-bold text-[var(--ink-2)]">€</span>
                           </div>
@@ -1866,14 +1830,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
                           Notas del Puesto de Merchandising / Incidencias
                         </label>
-                        <textarea
+                        <Textarea
                           rows={2}
                           placeholder="Ej: Encargado de mesa: Andrea. Las camisetas talla L se agotaron antes del bis. Mucha demanda de púas."
                           value={merch.notas || ''}
                           onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, { notas: e.target.value })}
-                          className={`w-full p-2.5 rounded-[var(--r-m)] text-xs font-mono outline-none resize-none ${
-                            'bg-[var(--surface)] text-[var(--ink)]'
-                          }`}
+                          className="w-full"
                         />
                       </div>
                     </div>
@@ -2131,25 +2093,23 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     'bg-[var(--sunken)]'
                   }`}
                 >
-                  <select
+                  <Select
+                    size="sm"
                     value={newCierreItemCat}
                     onChange={(e) => setNewCierreItemCat(e.target.value as any)}
-                    className={`px-2 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                      'bg-[var(--surface)] text-[var(--ink)]'
-                    }`}
+                    
                   >
                     <option value="escenario">Escenario</option>
                     <option value="camerino">Camerino</option>
                     <option value="furgoneta">Furgoneta</option>
-                  </select>
-                  <input
+                  </Select>
+                  <Input
+                    size="sm"
                     type="text"
                     value={newCierreItemText}
                     onChange={(e) => setNewCierreItemText(e.target.value)}
                     placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)…"
-                    className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
-                      'bg-[var(--surface)] text-[var(--ink)]'
-                    }`}
+                    className="flex-1 min-w-[200px]"
                   />
                   <button
                     type="submit"

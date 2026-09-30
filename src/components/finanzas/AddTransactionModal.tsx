@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ThemeColors, Payment } from '../../types';
 import { X, Plus } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { Input, Select } from '../ui';
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -103,10 +104,10 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
 
             <div>
               <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Categoría</label>
-              <select aria-label="Categoría"
+              <Select aria-label="Categoría"
                 value={categoria}
                 onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
-                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
+                wrapperClassName="w-full"
               >
                 <option value="concierto">Concierto / caché</option>
                 <option value="merchandising">Merchandising</option>
@@ -116,42 +117,42 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 <option value="comida">Dietas / Comida</option>
                 <option value="promo">Promoción / prensa</option>
                 <option value="otros">Otros</option>
-              </select>
+              </Select>
             </div>
 
             <div>
               <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Concepto / descripción</label>
-              <input
+              <Input
                 type="text"
                 required
                 value={concepto}
                 onChange={(e) => setConcepto(e.target.value)}
                 placeholder="Ej. Caché Concierto Wurlitzer"
-                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
+                className="w-full"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Importe (€)</label>
-                <input
+                <Input
                   type="number"
                   step="0.01"
                   required
                   value={importe}
                   onChange={(e) => setImporte(e.target.value)}
                   placeholder="0.00"
-                  className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
+                  className="w-full"
                 />
               </div>
               <div>
                 <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Fecha</label>
-                <input aria-label="Fecha"
+                <Input aria-label="Fecha"
                   type="date"
                   required
                   value={fecha}
                   onChange={(e) => setFecha(e.target.value)}
-                  className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
+                  className="w-full"
                 />
               </div>
             </div>

@@ -31,6 +31,7 @@ import { api } from "../../services/api";
 import { ExampleThreadsSection } from "../booking/ExampleThreadsSection";
 import type { TemplateCategory } from "../booking/TemplateConfigSection";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -908,11 +909,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         </button>
                       </div>
 
-                      <textarea
+                      <Textarea
                         readOnly
                         rows={6}
                         value={toneData.pitch_personalizado_ejemplo}
-                        className={`w-full p-3 rounded-[var(--r-m)] font-mono text-micro leading-relaxed focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                        className="w-full"
                       />
 
                       {onUseTailoredPitch && (
@@ -1060,7 +1061,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       </p>
                                     )}
                                   <div className="flex items-center gap-1.5 pt-1">
-                                    <input
+                                    <Input
+                                      size="sm"
                                       type="text"
                                       value={newRuleText[manualKey] || ""}
                                       onChange={(e) =>
@@ -1075,7 +1077,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       }}
                                       placeholder="+ añadir regla manual (protegida)…"
                                       disabled={savingManual}
-                                      className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
+                                      className="flex-1"
                                     />
                                     <button
                                       onClick={() =>
@@ -1240,7 +1242,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                     </p>
                                   )}
                                 <div className="flex items-center gap-1.5 pt-1">
-                                  <input
+                                  <Input
+                                    size="sm"
                                     type="text"
                                     value={newRuleText[manualKey] || ""}
                                     onChange={(e) =>
@@ -1255,7 +1258,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                     }}
                                     placeholder="+ añadir regla manual (protegida)…"
                                     disabled={savingManual}
-                                    className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
+                                    className="flex-1"
                                   />
                                   <button
                                     onClick={() =>

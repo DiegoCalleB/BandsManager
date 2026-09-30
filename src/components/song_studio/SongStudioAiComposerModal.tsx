@@ -3,6 +3,7 @@ import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } fro
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, SongAudioIdea } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 interface SongStudioAiComposerModalProps {
   isOpen: boolean;
@@ -152,42 +153,42 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Rol del Músico IA</label>
-                <select aria-label="Rol del Músico IA"
+                <Select size="sm" aria-label="Rol del Músico IA"
                   value={estiloMusico}
                   onChange={(e) => setEstiloMusico(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
+                  wrapperClassName="w-full"
                 >
                   <option value="Productor y Arreglista General">Productor y arreglista general</option>
                   <option value="Guitarrista Líder (Solos y Riffs)">Guitarrista Líder (Solos y Riffs)</option>
                   <option value="Bajista de Sesión (Grooves y Líneas)">Bajista de sesión (Grooves y líneas)</option>
                   <option value="Teclista / Sintetizador (Atmósferas)">Teclista / Sintetizador (Atmósferas)</option>
                   <option value="Letrista y Co-autor (Ganchos y Letra)">Letrista y Co-autor (Ganchos y Letra)</option>
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Objetivo del arreglo</label>
-                <select aria-label="Objetivo del arreglo"
+                <Select size="sm" aria-label="Objetivo del arreglo"
                   value={objetivoIdea}
                   onChange={(e) => setObjetivoIdea(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
+                  wrapperClassName="w-full"
                 >
                   <option value="Nuevo Riff o Puente Instrumental">Nuevo Riff o Puente Instrumental</option>
                   <option value="Variación Armónica para el Estribillo">Variación armónica para el estribillo</option>
                   <option value="Línea Melódica de Gancho (Hook)">Línea melódica de gancho (hook)</option>
                   <option value="Corte Rítmico o Transición Sorpresa">Corte Rítmico o Transición Sorpresa</option>
                   <option value="Outro Épico o Final de Canción">Outro Épico o Final de Canción</option>
-                </select>
+                </Select>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Parte de la canción</label>
-                <select aria-label="Parte de la canción"
+                <Select size="sm" aria-label="Parte de la canción"
                   value={seccionCancion}
                   onChange={(e) => setSeccionCancion(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
+                  wrapperClassName="w-full"
                 >
                   <option value="Intro">Intro</option>
                   <option value="Verso">Verso</option>
@@ -197,17 +198,18 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   <option value="Solo / Instrumental">Solo / instrumental</option>
                   <option value="Outro">Outro</option>
                   <option value="General">Toda la canción (General)</option>
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Minuto / Compás aprox.</label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={tiempoMinuto}
                   onChange={(e) => setTiempoMinuto(e.target.value)}
                   placeholder="Ej: 01:15 o Compás 12"
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -216,12 +218,12 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
                 Instrucción o inspiración libre para el músico IA (Opcional)
               </label>
-              <textarea
+              <Textarea
                 value={promptUsuario}
                 onChange={(e) => setPromptUsuario(e.target.value)}
                 placeholder="Ej: Quiero que el puente tenga tensión al estilo rock alternativo de los 90, con acordes suspendidos y notas de bajo cromáticas…"
                 rows={2}
-                className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans resize-none"
+                className="w-full"
               />
             </div>
 

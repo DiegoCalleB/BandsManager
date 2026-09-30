@@ -58,6 +58,7 @@ import {
   WHATSAPP_WINDOW_NAME,
 } from "../utils/whatsapp";
 import { decodeBandIdClient } from "../utils/bandHash";
+import { Input, Textarea } from './ui';
 
 export interface FansLandingProps {
   currentBandId?: string;
@@ -1764,14 +1765,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                 {t("labelName")} *
               </label>
-              <input
+              <Input
                 type="text"
                 required
                 value={formData.nombre}
                 onChange={(e) =>
                   setFormData({ ...formData, nombre: e.target.value })
                 }
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                className="w-full"
                 placeholder={t("placeholderName")}
               />
             </div>
@@ -1779,14 +1780,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                 {t("labelEmail")} *
               </label>
-              <input
+              <Input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                className="w-full"
                 placeholder="tu@email.com"
               />
             </div>
@@ -1818,13 +1819,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelCity")}
                   </label>
-                  <input
+                  <Input
                     type="text"
                     value={formData.ciudad}
                     onChange={(e) =>
                       setFormData({ ...formData, ciudad: e.target.value })
                     }
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                    className="w-full"
                     placeholder={t("placeholderCity")}
                   />
                 </div>
@@ -1852,7 +1853,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelFavSong", { bandName })}
                   </label>
-                  <input
+                  <Input
                     type="text"
                     value={formData.cancionFavorita}
                     onChange={(e) =>
@@ -1861,7 +1862,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         cancionFavorita: e.target.value,
                       })
                     }
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                    className="w-full"
                     placeholder={t("placeholderFavSong")}
                   />
                 </div>
@@ -1870,13 +1871,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelInstagram")}
                   </label>
-                  <input
+                  <Input
                     type="text"
                     value={formData.instagram}
                     onChange={(e) =>
                       setFormData({ ...formData, instagram: e.target.value })
                     }
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
+                    className="w-full"
                     placeholder={t("placeholderInstagram")}
                   />
                 </div>
@@ -1885,13 +1886,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelMessage")}
                   </label>
-                  <textarea
+                  <Textarea
                     rows={2}
                     value={formData.mensaje}
                     onChange={(e) =>
                       setFormData({ ...formData, mensaje: e.target.value })
                     }
-                    className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors resize-none"
+                    className="w-full"
                     placeholder={t("placeholderMessage")}
                   />
                 </div>

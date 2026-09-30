@@ -24,6 +24,7 @@ import {
 import { apiFetch } from "../../utils/api";
 import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface SpotifyTrack {
   id: string;
@@ -369,12 +370,12 @@ export const SpotifyDiscographyModal: React.FC<
           >
             <div className="relative flex-1">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
-              <input
+              <Input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/…)"
-                className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-ui bg-[var(--sunken)] text-[var(--ink)] placeholder:text-[var(--ink-2)]"
+                className="w-full pl-10 pr-4"
               />
             </div>
             <button

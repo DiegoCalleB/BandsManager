@@ -3,6 +3,7 @@ import { Rehearsal } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { Music, Trash2 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select, Textarea } from '../ui';
 
 interface CalendarEditRehearsalModalProps {
   viewingRehearsal: Rehearsal | null;
@@ -83,14 +84,12 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             {isReunion && (
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Asunto de la Reunión</label>
-                <input aria-label="Asunto de la Reunión"
+                <Input size="sm" aria-label="Asunto de la Reunión"
                   type="text"
                   value={editRehearsalDraft.asunto || ''}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, asunto: e.target.value } : prev))}
                   required
-                  className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                 />
               </div>
             )}
@@ -98,26 +97,22 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Fecha</label>
-                <input aria-label="Fecha"
+                <Input size="sm" aria-label="Fecha"
                   type="date"
                   value={editRehearsalDraft.fecha}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
                   required
-                  className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none font-mono ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                 />
               </div>
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Horario</label>
-                <input aria-label="Horario"
+                <Input size="sm" aria-label="Horario"
                   type="text"
                   value={editRehearsalDraft.hora}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, hora: e.target.value } : prev))}
                   required
-                  className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                 />
               </div>
             </div>
@@ -126,28 +121,26 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
               <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
                 {isReunion ? 'Plataforma / Lugar' : 'Local / Ubicación'}
               </label>
-              <input
+              <Input
+                size="sm"
                 type="text"
                 value={editRehearsalDraft.lugar}
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, lugar: e.target.value } : prev))}
                 required
-                className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--sunken)] text-[var(--ink)]'
-                }`}
+                className="w-full"
               />
             </div>
 
             {isReunion && (
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Enlace de Videollamada</label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={editRehearsalDraft.enlace_reunion || ''}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, enlace_reunion: e.target.value } : prev))}
                   placeholder="https://meet.google.com/xyz"
-                  className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
-                    'bg-[var(--sunken)] text-[var(--ink)]'
-                  }`}
+                  className="w-full"
                 />
               </div>
             )}
@@ -160,12 +153,10 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                     <span>Repertorio Asociado</span>
                   </span>
                 </label>
-                <select aria-label="Repertorio Asociado"
+                <Select size="sm" aria-label="Repertorio Asociado"
                   value={editRehearsalDraft.setlistId || ''}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
-                  className={`w-full px-2 py-1.5 text-micro rounded-[var(--r-m)] outline-none font-mono ${
-                    'bg-[var(--sunken)] text-[var(--ink)] '
-                  }`}
+                  wrapperClassName="w-full"
                 >
                   <option value="">-- Sin repertorio específico --</option>
                   {availableSetlists.map((s: any) => (
@@ -173,36 +164,32 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                       {s.nombre} • {s.items?.length ?? 0} temas
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             )}
 
             <div>
               <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Estado</label>
-              <select aria-label="Estado"
+              <Select size="sm" aria-label="Estado"
                 value={editRehearsalDraft.estado}
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
-                className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--sunken)] text-[var(--ink)]'
-                }`}
+                wrapperClassName="w-full"
               >
                 <option value="programado">Programado</option>
                 <option value="completado">Completado</option>
                 <option value="cancelado">Cancelado</option>
-              </select>
+              </Select>
             </div>
 
             <div>
               <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
                 {isReunion ? 'Orden del Día / Notas' : 'Objetivos / Notas'}
               </label>
-              <textarea
+              <Textarea
                 value={editRehearsalDraft.notas || ''}
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                 rows={2}
-                className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
-                  'bg-[var(--sunken)] text-[var(--ink)]'
-                }`}
+                className="w-full"
               />
             </div>
 

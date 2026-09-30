@@ -39,6 +39,7 @@ import {
   parseRootNote,
 } from "../utils/chordUtils";
 import { ShowIcon } from './ui/ShowIcon';
+import { Input, Textarea } from './ui';
 
 interface SongChordsViewerModalProps {
   song: Song;
@@ -874,11 +875,11 @@ export function SongChordsViewerModal({
                         Texto con Letra y Acordes (Formato LaCuerda o [Acorde]
                         inline):
                       </label>
-                      <textarea
+                      <Textarea
                         value={cifradoTexto}
                         onChange={(e) => setCifradoTexto(e.target.value)}
                         rows={14}
-                        className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-[var(--ink)] font-sans text-xs focus:outline-none focus:leading-relaxed"
+                        className="w-full"
                         placeholder={`[Intro]\nMim  Do  Re  Mim\n\n[Estribillo]\n[Sol] Que tiene tu [Re] veneno [Mim] ...`}
                       />
                     </div>
@@ -893,7 +894,8 @@ export function SongChordsViewerModal({
                           <label className="text-[var(--ink-2)] block mb-0.5">
                             Estructura Exacta del Tema:
                           </label>
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={guiaSustituto.estructura || ""}
                             onChange={(e) =>
@@ -902,7 +904,7 @@ export function SongChordsViewerModal({
                                 estructura: e.target.value,
                               })
                             }
-                            className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
+                            className="w-full"
                             placeholder="Intro -> Verso -> Estribillo -> Outro"
                           />
                         </div>
@@ -911,7 +913,8 @@ export function SongChordsViewerModal({
                           <label className="text-[var(--ink-2)] block mb-0.5">
                             Progresiones Clave:
                           </label>
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={guiaSustituto.progresionClave || ""}
                             onChange={(e) =>
@@ -920,7 +923,7 @@ export function SongChordsViewerModal({
                                 progresionClave: e.target.value,
                               })
                             }
-                            className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
+                            className="w-full"
                             placeholder="Verso: Mim - Do | Estribillo: Sol - Re"
                           />
                         </div>
@@ -929,7 +932,8 @@ export function SongChordsViewerModal({
                           <label className="text-[var(--ink-2)] block mb-0.5">
                             Cortes y Claves en Vivo:
                           </label>
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={guiaSustituto.cortesYClaves || ""}
                             onChange={(e) =>
@@ -938,7 +942,7 @@ export function SongChordsViewerModal({
                                 cortesYClaves: e.target.value,
                               })
                             }
-                            className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
+                            className="w-full"
                             placeholder="Parón en compás 8…"
                           />
                         </div>
@@ -947,7 +951,8 @@ export function SongChordsViewerModal({
                           <label className="text-[var(--ink-2)] block mb-0.5">
                             Capo / Afinación:
                           </label>
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={guiaSustituto.capoTraste || ""}
                             onChange={(e) =>
@@ -956,7 +961,7 @@ export function SongChordsViewerModal({
                                 capoTraste: e.target.value,
                               })
                             }
-                            className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
+                            className="w-full"
                             placeholder="Capo 2º traste"
                           />
                         </div>

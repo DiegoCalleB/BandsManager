@@ -16,6 +16,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface BoloConfirmadoSetlistModalProps {
   isOpen: boolean;
@@ -220,11 +221,11 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 <Calendar className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Fecha del Concierto:
               </label>
-              <input aria-label="Fecha del concierto"
+              <Input size="sm" aria-label="Fecha del concierto"
                 type="date"
                 value={concertDate}
                 onChange={(e) => setConcertDate(e.target.value)}
-                className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:outline-none"
+                className="w-full"
               />
             </div>
 
@@ -233,12 +234,13 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Caché Pactado (€):
               </label>
-              <input
+              <Input
+                size="sm"
                 type="number"
                 placeholder="Ej. 600"
                 value={cacheAmount}
                 onChange={(e) => setCacheAmount(e.target.value)}
-                className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:focus:outline-none"
+                className="w-full"
               />
             </div>
           </div>

@@ -48,6 +48,7 @@ import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
 import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { ShowIcon } from './ui/ShowIcon';
+import { Select, Textarea } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -2031,7 +2032,8 @@ export default function Chatbot({
                                               <p className="text-micro font-sans text-[var(--ink-2)]">
                                                 No he identificado la canción. Elige en cuál guardarla:
                                               </p>
-                                              <select
+                                              <Select
+                                                size="sm"
                                                 value={songPicker[audioKey].selectedId}
                                                 onChange={(e) =>
                                                   setSongPicker((prev) => ({
@@ -2039,7 +2041,7 @@ export default function Chatbot({
                                                     [audioKey]: { ...prev[audioKey], selectedId: e.target.value },
                                                   }))
                                                 }
-                                                className={`w-full text-xs font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                                                wrapperClassName="w-full"
                                               >
                                                 <option value="">— Selecciona una canción —</option>
                                                 {songPicker[audioKey].songs.map((s) => (
@@ -2047,7 +2049,7 @@ export default function Chatbot({
                                                     {s.titulo}
                                                   </option>
                                                 ))}
-                                              </select>
+                                              </Select>
                                               <button
                                                 type="button"
                                                 onClick={() =>
@@ -2151,7 +2153,8 @@ export default function Chatbot({
                                               <p className="text-micro font-sans text-[var(--ink-2)]">
                                                 No he identificado la canción. Elige en cuál guardarla:
                                               </p>
-                                              <select
+                                              <Select
+                                                size="sm"
                                                 value={songPicker[audioKey].selectedId}
                                                 onChange={(e) =>
                                                   setSongPicker((prev) => ({
@@ -2159,7 +2162,7 @@ export default function Chatbot({
                                                     [audioKey]: { ...prev[audioKey], selectedId: e.target.value },
                                                   }))
                                                 }
-                                                className={`w-full text-xs font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                                                wrapperClassName="w-full"
                                               >
                                                 <option value="">— Selecciona una canción —</option>
                                                 {songPicker[audioKey].songs.map((s) => (
@@ -2167,7 +2170,7 @@ export default function Chatbot({
                                                     {s.titulo}
                                                   </option>
                                                 ))}
-                                              </select>
+                                              </Select>
                                               <button
                                                 type="button"
                                                 onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea, songPicker[audioKey].selectedId)}
@@ -2626,7 +2629,7 @@ export default function Chatbot({
 
       {/* Input Message Form Footer */}
       <form onSubmit={handleSendMessage} className={`p-3 flex gap-2 items-end ${'bg-[var(--bg)]'}`}>
-        <textarea
+        <Textarea
           id="chatbot-text-input"
           ref={textareaRef}
           rows={1}
@@ -2634,7 +2637,7 @@ export default function Chatbot({
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Escribe tu mensaje… (Enter para enviar, Shift+Enter para nueva línea)"
-          className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-ui font-sans resize-none max-h-28 min-h-[38px] ${'bg-[var(--sunken)] text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]'}`}
+          className="flex-1 max-h-28 min-h-[38px]"
         />
         <button
           id="chatbot-mic-btn"

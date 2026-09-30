@@ -28,6 +28,7 @@ import {
   Briefcase,
 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Select } from '../ui';
 
 interface MorningBriefingRadarProps {
   leads: Lead[];
@@ -530,10 +531,11 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
                     <div className="flex items-center gap-2">
                       <span className="text-micro font-mono text-[var(--ink-2)]">Ciudad Ancla:</span>
-                      <select
+                      <Select
+                        size="sm"
                         value={simulatorCity}
                         onChange={(e) => setSimulatorCity(e.target.value)}
-                        className="bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded-[var(--r-m)] px-2.5 py-1 font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
+                        
                       >
                         <option value="Valencia">Valencia (Eje Mediterráneo)</option>
                         <option value="Barcelona">Barcelona (Eje Mediterráneo)</option>
@@ -542,7 +544,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         <option value="Bilbao">Bilbao (Eje Cantábrico / Ebro)</option>
                         <option value="Sevilla">Sevilla (Eje Sur)</option>
                         <option value="Valladolid">Valladolid (Eje Castilla)</option>
-                      </select>
+                      </Select>
                     </div>
                   </div>
 

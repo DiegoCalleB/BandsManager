@@ -41,6 +41,7 @@ import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 interface OrdenDelDiaTabProps {
   rehearsal: Rehearsal;
@@ -530,7 +531,8 @@ export function OrdenDelDiaTab({
 
             {/* Input to add objective */}
             <div className="flex gap-1.5">
-              <input
+              <Input
+                size="sm"
                 type="text"
                 placeholder="Nuevo objetivo…"
                 value={nuevoObjTexto}
@@ -541,7 +543,7 @@ export function OrdenDelDiaTab({
                     handleAddObjetivo();
                   }
                 }}
-                className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"
+                className="flex-1"
               />
               <button
                 type="button"
@@ -869,27 +871,29 @@ export function OrdenDelDiaTab({
               <div className="pt-3 space-y-2 shrink-0">
                 <div className="relative">
                   <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)]" />
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     value={searchSongQuery}
                     onChange={(e) => setSearchSongQuery(e.target.value)}
                     placeholder="Buscar por título, tonalidad, género…"
-                    className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] focus:outline-none"
+                    className="w-full pl-8 pr-3"
                   />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  <select
+                  <Select
+                    size="sm"
                     value={selectedAlbumFilter}
                     onChange={(e) => setSelectedAlbumFilter(e.target.value)}
-                    className="text-micro font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer bg-[var(--sunken)] text-[var(--acc-ink)] font-bold"
+                    
                   >
                     {albumsList.map((alb) => (
                       <option key={alb} value={alb}>
                         {alb === "todos" ? "Todos los álbumes" : alb}
                       </option>
                     ))}
-                  </select>
+                  </Select>
 
                   <button
                     type="button"
@@ -1182,12 +1186,13 @@ export function OrdenDelDiaTab({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Título del bloque
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Ej: Calentamiento & Sonido, Pausa café…"
                     value={blockTitulo}
                     onChange={(e) => setBlockTitulo(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"
+                    className="w-full"
                   />
                 </div>
 
@@ -1195,13 +1200,13 @@ export function OrdenDelDiaTab({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Duración estimada (Minutos)
                   </label>
-                  <input aria-label="Duración estimada (Minutos)"
+                  <Input size="sm" aria-label="Duración estimada (Minutos)"
                     type="number"
                     min="1"
                     max="120"
                     value={blockDuracion}
                     onChange={(e) => setBlockDuracion(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink)] outline-none"
+                    className="w-full"
                   />
                 </div>
 
@@ -1209,12 +1214,13 @@ export function OrdenDelDiaTab({
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
                     Enfoque / instrucciones
                   </label>
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Ej: Ajustar retorno de monitores y afinación…"
                     value={blockEnfoque}
                     onChange={(e) => setBlockEnfoque(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"
+                    className="w-full"
                   />
                 </div>
               </div>

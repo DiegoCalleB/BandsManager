@@ -3,6 +3,7 @@ import { BandContact } from '../../types';
 import { Repeat, X, Check, Copy, MessageCircle, Send } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
+import { Input } from '../ui';
 
 interface BandPitchModalProps {
   isOpen: boolean;
@@ -64,33 +65,33 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-micro font-sans">
               <div>
                 <label className="block text-micro text-[var(--ink-2)] mb-1">Ciudad donde os recibís</label>
-                <input aria-label="Ciudad donde os recibís"
+                <Input size="sm" aria-label="Ciudad donde os recibís"
                   type="text"
                   value={proposedCity}
                   placeholder="Madrid"
                   onChange={(e) => setProposedCity(e.target.value)}
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
+                  className="w-full"
                 />
               </div>
 
               <div>
                 <label className="block text-micro text-[var(--ink-2)] mb-1">Sala propuesta</label>
-                <input aria-label="Sala propuesta"
+                <Input size="sm" aria-label="Sala propuesta"
                   type="text"
                   value={proposedVenue}
                   placeholder="Nombre de la sala"
                   onChange={(e) => setProposedVenue(e.target.value)}
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
+                  className="w-full"
                 />
               </div>
 
               <div>
                 <label className="block text-micro text-[var(--ink-2)] mb-1">Periodo / mes estimado</label>
-                <input aria-label="Periodo / mes estimado"
+                <Input size="sm" aria-label="Periodo / mes estimado"
                   type="text"
                   value={proposedMonth}
                   onChange={(e) => setProposedMonth(e.target.value)}
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
+                  className="w-full"
                 />
               </div>
             </div>

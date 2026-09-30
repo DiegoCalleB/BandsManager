@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Wand2, RefreshCw, Music, CheckCircle2, Check } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Textarea } from '../ui';
 
 interface SongStudioAiTrackGenModalProps {
   showAiTrackGenModal: SongAudioIdea | null;
@@ -94,11 +95,11 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             <label className="block text-xs font-mono font-bold text-[var(--acc)] mb-1.5">
               2. Indicaciones de estilo / Prompt (Opcional)
             </label>
-            <textarea
+            <Textarea
               value={aiTrackGenPrompt}
               onChange={(e) => setAiTrackGenPrompt(e.target.value)}
               placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo…"
-              className="w-full h-20 bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] placeholder:text-[var(--ink-2)] font-sans text-xs focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] resize-none"
+              className="w-full h-20"
             />
           </div>
 

@@ -24,6 +24,7 @@ import { ThemeColors } from '../../types';
 import { ExampleThreadsSection } from './ExampleThreadsSection';
 import { TemplateRecommendationsCard } from './TemplateRecommendationsCard';
 import { GenerateAllTemplatesModal } from './GenerateAllTemplatesModal';
+import { Input, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -283,13 +284,14 @@ export function TemplateConfigSection({
           {/* Subject */}
           <div className="space-y-1">
             <label className="block text-xs font-mono font-bold text-[var(--ink-2)]">Asunto del email</label>
-            <input
+            <Input
+              size="sm"
               id="template-subject"
               type="text"
               value={activeTemplate.subject}
               onChange={(e) => activeTemplate.setSubject(e.target.value)}
               placeholder="Ej: Propuesta de directo: {{nombre_banda}} en {{nombre_sala}}"
-              className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none transition-colors"
+              className="w-full"
             />
           </div>
 
@@ -314,12 +316,12 @@ export function TemplateConfigSection({
               </div>
             </div>
 
-            <textarea
+            <Textarea
               id="template-body"
               rows={8}
               value={activeTemplate.body}
               onChange={(e) => activeTemplate.setBody(e.target.value)}
-              className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none leading-relaxed transition-colors font-sans"
+              className="w-full"
               placeholder="Escribe el cuerpo base de la plantilla usando las etiquetas como {{nombre_sala}}, {{ciudad}}…"
             />
           </div>
@@ -329,12 +331,12 @@ export function TemplateConfigSection({
             <label className="block text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
               <span>Pautas de redacción para la IA (Opcional)</span>
             </label>
-            <textarea
+            <Textarea
               id="template-guidelines"
               rows={2}
               value={activeTemplate.guidelines}
               onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
-              className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none transition-colors"
+              className="w-full"
               placeholder="Ej: Mantén el mensaje en menos de 100 palabras, tono cercano, destaca nuestra sección rítmica…"
             />
           </div>

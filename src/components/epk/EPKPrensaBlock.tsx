@@ -3,6 +3,7 @@ import { BarChart3, Quote, Plus, Trash2 } from "lucide-react";
 import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { Input, Textarea } from '../ui';
 
 interface EPKPrensaBlockProps {
   config: EPKConfig;
@@ -104,7 +105,8 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                 <label className="text-micro font-semibold text-[var(--ink-2)] block">
                   {campo.label}
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={config.cifrasClave?.[campo.key] || ""}
                   onChange={(e) =>
@@ -117,7 +119,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                     })
                   }
                   placeholder={campo.placeholder}
-                  className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full"
                 />
               </div>
             ))}
@@ -172,7 +174,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                 className="rounded-[var(--r-m)] bg-[var(--sunken)] p-3.5 space-y-2"
               >
                 <div className="flex items-start gap-2">
-                  <textarea
+                  <Textarea
                     rows={2}
                     value={cita.texto}
                     onChange={(e) => {
@@ -187,7 +189,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                       });
                     }}
                     placeholder="Texto exacto de la reseña o cita…"
-                    className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none leading-relaxed resize-none"
+                    className="flex-1"
                   />
                   <button
                     type="button"
@@ -209,7 +211,8 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={cita.medio}
                   onChange={(e) => {
@@ -224,7 +227,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                     });
                   }}
                   placeholder="Medio / firma (Ej: Radio 3, MondoSonoro, blog especializado…)"
-                  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus:outline-none"
+                  className="w-full"
                 />
               </div>
             ))}

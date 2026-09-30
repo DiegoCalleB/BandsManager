@@ -92,7 +92,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
-import { Button, Chip, ShowIcon } from "./ui";
+import { Button, Chip, Input, Select, ShowIcon } from './ui';
 import { RepertorioNavBar } from "./repertorio/RepertorioNavBar";
 import { SetlistAddBar } from "./repertorio/SetlistAddBar";
 import SongStudioModal from "./SongStudioModal";
@@ -5364,7 +5364,8 @@ export default function RepertorioSetlists({
                             </div>
                           )}
 
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)…"
                             value={it.notaTema || ""}
@@ -5372,7 +5373,7 @@ export default function RepertorioSetlists({
                             onChange={(e) =>
                               handleUpdateItemNote(it.id, e.target.value)
                             }
-                            className={`w-full text-micro font-sans px-2 py-1 rounded mt-1 ${"bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-2)]"}`}
+                            className="w-full mt-1"
                           />
 
                           {/* Notas de miembros / acordes / studio */}
@@ -5798,10 +5799,11 @@ export default function RepertorioSetlists({
               {/* CATALOG FILTERS BAR — Limpio y minimalista */}
               <div className="flex items-center gap-3 py-4">
                 {/* Album filter */}
-                <select
+                <Select
+                  size="sm"
                   value={catalogAlbumFilter}
                   onChange={(e) => setCatalogAlbumFilter(e.target.value)}
-                  className="text-sm py-2 px-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] font-medium focus:outline-none cursor-pointer hover:bg-[var(--sunken)] transition-colors"
+                  
                 >
                   <option value="todos">Todos los discos</option>
                   {albumsList
@@ -5811,7 +5813,7 @@ export default function RepertorioSetlists({
                         {alb}
                       </option>
                     ))}
-                </select>
+                </Select>
 
                 {/* Status filter toggle */}
                 <button

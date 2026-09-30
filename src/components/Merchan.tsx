@@ -30,6 +30,7 @@ import { ThemeColors, ThemeName } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
 import { ShowIcon } from './ui/ShowIcon';
+import { Input } from './ui';
 
 const ResolvedBgImage: React.FC<{
   url: string;
@@ -642,12 +643,13 @@ export default function Merchan({
               >
                 <QrCode className="w-3.5 h-3.5" /> Link de redirección del QR
               </label>
-              <input
+              <Input
+                size="sm"
                 type="url"
                 value={qrUrl}
                 onChange={(e) => setQrUrl(e.target.value)}
                 placeholder="https://instagram.com/tu_banda"
-                className="w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]"
+                className="w-full"
               />
             </div>
           )}
@@ -966,7 +968,8 @@ export default function Merchan({
                         </label>
                         <div className="relative">
                           <User className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={shippingForm.nombre}
                             onChange={(e) =>
@@ -975,7 +978,7 @@ export default function Merchan({
                                 nombre: e.target.value,
                               })
                             }
-                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
+                            className="w-full pl-9 pr-3"
                             placeholder="Nombre y apellidos"
                           />
                         </div>
@@ -987,7 +990,8 @@ export default function Merchan({
                         </label>
                         <div className="relative">
                           <Building className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
-                          <input
+                          <Input
+                            size="sm"
                             type="text"
                             value={shippingForm.direccion}
                             onChange={(e) =>
@@ -996,7 +1000,7 @@ export default function Merchan({
                                 direccion: e.target.value,
                               })
                             }
-                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
+                            className="w-full pl-9 pr-3"
                             placeholder="Dirección completa del local o domicilio"
                           />
                         </div>
@@ -1006,7 +1010,8 @@ export default function Merchan({
                         <label className="text-micro font-sans text-[var(--ink-2)]">
                           Código Postal (CP)
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={shippingForm.cp}
                           onChange={(e) =>
@@ -1015,7 +1020,7 @@ export default function Merchan({
                               cp: e.target.value,
                             })
                           }
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
+                          className="w-full"
                           placeholder="28001"
                         />
                       </div>
@@ -1024,7 +1029,8 @@ export default function Merchan({
                         <label className="text-micro font-sans text-[var(--ink-2)]">
                           Ciudad / provincia
                         </label>
-                        <input
+                        <Input
+                          size="sm"
                           type="text"
                           value={shippingForm.ciudad}
                           onChange={(e) =>
@@ -1033,7 +1039,7 @@ export default function Merchan({
                               ciudad: e.target.value,
                             })
                           }
-                          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
+                          className="w-full"
                           placeholder="Madrid"
                         />
                       </div>
@@ -1044,7 +1050,8 @@ export default function Merchan({
                         </label>
                         <div className="relative">
                           <Phone className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
-                          <input
+                          <Input
+                            size="sm"
                             type="tel"
                             value={shippingForm.telefono}
                             onChange={(e) =>
@@ -1053,7 +1060,7 @@ export default function Merchan({
                                 telefono: e.target.value,
                               })
                             }
-                            className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] focus:outline-none"
+                            className="w-full pl-9 pr-3"
                             placeholder="+34 600 000 000"
                           />
                         </div>

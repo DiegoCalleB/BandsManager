@@ -28,6 +28,7 @@ import {
 import { formatTime } from "./EnsayoCronometro";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input, Select } from '../ui';
 
 interface GrabacionActaTabProps {
   rehearsal: Rehearsal;
@@ -340,17 +341,19 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <audio controls src={recordingBlobUrl} className="w-full h-8" />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <input
+                  <Input
+                    size="sm"
                     type="text"
                     placeholder="Título de la toma (ej. Riff nuevo tema 2)…"
                     value={recordingTitle}
                     onChange={(e) => setRecordingTitle(e.target.value)}
-                    className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none"
+                    
                   />
-                  <select
+                  <Select
+                    size="sm"
                     value={recordingTag}
                     onChange={(e) => setRecordingTag(e.target.value as any)}
-                    className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none cursor-pointer"
+                    
                   >
                     <option value="toma_completa">Toma completa</option>
                     <option value="riff">Riff / idea nueva</option>
@@ -359,7 +362,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                       Nota de Voz / Conclusiones
                     </option>
                     <option value="debate">Debate / comentarios</option>
-                  </select>
+                  </Select>
                 </div>
 
                 <div className="flex justify-end gap-2">

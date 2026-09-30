@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, X, Loader2, Check, RefreshCw, Palette, Wand2, AlertCircle } from 'lucide-react';
 import { api } from '../../services/api';
 import { ShowIcon } from '../ui/ShowIcon';
+import { Input } from '../ui';
 
 interface AILogoGeneratorModalProps {
   isOpen: boolean;
@@ -151,12 +152,13 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
             <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1.5 flex items-center gap-1.5">
               <Wand2 className="w-4 h-4 text-[var(--acc)]" /> Indicaciones adicionales (opcional)
             </label>
-            <input
+            <Input
+              size="sm"
               type="text"
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
               placeholder="Ej: añadir forma de rayo, tonos dorados y negros, aire psicodélico…"
-              className="w-full bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--ink-3)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] outline-none"
+              className="w-full"
             />
           </div>
 

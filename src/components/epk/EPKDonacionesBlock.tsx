@@ -19,6 +19,7 @@ import {
   tieneTraduccion,
   traduccionDesactualizada,
 } from "../../utils/epkTraducciones";
+import { Input, Textarea } from '../ui';
 
 interface EPKDonacionesBlockProps {
   config: EPKConfig;
@@ -336,7 +337,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
                   Título de la tarjeta
                 </label>
-                <input
+                <Input
+                  size="sm"
                   type="text"
                   value={config.donacionRevolut?.titulo || ""}
                   onChange={(e) =>
@@ -349,7 +351,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     })
                   }
                   placeholder="Colabora con la banda"
-                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                  className="w-full"
                 />
               </div>
 
@@ -357,7 +359,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
                   Descripción del destino
                 </label>
-                <textarea
+                <Textarea
                   rows={2}
                   value={config.donacionRevolut?.descripcion || ""}
                   onChange={(e) =>
@@ -370,7 +372,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     })
                   }
                   placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
-                  className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -567,7 +569,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                             <label className="block text-micro text-[var(--acc)]/80 font-semibold mb-1.5">
                               {f.etiqueta} — {idioma.label}
                             </label>
-                            <textarea aria-label="—"
+                            <Textarea aria-label="—"
                               value={traduccion?.[f.campo] || ""}
                               onChange={(e) =>
                                 editarTraduccion(
@@ -577,7 +579,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                 )
                               }
                               rows={f.filas}
-                              className="w-full bg-[var(--surface)] rounded-[var(--r-s)] p-3 text-xs text-[var(--ink)] focus:focus:outline-none"
+                              className="w-full"
                             />
                           </div>
                         </div>
@@ -607,7 +609,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                   <div className="text-xs text-[var(--ink-2)] pt-1.5">
                                     {m.rol}
                                   </div>
-                                  <input
+                                  <Input
+                                    size="sm"
                                     type="text"
                                     value={
                                       traduccion?.miembros?.[m.id]?.rol || ""
@@ -621,7 +624,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                       )
                                     }
                                     placeholder={`Instrumento en ${idioma.label}`}
-                                    className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
+                                    className="w-full"
                                   />
                                 </div>
                               )}
@@ -630,7 +633,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                   <div className="text-xs text-[var(--ink-2)]">
                                     {m.bio}
                                   </div>
-                                  <textarea
+                                  <Textarea
                                     value={
                                       traduccion?.miembros?.[m.id]?.bio || ""
                                     }
@@ -644,7 +647,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                     }
                                     rows={2}
                                     placeholder={`Trayectoria en ${idioma.label}`}
-                                    className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
+                                    className="w-full"
                                   />
                                 </div>
                               )}
