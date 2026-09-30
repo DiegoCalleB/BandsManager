@@ -246,15 +246,15 @@
 /* ═══════════ TINTE DEL MENÚ POR GRUPO ═══════════
    Decisión de Diego (2026-09-30): «me gustaba que el menú de la izquierda cambiara un poco los tonos según
    el grupo —en Música, el verde—: da sensación de saber dónde estás solo con el color».
-   Se tiñe SOLO el menú lateral y la barra inferior (data-grupo va en <aside> y <nav>); el contenido sigue en el
+   Se tiñe SOLO la lista de navegación del menú lateral y la barra inferior (data-grupo va en el <nav>; cabecera de banda y CTAs siguen en azul); el contenido sigue en el
    azul único. Directorio y Herramientas conservan el azul. Todos con la misma luminosidad y croma moderado
    (≈ L 0,53 / C 0,14 en claro): ningún grupo grita más que otro. Música usa el verde de Spotify.       */
 [data-grupo="musica"]    { --acc:#108846; --acc-soft:#DEF6E3; --acc-ink:#00702F; --on-acc:#FFFFFF; }
 [data-grupo="promocion"] { --acc:#7F53AC; --acc-soft:#F4E9FF; --acc-ink:#6E4199; --on-acc:#FFFFFF; }
 [data-grupo="negocio"]   { --acc:#008192; --acc-soft:#D4F6FA; --acc-ink:#006E80; --on-acc:#FFFFFF; }
-[data-theme="dark"] [data-grupo="musica"]    { --acc:#1DB954; --acc-soft:#10301B; --acc-ink:#1DB954; --on-acc:#06180C; }
-[data-theme="dark"] [data-grupo="promocion"] { --acc:#CBA1FA; --acc-soft:#2C2138; --acc-ink:#CBA1FA; --on-acc:#191221; }
-[data-theme="dark"] [data-grupo="negocio"]   { --acc:#4CC4D2; --acc-soft:#0B2E33; --acc-ink:#4CC4D2; --on-acc:#04191C; }
+[data-theme="dark"] [data-grupo="musica"]    { --acc:#3DBE6C; --acc-soft:#14281B; --acc-ink:#72D699; --on-acc:#06180C; }
+[data-theme="dark"] [data-grupo="promocion"] { --acc:#B58DE0; --acc-soft:#251E30; --acc-ink:#CDAEF0; --on-acc:#191221; }
+[data-theme="dark"] [data-grupo="negocio"]   { --acc:#46AEBB; --acc-soft:#0F262A; --acc-ink:#7CCBD6; --on-acc:#04191C; }
 /* Clásico no tiñe el menú: es el diseño de antes. */
 [data-theme="classic"] [data-grupo] { --acc:#F2CA50; --acc-soft:#2C2310; --acc-ink:#F2CA50; --on-acc:#2C2200; }
 

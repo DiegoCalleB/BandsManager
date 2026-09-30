@@ -1413,7 +1413,7 @@ export default function App() {
               onClick={() => setIsMobileMenuOpen(false)}
             />
             {/* Drawer panel */}
-            <div data-grupo={grupoActivo} className="relative w-[280px] max-w-[85vw] bg-[var(--surface)] flex flex-col h-full z-10 overflow-y-auto">
+            <div className="relative w-[280px] max-w-[85vw] bg-[var(--surface)] flex flex-col h-full z-10 overflow-y-auto">
               {/* Drawer Header */}
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -1455,7 +1455,7 @@ export default function App() {
               </div>
 
               {/* Drawer Nav */}
-              <nav className="flex flex-col gap-1 px-3 pt-3 flex-1">
+              <nav data-grupo={grupoActivo} className="flex flex-col gap-1 px-3 pt-3 flex-1">
                 {NAV_PINNED_TOP_IDS.map((id) => {
                   const item = NAV_ITEMS[id];
                   return (
@@ -1675,7 +1675,7 @@ export default function App() {
           </div>
         )}
 
-        <aside data-grupo={grupoActivo} className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
+        <aside className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
           {/* Brand Header (Clickable Netflix Style Switcher) */}
           <div
             onClick={() => setShowBandSwitcherModal(true)}
@@ -1738,7 +1738,7 @@ export default function App() {
           </div>
 
           {/* Navigation */}
-          <nav className="flex flex-col gap-0.5 px-3 pt-2 flex-1">
+          <nav data-grupo={grupoActivo} className="flex flex-col gap-0.5 px-3 pt-2 flex-1">
             {NAV_PINNED_TOP_IDS.map((id) => {
               const item = NAV_ITEMS[id];
               return (
