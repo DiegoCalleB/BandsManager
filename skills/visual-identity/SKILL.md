@@ -213,4 +213,5 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 - [ ] Estado vacío con voz propia, no «No hay datos».
 - [ ] Checklist anti-plantilla del §8 pasado.
 - [ ] Cabe en 3 bloques el primer viewport móvil (~390 px).
+- [ ] Campos con `<Input>`/`<Textarea>`/`<Select>` de `components/ui` (nunca `<input>` a mano; excepción justificada con `data-raw`), botones de solo icono con `aria-label`, `npm run audit:diseno` en verde (CI lo exige).
 - [ ] `npx tsc --noEmit` sin errores nuevos.
