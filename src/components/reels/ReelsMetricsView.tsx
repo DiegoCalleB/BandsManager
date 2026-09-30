@@ -1037,16 +1037,13 @@ export function ReelsMetricsView({
               </div>
               <div>
                 <h3 className="text-xs font-bold font-display flex items-center gap-2 text-[var(--ink)]">
-                  Agente Radar Autónomo & Análisis Multiplataforma
+                  Radar de redes
                   <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
-                    <CheckCircle2 className="w-2.5 h-2.5" /> 0 Tokens IA •
-                    Supabase DB
+                    <CheckCircle2 className="w-2.5 h-2.5" /> No gasta créditos de IA
                   </span>
                 </h3>
                 <p className="text-micro text-[var(--ink-2)] font-sans mt-0.5">
-                  Sincronización directa con los feeds públicos y OpenGraph de
-                  las plataformas (resolución nativa: unidades exactas en bandas
-                  emergentes, escalas oficiales K/M en macro-cuentas).
+                  Lee tus perfiles públicos y trae seguidores y publicaciones cada vez que lo lanzas.
                 </p>
               </div>
             </div>

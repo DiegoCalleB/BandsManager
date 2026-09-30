@@ -735,9 +735,8 @@ export default function TourManager({
               La gira está vacía
             </h3>
             <p className="text-sm text-[var(--ink-2)] max-w-md mx-auto mb-4">
-              Agrupa tus conciertos en giras para calcular mejor los gastos
-              logísticos, combustible de todos tus vehículos, dietas de los
-              músicos convocados, alojamientos y el margen de beneficio neto.
+              Agrupa tus conciertos en una gira y calcula gasolina, dietas, alojamiento y lo que
+              queda por cabeza.
             </p>
             <button
               onClick={handleOpenCreateModal}
