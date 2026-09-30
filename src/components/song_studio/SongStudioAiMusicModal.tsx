@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Wand2,
   X,
-  Sparkles,
   RefreshCw,
   Play,
   Download,
@@ -119,7 +118,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-xs text-[var(--ink)] space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Motor de
+              Motor de
               Audio Generativo IA
             </p>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
@@ -132,7 +131,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
           <div className="space-y-4">
             <div>
               <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
-                Estilo Musical de la Banda
+                Estilo musical de la banda
               </label>
               <input
                 type="text"
@@ -166,7 +165,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3 animate-in fade-in duration-300">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold font-sans text-[var(--acc)] flex items-center gap-1.5">
-                    <Music className="w-4 h-4" /> Soundtrack Generado con Éxito
+                    <Music className="w-4 h-4" /> Soundtrack generado con éxito
                   </span>
                   <a
                     href={generatedAudioUrl}

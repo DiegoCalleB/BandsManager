@@ -3496,7 +3496,7 @@ export default function RepertorioSetlists({
  <thead>
  <tr>
  <th style="width:40px;">#</th>
- <th>TÍTULO DEL TEMA & CUES</th>
+ <th>TÍTULO DEL TEMA y CUES</th>
  <th style="width:90px;">TONO</th>
  <th style="width:80px;">BPM</th>
  <th style="width:80px;">TIEMPO</th>
@@ -5612,7 +5612,7 @@ export default function RepertorioSetlists({
                         <input
                           type="text"
                           value={it.tituloCustom || ""}
-                          placeholder="Título/Descripción..."
+                          placeholder="Título/descripción..."
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => {
                             const val = e.target.value;
@@ -5905,7 +5905,7 @@ export default function RepertorioSetlists({
                       className="px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] cursor-pointer transition-ui flex items-center gap-1.5"
                     >
                       <ListPlus className="w-3.5 h-3.5" />
-                      <span>Añadir a Repertorio…</span>
+                      <span>Añadir a repertorio…</span>
                     </button>
                     <button
                       type="button"
@@ -5915,7 +5915,7 @@ export default function RepertorioSetlists({
                       className="px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] cursor-pointer transition-ui flex items-center gap-1.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>Eliminar Seleccionadas</span>
+                      <span>Eliminar seleccionadas</span>
                     </button>
                     <button
                       type="button"
@@ -5956,7 +5956,7 @@ export default function RepertorioSetlists({
                         : `${filteredSongs.length} temas`}
                     </span>
                     <span className="hidden md:inline text-xs opacity-60">
-                      • Tono · BPM · Duración · Estado
+                      • Tono · BPM · duración · estado
                     </span>
                   </div>
 

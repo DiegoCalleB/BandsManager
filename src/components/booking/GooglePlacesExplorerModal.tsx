@@ -1107,7 +1107,7 @@ export function GooglePlacesExplorerModal({
                   {isMassCampaignSearching ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-[var(--acc-ink)]" />
-                      <span>Rastreando Ciudades...</span>
+                      <span>Rastreando ciudades...</span>
                     </>
                   ) : (
                     <>
@@ -1427,7 +1427,7 @@ export function GooglePlacesExplorerModal({
                     disabled={isSearching}
                     className="px-2.5 py-0.5 text-micro rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] ml-auto"
                   >
-                    <ShowIcon inline emoji="⚡" />Rastrear Todas
+                    <ShowIcon inline emoji="⚡" />Rastrear todas
                   </button>
                 </div>
               )}
@@ -1460,7 +1460,6 @@ export function GooglePlacesExplorerModal({
 
             {extractStatus && (
               <div className="p-3 bg-[var(--tentative)]/10 text-[var(--tentative)]/50 text-xs rounded-[var(--r-m)] flex items-center gap-2 animate-fadeIn">
-                <Sparkles className="w-4 h-4 shrink-0 text-[var(--tentative)]" />
                 <span>{extractStatus}</span>
               </div>
             )}

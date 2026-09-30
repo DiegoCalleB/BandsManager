@@ -73,7 +73,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
               'text-[var(--ink)]'
             }`}
           >
-            Mánager Virtual AI{' '}
+            Mánager Virtual IA{' '}
             <span
               className={`w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block ${
                 'bg-[var(--acc)]'
@@ -121,7 +121,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             'text-[var(--ink-2)] hover:text-[var(--acc)]'
           }`}
         >
-          Limpiar Hilo
+          Limpiar hilo
         </button>
         {onClose && (
           <button

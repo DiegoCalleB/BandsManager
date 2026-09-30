@@ -760,21 +760,21 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (intent === "confirmar_fecha" || intent === "proponer_fechas") {
       return (
         <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] ">
-          <ShowIcon inline emoji="📅" />Pide Fechas
+          <ShowIcon inline emoji="📅" />Pide fechas
         </span>
       );
     }
     if (intent === "pedir_cache") {
       return (
         <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] ">
-          <ShowIcon inline emoji="💰" />Negociación Caché
+          <ShowIcon inline emoji="💰" />Negociación caché
         </span>
       );
     }
     if (intent === "pedir_info_tecnica") {
       return (
         <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] ">
-          <ShowIcon inline emoji="🎛️" />Pide Rider
+          <ShowIcon inline emoji="🎛️" />Pide rider
         </span>
       );
     }
@@ -788,7 +788,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (intent === "derivar_contacto") {
       return (
         <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] ">
-          <ShowIcon inline emoji="📋" />Deriva Contacto
+          <ShowIcon inline emoji="📋" />Deriva contacto
         </span>
       );
     }
@@ -1442,10 +1442,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   Estado
                 </th>
                 <th className="py-2.5 px-3 min-w-[150px] whitespace-nowrap">
-                  Contacto / Directo
+                  Contacto / directo
                 </th>
                 <th className="py-2.5 px-3 min-w-[130px] text-right whitespace-nowrap">
-                  Acciones Rápidas
+                  Acciones rápidas
                 </th>
               </tr>
             </thead>

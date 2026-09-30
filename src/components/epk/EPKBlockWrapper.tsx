@@ -77,7 +77,7 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
                 className="px-3 sm:px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-xs flex items-center gap-1.5 shadow transition cursor-pointer shrink-0"
               >
                 <Save className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Guardar Cambios</span>
+                <span className="hidden sm:inline">Guardar cambios</span>
                 <span className="sm:hidden">Guardar</span>
               </button>
             )}

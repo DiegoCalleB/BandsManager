@@ -124,7 +124,7 @@ export function EnsayoCronometro({
           </div>
           <div>
             <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
-              Cronómetro de Ensayo
+              Cronómetro de ensayo
             </h4>
             <p className="text-micro font-sans text-[var(--ink-2)]">
               Objetivo: {totalEstimatedMin} min planificados

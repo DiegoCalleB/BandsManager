@@ -1380,7 +1380,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="pt-4 text-left">
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  space-y-2.5">
               <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
-                <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                 <span>{t("musicianBannerTitle")}</span>
               </div>
               <p className="text-xs font-sans text-[var(--ink-2)] leading-relaxed">
@@ -1712,7 +1711,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] text-micro font-bold hover:bg-[var(--ok)] transition-colors"
                             >
-                              <Ticket className="w-3 h-3" /> Comprar Entradas
+                              <Ticket className="w-3 h-3" /> Comprar entradas
                             </a>
                           )}
                           {c.entradasLugarFisico && (
@@ -2064,7 +2063,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         <div className="pt-4 text-left">
           <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  space-y-2.5">
             <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold">
-              <Sparkles className="w-4 h-4 text-[var(--acc)]" />
               <span>{t("musicianBannerTitle")}</span>
             </div>
             <p className="text-xs font-sans text-[var(--ink-2)] leading-relaxed">

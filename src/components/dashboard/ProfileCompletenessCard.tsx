@@ -298,7 +298,7 @@ export const ProfileCompletenessCard: React.FC<
         view: "repertorio",
         missingLabel: "Cargar Canciones",
         agentImpact:
-          "Permite al Mánager AI armar setlists exactos ajustados al minutaje del show (45m, 60m, 90m).",
+          "Permite al Mánager IA armar setlists exactos ajustados al minutaje del show (45m, 60m, 90m).",
       },
       {
         id: "metrics_fans",
@@ -387,7 +387,7 @@ export const ProfileCompletenessCard: React.FC<
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-xs font-bold font-sans text-[var(--ink)] flex items-center gap-1.5">
                 <Bot className="w-3.5 h-3.5 text-[var(--acc)]" />
-                Entrenamiento & Preparación de Agentes IA
+                Entrenamiento y preparación de agentes IA
               </h3>
               <span
                 className={`text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-semibold ${badgeInfo.color}`}
@@ -409,7 +409,7 @@ export const ProfileCompletenessCard: React.FC<
               className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
             >
               <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
-              <span className="hidden xs:inline">Autonomía & Caché</span>
+              <span className="hidden xs:inline">Autonomía y caché</span>
             </button>
           )}
 
@@ -633,16 +633,16 @@ export const ProfileCompletenessCard: React.FC<
 
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5">
                 <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
-                  <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI
-                  (Negociación de Fechas & Caché)
+                  <Disc3 className="w-4 h-4" /> 3. Agente mánager IA
+                  (Negociación de fechas y caché)
                 </h4>
                 <p className="text-[var(--ink-2)] text-xs">
                   Responde a las salas sobre disponibilidad consultando tu{" "}
                   <strong className="text-[var(--ink)]">Calendario</strong>,
                   comprueba el{" "}
-                  <strong className="text-[var(--ink)]">Rider Técnico</strong> y
+                  <strong className="text-[var(--ink)]">Rider técnico</strong> y
                   defiende el presupuesto según tus reglas de{" "}
-                  <strong className="text-[var(--ink)]">Caché Mínimo</strong>.
+                  <strong className="text-[var(--ink)]">Caché mínimo</strong>.
                 </p>
               </div>
 

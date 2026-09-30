@@ -224,7 +224,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           <div className="flex flex-wrap items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/20 text-[var(--ok)] font-sans text-micro font-bold inline-flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] animate-ping" />
-              Directo & Concierto
+              Directo y concierto
             </span>
 
             {/* Offline Robustness Badge */}
@@ -273,7 +273,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               className="px-2 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-sans font-extrabold text-micro rounded-[var(--r-pill)] hover:bg-[var(--acc)]/50 transition-ui flex items-center gap-2 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              <span>Imprimir / Exportar</span>
+              <span>Imprimir / exportar</span>
             </button>
           </div>
         )}
@@ -336,7 +336,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   </span>
                   {stageResolvedUrl ? (
                     <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro bg-[var(--surface)]/20 text-[var(--ok)]/30 font-bold">
-                      Audio Real
+                      Audio real
                     </span>
                   ) : stagePlayingIndex !== null ? (
                     <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">
@@ -943,7 +943,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                             </span>
                             {it.audioUrl && (
                               <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] font-bold flex items-center gap-1">
-                                <Mic className="w-3 h-3" /> Audio Real
+                                <Mic className="w-3 h-3" /> Audio real
                               </span>
                             )}
                           </div>

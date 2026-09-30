@@ -151,7 +151,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
       >
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]" />
-          <span className="text-xs font-mono font-bold text-[var(--ink)] ">Modo Cine · Reels</span>
+          <span className="text-xs font-mono font-bold text-[var(--ink)] ">Modo cine · Reels</span>
         </div>
         <button
           onClick={onClose}
@@ -339,12 +339,12 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               {isPreviewMuted ? (
                 <>
                   <VolumeX className="w-4 h-4 text-[var(--alert)]" />
-                  <span>Activar Audio</span>
+                  <span>Activar audio</span>
                 </>
               ) : (
                 <>
                   <Volume2 className="w-4 h-4 text-[var(--ok)]" />
-                  <span>Silenciar Audio</span>
+                  <span>Silenciar audio</span>
                 </>
               )}
             </button>
@@ -463,7 +463,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-[var(--acc-ink)]" />
                         <span className="text-xs font-mono font-extrabold text-[var(--ink-2)] ">
-                          Línea de Tiempo Interactiva
+                          Línea de tiempo interactiva
                         </span>
                       </div>
                       <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]">
@@ -508,7 +508,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[var(--hair)]">
                       <div className="space-y-1.5 text-left">
-                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block"><ShowIcon inline emoji="⬅️" />Ajustar Inicio</span>
+                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block"><ShowIcon inline emoji="⬅️" />Ajustar inicio</span>
                         <div className="flex gap-2">
                           <button
                             type="button"
@@ -663,7 +663,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label className="text-xs font-mono font-bold text-[var(--ink-2)] ">
-                  <ShowIcon inline emoji="📝" />Copy de Publicación
+                  <ShowIcon inline emoji="📝" />Copy de publicación
                 </label>
                 <button
                   type="button"

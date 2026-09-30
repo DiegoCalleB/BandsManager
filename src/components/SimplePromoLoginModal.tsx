@@ -557,7 +557,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       'Creando cuenta...'
                     ) : (
                       <>
-                        <span>Crear mi Dossier y QR</span>
+                        <span>Crear mi dossier y QR</span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}

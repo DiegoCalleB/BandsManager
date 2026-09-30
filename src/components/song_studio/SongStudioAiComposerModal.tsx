@@ -159,15 +159,15 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                 >
                   <option value="Productor y Arreglista General">Productor y Arreglista General</option>
                   <option value="Guitarrista Líder (Solos y Riffs)">Guitarrista Líder (Solos y Riffs)</option>
-                  <option value="Bajista de Sesión (Grooves y Líneas)">Bajista de Sesión (Grooves y Líneas)</option>
+                  <option value="Bajista de Sesión (Grooves y Líneas)">Bajista de sesión (Grooves y líneas)</option>
                   <option value="Teclista / Sintetizador (Atmósferas)">Teclista / Sintetizador (Atmósferas)</option>
                   <option value="Letrista y Co-autor (Ganchos y Letra)">Letrista y Co-autor (Ganchos y Letra)</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Objetivo del Arreglo</label>
-                <select aria-label="Objetivo del Arreglo"
+                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Objetivo del arreglo</label>
+                <select aria-label="Objetivo del arreglo"
                   value={objetivoIdea}
                   onChange={(e) => setObjetivoIdea(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
@@ -183,8 +183,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Parte de la Canción</label>
-                <select aria-label="Parte de la Canción"
+                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Parte de la canción</label>
+                <select aria-label="Parte de la canción"
                   value={seccionCancion}
                   onChange={(e) => setSeccionCancion(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
@@ -194,9 +194,9 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   <option value="Pre-estribillo">Pre-estribillo</option>
                   <option value="Estribillo">Estribillo</option>
                   <option value="Puente">Puente (Bridge)</option>
-                  <option value="Solo / Instrumental">Solo / Instrumental</option>
+                  <option value="Solo / Instrumental">Solo / instrumental</option>
                   <option value="Outro">Outro</option>
-                  <option value="General">Toda la Canción (General)</option>
+                  <option value="General">Toda la canción (General)</option>
                 </select>
               </div>
 
@@ -239,7 +239,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               ) : (
                 <>
                   <Wand2 className="w-4 h-4" />
-                  <span>Generar Idea y Arreglo Profesional</span>
+                  <span>Generar idea y arreglo profesional</span>
                 </>
               )}
             </button>
@@ -254,7 +254,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                     </span>
                     <h4 className="font-bold text-sm text-[var(--ink)]">{generatedIdea.tituloIdea}</h4>
                   </div>
-                  <span className="text-micro text-[var(--ink-2)] font-sans">Sugerencia IA Lista</span>
+                  <span className="text-micro text-[var(--ink-2)] font-sans">Sugerencia IA lista</span>
                 </div>
 
                 <div className="text-xs text-[var(--ink-2)] space-y-2">
@@ -297,7 +297,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                     className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>Añadir como Nueva Idea al Tema</span>
+                    <span>Añadir como nueva idea al tema</span>
                   </button>
                 </div>
               </div>

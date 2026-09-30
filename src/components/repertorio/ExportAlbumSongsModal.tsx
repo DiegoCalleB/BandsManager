@@ -499,7 +499,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
               </div>
               <div className="min-w-0">
                 <h2 className="text-base sm:text-xl font-bold font-display truncate">
-                  Exportar Canciones del Disco
+                  Exportar canciones del disco
                 </h2>
                 <p className="text-xs text-[var(--ink-2)] truncate">
                   Descarga los audios MP3 en ZIP, Excel, M3U playlist o imprime
@@ -523,20 +523,20 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
             {/* 1. Album Selector */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center justify-between">
-                <span>Seleccionar Álbum / Disco</span>
+                <span>Seleccionar álbum / disco</span>
                 <span className="text-[var(--ok)] font-sans font-bold text-xs">
                   {targetSongs.length}{" "}
                   {targetSongs.length === 1 ? "canción" : "canciones"} (
                   {formattedTotalDuration})
                 </span>
               </label>
-              <select aria-label="Seleccionar Álbum / Disco ( )"
+              <select aria-label="Seleccionar álbum / disco ( )"
                 value={selectedAlbum}
                 onChange={(e) => setSelectedAlbum(e.target.value)}
                 className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui bg-[var(--sunken)] text-[var(--ink)]`}
               >
                 <option value="all">
-                  Discografía Completa (Todas las Canciones)
+                  Discografía completa (Todas las canciones)
                 </option>
                 {albumsList
                   .filter((a) => a !== "todos")
@@ -553,7 +553,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
             {/* 2. Format Selection Tabs */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-[var(--ink-2)]">
-                Formato de Exportación
+                Formato de exportación
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {/* ZIP MP3 Bundle (Highlight) */}
@@ -781,7 +781,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                 title="Convertir canciones del disco en un setlist para imprimir en PDF"
               >
                 <Printer className="w-4 h-4 text-[var(--acc)]" />
-                <span>Imprimir PDF Escenario</span>
+                <span>Imprimir PDF escenario</span>
               </button>
             )}
 
@@ -801,7 +801,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                 ) : (
                   <>
                     <Copy className="w-4 h-4 text-[var(--acc)]" />
-                    <span>Copiar Lista</span>
+                    <span>Copiar lista</span>
                   </>
                 )}
               </button>

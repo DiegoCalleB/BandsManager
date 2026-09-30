@@ -389,7 +389,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      <span>Ver Acordes y Letra</span>
+                      <span>Ver acordes y letra</span>
                     </button>
                   )}
 
@@ -404,7 +404,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                     >
                       <Edit3 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                      <span>Editar Canción</span>
+                      <span>Editar canción</span>
                     </button>
                   )}
 
@@ -419,7 +419,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-m)] hover:bg-[var(--acc)]/15 text-[var(--acc)] transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
-                      <span>Notas por Miembro</span>
+                      <span>Notas por miembro</span>
                     </button>
                   )}
 
@@ -479,7 +479,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                      <span>Partitura / Enlace</span>
+                      <span>Partitura / enlace</span>
                     </a>
                   )}
 
@@ -528,7 +528,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>Eliminar Canción</span>
+                      <span>Eliminar canción</span>
                     </button>
                   </div>
                 )}

@@ -897,7 +897,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                           <span>Generando código...</span>
                         </span>
                       ) : (
-                        <span>Continuar y Generar Código</span>
+                        <span>Continuar y generar código</span>
                       )}
                     </button>
                   </form>
@@ -1204,7 +1204,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                             <span>Comprobando...</span>
                           </span>
                         ) : (
-                          <span>Comprobar Invitación</span>
+                          <span>Comprobar invitación</span>
                         )}
                       </button>
                     </form>
@@ -1342,7 +1342,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                             <span>Activando...</span>
                           </span>
                         ) : (
-                          <span>Completar Registro y Entrar</span>
+                          <span>Completar registro y entrar</span>
                         )}
                       </button>
                     </form>
@@ -1373,7 +1373,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       }}
                       className="text-[var(--acc)] hover:underline font-medium cursor-pointer"
                     >
-                      Volver al Login
+                      Volver al login
                     </button>
                   </p>
                 </div>
@@ -1425,7 +1425,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <ul className="space-y-2 text-xs text-[var(--ink-2)]">
                     <li className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-[var(--acc)]" />
-                      <span>Dossier de Prensa Interactivo (EPK)</span>
+                      <span>Dossier de prensa interactivo (EPK)</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-[var(--acc)]" />
@@ -1433,7 +1433,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-[var(--acc)]" />
-                      <span>Captación de Base de Fans</span>
+                      <span>Captación de base de fans</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-[var(--acc)]" />

@@ -80,7 +80,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-[var(--ink-2)]">
-            Tasa de Respuesta
+            Tasa de respuesta
           </span>
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/50 text-[var(--tentative)]">
             <MessageSquare className="w-5 h-5" />
@@ -103,7 +103,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-[var(--ink-2)]">
-            Aforo Total Potencial
+            Aforo total potencial
           </span>
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]">
             <TrendingUp className="w-5 h-5" />

@@ -160,7 +160,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                   onOpenSettings();
                 }}
                 className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
-                title="Configuración de Notificaciones"
+                title="Configuración de notificaciones"
               >
                 <Settings className="w-3.5 h-3.5" />
               </button>

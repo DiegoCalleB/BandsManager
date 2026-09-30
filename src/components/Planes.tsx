@@ -592,7 +592,7 @@ export const Planes: React.FC<PlanesProps> = ({
           ) : (
             <>
               <CreditCard className="w-4 h-4 text-[var(--acc)]" />
-              <span>Portal de Clientes Stripe</span>
+              <span>Portal de clientes Stripe</span>
               <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
             </>
           )}
@@ -634,7 +634,7 @@ export const Planes: React.FC<PlanesProps> = ({
                 }}
                 className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
-                <span>Probar Ahora</span>
+                <span>Probar ahora</span>
               </button>
               <button
                 type="button"
@@ -652,8 +652,7 @@ export const Planes: React.FC<PlanesProps> = ({
       {/* 2. Header & Toggle Mensual / Anual */}
       <div className="flex flex-col items-center text-center space-y-4 pt-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold">
-          <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-          <span>Planes & Suscripciones</span>
+          <span>Planes y Suscripciones</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-[var(--ink)]">
@@ -936,7 +935,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   <div className="space-y-2">
                     <div className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--acc)]/70 font-bold text-xs font-sans text-center flex items-center justify-center gap-1.5">
                       <Check className="w-4 h-4 stroke-[3]" />
-                      <span>Tu Plan Actual</span>
+                      <span>Tu plan actual</span>
                     </div>
                     {plan.id !== "ensayo" && (
                       <button
@@ -960,7 +959,6 @@ export const Planes: React.FC<PlanesProps> = ({
                     className={`text-xs ${getCtaStyle(plan.ctaVariant)}`}
                   >
                     <span className="flex items-center justify-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5" />
                       <span>Mejorar a {plan.name}</span>
                     </span>
                   </CheckoutButton>
@@ -1032,7 +1030,7 @@ export const Planes: React.FC<PlanesProps> = ({
               De Gira (29€/m) <ShowIcon inline emoji="⭐" />
             </div>
             <div className="col-span-2 text-center text-[var(--ok)] font-bold">
-              Cabeza de Cartel (79€/m)
+              Cabeza de cartel (79€/m)
             </div>
           </div>
 
@@ -1189,7 +1187,6 @@ export const Planes: React.FC<PlanesProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
           <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/60 space-y-2">
             <div className="flex items-center gap-2 text-[var(--acc)]/70 font-sans font-bold text-xs">
-              <Sparkles className="w-4 h-4 text-[var(--acc)]" />
               <span>Upgrades Inmediatos</span>
             </div>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">

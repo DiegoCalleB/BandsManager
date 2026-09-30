@@ -537,7 +537,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Nuevo Disco</span>
+            <span>Nuevo disco</span>
           </button>
           {showCreateAlbumMenu && (
             <>
@@ -579,7 +579,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <FolderUp className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--ok)] block">
-                      Subir Disco (MP3/WAV)
+                      Subir disco (MP3/WAV)
                     </span>
                     <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Arrastra archivos de audio desde tu ordenador.
@@ -615,7 +615,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <Scissors className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--acc)] block">
-                      <ShowIcon inline emoji="🔴" />Concierto en Vivo a Disco
+                      <ShowIcon inline emoji="🔴" />Concierto en vivo a disco
                     </span>
                     <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Recorta y cataloga a partir del vídeo o audio de un
@@ -927,7 +927,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                         title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
                       >
                         <FolderUp className="w-3.5 h-3.5" />
-                        <span className="hidden md:inline">Subir Audios</span>
+                        <span className="hidden md:inline">Subir audios</span>
                       </button>
                     )}
 

@@ -669,7 +669,7 @@ export default function SpotifyPlayerBar({
                 type="button"
                 onClick={() => handlePrev()}
                 className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-[0.97]"
-                title="Canción Anterior"
+                title="Canción anterior"
               >
                 <SkipBack className="w-4 h-4 fill-current" />
               </button>
@@ -691,7 +691,7 @@ export default function SpotifyPlayerBar({
                 type="button"
                 onClick={() => handleNext(false)}
                 className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-[0.97]"
-                title="Siguiente Canción"
+                title="Siguiente canción"
               >
                 <SkipForward className="w-4 h-4 fill-current" />
               </button>
@@ -700,7 +700,7 @@ export default function SpotifyPlayerBar({
                 type="button"
                 onClick={() => setIsMinimized(false)}
                 className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer ml-2"
-                title="Expandir Reproductor"
+                title="Expandir reproductor"
               >
                 <ChevronUp className="w-5 h-5 text-[var(--ok)]" />
               </button>
@@ -713,7 +713,7 @@ export default function SpotifyPlayerBar({
                   onClosePlayer();
                 }}
                 className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
-                title="Cerrar Reproductor"
+                title="Cerrar reproductor"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -836,7 +836,7 @@ export default function SpotifyPlayerBar({
                 <button
                   onClick={() => handlePrev()}
                   className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
-                  title="Canción Anterior"
+                  title="Canción anterior"
                 >
                   <SkipBack className="w-5 h-5 fill-current" />
                 </button>
@@ -854,7 +854,7 @@ export default function SpotifyPlayerBar({
                 <button
                   onClick={() => handleNext(false)}
                   className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
-                  title="Siguiente Canción"
+                  title="Siguiente canción"
                 >
                   <SkipForward className="w-5 h-5 fill-current" />
                 </button>
@@ -875,7 +875,7 @@ export default function SpotifyPlayerBar({
                   value={playbackRate}
                   onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
                   className="bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui"
-                  title="Velocidad de Reproducción"
+                  title="Velocidad de reproducción"
                 >
                   <option value={0.5}>0.5x</option>
                   <option value={0.75}>0.75x</option>
@@ -891,7 +891,7 @@ export default function SpotifyPlayerBar({
                   className={`bg-[var(--sunken)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-ui ${
                     transposeSemitones !== 0 ? 'text-[var(--alert)]' : 'text-[var(--ink-2)]'
                   }`}
-                  title="Trasposición de Tono"
+                  title="Trasposición de tono"
                 >
                   {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
                     const origKey = song?.tonalidad?.trim();
@@ -949,7 +949,7 @@ export default function SpotifyPlayerBar({
               <button
                 onClick={() => onOpenStudio(song)}
                 className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/25 hover:bg-[var(--ok)]/35 text-[var(--ok)] font-bold text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
-                title="Abrir Estudio de Arreglos e Ideas"
+                title="Abrir estudio de arreglos e ideas"
               >
                 <Sliders className="w-3.5 h-3.5" />
                 <span className="text-xs">Estudio</span>
@@ -993,7 +993,7 @@ export default function SpotifyPlayerBar({
                   onClosePlayer();
                 }}
                 className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui ml-1"
-                title="Cerrar Reproductor"
+                title="Cerrar reproductor"
               >
                 <X className="w-4 h-4" />
               </button>

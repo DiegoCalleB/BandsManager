@@ -73,7 +73,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                 </div>
                 <div>
                   <h4 className="text-xs font-bold font-sans text-[var(--ink)] flex items-center gap-1.5">
-                    <span>Estilos de Banda & Tipografía</span>
+                    <span>Estilos de Banda y Tipografía</span>
                     <Zap className="w-3 h-3 text-[var(--acc)]" />
                   </h4>
                   <p className="text-micro text-[var(--ink-2)] font-sans">

@@ -799,7 +799,7 @@ export const AgentAutonomySettingsModal: React.FC<
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-base font-bold font-display text-[var(--ink)]">
-                    Panel de Control de Agentes IA
+                    Panel de control de agentes IA
                   </h3>
                   <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-bold">
                     {bandName}
@@ -810,7 +810,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     </span>
                   ) : (
                     <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ink-3)]/60 text-[var(--ink-2)] flex items-center gap-1 font-bold">
-                      <Lock className="w-3 h-3" /> Modo Lectura (Músico)
+                      <Lock className="w-3 h-3" /> Modo lectura (Músico)
                     </span>
                   )}
                 </div>
@@ -856,7 +856,7 @@ export const AgentAutonomySettingsModal: React.FC<
               }`}
             >
               <MessageSquare className="w-4 h-4 text-[var(--tentative)]" />
-              <span>2. Estrategias de Respuesta</span>
+              <span>2. Estrategias de respuesta</span>
             </button>
 
             <button
@@ -869,7 +869,7 @@ export const AgentAutonomySettingsModal: React.FC<
               }`}
             >
               <Mail className="w-4 h-4 text-[var(--ink-2)]" />
-              <span>3. Email & Buzón</span>
+              <span>3. Email y buzón</span>
               {emailAccountConnected && (
                 <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]/80 inline-block"></span>
               )}
@@ -898,7 +898,7 @@ export const AgentAutonomySettingsModal: React.FC<
               }`}
             >
               <Sparkles className="w-4 h-4" />
-              <span>5. Tono & Identidad</span>
+              <span>5. Tono y identidad</span>
             </button>
 
             <button
@@ -925,7 +925,7 @@ export const AgentAutonomySettingsModal: React.FC<
             <div className="p-3 bg-[var(--sunken)] text-[var(--acc)]/70 text-xs flex items-center gap-2 px-5">
               <Lock className="w-4 h-4 text-[var(--acc)] shrink-0" />
               <span>
-                Estás en modo <strong>Solo Lectura</strong>. Solo los miembros
+                Estás en modo <strong>Solo lectura</strong>. Solo los miembros
                 con rol de Administrador o Mánager pueden modificar los
                 parámetros de los agentes.
               </span>
@@ -1042,8 +1042,8 @@ export const AgentAutonomySettingsModal: React.FC<
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                      <Send className="w-4 h-4" /> 1. Autonomía de Envío (Modo
-                      de Despacho)
+                      <Send className="w-4 h-4" /> 1. Autonomía de envío (Modo
+                      de despacho)
                     </h4>
                     <span className="text-micro text-[var(--ink-2)] font-sans">
                       ¿Cuándo se envían los correos?
@@ -1077,13 +1077,13 @@ export const AgentAutonomySettingsModal: React.FC<
                         </div>
                         <div>
                           <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                            Borrador & Aprobación
+                            Borrador y aprobación
                           </h5>
                           <p className="text-xs text-[var(--ink-2)] font-sans mt-1 leading-snug">
                             Todos los correos generados se guardan como borrador
                             en la pestaña{" "}
                             <strong className="text-[var(--ink)]">
-                              Pendiente de Aprobación
+                              Pendiente de aprobación
                             </strong>
                             . Requiere clic directo.
                           </p>
@@ -1123,7 +1123,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         </div>
                         <div>
                           <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                            Envío en Horario Comercial
+                            Envío en horario comercial
                           </h5>
                           <p className="text-xs text-[var(--ink-2)] font-sans mt-1 leading-snug">
                             El agente prepara la respuesta y avisa. Si en 3
@@ -1161,12 +1161,12 @@ export const AgentAutonomySettingsModal: React.FC<
                         <div className="flex items-center justify-between">
                           <Bot className="w-5 h-5 text-[var(--acc)]" />
                           <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold">
-                            Autónomo Inicial
+                            Autónomo inicial
                           </span>
                         </div>
                         <div>
                           <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                            Pitch Inicial Automático
+                            Pitch inicial automático
                           </h5>
                           <p className="text-xs text-[var(--ink-2)] font-sans mt-1 leading-snug">
                             El primer contacto de presentación (Scout) se envía
@@ -1186,8 +1186,8 @@ export const AgentAutonomySettingsModal: React.FC<
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                      <Bot className="w-4 h-4" /> 2. Alcance de Negociación del
-                      Mánager AI
+                      <Bot className="w-4 h-4" /> 2. Alcance de negociación del
+                      mánager IA
                     </h4>
                     <span className="text-micro text-[var(--ink-2)] font-sans">
                       ¿Qué temas puede tratar el agente?
@@ -1253,7 +1253,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           Nivel B
                         </span>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                          Filtro de Requisitos & Fechas
+                          Filtro de requisitos y fechas
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
                           Responde sobre disponibilidad de calendario y rider
@@ -1357,8 +1357,8 @@ export const AgentAutonomySettingsModal: React.FC<
 
                   <div className="pt-3 space-y-2">
                     <h5 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                      <Euro className="w-3.5 h-3.5" /> Caché de Inicio de
-                      Negociación (opcional)
+                      <Euro className="w-3.5 h-3.5" /> Caché de inicio de
+                      negociación (opcional)
                     </h5>
                     <p className="text-xs text-[var(--ink-2)]">
                       Si la sala pregunta directamente por el caché, el agente
@@ -1489,14 +1489,14 @@ export const AgentAutonomySettingsModal: React.FC<
                 {/* 1. Remitente e Identidad del Agente */}
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-4">
                   <h4 className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                    <AtSign className="w-4 h-4" /> 1. Remitente Oficial de la
-                    Banda para los Agentes
+                    <AtSign className="w-4 h-4" /> 1. Remitente oficial de la
+                    banda para los agentes
                   </h4>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-sans text-[var(--ink-2)] font-semibold flex items-center justify-between">
-                        <span>Email del Agente / Remitente</span>
+                        <span>Email del agente / remitente</span>
                         <span className="text-micro text-[var(--acc)]/80 font-sans">
                           Obligatorio
                         </span>
@@ -1545,7 +1545,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
                     <div className="space-y-1.5 sm:col-span-2">
                       <label className="text-xs font-sans text-[var(--ink-2)] font-semibold block">
-                        Email de Respuesta (Reply-To) (Opcional)
+                        Email de respuesta (Reply-To) (Opcional)
                       </label>
                       <input
                         type="email"
@@ -1602,7 +1602,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           <FileEdit className="w-4 h-4 text-[var(--acc)]" />
                         </div>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                          Crear Borrador en Gmail
+                          Crear borrador en Gmail
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
                           El agente prepara el correo en la carpeta "Borradores"
@@ -1637,7 +1637,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           <Send className="w-4 h-4 text-[var(--ink-2)]" />
                         </div>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                          Envío Directo tras Aprobación
+                          Envío directo tras aprobación
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
                           Tras pulsar "Aprobar Propuesta" o "Aprobar Respuesta" en
@@ -1723,7 +1723,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] flex items-center gap-1.5/10/20"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Sugerir Mejores Días (M-X-J)</span>
+                        <span>Sugerir mejores días (M-X-J)</span>
                       </button>
                       <button
                         type="button"
@@ -1737,7 +1737,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         onClick={applyPresetAllDay}
                         className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans transition-ui cursor-pointer active:scale-[0.97]"
                       >
-                        <ShowIcon inline emoji="⚡" />Toda la Semana (7d)
+                        <ShowIcon inline emoji="⚡" />Toda la semana (7d)
                       </button>
                     </div>
                   )}
@@ -1747,14 +1747,13 @@ export const AgentAutonomySettingsModal: React.FC<
                 <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/5 text-xs space-y-2.5">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 font-bold text-[var(--acc)]">
-                      <Sparkles className="w-4 h-4" />
                       <span>
                         Inteligencia de Booking: ¿Por qué Martes, Miércoles y
                         Jueves?
                       </span>
                     </div>
                     <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70 font-bold">
-                      +45% Tasa de Respuesta
+                      +45% Tasa de respuesta
                     </span>
                   </div>
                   <p className="leading-relaxed text-[var(--ink-2)] text-xs">
@@ -1948,7 +1947,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             }
                             className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-ui cursor-pointer"
                           >
-                            Jornada Completa
+                            Jornada completa
                           </button>
                           <button
                             type="button"
@@ -2024,7 +2023,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       Agentes (Supabase Engine)
                     </h4>
                     <span className="text-micro font-sans text-[var(--ok)]/80 bg-[var(--ok)]/10 px-2 py-0.5 rounded font-bold">
-                      Sistemas Operativos
+                      Sistemas operativos
                     </span>
                   </div>
 
@@ -2236,7 +2235,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           principio. Si una regla concreta no encaja, puedes
                           quitarla desde{" "}
                           <strong className="text-[var(--tentative)]/40">
-                            ADN de Tono → Reglas Aprendidas de tus Respuestas
+                            ADN de tono → reglas aprendidas de tus respuestas
                           </strong>{" "}
                           (ahí también se pueden borrar o añadir a mano).
                         </p>
@@ -2324,11 +2323,11 @@ export const AgentAutonomySettingsModal: React.FC<
                       }}
                       className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
                     >
-                      Ver Hilos de Ejemplo ➔
+                      Ver hilos de ejemplo ➔
                     </button>
                   ) : (
                     <span className="text-micro text-[var(--ink-2)] font-sans shrink-0 max-w-[160px] text-right">
-                      Búscalo en Plantillas de Email
+                      Búscalo en plantillas de email
                     </span>
                   )}
                 </div>
@@ -2486,8 +2485,8 @@ export const AgentAutonomySettingsModal: React.FC<
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
                     <h4 className="text-xs font-sans font-bold text-[var(--ok)] flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4" /> Registro de Auditoría
-                      de Ejecución de Agentes
+                      <ShieldCheck className="w-4 h-4" /> Registro de auditoría
+                      de ejecución de agentes
                     </h4>
                     <p className="text-xs text-[var(--ink-2)] mt-0.5">
                       Trazabilidad de qué usuario o proceso disparó cada agente,
@@ -2743,17 +2742,17 @@ export const AgentAutonomySettingsModal: React.FC<
                   {isSaving ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-[var(--acc-ink)]" />
-                      <span>Guardando Ajustes...</span>
+                      <span>Guardando ajustes...</span>
                     </>
                   ) : savedSuccess ? (
                     <>
                       <CheckCircle2 className="w-4 h-4 text-[var(--acc-ink)]" />
-                      <span>¡Configuración Guardada!</span>
+                      <span>¡Configuración guardada!</span>
                     </>
                   ) : (
                     <>
                       <Save className="w-4 h-4" />
-                      <span>Guardar Cambios</span>
+                      <span>Guardar cambios</span>
                     </>
                   )}
                 </button>

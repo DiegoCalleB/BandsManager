@@ -2,7 +2,6 @@ import React from "react";
 import {
   Globe,
   Check,
-  Sparkles,
   Languages,
   MessageSquareText,
   FileText,
@@ -93,7 +92,6 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
           </div>
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-micro font-sans font-bold">
-              <Sparkles className="w-3 h-3 text-[var(--acc)]" />
               <span>Primer Paso Obligatorio / First Step</span>
             </div>
             <h3 className="text-base sm:text-lg font-bold font-display text-[var(--ink)]">
@@ -190,7 +188,6 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                   {details.description}
                 </p>
                 <div className="flex items-center gap-1.5 text-xs text-[var(--acc)]/70 font-sans">
-                  <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
                   <span className="truncate">{details.aiNote}</span>
                 </div>
               </div>

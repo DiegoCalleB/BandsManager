@@ -132,7 +132,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           }`}
         >
           <Upload className="w-3.5 h-3.5" />
-          Subir Audio (MP3 / WAV)
+          Subir audio (MP3 / WAV)
         </button>
         <button
           type="button"
@@ -144,7 +144,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           }`}
         >
           <Plus className="w-3.5 h-3.5" />
-          Añadir Manual / En Bloque
+          Añadir manual / en bloque
         </button>
       </div>
 
@@ -300,7 +300,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-semibold text-[var(--ink-2)]">
-                  Añadir Canción Individual
+                  Añadir canción individual
                 </h4>
                 <button
                   type="button"
@@ -317,7 +317,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     type="text"
                     value={newManualTitle}
                     onChange={(e) => setNewManualTitle(e.target.value)}
-                    placeholder="Título de la Canción *"
+                    placeholder="Título de la canción *"
                     className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
                   />
                 </div>
@@ -349,7 +349,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  Añadir Canción
+                  Añadir canción
                 </button>
               </div>
             </div>
@@ -451,7 +451,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-medium transition-colors disabled:opacity-50"
           >
             <Layers className="w-3.5 h-3.5" />
-            Crear Setlist Directo (60 min)
+            Crear Setlist directo (60 min)
           </button>
 
           <button

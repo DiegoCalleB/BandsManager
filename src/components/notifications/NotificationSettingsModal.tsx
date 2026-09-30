@@ -123,7 +123,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   onClick={onRequestPermission}
                   className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs shrink-0 transition-colors cursor-pointer"
                 >
-                  Solicitar Permiso
+                  Solicitar permiso
                 </button>
               </div>
             )}
@@ -154,7 +154,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     {config.soundEnabled ? <Volume2 className="w-4 h-4 text-[var(--acc)]" /> : <VolumeX className="w-4 h-4 text-[var(--ink-2)]" />}
                   </div>
                   <div>
-                    <span className="font-bold text-[var(--ink-2)] block text-xs">Sonido de Alerta</span>
+                    <span className="font-bold text-[var(--ink-2)] block text-xs">Sonido de alerta</span>
                     <span className="text-xs text-[var(--ink-2)]">Chime suave con cada notificación</span>
                   </div>
                 </div>
@@ -193,7 +193,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <div className="flex items-start gap-2.5">
                     <RefreshCw className="w-4 h-4 text-[var(--ok)] mt-0.5 shrink-0" />
                     <div>
-                      <span className="font-bold text-[var(--ink-2)] block text-xs">Cambios de Estado en Leads CRM</span>
+                      <span className="font-bold text-[var(--ink-2)] block text-xs">Cambios de estado en leads CRM</span>
                       <p className="text-xs text-[var(--ink-2)]">Avisar cuando una sala cambie de estado (ej: negociando, aplazado, etc.).</p>
                     </div>
                   </div>
@@ -231,7 +231,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <div className="flex items-start gap-2.5">
                     <Sparkles className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
-                      <span className="font-bold text-[var(--ink-2)] block text-xs">Agentes IA: Propuestas Listas para Aprobación</span>
+                      <span className="font-bold text-[var(--ink-2)] block text-xs">Agentes IA: Propuestas listas para aprobación</span>
                       <p className="text-xs text-[var(--ink-2)]">
                         Avisar cuando el Redactor o Lector prepare un pitch pendiente de tu revisión.
                       </p>
@@ -303,7 +303,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               onClick={onClose}
               className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer"
             >
-              Guardar y Cerrar
+              Guardar y cerrar
             </button>
           </div>
         </div>

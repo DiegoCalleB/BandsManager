@@ -101,7 +101,7 @@ export function AddSongsToSetlistModal({
             <div className="flex items-center gap-2">
               <ListPlus className="w-5 h-5 text-[var(--ok)]" />
               <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
-                Añadir Varias Canciones al Repertorio
+                Añadir varias canciones al repertorio
               </h3>
             </div>
             <button
@@ -149,7 +149,7 @@ export function AddSongsToSetlistModal({
                 <Star
                   className={`w-3 h-3 ${onlyFavoritos ? "fill-[var(--acc)]" : ""}`}
                 />
-                <span>Solo Favoritos</span>
+                <span>Solo favoritos</span>
               </button>
 
               <button

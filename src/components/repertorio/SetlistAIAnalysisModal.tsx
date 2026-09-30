@@ -730,7 +730,7 @@ export function SetlistAIAnalysisModal({
                   onClick={handleAnalyze}
                   className="bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
                 >
-                  Iniciar Análisis IA
+                  Iniciar análisis IA
                 </button>
               </div>
             )}
@@ -764,7 +764,7 @@ export function SetlistAIAnalysisModal({
                 <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-[var(--ink-2)] font-medium">
-                      Score General
+                      Score general
                     </span>
                     <span className="text-lg font-bold text-[var(--acc)]">
                       {analysis.overallScore}/100

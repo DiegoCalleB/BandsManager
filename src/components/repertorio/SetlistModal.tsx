@@ -72,7 +72,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-sans">
             <div>
-              <label className="block text-[var(--ink-2)] font-semibold mb-1">Nombre del Repertorio *</label>
+              <label className="block text-[var(--ink-2)] font-semibold mb-1">Nombre del repertorio *</label>
               <input
                 type="text"
                 required
@@ -84,8 +84,8 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
             </div>
 
             <div>
-              <label className="block text-[var(--ink-2)] font-semibold mb-1">Formato de Concierto</label>
-              <select aria-label="Formato de Concierto"
+              <label className="block text-[var(--ink-2)] font-semibold mb-1">Formato de concierto</label>
+              <select aria-label="Formato de concierto"
                 value={tipoFormato}
                 onChange={(e) => setTipoFormato(e.target.value as any)}
                 className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
@@ -93,13 +93,13 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 <option value="festival">Festival (45-60m Caña Directa)</option>
                 <option value="sala_larga">Sala / Show Largo (90-120m)</option>
                 <option value="acustico">Acústico / Íntimo</option>
-                <option value="ensayo">Ensayo / Local</option>
-                <option value="otro">Otro Formato</option>
+                <option value="ensayo">Ensayo / local</option>
+                <option value="otro">Otro formato</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-[var(--ink-2)] font-semibold mb-1">Notas de Escenario / Descripción</label>
+              <label className="block text-[var(--ink-2)] font-semibold mb-1">Notas de escenario / descripción</label>
               <textarea
                 rows={3}
                 value={descripcion}

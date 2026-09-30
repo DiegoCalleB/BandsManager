@@ -181,7 +181,7 @@ export function EnsayosManager({
 
         <div className="space-y-2">
           <h2 className="text-2xl sm:text-3xl font-display font-black text-[var(--ink)]">
-            Módulo de Ensayos & Local en Vivo
+            Módulo de ensayos y local en vivo
           </h2>
           <p className="text-sm text-[var(--ink-2)] max-w-lg mx-auto">
             Planifica el orden del día, cronometra tus sesiones, usa el
@@ -198,7 +198,7 @@ export function EnsayosManager({
           className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-bold text-sm hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
         >
           <Plus className="w-4 h-4" />
-          <span>Convocar Primer Ensayo</span>
+          <span>Convocar primer ensayo</span>
         </button>
 
         {showConvocarModal && (
@@ -319,7 +319,7 @@ export function EnsayosManager({
               className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>+ Convocar Ensayo</span>
+              <span>+ Convocar ensayo</span>
             </button>
           </div>
         </div>
@@ -353,7 +353,7 @@ export function EnsayosManager({
             <span className="sm:hidden text-xs leading-tight font-bold">
               2. En Vivo
             </span>
-            <span className="hidden sm:inline">2. Modo Local en Vivo</span>
+            <span className="hidden sm:inline">2. Modo local en vivo</span>
           </button>
 
           <button
@@ -368,7 +368,7 @@ export function EnsayosManager({
             <span className="sm:hidden text-xs leading-tight font-bold">
               3. Acta IA
             </span>
-            <span className="hidden sm:inline">3. Grabación & Acta</span>
+            <span className="hidden sm:inline">3. Grabación y Acta</span>
           </button>
         </div>
       </div>

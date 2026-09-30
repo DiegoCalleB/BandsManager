@@ -218,7 +218,7 @@ Firmado en conformidad por ambas partes.`;
                 }`}
               >
                 <Clock className="w-3.5 h-3.5" />
-                <span>Roadbook & Horarios</span>
+                <span>Roadbook y horarios</span>
               </button>
               <button
                 type="button"
@@ -251,8 +251,8 @@ Firmado en conformidad por ambas partes.`;
                 {/* Controles rápidos de edición de horarios */}
                 <div className="p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
-                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Fecha Evento</label>
-                    <input aria-label="Fecha Evento"
+                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Fecha evento</label>
+                    <input aria-label="Fecha evento"
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
@@ -260,8 +260,8 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Salida Furgoneta</label>
-                    <input aria-label="Salida Furgoneta"
+                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Salida furgoneta</label>
+                    <input aria-label="Salida furgoneta"
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
@@ -269,8 +269,8 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Prueba Sonido</label>
-                    <input aria-label="Prueba Sonido"
+                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Prueba sonido</label>
+                    <input aria-label="Prueba sonido"
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
@@ -278,8 +278,8 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Inicio Show</label>
-                    <input aria-label="Inicio Show"
+                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Inicio show</label>
+                    <input aria-label="Inicio show"
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
@@ -333,7 +333,7 @@ Firmado en conformidad por ambas partes.`;
                         </div>
                         <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{soundcheckTime}</span>
-                          <span className="text-[var(--ink-2)] font-medium">Prueba sonido (D.I.s violín acústico, sintes, voces & IEMs)</span>
+                          <span className="text-[var(--ink-2)] font-medium">Prueba sonido (D.I.s violín acústico, sintes, voces y IEMs)</span>
                         </div>
                         <div className="flex items-center gap-3 p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/60 ">
                           <span className="text-xs font-mono font-bold text-[var(--acc)] w-12">{dinnerTime}</span>
@@ -372,7 +372,7 @@ Firmado en conformidad por ambas partes.`;
                           </ul>
                         </div>
                         <div className="pt-2 border-t border-[var(--hair)]">
-                          <span className="text-micro text-[var(--ink-2)] block">Hospitalidad & Parking:</span>
+                          <span className="text-micro text-[var(--ink-2)] block">Hospitalidad y Parking:</span>
                           <span className="text-[var(--ink-2)] text-xs">
                             Agua sin gas en escenario, camerino con llave y espacio reservado para estacionamiento de furgoneta.
                           </span>
@@ -397,8 +397,8 @@ Firmado en conformidad por ambas partes.`;
                       className="w-full bg-[var(--surface)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     >
                       <option value="taquilla">Taquilla (%)</option>
-                      <option value="cache">Caché Fijo (€)</option>
-                      <option value="mixto">Fijo + Taquilla</option>
+                      <option value="cache">Caché fijo (€)</option>
+                      <option value="mixto">Fijo + taquilla</option>
                     </select>
                   </div>
                   <div>
@@ -417,8 +417,8 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Reparto Banda (%)</label>
-                    <input aria-label="Reparto Banda (%)"
+                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Reparto banda (%)</label>
+                    <input aria-label="Reparto banda (%)"
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
@@ -426,8 +426,8 @@ Firmado en conformidad por ambas partes.`;
                     />
                   </div>
                   <div>
-                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Aforo Sala</label>
-                    <input aria-label="Aforo Sala"
+                    <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Aforo sala</label>
+                    <input aria-label="Aforo sala"
                       type="number"
                       value={venueCapacity}
                       disabled

@@ -716,7 +716,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 {isListening ? (
                   <>
                     <MicOff className="w-4 h-4" />
-                    Pausar Micrófono
+                    Pausar micrófono
                   </>
                 ) : (
                   <>

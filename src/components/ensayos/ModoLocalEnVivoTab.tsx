@@ -507,10 +507,10 @@ export function ModoLocalEnVivoTab({
                   ? "bg-[var(--acc)]/60 text-[var(--ink)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
-              title="Modo Atril / Acordes & Letra (Teleprompter)"
+              title="Modo atril / acordes y letra (Teleprompter)"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Atril / Acordes</span>
+              <span className="hidden md:inline">Atril / acordes</span>
             </button>
           </div>
 
@@ -601,7 +601,7 @@ export function ModoLocalEnVivoTab({
               onClick={() => setViewMode("atril")}
               className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold cursor-pointer transition-ui active:scale-[0.97]"
             >
-              Abrir Atril <ShowIcon inline emoji="📜" />
+              Abrir atril <ShowIcon inline emoji="📜" />
             </button>
           </div>
 
@@ -651,7 +651,7 @@ export function ModoLocalEnVivoTab({
               <div className="p-4 rounded-[var(--r-l)] bg-[var(--sunken)] space-y-2">
                 <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                   <Music className="w-3.5 h-3.5 text-[var(--acc)]" /> Afinación
-                  & Arreglos
+                  y arreglos
                 </label>
                 <p className="text-xs text-[var(--ink-2)] font-sans">
                   {currentSong?.afinacion
@@ -838,7 +838,7 @@ export function ModoLocalEnVivoTab({
                     ? "bg-[var(--alert)] text-[var(--on-alert)]"
                     : "bg-[var(--ok)] text-[var(--on-ok)]"
                 }`}
-                title="Metrónomo Clic"
+                title="Metrónomo clic"
               >
                 {isMetronomeActive ? (
                   <VolumeX className="w-4 h-4" />

@@ -133,7 +133,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
               </div>
               <div>
                 <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-sans">
-                  1. Elige la Plantilla Visual del Dossier
+                  1. Elige la plantilla visual del dossier
                 </h4>
                 <p className="hidden sm:block text-xs text-[var(--ink-2)]">
                   Personaliza los colores, tipografía, estilo de tarjetas y

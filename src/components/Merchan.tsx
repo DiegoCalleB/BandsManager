@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  Sparkles,
   Image as ImageIcon,
   Shirt,
   Tag,
@@ -348,7 +347,6 @@ export default function Merchan({
           <h1
             className={`text-2xl sm:text-3xl font-black font-display flex items-center gap-3 ${"text-[var(--ink)]"}`}
           >
-            <Sparkles className={`w-8 h-8 ${"text-[var(--acc)]"}`} />
             Taller de Merchandising IA
           </h1>
           <p
@@ -380,10 +378,10 @@ export default function Merchan({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)]">
-                  Regalo de Bienvenida · Plan De Gira
+                  Regalo de bienvenida · plan de Gira
                 </span>
                 <span className="text-micro font-sans text-[var(--acc)]/70 font-bold">
-                  500 uds Vinilo Mate
+                  500 uds vinilo mate
                 </span>
               </div>
               <p className="text-sm font-bold text-[var(--ink)] mt-1">
@@ -407,7 +405,7 @@ export default function Merchan({
               className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans transition-ui active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
             >
               <PackageCheck className="w-4 h-4" />
-              <span>Canjear Pegatinas Gratis</span>
+              <span>Canjear pegatinas gratis</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -467,7 +465,7 @@ export default function Merchan({
                 }`}
               >
                 <Type className="w-4 h-4" />
-                Logo Oficial
+                Logo oficial
               </button>
               <button
                 onClick={() => setAssetType("portada")}
@@ -515,7 +513,7 @@ export default function Merchan({
                 <label
                   className={`text-micro font-sans font-bold ${"text-[var(--ink-2)]"}`}
                 >
-                  Imagen Personalizada Subida
+                  Imagen personalizada subida
                 </label>
                 <button
                   onClick={() => fileInputRef.current?.click()}
@@ -560,7 +558,7 @@ export default function Merchan({
               <label
                 className={`block text-micro font-sans font-bold mb-2 ${"text-[var(--ink-2)]"}`}
               >
-                Selecciona Álbum / EP
+                Selecciona álbum / EP
               </label>
               <div className="flex overflow-x-auto shrink-0 gap-3 pb-2 snap-x">
                 {albums.map((album, idx) => (
@@ -619,7 +617,7 @@ export default function Merchan({
               <label
                 className={`font-sans text-micro font-bold ${"text-[var(--ink-2)]"}`}
               >
-                3. Color de la Prenda
+                3. Color de la prenda
               </label>
               <div className="flex flex-wrap gap-2">
                 {SHIRT_COLORS.map((c) => (
@@ -847,7 +845,7 @@ export default function Merchan({
                           className={`px-4 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 transition ${"bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--surface)]"}`}
                         >
                           <Download className="w-4 h-4" />
-                          Descargar Gráfico
+                          Descargar gráfico
                         </button>
                         <button
                           onClick={() => handleDelete(design.id)}
@@ -887,7 +885,7 @@ export default function Merchan({
                 </div>
                 <div>
                   <h3 className="text-base font-bold font-display text-[var(--ink)] flex items-center gap-2">
-                    <span>Canjear Pack de Pegatinas Gratis</span>
+                    <span>Canjear pack de pegatinas gratis</span>
                     <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
                       100 uds
                     </span>
@@ -958,7 +956,7 @@ export default function Merchan({
                   <div className="space-y-3 pt-2">
                     <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-[var(--acc)]" />
-                      <span>2. Dirección de Envío (España)</span>
+                      <span>2. Dirección de envío (España)</span>
                     </label>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--sunken)]">
@@ -1024,7 +1022,7 @@ export default function Merchan({
 
                       <div className="space-y-1">
                         <label className="text-micro font-sans text-[var(--ink-2)]">
-                          Ciudad / Provincia
+                          Ciudad / provincia
                         </label>
                         <input
                           type="text"
@@ -1102,7 +1100,7 @@ export default function Merchan({
                     <div className="flex items-center justify-between pb-2">
                       <span className="text-[var(--ink-2)]">Pack:</span>
                       <span className="text-[var(--acc)] font-bold">
-                        500 Pegatinas Vinilo Oficial
+                        500 Pegatinas vinilo oficial
                       </span>
                     </div>
                     <div className="flex items-center justify-between">

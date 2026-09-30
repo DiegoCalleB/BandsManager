@@ -171,7 +171,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
               </div>
               <div className="min-w-0">
                 <h3 className="font-display font-bold text-base text-[var(--ink)] truncate">
-                  Cambiar Imagen / Logo
+                  Cambiar imagen / logo
                 </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans truncate">
                   {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` : ""}

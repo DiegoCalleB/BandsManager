@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Smartphone, Monitor, Globe2, Sparkles, RefreshCw, Eye, CheckCircle2, Calendar, FileText } from 'lucide-react';
+import { X, Smartphone, Monitor, Globe2, RefreshCw, Eye, CheckCircle2, Calendar, FileText } from 'lucide-react';
 import { FansLanding } from './FansLanding';
 import { Concert, EPKConfig } from '../types';
 import {
@@ -72,7 +72,6 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
                 {t('previewModalTitle')}
               </h2>
               <span className="hidden md:inline-flex items-center gap-1 text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
-                <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                 {t('previewProductionSyncBadge')}
               </span>
             </div>

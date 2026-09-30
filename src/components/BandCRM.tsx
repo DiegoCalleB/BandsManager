@@ -1044,7 +1044,7 @@ export default function BandCRM({
         return (
           <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--tentative)]/15 text-[var(--tentative)]/80 whitespace-nowrap shrink-0">
             <Clock className="w-3 h-3 text-[var(--tentative)]/80 shrink-0" />
-            <span>Pendiente Respuesta</span>
+            <span>Pendiente respuesta</span>
           </span>
         );
       case "no_disponible":
@@ -1200,14 +1200,14 @@ Bakandeya Agent Manager IA & Músicos`;
             className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
           >
             <Plus className="w-3.5 h-3.5 shrink-0" />
-            <span>Nueva Banda</span>
+            <span>Nueva banda</span>
           </button>
 
           <a
             href="/api/export-excel"
             download="band_data.xlsx"
             className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-ui flex items-center gap-1.5 active:scale-[0.97] cursor-pointer"
-            title="Exportar Excel Completo (.xlsx)"
+            title="Exportar Excel completo (.xlsx)"
           >
             <FileSpreadsheet className="w-3.5 h-3.5 text-[var(--ok)]" />
             <span className="hidden sm:inline">Excel</span>
@@ -1262,11 +1262,11 @@ Bakandeya Agent Manager IA & Músicos`;
               <thead>
                 <tr className="bg-[var(--surface)] text-[var(--ink-2)] text-micro">
                   <th className="p-3">ID Reg.</th>
-                  <th className="p-3">Nombre Banda</th>
-                  <th className="p-3">Email Contacto</th>
+                  <th className="p-3">Nombre banda</th>
+                  <th className="p-3">Email contacto</th>
                   <th className="p-3">Plan</th>
-                  <th className="p-3">Fecha Registro</th>
-                  <th className="p-3">Estado Cuenta</th>
+                  <th className="p-3">Fecha registro</th>
+                  <th className="p-3">Estado cuenta</th>
                   <th className="p-3">Notas</th>
                   <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10/20">
                     user_id
@@ -1387,7 +1387,7 @@ Bakandeya Agent Manager IA & Músicos`;
                     Intercambio Propuesto
                   </option>
                   <option value="pendiente_respuesta">
-                    Pendiente Respuesta
+                    Pendiente respuesta
                   </option>
                   <option value="sin_contactar">Sin Contactar</option>
                   <option value="no_disponible">No Disponible</option>
@@ -1400,7 +1400,7 @@ Bakandeya Agent Manager IA & Músicos`;
                   onChange={(e) => setLocationFilter(e.target.value)}
                   className="bg-[var(--sunken)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-micro font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer max-w-[160px] truncate"
                 >
-                  <option value="todos">Todas las Ciudades</option>
+                  <option value="todos">Todas las ciudades</option>
                   {availableLocations.map((loc) => (
                     <option key={loc} value={loc}>
                       {loc}
@@ -1454,7 +1454,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
-                    title="Vista en Tarjetas"
+                    title="Vista en tarjetas"
                   >
                     <LayoutGrid className="w-4 h-4" />
                   </button>
@@ -1480,7 +1480,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
-                    title="Vista en Mapa Interactivo"
+                    title="Vista en mapa interactivo"
                   >
                     <Map className="w-4 h-4" />
                   </button>
@@ -1525,7 +1525,7 @@ Bakandeya Agent Manager IA & Músicos`;
                 className="mt-2 inline-flex items-center gap-2 px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-sans font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
-                <span>Añadir Primera Banda</span>
+                <span>Añadir primera banda</span>
               </button>
             </div>
           ) : viewMode === "map" ? (
@@ -1725,7 +1725,7 @@ Bakandeya Agent Manager IA & Músicos`;
                           title="Analizar forma de expresarse y tono en redes sociales con IA Grounding"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-                          <span>Tono Redes</span>
+                          <span>Tono redes</span>
                         </button>
 
                         {/* Generate Pitch */}
@@ -1746,7 +1746,7 @@ Bakandeya Agent Manager IA & Músicos`;
                         <button
                           onClick={() => handleOpenEditModal(band)}
                           className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                          title="Editar Banda"
+                          title="Editar banda"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </button>
@@ -1757,7 +1757,7 @@ Bakandeya Agent Manager IA & Músicos`;
                             handleDeleteBand(band.id, band.nombre_banda)
                           }
                           className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--alert)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
-                          title="Eliminar Banda"
+                          title="Eliminar banda"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -1802,10 +1802,10 @@ Bakandeya Agent Manager IA & Músicos`;
                       </button>
                     </th>
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[170px]">
-                      Banda / Artista
+                      Banda / artista
                     </th>
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[150px]">
-                      Estilo Musical
+                      Estilo musical
                     </th>
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[140px]">
                       Localización
@@ -1817,10 +1817,10 @@ Bakandeya Agent Manager IA & Músicos`;
                       Contacto
                     </th>
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[90px]">
-                      Aforo Habitual
+                      Aforo habitual
                     </th>
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[100px]">
-                      Último Contacto
+                      Último contacto
                     </th>
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[130px] text-right">
                       Acciones

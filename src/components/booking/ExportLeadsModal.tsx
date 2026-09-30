@@ -153,7 +153,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-[var(--ink)]">
-                Exportar Leads de Booking
+                Exportar leads de Booking
               </h3>
               <p className="text-xs text-[var(--ink-2)]">
                 Descarga tu base de contactos en Excel o JSON
@@ -323,7 +323,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   onChange={(e) => setIncludePitch(e.target.checked)}
                   className="rounded700 text-[var(--acc)] focus:ring-[var(--acc)]/20 bg-[var(--bg)]"
                 />
-                <span>Incluir Pitch / Propuesta IA</span>
+                <span>Incluir pitch / propuesta IA</span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)]">
@@ -333,7 +333,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   onChange={(e) => setIncludeNotes(e.target.checked)}
                   className="rounded700 text-[var(--acc)] focus:ring-[var(--acc)]/20 bg-[var(--bg)]"
                 />
-                <span>Incluir Historial y Notas</span>
+                <span>Incluir historial y notas</span>
               </label>
             </div>
           </div>

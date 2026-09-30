@@ -215,7 +215,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                         className="w-full text-left flex items-center gap-2 px-3 py-2 text-[var(--ink-2)]/80 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer/80 mt-1 pt-1.5"
                       >
                         <Bot className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                        <span>Conexión con Agentes IA</span>
+                        <span>Conexión con agentes IA</span>
                       </button>
                     )}
                   </div>
@@ -311,7 +311,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             </span>
           </div>
           <h2 className="page-title">
-            EPK / Dossier de la Banda
+            EPK / dossier de la banda
           </h2>
           <p className="text-[var(--ink-2)] text-xs max-w-2xl leading-relaxed">
             {isPromoPlan
@@ -368,7 +368,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs sm:text-sm rounded-[var(--r-pill)] flex items-center gap-2 transition cursor-pointer"
           >
             <Save className="w-4 h-4" />
-            <span>Guardar Cambios</span>
+            <span>Guardar cambios</span>
           </button>
         </div>
       </div>
@@ -388,7 +388,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
-            title="Logo de la banda (Bloque Archivos)"
+            title="Logo de la banda (Bloque archivos)"
           >
             Logo {health.hasLogo ? "✓" : "○"}
           </button>
@@ -401,7 +401,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
-            title="Biografía oficial (Bloque Perfil)"
+            title="Biografía oficial (Bloque perfil)"
           >
             Bio {health.hasBio ? "✓" : "○"}
           </button>
@@ -414,7 +414,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
-            title="Dossier en PDF (Bloque Archivos)"
+            title="Dossier en PDF (Bloque archivos)"
           >
             PDF {health.hasDossier ? "✓" : "○"}
           </button>
@@ -427,7 +427,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
-            title="Rider técnico (Bloque Archivos)"
+            title="Rider técnico (Bloque archivos)"
           >
             Rider {health.hasRider ? "✓" : "○"}
           </button>
@@ -440,7 +440,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
-            title="Miembros de la formación (Bloque Perfil)"
+            title="Miembros de la formación (Bloque perfil)"
           >
             {health.numMiembros}{" "}
             {health.numMiembros === 1 ? "músico" : "músicos"}{" "}

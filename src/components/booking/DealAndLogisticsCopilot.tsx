@@ -230,8 +230,8 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
               className="w-full bg-[var(--sunken)] text-[var(--ink-2)] text-xs rounded p-1 focus:outline-none"
             >
               <option value="taquilla">Taquilla (%)</option>
-              <option value="cache">Caché Fijo (€)</option>
-              <option value="mixto">Fijo + Taquilla</option>
+              <option value="cache">Caché fijo (€)</option>
+              <option value="mixto">Fijo + taquilla</option>
             </select>
           </div>
 
@@ -262,8 +262,8 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
-            <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
-            <input aria-label="Hotel + Dietas (€)"
+            <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Hotel + dietas (€)</label>
+            <input aria-label="Hotel + dietas (€)"
               type="number"
               value={hotelCost + dietsCost}
               onChange={(e) => {
@@ -285,7 +285,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/80 text-center">
-            <span className="text-micro text-[var(--ink-2)] font-mono block">Entradas para Cubrir Costes</span>
+            <span className="text-micro text-[var(--ink-2)] font-mono block">Entradas para cubrir costes</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--acc)]">{breakEvenTickets} tickets</span>
             <span className="text-micro text-[var(--ink-2)] block">{breakEvenCapacityPercent}% del aforo</span>
           </div>
@@ -361,7 +361,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
               className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold font-mono flex items-center gap-1 transition-ui cursor-pointer"
             >
               <FileText className="w-3 h-3" />
-              <span>Exportar PDF / Imprimir</span>
+              <span>Exportar PDF / imprimir</span>
             </button>
           )}
         </div>
@@ -373,7 +373,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  Hoja de Ruta (Run of Show)
+                  Hoja de ruta (Run of show)
                 </span>
                 <button
                   type="button"
@@ -399,7 +399,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  Acuerdo & Condiciones
+                  Acuerdo y condiciones
                 </span>
                 <button
                   type="button"

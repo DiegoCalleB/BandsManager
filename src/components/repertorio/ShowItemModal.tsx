@@ -96,7 +96,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
           <div>
-            <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Nombre / Título del Momento</label>
+            <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Nombre / título del momento</label>
             <input
               type="text"
               required
@@ -115,11 +115,11 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 onChange={(e) => setType(e.target.value)}
                 className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}
               >
-                <option value="interlude">Interludio / Transición</option>
+                <option value="interlude">Interludio / transición</option>
                 <option value="speech">Presentación / Hablado</option>
-                <option value="solo">Solo Instrumental</option>
-                <option value="pause">Pausa / Descanso</option>
-                <option value="encore">Biset / Final</option>
+                <option value="solo">Solo instrumental</option>
+                <option value="pause">Pausa / descanso</option>
+                <option value="encore">Biset / final</option>
               </select>
             </div>
 
@@ -171,7 +171,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Notas para los Músicos / Atril</label>
+            <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Notas para los músicos / atril</label>
             <textarea
               rows={2}
               value={notes}

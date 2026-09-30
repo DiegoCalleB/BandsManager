@@ -69,7 +69,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 >
                   <option value="Madrid">Madrid</option>
                   <option value="Sevilla">Sevilla</option>
-                  <option value="Ambas">Madrid & Sevilla</option>
+                  <option value="Ambas">Madrid y Sevilla</option>
                 </select>
               </div>
 
@@ -84,8 +84,8 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-micro text-[var(--ink-2)] mb-1">Periodo / Mes Estimado</label>
-                <input aria-label="Periodo / Mes Estimado"
+                <label className="block text-micro text-[var(--ink-2)] mb-1">Periodo / mes estimado</label>
+                <input aria-label="Periodo / mes estimado"
                   type="text"
                   value={proposedMonth}
                   onChange={(e) => setProposedMonth(e.target.value)}
@@ -98,8 +98,8 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
           {/* Generated Pitch Preview Box */}
           <div className="space-y-1.5">
             <label className="block text-micro font-sans text-[var(--acc)] flex items-center justify-between">
-              <span>Mensaje de Propuesta Generado (Músico a Músico)</span>
-              <span className="text-micro text-[var(--ink-2)] lowercase">editable & listo para enviar</span>
+              <span>Mensaje de propuesta generado (Músico a músico)</span>
+              <span className="text-micro text-[var(--ink-2)] lowercase">editable y listo para enviar</span>
             </label>
 
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] text-micro font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
@@ -150,7 +150,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                   className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Enviar Email</span>
+                  <span>Enviar email</span>
                 </a>
               )}
             </div>

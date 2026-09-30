@@ -128,7 +128,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <Quote className="w-5 h-5" /> Reseñas y Citas de Prensa
+              <Quote className="w-5 h-5" /> Reseñas y citas de prensa
             </h3>
             <span className="text-micro font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               {config.resenasPrensa?.habilitado ? "✓ Visible en EPK" : "Oculto"}
@@ -247,7 +247,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             }}
             className="w-full py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--acc)]  text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
           >
-            <Plus className="w-4 h-4" /> Añadir Reseña de Prensa
+            <Plus className="w-4 h-4" /> Añadir reseña de prensa
           </button>
         </div>
       </div>

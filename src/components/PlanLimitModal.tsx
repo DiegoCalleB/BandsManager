@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   ShieldCheck,
-  Sparkles,
   X,
   Lock,
   Check,
@@ -128,7 +127,6 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
           <div className="p-5 rounded-[var(--r-l)] bg-[var(--sunken)]   space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                 <span className="text-sm font-bold font-display text-[var(--acc)]/70">
                   Plan Recomendado: {targetPlanDef.name}
                 </span>

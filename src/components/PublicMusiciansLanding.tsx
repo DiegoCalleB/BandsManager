@@ -182,7 +182,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] p-0.5 flex items-center justify-center shrink-0">
               <img
                 src="/bandmanageriodefinitiva.jpeg"
-                alt="BandManager.io Logo"
+                alt="BandManager.io logo"
                 className="w-full h-full object-contain rounded-[10px]"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src =
@@ -275,7 +275,6 @@ export const PublicMusiciansLanding: React.FC = () => {
             </div>
 
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-sans font-bold mt-1">
-              <Sparkles className="w-3.5 h-3.5" />
               <span>{t.badge}</span>
             </div>
           </div>

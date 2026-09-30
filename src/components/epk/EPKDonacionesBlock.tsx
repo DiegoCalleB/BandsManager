@@ -86,7 +86,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
               (Revolut, PayPal & Bizum)
             </h3>
             <span className="text-micro font-bold text-[var(--ink-2)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
-              Crowdfunding Directo
+              Crowdfunding directo
             </span>
           </div>
           <p className="text-xs text-[var(--ink-2)]">

@@ -257,7 +257,7 @@ export function MetronomeModal({
                   onChange={handleSelectSong}
                   className="w-full bg-[var(--bg)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none "
                 >
-                  <option value="">-- Seleccionar Canción --</option>
+                  <option value="">-- Seleccionar canción --</option>
                   {songs.map((song) => (
                     <option key={song.id} value={song.id}>
                       {song.titulo}{" "}
@@ -271,7 +271,7 @@ export function MetronomeModal({
             {/* Large BPM Display & Quick Adjustment */}
             <div className="flex flex-col items-center justify-center bg-[var(--sunken)] rounded-[var(--r-l)] p-6 relative overflow-hidden">
               <div className="text-xs font-sans font-bold text-[var(--acc)] mb-1 flex items-center gap-1">
-                <Zap className="w-3.5 h-3.5" /> Tempo Actual
+                <Zap className="w-3.5 h-3.5" /> Tempo actual
               </div>
 
               <div className="flex items-center gap-4">
@@ -295,7 +295,7 @@ export function MetronomeModal({
                     {bpm}
                   </span>
                   <span className="text-micro font-sans text-[var(--ink-2)]">
-                    Pulsaciones por Minuto
+                    Pulsaciones por minuto
                   </span>
                 </div>
 

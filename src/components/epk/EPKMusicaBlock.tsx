@@ -66,7 +66,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               (Landing de Fans & EPK)
             </h3>
             <span className="text-micro font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
-              Player Interactivo
+              Player interactivo
             </span>
           </div>
           <p className="text-xs text-[var(--ink-2)]">
@@ -343,7 +343,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
         {/* DATOS LOGÍSTICOS & GIRA (DATOS DE CONTRATACIÓN) */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
-            <Info className="w-5 h-5" /> Datos de Gira y Contratación
+            <Info className="w-5 h-5" /> Datos de Gira y contratación
           </h3>
           <p className="text-xs text-[var(--ink-2)]">
             Lo que un programador siempre necesita saber antes de cerrar fecha.
@@ -430,7 +430,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
           <div className="pt-4 border-t border-[var(--hair)]/80">
             <h4 className="text-xs font-bold text-[var(--ink-2)] mb-3 flex items-center gap-2">
               <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]"></span>
-              Operativa Real para el Agente de IA (Anti-Alucinaciones)
+              Operativa real para el agente de IA (Anti-Alucinaciones)
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {/* Técnico de sonido propio vs sala */}

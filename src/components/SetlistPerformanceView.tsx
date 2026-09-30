@@ -605,7 +605,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 title="Modo Escenario Offline Guard activo — Letras y acordes guardados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
-                <span className="hidden sm:inline">Offline Seguro</span>
+                <span className="hidden sm:inline">Offline seguro</span>
               </span>
             )}
           </div>
@@ -661,7 +661,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               title="Repertorio completo: ver todos los temas, estado de pistas Iris y accesos directos a Studio"
             >
               <ListMusic className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Pistas & Repertorio</span>
+              <span className="hidden sm:inline">Pistas y repertorio</span>
               <span className="sm:hidden">Temas</span>
               {songsWithIrisCount > 0 && (
                 <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-sans bg-[var(--ok)]/30 text-[var(--ink-2)]">
@@ -1011,7 +1011,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </div>
             <div className="truncate">
               <span className="font-bold text-[var(--ok)]">
-                Modo Ensayo Activo
+                Modo ensayo activo
               </span>
               <span className="opacity-80 ml-2 font-sans text-xs">
                 {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` : ""}
@@ -1030,7 +1030,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs flex items-center gap-1 transition active:scale-[0.97] cursor-pointer"
               >
                 <Headphones className="w-3.5 h-3.5" />
-                <span>Abrir Sala de Ensayo</span>
+                <span>Abrir sala de ensayo</span>
               </button>
             ) : (
               <button
@@ -1446,7 +1446,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           title="Modo Ensayo individual con las pistas aisladas de este tema"
                         >
                           <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
-                          <span>Modo Ensayo</span>
+                          <span>Modo ensayo</span>
                         </button>
                       ) : (
                         <button

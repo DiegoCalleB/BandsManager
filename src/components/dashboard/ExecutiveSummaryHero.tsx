@@ -133,7 +133,7 @@ export const ExecutiveSummaryHero: React.FC<ExecutiveSummaryHeroProps> = ({
       <CardKpi
         icon={<Calendar className="w-4 h-4" />}
         accentVar="--acc"
-        label="Próximo Show"
+        label="Próximo show"
         valor={
           proximoShow
             ? formatearCuentaAtras(diasHasta(proximoShow.fecha))
@@ -167,7 +167,7 @@ export const ExecutiveSummaryHero: React.FC<ExecutiveSummaryHeroProps> = ({
       <CardKpi
         icon={<Sparkles className="w-4 h-4" />}
         accentVar={leadsUrgentes.length > 0 ? "--alert" : "--ok"}
-        label="Esperan Tu Respuesta"
+        label="Esperan tu respuesta"
         valor={leadsUrgentes.length > 0 ? leadsUrgentes.length : null}
         contexto={
           leadsUrgentes.length === 1
@@ -184,7 +184,7 @@ export const ExecutiveSummaryHero: React.FC<ExecutiveSummaryHeroProps> = ({
       <CardKpi
         icon={<Disc3 className="w-4 h-4" />}
         accentVar="--acc"
-        label="Próximo Ensayo"
+        label="Próximo ensayo"
         valor={
           proximoEnsayo
             ? formatearCuentaAtras(diasHasta(proximoEnsayo.fecha))

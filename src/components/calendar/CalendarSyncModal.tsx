@@ -43,7 +43,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-sm">Sincronización Automática (iCal / Google)</h3>
+              <h3 className="font-bold text-sm">Sincronización automática (iCal / Google)</h3>
               <p className="text-micro text-[var(--ink-2)] font-mono">
                 Sincroniza los bolos y ensayos en tiempo real con tu calendario personal.
               </p>

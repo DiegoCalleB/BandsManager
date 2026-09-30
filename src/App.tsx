@@ -2021,7 +2021,7 @@ export default function App() {
               <div className="flex gap-2 items-center">
                 <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
                 <span>
-                  <strong>Modo Simulación Activo:</strong> No se pudo conectar
+                  <strong>Modo simulación activo:</strong> No se pudo conectar
                   con el servidor Express backend local. Los cambios actuales se
                   almacenarán temporalmente en memoria.
                 </span>
@@ -2460,8 +2460,8 @@ export default function App() {
               }`}
               title={
                 isChatLoading
-                  ? "Agente AI ejecutando en segundo plano..."
-                  : "Abrir Agente Mánager AI"
+                  ? "Agente IA ejecutando en segundo plano..."
+                  : "Abrir Agente Mánager IA"
               }
             >
               {isFloatingChatOpen ? (
@@ -2482,7 +2482,7 @@ export default function App() {
                     />
                   </div>
                   <span className="text-xs font-sans font-bold hidden sm:inline-block pr-1">
-                    {isChatLoading ? "Ejecutando..." : "Agente AI"}
+                    {isChatLoading ? "Ejecutando..." : "Agente IA"}
                   </span>
                 </>
               )}

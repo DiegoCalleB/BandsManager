@@ -197,8 +197,7 @@ export function ShareModal({
           {/* Footer */}
           <div className="p-4 bg-[var(--surface)]/[0.02] flex items-center justify-between">
             <span className="text-xs text-[var(--ink-2)] flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-              Listos para WhatsApp, Telegram, Signal o Email
+              Listos para WhatsApp, Telegram, Signal o email
             </span>
             <div className="flex items-center gap-2">
               <button

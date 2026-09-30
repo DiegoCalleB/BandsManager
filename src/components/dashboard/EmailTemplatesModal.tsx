@@ -4,7 +4,6 @@ import {
   Copy,
   Check,
   X,
-  Sparkles,
   Send,
   Radio,
   Building2,
@@ -145,7 +144,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
               </div>
               <div>
                 <h3 className="text-base font-bold font-display text-[var(--ink)] flex items-center gap-2">
-                  Plantillas & Ejemplos Reales de Email
+                  Plantillas y ejemplos reales de email
                 </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans">
                   Modelos de redacción probados para salas, festivales, medios e
@@ -224,7 +223,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      <span>Copiar Plantilla</span>
+                      <span>Copiar plantilla</span>
                     </>
                   )}
                 </button>
@@ -252,7 +251,6 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-xs flex items-center gap-2">
-              <Sparkles className="w-4 h-4 shrink-0 text-[var(--acc)]" />
               <span>
                 <strong>Consejo de Agentes AI:</strong> El Agente Redactor
                 utiliza este mismo estilo directo y conciso al generar

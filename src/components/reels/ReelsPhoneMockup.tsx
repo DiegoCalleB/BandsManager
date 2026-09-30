@@ -416,7 +416,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               </div>
             </div>
             <div className="bg-[var(--alert)]/20 p-1 rounded text-center">
-              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona Inferior (Pie de foto & Audio)</span>
+              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona Inferior (Pie de foto y Audio)</span>
             </div>
           </div>
         )}
@@ -533,14 +533,14 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           disabled={uploadProgress !== null}
           className={`text-micro font-mono hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-40 bg-transparent border-0 text-[var(--acc-ink)]`}
         >
-          <Upload className="w-3 h-3" /> Subir Directo
+          <Upload className="w-3 h-3" /> Subir directo
         </button>
       </div>
 
       {uploadProgress !== null && (
         <div className="space-y-1 mt-2">
           <div className="flex justify-between items-center text-micro font-mono text-[var(--ink-2)]">
-            <span>Transmitiendo a APIs de Redes Sociales...</span>
+            <span>Transmitiendo a APIs de redes sociales...</span>
             <span>{uploadProgress}%</span>
           </div>
           <div className="w-full h-1.5 rounded-full overflow-hidden bg-[var(--surface)] ">

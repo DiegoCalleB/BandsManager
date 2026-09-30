@@ -349,7 +349,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                     Calculadora de Inversión y Coste por Envío:
                   </span>
                   <span className="text-micro px-1.5 py-0.2 bg-[var(--ok)]/10 text-[var(--ink-2)] rounded font-sans">
-                    Tarifas Oficiales 2025/2026
+                    Tarifas oficiales 2025/2026
                   </span>
                 </div>
                 <p className="text-micro text-[var(--ink-2)]">
@@ -632,7 +632,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5 font-sans">
                   <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  Resumen de Costes & ROI para la Banda
+                  Resumen de costes y ROI para la banda
                 </span>
                 <span className="text-micro text-[var(--ink-2)] font-sans">
                   1 USD ≈ 0.925 EUR
@@ -646,12 +646,12 @@ export const MultiModelPitchComparatorModal: React.FC<
                       <th className="py-1.5 px-2">Modelo</th>
                       <th className="py-1.5 px-2">Entrada (1M tok)</th>
                       <th className="py-1.5 px-2">Salida (1M tok)</th>
-                      <th className="py-1.5 px-2">Coste 1 Pitch</th>
+                      <th className="py-1.5 px-2">Coste 1 pitch</th>
                       <th className="py-1.5 px-2 font-bold text-[var(--acc)]/70">
-                        Coste 100 Salas
+                        Coste 100 salas
                       </th>
                       <th className="py-1.5 px-2 font-bold text-[var(--ok)]">
-                        Coste 1.000 Salas
+                        Coste 1.000 salas
                       </th>
                     </tr>
                   </thead>

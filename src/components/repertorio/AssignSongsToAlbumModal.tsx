@@ -101,7 +101,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
             <div className="space-y-3 overflow-y-auto pr-1 max-h-[220px]">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Nombre del Álbum / Disco *</label>
+                  <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Nombre del álbum / disco *</label>
                   <input
                     type="text"
                     required
@@ -126,22 +126,22 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Tipo de Trabajo</label>
-                  <select aria-label="Tipo de Trabajo"
+                  <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Tipo de trabajo</label>
+                  <select aria-label="Tipo de trabajo"
                     value={albumType}
                     onChange={(e) => setAlbumType(e.target.value)}
                     className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                   >
-                    <option value="Álbum Estudio">Álbum Estudio</option>
+                    <option value="Álbum Estudio">Álbum estudio</option>
                     <option value="EP">EP (Extended Play)</option>
                     <option value="Single">Single / Sencillo</option>
-                    <option value="Directo">Álbum en Directo</option>
-                    <option value="Maqueta">Maqueta / Demo</option>
+                    <option value="Directo">Álbum en directo</option>
+                    <option value="Maqueta">Maqueta / demo</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Imagen de Portada (Upload o URL)</label>
+                  <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Imagen de portada (Upload o URL)</label>
                   <div className="flex gap-2 items-center">
                     <input
                       type="text"
@@ -152,7 +152,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                     />
                     <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 flex items-center gap-1 text-xs">
                       <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
-                      <input aria-label="Imagen de Portada (Upload o URL)" type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                      <input aria-label="Imagen de portada (Upload o URL)" type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                     </label>
                   </div>
                 </div>

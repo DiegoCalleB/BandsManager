@@ -11,7 +11,6 @@ import {
   Check,
   Trash2,
   Edit3,
-  Sparkles,
   ChevronRight,
   Compass,
   ArrowRight,
@@ -347,7 +346,7 @@ export function CampaignManagerModal({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                    Nombre de la Campaña *
+                    Nombre de la campaña *
                   </label>
                   <input
                     type="text"
@@ -361,7 +360,7 @@ export function CampaignManagerModal({
                 </div>
                 <div>
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                    Color en Calendario
+                    Color en calendario
                   </label>
                   <div className="flex items-center gap-2 mt-1">
                     {[
@@ -391,7 +390,7 @@ export function CampaignManagerModal({
               {/* Target Cities */}
               <div>
                 <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                  Ciudades Objetivo *
+                  Ciudades objetivo *
                 </label>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {formData.targetCities?.map((city) => (
@@ -439,9 +438,9 @@ export function CampaignManagerModal({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                    Aforo Mínimo (pax)
+                    Aforo mínimo (pax)
                   </label>
-                  <input aria-label="Aforo Mínimo (pax)"
+                  <input aria-label="Aforo mínimo (pax)"
                     type="number"
                     value={formData.minCapacity || 0}
                     onChange={(e) =>
@@ -651,7 +650,7 @@ export function CampaignManagerModal({
                   className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--hair)] text-[var(--on-acc)] active:scale-[0.97] flex items-center gap-2"
                 >
                   <Check className="w-4 h-4" />
-                  Guardar Campaña
+                  Guardar campaña
                 </button>
               </div>
             </div>
@@ -661,14 +660,14 @@ export function CampaignManagerModal({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-sans font-bold text-[var(--ink-2)]">
-                    Campañas Registradas
+                    Campañas registradas
                   </span>
                 </div>
                 <button
                   onClick={handleStartCreate}
                   className="px-3 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--hair)]/80 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97]"
                 >
-                  <Plus className="w-3.5 h-3.5" /> + Nueva Campaña
+                  <Plus className="w-3.5 h-3.5" /> + Nueva campaña
                 </button>
               </div>
 
@@ -694,7 +693,7 @@ export function CampaignManagerModal({
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-[var(--ink)]">
-                        Modo General (Sin Filtro de Campaña)
+                        Modo general (Sin filtro de campaña)
                       </span>
                       {!activeCampaign && (
                         <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
@@ -758,7 +757,7 @@ export function CampaignManagerModal({
                                 onClick={() => onSetActiveCampaign(camp)}
                                 className="text-micro font-sans font-bold text-[var(--acc)] hover:text-[var(--hair)]/80 underline cursor-pointer"
                               >
-                                Activar Modo Campaña
+                                Activar modo campaña
                               </button>
                             )}
                           </div>
@@ -782,7 +781,6 @@ export function CampaignManagerModal({
                               camp.customPitchTemplates || {},
                             ).some((v) => (v || "").trim()) && (
                               <span className="flex items-center gap-1 text-[var(--hair)]/80">
-                                <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                                 {
                                   Object.values(
                                     camp.customPitchTemplates || {},

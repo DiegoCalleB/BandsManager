@@ -367,10 +367,10 @@ export function BookingFunnelChartWidget({
           </div>
           <div>
             <h3 className="text-sm font-bold font-display text-[var(--ink)]">
-              Embudo de Contrataciones
+              Embudo de contrataciones
             </h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">
-              Conversión de Salas & Festivales
+              Conversión de salas y festivales
             </p>
           </div>
         </div>
@@ -485,7 +485,7 @@ export function FinancesChartWidget({
               Evolución Financiera & Caché
             </h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">
-              Ingresos vs Gastos de Directos
+              Ingresos vs gastos de directos
             </p>
           </div>
         </div>
@@ -505,7 +505,7 @@ export function FinancesChartWidget({
       <div className="grid grid-cols-2 gap-2 font-sans text-xs text-center">
         <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]">
           <span className="text-micro text-[var(--ink-2)] block">
-            Ingresos Totales
+            Ingresos totales
           </span>
           <span className="font-bold text-[var(--ok)] text-sm">
             {eur(totalIngresos)}
@@ -581,10 +581,10 @@ export function SocialFansGrowthWidget({
           </div>
           <div>
             <h3 className="text-sm font-bold font-display text-[var(--ink)]">
-              Captación de Fans & QR
+              Captación de fans y QR
             </h3>
             <p className="text-xs font-sans text-[var(--ink-2)]">
-              Crecimiento en Registro de Seguidores
+              Crecimiento en registro de seguidores
             </p>
           </div>
         </div>

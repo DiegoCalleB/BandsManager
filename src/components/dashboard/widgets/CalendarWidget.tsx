@@ -252,7 +252,7 @@ export function CalendarWidget({
                   ? "bg-[var(--acc)] text-[var(--on-acc)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
-              title="Vista Lista Próximos"
+              title="Vista lista próximos"
             >
               <List className="w-3.5 h-3.5" />
               <span className="hidden md:inline text-micro">Lista</span>

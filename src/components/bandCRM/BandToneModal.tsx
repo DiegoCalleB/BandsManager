@@ -414,7 +414,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>ADN de Tono & Personalidad</span>
+              <span>ADN de Tono y Personalidad</span>
             </button>
             <button
               type="button"
@@ -426,7 +426,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               }`}
             >
               <MessageSquareText className="w-3.5 h-3.5" />
-              <span>Hilos Reales de Ejemplo (Entrenar IA)</span>
+              <span>Hilos reales de ejemplo (Entrenar IA)</span>
             </button>
           </div>
 
@@ -505,7 +505,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 <div className="space-y-3.5">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
                     <div>
-                      <label className={labelClass}>Tono General</label>
+                      <label className={labelClass}>Tono general</label>
                       <input
                         className={inputClass}
                         value={draft.tono_comunicacion}
@@ -533,7 +533,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       />
                     </div>
                     <div>
-                      <label className={labelClass}>Nivel de Energía</label>
+                      <label className={labelClass}>Nivel de energía</label>
                       <input
                         className={inputClass}
                         value={draft.nivel_energia}
@@ -641,8 +641,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </div>
 
                   <div>
-                    <label className={labelClass}>Punto de Conexión</label>
-                    <textarea aria-label="Punto de Conexión"
+                    <label className={labelClass}>Punto de conexión</label>
+                    <textarea aria-label="Punto de conexión"
                       rows={4}
                       className={`${inputClass} min-h-[90px] resize-y`}
                       value={draft.puntos_fuertes_para_conectar}
@@ -657,9 +657,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
                   <div>
                     <label className={labelClass}>
-                      Recomendación de Contacto
+                      Recomendación de contacto
                     </label>
-                    <textarea aria-label="Recomendación de Contacto"
+                    <textarea aria-label="Recomendación de contacto"
                       rows={4}
                       className={`${inputClass} min-h-[90px] resize-y`}
                       value={draft.recomendacion_pitch}
@@ -704,7 +704,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       className={`p-3 rounded-[var(--r-m)] ${"bg-[var(--ink-3)] "}`}
                     >
                       <span className="text-[var(--ink-2)] block text-micro">
-                        Tono General
+                        Tono general
                       </span>
                       <span className="font-bold text-[var(--acc)] block text-xs mt-0.5">
                         {toneData.tono_comunicacion || "No especificado"}
@@ -726,7 +726,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       className={`p-3 rounded-[var(--r-m)] ${"bg-[var(--ink-3)] "}`}
                     >
                       <span className="text-[var(--ink-2)] block text-micro">
-                        Nivel de Energía
+                        Nivel de energía
                       </span>
                       <span className="font-bold text-[var(--ok)] block text-xs mt-0.5">
                         {toneData.nivel_energia || "Alta / Explosiva"}
@@ -874,7 +874,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     >
                       <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                         <HeartHandshake className="w-3 h-3" /> Recomendación de
-                        Contacto
+                        contacto
                       </span>
                       <p className="font-sans leading-relaxed text-xs">
                         {toneData.recomendacion_pitch ||
@@ -1103,8 +1103,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           ahora". Para no esperar a eso, puedes pegar
                           directamente conversaciones reales buenas en{" "}
                           <strong className="text-[var(--acc)]">
-                            Booking CRM → Plantillas de Email → Hilos de Email
-                            de Ejemplo
+                            Booking CRM → plantillas de email → hilos de email
+                            de ejemplo
                           </strong>
                           .
                         </p>
@@ -1283,8 +1283,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           puedes pegar directamente conversaciones reales buenas
                           en{" "}
                           <strong className="text-[var(--acc)]">
-                            Booking CRM → Plantillas de Email → Hilos de Email
-                            de Ejemplo
+                            Booking CRM → plantillas de email → hilos de email
+                            de ejemplo
                           </strong>
                           .
                         </p>
@@ -1313,7 +1313,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     onClick={onReAnalyze}
                     className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans font-bold text-xs cursor-pointer"
                   >
-                    Iniciar Análisis de Tono
+                    Iniciar análisis de tono
                   </button>
                 </div>
               )}

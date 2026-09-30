@@ -52,7 +52,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <DollarSign className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Caché & Condiciones de Contratación (Booking CRM)
+          Caché y condiciones de contratación (Booking CRM)
         </h3>
       </div>
 
@@ -83,7 +83,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
           <label className="block text-xs font-medium text-[var(--ink-2)]">
-            Caché Sala / Concierto Estándar (€)
+            Caché sala / concierto estándar (€)
           </label>
           <div className="relative">
             <input
@@ -121,7 +121,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
         <div>
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
             <Car className="w-3.5 h-3.5 text-[var(--acc)]" />
-            Condiciones de Kilometraje / Furgoneta
+            Condiciones de kilometraje / furgoneta
           </label>
           <input
             type="text"
@@ -163,7 +163,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
       {/* Contacto Directo de Booking */}
       <div className="pt-2 space-y-3">
         <h4 className="text-xs font-semibold text-[var(--ink-2)]">
-          Persona de Contacto de Booking / Contratación
+          Persona de contacto de Booking / contratación
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -182,7 +182,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
           <div>
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
-              Email de Contratación
+              Email de contratación
             </label>
             <input
               type="email"
@@ -195,7 +195,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
           <div>
             <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
-              Teléfono Directo
+              Teléfono directo
             </label>
             <input
               type="tel"

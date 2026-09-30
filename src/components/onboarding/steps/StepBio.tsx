@@ -59,7 +59,7 @@ export const StepBio: React.FC<StepBioProps> = ({
       <div>
         <div className="flex items-center justify-between mb-1.5">
           <label className="text-xs font-medium text-[var(--ink-2)]">
-            Biografía / Resumen de Prensa
+            Biografía / resumen de prensa
           </label>
           <button
             type="button"
@@ -67,7 +67,7 @@ export const StepBio: React.FC<StepBioProps> = ({
             className="inline-flex items-center gap-1.5 text-xs text-[var(--acc)] hover:text-[var(--acc)]/70 font-medium px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            Redactar con IA / Sugerencia
+            Redactar con IA / sugerencia
           </button>
         </div>
         <textarea
@@ -83,7 +83,7 @@ export const StepBio: React.FC<StepBioProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
         <div>
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-            Formato de Escenario
+            Formato de escenario
           </label>
           <input
             type="text"
@@ -96,9 +96,9 @@ export const StepBio: React.FC<StepBioProps> = ({
 
         <div>
           <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
-            Músicos en Escenario
+            Músicos en escenario
           </label>
-          <input aria-label="Músicos en Escenario"
+          <input aria-label="Músicos en escenario"
             type="number"
             min={1}
             max={25}

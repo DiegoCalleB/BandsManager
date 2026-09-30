@@ -156,9 +156,9 @@ export function ConvocarEnsayoModal({
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
-                  Hora de Inicio <span className="text-[var(--acc)]">*</span>
+                  Hora de inicio <span className="text-[var(--acc)]">*</span>
                 </label>
-                <input aria-label="Hora de Inicio"
+                <input aria-label="Hora de inicio"
                   type="time"
                   required
                   value={hora}
@@ -171,7 +171,7 @@ export function ConvocarEnsayoModal({
             {/* Lugar / Local */}
             <div>
               <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">
-                Lugar / Local de Ensayo <span className="text-[var(--acc)]">*</span>
+                Lugar / local de ensayo <span className="text-[var(--acc)]">*</span>
               </label>
               <div className="relative">
                 <MapPin className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[var(--ink-2)]" />
@@ -226,8 +226,8 @@ export function ConvocarEnsayoModal({
                   {/* Hora Fin & Duración */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Hora Fin Estimada</label>
-                      <input aria-label="Hora Fin Estimada"
+                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Hora fin estimada</label>
+                      <input aria-label="Hora fin estimada"
                         type="time"
                         value={horaFin}
                         onChange={(e) => setHoraFin(e.target.value)}
@@ -251,7 +251,7 @@ export function ConvocarEnsayoModal({
                   {/* Músicos Convocados */}
                   {bandUsers.length > 0 && (
                     <div>
-                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Músicos Convocados</label>
+                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Músicos convocados</label>
                       <div className="flex flex-wrap gap-1.5 p-2 rounded-[var(--r-m)] bg-[var(--sunken)] ">
                         {bandUsers.map((u) => {
                           const isSelected = convocadosIds.includes(u.id);
@@ -278,7 +278,7 @@ export function ConvocarEnsayoModal({
                   {/* Objetivos */}
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <label className="text-xs font-semibold text-[var(--ink-2)]">Objetivos de la Sesión</label>
+                      <label className="text-xs font-semibold text-[var(--ink-2)]">Objetivos de la sesión</label>
                       <span className="text-micro text-[var(--ink-2)]">{objetivos.length} asignados</span>
                     </div>
 

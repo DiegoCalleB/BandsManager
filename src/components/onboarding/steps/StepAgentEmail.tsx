@@ -35,7 +35,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <Sparkles className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Agentes IA de Booking & Conexión de Correo
+          Agentes IA de Booking y conexión de correo
         </h3>
       </div>
 
@@ -44,7 +44,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-[var(--acc)]" />
           <h4 className="text-xs font-semibold text-[var(--acc)]/70">
-            Human-in-the-Loop: Automatización Segura de Booking
+            Human-in-the-Loop: Automatización segura de Booking
           </h4>
         </div>
         <p className="text-xs text-[var(--ink-2)] leading-relaxed">
@@ -81,13 +81,13 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
         {/* Firma de correo del redactor */}
         <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
           <h4 className="text-xs font-semibold text-[var(--ink-2)]">
-            Firma de Correo para las Propuestas
+            Firma de correo para las propuestas
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
-                Nombre del Remitente
+                Nombre del remitente
               </label>
               <input
                 type="text"

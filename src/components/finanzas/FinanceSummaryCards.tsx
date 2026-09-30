@@ -73,7 +73,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold" style={{ color: colors.textMuted }}>
-            Beneficio Neto
+            Beneficio neto
           </span>
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
             <DollarSign className="w-5 h-5" />

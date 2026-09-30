@@ -77,7 +77,7 @@ export function NegotiationSimulationModal({
             <div>
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-[var(--acc)]" />
-                <h3 className="text-sm font-bold font-display">Simulador de Negociación Personalizado</h3>
+                <h3 className="text-sm font-bold font-display">Simulador de negociación personalizado</h3>
               </div>
               <p className={`text-micro font-sans mt-0.5 ${textMuted}`}>
                 Trato actual con{' '}
@@ -109,7 +109,7 @@ export function NegotiationSimulationModal({
                       : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
                   }`}
                 >
-                  <Building className="w-4 h-4" /> Sala o Festival (Entrante)
+                  <Building className="w-4 h-4" /> Sala o festival (Entrante)
                 </button>
                 <button
                   type="button"
@@ -154,7 +154,7 @@ export function NegotiationSimulationModal({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className={`block text-micro font-sans ${textSub}`}>Asunto del Correo</label>
+                <label className={`block text-micro font-sans ${textSub}`}>Asunto del correo</label>
                 <input
                   type="text"
                   value={simulationSubject}
@@ -196,7 +196,7 @@ export function NegotiationSimulationModal({
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" /> Generar Correo con Gemini AI
+                    <Sparkles className="w-4 h-4" /> Generar correo con Gemini AI
                   </>
                 )}
               </button>
@@ -207,10 +207,10 @@ export function NegotiationSimulationModal({
               <div className="space-y-2 pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="flex justify-between items-center">
                   <label className={`block text-micro font-sans ${'text-[var(--acc)]'}`}>
-                    <ShowIcon inline emoji="✨" />Vista Previa del Correo Generado (Editable)
+                    <ShowIcon inline emoji="✨" />Vista previa del correo generado (Editable)
                   </label>
                   <span className="text-micro font-sans bg-[var(--surface)]/15 text-[var(--ok)]/80 px-2 py-1 rounded">
-                    Listo para Ajustar
+                    Listo para ajustar
                   </span>
                 </div>
                 <textarea
@@ -241,7 +241,7 @@ export function NegotiationSimulationModal({
               disabled={!simulationMessage || isGeneratingSimulation}
               className={`px-2 py-1 rounded-[var(--r-pill)] font-sans font-bold text-micro flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.97] disabled:opacity-40 transition-ui bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]`}
             >
-              <Check className="w-4 h-4" /> Guardar y Sincronizar
+              <Check className="w-4 h-4" /> Guardar y sincronizar
             </button>
           </div>
         </div>

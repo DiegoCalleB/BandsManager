@@ -49,7 +49,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
             onClick={onOpenGuidanceModal}
             className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
           >
-            <span>Ver Plan Completo</span>
+            <span>Ver plan completo</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         ) : onNavigate ? (
@@ -114,7 +114,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-center">
           <span className="text-base font-bold font-mono text-[var(--ok)]">{totalPillars}</span>
-          <p className="text-micro font-mono text-[var(--ink-2)] mt-0.5">Pilares Clave</p>
+          <p className="text-micro font-mono text-[var(--ink-2)] mt-0.5">Pilares clave</p>
         </div>
       </div>
     </div>

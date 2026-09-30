@@ -679,7 +679,7 @@ export function BulkAlbumAudioUploaderModal({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5">
               <div className="md:col-span-2 space-y-2">
                 <label className="text-xs font-sans font-bold text-[var(--ink-2)]">
-                  Nombre del Álbum / Disco
+                  Nombre del álbum / disco
                 </label>
                 <input
                   type="text"
@@ -692,9 +692,9 @@ export function BulkAlbumAudioUploaderModal({
 
               <div className="space-y-2">
                 <label className="text-xs font-sans font-bold text-[var(--ink-2)]">
-                  Portada del Disco
+                  Portada del disco
                 </label>
-                <input aria-label="Portada del Disco"
+                <input aria-label="Portada del disco"
                   ref={coverInputRef}
                   type="file"
                   accept="image/*"
@@ -1012,7 +1012,7 @@ export function BulkAlbumAudioUploaderModal({
             {isUploading ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Guardando Pistas...</span>
+                <span>Guardando pistas...</span>
               </>
             ) : (
               <>

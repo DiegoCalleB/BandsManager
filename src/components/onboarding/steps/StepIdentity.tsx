@@ -70,7 +70,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
           <div className="flex items-center gap-2">
             <Guitar className="w-4 h-4 text-[var(--acc)]" />
             <h3 className="text-sm font-semibold text-[var(--ink)]">
-              Nombre del Proyecto Musical & Ubicación
+              Nombre del proyecto musical y ubicación
             </h3>
           </div>
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-xs text-[var(--ink-2)] font-sans">
@@ -235,7 +235,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
             )}
             <div className="min-w-0">
               <span className="text-micro font-sans text-[var(--acc)] font-bold block">
-                Previsualización en Dossier EPK
+                Previsualización en dossier EPK
               </span>
               <div
                 className="text-xl sm:text-2xl text-[var(--ink)] truncate font-bold leading-tight"
@@ -266,7 +266,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
         <div className="flex items-center gap-2">
           <Camera className="w-4 h-4 text-[var(--acc)]" />
           <h3 className="text-sm font-semibold text-[var(--ink)]">
-            4. Logotipo Oficial o Imagen de Perfil
+            4. Logotipo oficial o imagen de perfil
           </h3>
         </div>
 

@@ -48,7 +48,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
           >
             <Sliders className="w-3 h-3 text-[var(--acc)]" />
-            <span>Niveles de Autonomía</span>
+            <span>Niveles de autonomía</span>
             <span className="px-1 py-0.2 rounded text-micro bg-[var(--acc)]/50 text-[var(--ink)] font-bold">ADMIN</span>
           </button>
         )}

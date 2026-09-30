@@ -2137,7 +2137,7 @@ export default function ReelsCenter({
               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5" /> Analizador de Vídeos AI
+          <Sparkles className="w-3.5 h-3.5" /> Analizador de vídeos IA
         </button>
       </div>
 
@@ -2153,7 +2153,7 @@ export default function ReelsCenter({
                   <h3
                     className={`text-sm font-bold font-display text-[var(--acc)]`}
                   >
-                    Pipeline de Reels y Contenido
+                    Pipeline de Reels y contenido
                   </h3>
                   <p className={`text-micro font-sans mt-1 ${textSub}`}>
                     Visualiza los vídeos grabados por la banda en la carretera y
@@ -2406,7 +2406,7 @@ export default function ReelsCenter({
                   <h3
                     className={`text-sm font-bold font-display flex items-center gap-1.5 text-[var(--acc)]`}
                   >
-                    <Sparkles className="w-4 h-4" /> AI Reels Writer (Redacción
+                    AI Reels Writer (Redacción
                     Estructurada)
                   </h3>
                   <p className={`text-micro font-sans mt-1 ${textSub}`}>
@@ -2434,7 +2434,7 @@ export default function ReelsCenter({
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                     <div className="lg:col-span-4 space-y-2.5">
                       <span className="block text-micro font-sans text-[var(--ink-2)]">
-                        Seleccionar Tonalidad AI
+                        Seleccionar tonalidad AI
                       </span>
                       <button
                         id="btn-reels-hype"
@@ -2463,7 +2463,7 @@ export default function ReelsCenter({
 
                     <div className="lg:col-span-8 space-y-1.5">
                       <span className="block text-micro font-sans text-[var(--ink-2)]">
-                        Publicación Generada (Listo para copiar)
+                        Publicación generada (Listo para copiar)
                       </span>
                       <textarea
                         id="reels-generated-output"
@@ -2514,7 +2514,7 @@ export default function ReelsCenter({
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
-                    <ShowIcon inline emoji="📂" />Archivo de Vídeo
+                    <ShowIcon inline emoji="📂" />Archivo de vídeo
                   </button>
                   <button
                     type="button"
@@ -2760,9 +2760,9 @@ export default function ReelsCenter({
                       className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                     >
                       <option value="auto">Detectar automáticamente</option>
-                      <option value="concierto">Concierto / Directo</option>
+                      <option value="concierto">Concierto / directo</option>
                       <option value="videoclip">Videoclip</option>
-                      <option value="ensayo">Ensayo / Local</option>
+                      <option value="ensayo">Ensayo / local</option>
                     </select>
                   </div>
                   <div className="space-y-1">
@@ -3194,9 +3194,6 @@ export default function ReelsCenter({
                         >
                           <div className="flex justify-between items-center flex-wrap gap-2">
                             <div className="flex items-center gap-2">
-                              <Sparkles
-                                className={`w-4 h-4 text-[var(--acc)]`}
-                              />
                               <span
                                 className={`text-xs font-sans font-bold ${textTitle}`}
                               >
@@ -3420,7 +3417,7 @@ export default function ReelsCenter({
                         <div className="space-y-1.5">
                           <div className="flex justify-between items-center">
                             <label className="block text-micro font-mono text-[var(--ink-2)]">
-                              Variante de Copy con ADN
+                              Variante de copy con ADN
                             </label>
                             <div className="flex gap-1">
                               {[
@@ -3494,12 +3491,12 @@ export default function ReelsCenter({
                               {copiedNotification ? (
                                 <>
                                   <Check className="w-3.5 h-3.5" />
-                                  <span>¡Copiado para Redes!</span>
+                                  <span>¡Copiado para redes!</span>
                                 </>
                               ) : (
                                 <>
                                   <Bookmark className="w-3.5 h-3.5" />
-                                  <span>1-Click Copiar Formato</span>
+                                  <span>1-Click copiar formato</span>
                                 </>
                               )}
                             </button>
@@ -3535,7 +3532,7 @@ export default function ReelsCenter({
                         {/* Platform Selector */}
                         <div className="space-y-1.5">
                           <span className="block text-micro font-sans text-[var(--ink-2)]">
-                            Plataforma Objetivo
+                            Plataforma objetivo
                           </span>
                           <div className="grid grid-cols-2 gap-2">
                             {[
@@ -3667,7 +3664,7 @@ export default function ReelsCenter({
                                   }}
                                   className="text-[var(--acc-ink)] hover:text-[var(--acc-ink)] font-bold underline cursor-pointer flex items-center gap-1"
                                 >
-                                  <span><ShowIcon inline emoji="🔗" />Conectar en 1 Clic</span>
+                                  <span><ShowIcon inline emoji="🔗" />Conectar en 1 clic</span>
                                 </button>
                               </div>
                             );
@@ -3725,7 +3722,7 @@ export default function ReelsCenter({
                               title="Copia el texto formateado al portapapeles"
                             >
                               <Copy className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
-                              <span>Copiar Copy</span>
+                              <span>Copiar copy</span>
                             </button>
                           </div>
 
@@ -3918,7 +3915,7 @@ export default function ReelsCenter({
                               }
                             }}
                             className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors bg-transparent -none cursor-pointer"
-                            title="Eliminar del Calendario"
+                            title="Eliminar del calendario"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -3939,7 +3936,7 @@ export default function ReelsCenter({
           <div className="space-y-3">
             <div className={` pb-2 `}>
               <h3 className={`text-xs font-sans text-[var(--acc)]`}>
-                Vista Previa en Redes
+                Vista previa en redes
               </h3>
               <p className="text-micro text-[var(--ink-2)] font-sans mt-0.5">
                 Visualiza cómo se verá la copia y el contenido en directo
@@ -4095,7 +4092,7 @@ export default function ReelsCenter({
               <div className="flex items-center gap-2 text-[var(--acc-ink)]">
                 <ShieldCheck className="w-5 h-5" />
                 <h3 className="text-sm font-bold font-mono text-[var(--ink)]">
-                  Vincular Cuenta Oficial
+                  Vincular cuenta oficial
                 </h3>
               </div>
               <p className="text-xs text-[var(--ink-2)] font-sans">

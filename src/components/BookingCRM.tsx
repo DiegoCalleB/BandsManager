@@ -1358,7 +1358,19 @@ export default function BookingCRM({
           <div className="space-y-3 sm:space-y-4">
             {/* Header: Tabs + Unified Action Buttons */}
             <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-end gap-2">
+              <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+                <div className="min-w-0">
+                  <h1 className="page-title">
+                    {sectionTab === 'medios' ? 'Medios' : sectionTab === 'grupos' ? 'Management y grupos' : 'Escenarios'}
+                  </h1>
+                  <p className="text-xs text-[var(--ink-2)] mt-1">
+                    {sectionTab === 'medios'
+                      ? 'Radios, webs y prensa que pueden dar voz a tu banda.'
+                      : sectionTab === 'grupos'
+                        ? 'Agencias, managers, productoras y bandas amigas.'
+                        : 'Salas y festivales donde tocar, con su estado de contacto.'}
+                  </p>
+                </div>
                 {/* UNIFIED ACTION BUTTONS */}
                 <div className="flex items-center gap-1.5 w-full sm:w-auto justify-stretch sm:justify-end">
                   <button
@@ -1408,7 +1420,7 @@ export default function BookingCRM({
                     title="Exportar base de datos a Excel / CSV o JSON"
                   >
                     <Download className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                    <span>Exportar Leads</span>
+                    <span>Exportar leads</span>
                   </button>
 
                   <button
@@ -1424,7 +1436,7 @@ export default function BookingCRM({
                     title="Configurar plantillas de correo y entrenar el Redactor con hilos reales de conversación"
                   >
                     <MessageSquareText className="w-3.5 h-3.5" />
-                    <span>Plantillas & Hilos IA</span>
+                    <span>Plantillas y hilos IA</span>
                   </button>
 
                   {/* Botón Herramientas & IA */}
@@ -1440,7 +1452,7 @@ export default function BookingCRM({
                     title="Herramientas, Scout, Excel y Agentes IA"
                   >
                     <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
-                    <span>IA & Herramientas</span>
+                    <span>IA y Herramientas</span>
                     {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
                       <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-micro font-semibold tabular-nums">
                         {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length}
@@ -1465,7 +1477,7 @@ export default function BookingCRM({
                   <div className="flex items-center justify-between text-xs font-bold text-[var(--acc)]/70 pb-1.5">
                     <span className="flex items-center gap-1.5">
                       <Wrench className="w-3.5 h-3.5" />
-                      Herramientas e Inteligencia Artificial
+                      Herramientas e inteligencia artificial
                     </span>
                     <button
                       type="button"
@@ -1525,7 +1537,7 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <FileSpreadsheet className="w-4 h-4 text-[var(--ok)]" />
-                        Importar Excel / CSV (Bandas y Salas)
+                        Importar Excel / CSV (Bandas y salas)
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
                     </button>
@@ -1579,7 +1591,7 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <Bot className="w-4 h-4 text-[var(--acc)]" />
-                        Configurar Agentes IA (Autonomía & Tono)
+                        Configurar agentes IA (Autonomía y tono)
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
                     </button>
@@ -1598,7 +1610,7 @@ export default function BookingCRM({
                           <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--ok)]"></span>
                         </span>
                         <Activity className="w-4 h-4 text-[var(--ok)]" />
-                        <span>Monitor de Cola & Workers en Vivo</span>
+                        <span>Monitor de cola y workers en vivo</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
                     </button>
@@ -1616,7 +1628,7 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <MessageSquareText className="w-4 h-4 text-[var(--acc)]" />
-                        <span>Plantillas & Hilos de Ejemplo (Redactor AI)</span>
+                        <span>Plantillas y hilos de ejemplo (Redactor IA)</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
                     </button>
@@ -1646,7 +1658,7 @@ export default function BookingCRM({
                       className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
-                      <span>Exportar Leads (A la vista / Todos / Excel)</span>
+                      <span>Exportar leads (A la vista / todos / Excel)</span>
                     </button>
 
                     <button
@@ -1821,7 +1833,7 @@ export default function BookingCRM({
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                         viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
-                      title="Vista en Tarjetas"
+                      title="Vista en tarjetas"
                     >
                       <LayoutGrid className="w-3.5 h-3.5" />
                       <span className="hidden sm:inline">Tarjetas</span>
@@ -1845,7 +1857,7 @@ export default function BookingCRM({
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                         viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
-                      title="Vista en Mapa GPS Interactivo"
+                      title="Vista en mapa GPS interactivo"
                     >
                       <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-2)]'}`} />
                       <span className="hidden sm:inline">Mapa</span>
@@ -2390,7 +2402,7 @@ export default function BookingCRM({
                 Configuración de plantillas y pautas AI (Redactor)
               </h3>
               <p className="text-xs font-sans mt-0.5 text-[var(--ink-2)]">
-                Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
+                Personaliza el correo por defecto y las directrices del Redactor IA para Salas, Festivales, Medios y Grupos.
               </p>
             </div>
           </div>

@@ -287,7 +287,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
               }`}
             >
               <Compass className="w-3.5 h-3.5" />
-              <span>Enlaces de Ruta</span>
+              <span>Enlaces de ruta</span>
             </button>
           </div>
 
@@ -380,7 +380,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                                 title="Posible coincidencia de ruta con bolo confirmado"
                               >
                                 <AlertCircle className="w-2.5 h-2.5 text-[var(--acc)]" />
-                                Enlace Ruta
+                                Enlace ruta
                               </span>
                             )}
                           </div>
@@ -504,7 +504,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                                   className="px-2.5 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--acc)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0"
                                 >
                                   <Send className="w-3 h-3" />
-                                  <span>Pitch de Ruta</span>
+                                  <span>Pitch de ruta</span>
                                 </button>
                               </div>
                             ))}
@@ -537,7 +537,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                       >
                         <option value="Valencia">Valencia (Eje Mediterráneo)</option>
                         <option value="Barcelona">Barcelona (Eje Mediterráneo)</option>
-                        <option value="Madrid">Madrid (Eje Centro)</option>
+                        <option value="Madrid">Madrid (Eje centro)</option>
                         <option value="Zaragoza">Zaragoza (Eje Ebro)</option>
                         <option value="Bilbao">Bilbao (Eje Cantábrico / Ebro)</option>
                         <option value="Sevilla">Sevilla (Eje Sur)</option>

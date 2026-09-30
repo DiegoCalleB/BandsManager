@@ -130,7 +130,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             </div>
             <div>
               <h3 className="text-lg font-bold text-[var(--ink)] font-display tracking-wide">
-                Exportar & Imprimir QR en Máxima Calidad
+                Exportar y imprimir QR en máxima calidad
               </h3>
               <p className="text-xs text-[var(--ink-2)] font-sans">
                 Formatos vectoriales para imprenta, Ultra HD (300 DPI) y
@@ -165,7 +165,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               <div className="flex items-center justify-between">
                 <span className="font-bold text-sm flex items-center gap-2 text-[var(--ink)]">
                   <FileText className="w-4 h-4 text-[var(--acc)]" />
-                  Cartel A4 Completo
+                  Cartel A4 completo
                 </span>
                 <span className="text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Recomendado
@@ -192,7 +192,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                   Vectorial SVG (.svg)
                 </span>
                 <span className="text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-[var(--r-s)]">
-                  Imprentas / Lonas
+                  Imprentas / lonas
                 </span>
               </div>
               <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
@@ -322,7 +322,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             className="w-full sm:w-auto py-3 px-5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <Printer className="w-4 h-4" />
-            Imprimir en A4 / Guardar PDF
+            Imprimir en A4 / guardar PDF
           </button>
         </div>
       </div>

@@ -34,7 +34,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <Video className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Vídeos de YouTube & Directos
+          Vídeos de YouTube y directos
         </h3>
       </div>
 
@@ -117,7 +117,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
       <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
         <h4 className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
           <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
-          Añadir Nuevo Vídeo (YouTube)
+          Añadir nuevo vídeo (YouTube)
         </h4>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -137,10 +137,10 @@ export const StepVideos: React.FC<StepVideosProps> = ({
               onChange={(e) => setNewVideoType(e.target.value as any)}
               className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
             >
-              <option value="videoclip">Videoclip Oficial</option>
-              <option value="directo">Directo en Concierto</option>
-              <option value="acustico">Sesión Acústica</option>
-              <option value="entrevista">Entrevista / Prensa</option>
+              <option value="videoclip">Videoclip oficial</option>
+              <option value="directo">Directo en concierto</option>
+              <option value="acustico">Sesión acústica</option>
+              <option value="entrevista">Entrevista / prensa</option>
             </select>
           </div>
         </div>
@@ -161,7 +161,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
-            Añadir Vídeo
+            Añadir vídeo
           </button>
         </div>
       </div>

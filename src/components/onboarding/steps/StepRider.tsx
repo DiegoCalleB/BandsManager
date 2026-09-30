@@ -88,7 +88,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           } hover:brightness-95`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold">Microfonía Propia</span>
+            <span className="text-xs font-semibold">Microfonía propia</span>
             {llevaMicrofoniaPropia && (
               <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
             )}
@@ -126,7 +126,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           } hover:brightness-95`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold">Backline Sala</span>
+            <span className="text-xs font-semibold">Backline sala</span>
             {necesitaBacklineBateria && (
               <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
             )}

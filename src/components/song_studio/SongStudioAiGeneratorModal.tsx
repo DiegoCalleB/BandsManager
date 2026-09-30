@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wand2, X, Sparkles, RefreshCw } from 'lucide-react';
+import { Wand2, X, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { SongAudioIdea, DrumPatternStyle } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -54,8 +54,8 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                 <Wand2 className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold">Generar Base de Batería y Bajo</h3>
-                <p className="text-xs text-[var(--acc)] font-sans">Sintetizador Web Audio de Referencia</p>
+                <h3 className="text-base font-bold">Generar base de batería y bajo</h3>
+                <p className="text-xs text-[var(--acc)] font-sans">Sintetizador web audio de referencia</p>
               </div>
             </div>
             <button type="button" onClick={onClose} className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]">
@@ -65,7 +65,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
 
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-xs text-[var(--acc)] space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Pista de Referencia Orientativa
+              Pista de Referencia Orientativa
             </p>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               Genera una secuencia rítmica sintetizada de bajo y batería para escuchar cómo sonaría tu guitarra o voz con acompañamiento.
@@ -88,8 +88,8 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                 />
               </div>
               <div>
-                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tonalidad (Raíz del Bajo)</label>
-                <select aria-label="Tonalidad (Raíz del Bajo)"
+                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tonalidad (Raíz del bajo)</label>
+                <select aria-label="Tonalidad (Raíz del bajo)"
                   value={genKey}
                   onChange={(e) => setGenKey(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
@@ -195,7 +195,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
               {isGeneratingAccompaniment ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  Sintetizando Pistas...
+                  Sintetizando pistas...
                 </>
               ) : (
                 <>

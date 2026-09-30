@@ -39,7 +39,7 @@ export function TemplateRecommendationsCard({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-extrabold text-[var(--acc)]">Recomendaciones del Agente</span>
+              <span className="text-xs font-extrabold text-[var(--acc)]">Recomendaciones del agente</span>
               <span
                 className={`text-micro font-semibold px-2 py-0.5 rounded-[var(--r-pill)] ${
                   'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
@@ -158,7 +158,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--sunken)] '
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro"><ShowIcon inline emoji="⚡" />Ganchos Clave</span>
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro"><ShowIcon inline emoji="⚡" />Ganchos clave</span>
               <ul className="space-y-0.5">
                 {rec.keyHooks.map((hook, i) => (
                   <li key={i} className="flex items-center gap-1">

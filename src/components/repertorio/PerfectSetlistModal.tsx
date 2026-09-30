@@ -261,7 +261,7 @@ export function PerfectSetlistModal({
             <div className="flex items-center gap-2.5">
               <Wand2 className="w-5 h-5 text-[var(--ok)]" />
               <div>
-                <h2 className="text-base font-bold">Setlist Perfecto</h2>
+                <h2 className="text-base font-bold">Setlist perfecto</h2>
                 {setlistName && <p className="text-xs text-[var(--ink-2)]">{setlistName}</p>}
               </div>
             </div>
@@ -314,7 +314,7 @@ export function PerfectSetlistModal({
                 onClick={() => onGenerate()}
                 className="bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
               >
-                Generar Plan
+                Generar plan
               </button>
             </div>
           )}

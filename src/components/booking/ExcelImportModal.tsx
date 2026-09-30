@@ -5,7 +5,6 @@ import {
   Upload,
   CheckCircle2,
   AlertTriangle,
-  Sparkles,
   ArrowRight,
   ArrowLeft,
   X,
@@ -772,7 +771,7 @@ export function ExcelImportModal({
                 title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
               >
                 <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
-                <span>Plantilla Ejemplo</span>
+                <span>Plantilla ejemplo</span>
               </button>
               <button
                 type="button"
@@ -833,7 +832,7 @@ export function ExcelImportModal({
                     : "text-[var(--ink-2)]"
                 }
               >
-                3. Validar y Guardar
+                3. Validar y guardar
               </span>
             </div>
           </div>
@@ -898,7 +897,7 @@ export function ExcelImportModal({
                     className="px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-ui cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    <span>Descargar Plantilla</span>
+                    <span>Descargar plantilla</span>
                   </button>
                 </div>
               </div>
@@ -972,7 +971,7 @@ export function ExcelImportModal({
                   {/* Nombre Sala (Obligatorio) */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)] flex items-center justify-between">
-                      <span>Nombre Sala / Contacto / Banda *</span>
+                      <span>Nombre sala / contacto / banda *</span>
                       <span className="text-micro text-[var(--ok)] font-sans">
                         Requerido
                       </span>
@@ -987,7 +986,7 @@ export function ExcelImportModal({
                       }
                       className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none"
                     >
-                      <option value="">-- Seleccionar Columna --</option>
+                      <option value="">-- Seleccionar columna --</option>
                       {rawHeaders.map((h) => (
                         <option key={h} value={h}>
                           {h}
@@ -1023,9 +1022,9 @@ export function ExcelImportModal({
                   {/* Email */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Email de Contacto
+                      Email de contacto
                     </label>
-                    <select aria-label="Email de Contacto"
+                    <select aria-label="Email de contacto"
                       value={mapping.email_contacto}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1048,9 +1047,9 @@ export function ExcelImportModal({
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <span><ShowIcon inline emoji="📱" /></span>
-                      <span>Teléfono Móvil (WhatsApp)</span>
+                      <span>Teléfono móvil (WhatsApp)</span>
                     </label>
-                    <select aria-label="Teléfono Móvil (WhatsApp)"
+                    <select aria-label="Teléfono móvil (WhatsApp)"
                       value={mapping.telefono_movil}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1073,9 +1072,9 @@ export function ExcelImportModal({
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
                       <span><ShowIcon inline emoji="☎️" /></span>
-                      <span>Teléfono Fijo</span>
+                      <span>Teléfono fijo</span>
                     </label>
-                    <select aria-label="Teléfono Fijo"
+                    <select aria-label="Teléfono fijo"
                       value={mapping.telefono_fijo}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1098,9 +1097,9 @@ export function ExcelImportModal({
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                       <span><ShowIcon inline emoji="📞" /></span>
-                      <span>Teléfono General / Otro</span>
+                      <span>Teléfono general / otro</span>
                     </label>
-                    <select aria-label="Teléfono General / Otro"
+                    <select aria-label="Teléfono general / otro"
                       value={mapping.telefono}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1148,9 +1147,9 @@ export function ExcelImportModal({
                   {/* Instagram */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Instagram / Redes
+                      Instagram / redes
                     </label>
-                    <select aria-label="Instagram / Redes"
+                    <select aria-label="Instagram / redes"
                       value={mapping.instagram}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1244,9 +1243,9 @@ export function ExcelImportModal({
                   {/* Género / Estilo */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Género / Estilo Musical
+                      Género / estilo musical
                     </label>
-                    <select aria-label="Género / Estilo Musical"
+                    <select aria-label="Género / estilo musical"
                       value={mapping.genero}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1292,9 +1291,9 @@ export function ExcelImportModal({
                   {/* Notas / Observaciones */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Notas / Comentarios
+                      Notas / comentarios
                     </label>
-                    <select aria-label="Notas / Comentarios"
+                    <select aria-label="Notas / comentarios"
                       value={mapping.notas}
                       onChange={(e) =>
                         setMapping((prev) => ({
@@ -1367,14 +1366,14 @@ export function ExcelImportModal({
                       onClick={() => handleToggleSelectAll(true)}
                       className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
                     >
-                      Seleccionar Todos
+                      Seleccionar todos
                     </button>
                     <button
                       type="button"
                       onClick={() => handleToggleSelectAll(false)}
                       className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
                     >
-                      Deseleccionar Todos
+                      Deseleccionar todos
                     </button>
                   </div>
                 </div>
@@ -1408,7 +1407,6 @@ export function ExcelImportModal({
                     />
                     <div className="text-xs">
                       <p className="font-bold text-[var(--tentative)]/50 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
                         Enriquecer contactos sin email con IA
                       </p>
                       <p className="text-[var(--ink-2)]">

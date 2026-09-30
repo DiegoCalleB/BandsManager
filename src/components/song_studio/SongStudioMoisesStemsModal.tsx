@@ -55,7 +55,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
               moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
-            <Sliders className="w-3.5 h-3.5" /> Separar Pistas
+            <Sliders className="w-3.5 h-3.5" /> Separar pistas
           </button>
           <button
             type="button"
@@ -75,7 +75,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
               moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
-            <Upload className="w-3.5 h-3.5" /> Subir Pistas
+            <Upload className="w-3.5 h-3.5" /> Subir pistas
           </button>
         </div>
 
@@ -133,7 +133,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                 className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>Comenzar Separación</span>
+                <span>Comenzar separación</span>
               </button>
             </div>
           </div>

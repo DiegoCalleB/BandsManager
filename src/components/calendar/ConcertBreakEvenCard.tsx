@@ -24,7 +24,7 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
       className={`p-3 rounded-[var(--r-m)] mt-3 ${'bg-[var(--sunken)] '} space-y-2`}
     >
       <div className="flex items-center justify-between text-xs font-bold">
-        <span className={textTitle}><ShowIcon inline emoji="📊" />Viabilidad del Bolo</span>
+        <span className={textTitle}><ShowIcon inline emoji="📊" />Viabilidad del bolo</span>
         <span
           className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro ${
             analysis.estadoRentabilidad === 'beneficio'
@@ -52,7 +52,7 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
           <span className="text-xs font-bold text-[var(--alert)] font-mono">{analysis.gastosTotalesEstimados} €</span>
         </div>
         <div className="bg-[var(--surface)] p-1.5 rounded-[var(--r-m)] ">
-          <span className="text-micro text-[var(--ink-2)] block font-mono">Para Cubrir Gastos</span>
+          <span className="text-micro text-[var(--ink-2)] block font-mono">Para cubrir gastos</span>
           <span className="text-xs font-bold text-[var(--acc)] font-mono">
             {analysis.entradasParaBreakEven > 0 ? `${analysis.entradasParaBreakEven} entradas` : 'Cubierto'}
           </span>

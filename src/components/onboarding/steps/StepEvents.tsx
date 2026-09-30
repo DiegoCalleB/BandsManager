@@ -67,7 +67,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <Calendar className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Próximos Conciertos & Ensayos (Agenda)
+          Próximos conciertos y ensayos (Agenda)
         </h3>
       </div>
 
@@ -136,7 +136,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
       <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
         <h4 className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
           <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
-          Añadir Fecha a la Agenda
+          Añadir fecha a la agenda
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -145,7 +145,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               type="text"
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)}
-              placeholder="Título / Sala (ej. Concierto Presentación Disco) *"
+              placeholder="Título / sala (ej. Concierto presentación disco) *"
               className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
             />
           </div>
@@ -156,9 +156,9 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               onChange={(e) => setNewEventType(e.target.value as any)}
               className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
             >
-              <option value="concierto">Concierto en Sala</option>
+              <option value="concierto">Concierto en sala</option>
               <option value="festival">Festival</option>
-              <option value="ensayo">Ensayo General</option>
+              <option value="ensayo">Ensayo general</option>
               <option value="privado">Evento Privado</option>
             </select>
           </div>
@@ -216,7 +216,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                     onChange={(e) => setNewEventIsMilestone(e.target.checked)}
                     className="accent-amber-500 rounded"
                   />
-                  <span><ShowIcon inline emoji="⭐" />Llenazo / Hito Clave</span>
+                  <span><ShowIcon inline emoji="⭐" />Llenazo / hito clave</span>
                 </label>
               )}
             </div>
@@ -266,7 +266,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
-            Añadir a la Agenda
+            Añadir a la agenda
           </button>
         </div>
       </div>

@@ -86,7 +86,7 @@ export const StepCompletedCelebration: React.FC<
         </span>
         {hasRider && (
           <span className="text-xs px-3 py-1 rounded-[var(--r-pill)] bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5 text-[var(--ok)]" /> Rider Técnico
+            <Layers className="w-3.5 h-3.5 text-[var(--ok)]" /> Rider técnico
           </span>
         )}
       </div>
@@ -103,7 +103,7 @@ export const StepCompletedCelebration: React.FC<
               </h4>
             </div>
             <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
-              Para Salas y Festivales
+              Para salas y festivales
             </span>
           </div>
 
@@ -142,7 +142,7 @@ export const StepCompletedCelebration: React.FC<
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-[var(--alert)]" />
               <h4 className="text-sm font-semibold text-[var(--ink)]">
-                Landing & QR de Fans
+                Landing y QR de fans
               </h4>
             </div>
             <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--alert)]/60 font-medium">
@@ -162,7 +162,7 @@ export const StepCompletedCelebration: React.FC<
               rel="noreferrer"
               className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
-              <ExternalLink className="w-3.5 h-3.5" /> Ver Landing Fans
+              <ExternalLink className="w-3.5 h-3.5" /> Ver landing fans
             </a>
             <button
               type="button"

@@ -1028,7 +1028,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
               className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
             >
               <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
-              <span>Estilo Mapa</span>
+              <span>Estilo mapa</span>
             </button>
 
             {showStyleMenu && (
@@ -1069,7 +1069,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
             className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
           >
             <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
-            <span>Centrar Vista</span>
+            <span>Centrar vista</span>
           </button>
         </div>
       </div>
@@ -1083,7 +1083,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] inline-block" />
-          <span>Aprobado / Confirmado</span>
+          <span>Aprobado / confirmado</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] inline-block" />

@@ -76,7 +76,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan Estratégico de Crecimiento & Promoción</h3>
+                <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan Estratégico de Crecimiento y Promoción</h3>
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                   {growthPlan.horizonDays} Días
                 </span>
@@ -120,7 +120,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               }`}
             >
               <Radio className="w-3.5 h-3.5" />
-              <span>Playbooks por Canal</span>
+              <span>Playbooks por canal</span>
             </button>
 
             <button
@@ -132,7 +132,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               }`}
             >
               <Target className="w-3.5 h-3.5" />
-              <span>Pilares & Diagnóstico</span>
+              <span>Pilares y Diagnóstico</span>
             </button>
           </div>
 
@@ -279,7 +279,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   {channelData.hookFormulas && channelData.hookFormulas.length > 0 && (
                     <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-2">
                       <h5 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" /> Fórmulas de Gancho Probadas
+                        Fórmulas de Gancho Probadas
                       </h5>
                       <ul className="space-y-1.5">
                         {channelData.hookFormulas.map((hook, hIdx) => (
@@ -299,7 +299,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {activeTab === 'pillars' && (
             <div className="space-y-4">
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
-                <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Resumen Ejecutivo & Diagnóstico</h4>
+                <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Resumen Ejecutivo y Diagnóstico</h4>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">{growthPlan.executiveSummary}</p>
               </div>
 
@@ -342,7 +342,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 }}
                 className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-mono font-bold transition-ui flex items-center gap-1 cursor-pointer"
               >
-                <span>Ir al Radar de Redes</span>
+                <span>Ir al radar de redes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
@@ -352,7 +352,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               onClick={onClose}
               className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer"
             >
-              Cerrar & Empezar
+              Cerrar y empezar
             </button>
           </div>
         </div>

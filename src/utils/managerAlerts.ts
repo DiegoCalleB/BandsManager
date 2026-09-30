@@ -80,7 +80,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'seasonal_festivals_window',
         type: 'seasonal_festival',
-        title: 'Ventana Abierta: Booking de Festivales de Verano',
+        title: 'Ventana abierta: Booking de festivales de verano',
         description:
           'Estamos en el periodo clave (octubre - febrero) donde los directores artísticos cierran el 80% de los carteles de festivales de verano. Es el momento de enviar la propuesta de festival.',
         severity: 'urgent',
@@ -89,12 +89,12 @@ export function generateManagerAlerts(
         actionType: 'open_campaign',
         actions: [
           {
-            label: 'Contactar Festivales de Verano',
+            label: 'Contactar festivales de verano',
             actionType: 'open_campaign',
             variant: 'primary',
           },
           {
-            label: 'Buscar y Añadir Festivales a Mis Contactos',
+            label: 'Buscar y añadir festivales a mis contactos',
             actionType: 'scout_festivals',
             variant: 'secondary',
           },
@@ -109,7 +109,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'seasonal_tour_window',
         type: 'seasonal_tour',
-        title: 'Cierre de Agenda de Salas & Clubes',
+        title: 'Cierre de agenda de salas y clubes',
         description:
           'Las salas de conciertos están cuadrando sus programaciones del próximo trimestre. Lanza las propuestas con la lista de retén de fechas resguardo.',
         severity: 'info',
@@ -118,12 +118,12 @@ export function generateManagerAlerts(
         actionType: 'open_campaign',
         actions: [
           {
-            label: 'Contactar Salas de Gira',
+            label: 'Contactar salas de gira',
             actionType: 'open_campaign',
             variant: 'primary',
           },
           {
-            label: 'Explorar Salas por Ciudad',
+            label: 'Explorar salas por ciudad',
             actionType: 'scout_festivals',
             variant: 'secondary',
           },
@@ -139,7 +139,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'seasonal_towns_window',
         type: 'seasonal_towns',
-        title: 'Cierre de Presupuestos de Fiestas Mayores & Ayuntamientos',
+        title: 'Cierre de presupuestos de fiestas mayores y ayuntamientos',
         description:
           'Las concejalías de cultura y comisiones de fiestas rematan la contratación estival. Asegúrate de presentar la garantía de gestión legal y facturación.',
         severity: 'warning',
@@ -148,12 +148,12 @@ export function generateManagerAlerts(
         actionType: 'open_campaign',
         actions: [
           {
-            label: 'Contactar Programadores de Fiestas',
+            label: 'Contactar programadores de fiestas',
             actionType: 'open_campaign',
             variant: 'primary',
           },
           {
-            label: 'Añadir Contactos de Ayuntamientos',
+            label: 'Añadir contactos de ayuntamientos',
             actionType: 'scout_festivals',
             variant: 'secondary',
           },
@@ -191,13 +191,13 @@ export function generateManagerAlerts(
         actionType: 'view_leads_stale',
         actions: [
           {
-            label: 'Redactar Email de Seguimiento',
+            label: 'Redactar email de seguimiento',
             actionType: 'view_leads_stale',
             targetStatusFilter: 'esperando_respuesta',
             variant: 'primary',
           },
           {
-            label: 'Ver Todos los Leads Estancados',
+            label: 'Ver todos los leads estancados',
             actionType: 'open_campaign',
             variant: 'secondary',
           },
@@ -226,12 +226,12 @@ export function generateManagerAlerts(
         actionType: 'view_drafts',
         actions: [
           {
-            label: 'Revisar y Aprobar Borradores',
+            label: 'Revisar y aprobar borradores',
             actionType: 'view_drafts',
             variant: 'primary',
           },
           {
-            label: 'Ajustar Autonomía de Agentes',
+            label: 'Ajustar autonomía de agentes',
             actionType: 'open_autonomy',
             variant: 'secondary',
           },
@@ -255,12 +255,12 @@ export function generateManagerAlerts(
         actionType: 'open_campaign',
         actions: [
           {
-            label: 'Contactar Salas Cercanas',
+            label: 'Contactar salas cercanas',
             actionType: 'open_campaign',
             variant: 'primary',
           },
           {
-            label: 'Ver Calendario de Gira',
+            label: 'Ver calendario de gira',
             actionType: 'view_concerts',
             variant: 'secondary',
           },
@@ -293,13 +293,13 @@ export function generateManagerAlerts(
         targetStatusFilter: 'negociando',
         actions: [
           {
-            label: 'Ver Negociaciones Enfriadas',
+            label: 'Ver negociaciones enfriadas',
             actionType: 'view_leads_stale',
             targetStatusFilter: 'negociando',
             variant: 'primary',
           },
           {
-            label: 'Ver Pipeline Completo',
+            label: 'Ver pipeline completo',
             actionType: 'open_campaign',
             variant: 'secondary',
           },
@@ -334,12 +334,12 @@ export function generateManagerAlerts(
         actionType: 'view_concerts',
         actions: [
           {
-            label: 'Gestionar Promoción de Concierto',
+            label: 'Gestionar promoción de concierto',
             actionType: 'view_concerts',
             variant: 'primary',
           },
           {
-            label: 'Ver Calendario Completo',
+            label: 'Ver calendario completo',
             actionType: 'view_concerts',
             variant: 'secondary',
           },
@@ -370,12 +370,12 @@ export function generateManagerAlerts(
         actionType: 'view_finanzas',
         actions: [
           {
-            label: 'Revisar Cobros Pendientes',
+            label: 'Revisar cobros pendientes',
             actionType: 'view_finanzas',
             variant: 'primary',
           },
           {
-            label: 'Ver Histórico de Facturas',
+            label: 'Ver histórico de facturas',
             actionType: 'view_finanzas',
             variant: 'secondary',
           },
@@ -410,12 +410,12 @@ export function generateManagerAlerts(
         actionType: 'view_concerts',
         actions: [
           {
-            label: 'Revisar Bolo y Contrato',
+            label: 'Revisar bolo y contrato',
             actionType: 'view_concerts',
             variant: 'primary',
           },
           {
-            label: 'Ir a Finanzas',
+            label: 'Ir a finanzas',
             actionType: 'view_finanzas',
             variant: 'secondary',
           },
@@ -447,7 +447,7 @@ export function generateManagerAlerts(
         alerts.push({
           id: 'ensayos_missing_before_show',
           type: 'rehearsal_missing',
-          title: 'Próximo Bolo en <14 Días sin Ensayos Agendados',
+          title: 'Próximo bolo en <14 días sin ensayos agendados',
           description: `Tenéis concierto en ${showsSoon[0].ciudad || 'breve'} y no consta ningún ensayo programado en la agenda esta semana.`,
           severity: 'warning',
           category: 'Ensayos & Shows',
@@ -455,12 +455,12 @@ export function generateManagerAlerts(
           actionType: 'view_ensayos',
           actions: [
             {
-              label: 'Programar Ensayo de Rodaje',
+              label: 'Programar ensayo de rodaje',
               actionType: 'view_ensayos',
               variant: 'primary',
             },
             {
-              label: 'Ver Calendario de Directos',
+              label: 'Ver calendario de directos',
               actionType: 'view_concerts',
               variant: 'secondary',
             },
@@ -482,7 +482,7 @@ export function generateManagerAlerts(
       alerts.push({
         id: 'epk_incomplete_alert',
         type: 'epk_incomplete',
-        title: 'Dossier Oficial (EPK) Incompleto',
+        title: 'Dossier oficial (EPK) incompleto',
         description: `Para maximizar la conversión en salas y medios, completa: ${missing.join(', ')}.`,
         severity: 'info',
         category: 'Prensa & EPK',
@@ -490,7 +490,7 @@ export function generateManagerAlerts(
         actionType: 'open_epk',
         actions: [
           {
-            label: 'Completar Dossier EPK',
+            label: 'Completar dossier EPK',
             actionType: 'open_epk',
             variant: 'primary',
           },

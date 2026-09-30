@@ -457,7 +457,7 @@ export function SongChordsViewerModal({
                 type="button"
                 onClick={() => window.print()}
                 className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
-                title="Imprimir Cifrado"
+                title="Imprimir cifrado"
               >
                 <Printer className="w-4 h-4" />
               </button>
@@ -478,7 +478,7 @@ export function SongChordsViewerModal({
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Letra y Acordes</span>
+                <span>Letra y acordes</span>
               </button>
 
               <button
@@ -604,7 +604,7 @@ export function SongChordsViewerModal({
                       type="button"
                       onClick={() => setTranspose(0)}
                       className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--acc)] transition cursor-pointer ml-1"
-                      title="Restablecer Tono Original"
+                      title="Restablecer tono original"
                     >
                       <RotateCcw className="w-3 h-3" />
                     </button>
@@ -749,7 +749,7 @@ export function SongChordsViewerModal({
                           onClick={() => setActiveTab("substitute")}
                           className="text-micro underline text-[var(--acc)] hover:text-[var(--ink)]"
                         >
-                          Ver Ficha Completa →
+                          Ver ficha completa →
                         </button>
                       </div>
                       <p className="text-[var(--ink-2)] text-sm font-semibold bg-[var(--sunken)] p-2 rounded-[var(--r-s)]5">
@@ -818,7 +818,7 @@ export function SongChordsViewerModal({
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
                         <span className="text-[var(--tentative)]/80 font-bold block text-xs">
-                          4. Capo / Afinación
+                          4. Capo / afinación
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
                           {guiaSustituto.capoTraste || "Standard / Sin Capo"}
@@ -827,7 +827,7 @@ export function SongChordsViewerModal({
 
                       <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
                         <span className="text-[var(--acc)] font-bold block text-xs">
-                          5. Protagonismo de Instrumentos / Arreglos
+                          5. Protagonismo de instrumentos / arreglos
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
                           {guiaSustituto.instrumentosClave ||
@@ -857,7 +857,7 @@ export function SongChordsViewerModal({
                     <div className="flex items-center justify-between pb-3">
                       <h3 className="font-bold text-[var(--ink)] flex items-center gap-2 text-sm font-sans">
                         <Edit3 className="w-4 h-4 text-[var(--acc)]" />
-                        Editor de Cifrado y Ficha
+                        Editor de cifrado y ficha
                       </h3>
                       <button
                         type="button"
@@ -865,7 +865,7 @@ export function SongChordsViewerModal({
                         className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <Save className="w-4 h-4" />
-                        <span>Guardar Cambios</span>
+                        <span>Guardar cambios</span>
                       </button>
                     </div>
 
@@ -1183,7 +1183,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
         </div>
       ) : (
         <p className="text-micro text-[var(--ink-2)] font-sans">
-          [Acorde Estándar]
+          [Acorde estándar]
         </p>
       )}
     </div>

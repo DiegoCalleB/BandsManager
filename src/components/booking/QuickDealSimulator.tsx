@@ -70,7 +70,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[var(--ink-2)] font-sans">Condiciones del Bolo & Rentabilidad</span>
+              <span className="text-xs font-bold text-[var(--ink-2)] font-sans">Condiciones del bolo y rentabilidad</span>
               <span
                 className={`text-micro font-sans font-bold px-1.5 py-0.2 rounded ${
                   isViable
@@ -125,8 +125,8 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-              <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🏢" />Alquiler Sala (€)</label>
-              <input aria-label="Alquiler Sala (€)"
+              <label className="text-micro text-[var(--ink-2)] block font-medium"><ShowIcon inline emoji="🏢" />Alquiler sala (€)</label>
+              <input aria-label="Alquiler sala (€)"
                 type="number"
                 value={alquiler}
                 onChange={(e) => setAlquiler(Number(e.target.value))}
@@ -135,8 +135,8 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
             </div>
 
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-              <label className="text-micro text-[var(--ink-2)] block font-medium">% Comisión Sala</label>
-              <input aria-label="% Comisión Sala"
+              <label className="text-micro text-[var(--ink-2)] block font-medium">% Comisión sala</label>
+              <input aria-label="% Comisión sala"
                 type="number"
                 value={pctSala}
                 onChange={(e) => setPctSala(Number(e.target.value))}
@@ -174,7 +174,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
             </div>
 
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/60 text-center">
-              <span className="text-micro text-[var(--ink-2)] font-bold block">% Aforo Sala</span>
+              <span className="text-micro text-[var(--ink-2)] font-bold block">% Aforo sala</span>
               <span className="text-lg font-bold text-[var(--ink-2)] font-mono block">{liveBreakEvenPct}%</span>
               <span className="text-micro text-[var(--ink-2)] block">de {aforo} personas</span>
             </div>

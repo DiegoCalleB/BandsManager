@@ -107,6 +107,16 @@ const CHECKS = {
     pattern: /className=\{?[`"'][^`"']*(?:text-\[var\(--on-(?:acc|ok|alert)\)\][^`"']*hover:bg-\[var\(--(?:acc|ok)-soft\)\]|hover:bg-\[var\(--(?:acc|ok)-soft\)\][^`"']*text-\[var\(--on-(?:acc|ok|alert)\)\])/g,
     severity: 'error',
   },
+  ampersandEnTexto: {
+    description: 'signo & (o &amp;) en texto visible — en español se escribe "y"; el ampersand es un calco del inglés y delata copy traducido o generado (marcas como "Rock & Roll" o "R&B" van fuera de esta regla)',
+    pattern: />(?![^<>{}\n]*(?:Rock|Roll|R&B|KoЯn))[^<>{}\n]*[A-Za-zÁ-úñÑ] (?:&|&amp;) [A-Za-zÁ-úñÑ][^<>{}\n]*</g,
+    severity: 'error',
+  },
+  titleCaseEnTexto: {
+    description: 'rótulo en Title Case (3+ palabras con inicial mayúscula) — el español usa caja de frase; el Title Case es un calco del inglés. Los nombres propios y marcas son legítimos: revisa a mano',
+    pattern: />\s*[A-ZÁÉÍÓÚ][a-záéíóúñ]{2,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}[^<>{}\n]*</g,
+    severity: 'warning',
+  },
   mayusculasDecorativas: {
     description: 'uppercase de Tailwind — visual-identity §1/§6: caja de frase siempre; las versalitas eliminan la silueta de la palabra y cansan en sesiones largas (un literal ya escrito en mayúsculas en el JSX no lo detecta esta regla)',
     pattern: /(?<![\w-])uppercase(?![\w-])/g,

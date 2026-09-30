@@ -222,7 +222,7 @@ export function AddLeadModal({
                     }`}
                   >
                     <option value="Radio">Radio / Programa</option>
-                    <option value="Televisión">Televisión / Vídeo</option>
+                    <option value="Televisión">Televisión / vídeo</option>
                     <option value="Prensa">Prensa / Revista</option>
                     <option value="Redes Sociales">Redes / Creadores</option>
                     <option value="Podcasts">Podcasts / Entrevistas</option>
@@ -235,15 +235,15 @@ export function AddLeadModal({
                       'bg-[var(--sunken)] text-[var(--ink)] '
                     }`}
                   >
-                    <option value="sala">Sala de Conciertos</option>
+                    <option value="sala">Sala de conciertos</option>
                     <option value="festival">Festival</option>
-                    <option value="ayuntamiento">Ayuntamiento / Fiestas</option>
+                    <option value="ayuntamiento">Ayuntamiento / fiestas</option>
                     <option value="agencia">Agencia de Booking</option>
                     <option value="manager">Mánager / Representante</option>
                     <option value="productora">Productora / Promotora</option>
-                    <option value="productor">Productor / Estudio</option>
+                    <option value="productor">Productor / estudio</option>
                     <option value="patrocinador">Marca / Patrocinador</option>
-                    <option value="supervisor_sync">Supervisor Musical (Sync)</option>
+                    <option value="supervisor_sync">Supervisor musical (Sync)</option>
                     <option value="sello">Sello Discográfico</option>
                     <option value="grupo">Banda Amiga</option>
                   </select>
@@ -254,7 +254,7 @@ export function AddLeadModal({
             {/* Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Email Principal</label>
+                <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Email principal</label>
                 <input
                   type="email"
                   placeholder="info@sala.com"
@@ -316,7 +316,7 @@ export function AddLeadModal({
                   {/* Logo block */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <label className="text-xs font-semibold text-[var(--ink-2)]">Logo o Icono</label>
+                      <label className="text-xs font-semibold text-[var(--ink-2)]">Logo o icono</label>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -330,7 +330,7 @@ export function AddLeadModal({
                         <label className="cursor-pointer px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-micro rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-ui ">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
-                          <input aria-label="Logo o Icono"
+                          <input aria-label="Logo o icono"
                             type="file"
                             accept="image/*"
                             className="hidden"
@@ -405,7 +405,7 @@ export function AddLeadModal({
                       <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Región / Alcance</label>
                       <input
                         type="text"
-                        placeholder="Comunidad / Provincia"
+                        placeholder="Comunidad / provincia"
                         value={newLeadData.region}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, region: e.target.value }))}
                         className={`w-full rounded-[var(--r-m)] px-2.5 py-1.5 text-xs focus:outline-none ${
@@ -430,7 +430,7 @@ export function AddLeadModal({
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Teléfono Fijo</label>
+                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Teléfono fijo</label>
                       <input
                         type="tel"
                         placeholder="+34 912 345 678"
@@ -452,7 +452,7 @@ export function AddLeadModal({
 
                   {/* Pitch / Proposal */}
                   <div>
-                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Propuesta de Concierto</label>
+                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Propuesta de concierto</label>
                     <textarea
                       rows={2}
                       placeholder="Propuesta de fecha, caché o taquilla..."

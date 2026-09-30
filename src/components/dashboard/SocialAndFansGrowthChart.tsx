@@ -537,7 +537,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <h3
               className={`text-sm font-bold font-display flex items-center gap-2 ${"text-[var(--ink)]"}`}
             >
-              Evolución de Redes Sociales & Base de Fans en BBDD
+              Evolución de redes sociales y base de fans en BBDD
               <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
                 <CheckCircle2 className="w-2.5 h-2.5" /> Supabase Conectada
               </span>
@@ -788,7 +788,7 @@ export const SocialAndFansGrowthChart: React.FC<
           title="Restaurar y mostrar todos los canales disponibles"
         >
           <RefreshCw className="w-2.5 h-2.5" />
-          <span>Mostrar Todos</span>
+          <span>Mostrar todos</span>
         </button>
       </div>
 

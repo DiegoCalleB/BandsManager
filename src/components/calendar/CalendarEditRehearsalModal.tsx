@@ -72,7 +72,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
             {isReunion ? (
               <span className="text-[var(--acc)]"><ShowIcon inline emoji="💬" />Editar Reunión</span>
             ) : (
-              <span className="text-[var(--ok)]"><ShowIcon inline emoji="🎙️" />Editar Ensayo</span>
+              <span className="text-[var(--ok)]"><ShowIcon inline emoji="🎙️" />Editar ensayo</span>
             )}
           </h3>
           <p className="text-xs font-mono text-[var(--ink-2)] mb-4">
@@ -234,7 +234,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   type="submit"
                   className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-ui cursor-pointer font-bold"
                 >
-                  Guardar Cambios
+                  Guardar cambios
                 </button>
               </div>
             </div>

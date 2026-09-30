@@ -8,7 +8,7 @@ import { Concert, Rehearsal, KeyContactItem, MerchBoloItem, MerchControlBolo } f
 import { RoadbookInfo } from './calendarTypes';
 import { WeatherAlert } from '../../services/weatherService';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
+import { Sparkles,
   AlertCircle,
   AlertTriangle,
   Banknote,
@@ -36,7 +36,6 @@ import {
   Shirt,
   ShoppingBag,
   Smartphone,
-  Sparkles,
   Tag,
   Ticket,
   Trash2,
@@ -295,7 +294,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
             </button>
 
             <div className="flex flex-col items-center min-w-0">
-              <span className="text-micro font-mono text-[var(--acc)]/80 font-bold">Ficha de Evento</span>
+              <span className="text-micro font-mono text-[var(--acc)]/80 font-bold">Ficha de evento</span>
               {modalPosLabel && (
                 <span className={`text-micro font-mono font-bold ${'text-[var(--ink-2)]'}`}>
                   {modalPosLabel}
@@ -456,7 +455,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
                     className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] transition-colors cursor-pointer"
                   >
-                    Sí, Eliminar Definitivamente
+                    Sí, eliminar definitivamente
                   </button>
                 </div>
               </div>
@@ -486,7 +485,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                 }`}
               >
-                <span><ShowIcon inline emoji="📋" />Resumen & Info</span>
+                <span><ShowIcon inline emoji="📋" />Resumen y info</span>
               </button>
               <button
                 type="button"
@@ -498,7 +497,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 }`}
               >
                 <Wrench className="w-3.5 h-3.5" />
-                <span>1. Logística Técnica</span>
+                <span>1. Logística técnica</span>
               </button>
               <button
                 type="button"
@@ -510,7 +509,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 }`}
               >
                 <Phone className="w-3.5 h-3.5" />
-                <span>2. Contactos Clave</span>
+                <span>2. Contactos clave</span>
                 {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
                   <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro bg-[var(--surface)] font-mono">
                     {modalRoadbook.contactosClave.length}
@@ -544,7 +543,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
-                <span>4. Público & Post-Show</span>
+                <span>4. Público y Post-Show</span>
                 {selectedConcert?.es_hito_destacado && (
                   <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro bg-[var(--acc)] text-[var(--on-acc)] font-bold"><ShowIcon inline emoji="⭐" />Hito</span>
                 )}
@@ -559,7 +558,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 }`}
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>5. Cierre Material</span>
+                <span>5. Cierre material</span>
                 {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
                   <span
                     className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-mono ${
@@ -609,7 +608,6 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   )}
                   {!isPromoPlan && selectedEventDetails.type === 'concert' && (
                     <div className="flex items-center gap-2 text-xs pt-2">
-                      <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
                       <span className={`font-mono ${textSub}`}>Compensación:</span>
                       <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
                     </div>
@@ -624,7 +622,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             rel="noopener noreferrer"
                             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)] transition-colors w-fit"
                           >
-                            <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
+                            <Ticket className="w-3.5 h-3.5" /> Comprar entradas
                           </a>
                         )}
                         {selectedEventDetails.entradasLugarFisico && (
@@ -678,7 +676,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   >
                     <div className="flex items-center gap-1.5 text-[var(--acc)] font-mono font-bold text-xs mb-1">
                       <Wrench className="w-3.5 h-3.5" />
-                      <span>1. Logística Técnica</span>
+                      <span>1. Logística técnica</span>
                     </div>
                     <p className={`text-xs font-mono ${textSub}`}>
                       {modalRoadbook.horaPruebaSonido ? `Prueba: ${modalRoadbook.horaPruebaSonido}` : 'Configurar rider, P.A. y horarios'}
@@ -696,7 +694,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   >
                     <div className="flex items-center gap-1.5 text-[var(--ok)] font-mono font-bold text-xs mb-1">
                       <Phone className="w-3.5 h-3.5" />
-                      <span>2. Contactos Clave</span>
+                      <span>2. Contactos clave</span>
                     </div>
                     <p className={`text-xs font-mono ${textSub}`}>
                       {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0
@@ -736,7 +734,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   >
                     <div className="flex items-center gap-1.5 text-[var(--acc)] font-mono font-bold text-xs mb-1">
                       <ShieldCheck className="w-3.5 h-3.5" />
-                      <span>5. Cierre Material</span>
+                      <span>5. Cierre material</span>
                     </div>
                     <p className={`text-xs font-mono ${textSub}`}>
                       {modalRoadbook.cierreMaterial
@@ -759,7 +757,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)]">
                       Sección 1
                     </span>
-                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Logística Técnica, Horarios & Rider</h3>
+                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Logística técnica, horarios y rider</h3>
                   </div>
                   <span className="text-micro font-mono text-[var(--ink-2)]">Guardado automático local</span>
                 </div>
@@ -770,11 +768,11 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5" />
-                    <span>Cronograma de Producción del Día</span>
+                    <span>Cronograma de producción del día</span>
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
                     <div>
-                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Llegada / descarga</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaLlegada || '17:00'}
@@ -786,7 +784,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Prueba sonido</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaPruebaSonido || '18:00 - 19:30'}
@@ -810,7 +808,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-micro font-mono font-bold mb-1 text-[var(--acc)]`}>Show / Directo</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 text-[var(--acc)]`}>Show / directo</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaShow || '21:30'}
@@ -847,7 +845,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
                       <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
-                        Especificaciones P.A. de Sala
+                        Especificaciones P.A. de sala
                       </label>
                       <textarea
                         rows={2}
@@ -876,7 +874,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </div>
                   <div>
                     <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
-                      Canales de Envíos Auxiliares
+                      Canales de envíos auxiliares
                     </label>
                     <input
                       type="text"
@@ -896,11 +894,11 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Truck className="w-3.5 h-3.5" />
-                    <span>Backline Aportado vs Traído & Toma Eléctrica</span>
+                    <span>Backline Aportado vs Traído y Toma Eléctrica</span>
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Backline (Sala vs Banda)</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Backline (Sala vs banda)</label>
                       <textarea
                         rows={3}
                         value={modalRoadbook.backlineInfo || ''}
@@ -980,14 +978,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--ok)] text-[var(--on-ok)]">
                       Sección 2
                     </span>
-                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Directorio de Contactos Clave de Producción</h3>
+                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Directorio de contactos clave de producción</h3>
                   </div>
                   <button
                     type="button"
                     onClick={() => setShowAddContactForm(!showAddContactForm)}
                     className="px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
                   >
-                    <span>+</span> Añadir Contacto
+                    <span>+</span> Añadir contacto
                   </button>
                 </div>
 
@@ -999,7 +997,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       'bg-[var(--ok-soft)]'
                     }`}
                   >
-                    <h4 className="text-xs font-mono font-bold text-[var(--ok)]">Nuevo Contacto Clave</h4>
+                    <h4 className="text-xs font-mono font-bold text-[var(--ok)]">Nuevo contacto clave</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                       <div>
                         <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">
@@ -1025,13 +1023,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             'bg-[var(--sunken)] text-[var(--ink)]'
                           }`}
                         >
-                          <option value="Promotor / Sala">Promotor / Sala</option>
-                          <option value="Técnico de Sonido (P.A.)">Técnico de Sonido (P.A.)</option>
-                          <option value="Técnico de Monitores">Técnico de Monitores</option>
+                          <option value="Promotor / Sala">Promotor / sala</option>
+                          <option value="Técnico de Sonido (P.A.)">Técnico de sonido (P.A.)</option>
+                          <option value="Técnico de Monitores">Técnico de monitores</option>
                           <option value="Técnico de Iluminación">Técnico de Iluminación</option>
                           <option value="Producción / Camerinos">Producción / Camerinos</option>
                           <option value="Hotel / Alojamiento">Hotel / Alojamiento</option>
-                          <option value="Seguridad / Acceso">Seguridad / Acceso</option>
+                          <option value="Seguridad / Acceso">Seguridad / acceso</option>
                           <option value="Road Manager">Road Manager</option>
                         </select>
                       </div>
@@ -1087,7 +1085,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         type="submit"
                         className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] transition-colors"
                       >
-                        Guardar Contacto
+                        Guardar contacto
                       </button>
                     </div>
                   </form>
@@ -1272,7 +1270,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                       >
                         <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
-                          <ShoppingBag className="w-3 h-3 text-[var(--acc)]" /> Stock Final
+                          <ShoppingBag className="w-3 h-3 text-[var(--acc)]" /> Stock final
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className={`text-lg font-bold font-mono ${textTitle}`}>{totalFinal}</span>
@@ -1311,7 +1309,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                       >
                         <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
-                          <Coins className="w-3 h-3 text-[var(--ok)]" /> Cobrado Real
+                          <Coins className="w-3 h-3 text-[var(--ok)]" /> Cobrado real
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className="text-lg font-bold font-mono text-[var(--ok)]">{totalCobradoReal.toFixed(2)}</span>
@@ -1414,7 +1412,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             </div>
 
                             <div>
-                              <label className={`block text-micro mb-1 ${textSub}`}>Talla / Versión</label>
+                              <label className={`block text-micro mb-1 ${textSub}`}>Talla / versión</label>
                               <input
                                 type="text"
                                 placeholder="Ej: M, L, XL, 12'', Pack..."
@@ -1585,7 +1583,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   >
                                     <div className="flex items-center justify-between mb-1">
                                       <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
-                                        <DoorClosed className="w-2.5 h-2.5 text-[var(--acc)]" /> Stock Final
+                                        <DoorClosed className="w-2.5 h-2.5 text-[var(--acc)]" /> Stock final
                                       </span>
                                       <button
                                         type="button"
@@ -1883,7 +1881,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--acc-soft)]/60'}`}
                   >
                     <div className="text-micro font-mono text-[var(--acc)] font-bold mb-1">
-                      <ShowIcon inline emoji="👥" />Asistencia Propia Estimada
+                      <ShowIcon inline emoji="👥" />Asistencia propia estimada
                     </div>
                     <div className="text-2xl font-black font-mono text-[var(--acc)]">
                       {selectedConcert?.asistencia_propia ?? selectedConcert?.aforo_vendido ?? 0}{' '}
@@ -1896,7 +1894,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                   >
                     <div className="text-micro font-mono text-[var(--ink-2)] font-bold mb-1">
-                      <ShowIcon inline emoji="🎸" />Público de Otros Grupos
+                      <ShowIcon inline emoji="🎸" />Público de otros grupos
                     </div>
                     <div className="text-2xl font-black font-mono text-[var(--ink)]">
                       {selectedConcert?.asistencia_otras_bandas ?? 0}{' '}
@@ -1926,7 +1924,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Music className="w-3.5 h-3.5" />
-                    <span>Bandas & Cartel Compartido</span>
+                    <span>Bandas y Cartel Compartido</span>
                   </h4>
                   <p className={`text-xs font-mono ${textTitle}`}>
                     {Array.isArray(selectedConcert?.bandas_compartidas) && selectedConcert.bandas_compartidas.length > 0
@@ -1939,7 +1937,6 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--acc-soft)]/40'}`}
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
                     <span>Resumen / Sensaciones Post-Show (Usado por la IA)</span>
                   </h4>
                   {selectedConcert?.post_show_review ? (
@@ -1964,7 +1961,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)]">
                       Sección 5
                     </span>
-                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Checklist de Cierre de Material & Carga de Furgoneta</h3>
+                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Checklist de Cierre de Material y Carga de Furgoneta</h3>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
@@ -1972,7 +1969,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
                       className="px-2 py-1 rounded text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
                     >
-                      ✓ Marcar Todo
+                      ✓ Marcar todo
                     </button>
                     <button
                       type="button"
@@ -2121,7 +2118,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     disabled={!newCierreItemText.trim()}
                     className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                   >
-                    + Añadir Ítem
+                    + Añadir ítem
                   </button>
                 </form>
               </div>

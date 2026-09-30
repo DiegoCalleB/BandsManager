@@ -96,7 +96,7 @@ export function GenerateAllTemplatesModal({
                       : 'bg-[var(--acc)]/20 text-[var(--acc)] '
                   }`}
                 >
-                  7 Categorías en 1 Clic
+                  7 Categorías en 1 clic
                 </span>
               </h3>
               <p className={`text-xs ${'text-[var(--ink-2)]'}`}>
@@ -133,7 +133,6 @@ export function GenerateAllTemplatesModal({
           {isCampaign && campaignContext && (
             <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)] text-xs space-y-1.5">
               <div className="flex items-center gap-2 font-bold text-[var(--acc)]">
-                <Sparkles className="w-4 h-4 shrink-0" />
                 <span>Contexto de Campaña detectado:</span>
               </div>
               <div className="flex flex-wrap gap-2 text-xs pt-1">
@@ -165,7 +164,6 @@ export function GenerateAllTemplatesModal({
             }`}
           >
             <div className={`flex items-center gap-2 font-bold ${isCampaign ? 'text-[var(--acc)]' : 'text-[var(--acc)]'}`}>
-              <Sparkles className="w-4 h-4 shrink-0" />
               <span>Reglas Maestras de Oro aplicadas automáticamente:</span>
             </div>
             <p className="text-xs opacity-90">

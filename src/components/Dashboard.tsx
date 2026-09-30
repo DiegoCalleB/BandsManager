@@ -844,7 +844,7 @@ export default function Dashboard({
                 >
                   <div className="flex items-center gap-2">
                     <Eye className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                    <span>Modo Vista</span>
+                    <span>Modo vista</span>
                   </div>
                   <span className="text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                     {viewDensityMode === "clean" ? "Esencial" : "Completa"}
@@ -862,7 +862,7 @@ export default function Dashboard({
                 >
                   <div className="flex items-center gap-2">
                     <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                    <span>Personalizar / Reordenar</span>
+                    <span>Personalizar / reordenar</span>
                   </div>
                   {isEditDashboardMode && (
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
@@ -879,7 +879,7 @@ export default function Dashboard({
                   className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center gap-2 font-medium transition-colors cursor-pointer`}
                 >
                   <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                  <span>Alertas del Mánager</span>
+                  <span>Alertas del mánager</span>
                 </button>
               </div>
             )}

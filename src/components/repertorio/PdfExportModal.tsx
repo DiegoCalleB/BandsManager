@@ -1613,7 +1613,7 @@ export function PdfExportModal({
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="font-display font-bold text-sm sm:text-lg text-[var(--ink)] truncate">
-                    Generador de Repertorios
+                    Generador de repertorios
                   </h3>
                   <span className="hidden sm:inline-block px-2 py-0.5 rounded text-micro font-bold font-sans bg-[var(--surface)] text-[var(--ink)] shrink-0">
                     Rock Stage Edition
@@ -1686,8 +1686,8 @@ export function PdfExportModal({
                 <option value="all_members">
                   Todos los Músicos ({resolvedMembers.length} hojas)
                 </option>
-                <option value="single_member">1 Músico Específico</option>
-                <option value="master">Master Escenario / Sonido</option>
+                <option value="single_member">1 Músico específico</option>
+                <option value="master">Master escenario / sonido</option>
               </select>
 
               <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
@@ -1716,7 +1716,7 @@ export function PdfExportModal({
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
-                  <User className="w-3.5 h-3.5" /> 1 Músico Específico
+                  <User className="w-3.5 h-3.5" /> 1 Músico específico
                 </button>
                 <button
                   onClick={() => {
@@ -1729,7 +1729,7 @@ export function PdfExportModal({
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
-                  <FileText className="w-3.5 h-3.5" /> Master Escenario / Sonido
+                  <FileText className="w-3.5 h-3.5" /> Master escenario / sonido
                 </button>
               </div>
 
@@ -1837,12 +1837,12 @@ export function PdfExportModal({
                   onChange={(e) => setHandwritingFont(e.target.value as any)}
                   className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
                 >
-                  <option value="caveat">Rotulador Fino (Caveat)</option>
+                  <option value="caveat">Rotulador fino (Caveat)</option>
                   <option value="permanent_marker">
                     Sharpie Grueso (Permanent Marker)
                   </option>
                   <option value="courier">Máquina (Courier)</option>
-                  <option value="sans">Imprenta Limpia (Sans)</option>
+                  <option value="sans">Imprenta limpia (Sans)</option>
                 </select>
 
                 {/* Ink color selector */}
@@ -1895,7 +1895,7 @@ export function PdfExportModal({
                     onChange={(e) => setShowBandLogo(e.target.checked)}
                     className="rounded accent-[var(--ok)] cursor-pointer"
                   />
-                  <span>Logo Grupo</span>
+                  <span>Logo grupo</span>
                 </label>
 
                 <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
@@ -2332,7 +2332,7 @@ export function PdfExportModal({
                                   className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-2)] rounded font-sans text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
                                 >
                                   <Edit3 className="w-3 h-3 text-[var(--ok)]" />
-                                  <span>Editar Nota</span>
+                                  <span>Editar nota</span>
                                 </button>
                               )}
                             </div>

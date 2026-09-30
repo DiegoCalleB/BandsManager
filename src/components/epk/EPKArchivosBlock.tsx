@@ -69,7 +69,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
+              <ImageIcon className="w-5 h-5" /> Logo oficial de la banda
             </h3>
             <button
               type="button"
@@ -91,7 +91,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               ) : isBakandeya ? (
                 <img
                   src="/logo_bakandeya_bueno_sin_fondo.png"
-                  alt="Bakandeya Logo"
+                  alt="Bakandeya logo"
                   className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--sunken)]"
                 />
               ) : (
@@ -168,7 +168,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
         {/* DOSSIER EN PDF O DOCUMENTO OFICIAL */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
           <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
-            <FileDown className="w-5 h-5" /> Dossier en PDF o Documento Oficial
+            <FileDown className="w-5 h-5" /> Dossier en PDF o documento oficial
           </h3>
 
           {config.dossierPdfUrl ? (
@@ -211,7 +211,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   rel="noopener noreferrer"
                   className="flex-1 py-1.5 px-3 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                 >
-                  <Download className="w-3.5 h-3.5" /> Descargar / Abrir Dossier
+                  <Download className="w-3.5 h-3.5" /> Descargar / abrir dossier
                 </a>
 
                 <label className="cursor-pointer py-1.5 px-3 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-semibold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition">
@@ -233,7 +233,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
               <div className="space-y-1">
                 <p className="text-xs font-bold text-[var(--ink)]">
-                  Sube aquí el Dossier Oficial (PDF o Word)
+                  Sube aquí el dossier oficial (PDF o Word)
                 </p>
                 <p className="text-xs text-[var(--ink-2)]">
                   PDF, Word o TXT. Estará listo para el envío automático en
@@ -289,8 +289,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca
-              Interna)
+              <FileDown className="w-5 h-5" /> Rider técnico (Biblioteca
+              interna)
             </h3>
             <span className="text-micro font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Solo visible aquí
@@ -304,7 +304,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
           <div className="space-y-3">
             <label className="text-xs font-bold text-[var(--ink)] block">
-              Archivo de Rider Técnico (PDF)
+              Archivo de rider técnico (PDF)
             </label>
             {config.riderPdfUrl ? (
               <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3">
@@ -344,7 +344,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     rel="noopener noreferrer"
                     className="flex-1 py-1.5 px-3 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                   >
-                    <Download className="w-3.5 h-3.5" /> Descargar / Abrir Rider
+                    <Download className="w-3.5 h-3.5" /> Descargar / abrir rider
                   </a>
 
                   <label className="cursor-pointer py-1.5 px-3 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-semibold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition">
@@ -366,7 +366,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-bold text-[var(--ink)]">
-                    Sube aquí el Rider Técnico (PDF)
+                    Sube aquí el rider técnico (PDF)
                   </p>
                 </div>
 
@@ -394,7 +394,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
             <div className="pt-2 space-y-1">
               <label className="text-xs font-semibold text-[var(--ink-2)]">
-                Rider Técnico (Texto)
+                Rider técnico (Texto)
               </label>
               <textarea
                 value={config.riderTecnico || ""}
@@ -448,9 +448,9 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 {/* Backline */}
                 <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
                   <label className="text-xs font-semibold text-[var(--ink-2)] block">
-                    Backline (Amplis / Batería)
+                    Backline (Amplis / batería)
                   </label>
-                  <select aria-label="Backline (Amplis / Batería)"
+                  <select aria-label="Backline (Amplis / batería)"
                     value={config.riderConfig?.backlinePropio || "completo"}
                     onChange={(e) =>
                       setConfig({
@@ -569,7 +569,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
         {/* GALERÍA DE IMAGEN & PRENSA */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
-            <ImageIcon className="w-5 h-5" /> Galería de Imagen &amp; Prensa
+            <ImageIcon className="w-5 h-5" /> Galería de imagen y prensa
           </h3>
           <p className="text-xs text-[var(--ink-2)]">
             Fotos reales de directo o sesión de prensa. Es lo primero que ve

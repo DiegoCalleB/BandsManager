@@ -39,7 +39,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
         </div>
         <div>
           <h1 className="text-2xl font-bold tracking-tight" style={{ color: colors.text }}>
-            Repertorio & Setlists
+            Repertorio y setlists
           </h1>
           <p className="text-xs text-[var(--ink-2)]">
             {songCount} canciones en catálogo • {setlistCount} setlists de concierto
@@ -89,7 +89,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
             style={{ backgroundColor: colors.primary }}
           >
             <Plus className="w-4 h-4" />
-            Nueva Canción
+            Nueva canción
           </button>
         ) : (
           <button

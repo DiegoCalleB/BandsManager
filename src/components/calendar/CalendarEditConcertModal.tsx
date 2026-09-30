@@ -89,7 +89,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
           </button>
 
           <h3 className="text-base font-mono font-bold mb-1 flex items-center gap-2">
-            <span className="text-[var(--acc)]"><ShowIcon inline emoji="🎸" />Editar Concierto</span>
+            <span className="text-[var(--acc)]"><ShowIcon inline emoji="🎸" />Editar concierto</span>
           </h3>
           <p className="text-xs font-mono text-[var(--ink-2)] mb-4">
             Modificando fecha: <strong className="text-[var(--ink)]">{editDraft.fecha}</strong>
@@ -110,8 +110,8 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 />
               </div>
               <div>
-                <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Sala / Evento</label>
-                <input aria-label="Sala / Evento"
+                <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Sala / evento</label>
+                <input aria-label="Sala / evento"
                   type="text"
                   value={editDraft.sala}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, sala: e.target.value } : prev))}
@@ -164,8 +164,8 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 />
               </div>
               <div>
-                <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Estado de Pago</label>
-                <select aria-label="Estado de Pago"
+                <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Estado de pago</label>
+                <select aria-label="Estado de pago"
                   value={editDraft.estado_pago}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
                   className={`w-full px-2 py-1 text-micro rounded-[var(--r-m)] outline-none ${
@@ -258,7 +258,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   type="submit"
                   className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer font-bold"
                 >
-                  Guardar Cambios
+                  Guardar cambios
                 </button>
               </div>
             </div>

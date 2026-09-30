@@ -182,7 +182,7 @@ export function ExampleThreadsSection({
       <div className="flex items-center justify-between">
         <label className="block text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
           <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos
-          de Email Reales de Ejemplo
+          de email reales de ejemplo
         </label>
         <button
           type="button"

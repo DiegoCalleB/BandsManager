@@ -548,7 +548,7 @@ export function DashboardWidgetGrid({
               className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4" />
-              <span>Añadir Widget</span>
+              <span>Añadir widget</span>
             </button>
 
             <button
@@ -567,7 +567,7 @@ export function DashboardWidgetGrid({
               className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-semibold transition-[filter] hover:brightness-110 cursor-pointer flex items-center gap-1.5"
             >
               <Check className="w-4 h-4" />
-              <span>Finalizar Edición</span>
+              <span>Finalizar edición</span>
             </button>
           </div>
         </div>
@@ -590,7 +590,7 @@ export function DashboardWidgetGrid({
             <div className="flex items-center gap-1.5">
               <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span>
-                <strong>Ancho & Alto:</strong> Elige tamaño con los iconos de
+                <strong>Ancho y Alto:</strong> Elige tamaño con los iconos de
                 barra.
               </span>
             </div>
@@ -725,7 +725,7 @@ export function DashboardWidgetGrid({
                       type="button"
                       onClick={() => handleRemoveWidget(widget.id)}
                       className="p-1 rounded bg-[var(--alert)]/15 text-[var(--alert)] hover:bg-[var(--alert)]/30 cursor-pointer"
-                      title="Quitar Widget"
+                      title="Quitar widget"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

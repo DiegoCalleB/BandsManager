@@ -273,7 +273,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               </div>
               <div>
                 <h3 className="text-sm font-sans font-bold text-[var(--ink)]">
-                  Grabadora de Audio en Vivo
+                  Grabadora de audio en vivo
                 </h3>
                 <p className="text-xs text-[var(--ink-2)]">
                   Graba tomas completas, riffs o notas de voz directamente desde
@@ -330,7 +330,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 cursor-pointer active:scale-[0.97] transition-ui"
               >
                 <Mic className="w-4 h-4" />
-                <span>Iniciar Grabación con Micrófono</span>
+                <span>Iniciar grabación con micrófono</span>
               </button>
             )}
 
@@ -352,13 +352,13 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     onChange={(e) => setRecordingTag(e.target.value as any)}
                     className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none cursor-pointer"
                   >
-                    <option value="toma_completa">Toma Completa</option>
-                    <option value="riff">Riff / Idea Nueva</option>
+                    <option value="toma_completa">Toma completa</option>
+                    <option value="riff">Riff / idea nueva</option>
                     <option value="seccion">Sección Específica</option>
                     <option value="voz_acta">
                       Nota de Voz / Conclusiones
                     </option>
-                    <option value="debate">Debate / Comentarios</option>
+                    <option value="debate">Debate / comentarios</option>
                   </select>
                 </div>
 
@@ -375,7 +375,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     onClick={handleSaveRecording}
                     className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-xs font-sans font-bold cursor-pointer"
                   >
-                    Guardar Grabación
+                    Guardar grabación
                   </button>
                 </div>
               </div>
@@ -389,7 +389,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             </span>
             <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold cursor-pointer transition-colors">
               <Upload className="w-3.5 h-3.5" />
-              <span>Subir Archivo de Audio</span>
+              <span>Subir archivo de audio</span>
               <input
                 type="file"
                 accept="audio/*"
@@ -468,7 +468,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <Sparkles className="w-4 h-4" />
               </span>
               <h3 className="text-sm font-sans font-bold text-[var(--ink)]">
-                Acta de Ensayo Inteligente (Human-in-the-loop)
+                Acta de ensayo inteligente (Human-in-the-loop)
               </h3>
             </div>
             <p className="text-xs text-[var(--ink-2)]">
@@ -571,7 +571,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {/* Deberes para casa */}
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2.5">
               <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                <ShowIcon inline emoji="🎯" />Deberes para Casa
+                <ShowIcon inline emoji="🎯" />Deberes para casa
               </h4>
               <div className="space-y-2">
                 {(acta.deberesPorMiembro || []).map((d, i) => (

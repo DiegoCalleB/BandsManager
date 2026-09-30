@@ -34,7 +34,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
       <div className="flex items-center gap-2 pb-2">
         <Camera className="w-5 h-5 text-[var(--acc)]" />
         <h3 className="text-base font-semibold text-[var(--ink)]">
-          Galería de Fotos para Prensa & EPK
+          Galería de fotos para prensa y EPK
         </h3>
       </div>
 

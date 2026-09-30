@@ -277,7 +277,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             </div>
             <div>
               <h2 className="text-lg font-bold text-[var(--ink-2)] tracking-tight flex items-center gap-2">
-                Configuración del Radar de Alertas
+                Configuración del radar de alertas
                 <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                   Mánager Pro
                 </span>
@@ -382,7 +382,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                           {rule.targetRoleOnly && (
                             <span className="px-2 py-0.5 rounded text-micro font-mono font-semibold bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1">
                               <ShieldCheck className="w-3 h-3" />
-                              Solo Mánager
+                              Solo mánager
                             </span>
                           )}
                         </div>
@@ -547,7 +547,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                       className="accent-amber-500"
                     />
                     <div>
-                      <div className="text-xs font-bold text-[var(--ink-2)]">Todos los Músicos e Integrantes</div>
+                      <div className="text-xs font-bold text-[var(--ink-2)]">Todos los músicos e integrantes</div>
                       <div className="text-xs text-[var(--ink-2)]">Notifica a todo el grupo cuando surja un hito o aviso de ensayo.</div>
                     </div>
                   </label>
@@ -559,7 +559,6 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
           {activeTab === 'plan' && (
             <div className="space-y-4 p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/90 text-[var(--ink-2)] text-xs leading-relaxed">
               <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-sm mb-2">
-                <Sparkles className="w-4 h-4" />
                 El Plan Perfecto: Notificaciones Útiles sin Spam
               </div>
 
@@ -571,7 +570,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                 </div>
 
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ">
-                  <span className="font-bold text-[var(--ink-2)] block mb-1">2. Acción a 1 Clic Directa</span>
+                  <span className="font-bold text-[var(--ink-2)] block mb-1">2. Acción a 1 clic directa</span>
                   Cada alerta incluye su botón ejecutor (*"Lanzar Campaña"*, *"Revisar Borradores"*, *"Ver Contactos Stale"*).
                 </div>
 
@@ -624,7 +623,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               ) : (
                 <>
                   <Save className="w-4 h-4" />
-                  <span>Guardar Reglas</span>
+                  <span>Guardar reglas</span>
                 </>
               )}
             </button>

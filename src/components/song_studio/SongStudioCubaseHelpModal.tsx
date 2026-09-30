@@ -37,7 +37,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-              <span className="text-[var(--ink-2)]">Play / Pausa</span>
+              <span className="text-[var(--ink-2)]">Play / pausa</span>
               <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">Espacio</kbd>
             </div>
 
@@ -47,12 +47,12 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-              <span className="text-[var(--ink-2)]">Detener e ir a Inicio (Stop)</span>
+              <span className="text-[var(--ink-2)]">Detener e ir a inicio (Stop)</span>
               <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">0 / Stop / Home</kbd>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-              <span className="text-[var(--ink-2)]">Alternar Bucle (Loop ON/OFF)</span>
+              <span className="text-[var(--ink-2)]">Alternar bucle (Loop ON/OFF)</span>
               <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">L / /</kbd>
             </div>
 
@@ -72,7 +72,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-              <span className="text-[var(--ink-2)]">Nueva Idea / Proyecto</span>
+              <span className="text-[var(--ink-2)]">Nueva idea / proyecto</span>
               <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">N</kbd>
             </div>
 
@@ -92,7 +92,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-              <span className="text-[var(--ink-2)]">Alternar Solo</span>
+              <span className="text-[var(--ink-2)]">Alternar solo</span>
               <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">S</kbd>
             </div>
           </div>

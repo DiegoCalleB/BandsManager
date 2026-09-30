@@ -114,7 +114,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                 <Camera className="w-5 h-5 text-[var(--acc)]" />
               </div>
               <div>
-                <h3 className="font-display font-bold text-base text-[var(--ink)]">Cambiar Imagen / Logo</h3>
+                <h3 className="font-display font-bold text-base text-[var(--ink)]">Cambiar imagen / logo</h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans">{band.nombre_banda}</p>
               </div>
             </div>
@@ -175,7 +175,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                   )}
                 </div>
                 <div className="text-left">
-                  <span className="block font-bold text-xs text-[var(--acc)]/70">Buscar Logo con IA</span>
+                  <span className="block font-bold text-xs text-[var(--acc)]/70">Buscar logo con IA</span>
                   <span className="block text-xs text-[var(--acc)]/80 font-sans">Encuentra fotos o favicons oficiales</span>
                 </div>
               </div>

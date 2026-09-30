@@ -336,7 +336,7 @@ export const SpotifyDiscographyModal: React.FC<
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight flex items-center gap-2">
-                  Importar Discografía de Spotify
+                  Importar discografía de Spotify
                 </h2>
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/20 text-[var(--ok)]/30">
                   OFICIAL SPOTIFY API
@@ -790,7 +790,7 @@ export const SpotifyDiscographyModal: React.FC<
               {isImporting ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Importando a la Discografía...</span>
+                  <span>Importando a la discografía...</span>
                 </>
               ) : (
                 <>

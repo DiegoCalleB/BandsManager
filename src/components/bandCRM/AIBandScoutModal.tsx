@@ -146,7 +146,7 @@ export function AIBandScoutModal({
                 <Sparkles className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                 <div>
                   <p className={`text-sm font-medium ${textColor}`}>
-                    Contexto de tu Campaña Activa
+                    Contexto de tu campaña activa
                   </p>
                   <p className={`text-xs ${subtextColor} mt-1`}>
                     Buscando llenar un aforo de {activeCampaign.minCapacity}-
@@ -165,7 +165,7 @@ export function AIBandScoutModal({
                 <label
                   className={`block text-xs font-bold mb-1.5 ${subtextColor}`}
                 >
-                  Ciudad Origen de la Banda
+                  Ciudad origen de la banda
                 </label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
@@ -183,7 +183,7 @@ export function AIBandScoutModal({
                 <label
                   className={`block text-xs font-bold mb-1.5 ${subtextColor}`}
                 >
-                  Estilo / Género Musical
+                  Estilo / género musical
                 </label>
                 <div className="relative">
                   <Music className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
@@ -229,7 +229,7 @@ export function AIBandScoutModal({
                 ) : (
                   <>
                     <Search className="w-5 h-5" />
-                    Scoutear Bandas con IA
+                    Scoutear bandas con IA
                   </>
                 )}
               </button>

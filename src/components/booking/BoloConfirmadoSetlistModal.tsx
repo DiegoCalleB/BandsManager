@@ -11,7 +11,6 @@ import {
   Calendar,
   Clock,
   Music,
-  Sparkles,
   Check,
   Zap,
   CheckCircle2,
@@ -197,7 +196,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-micro font-bold mb-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
-                Concierto Confirmado
+                Concierto confirmado
               </div>
               <h3 className="text-lg sm:text-xl font-bold font-sans text-[var(--ink)]">
                 {lead.nombre_sala}
@@ -221,7 +220,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 <Calendar className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Fecha del Concierto:
               </label>
-              <input aria-label="Fecha del Concierto"
+              <input aria-label="Fecha del concierto"
                 type="date"
                 value={concertDate}
                 onChange={(e) => setConcertDate(e.target.value)}
@@ -275,7 +274,6 @@ export const BoloConfirmadoSetlistModal: React.FC<
           <div className="space-y-2 pt-1">
             <div className="flex items-center justify-between text-xs font-sans">
               <span className="text-[var(--ink-2)] font-bold flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Asignación de Repertorio Óptimo:
               </span>
               <button

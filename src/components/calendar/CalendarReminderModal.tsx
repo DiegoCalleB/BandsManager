@@ -59,7 +59,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
               <Bell className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-sm">Enviar Recordatorio a la Banda</h3>
+              <h3 className="font-bold text-sm">Enviar recordatorio a la banda</h3>
               <p className="text-micro text-[var(--ink-2)] font-mono truncate max-w-[200px]">
                 {selectedConcert ? `Concierto: ${selectedConcert.sala}` : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento'}
               </p>
@@ -86,7 +86,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           <div
             className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)] '}`}
           >
-            <div className="font-mono text-micro text-[var(--acc)] font-bold mb-1">Detalles del Evento</div>
+            <div className="font-mono text-micro text-[var(--acc)] font-bold mb-1">Detalles del evento</div>
             <p className="font-semibold">
               {selectedConcert
                 ? `Concierto en ${selectedConcert.sala} (${selectedConcert.ciudad})`
@@ -180,7 +180,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             ) : (
               <>
                 <Send className="w-3.5 h-3.5" />
-                <span>Enviar Recordatorio</span>
+                <span>Enviar recordatorio</span>
               </>
             )}
           </button>

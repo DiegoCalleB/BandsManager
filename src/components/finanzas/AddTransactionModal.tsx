@@ -108,19 +108,19 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
                 className="w-full p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm focus:outline-none"
               >
-                <option value="concierto">Concierto / Caché</option>
+                <option value="concierto">Concierto / caché</option>
                 <option value="merchandising">Merchandising</option>
-                <option value="subvencion">Subvención / Ayuda</option>
-                <option value="transporte">Transporte / Gasolina</option>
+                <option value="subvencion">Subvención / ayuda</option>
+                <option value="transporte">Transporte / gasolina</option>
                 <option value="alojamiento">Alojamiento</option>
                 <option value="comida">Dietas / Comida</option>
-                <option value="promo">Promoción / Prensa</option>
+                <option value="promo">Promoción / prensa</option>
                 <option value="otros">Otros</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Concepto / Descripción</label>
+              <label className="block text-xs font-semibold mb-2 text-[var(--ink-2)]">Concepto / descripción</label>
               <input
                 type="text"
                 required
@@ -166,7 +166,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                     estado === 'pagado' ? 'bg-[var(--ok)]/20 text-[var(--ok)]' : 'bg-[var(--surface)]/40 text-[var(--ink-2)]'
                   }`}
                 >
-                  Pagado / Completado
+                  Pagado / completado
                 </button>
                 <button
                   type="button"

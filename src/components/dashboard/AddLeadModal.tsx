@@ -59,7 +59,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-m)] w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
           <div className="p-4 flex justify-between items-center bg-[var(--sunken)]">
             <h3 className="text-sm font-bold font-display text-[var(--ink)] flex items-center gap-1.5">
-              <Plus className="w-4 h-4" /> Agregar Nueva Sala a la Hoja
+              <Plus className="w-4 h-4" /> Agregar nueva sala a la hoja
             </h3>
             <button
               onClick={onClose}
@@ -76,7 +76,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
-                  Nombre de la Sala*
+                  Nombre de la sala*
                 </label>
                 <input
                   id="new-lead-sala"
@@ -106,7 +106,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
               <div className="space-y-1.5">
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
-                  Región / Provincia
+                  Región / provincia
                 </label>
                 <input
                   id="new-lead-region"
@@ -120,7 +120,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
               <div className="space-y-1.5">
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
-                  Aforo Estimado (Pax)
+                  Aforo estimado (Pax)
                 </label>
                 <input
                   id="new-lead-aforo"
@@ -146,7 +146,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
               <div className="space-y-1.5">
                 <label className="block text-micro font-sans text-[var(--ink-2)]">
-                  Categoría de Contacto
+                  Categoría de contacto
                 </label>
                 <select
                   id="new-lead-tipo"
@@ -158,19 +158,19 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                     Sala / Teatro (Booking directo)
                   </option>
                   <option value="festival">
-                    Festival (Escenarios / Carteles)
+                    Festival (Escenarios / carteles)
                   </option>
                   <option value="ayuntamiento">
                     Ayuntamiento / Fiestas Patronales
                   </option>
                   <option value="grupo">
-                    Grupo / Artista (Colaboración)
+                    Grupo / artista (Colaboración)
                   </option>
                   <option value="productora">
                     Productora / Agencia Management
                   </option>
                   <option value="medio">
-                    Medio de Comunicación (Radio 3 / Prensa / TV)
+                    Medio de comunicación (Radio 3 / prensa / TV)
                   </option>
                 </select>
               </div>
@@ -206,7 +206,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
             <div className="space-y-1.5 col-span-2">
               <label className="block text-micro font-sans text-[var(--ink-2)]">
-                Notas Iniciales
+                Notas iniciales
               </label>
               <textarea
                 id="new-lead-notes"
@@ -232,7 +232,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 type="submit"
                 className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] font-sans font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer"
               >
-                Confirmar Registro
+                Confirmar registro
               </button>
             </div>
           </form>

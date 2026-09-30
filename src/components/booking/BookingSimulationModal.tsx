@@ -114,8 +114,8 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                   onChange={(e) => setSimulationScenario(e.target.value)}
                   className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] outline-none"
                 >
-                  <option value="taquilla">Propuesta de Taquilla (70/30)</option>
-                  <option value="cache">Propuesta de Caché Fijo</option>
+                  <option value="taquilla">Propuesta de taquilla (70/30)</option>
+                  <option value="cache">Propuesta de caché fijo</option>
                   <option value="rechazo">Agenda Llena / Rechazo Amable</option>
                   <option value="mas_info">Petición de EPK / Dossier técnico</option>
                 </select>
@@ -123,8 +123,8 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             </div>
 
             <div>
-              <label className="block text-[var(--ink-2)] mb-1 font-semibold">Nombre del Remitente</label>
-              <input aria-label="Nombre del Remitente"
+              <label className="block text-[var(--ink-2)] mb-1 font-semibold">Nombre del remitente</label>
+              <input aria-label="Nombre del remitente"
                 type="text"
                 value={simulationSenderName}
                 onChange={(e) => setSimulationSenderName(e.target.value)}
@@ -161,7 +161,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             {simulationGenerated && (
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 space-y-3">
                 <div className="flex items-center justify-between pb-2">
-                  <span className="font-semibold text-[var(--ink-2)]">Vista Previa del Mensaje</span>
+                  <span className="font-semibold text-[var(--ink-2)]">Vista previa del mensaje</span>
                   <span className="text-micro px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">Listo para registrar</span>
                 </div>
                 <textarea
@@ -187,7 +187,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
               className="px-5 py-2 rounded-[var(--r-pill)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 transition-ui flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
-              Registrar en Hilo de Emails
+              Registrar en hilo de emails
             </button>
           </div>
         </div>

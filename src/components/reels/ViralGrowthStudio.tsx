@@ -504,7 +504,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-[var(--acc-ink)]" /> Gancho y Copy Mejorado
+                        Gancho y Copy Mejorado
                       </span>
                     </div>
                     <p className="text-xs font-bold text-[var(--acc-ink)]">
@@ -556,7 +556,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     {copiedPinnedComment ? (
                       <>
                         <Check className="w-3.5 h-3.5" />
-                        <span>¡Comentario Copiado al Portapapeles!</span>
+                        <span>¡Comentario copiado al portapapeles!</span>
                       </>
                     ) : (
                       <>
@@ -659,7 +659,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <ZoomIn className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span>Punch-in Zoom (0-3s & Picos)</span>
+                  <span>Punch-in Zoom (0-3s y Picos)</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -681,7 +681,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Zap className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span>Beat-Drop & Rhythm Impacts</span>
+                  <span>Beat-Drop y Rhythm Impacts</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -839,7 +839,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 text-[var(--acc-ink)] font-bold text-xs font-mono">
                   <Ticket className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
-                  <span>Sticker Próximo Bolo</span>
+                  <span>Sticker próximo bolo</span>
                 </div>
                 <input
                   type="checkbox"

@@ -683,19 +683,13 @@ export default function TourManager({
       <div className={`p-5 sm:p-6 rounded-[var(--r-l)] ${colors.card}`}>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)]">
-                Logística & Convocatorias Multi-Miembro
-              </span>
-            </div>
-            <h2 className="page-title flex items-center gap-2 mt-1">
+            <h2 className="page-title flex items-center gap-2">
               <Truck className="w-6 h-6 text-[var(--ink-2)]" />
-              Gestor Logístico & Giras de {currentBandName}
+              Giras
             </h2>
-            <p className={`text-xs ${colors.textMuted} mt-1`}>
-              Planifica rutas, selecciona qué miembros participan (Banda
-              Completa vs Parcial), calcula combustible multi-vehículo, dietas y
-              sincroniza automáticamente con el Calendario y Finanzas.
+            <p className={`text-xs ${colors.textMuted} mt-1 max-w-xl`}>
+              Ruta, furgo, dietas y reparto de gastos de {currentBandName}. Lo que apuntes aquí se
+              refleja solo en Calendario y Finanzas.
             </p>
           </div>
 
@@ -704,7 +698,7 @@ export default function TourManager({
             className="px-4 py-2.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:brightness-95 transition-ui active:scale-[0.97] flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4 shrink-0" />
-            <span>Nueva Gira</span>
+            <span>Nueva gira</span>
           </button>
         </div>
       </div>
@@ -919,7 +913,7 @@ export default function TourManager({
                         className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ? "bg-[var(--ok)]/10 text-[var(--ok)]" : "bg-[var(--alert)]/10 text-[var(--alert)]"}`}
                       >
                         <span className="text-micro opacity-80 block font-sans">
-                          Margen Neto
+                          Margen neto
                         </span>
                         <div className="text-xs font-extrabold mt-0.5 flex items-center gap-1">
                           <TrendingUp className="w-3 h-3" />
@@ -1258,7 +1252,7 @@ export default function TourManager({
                             className="px-2.5 py-1 rounded bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 text-xs font-sans font-bold flex items-center gap-1 transition-colors cursor-pointer"
                             title="Aplica la dieta total (personas x dieta) a todas las paradas de la ruta"
                           >
-                            <Sparkles className="w-3 h-3" /> Aplicar a Paradas
+                            <Sparkles className="w-3 h-3" /> Aplicar a paradas
                           </button>
                         </div>
                       </div>
@@ -1288,7 +1282,7 @@ export default function TourManager({
                             onClick={() => handleAddVehicle(0)}
                             className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink-2)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer"
                           >
-                            <Plus className="w-3.5 h-3.5" /> Añadir Vehículo
+                            <Plus className="w-3.5 h-3.5" /> Añadir vehículo
                           </button>
                           <button
                             type="button"
@@ -1336,9 +1330,9 @@ export default function TourManager({
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                               <div>
                                 <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
-                                  Cargar Plantilla
+                                  Cargar plantilla
                                 </label>
-                                <select aria-label="Cargar Plantilla"
+                                <select aria-label="Cargar plantilla"
                                   onChange={(e) =>
                                     handleApplyPresetToVehicle(
                                       vIdx,
@@ -1482,7 +1476,7 @@ export default function TourManager({
                         </div>
                         <div className="bg-[var(--acc)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-right shrink-0">
                           <span className="text-micro block text-[var(--ink-2)] font-sans">
-                            Coste Flota Total / 100 km
+                            Coste flota total / 100 km
                           </span>
                           <span className="text-sm font-extrabold text-[var(--acc)]/70">
                             {totalFleetCostPer100Km.toFixed(2)} € / 100 km
@@ -1498,7 +1492,7 @@ export default function TourManager({
                       <div>
                         <h4 className="text-sm font-bold flex items-center gap-2 font-display">
                           <MapPin className="w-4 h-4 text-[var(--ink-2)]" />
-                          Ruta & Paradas
+                          Ruta y paradas
                         </h4>
                         <p className="text-xs text-[var(--ink-2)] mt-0.5">
                           Cada parada con fecha se reflejará en el calendario de
@@ -1510,7 +1504,7 @@ export default function TourManager({
                         onClick={addStop}
                         className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
-                        <Plus className="w-3.5 h-3.5" /> Añadir Parada
+                        <Plus className="w-3.5 h-3.5" /> Añadir parada
                       </button>
                     </div>
 
@@ -1580,7 +1574,7 @@ export default function TourManager({
                               </div>
                               <div className="space-y-1">
                                 <label className="text-micro font-sans text-[var(--ink-2)] block">
-                                  Sala / Festival
+                                  Sala / festival
                                 </label>
                                 <input
                                   value={stop.sala}
@@ -1649,7 +1643,7 @@ export default function TourManager({
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
                               <div>
                                 <label className="text-micro text-[var(--ok)] block font-sans">
-                                  Caché / Taquilla (€)
+                                  Caché / taquilla (€)
                                 </label>
                                 <input
                                   type="number"
@@ -1668,7 +1662,7 @@ export default function TourManager({
                               </div>
                               <div>
                                 <label className="text-micro text-[var(--acc)]/70 block font-sans flex items-center justify-between">
-                                  <span>Gasolina Flota (€)</span>
+                                  <span>Gasolina flota (€)</span>
                                 </label>
                                 <input
                                   type="number"
@@ -1800,7 +1794,7 @@ export default function TourManager({
                           </div>
                           <div>
                             <span className="text-micro text-[var(--ink-2)] font-sans block">
-                              Margen Neto Total
+                              Margen neto total
                             </span>
                             <span
                               className={`text-base sm:text-lg font-extrabold ${neto >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"}`}
@@ -1895,7 +1889,7 @@ export default function TourManager({
                   className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] active:scale-[0.97] transition-ui flex items-center gap-1.5 cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
-                  Sí, Eliminar Gira
+                  Sí, eliminar Gira
                 </button>
               </div>
             </div>

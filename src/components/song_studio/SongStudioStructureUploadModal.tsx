@@ -308,7 +308,7 @@ export const SongStudioStructureUploadModal: React.FC<
                           onClick={handleCameraCapture}
                           className="flex-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-sm font-semibold transition"
                         >
-                          <ShowIcon inline emoji="📸" />Capturar Foto
+                          <ShowIcon inline emoji="📸" />Capturar foto
                         </button>
                         <button
                           onClick={stopCamera}
@@ -394,7 +394,7 @@ export const SongStudioStructureUploadModal: React.FC<
                           }}
                           className="flex-1 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
                         >
-                          Cambiar Archivo
+                          Cambiar archivo
                         </button>
                         <button
                           onClick={handleProcessWithAI}

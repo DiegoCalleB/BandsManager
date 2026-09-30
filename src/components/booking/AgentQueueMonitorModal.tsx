@@ -127,7 +127,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
       case 'campaign_radar_sync':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
-            <ShowIcon inline emoji="🛰️" />Radar Sync
+            <ShowIcon inline emoji="🛰️" />Radar sync
           </span>
         );
       default:
@@ -182,7 +182,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-[var(--ink)] tracking-wide">Monitor de Cola & Workers en Vivo</h2>
+                  <h2 className="text-base font-bold text-[var(--ink)] tracking-wide">Monitor de cola y workers en vivo</h2>
                   <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--ok)]/15 text-[var(--ok)] ">
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping" />
                     Worker Online
@@ -269,7 +269,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               <div className="space-y-1">
                 <div className="flex items-center gap-2 font-bold text-[var(--ink)]">
                   <Server className="w-4 h-4 text-[var(--acc)]" />
-                  <span>Mantenimiento & Retención Automática (Auto-Vacuum)</span>
+                  <span>Mantenimiento y Retención Automática (Auto-Vacuum)</span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                   Las tareas completadas se archivan automáticamente tras 7 días para preservar la máxima velocidad de lectura en

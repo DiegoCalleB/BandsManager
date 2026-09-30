@@ -630,7 +630,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             ) : (
               <>
                 <Save className="w-4 h-4" />
-                <span>Guardar Cuenta de Email</span>
+                <span>Guardar cuenta de email</span>
               </>
             )}
           </button>

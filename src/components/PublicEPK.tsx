@@ -615,7 +615,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline truncate max-w-[200px]"
-                    title="Sitio Web Oficial"
+                    title="Sitio web oficial"
                   >
                     {config.enlacesRedes.website.replace(/^https?:\/\//, "")}
                   </a>
@@ -929,7 +929,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] text-xs font-bold hover:bg-[var(--ok)] transition-colors"
                     >
-                      <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
+                      <Ticket className="w-3.5 h-3.5" /> Comprar entradas
                     </a>
                   )}
                   {c.entradasLugarFisico && (

@@ -209,7 +209,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             >
               <div className="flex items-center gap-1.5 text-[var(--ink-2)] text-micro font-sans mb-1">
                 <Users className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                <span>Perfil & Audiencia Actual</span>
+                <span>Perfil y audiencia actual</span>
               </div>
               <p className="text-xs font-sans font-bold text-[var(--ink)]">
                 {archetype.label}
@@ -283,7 +283,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
-          <span>Visión Global</span>
+          <span>Visión global</span>
         </button>
 
         <button
@@ -343,7 +343,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           }`}
         >
           <Music2 className="w-3.5 h-3.5 text-[var(--ok)]" />
-          <span>Spotify & Streaming</span>
+          <span>Spotify y Streaming</span>
         </button>
       </div>
 
@@ -532,7 +532,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     )}
                     {dayPlan.recommendedPlatform === "todas" && (
                       <span className="text-[var(--acc)] flex items-center gap-1">
-                        <Flame className="w-3 h-3" /> Todas las Redes
+                        <Flame className="w-3 h-3" /> Todas las redes
                       </span>
                     )}
                   </div>
@@ -596,7 +596,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-right min-w-[200px]">
                   <span className="text-micro font-sans text-[var(--ink-2)] block">
-                    Horario Recomendado
+                    Horario recomendado
                   </span>
                   <span className="text-xs font-sans font-bold text-[var(--acc)] mt-0.5 block">
                     {currentChannel.recommendedSchedule}

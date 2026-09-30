@@ -276,7 +276,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-sans font-bold text-[var(--acc)]">
-                  Muro Oficial de la Banda
+                  Muro oficial de la banda
                 </span>
                 <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
                   <Megaphone className="w-2.5 h-2.5" /> Oficial
@@ -337,7 +337,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                     {ann.autor}
                   </span>
                   <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] font-sans font-bold">
-                    Noticia Banda
+                    Noticia banda
                   </span>
                 </div>
                 <span className="text-xs text-[var(--ink-2)] font-sans">
@@ -432,7 +432,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
               onClick={onOpenAddModal}
               className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold rounded-[var(--r-pill)] transition cursor-pointer"
             >
-              Registrar Primer Fan
+              Registrar primer fan
             </button>
           </div>
         ) : (
@@ -701,7 +701,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
               <div>
                 <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
-                  Mensaje para la Comunidad de Fans *
+                  Mensaje para la comunidad de fans *
                 </label>
                 <textarea
                   rows={4}
@@ -725,7 +725,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   type="submit"
                   className="px-5 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-xs font-bold rounded-[var(--r-pill)] transition cursor-pointer flex items-center gap-1.5"
                 >
-                  <Send className="w-3.5 h-3.5" /> Publicar en el Muro
+                  <Send className="w-3.5 h-3.5" /> Publicar en el muro
                 </button>
               </div>
             </form>

@@ -268,7 +268,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 active:scale-[0.97]"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Nueva Canción</span>
+                <span>Nueva canción</span>
               </button>
               <button
                 id="btn-add-album"
@@ -277,7 +277,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
               >
                 <Disc3 className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span className="hidden xs:inline">Nuevo Álbum</span>
+                <span className="hidden xs:inline">Nuevo álbum</span>
               </button>
             </div>
           </div>

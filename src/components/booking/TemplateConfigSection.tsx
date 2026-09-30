@@ -282,7 +282,7 @@ export function TemplateConfigSection({
         <div className="lg:col-span-7 space-y-3.5">
           {/* Subject */}
           <div className="space-y-1">
-            <label className="block text-xs font-mono font-bold text-[var(--ink-2)]">Asunto del Email</label>
+            <label className="block text-xs font-mono font-bold text-[var(--ink-2)]">Asunto del email</label>
             <input
               id="template-subject"
               type="text"
@@ -296,7 +296,7 @@ export function TemplateConfigSection({
           {/* Body */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-mono font-bold text-[var(--ink-2)]">Cuerpo del Correo</label>
+              <label className="block text-xs font-mono font-bold text-[var(--ink-2)]">Cuerpo del correo</label>
               {/* Insertable variables chips */}
               <div className="flex items-center gap-1 flex-wrap">
                 <span className="text-micro text-[var(--ink-2)] mr-1">Insertar:</span>
@@ -327,8 +327,7 @@ export function TemplateConfigSection({
           {/* AI Guidelines */}
           <div className="space-y-1">
             <label className="block text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-              <span>Pautas de Redacción para la IA (Opcional)</span>
+              <span>Pautas de redacción para la IA (Opcional)</span>
             </label>
             <textarea
               id="template-guidelines"
@@ -404,7 +403,7 @@ export function TemplateConfigSection({
 
           <div className="pt-3 border-t border-[var(--hair)]/5 text-micro text-[var(--ink-2)] flex items-center justify-between">
             <span>Redactor IA v2.4</span>
-            <span>Salas · Festivales · Medios</span>
+            <span>Salas · festivales · medios</span>
           </div>
         </div>
       </div>

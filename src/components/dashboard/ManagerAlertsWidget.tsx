@@ -145,7 +145,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <h3 className={`text-xs font-bold ${'text-[var(--ink)]'} tracking-tight`}>Radar del Mánager</h3>
+            <h3 className={`text-xs font-bold ${'text-[var(--ink)]'} tracking-tight`}>Radar del mánager</h3>
             <span
               className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-mono font-bold ${
                 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'

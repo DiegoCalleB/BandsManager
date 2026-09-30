@@ -187,7 +187,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                 {/* Standard Preset Events */}
                 <div>
                   <div className="text-micro text-[var(--ink-2)] px-2 py-1 font-semibold">
-                    Eventos de Show
+                    Eventos de show
                   </div>
                   <div className="grid grid-cols-1 gap-0.5">
                     {QUICK_EVENTS.map((ev) => (

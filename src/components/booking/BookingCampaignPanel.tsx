@@ -119,7 +119,7 @@ export default function BookingCampaignPanel({
           onClick={() => setIsEditing(true)}
           className="flex items-center gap-1 text-xs font-semibold text-[var(--on-acc)] hover:text-[var(--ink)] bg-[var(--acc)] px-3 py-2 rounded-[var(--r-pill)]"
         >
-          <Plus className="w-3.5 h-3.5" /> Configurar Campaña
+          <Plus className="w-3.5 h-3.5" /> Configurar campaña
         </button>
       </div>
     );
@@ -130,7 +130,7 @@ export default function BookingCampaignPanel({
       <div className="mb-6 p-5 rounded-[var(--r-m)] bg-[var(--surface)]">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-semibold text-lg flex items-center gap-2">
-            <Target className="w-5 h-5" /> Configurar Campaña
+            <Target className="w-5 h-5" /> Configurar campaña
           </h3>
           <button
             onClick={() => setIsEditing(false)}
@@ -173,10 +173,10 @@ export default function BookingCampaignPanel({
           </div>
           <div>
             <label className="block text-xs text-[var(--ink-2)] font-medium mb-1">
-              Aforo Objetivo
+              Aforo objetivo
             </label>
             <div className="flex items-center gap-2">
-              <input aria-label="Aforo Objetivo"
+              <input aria-label="Aforo objetivo"
                 type="number"
                 value={campaignForm.minCapacity}
                 onChange={(e) =>
@@ -188,7 +188,7 @@ export default function BookingCampaignPanel({
                 className="w-full text-sm rounded-[var(--r-s)] focus:ring-black"
               />
               <span className="text-[var(--ink-2)]">-</span>
-              <input aria-label="Aforo Objetivo"
+              <input aria-label="Aforo objetivo"
                 type="number"
                 value={campaignForm.maxCapacity}
                 onChange={(e) =>
@@ -204,7 +204,7 @@ export default function BookingCampaignPanel({
 
           <div className="md:col-span-2 lg:col-span-3">
             <label className="block text-xs text-[var(--ink-2)] font-medium mb-2">
-              Fechas Clave del Concierto
+              Fechas clave del concierto
             </label>
             <div className="flex gap-2 flex-wrap items-center">
               {campaignForm.targetDates?.map((date, idx) => (
@@ -251,7 +251,7 @@ export default function BookingCampaignPanel({
                 <span className="text-xs font-semibold shrink-0">
                   Añadir Fecha:
                 </span>
-                <input aria-label="Fechas Clave del Concierto"
+                <input aria-label="Fechas clave del concierto"
                   type="date"
                   onChange={(e) => {
                     if (
@@ -286,7 +286,7 @@ export default function BookingCampaignPanel({
 
           <div className="md:col-span-2 lg:col-span-3">
             <label className="block text-xs text-[var(--ink-2)] font-medium mb-2">
-              <ShowIcon inline emoji="🎪" />Rango de Fechas para Filtrar Festivales/Eventos
+              <ShowIcon inline emoji="🎪" />Rango de fechas para filtrar festivales/eventos
             </label>
             <p className="text-xs text-[var(--ink-2)] mb-2">
               Define el rango de fechas para mostrar solo los festivales y
@@ -340,7 +340,7 @@ export default function BookingCampaignPanel({
             onClick={handleSave}
             className="px-4 py-2 text-sm bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)] rounded-[var(--r-pill)] font-medium flex items-center gap-2"
           >
-            <Check className="w-4 h-4" /> Guardar y Activar
+            <Check className="w-4 h-4" /> Guardar y activar
           </button>
         </div>
       </div>

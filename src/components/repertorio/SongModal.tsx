@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Upload, Disc3, CheckCircle2, Music, Users, ChevronDown, ChevronUp, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { X, Upload, Disc3, CheckCircle2, Music, Users, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
 import { formatSongTitle } from '../../utils/formatSongTitle';
@@ -162,7 +162,7 @@ export function SongModal({
                       <Upload className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
-                      <span className="font-semibold text-xs block text-[var(--ink-2)]">Audio Demo (mp3, wav, m4a)</span>
+                      <span className="font-semibold text-xs block text-[var(--ink-2)]">Audio demo (mp3, wav, m4a)</span>
                       <span className="text-micro text-[var(--ink-2)] truncate block">
                         {audioFileName || (audioFileUrl ? 'Audio subido previamente' : 'Opcional — autodetección de duración')}
                       </span>
@@ -192,7 +192,6 @@ export function SongModal({
                 )}
                 {detectedDurationMsg && (
                   <div className="mt-1.5 text-xs font-semibold text-[var(--ok)] flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
                     <span>{detectedDurationMsg}</span>
                   </div>
                 )}
@@ -201,7 +200,7 @@ export function SongModal({
               {/* Title Field (Main Essential Field) */}
               <div>
                 <label className="block text-[var(--ink-2)] font-semibold mb-1">
-                  Título de la Canción <span className="text-[var(--ok)]">*</span>
+                  Título de la canción <span className="text-[var(--ok)]">*</span>
                 </label>
                 <input
                   name="titulo"
@@ -223,9 +222,9 @@ export function SongModal({
                 <div>
                   <label className="block text-[var(--ink-2)] font-semibold mb-1 flex items-center gap-1.5">
                     <Disc3 className="w-3.5 h-3.5 text-[var(--ok)]" />
-                    <span>Álbum / Disco</span>
+                    <span>Álbum / disco</span>
                   </label>
-                  <select aria-label="Álbum / Disco"
+                  <select aria-label="Álbum / disco"
                     value={selectedAlbum}
                     onChange={(e) => setSelectedAlbum(e.target.value)}
                     className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${'bg-[var(--sunken)] text-[var(--ok)]'}`}
@@ -238,7 +237,7 @@ export function SongModal({
                           {alb}
                         </option>
                       ))}
-                    <option value="__CUSTOM__">+ Crear Nuevo Álbum...</option>
+                    <option value="__CUSTOM__">+ Crear nuevo álbum...</option>
                   </select>
 
                   {selectedAlbum === '__CUSTOM__' && (
@@ -358,7 +357,7 @@ export function SongModal({
                     {/* Style & Type */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[var(--ink-2)] text-xs mb-1">Género / Estilo</label>
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Género / estilo</label>
                         <input
                           name="genero"
                           type="text"
@@ -371,16 +370,16 @@ export function SongModal({
                       </div>
 
                       <div>
-                        <label className="block text-[var(--ink-2)] text-xs mb-1">Tipo de Tema</label>
-                        <select aria-label="Tipo de Tema"
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Tipo de tema</label>
+                        <select aria-label="Tipo de tema"
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
                             'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                         >
-                          <option value="propio">Propio / Original</option>
-                          <option value="cover">Cover / Versión</option>
+                          <option value="propio">Propio / original</option>
+                          <option value="cover">Cover / versión</option>
                           <option value="instrumental">Instrumental / Intro</option>
                         </select>
                       </div>
@@ -397,7 +396,7 @@ export function SongModal({
                             'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
                         >
-                          <option value="listo">Listo para Directo</option>
+                          <option value="listo">Listo para directo</option>
                           <option value="ensayando">En Ensayo</option>
                           <option value="componiendo">En Composición</option>
                           <option value="descartado">Archivo</option>
@@ -538,7 +537,7 @@ export function SongModal({
                 type="submit"
                 className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer"
               >
-                Guardar Canción
+                Guardar canción
               </button>
             </div>
           </form>

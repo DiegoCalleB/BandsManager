@@ -2173,7 +2173,7 @@ export default function CalendarView({
                         className={`absolute right-0 mt-1.5 w-48 rounded-[var(--r-m)] z-50 py-1.5 overflow-hidden animate-in fade-in duration-150 ${'bg-[var(--surface)]/95 text-[var(--ink)]'}`}
                       >
                         <div className="px-3 py-1 text-micro font-sans text-[var(--ink-2)] /40 mb-1">
-                          Añadir al Calendario
+                          Añadir al calendario
                         </div>
                         <button
                           type="button"
@@ -2197,7 +2197,7 @@ export default function CalendarView({
                           className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--tentative)]/15 hover:text-[var(--tentative)] transition-colors cursor-pointer"
                         >
                           <span><ShowIcon inline emoji="🎯" /></span>
-                          <span>+ Bolo Posible</span>
+                          <span>+ Bolo posible</span>
                         </button>
                         <button
                           type="button"
@@ -2951,7 +2951,7 @@ export default function CalendarView({
                             title="5. Checklist de cierre de material y carga de furgoneta"
                           >
                             <ShieldCheck className="w-3 h-3" />
-                            <span>5. Cierre Material</span>
+                            <span>5. Cierre material</span>
                           </button>
                           <button
                             type="button"
@@ -2962,7 +2962,7 @@ export default function CalendarView({
                             className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
                           >
                             <Maximize2 className="w-3.5 h-3.5" />
-                            <span>Abrir Ficha Completa</span>
+                            <span>Abrir ficha completa</span>
                           </button>
                         </div>
                       </div>
@@ -2997,7 +2997,7 @@ export default function CalendarView({
                           className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
                         >
                           <Bell className="w-3 h-3 text-[var(--ink-2)]" />
-                          <span>Notificar Banda</span>
+                          <span>Notificar banda</span>
                         </button>
                         <button
                           type="button"
@@ -3005,7 +3005,7 @@ export default function CalendarView({
                           className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer"
                         >
                           <Edit className="w-3 h-3 text-[var(--acc)]" />
-                          <span>Editar Concierto</span>
+                          <span>Editar concierto</span>
                         </button>
                         {(selectedConcert.direccion || selectedConcert.sala) && (
                           <a
@@ -3082,7 +3082,7 @@ export default function CalendarView({
                           }`}
                         >
                           <Maximize2 className="w-3.5 h-3.5" />
-                          <span>Abrir Ficha</span>
+                          <span>Abrir ficha</span>
                         </button>
                       </div>
 
@@ -3133,7 +3133,7 @@ export default function CalendarView({
                           className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
                         >
                           <Bell className="w-3 h-3 text-[var(--ink-2)]" />
-                          <span>Notificar Convocatoria</span>
+                          <span>Notificar convocatoria</span>
                         </button>
                         <button
                           type="button"
@@ -3141,7 +3141,7 @@ export default function CalendarView({
                           className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
                         >
                           <Edit className="w-3 h-3 text-[var(--ok)]" />
-                          <span>Editar Ensayo</span>
+                          <span>Editar ensayo</span>
                         </button>
                       </div>
                     </div>

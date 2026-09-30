@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard, Sparkles } from 'lucide-react';
+import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard } from 'lucide-react';
 
 interface StepFansPaymentsProps {
   fanCallToAction: string;
@@ -56,7 +56,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Heart className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Captación de Fans, Regalo Descargable & Pagos Directos</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">Captación de fans, regalo descargable y pagos directos</h3>
       </div>
 
       <p className="text-xs text-[var(--ink-2)]">
@@ -78,7 +78,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Mensaje de Bienvenida para nuevos Fans</label>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Mensaje de bienvenida para nuevos fans</label>
           <input
             type="text"
             value={fanWelcomeMessage}
@@ -93,14 +93,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
       <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
         <div className="flex items-center justify-between">
           <h4 className="text-xs font-semibold text-[var(--acc)]/70 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
             Regalo para el Fan (Lead Magnet / Descarga Inmediata)
           </h4>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Descripción del Regalo</label>
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Descripción del regalo</label>
             <input
               type="text"
               value={fanRewardDescription}

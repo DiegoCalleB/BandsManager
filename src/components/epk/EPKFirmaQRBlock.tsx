@@ -4,7 +4,6 @@ import {
   Mail,
   Music,
   FileDown,
-  Sparkles,
   QrCode,
   Copy,
   ExternalLink,
@@ -116,7 +115,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-5">
           <div className=" pb-3 flex items-center justify-between flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <AtSign className="w-5 h-5" /> Configurar Firma de Correo
+              <AtSign className="w-5 h-5" /> Configurar firma de correo
             </h3>
             <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
               HTML Automático
@@ -126,7 +125,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="text-xs font-bold text-[var(--ink-2)]">
-                Nombre del Remitente
+                Nombre del remitente
               </label>
               <input
                 type="text"
@@ -168,7 +167,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
             <div className="space-y-1">
               <label className="text-xs font-bold text-[var(--ink-2)]">
-                Teléfono de Contacto
+                Teléfono de contacto
               </label>
               <input
                 type="text"
@@ -189,7 +188,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
             <div className="space-y-1">
               <label className="text-xs font-bold text-[var(--ink-2)]">
-                Email Oficial
+                Email oficial
               </label>
               <input
                 type="email"
@@ -211,7 +210,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
           <div className="space-y-1">
             <label className="text-xs font-bold text-[var(--ink-2)]">
-              Lema / Pie de Firma
+              Lema / pie de firma
             </label>
             <p className="text-xs text-[var(--ink-2)]">
               Una frase corta que sale al pie de los emails y también como
@@ -300,7 +299,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   onClick={() => onNavigateToBlock("perfil")}
                   className="px-2 py-0.5 text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)]/70 bg-[var(--acc)]/10 rounded flex items-center gap-1 cursor-pointer"
                 >
-                  <FileText className="w-3 h-3" /> Editar en Bloque 1
+                  <FileText className="w-3 h-3" /> Editar en bloque 1
                 </button>
               )}
             </div>
@@ -331,10 +330,10 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
             <div className=" pb-3 flex items-center justify-between">
               <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-                <Mail className="w-5 h-5" /> Vista Previa de la Firma
+                <Mail className="w-5 h-5" /> Vista previa de la firma
               </h3>
               <span className="text-micro text-[var(--ink-2)] font-sans">
-                Renderizado Email
+                Renderizado email
               </span>
             </div>
 
@@ -354,7 +353,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   ) : isBakandeya ? (
                     <img
                       src="/logo_bakandeya_bueno_sin_fondo.png"
-                      alt="Bakandeya Logo"
+                      alt="Bakandeya logo"
                       className="w-10 h-10 rounded-[var(--r-s)] object-contain shrink-0"
                     />
                   ) : (
@@ -546,7 +545,6 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             </div>
 
             <p className="text-xs text-[var(--ink-2)] flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
               Esta firma se inyecta automáticamente en los correos del CRM y
               ahora puedes exportarla a tu propio correo.
             </p>
@@ -816,10 +814,10 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 text-center">
             <div className="flex items-center justify-between pb-3">
               <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-                <QrCode className="w-5 h-5" /> Código QR Oficial del Dossier
+                <QrCode className="w-5 h-5" /> Código QR oficial del dossier
               </h3>
               <span className="text-micro font-sans text-[var(--ink-2)]">
-                Difusión Rápida
+                Difusión rápida
               </span>
             </div>
 
@@ -855,7 +853,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   rel="noopener noreferrer"
                   className="px-4 py-2 bg-[var(--sunken)] text-[var(--acc)]/70 font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 hover:bg-[var(--surface)] transition"
                 >
-                  <ExternalLink className="w-3.5 h-3.5" /> Abrir Dossier
+                  <ExternalLink className="w-3.5 h-3.5" /> Abrir dossier
                 </a>
               </div>
             </div>

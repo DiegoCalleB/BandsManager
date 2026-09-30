@@ -4,7 +4,6 @@ import {
   BookOpen,
   Disc3,
   ArrowRight,
-  Sparkles,
   X,
   CheckCircle2,
   Music2,
@@ -78,7 +77,6 @@ export const MusicianOnboardingModal: React.FC<
 
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-xs font-sans font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Primeros Pasos para Músicos</span>
             </div>
 
@@ -184,7 +182,7 @@ export const MusicianOnboardingModal: React.FC<
               type="button"
               className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)] group-hover:text-[var(--on-acc)] text-xs font-sans font-bold transition-ui shrink-0 cursor-pointer"
             >
-              <span>Configurar Dossier</span>
+              <span>Configurar dossier</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>

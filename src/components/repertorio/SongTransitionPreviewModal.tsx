@@ -6,7 +6,6 @@ import {
   RotateCcw,
   Volume2,
   VolumeX,
-  Sparkles,
   AlertTriangle,
   CheckCircle2,
   ChevronLeft,
@@ -649,7 +648,7 @@ export function SongTransitionPreviewModal({
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight">
-                    Comprobar Unión y Transición
+                    Comprobar unión y transición
                   </h2>
                   <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
                     #{indexA + 1} ➔ #{indexB + 1}
@@ -1102,7 +1101,7 @@ export function SongTransitionPreviewModal({
                       }`}
                     >
                       <Disc3 className="w-3 h-3" />
-                      <span>Audio Real</span>
+                      <span>Audio real</span>
                     </button>
                     <button
                       type="button"
@@ -1399,7 +1398,6 @@ export function SongTransitionPreviewModal({
 
                 {/* Right Summary Verdict */}
                 <div className="text-micro text-[var(--ink-2)] flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                   <span>
                     Recomendado:{" "}
                     <strong className="text-[var(--ink)] font-bold">
@@ -1507,7 +1505,7 @@ export function SongTransitionPreviewModal({
                     <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] space-y-0.5">
                       <div className="flex items-center gap-1 text-xs font-bold text-[var(--acc)]/70">
                         <Music className="w-3 h-3" />
-                        <span>Armonía & Tono</span>
+                        <span>Armonía y tono</span>
                       </div>
                       <p className="text-micro text-[var(--ink-2)] leading-tight">
                         {diagnosis.harmonyDescription}
@@ -1575,7 +1573,7 @@ export function SongTransitionPreviewModal({
                   className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 transition cursor-pointer"
                 >
                   <MessageSquarePlus className="w-3 h-3" />
-                  <span>Insertar Chapa</span>
+                  <span>Insertar chapa</span>
                 </button>
               )}
 

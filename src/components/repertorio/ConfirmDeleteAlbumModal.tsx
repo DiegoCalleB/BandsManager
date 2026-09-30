@@ -27,7 +27,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
                 <Trash2 className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-[var(--ink)]">Eliminar Disco</h3>
+                <h3 className="text-lg font-bold text-[var(--ink)]">Eliminar disco</h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">"{data.albumName}"</p>
               </div>
             </div>

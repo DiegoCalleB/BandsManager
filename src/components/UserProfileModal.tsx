@@ -475,7 +475,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </div>
               <div>
                 <h3 className="font-bold font-display text-sm flex items-center gap-2">
-                  <span>Mi Perfil & Contraseña</span>
+                  <span>Mi perfil y contraseña</span>
                 </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1.5 flex-wrap">
                   <span>
@@ -483,7 +483,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     {isAdmin ? "Administrador" : "Músico"}
                   </span>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc)]/70">
-                    <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
                     {currentPlanDef.name}
                   </span>
                 </p>
@@ -560,7 +559,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       title="Abrir Asistente de Inicio / Onboarding"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-                      <span>Guía de Inicio</span>
+                      <span>Guía de inicio</span>
                     </button>
                   )}
                 </div>
@@ -623,7 +622,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  <span>Logo de tu Banda / Proyecto Musical</span>
+                  <span>Logo de tu banda / proyecto musical</span>
                 </span>
                 <span className="text-micro text-[var(--acc)]/80 font-normal font-sans">
                   Editar Avatar
@@ -638,7 +637,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     {bandLogoUrl && !logoImgError ? (
                       <img
                         src={bandLogoUrl}
-                        alt="Logo Banda"
+                        alt="Logo banda"
                         onError={() => setLogoImgError(true)}
                         className="w-full h-full object-contain"
                         referrerPolicy="no-referrer"
@@ -654,7 +653,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       </p>
                       {isPromoUser ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-extrabold bg-[var(--acc)]/60 text-[var(--acc)]/70">
-                          <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
                           <span>{currentPlanDef.name}</span>
                         </span>
                       ) : (
@@ -685,7 +683,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   ) : (
                     <>
                       <Upload className="w-3.5 h-3.5" />
-                      <span>Cambiar Logo</span>
+                      <span>Cambiar logo</span>
                     </>
                   )}
                   <input aria-label="Logo de tu Banda / Proyecto Musical Editar Avatar"
@@ -704,7 +702,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <div className="flex items-center justify-between">
                 <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                   <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-[var(--acc)]" />
-                  <span>Proyectos y Banda Principal</span>
+                  <span>Proyectos y banda principal</span>
                 </label>
                 <div className="flex items-center gap-2">
                   {onOpenProfileWizard && (
@@ -718,7 +716,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       title="Abrir asistente paso a paso de configuración de banda"
                     >
                       <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-                      <span>Asistente Perfil</span>
+                      <span>Asistente perfil</span>
                     </button>
                   )}
                   <button
@@ -756,8 +754,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[var(--ok)]" />
-                      <span>Crear Nuevo Proyecto o Banda</span>
+                      <span>Crear nuevo proyecto o banda</span>
                     </p>
                     <button
                       type="button"
@@ -771,7 +768,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <div className="space-y-2">
                     <div>
                       <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
-                        Nombre del Proyecto / Banda *
+                        Nombre del proyecto / banda *
                       </label>
                       <input
                         type="text"
@@ -786,7 +783,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <div className="grid grid-cols-2 gap-2">
                       <div>
                         <label className="text-micro font-sans text-[var(--ink-2)] block mb-1">
-                          Estilo / Género
+                          Estilo / género
                         </label>
                         <input
                           type="text"
@@ -823,7 +820,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     ) : (
                       <div>
                         <label className="text-micro font-sans text-[var(--ink-2)] block mb-1.5">
-                          Plan Inicial del Proyecto
+                          Plan inicial del proyecto
                         </label>
                         <div className="grid grid-cols-3 gap-1.5">
                           {(["emergente", "profesional", "elite"] as const).map(
@@ -877,7 +874,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         ) : (
                           <>
                             <Plus className="w-3 h-3" />
-                            <span>Crear Proyecto</span>
+                            <span>Crear proyecto</span>
                           </>
                         )}
                       </button>
@@ -1084,7 +1081,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <div className="flex items-center gap-2">
                     <Palette className="w-4 h-4 text-[var(--acc)]" />
                     <span className="text-xs font-sans font-semibold">
-                      Personalización Visual (Tema y Fuente)
+                      Personalización visual (Tema y fuente)
                     </span>
                   </div>
                   <div className="flex items-center gap-1 text-xs font-sans text-[var(--ink-2)]">
@@ -1101,7 +1098,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <div className="space-y-2">
                         <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                           <Palette className="w-3.5 h-3.5 text-[var(--acc)]" />
-                          <span>Tema Visual de la Aplicación</span>
+                          <span>Tema visual de la aplicación</span>
                         </label>
                         <div className="grid grid-cols-2 gap-2">
                           {Object.entries(THEMES).map(([key, t]) => {
@@ -1134,7 +1131,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <div className="space-y-2 pt-2 ">
                         <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                           <Type className="w-3.5 h-3.5 text-[var(--ok)]" />
-                          <span>Estilo de Fuente & Tipografía</span>
+                          <span>Estilo de Fuente y Tipografía</span>
                         </label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {FONT_PRESETS.map((p) => {
@@ -1181,7 +1178,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <div className="pt-3 ">
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/[0.04] space-y-2.5">
                 <label className="text-xs font-sans font-semibold text-[var(--acc)]/70 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>Nuevo diseño — Espectro (en pruebas)</span>
                 </label>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
@@ -1243,7 +1239,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <div className="flex items-center gap-2">
                     <Bot className="w-4 h-4 text-[var(--acc)]" />
                     <span className="text-xs font-sans font-semibold">
-                      Configuración de Agentes IA (Autonomía, Horarios y Email)
+                      Configuración de agentes IA (Autonomía, horarios y email)
                     </span>
                   </div>
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1">
@@ -1283,7 +1279,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <div className="pt-2 bg-[var(--surface)]/80 space-y-3">
               <div className="flex items-center gap-1.5 text-xs font-sans font-bold text-[var(--acc)]">
                 <Key className="w-4 h-4" />
-                <span>Cambiar Contraseña</span>
+                <span>Cambiar contraseña</span>
               </div>
 
               <div className="space-y-1">
@@ -1302,7 +1298,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {newPassword.length > 0 && (
                 <div className="space-y-1 animate-in fade-in duration-200">
                   <label className="text-xs font-sans text-[var(--ink-2)]">
-                    Confirmar Nueva Contraseña
+                    Confirmar nueva contraseña
                   </label>
                   <input
                     type="password"
@@ -1324,7 +1320,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <Shield className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                      <span>Administración de la Banda</span>
+                      <span>Administración de la banda</span>
                     </span>
                     <span className="text-micro text-[var(--tentative)] font-sans font-bold">
                       Solo Admins
@@ -1343,7 +1339,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <Users className="w-4 h-4 text-[var(--tentative)] shrink-0" />
                       <div>
                         <div className="text-xs font-bold font-sans">
-                          Gestión de la Banda
+                          Gestión de la banda
                         </div>
                         <div className="text-micro opacity-75 font-sans">
                           Crear nuevos músicos, cambiar sus contraseñas y
@@ -1368,7 +1364,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               ) : (
                 <>
                   <Check className="w-4 h-4" />
-                  <span>Guardar Cambios de Perfil</span>
+                  <span>Guardar cambios de perfil</span>
                 </>
               )}
             </button>
@@ -1390,7 +1386,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 className="text-xs font-sans text-[var(--ok)] hover:underline flex items-center gap-1 cursor-pointer"
               >
                 <Shield className="w-3 h-3" />
-                <span>Gestión de la Banda</span>
+                <span>Gestión de la banda</span>
               </button>
             ) : (
               <span className="text-micro font-sans text-[var(--ink-2)]">
@@ -1424,7 +1420,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     </div>
                     <div>
                       <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans">
-                        Cambiar Plan de Suscripción
+                        Cambiar plan de suscripción
                       </h3>
                       <p className="text-micro text-[var(--ink-2)] font-sans">
                         Selecciona el plan para tu proyecto musical
@@ -1465,7 +1461,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         }}
                         className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer whitespace-nowrap"
                       >
-                        Actualizar Tarjeta
+                        Actualizar tarjeta
                       </button>
                     </div>
                   )}
@@ -1555,7 +1551,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               </span>
                               {isCurrent && (
                                 <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
-                                  Plan Actual
+                                  Plan actual
                                 </span>
                               )}
                             </div>
@@ -1566,7 +1562,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                           {plan.stickerGift && (
                             <div className="mt-2 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/60 flex items-center gap-1.5 text-micro font-sans text-[var(--acc)]/70 font-bold">
-                              <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
                               <span>
                                 Regalo de bienvenida: {plan.stickerGift.qty}
                               </span>

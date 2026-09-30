@@ -659,7 +659,7 @@ export default function PracticeModePanel({
                 <Headphones className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h3 className="font-bold font-display text-sm truncate">Sala de Ensayo Individual</h3>
+                <h3 className="font-bold font-display text-sm truncate">Sala de ensayo individual</h3>
                 <p className="text-xs text-[var(--ink-2)] truncate">
                   {song.titulo} · {idea.titulo}
                 </p>
@@ -841,7 +841,7 @@ export default function PracticeModePanel({
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                       <Gauge className="w-3.5 h-3.5 text-[var(--acc)]" />
-                      Tempo & Velocidad
+                      Tempo y velocidad
                     </span>
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] ${

@@ -89,7 +89,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {/* 0. Filter drawer Category and View Mode Selectors */}
       <div className="space-y-3 pb-3 border-b border-[var(--hair)]/10">
         <div>
-          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Categoría de Contactos</p>
+          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Categoría de contactos</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
             <button
               type="button"
@@ -125,7 +125,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         </div>
 
         <div className="sm:hidden">
-          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Modo de Vista</p>
+          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Modo de vista</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
             <button
               type="button"
@@ -170,7 +170,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         </div>
 
         <div>
-          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Tipo de Espacio</p>
+          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Tipo de espacio</p>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as any)}

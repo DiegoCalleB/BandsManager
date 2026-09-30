@@ -1217,7 +1217,7 @@ export default function Chatbot({
         aforo_total: action.concert?.aforo_total || 200,
         contrato_firmado: action.concert?.contrato_firmado ?? true,
         estado_pago: action.concert?.estado_pago || 'pendiente',
-        notas: action.concert?.notas || 'Bolo agendado vía Mánager Virtual AI',
+        notas: action.concert?.notas || 'Bolo agendado vía Mánager Virtual IA',
         tipo: action.concert?.tipo || 'sala',
       };
 
@@ -2383,7 +2383,7 @@ export default function Chatbot({
                     <div className="p-3.5 bg-[var(--ok-soft)] rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className="text-xs text-[var(--ok)] font-bold">¡Bandeja Sincronizada!</span>
+                        <span className="text-xs text-[var(--ok)] font-bold">¡Bandeja sincronizada!</span>
                       </div>
                       <p className="text-micro leading-normal text-[var(--ok)]">
                         El agente Lector ha revisado tu bandeja de correo y actualizado el hilo de respuestas en Supabase.
@@ -2397,7 +2397,7 @@ export default function Chatbot({
                     <div className="p-3.5 bg-[var(--ok)]/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className="text-xs text-[var(--ok)] font-bold">¡Despacho Completado!</span>
+                        <span className="text-xs text-[var(--ok)] font-bold">¡Despacho completado!</span>
                       </div>
                       <p className="text-micro leading-normal text-[var(--ok)]">
                         El agente Enviador ha procesado los correos autorizados en Supabase y registrado las fechas de envío.
@@ -2411,7 +2411,7 @@ export default function Chatbot({
                     <div className="p-3.5 bg-[var(--ok)]/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className="text-xs text-[var(--ok)] font-bold">¡Borradores Generados!</span>
+                        <span className="text-xs text-[var(--ok)] font-bold">¡Borradores generados!</span>
                       </div>
                       <p className="text-micro leading-normal text-[var(--ok)]">
                         El agente Redactor ha generado propuestas personalizadas en Supabase listas para tu revisión.
@@ -2609,7 +2609,7 @@ export default function Chatbot({
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-[var(--alert)] font-bold flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
-                    <span>Incidencia en Motor de Agentes Supabase</span>
+                    <span>Incidencia en motor de agentes Supabase</span>
                   </p>
                 </div>
                 <p className="text-micro leading-normal text-[var(--ink-2)]/90">

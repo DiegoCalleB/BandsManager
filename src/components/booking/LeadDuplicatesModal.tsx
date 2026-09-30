@@ -356,7 +356,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Fusionar Todos Automáticamente</span>
+                <span>Fusionar todos automáticamente</span>
               </button>
             )}
           </div>

@@ -282,7 +282,7 @@ export default function Finanzas({
           className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}
         >
           <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--ok)]">
-            <span>Ingresos Cobrados</span>
+            <span>Ingresos cobrados</span>
             <TrendingUp className="w-4 h-4" />
           </div>
           <h3
@@ -334,7 +334,7 @@ export default function Finanzas({
               balanceNeto >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"
             }`}
           >
-            <span>Balance de Caja Neto</span>
+            <span>Balance de caja neto</span>
             <DollarSign className="w-4 h-4" />
           </div>
           <h3
@@ -363,7 +363,7 @@ export default function Finanzas({
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
             }`}
           >
-            <Calculator className="w-3.5 h-3.5" /> Rentabilidad por Bolo
+            <Calculator className="w-3.5 h-3.5" /> Rentabilidad por bolo
           </button>
           <button
             onClick={() => setActiveTab("ledger")}
@@ -373,7 +373,7 @@ export default function Finanzas({
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
             }`}
           >
-            Libro Diario (Historial)
+            Libro diario (Historial)
           </button>
           <button
             onClick={() => setActiveTab("analytics")}
@@ -383,7 +383,7 @@ export default function Finanzas({
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
             }`}
           >
-            Análisis de Costes (Categorías)
+            Análisis de costes (Categorías)
           </button>
         </div>
 
@@ -440,7 +440,7 @@ export default function Finanzas({
                     className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}
                   >
                     <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
-                      Total Gastos Gira
+                      Total gastos Gira
                     </span>
                     <h4 className="text-xl font-bold text-[var(--alert)]">
                       -{totalConcertGastos.toLocaleString("es-ES")}€
@@ -472,7 +472,7 @@ export default function Finanzas({
                     className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}
                   >
                     <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
-                      Beneficio Medio / Bolo
+                      Beneficio medio / bolo
                     </span>
                     <h4 className="text-xl font-bold text-[var(--acc)]/70">
                       {mediaBeneficio >= 0
@@ -492,8 +492,8 @@ export default function Finanzas({
           <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
             <div className="flex items-center justify-between  pb-3">
               <h3 className="text-sm font-bold text-[var(--acc)] flex items-center gap-2">
-                <Calculator className="w-4 h-4" /> Desglose de Gastos &
-                Rentabilidad por Bolo
+                <Calculator className="w-4 h-4" /> Desglose de gastos &
+                rentabilidad por bolo
               </h3>
               <span className="text-xs text-[var(--ink-2)]">
                 Haz clic en "Gastos" para desglosar peajes, gasolina, hotel y
@@ -523,13 +523,13 @@ export default function Finanzas({
                 <table className="w-full text-left text-xs">
                   <thead className="bg-[var(--surface)]/80 text-[var(--acc)] font-bold font-sans text-micro">
                     <tr>
-                      <th className="p-3">Fecha & Bolo</th>
-                      <th className="p-3">Ciudad / Sala</th>
+                      <th className="p-3">Fecha y bolo</th>
+                      <th className="p-3">Ciudad / sala</th>
                       <th className="p-3">Caché (€)</th>
-                      <th className="p-3">Desglose de Gastos (€)</th>
-                      <th className="p-3">Gastos Totales</th>
-                      <th className="p-3">Beneficio Neto</th>
-                      <th className="p-3 text-center">Estado Rentabilidad</th>
+                      <th className="p-3">Desglose de gastos (€)</th>
+                      <th className="p-3">Gastos totales</th>
+                      <th className="p-3">Beneficio neto</th>
+                      <th className="p-3 text-center">Estado rentabilidad</th>
                       <th className="p-3 text-right">Acción</th>
                     </tr>
                   </thead>
@@ -747,9 +747,9 @@ export default function Finanzas({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[var(--ink-2)] font-semibold">
-                        Gasolina & Peajes (€)
+                        Gasolina y peajes (€)
                       </label>
-                      <input aria-label="Gasolina & Peajes (€)"
+                      <input aria-label="Gasolina y peajes (€)"
                         type="number"
                         value={editingGasolina}
                         onChange={(e) => setEditingGasolina(e.target.value)}
@@ -772,9 +772,9 @@ export default function Finanzas({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[var(--ink-2)] font-semibold">
-                        Alquiler Furgoneta / Backline (€)
+                        Alquiler furgoneta / backline (€)
                       </label>
-                      <input aria-label="Alquiler Furgoneta / Backline (€)"
+                      <input aria-label="Alquiler furgoneta / backline (€)"
                         type="number"
                         value={editingAlquiler}
                         onChange={(e) => setEditingAlquiler(e.target.value)}
@@ -783,9 +783,9 @@ export default function Finanzas({
                     </div>
                     <div>
                       <label className="text-[var(--ink-2)] font-semibold">
-                        Alojamiento / Hoteles (€)
+                        Alojamiento / hoteles (€)
                       </label>
-                      <input aria-label="Alojamiento / Hoteles (€)"
+                      <input aria-label="Alojamiento / hoteles (€)"
                         type="number"
                         value={editingAlojamiento}
                         onChange={(e) => setEditingAlojamiento(e.target.value)}
@@ -796,9 +796,9 @@ export default function Finanzas({
 
                   <div>
                     <label className="text-[var(--ink-2)] font-semibold">
-                      Otros Gastos Extra (€)
+                      Otros gastos extra (€)
                     </label>
-                    <input aria-label="Otros Gastos Extra (€)"
+                    <input aria-label="Otros gastos extra (€)"
                       type="number"
                       value={editingOtros}
                       onChange={(e) => setEditingOtros(e.target.value)}
@@ -808,7 +808,7 @@ export default function Finanzas({
 
                   <div>
                     <label className="text-[var(--ink-2)] font-semibold">
-                      Notas sobre Gastos
+                      Notas sobre gastos
                     </label>
                     <textarea
                       rows={2}
@@ -862,7 +862,7 @@ export default function Finanzas({
                     }}
                     className="px-4 py-2 bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-pill)]"
                   >
-                    Guardar Gastos
+                    Guardar gastos
                   </button>
                 </div>
               </div>
@@ -1049,25 +1049,25 @@ export default function Finanzas({
               </h3>
               <div className="space-y-3 font-sans text-xs">
                 <div className="flex justify-between pb-2 -dashed">
-                  <span className={textSub}>Operaciones Registradas</span>
+                  <span className={textSub}>Operaciones registradas</span>
                   <span className={`${textTitle} font-bold`}>
                     {payments.length}
                   </span>
                 </div>
                 <div className="flex justify-between pb-2 -dashed">
-                  <span className={textSub}>Pendiente de Cobro</span>
+                  <span className={textSub}>Pendiente de cobro</span>
                   <span className="text-[var(--ok)] font-bold">
                     +{totalPendienteIngresos.toLocaleString("es-ES")}€
                   </span>
                 </div>
                 <div className="flex justify-between pb-2 -dashed">
-                  <span className={textSub}>Pendiente de Pago</span>
+                  <span className={textSub}>Pendiente de pago</span>
                   <span className="text-[var(--alert)] font-bold">
                     -{totalPendienteGastos.toLocaleString("es-ES")}€
                   </span>
                 </div>
                 <div className="flex justify-between font-bold text-xs pt-1">
-                  <span className={textTitle}>Faltas Pendientes Neto</span>
+                  <span className={textTitle}>Faltas pendientes neto</span>
                   <span
                     className={
                       totalPendienteIngresos - totalPendienteGastos >= 0
@@ -1116,7 +1116,7 @@ export default function Finanzas({
             <h3
               className={`text-sm font-bold font-display ${"text-[var(--acc)]"}`}
             >
-              Análisis de Gastos por Categoría
+              Análisis de gastos por categoría
             </h3>
             <p className={`text-micro font-sans mt-0.5 ${textSub}`}>
               Proporciones totales liquidadas para cada categoría de costes

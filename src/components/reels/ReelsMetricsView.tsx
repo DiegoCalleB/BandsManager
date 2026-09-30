@@ -987,7 +987,7 @@ export function ReelsMetricsView({
             }`}
           >
             <BarChart3 className="w-3.5 h-3.5" />
-            <span>Panel de Métricas & Radar</span>
+            <span>Panel de métricas y radar</span>
           </button>
 
           <button
@@ -1000,7 +1000,7 @@ export function ReelsMetricsView({
             }`}
           >
             <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
-            <span>Plan & Recomendaciones de Crecimiento</span>
+            <span>Plan y recomendaciones de crecimiento</span>
             <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70 font-normal">
               IA
             </span>
@@ -1064,7 +1064,7 @@ export function ReelsMetricsView({
                 title="Sube una captura de pantalla de tu Instagram, TikTok o Spotify y Gemini extraerá todas las métricas al instante"
               >
                 <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
-                <span>Escanear Captura IA</span>
+                <span>Escanear captura IA</span>
               </button>
 
               {/* Instagram OAuth / Meta Graph API Button */}
@@ -1192,7 +1192,7 @@ export function ReelsMetricsView({
                     ).toLocaleString()}
                   </div>
                   <div className="text-micro font-sans text-[var(--ink-2)] mt-0.5 flex items-center justify-between">
-                    <span>Seguidores Oficiales</span>
+                    <span>Seguidores oficiales</span>
                     {latestMetric?.instagram_posts_count ? (
                       <span>{latestMetric.instagram_posts_count} posts</span>
                     ) : null}
@@ -1300,7 +1300,7 @@ export function ReelsMetricsView({
                     ).toLocaleString()}
                   </div>
                   <div className="text-micro font-sans text-[var(--ink-2)] mt-0.5">
-                    Suscriptores Oficiales
+                    Suscriptores oficiales
                   </div>
                 </div>
                 <div className="pt-2/10 flex justify-between text-micro font-sans text-[var(--ink-2)]">
@@ -1381,7 +1381,7 @@ export function ReelsMetricsView({
                     {fansTotalCount.toLocaleString()}
                   </div>
                   <div className="text-micro font-sans text-[var(--ink-2)] mt-0.5">
-                    Contactos en Base de Datos
+                    Contactos en base de datos
                   </div>
                 </div>
                 <div className="pt-2  flex justify-between text-micro font-sans text-[var(--ink-2)]">
@@ -1465,7 +1465,7 @@ export function ReelsMetricsView({
                     title="Mostrar todos los canales disponibles"
                   >
                     <RefreshCw className="w-2.5 h-2.5" />
-                    <span>Mostrar Todos</span>
+                    <span>Mostrar todos</span>
                   </button>
                 </div>
               </div>
@@ -1891,9 +1891,9 @@ export function ReelsMetricsView({
               <form onSubmit={handleSaveMetric} className="space-y-3">
                 <div className="space-y-1">
                   <label className="text-micro font-sans text-[var(--ink-2)]">
-                    Fecha del Snapshot
+                    Fecha del snapshot
                   </label>
-                  <input aria-label="Fecha del Snapshot"
+                  <input aria-label="Fecha del snapshot"
                     type="date"
                     required
                     value={metricDate}
@@ -1948,7 +1948,7 @@ export function ReelsMetricsView({
                   <div className="space-y-1">
                     <label className="text-micro font-sans text-[var(--ink-2)] flex items-center gap-1">
                       <Music2 className="w-3 h-3 text-[var(--ok)]" /> Spotify
-                      Oyentes
+                      oyentes
                     </label>
                     <input
                       type="number"
@@ -1976,7 +1976,7 @@ export function ReelsMetricsView({
                     <div className="grid grid-cols-2 gap-2">
                       <div>
                         <label className="text-micro font-sans text-[var(--ink-2)]">
-                          Spotify Seguidores
+                          Spotify seguidores
                         </label>
                         <input
                           type="number"
@@ -2032,7 +2032,7 @@ export function ReelsMetricsView({
 
                 <div className="space-y-1">
                   <label className="text-micro font-sans text-[var(--ink-2)]">
-                    Notas / Eventos (Opcional)
+                    Notas / eventos (Opcional)
                   </label>
                   <input
                     type="text"
@@ -2442,7 +2442,7 @@ export function ReelsMetricsView({
                     </div>
                     <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
                       <div className="text-micro font-sans text-[var(--ink-2)]">
-                        Visitas Perfil
+                        Visitas perfil
                       </div>
                       <div className="text-sm font-bold font-display text-[var(--ink)] mt-0.5">
                         {(
@@ -2486,7 +2486,7 @@ export function ReelsMetricsView({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="block text-xs font-sans font-bold text-[var(--ink-2)]">
-                    Vincular Token de Instagram Insights API
+                    Vincular token de Instagram insights API
                   </label>
                   <span className="text-micro text-[var(--alert)] font-sans">
                     Permisos: instagram_manage_insights
@@ -2528,12 +2528,12 @@ export function ReelsMetricsView({
                     {isConnectingIg ? (
                       <>
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        <span>Verificando Insights API...</span>
+                        <span>Verificando insights API...</span>
                       </>
                     ) : (
                       <>
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Conectar Instagram Insights</span>
+                        <span>Conectar Instagram insights</span>
                       </>
                     )}
                   </button>
@@ -2633,7 +2633,7 @@ export function ReelsMetricsView({
                   <h3 className="text-sm font-bold font-display flex items-center gap-2">
                     Escanear Métricas con Visión IA
                     <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/20 text-[var(--tentative)] font-sans font-normal flex items-center gap-1">
-                      <Sparkles className="w-2.5 h-2.5" /> Gemini Multimodal
+                      Gemini Multimodal
                     </span>
                   </h3>
                   <p className="text-xs text-[var(--ink-2)] font-sans">
@@ -2744,7 +2744,7 @@ export function ReelsMetricsView({
                   ) : (
                     <>
                       <ScanLine className="w-4 h-4 text-[var(--tentative)]/80" />
-                      <span>Escanear y Guardar en Supabase</span>
+                      <span>Escanear y guardar en Supabase</span>
                     </>
                   )}
                 </button>
@@ -2758,7 +2758,7 @@ export function ReelsMetricsView({
                   <div className="flex items-center justify-between/20 pb-2">
                     <div className="text-xs font-bold font-sans text-[var(--tentative)]/80 flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
-                      Datos Extraídos con Éxito
+                      Datos extraídos con éxito
                     </div>
                     <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)] font-bold">
                       {scanResult.platform || "Red Social"}
@@ -2774,7 +2774,7 @@ export function ReelsMetricsView({
                       scanResult.followers !== undefined && (
                         <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
                           <div className="text-micro font-sans text-[var(--ink-2)]">
-                            Seguidores / Oyentes
+                            Seguidores / oyentes
                           </div>
                           <div className="text-base font-bold font-display text-[var(--ink)] mt-0.5">
                             {Number(scanResult.followers).toLocaleString()}
@@ -2842,7 +2842,6 @@ export function ReelsMetricsView({
             {/* Modal Footer */}
             <div className="p-4 flex justify-between items-center bg-[var(--surface)]/50">
               <span className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
                 OCR & Visión Asistida por Gemini 2.5
               </span>
               <button

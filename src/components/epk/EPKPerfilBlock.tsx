@@ -13,7 +13,6 @@ import {
   Globe,
   Music2,
   Tag,
-  Sparkles,
   Plus,
   X,
 } from "lucide-react";
@@ -121,7 +120,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-[var(--ink-2)]">
-              Biografía de Presentación
+              Biografía de presentación
             </label>
             <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-xs text-[var(--ink-2)] space-y-1.5">
               <p className="text-[var(--ink-2)] font-semibold">
@@ -262,8 +261,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               </h3>
             </div>
             <span className="text-micro font-mono px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] font-bold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-              Agentes IA & Radar de Booking
+              Agentes IA y radar de Booking
             </span>
           </div>
 
@@ -272,7 +270,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                 <Tag className="w-3.5 h-3.5 text-[var(--acc)]" />
-                Género / Estilo Musical Principal
+                Género / estilo musical principal
               </label>
               <input
                 type="text"
@@ -292,7 +290,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <div className="space-y-1.5 flex flex-col justify-between">
               <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                 <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
-                Visibilidad en el Dossier Público
+                Visibilidad en el dossier público
               </label>
               <label className="flex items-center gap-3 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/70 cursor-pointer transition hover:brightness-95">
                 <input
@@ -539,8 +537,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         {/* DATOS DE CONTACTO DE BOOKING & REDES */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
-            <Mail className="w-5 h-5" /> Datos de Contacto de Booking & Redes
-            Oficiales
+            <Mail className="w-5 h-5" /> Datos de contacto de Booking y redes
+            oficiales
           </h3>
 
           <div className="space-y-4">
@@ -567,9 +565,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
 
               <div>
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
-                  Email de Contacto
+                  Email de contacto
                 </label>
-                <input aria-label="Email de Contacto"
+                <input aria-label="Email de contacto"
                   type="email"
                   value={config.contactoBooking?.email || ""}
                   onChange={(e) =>
@@ -587,9 +585,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
 
               <div>
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
-                  Teléfono Mánager
+                  Teléfono mánager
                 </label>
-                <input aria-label="Teléfono Mánager"
+                <input aria-label="Teléfono mánager"
                   type="text"
                   value={config.contactoBooking?.telefono || ""}
                   onChange={(e) =>
@@ -610,11 +608,11 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-[var(--acc)]" /> Sitio Web
-                  Oficial Propio de la Banda (Opcional)
+                  <Globe className="w-4 h-4 text-[var(--acc)]" /> Sitio web
+                  oficial propio de la banda (Opcional)
                 </label>
                 <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
-                  Dossier EPK + Fans Landing
+                  Dossier EPK + fans landing
                 </span>
               </div>
               <p className="text-xs text-[var(--ink-2)] leading-relaxed">
@@ -651,8 +649,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
-                    <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes &
-                    Plataformas Oficiales
+                    <Share2 className="w-3.5 h-3.5" /> Enlaces de redes &
+                    plataformas oficiales
                   </label>
                   <p className="text-xs text-[var(--ink-2)]">
                     Fuente única: se sincronizan automáticamente en tu Dossier

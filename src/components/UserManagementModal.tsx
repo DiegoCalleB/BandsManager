@@ -10,7 +10,6 @@ import {
   Check,
   AlertCircle,
   Edit2,
-  Sparkles,
   RefreshCw,
   Link2,
   Upload,
@@ -368,7 +367,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               </div>
               <div>
                 <h3 className="font-bold font-display text-base flex items-center gap-2">
-                  <span>Gestión de Miembros de la Banda</span>
+                  <span>Gestión de miembros de la banda</span>
                   <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                     Panel Admin
                   </span>
@@ -402,7 +401,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               }`}
             >
               <ImageIcon className="w-3.5 h-3.5" />
-              <span>Info & Logo de Banda</span>
+              <span>Info y logo de banda</span>
             </button>
             <button
               onClick={() => {
@@ -432,7 +431,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
-              <span>+ Nuevo Músico</span>
+              <span>+ Nuevo músico</span>
             </button>
             <button
               onClick={() => {
@@ -447,7 +446,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               }`}
             >
               <Link2 className="w-3.5 h-3.5" />
-              <span>Asociar Músico</span>
+              <span>Asociar músico</span>
             </button>
           </div>
 
@@ -476,7 +475,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   <div>
                     <h4 className="font-bold text-sm text-[var(--ink)] flex items-center gap-2">
                       <ImageIcon className="w-4 h-4 text-[var(--acc-ink)]" />
-                      <span>Logotipo Oficial de la Banda</span>
+                      <span>Logotipo oficial de la banda</span>
                     </h4>
                     <p className="text-xs text-[var(--ink-2)] mt-0.5">
                       Este logo se muestra en el selector de proyectos, tu
@@ -550,12 +549,12 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 {/* Band Basic Info */}
                 <div className="p-4 rounded-2xl bg-[var(--sunken)]/60 text-xs space-y-3">
                   <h4 className="font-bold text-xs font-mono text-[var(--acc-ink)]/90">
-                    Detalles del Proyecto
+                    Detalles del proyecto
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
                       <span className="text-[var(--ink-2)] block text-micro font-mono ">
-                        Nombre de la Banda
+                        Nombre de la banda
                       </span>
                       <span className="font-bold text-[var(--ink)] text-sm">
                         {bandName || currentUser.bandName || "Mi Banda"}
@@ -563,7 +562,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     </div>
                     <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
                       <span className="text-[var(--ink-2)] block text-micro font-mono ">
-                        Total de Músicos
+                        Total de músicos
                       </span>
                       <span className="font-bold text-[var(--ink)] text-sm">
                         {users.length} miembros registrados
@@ -759,7 +758,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
-                      Nombre Completo *
+                      Nombre completo *
                     </label>
                     <input
                       type="text"
@@ -773,7 +772,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
                   <div className="space-y-1">
                     <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
-                      Contraseña Inicial *
+                      Contraseña inicial *
                     </label>
                     <input
                       type="text"
@@ -795,8 +794,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     onChange={(e) => setNewRole(e.target.value as UserRole)}
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                   >
-                    <option value="member">Miembro de Banda (Músico)</option>
-                    <option value="leader">Admin / Dirección de Banda</option>
+                    <option value="member">Miembro de banda (Músico)</option>
+                    <option value="leader">Admin / dirección de banda</option>
                   </select>
                 </div>
 
@@ -861,7 +860,6 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               <form onSubmit={handleAssociateUser} className="space-y-4">
                 <div className="p-4 bg-[var(--tentative)]/5 rounded-[var(--r-l)] text-xs text-[var(--ink-2)]">
                   <p className="font-semibold text-[var(--tentative)] mb-1 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
                     <span>¿Músico ya registrado en la plataforma?</span>
                   </p>
                   <span>
@@ -873,7 +871,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
                 <div className="space-y-1">
                   <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
-                    Email del Músico Registrado *
+                    Email del músico registrado *
                   </label>
                   <input
                     type="email"
@@ -894,8 +892,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     onChange={(e) => setAssocRole(e.target.value as UserRole)}
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
                   >
-                    <option value="member">Miembro de Banda (Músico)</option>
-                    <option value="leader">Admin / Dirección de Banda</option>
+                    <option value="member">Miembro de banda (Músico)</option>
+                    <option value="leader">Admin / dirección de banda</option>
                   </select>
                 </div>
 
@@ -923,7 +921,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   ) : (
                     <>
                       <UserPlus className="w-4 h-4" />
-                      <span>Asociar Músico a mi Banda</span>
+                      <span>Asociar músico a mi banda</span>
                     </>
                   )}
                 </button>
@@ -937,7 +935,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               onClick={onClose}
               className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
             >
-              Cerrar Panel
+              Cerrar panel
             </button>
           </div>
         </div>

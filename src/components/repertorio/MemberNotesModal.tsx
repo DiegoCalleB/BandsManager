@@ -196,7 +196,7 @@ export function MemberNotesModal({
                 <h3
                   className={`text-base font-bold font-display ${"text-[var(--ink)]"}`}
                 >
-                  Notas para Repertorio por Miembro
+                  Notas para repertorio por miembro
                 </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1.5 mt-0.5">
                   <Music className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -275,7 +275,7 @@ export function MemberNotesModal({
               <label
                 className={`block text-xs font-bold font-sans mb-1.5 ${"text-[var(--ink-2)]"}`}
               >
-                <ShowIcon inline emoji="📌" />Nota General para todo el Grupo (Opcional)
+                <ShowIcon inline emoji="📌" />Nota general para todo el grupo (Opcional)
               </label>
               <textarea
                 rows={2}

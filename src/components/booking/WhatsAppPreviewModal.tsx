@@ -8,7 +8,6 @@ import {
   Phone,
   Smartphone,
   Calendar,
-  Sparkles,
   Clock,
   BookOpen,
   AlertTriangle,
@@ -148,7 +147,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm sm:text-base font-bold font-display tracking-tight text-[var(--ink)] flex items-center gap-1.5">
-                    <span>Mensaje Directo por WhatsApp</span>
+                    <span>Mensaje directo por WhatsApp</span>
                   </h3>
                   <span className="text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] ">
                     wa.me 1-Clic
@@ -180,7 +179,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 <div className="flex items-center gap-2">
                   {isMobile && (
                     <span className="text-micro font-bold px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] flex items-center gap-1">
-                      <Check className="w-3 h-3" /> Móvil Detectado
+                      <Check className="w-3 h-3" /> Móvil detectado
                     </span>
                   )}
                   {isLandline && (
@@ -188,7 +187,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                       className="text-micro font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1"
                       title="Parece un teléfono fijo; puede no tener WhatsApp habilitado"
                     >
-                      <AlertTriangle className="w-3 h-3" /> Posible Fijo
+                      <AlertTriangle className="w-3 h-3" /> Posible fijo
                     </span>
                   )}
                   <button
@@ -283,7 +282,6 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-[var(--ink-2)]">
                 <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-[var(--ok)]" />
                   <span>Mensaje redactado para WhatsApp:</span>
                 </label>
                 <div className="flex items-center gap-3">
@@ -341,7 +339,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5" />
-                    <span>Copiar Texto</span>
+                    <span>Copiar texto</span>
                   </>
                 )}
               </button>

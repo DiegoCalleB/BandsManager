@@ -1,6 +1,6 @@
 import React from 'react';
 import { auditDateAndCity, HolidayAuditResult } from '../../utils/holidayAuditor';
-import { AlertTriangle, Sparkles, Calendar, Info, CheckCircle2, Flame } from 'lucide-react';
+import { AlertTriangle, Calendar, Info, CheckCircle2, Flame } from 'lucide-react';
 
 interface HolidayDateWarningProps {
   date?: string | Date | null;
@@ -22,7 +22,6 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({ date, ci
           className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] ${className}`}
           title={`${audit.title}: ${audit.advice}`}
         >
-          <Sparkles className="w-3 h-3 text-[var(--ok)] shrink-0" />
           <span>Víspera Festivo ({audit.holidayName})</span>
         </span>
       );
@@ -56,7 +55,6 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({ date, ci
     return (
       <div className={`p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink)] text-xs space-y-1 ${className}`}>
         <div className="flex items-center gap-2 font-bold text-[var(--ink-2)]">
-          <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
           <span>{audit.title}</span>
         </div>
         <p className="text-xs text-[var(--ok)]/90 leading-relaxed">{audit.advice}</p>

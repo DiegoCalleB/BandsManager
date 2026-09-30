@@ -699,7 +699,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             title="Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento."
           >
             <QrCode className="size-5 sm:size-6 text-[var(--acc)] shrink-0" />
-            <span className="truncate">Captura QR & Fans</span>
+            <span className="truncate">Captura QR y fans</span>
           </h2>
           <p className="hidden sm:block text-[var(--ink-2)] font-sans text-sm mt-1">
             Captura de fans en directo con códigos QR, métricas de redes,
@@ -749,7 +749,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
                     <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
-                    Formulario
+                    formulario
                   </button>
                   <button
                     type="button"
@@ -759,8 +759,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de Captura
-                    Corto
+                    <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de captura
+                    corto
                   </button>
                   <button
                     type="button"
@@ -770,8 +770,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan
-                    Manual
+                    <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar fan
+                    manual
                   </button>
                   <button
                     id="fans-export-csv-btn"
@@ -800,7 +800,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs ${activeTab === "metrics" ? "text-[var(--acc)] font-bold bg-[var(--acc)]/5" : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
           >
             <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento
-            & Métricas de Redes
+            y métricas de redes
           </button>
         )}
         <button
@@ -1027,7 +1027,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
-                  title="Vista en Tarjetas"
+                  title="Vista en tarjetas"
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
                   <span>Tarjetas</span>
@@ -1053,7 +1053,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
-                  title="Vista en Mapa por Ciudades"
+                  title="Vista en mapa por ciudades"
                 >
                   <MapIcon className="w-3.5 h-3.5" />
                   <span>Mapa</span>
@@ -1140,7 +1140,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       </div>
                       <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
                         <span className="text-[var(--ink-2)] text-micro block">
-                          Origen / Canal
+                          Origen / canal
                         </span>
                         <span className="text-[var(--acc)] truncate block font-semibold">
                           {fan.comoConocio ||
@@ -1212,7 +1212,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <thead className="bg-[var(--surface)] text-[var(--acc)] font-bold font-sans">
                   <tr>
                     <th className="p-3">Nombre</th>
-                    <th className="p-3">Correo Electrónico</th>
+                    <th className="p-3">Correo electrónico</th>
                     <th className="p-3">Ciudad</th>
                     <th className="p-3">Canal</th>
                     <th className="p-3">Concierto Asociado</th>
@@ -1325,7 +1325,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
             >
               <option value="">
-                -- Campaña General / QR Genérico de la Banda --
+                -- Campaña general / QR genérico de la banda --
               </option>
               {concerts.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -1538,7 +1538,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <div className="space-y-3 pt-1">
                     <div>
                       <label className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
-                        <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
+                        {" "}
                         Mensaje de Bienvenida / Agradecimiento:
                       </label>
                       <input
@@ -1626,14 +1626,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-pill)] shadow transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> Configurar en el
-                    Dossier EPK
+                    dossier EPK
                   </button>
                 </div>
 
                 {/* Ruta Limpia y Dominio */}
                 <div className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-4">
                   <label className="text-xs font-bold text-[var(--acc)] font-sans flex items-center gap-2">
-                    Ruta Limpia y Dominio Base
+                    Ruta limpia y dominio base
                   </label>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
@@ -1646,7 +1646,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                       }`}
                     >
-                      <span><ShowIcon inline emoji="🌐" />Dominio Web Oficial</span>
+                      <span><ShowIcon inline emoji="🌐" />Dominio web oficial</span>
                       <span className="text-micro text-[var(--ink-2)] font-normal">
                         Para impresiones/carteles
                       </span>
@@ -1890,16 +1890,16 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </div>
                 <div>
                   <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
-                    Origen / Canal
+                    Origen / canal
                   </label>
-                  <select aria-label="Origen / Canal"
+                  <select aria-label="Origen / canal"
                     value={newOrigen}
                     onChange={(e) => setNewOrigen(e.target.value)}
                     className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   >
-                    <option value="Manual">Registro Manual</option>
+                    <option value="Manual">Registro manual</option>
                     <option value="Concierto Directo">
-                      Concierto / Directo
+                      Concierto / directo
                     </option>
                     <option value="Instagram">Instagram</option>
                     <option value="TikTok">TikTok</option>
@@ -1921,7 +1921,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   >
                     <option value="fiel">Oyente Fiel</option>
-                    <option value="superfan">Superfan Directos</option>
+                    <option value="superfan">Superfan directos</option>
                     <option value="fundador">Fan Fundador</option>
                     <option value="backstage">Backstage VIP</option>
                   </select>
