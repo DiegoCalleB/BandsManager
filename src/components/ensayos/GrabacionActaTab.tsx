@@ -342,7 +342,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <input
                     type="text"
-                    placeholder="Título de la toma (ej. Riff nuevo tema 2)..."
+                    placeholder="Título de la toma (ej. Riff nuevo tema 2)…"
                     value={recordingTitle}
                     onChange={(e) => setRecordingTitle(e.target.value)}
                     className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none"
@@ -486,7 +486,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               {isGeneratingActa ? (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Generando Acta...</span>
+                  <span>Generando Acta…</span>
                 </>
               ) : (
                 <>
@@ -519,7 +519,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         {!acta ? (
           <div className="p-8 text-center text-[var(--ink-2)] text-xs space-y-2 rounded-[var(--r-m)]">
             <p>
-              Pulsa "Generar Acta con IA" para obtener un resumen estructurado
+              Pulsa “Generar Acta con IA” para obtener un resumen estructurado
               del ensayo listo para compartir.
             </p>
           </div>

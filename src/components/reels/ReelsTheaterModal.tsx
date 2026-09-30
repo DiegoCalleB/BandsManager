@@ -618,7 +618,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                     <div className="flex items-center gap-3">
                       <RefreshCw className="w-5 h-5 text-[var(--acc-ink)] animate-spin" />
                       <span className="text-xs font-mono font-extrabold text-[var(--ink)]">
-                        RENDERIZANDO ARCHIVOS...
+                        RENDERIZANDO ARCHIVOS…
                       </span>
                     </div>
                     <p className="text-xs text-[var(--acc-ink)] font-mono pl-8">
@@ -678,7 +678,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 value={editedCopy}
                 onChange={(e) => setEditedCopy(e.target.value)}
                 rows={5}
-                placeholder="Escribe el copy para tus redes..."
+                placeholder="Escribe el copy para tus redes…"
                 className="w-full text-xs font-sans bg-[var(--sunken)] rounded-xl p-3 text-[var(--ink)] focus:outline-none"
               />
             </div>

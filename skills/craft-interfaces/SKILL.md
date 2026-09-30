@@ -87,6 +87,12 @@ description: Detalle y movimiento de la interfaz de BandManager.io — escala ti
 - Los objetos propios del producto (onda, público, sala, setlist) se dibujan a mano.
 - Copy del circuito (caché, rider, backline, hoja de ruta, furgo), no de producto ("Todo en un solo lugar").
 - Estados vacíos con el Público y una frase con voz propia.
+- **Caja de frase, siempre.** "Guardar y activar", no "Guardar Y Activar" ni "Gestor Logístico & Giras". El Title Case es un calco del inglés; solo llevan mayúscula los nombres propios y las marcas (Instagram, Spotify, BAKANDEYA).
+- **"y", no "&"**, salvo marcas ("Rock & Roll", "R&B"). `design-audit` lo marca como error.
+- **Un solo nombre para cada cosa:** "IA", no "AI" (salvo nombres de producto: Gemini AI); "mánager" con tilde.
+- **La chispa ✨ (`Sparkles`) significa una sola cosa: "aquí actúa la IA".** Va en botones de acción, no en titulares, etiquetas ni chips: una chispa decorativa es el delator más reconocible de interfaz generada.
+- **Tipografía del texto:** `…` (no `...`), comillas “así” en el texto visible, y separadores con `·`.
+- **Cada módulo abre con el mismo patrón:** `page-title` + una línea que dice para qué sirve, y las acciones a la derecha. Booking, Giras, Fans y el resto no inventan cabeceras propias.
 
 ## 🔍 7. Método de revisión (Impeccable, adaptado)
 

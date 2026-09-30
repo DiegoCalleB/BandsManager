@@ -199,7 +199,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
             {isUploadingRider && (
               <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-[var(--acc)]">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" /> Subiendo
-                rider...
+                rider…
               </div>
             )}
           </div>
@@ -215,7 +215,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           rows={3}
           value={riderTecnicoText}
           onChange={(e) => setRiderTecnicoText(e.target.value)}
-          placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
+          placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m…"
           className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:leading-relaxed"
         />
       </div>

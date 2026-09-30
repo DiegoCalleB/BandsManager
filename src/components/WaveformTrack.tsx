@@ -417,7 +417,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
         {/* Loading Overlay */}
         {!isLoaded && !loadError && (
           <div className="absolute inset-0 flex items-center justify-center text-micro text-[var(--ink-2)] font-sans bg-[var(--scrim)]/70 z-30">
-            <ShowIcon inline emoji="⚡" />Cargando onda de audio...
+            <ShowIcon inline emoji="⚡" />Cargando onda de audio…
           </div>
         )}
       </div>

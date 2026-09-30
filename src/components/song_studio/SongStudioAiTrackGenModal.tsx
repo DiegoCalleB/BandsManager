@@ -97,7 +97,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             <textarea
               value={aiTrackGenPrompt}
               onChange={(e) => setAiTrackGenPrompt(e.target.value)}
-              placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
+              placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo…"
               className="w-full h-20 bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] placeholder:text-[var(--ink-2)] font-sans text-xs focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] resize-none"
             />
           </div>
@@ -151,7 +151,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             {isGeneratingAiTrack ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Generando...</span>
+                <span>Generando…</span>
               </>
             ) : (
               <>

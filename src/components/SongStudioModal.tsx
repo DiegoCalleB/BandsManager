@@ -3796,7 +3796,7 @@ export default function SongStudioModal({
           <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-[var(--acc)]  text-[var(--on-acc)] font-sans font-bold px-6 py-3 rounded-[var(--r-l)] flex items-center gap-3">
             <span className="text-2xl"><ShowIcon inline emoji="🥁" /></span>
             <div className="text-sm">
-              <div>PREPARANDO GRABACIÓN MULTIPISTA...</div>
+              <div>PREPARANDO GRABACIÓN MULTIPISTA…</div>
               <div className="text-xs opacity-80 font-bold">Arranca en: ¡{countInCountdown}!</div>
             </div>
             <span className="text-3xl font-black ml-2 bg-[var(--sunken)] text-[var(--acc)] px-3.5 py-1 rounded-[var(--r-m)]">
@@ -3860,7 +3860,7 @@ export default function SongStudioModal({
                         }`}
                       >
                         <option value="" disabled>
-                          Mi preparación...
+                          Mi preparación…
                         </option>
                         {READINESS_LEVELS.map((l) => (
                           <option key={l.value} value={l.value}>
@@ -3923,7 +3923,7 @@ export default function SongStudioModal({
                                 }`}
                               >
                                 <option value="" disabled>
-                                  Mi preparación...
+                                  Mi preparación…
                                 </option>
                                 {READINESS_LEVELS.map((l) => (
                                   <option key={l.value} value={l.value}>
@@ -4251,7 +4251,7 @@ export default function SongStudioModal({
                               setSelectedAudioFile(null);
                               setRecordedAudioUrl(null);
                             }}
-                            placeholder="https://drive.google.com/..."
+                            placeholder="https://drive.google.com/…"
                             className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-micro text-[var(--ink)] focus:outline-none font-sans"
                           />
                         </div>
@@ -4360,7 +4360,7 @@ export default function SongStudioModal({
                                 value={newIdeaKey}
                                 onChange={(e) => setNewIdeaKey(e.target.value)}
                                 className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-sans"
-                                placeholder="Do, Re, Mi..."
+                                placeholder="Do, Re, Mi…"
                               />
                             </div>
 
@@ -4400,7 +4400,7 @@ export default function SongStudioModal({
                       <textarea
                         value={ideaNotes}
                         onChange={(e) => setIdeaNotes(e.target.value)}
-                        placeholder="Explica qué has grabado o la propuesta..."
+                        placeholder="Explica qué has grabado o la propuesta…"
                         rows={2}
                         className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none resize-none"
                       />
@@ -4419,7 +4419,7 @@ export default function SongStudioModal({
                         ) : isRecording ? (
                           <span className="text-[var(--alert)] font-bold flex items-center gap-1">
                             <Mic className="w-4 h-4" /> Grabando micro ({Math.floor(recordingTime / 60)}:
-                            {String(recordingTime % 60).padStart(2, '0')})...
+                            {String(recordingTime % 60).padStart(2, '0')})…
                           </span>
                         ) : recordedAudioUrl ? (
                           <span className="text-[var(--ok)] font-bold flex items-center gap-1">
@@ -5399,7 +5399,7 @@ export default function SongStudioModal({
                                                   </span>
                                                   <span className="px-2 py-0.5 rounded bg-[var(--alert)]/80 text-[var(--ink)] font-sans text-micro font-extrabold flex items-center gap-1 shadow">
                                                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] animate-ping" /> GRABANDO
-                                                    ONDAS EN DIRECTO...
+                                                    ONDAS EN DIRECTO…
                                                   </span>
                                                 </div>
                                                 <span className="text-micro font-sans text-[var(--alert)]/80 block mt-0.5">
@@ -5780,7 +5780,7 @@ export default function SongStudioModal({
                                     }))
                                   }
                                   onKeyDown={(e) => e.key === 'Enter' && handleAddComment(idea)}
-                                  placeholder="Escribe tu crítica o sugerencia..."
+                                  placeholder="Escribe tu crítica o sugerencia…"
                                   className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                                 />
 

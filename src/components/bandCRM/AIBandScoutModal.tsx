@@ -173,7 +173,7 @@ export function AIBandScoutModal({
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    placeholder="Ej: Barcelona, Valencia..."
+                    placeholder="Ej: Barcelona, Valencia…"
                     className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
                   />
                 </div>
@@ -191,7 +191,7 @@ export function AIBandScoutModal({
                     type="text"
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
-                    placeholder="Ej: Balkan Ska, Punk Rock..."
+                    placeholder="Ej: Balkan Ska, Punk Rock…"
                     className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
                   />
                 </div>
@@ -224,7 +224,7 @@ export function AIBandScoutModal({
                 {isSearching ? (
                   <>
                     <div className="w-5 h-5 border-t-[var(--hair)] rounded-[var(--r-pill)] animate-spin" />
-                    Buscando bandas compatibles...
+                    Buscando bandas compatibles…
                   </>
                 ) : (
                   <>

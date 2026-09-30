@@ -293,7 +293,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
 
             {isLoadingData ? (
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] text-center text-xs font-sans text-[var(--ink-2)]">
-                Calculando duraciones y repertorios óptimos...
+                Calculando duraciones y repertorios óptimos…
               </div>
             ) : generateNewSetlist ? (
               <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 space-y-2 animate-fadeIn">

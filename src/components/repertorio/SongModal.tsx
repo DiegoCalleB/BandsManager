@@ -173,7 +173,7 @@ export function SongModal({
                     onClick={() => fileInputRef.current?.click()}
                     className="px-2.5 py-1 text-micro rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold cursor-pointer transition-transform active:scale-[0.97]"
                   >
-                    Examinar...
+                    Examinar…
                   </button>
                 </div>
                 <input
@@ -237,7 +237,7 @@ export function SongModal({
                           {alb}
                         </option>
                       ))}
-                    <option value="__CUSTOM__">+ Crear nuevo álbum...</option>
+                    <option value="__CUSTOM__">+ Crear nuevo álbum…</option>
                   </select>
 
                   {selectedAlbum === '__CUSTOM__' && (
@@ -245,7 +245,7 @@ export function SongModal({
                       type="text"
                       value={customAlbumInput}
                       onChange={(e) => setCustomAlbumInput(e.target.value)}
-                      placeholder="Nombre del nuevo disco..."
+                      placeholder="Nombre del nuevo disco…"
                       className={`w-full mt-2 px-3 py-2 rounded-[var(--r-m)] focus:outline-none ${
                         'bg-[var(--sunken)] text-[var(--ink)]'
                       }`}
@@ -441,7 +441,7 @@ export function SongModal({
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] focus:outline-none ${
                             'bg-[var(--surface)] text-[var(--ink)] '
                           }`}
-                          placeholder="https://drive.google.com/..."
+                          placeholder="https://drive.google.com/…"
                         />
                       </div>
                     </div>
@@ -456,7 +456,7 @@ export function SongModal({
                         className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none text-xs ${
                           'bg-[var(--surface)] text-[var(--ink)] '
                         }`}
-                        placeholder="ej. Entrar directos tras el solo de batería..."
+                        placeholder="ej. Entrar directos tras el solo de batería…"
                       />
                     </div>
 

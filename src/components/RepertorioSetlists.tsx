@@ -5366,7 +5366,7 @@ export default function RepertorioSetlists({
 
                           <input
                             type="text"
-                            placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)..."
+                            placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)…"
                             value={it.notaTema || ""}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) =>
@@ -5612,7 +5612,7 @@ export default function RepertorioSetlists({
                         <input
                           type="text"
                           value={it.tituloCustom || ""}
-                          placeholder="Título/descripción..."
+                          placeholder="Título/descripción…"
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => {
                             const val = e.target.value;

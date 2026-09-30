@@ -540,7 +540,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
       {uploadProgress !== null && (
         <div className="space-y-1 mt-2">
           <div className="flex justify-between items-center text-micro font-mono text-[var(--ink-2)]">
-            <span>Transmitiendo a APIs de redes sociales...</span>
+            <span>Transmitiendo a APIs de redes sociales…</span>
             <span>{uploadProgress}%</span>
           </div>
           <div className="w-full h-1.5 rounded-full overflow-hidden bg-[var(--surface)] ">

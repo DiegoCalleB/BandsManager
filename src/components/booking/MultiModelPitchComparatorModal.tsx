@@ -311,7 +311,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   type="text"
                   value={customComment}
                   onChange={(e) => setCustomComment(e.target.value)}
-                  placeholder="Ajuste puntual opcional: Ej. 'Destacar que tenemos 100k streams', 'Proponer viernes o sábado'..."
+                  placeholder="Ajuste puntual opcional: Ej. 'Destacar que tenemos 100k streams', 'Proponer viernes o sábado'…"
                   className="w-full px-3 py-2 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleRunComparison();
@@ -327,7 +327,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Consultando modelos en paralelo...</span>
+                    <span>Consultando modelos en paralelo…</span>
                   </>
                 ) : (
                   <>
@@ -416,7 +416,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-[var(--ink)]">
-                    Calculando propuestas y costes en paralelo...
+                    Calculando propuestas y costes en paralelo…
                   </h3>
                   <p className="text-xs text-[var(--ink-2)] mt-1 max-w-md mx-auto">
                     Enviando el mismo contexto a DeepSeek V3 y Google Gemini
@@ -429,7 +429,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <div className="py-16 text-center space-y-3 text-[var(--ink-2)]">
                 <Sparkles className="w-8 h-8 mx-auto text-[var(--ink-2)]" />
                 <p className="text-xs">
-                  Haz clic en "Generar y Comparar Propuestas" para ver las
+                  Haz clic en “Generar y Comparar Propuestas” para ver las
                   opciones A/B y sus costes detallados.
                 </p>
               </div>

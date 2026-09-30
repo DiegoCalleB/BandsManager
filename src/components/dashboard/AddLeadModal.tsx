@@ -213,7 +213,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 rows={3}
                 value={newNotas}
                 onChange={(e) => setNewNotas(e.target.value)}
-                placeholder="Alguna instrucción de booking, contacto recomendado..."
+                placeholder="Alguna instrucción de booking, contacto recomendado…"
                 className="w-full bg-[var(--sunken)] rounded p-3 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans leading-relaxed"
               />
             </div>

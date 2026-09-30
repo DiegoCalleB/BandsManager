@@ -67,7 +67,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
             type="text"
             value={socialLinks.spotify}
             onChange={(e) => setSocialLinks((prev) => ({ ...prev, spotify: e.target.value }))}
-            placeholder="https://open.spotify.com/artist/..."
+            placeholder="https://open.spotify.com/artist/…"
             className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
         </div>

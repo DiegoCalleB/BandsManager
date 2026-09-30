@@ -202,7 +202,7 @@ export function ExampleThreadsSection({
 
       {isLoading ? (
         <div className="text-micro text-[var(--acc)]/70 flex items-center gap-1.5">
-          <Loader2 className="w-3 h-3 animate-spin" /> Cargando hilos...
+          <Loader2 className="w-3 h-3 animate-spin" /> Cargando hilos…
         </div>
       ) : threads.length > 0 ? (
         <div className="space-y-1.5">

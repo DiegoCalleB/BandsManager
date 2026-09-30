@@ -496,7 +496,7 @@ export default function Finanzas({
                 rentabilidad por bolo
               </h3>
               <span className="text-xs text-[var(--ink-2)]">
-                Haz clic en "Gastos" para desglosar peajes, gasolina, hotel y
+                Haz clic en “Gastos” para desglosar peajes, gasolina, hotel y
                 dietas.
               </span>
             </div>
@@ -814,7 +814,7 @@ export default function Finanzas({
                       rows={2}
                       value={editingNotasGastos}
                       onChange={(e) => setEditingNotasGastos(e.target.value)}
-                      placeholder="Detalles de facturas, tickets guardados..."
+                      placeholder="Detalles de facturas, tickets guardados…"
                       className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)]"
                     />
                   </div>
@@ -885,7 +885,7 @@ export default function Finanzas({
                 <input
                   id="finanzas-search"
                   type="text"
-                  placeholder="Buscar transacciones por concepto..."
+                  placeholder="Buscar transacciones por concepto…"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ? "pr-8" : "pr-3"} py-1.5 text-xs focus:outline-none font-sans transition-ui ${"bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50 placeholder:text-[var(--ink-2)]"}`}

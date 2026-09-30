@@ -2426,7 +2426,7 @@ export default function ReelsCenter({
                       rows={3}
                       value={reelIdea}
                       onChange={(e) => setReelIdea(e.target.value)}
-                      placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino..."
+                      placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino…"
                       className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50`}
                     />
                   </div>
@@ -2456,7 +2456,7 @@ export default function ReelsCenter({
                       {isGenerating && (
                         <div className="text-micro font-sans text-[var(--ink-2)] text-center flex items-center justify-center gap-1.5 mt-2">
                           <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                          <span>Consultando a Gemini...</span>
+                          <span>Consultando a Gemini…</span>
                         </div>
                       )}
                     </div>
@@ -2643,7 +2643,7 @@ export default function ReelsCenter({
                           type="url"
                           value={youtubeUrl}
                           onChange={(e) => setYoutubeUrl(e.target.value)}
-                          placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
+                          placeholder="https://www.youtube.com/watch?v=… o https://youtu.be/…"
                           className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                         />
                         {youtubeUrl && (
@@ -2670,7 +2670,7 @@ export default function ReelsCenter({
                       {isFetchingMeta && (
                         <div className="flex items-center justify-center gap-2 text-micro font-sans text-[var(--ink-2)] pt-1">
                           <RefreshCw className="w-3 h-3 animate-spin" />
-                          <span>Leyendo la ficha del vídeo...</span>
+                          <span>Leyendo la ficha del vídeo…</span>
                         </div>
                       )}
 
@@ -2774,7 +2774,7 @@ export default function ReelsCenter({
                       type="text"
                       value={videoTopic}
                       onChange={(e) => setVideoTopic(e.target.value)}
-                      placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión..."
+                      placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión…"
                       className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                     />
                   </div>
@@ -2816,7 +2816,7 @@ export default function ReelsCenter({
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
-                      ). Pulsa "Analizar highlights con IA" si quieres uno nuevo.
+                      ). Pulsa “Analizar highlights con IA” si quieres uno nuevo.
                     </span>
                   </div>
                 )}
@@ -2841,7 +2841,7 @@ export default function ReelsCenter({
                         <RefreshCw
                           className={`w-4 h-4 animate-spin text-[var(--acc-ink)]`}
                         />
-                        <span>PROCESANDO METRAJE...</span>
+                        <span>PROCESANDO METRAJE…</span>
                       </>
                     ) : (
                       <>
@@ -3178,7 +3178,7 @@ export default function ReelsCenter({
                                 );
                               }}
                               className={`w-full bg-transparent text-xs font-bold font-sans -dashed focus:-[var(--acc)] focus:outline-none py-0.5 ${textTitle}`}
-                              placeholder="Escribe un título para este corte..."
+                              placeholder="Escribe un título para este corte…"
                             />
                           </div>
                           <span
@@ -3229,7 +3229,7 @@ export default function ReelsCenter({
                               type="text"
                               value={clipUserNote}
                               onChange={(e) => setClipUserNote(e.target.value)}
-                              placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín..."
+                              placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín…"
                               className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50`}
                             />
                           </div>
@@ -3742,7 +3742,7 @@ export default function ReelsCenter({
                               {isPublishingNow ? (
                                 <>
                                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                                  <span>PUBLICANDO...</span>
+                                  <span>PUBLICANDO…</span>
                                 </>
                               ) : (
                                 <>
@@ -3764,7 +3764,7 @@ export default function ReelsCenter({
                               {isScheduling ? (
                                 <>
                                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                                  <span>AGENDANDO...</span>
+                                  <span>AGENDANDO…</span>
                                 </>
                               ) : (
                                 <>

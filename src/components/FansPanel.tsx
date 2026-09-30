@@ -924,7 +924,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <input
                     type="text"
                     autoFocus
-                    placeholder="Nueva ciudad..."
+                    placeholder="Nueva ciudad…"
                     value={newCityInput}
                     onChange={(e) => setNewCityInput(e.target.value)}
                     className="bg-[var(--sunken)] rounded-[var(--r-m)] px-2.5 py-1 text-xs text-[var(--ink)] font-sans outline-none w-36"
@@ -966,7 +966,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <Search className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Buscar por nombre, email o ciudad..."
+                  placeholder="Buscar por nombre, email o ciudad…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] pl-9 pr-3 py-2 text-xs text-[var(--ink)] outline-none"
@@ -1399,7 +1399,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowQrMoreMenu((v) => !v)}
-                  title="Más opciones: SVG, PNG 4K, tarjetas, compartir, previsualizar el formulario..."
+                  title="Más opciones: SVG, PNG 4K, tarjetas, compartir, previsualizar el formulario…"
                   className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
                 >
                   <MoreHorizontal className="w-4 h-4" />
@@ -1444,7 +1444,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos
-                        (tarjeta, pegatina...)
+                        (tarjeta, pegatina…)
                       </button>
                       <div className="h-px bg-[var(--surface)] my-1" />
                       <button
@@ -1488,7 +1488,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
-                        formulario "Únete"
+                        formulario “Únete”
                       </button>
                     </div>
                   </>
@@ -1570,7 +1570,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                               enlaceDescarga: e.target.value,
                             }))
                           }
-                          placeholder="https://..."
+                          placeholder="https://…"
                           className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
                         />
                       </div>
@@ -1882,7 +1882,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej: Madrid, Sevilla..."
+                    placeholder="Ej: Madrid, Sevilla…"
                     value={newCiudad}
                     onChange={(e) => setNewCiudad(e.target.value)}
                     className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
@@ -1946,7 +1946,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </label>
                 <input
                   type="text"
-                  placeholder="Ej: La Noche Entera, Balada..."
+                  placeholder="Ej: La Noche Entera, Balada…"
                   value={newCancionFavorita}
                   onChange={(e) => setNewCancionFavorita(e.target.value)}
                   className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
@@ -1959,7 +1959,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="Dedicatoria o saludo que aparecerá en el muro de la comunidad..."
+                  placeholder="Dedicatoria o saludo que aparecerá en el muro de la comunidad…"
                   value={newMensaje}
                   onChange={(e) => setNewMensaje(e.target.value)}
                   className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"

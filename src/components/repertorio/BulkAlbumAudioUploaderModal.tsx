@@ -685,7 +685,7 @@ export function BulkAlbumAudioUploaderModal({
                   type="text"
                   value={currentAlbumName}
                   onChange={(e) => setCurrentAlbumName(e.target.value)}
-                  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
+                  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut…"
                   className="w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition bg-[var(--sunken)] text-[var(--ink)]"
                 />
               </div>
@@ -927,7 +927,7 @@ export function BulkAlbumAudioUploaderModal({
                           {item.status === "uploading" && (
                             <span
                               className="p-1 text-[var(--ok)]"
-                              title="Subiendo..."
+                              title="Subiendo…"
                             >
                               <RefreshCw className="w-4 h-4 animate-spin" />
                             </span>
@@ -935,7 +935,7 @@ export function BulkAlbumAudioUploaderModal({
                           {item.status === "transcribing" && (
                             <span
                               className="p-1 text-[var(--acc)]"
-                              title="Analizando letra y acordes con IA..."
+                              title="Analizando letra y acordes con IA…"
                             >
                               <RefreshCw className="w-4 h-4 animate-spin" />
                             </span>
@@ -1012,7 +1012,7 @@ export function BulkAlbumAudioUploaderModal({
             {isUploading ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Guardando pistas...</span>
+                <span>Guardando pistas…</span>
               </>
             ) : (
               <>

@@ -306,7 +306,7 @@ export function AddLeadModal({
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span className="font-semibold">Más datos de contacto y notas</span>
-                  <span className="text-micro text-[var(--ink-2)] font-normal">(Logo, dirección, proposal...)</span>
+                  <span className="text-micro text-[var(--ink-2)] font-normal">(Logo, dirección, proposal…)</span>
                 </div>
                 {showAdvanced ? <ChevronUp className="w-4 h-4 text-[var(--ink-2)]" /> : <ChevronDown className="w-4 h-4 text-[var(--ink-2)]" />}
               </button>
@@ -455,7 +455,7 @@ export function AddLeadModal({
                     <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Propuesta de concierto</label>
                     <textarea
                       rows={2}
-                      placeholder="Propuesta de fecha, caché o taquilla..."
+                      placeholder="Propuesta de fecha, caché o taquilla…"
                       value={newLeadData.pitch_generado}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, pitch_generado: e.target.value }))}
                       className={`w-full rounded-[var(--r-m)] p-2.5 text-xs focus:outline-none ${

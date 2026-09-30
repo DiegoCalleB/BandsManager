@@ -297,7 +297,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
       >
         <Loader2 className="w-5 h-5 animate-spin text-[var(--ink-2)]" />
         <span className="text-xs font-sans text-[var(--ink-2)]">
-          Comprobando cuenta de email conectada...
+          Comprobando cuenta de email conectada…
         </span>
       </div>
     );
@@ -354,7 +354,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
         {gmailOAuthLoading ? (
           <div className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)]">
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            <span>Comprobando conexión de Gmail...</span>
+            <span>Comprobando conexión de Gmail…</span>
           </div>
         ) : gmailOAuthStatus.connected ? (
           <div
@@ -625,7 +625,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             {saving ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Conectando...</span>
+                <span>Conectando…</span>
               </>
             ) : (
               <>

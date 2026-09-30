@@ -1352,7 +1352,7 @@ Bakandeya Agent Manager IA & Músicos`;
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Buscar por banda, estilo, ciudad o contacto..."
+                  placeholder="Buscar por banda, estilo, ciudad o contacto…"
                   className="w-full bg-[var(--sunken)] text-[var(--ink)] pl-9 pr-3 py-2 rounded-[var(--r-m)] text-micro font-sans focus:outline-none focus:-[var(--acc)]/50 transition-colors"
                 />
                 {searchTerm && (

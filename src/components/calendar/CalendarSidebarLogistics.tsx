@@ -1627,7 +1627,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     />
                     <input
                       type="text"
-                      placeholder="Nueva actividad/horario..."
+                      placeholder="Nueva actividad/horario…"
                       value={newRunActivity}
                       onChange={(e) => setNewRunActivity(e.target.value)}
                       className={`flex-1 px-2 py-1 text-micro rounded outline-none ${
@@ -1648,7 +1648,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   <form onSubmit={handleAddGear} className="flex gap-1.5 items-center">
                     <input
                       type="text"
-                      placeholder="Añadir instrumento, cable o cacharro de directo..."
+                      placeholder="Añadir instrumento, cable o cacharro de directo…"
                       value={newGearLabel}
                       onChange={(e) => setNewGearLabel(e.target.value)}
                       className={`flex-1 px-2 py-1 text-micro rounded outline-none ${

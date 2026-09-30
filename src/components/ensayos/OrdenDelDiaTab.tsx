@@ -532,7 +532,7 @@ export function OrdenDelDiaTab({
             <div className="flex gap-1.5">
               <input
                 type="text"
-                placeholder="Nuevo objetivo..."
+                placeholder="Nuevo objetivo…"
                 value={nuevoObjTexto}
                 onChange={(e) => setNuevoObjTexto(e.target.value)}
                 onKeyDown={(e) => {
@@ -755,7 +755,7 @@ export function OrdenDelDiaTab({
                           <div className="flex items-center gap-2">
                             <input
                               type="text"
-                              placeholder="Enfoque: ej. solo de guitarra, compenetrar coros, dinamismo..."
+                              placeholder="Enfoque: ej. solo de guitarra, compenetrar coros, dinamismo…"
                               value={item.enfoque || ""}
                               onChange={(e) =>
                                 handleUpdateAgendaItem(item.id, {
@@ -853,7 +853,7 @@ export function OrdenDelDiaTab({
                     </h3>
                     <p className="text-xs text-[var(--ink-2)] font-sans">
                       Pulsa sobre las canciones en el orden en que quieras
-                      ensayarlas (#1, #2, #3...).
+                      ensayarlas (#1, #2, #3…).
                     </p>
                   </div>
                 </div>
@@ -873,7 +873,7 @@ export function OrdenDelDiaTab({
                     type="text"
                     value={searchSongQuery}
                     onChange={(e) => setSearchSongQuery(e.target.value)}
-                    placeholder="Buscar por título, tonalidad, género..."
+                    placeholder="Buscar por título, tonalidad, género…"
                     className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] focus:outline-none"
                   />
                 </div>
@@ -1184,7 +1184,7 @@ export function OrdenDelDiaTab({
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej: Calentamiento & Sonido, Pausa café..."
+                    placeholder="Ej: Calentamiento & Sonido, Pausa café…"
                     value={blockTitulo}
                     onChange={(e) => setBlockTitulo(e.target.value)}
                     className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"
@@ -1211,7 +1211,7 @@ export function OrdenDelDiaTab({
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej: Ajustar retorno de monitores y afinación..."
+                    placeholder="Ej: Ajustar retorno de monitores y afinación…"
                     value={blockEnfoque}
                     onChange={(e) => setBlockEnfoque(e.target.value)}
                     className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] outline-none"

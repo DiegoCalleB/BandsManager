@@ -128,7 +128,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   {isAiSearching ? (
                     <>
                       <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
-                      <span>Buscando en la Web...</span>
+                      <span>Buscando en la Web…</span>
                     </>
                   ) : (
                     <>
@@ -143,7 +143,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 required
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
-                placeholder="Ej: Pardiez, La Señora Tomasa, Tarraco Ska..."
+                placeholder="Ej: Pardiez, La Señora Tomasa, Tarraco Ska…"
                 className="w-full bg-[var(--sunken)] text-[var(--ink)] px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
               />
             </div>
@@ -152,7 +152,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {isAiSearching && (
               <div className="md:col-span-2 p-3 bg-[var(--sunken)]/90 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono">
                 <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
-                <span>Buscando datos de "{formName}" con IA en la web...</span>
+                <span>Buscando datos de "{formName}" con IA en la web…</span>
               </div>
             )}
 
@@ -396,7 +396,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 required
                 value={formStyle}
                 onChange={(e) => setFormStyle(e.target.value)}
-                placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje..."
+                placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje…"
                 className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
@@ -409,7 +409,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 required
                 value={formLocation}
                 onChange={(e) => setFormLocation(e.target.value)}
-                placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla..."
+                placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla…"
                 className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
@@ -510,7 +510,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               type="url"
               value={formSpotifyYoutube}
               onChange={(e) => setFormSpotifyYoutube(e.target.value)}
-              placeholder="https://open.spotify.com/artist/..."
+              placeholder="https://open.spotify.com/artist/…"
               className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
             />
           </div>
@@ -524,7 +524,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               rows={3}
               value={formNotes}
               onChange={(e) => setFormNotes(e.target.value)}
-              placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)..."
+              placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)…"
               className="w-full bg-[var(--sunken)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-micro font-sans leading-relaxed focus:outline-none focus:-[#f2ca50]/50"
             />
           </div>

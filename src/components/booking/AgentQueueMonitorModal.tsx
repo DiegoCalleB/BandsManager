@@ -300,7 +300,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               {loading ? (
                 <div className="py-12 text-center text-[var(--ink-2)] text-xs flex items-center justify-center gap-2">
                   <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
-                  <span>Cargando telemetría de Supabase...</span>
+                  <span>Cargando telemetría de Supabase…</span>
                 </div>
               ) : recentJobs.length === 0 ? (
                 <div className="py-10 text-center text-[var(--ink-2)] text-xs bg-[var(--sunken)] rounded-[var(--r-m)] ">

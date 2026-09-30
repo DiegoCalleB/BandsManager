@@ -381,7 +381,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   type="text"
                   value={currentHook}
                   onChange={(e) => onUpdateHook(e.target.value)}
-                  placeholder="Ej: El fallo en el segundo 14 que el público convirtió en estribillo..."
+                  placeholder="Ej: El fallo en el segundo 14 que el público convirtió en estribillo…"
                   className="w-full rounded-xl bg-[var(--sunken)] px-3.5 py-2.5 text-xs font-sans font-bold text-[var(--ink)] focus:outline-none pr-52 bg-[var(--acc)]/10"
                 />
                 <div className="absolute right-1.5 top-1.5 bottom-1.5 flex items-center gap-1">

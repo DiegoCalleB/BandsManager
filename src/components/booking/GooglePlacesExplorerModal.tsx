@@ -1107,7 +1107,7 @@ export function GooglePlacesExplorerModal({
                   {isMassCampaignSearching ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-[var(--acc-ink)]" />
-                      <span>Rastreando ciudades...</span>
+                      <span>Rastreando ciudades…</span>
                     </>
                   ) : (
                     <>
@@ -1246,7 +1246,7 @@ export function GooglePlacesExplorerModal({
                     value={selectedCity}
                     onChange={(e) => setSelectedCity(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                    placeholder="Ciudad (ej. Granada, Madrid...)"
+                    placeholder="Ciudad (ej. Granada, Madrid…)"
                     className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                   />
                   {selectedCity && (

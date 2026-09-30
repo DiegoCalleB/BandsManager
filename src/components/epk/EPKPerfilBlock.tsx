@@ -231,7 +231,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               onChange={(e) =>
                 setConfig({ ...config, dossierTextoExtra: e.target.value })
               }
-              placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
+              placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público…"
               className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed font-sans"
             />
             <div className="flex justify-between items-center text-xs font-sans text-[var(--ink-2)]">
@@ -278,7 +278,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 onChange={(e) =>
                   setConfig({ ...config, genero: e.target.value })
                 }
-                placeholder="Ej. Mestizaje, Indie Rock, Balkan-Ska, Pop-Rock, Flamenco Fusión..."
+                placeholder="Ej. Mestizaje, Indie Rock, Balkan-Ska, Pop-Rock, Flamenco Fusión…"
                 className="w-full bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--ink-3)] rounded-[var(--r-m)] px-3.5 py-2.5 text-xs sm:text-sm text-[var(--ink-2)] outline-none"
               />
               <p className="text-xs text-[var(--ink-2)]">
@@ -382,7 +382,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       handleAddSimilarBand();
                     }
                   }}
-                  placeholder="Escribe el nombre de un grupo similar (ej. Vetusta Morla, Cala Vento, La Pegatina) y pulsa Enter..."
+                  placeholder="Escribe el nombre de un grupo similar (ej. Vetusta Morla, Cala Vento, La Pegatina) y pulsa Enter…"
                   className="w-full bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--ink-3)] rounded-[var(--r-m)] px-3.5 py-2 text-xs sm:text-sm text-[var(--ink-2)] outline-none placeholder:text-[var(--ink-2)] font-sans"
                 />
               </div>
@@ -485,7 +485,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       onChange={(e) =>
                         editarMiembro(m.id, { rol: e.target.value })
                       }
-                      placeholder="Instrumento / Rol (Voz, guitarra, metales...)"
+                      placeholder="Instrumento / Rol (Voz, guitarra, metales…)"
                       className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus:outline-none"
                     />
                   </div>
@@ -508,7 +508,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     onChange={(e) =>
                       editarMiembro(m.id, { bio: e.target.value })
                     }
-                    placeholder="Trayectoria o rol en directo..."
+                    placeholder="Trayectoria o rol en directo…"
                     className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none placeholder:text-[var(--ink-2)] leading-relaxed"
                   />
                 </div>

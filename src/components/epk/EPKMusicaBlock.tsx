@@ -332,7 +332,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   type="url"
                   value={v.url}
                   onChange={(e) => editarVideo(v.id, { url: e.target.value })}
-                  placeholder="https://www.youtube.com/watch?v=..."
+                  placeholder="https://www.youtube.com/watch?v=…"
                   className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs font-sans text-[var(--ink)] focus:outline-none"
                 />
               </div>
@@ -459,7 +459,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   </button>
                 </div>
                 <p className="text-xs text-[var(--ink-2)]">
-                  El agente no prometerá técnico propio si marcáis "De la sala".
+                  El agente no prometerá técnico propio si marcáis “De la sala”.
                 </p>
               </div>
               {/* Merchandising */}

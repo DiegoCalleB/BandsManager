@@ -373,7 +373,7 @@ export const SpotifyDiscographyModal: React.FC<
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/...)"
+                placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/…)"
                 className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-ui bg-[var(--sunken)] text-[var(--ink)] placeholder:text-[var(--ink-2)]"
               />
             </div>
@@ -385,7 +385,7 @@ export const SpotifyDiscographyModal: React.FC<
               {isFetchingDiscography ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Buscando...</span>
+                  <span>Buscando…</span>
                 </>
               ) : (
                 <>
@@ -469,11 +469,11 @@ export const SpotifyDiscographyModal: React.FC<
               <RefreshCw className="w-10 h-10 text-[var(--ok)] animate-spin" />
               <p className="font-sans text-sm font-bold">
                 Conectando con la API de Spotify y extrayendo discografía
-                completa...
+                completa…
               </p>
               <p className="font-sans text-xs opacity-60">
                 Obteniendo pistas, duraciones, portadas oficiales y metadatos de
-                audio...
+                audio…
               </p>
             </div>
           ) : albums.length === 0 ? (
@@ -790,7 +790,7 @@ export const SpotifyDiscographyModal: React.FC<
               {isImporting ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Importando a la discografía...</span>
+                  <span>Importando a la discografía…</span>
                 </>
               ) : (
                 <>

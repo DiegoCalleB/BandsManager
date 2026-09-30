@@ -267,7 +267,7 @@ export function GenerateAllTemplatesModal({
             {isGenerating ? (
               <>
                 <Loader2 className={`w-4 h-4 animate-spin ${isCampaign ? 'text-[var(--ink)]' : 'text-[var(--ink)]'}`} />
-                <span>Generando 7 plantillas de campaña...</span>
+                <span>Generando 7 plantillas de campaña…</span>
               </>
             ) : (
               <>

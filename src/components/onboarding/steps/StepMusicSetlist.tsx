@@ -158,7 +158,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                 type="text"
                 value={spotifyQuery}
                 onChange={(e) => setSpotifyQuery(e.target.value)}
-                placeholder="Buscar artista o grupo en Spotify..."
+                placeholder="Buscar artista o grupo en Spotify…"
                 className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
               />
             </div>
@@ -286,7 +286,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             {isUploadingAudio && (
               <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[var(--acc)] font-medium">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Subiendo y procesando audio...
+                Subiendo y procesando audio…
               </div>
             )}
           </div>

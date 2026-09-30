@@ -279,7 +279,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     : "",
                 })
               }
-              placeholder="https://drive.google.com/file/d/..."
+              placeholder="https://drive.google.com/file/d/…"
               className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
             />
           </div>
@@ -401,7 +401,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 onChange={(e) =>
                   setConfig({ ...config, riderTecnico: e.target.value })
                 }
-                placeholder="Canales, microfonía, DIs, etc..."
+                placeholder="Canales, microfonía, DIs, etc…"
                 rows={4}
                 className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
               />

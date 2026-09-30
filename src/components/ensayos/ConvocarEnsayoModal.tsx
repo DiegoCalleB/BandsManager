@@ -216,7 +216,7 @@ export function ConvocarEnsayoModal({
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span className="font-semibold">Más opciones de ensayo</span>
-                  <span className="text-micro text-[var(--ink-2)] font-normal">(Horario fin, músicos, objetivos...)</span>
+                  <span className="text-micro text-[var(--ink-2)] font-normal">(Horario fin, músicos, objetivos…)</span>
                 </div>
                 {showAdvanced ? <ChevronUp className="w-4 h-4 text-[var(--ink-2)]" /> : <ChevronDown className="w-4 h-4 text-[var(--ink-2)]" />}
               </button>
@@ -306,7 +306,7 @@ export function ConvocarEnsayoModal({
                     <div className="flex gap-2">
                       <input
                         type="text"
-                        placeholder="Ej. Pulir la intro..."
+                        placeholder="Ej. Pulir la intro…"
                         value={nuevoObjetivo}
                         onChange={(e) => setNuevoObjetivo(e.target.value)}
                         onKeyDown={(e) => {
@@ -332,7 +332,7 @@ export function ConvocarEnsayoModal({
                     <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Notas / Material a llevar</label>
                     <textarea
                       rows={2}
-                      placeholder="Ej. Traer juego nuevo de cuerdas..."
+                      placeholder="Ej. Traer juego nuevo de cuerdas…"
                       value={notas}
                       onChange={(e) => setNotas(e.target.value)}
                       className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-xs outline-none focus:ring-1 focus:ring-[var(--ink-3)] resize-none"

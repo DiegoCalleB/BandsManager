@@ -266,7 +266,7 @@ export const PublicFanCapture: React.FC = () => {
               className="w-full py-3 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-extrabold text-sm rounded-[var(--r-m)] transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
-                <span>Guardando...</span>
+                <span>Guardando…</span>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />

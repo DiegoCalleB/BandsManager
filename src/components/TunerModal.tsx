@@ -691,7 +691,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                   <div className="flex flex-col items-center gap-2 text-[var(--ink-2)] py-2">
                     <RefreshCw className="w-6 h-6 animate-spin text-[var(--ok)]" />
                     <span className="text-xs font-sans">
-                      Escuchando instrumento... Toca una cuerda
+                      Escuchando instrumento… Toca una cuerda
                     </span>
                   </div>
                 ) : (

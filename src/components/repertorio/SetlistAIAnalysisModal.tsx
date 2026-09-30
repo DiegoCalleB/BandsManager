@@ -738,7 +738,7 @@ export function SetlistAIAnalysisModal({
             {loading && (
               <div className="text-center py-12">
                 <Loader className="w-8 h-8 animate-spin text-[var(--acc)] mx-auto mb-4" />
-                <p className="text-[var(--ink-2)]">Analizando tu setlist...</p>
+                <p className="text-[var(--ink-2)]">Analizando tu setlist…</p>
               </div>
             )}
 

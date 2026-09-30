@@ -769,7 +769,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     {loading ? (
                       <span className="flex items-center gap-2">
                         <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
-                        <span>Entrando...</span>
+                        <span>Entrando…</span>
                       </span>
                     ) : (
                       <span>Entrar a mi cuenta</span>
@@ -894,7 +894,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       {loading ? (
                         <span className="flex items-center gap-2">
                           <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
-                          <span>Generando código...</span>
+                          <span>Generando código…</span>
                         </span>
                       ) : (
                         <span>Continuar y generar código</span>
@@ -996,7 +996,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       {loading ? (
                         <span className="flex items-center gap-2">
                           <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
-                          <span>Guardando contraseña...</span>
+                          <span>Guardando contraseña…</span>
                         </span>
                       ) : (
                         <span>Restablecer contraseña</span>
@@ -1125,7 +1125,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     {loading ? (
                       <span className="flex items-center gap-2">
                         <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
-                        <span>Creando cuenta...</span>
+                        <span>Creando cuenta…</span>
                       </span>
                     ) : (
                       <span>Crear cuenta</span>
@@ -1201,7 +1201,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         {loading ? (
                           <span className="flex items-center gap-2">
                             <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
-                            <span>Comprobando...</span>
+                            <span>Comprobando…</span>
                           </span>
                         ) : (
                           <span>Comprobar invitación</span>
@@ -1339,7 +1339,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         {loading ? (
                           <span className="flex items-center gap-2">
                             <span className="w-4 h-4 rounded-[var(--r-pill)] animate-spin" />
-                            <span>Activando...</span>
+                            <span>Activando…</span>
                           </span>
                         ) : (
                           <span>Completar registro y entrar</span>

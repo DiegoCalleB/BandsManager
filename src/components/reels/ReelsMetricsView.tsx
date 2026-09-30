@@ -1800,7 +1800,7 @@ export function ReelsMetricsView({
 
             {contentItems.length === 0 ? (
               <div className="py-8 text-center text-[var(--ink-2)] font-sans text-xs rounded-[var(--r-m)]">
-                Pulsa <b className="text-[var(--ok)]">"Ejecutar Radar Ahora"</b>{" "}
+                Pulsa <b className="text-[var(--ok)]">“Ejecutar Radar Ahora”</b>{" "}
                 para escanear y listar los vídeos y reproducciones de tus
                 canales.
               </div>
@@ -2496,7 +2496,7 @@ export function ReelsMetricsView({
                 <div className="relative">
                   <input
                     type="password"
-                    placeholder="Pega aquí tu User Access Token con permiso instagram_manage_insights (EAA...)"
+                    placeholder="Pega aquí tu User Access Token con permiso instagram_manage_insights (EAA…)"
                     value={igTokenInput}
                     onChange={(e) => setIgTokenInput(e.target.value)}
                     className={`w-full px-4 py-3 rounded-[var(--r-m)] font-sans text-xs focus:outline-none focus:ring-2 bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]`}
@@ -2528,7 +2528,7 @@ export function ReelsMetricsView({
                     {isConnectingIg ? (
                       <>
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        <span>Verificando insights API...</span>
+                        <span>Verificando insights API…</span>
                       </>
                     ) : (
                       <>
@@ -2738,7 +2738,7 @@ export function ReelsMetricsView({
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin text-[var(--tentative)]/80" />
                       <span>
-                        Gemini Visión analizando píxeles y métricas...
+                        Gemini Visión analizando píxeles y métricas…
                       </span>
                     </>
                   ) : (

@@ -102,7 +102,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ej: Intro de Teclado + Presentación, Solo de Batería, Biset..."
+              placeholder="Ej: Intro de Teclado + Presentación, Solo de Batería, Biset…"
               className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}
             />
           </div>
@@ -176,7 +176,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Ej: Luces rojas fijas, no hablar por micro, entrar directo al bombo..."
+              placeholder="Ej: Luces rojas fijas, no hablar por micro, entrar directo al bombo…"
               className={`w-full p-2.5 rounded-[var(--r-m)] outline-none ${colors.input}`}
             />
           </div>

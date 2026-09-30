@@ -1337,7 +1337,7 @@ export function ExcelImportModal({
                       <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-[var(--ink-2)]" />
                       <input
                         type="text"
-                        placeholder="Buscar en la vista previa..."
+                        placeholder="Buscar en la vista previa…"
                         value={searchPreview}
                         onChange={(e) => setSearchPreview(e.target.value)}
                         className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none"
@@ -1590,7 +1590,7 @@ export function ExcelImportModal({
                   {isImporting ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Guardando en Supabase...</span>
+                      <span>Guardando en Supabase…</span>
                     </>
                   ) : (
                     <>

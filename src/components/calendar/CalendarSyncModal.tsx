@@ -114,10 +114,10 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
             <p className="font-bold text-[var(--ink-2)]">Pasos en Google Calendar (1 minuto):</p>
             <ol className="list-decimal list-inside space-y-1 text-[var(--ink-2)]">
               <li>
-                Haz clic en el botón azul <strong>"Añadir a Google Calendar"</strong> de arriba.
+                Haz clic en el botón azul <strong>“Añadir a Google Calendar”</strong> de arriba.
               </li>
               <li>
-                Si lo añades manualmente: ve a <em>"Otros calendarios" (+)</em> ➔ <strong>"Desde URL"</strong> en Google Calendar.
+                Si lo añades manualmente: ve a <em>“Otros calendarios” (+)</em> ➔ <strong>“Desde URL”</strong> en Google Calendar.
               </li>
               <li>Pega la URL de suscripción y confirma.</li>
               <li>¡Listo! Google Calendar sincronizará los cambios automáticamente.</li>

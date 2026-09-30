@@ -119,7 +119,7 @@ export function AddSongsToSetlistModal({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar por título o tonalidad..."
+                placeholder="Buscar por título o tonalidad…"
                 className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
               />
             </div>

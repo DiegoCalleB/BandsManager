@@ -704,7 +704,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             onChange={(e) =>
                               setChangePasswordValue(e.target.value)
                             }
-                            placeholder="Nueva contraseña secreta..."
+                            placeholder="Nueva contraseña secreta…"
                             className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none bg-[var(--sunken)]`}
                           />
                           <button
@@ -846,7 +846,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
                 >
                   {loading ? (
-                    <span>Creando miembro...</span>
+                    <span>Creando miembro…</span>
                   ) : (
                     <>
                       <UserPlus className="w-4 h-4" />
@@ -877,7 +877,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     type="email"
                     value={assocEmail}
                     onChange={(e) => setAssocEmail(e.target.value)}
-                    placeholder="Introduce su email exacto..."
+                    placeholder="Introduce su email exacto…"
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)] text-[var(--ink)]`}
                     required
                   />
@@ -917,7 +917,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
                 >
                   {loading ? (
-                    <span>Asociando músico...</span>
+                    <span>Asociando músico…</span>
                   ) : (
                     <>
                       <UserPlus className="w-4 h-4" />

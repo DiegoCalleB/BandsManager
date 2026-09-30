@@ -195,7 +195,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
               {isGeneratingAccompaniment ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  Sintetizando pistas...
+                  Sintetizando pistas…
                 </>
               ) : (
                 <>

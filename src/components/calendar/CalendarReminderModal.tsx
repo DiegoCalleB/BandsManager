@@ -118,7 +118,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             <textarea
               value={reminderNotes}
               onChange={(e) => setReminderNotes(e.target.value)}
-              placeholder="Ej: Traer la lista de repertorio revisada o llegar 15 min antes para probar sonido..."
+              placeholder="Ej: Traer la lista de repertorio revisada o llegar 15 min antes para probar sonido…"
               rows={3}
               className={`w-full p-2 text-xs rounded-[var(--r-m)] outline-none font-sans ${
                 'bg-[var(--sunken)] text-[var(--ink)]'
@@ -175,7 +175,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             {reminderSending ? (
               <>
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Enviando...</span>
+                <span>Enviando…</span>
               </>
             ) : (
               <>

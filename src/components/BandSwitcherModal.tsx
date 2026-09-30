@@ -642,7 +642,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar proyecto..."
+                  placeholder="Buscar proyecto…"
                   className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none "
                 />
               </div>
@@ -1172,7 +1172,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         type="text"
                         value={newBandName}
                         onChange={(e) => setNewBandName(e.target.value)}
-                        placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑, Bakandeya..."
+                        placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑, Bakandeya…"
                         required
                         autoFocus
                         className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors font-bold"
@@ -1203,7 +1203,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           type="text"
                           value={newBandStyle}
                           onChange={(e) => setNewBandStyle(e.target.value)}
-                          placeholder="Ej: Rock, Indie, Mestizaje, Ska..."
+                          placeholder="Ej: Rock, Indie, Mestizaje, Ska…"
                           className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors"
                         />
                       </div>
@@ -1217,7 +1217,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           type="text"
                           value={newBandLocation}
                           onChange={(e) => setNewBandLocation(e.target.value)}
-                          placeholder="Ej: Madrid, Barcelona, Valencia..."
+                          placeholder="Ej: Madrid, Barcelona, Valencia…"
                           className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors"
                         />
                       </div>
@@ -1243,7 +1243,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           isCreatingBand ? (
                             <>
                               <Loader2 className="w-4 h-4 animate-spin" />
-                              <span>Creando...</span>
+                              <span>Creando…</span>
                             </>
                           ) : (
                             <>
@@ -1415,7 +1415,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         {isCreatingBand && creatingPlanKey === "ensayo" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
-                            <span>Configurando...</span>
+                            <span>Configurando…</span>
                           </>
                         ) : (
                           <span>Empezar gratis</span>
@@ -1494,7 +1494,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         {isCreatingBand && creatingPlanKey === "local" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
-                            <span>Configurando...</span>
+                            <span>Configurando…</span>
                           </>
                         ) : (
                           <span>Elegir local</span>
@@ -1576,7 +1576,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         {isCreatingBand && creatingPlanKey === "de_gira" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
-                            <span>Configurando...</span>
+                            <span>Configurando…</span>
                           </>
                         ) : (
                           <>
@@ -1666,7 +1666,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         creatingPlanKey === "cabeza_de_cartel" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
-                            <span>Configurando...</span>
+                            <span>Configurando…</span>
                           </>
                         ) : (
                           <span>Seleccionar 360</span>

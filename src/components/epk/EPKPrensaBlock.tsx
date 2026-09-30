@@ -186,7 +186,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                         },
                       });
                     }}
-                    placeholder="Texto exacto de la reseña o cita..."
+                    placeholder="Texto exacto de la reseña o cita…"
                     className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none leading-relaxed resize-none"
                   />
                   <button
@@ -223,7 +223,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                       },
                     });
                   }}
-                  placeholder="Medio / firma (Ej: Radio 3, MondoSonoro, blog especializado...)"
+                  placeholder="Medio / firma (Ej: Radio 3, MondoSonoro, blog especializado…)"
                   className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus:outline-none"
                 />
               </div>

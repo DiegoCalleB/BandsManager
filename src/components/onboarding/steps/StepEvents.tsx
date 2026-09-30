@@ -197,7 +197,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               type="text"
               value={newEventTicketUrl}
               onChange={(e) => setNewEventTicketUrl(e.target.value)}
-              placeholder="Enlace de venta de entradas (Wegow, DICE, Eventbrite...)"
+              placeholder="Enlace de venta de entradas (Wegow, DICE, Eventbrite…)"
               className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
             />
           </div>

@@ -138,7 +138,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                 rows={2}
                 value={simulationCustomInstruction}
                 onChange={(e) => setSimulationCustomInstruction(e.target.value)}
-                placeholder="Ej: La sala acepta la fecha del 15 de noviembre y pide cartel..."
+                placeholder="Ej: La sala acepta la fecha del 15 de noviembre y pide cartel…"
                 className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] outline-none"
               />
             </div>
@@ -149,7 +149,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
               className="w-full py-2.5 rounded-[var(--r-m)] font-semibold text-[var(--on-acc)] bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 transition-ui flex items-center justify-center gap-2"
             >
               {isGenerating ? (
-                <span className="animate-pulse">Generando respuesta con Gemini IA...</span>
+                <span className="animate-pulse">Generando respuesta con Gemini IA…</span>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />

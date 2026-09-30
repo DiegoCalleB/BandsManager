@@ -296,7 +296,7 @@ export function ImportSetlistModal({
           {analyzing && (
             <div className="text-center py-12">
               <Loader className="w-8 h-8 animate-spin text-[var(--ink-2)] mx-auto mb-4" />
-              <p className="text-[var(--ink-2)]">Leyendo el repertorio...</p>
+              <p className="text-[var(--ink-2)]">Leyendo el repertorio…</p>
             </div>
           )}
 
@@ -416,7 +416,7 @@ export function ImportSetlistModal({
                             className="text-micro bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
                           >
                             <option value="">
-                              Elige una canción del catálogo...
+                              Elige una canción del catálogo…
                             </option>
                             {catalogSongs.map((s) => (
                               <option key={s.id} value={s.id}>

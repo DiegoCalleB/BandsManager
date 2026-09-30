@@ -625,7 +625,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
           {isGeocoding && (
             <div className="px-3 py-1.5 rounded-[var(--r-m)] text-micro font-sans flex items-center gap-1.5 bg-[var(--acc-soft)] text-[var(--ink)]">
               <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
-              <span>Geolocalizando bandas...</span>
+              <span>Geolocalizando bandas…</span>
             </div>
           )}
 

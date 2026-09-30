@@ -2654,7 +2654,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {/* DIRECCIÓN / CALLE */}
                 <div>
                   <label className="block text-micro font-sans text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
-                    <ShowIcon inline emoji="📍" />Dirección Exacta (Calle, Número...)
+                    <ShowIcon inline emoji="📍" />Dirección Exacta (Calle, Número…)
                   </label>
                   <input
                     type="text"
@@ -2854,7 +2854,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej. Ska-P, Boikot, Zoo, La Raíz..."
+                    placeholder="Ej. Ska-P, Boikot, Zoo, La Raíz…"
                     value={editedLeadInfo.roster || ""}
                     onChange={(e) =>
                       setEditedLeadInfo({
@@ -2933,7 +2933,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </label>
                     <input
                       type="url"
-                      placeholder="https://..."
+                      placeholder="https://…"
                       value={editedLeadInfo.website || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
@@ -2979,7 +2979,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     {getDaysSinceContact(selectedLead)} días sin respuesta)
                   </span>
                   <span className="text-xs text-[var(--ink-2)] font-sans">
-                    Es el momento idóneo para un "Gentle Nudge" breve (&lt;50
+                    Es el momento idóneo para un “Gentle Nudge” breve (&lt;50
                     palabras) y cordial.
                   </span>
                 </div>
@@ -3569,7 +3569,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   rows={4}
                   value={feedbackComment}
                   onChange={(e) => setFeedbackComment(e.target.value)}
-                  placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'..."
+                  placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'…"
                   className="w-full p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none min-h-[90px] resize-y"
                 />
               </div>
@@ -3986,7 +3986,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           {isAnalyzingMessageSentiment === msg.id ? (
                             <>
                               <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
-                              <span>Analizando sentimiento...</span>
+                              <span>Analizando sentimiento…</span>
                             </>
                           ) : (
                             <>
@@ -4177,7 +4177,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="py-4 text-center text-[var(--ink-2)] text-xs italic">
-                  Pulsa "Actualizar Todas las APIs" para calcular la demanda de
+                  Pulsa “Actualizar Todas las APIs” para calcular la demanda de
                   Spotify en {selectedLead.ciudad || "Madrid"}.
                 </div>
               )}
@@ -4258,7 +4258,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="py-4 text-center text-[var(--ink-2)] text-xs italic">
-                  Pulsa "Actualizar Todas las APIs" para cargar la ficha técnica
+                  Pulsa “Actualizar Todas las APIs” para cargar la ficha técnica
                   de Google Places.
                 </div>
               )}
@@ -4407,7 +4407,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="py-4 text-center text-[var(--ink-2)] text-xs italic">
-                  Pulsa "Actualizar Todas las APIs" para validar los registros
+                  Pulsa “Actualizar Todas las APIs” para validar los registros
                   DNS y entregabilidad del email.
                 </div>
               )}
@@ -4503,7 +4503,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="py-3 text-center text-[var(--ink-2)] text-xs italic">
-                  Introduce tu ciudad base y pulsa "Calcular" para obtener
+                  Introduce tu ciudad base y pulsa “Calcular” para obtener
                   kilometraje y combustible.
                 </div>
               )}
@@ -5245,7 +5245,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
             ) : (
               <div className="py-3 text-center text-[var(--ink-2)] text-xs italic">
-                Ajusta los precios y pulsa "Recalcular & Guardar P&L" para
+                Ajusta los precios y pulsa “Recalcular & Guardar P&L” para
                 simular la rentabilidad del concierto.
               </div>
             )}
@@ -5322,7 +5322,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 type="text"
                 value={interactionAutor}
                 onChange={(e) => setInteractionAutor(e.target.value)}
-                placeholder="Tu nombre..."
+                placeholder="Tu nombre…"
                 className="px-2 py-1 text-micro bg-[var(--bg)] rounded text-[var(--ink)] w-28 focus:outline-none"
               />
             </div>
@@ -5369,7 +5369,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               required
               value={interactionNotes}
               onChange={(e) => setInteractionNotes(e.target.value)}
-              placeholder="Ej: Hablé con Carlos por WhatsApp. Pide propuesta de fechas para Noviembre..."
+              placeholder="Ej: Hablé con Carlos por WhatsApp. Pide propuesta de fechas para Noviembre…"
               className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans resize-y min-h-[90px]"
             />
 

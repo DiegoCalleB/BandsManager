@@ -219,7 +219,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               <textarea
                 value={promptUsuario}
                 onChange={(e) => setPromptUsuario(e.target.value)}
-                placeholder="Ej: Quiero que el puente tenga tensión al estilo rock alternativo de los 90, con acordes suspendidos y notas de bajo cromáticas..."
+                placeholder="Ej: Quiero que el puente tenga tensión al estilo rock alternativo de los 90, con acordes suspendidos y notas de bajo cromáticas…"
                 rows={2}
                 className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans resize-none"
               />
@@ -234,7 +234,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               {isGenerating ? (
                 <>
                   <Sparkles className="w-4 h-4 animate-spin" />
-                  <span>El Músico IA está componiendo el arreglo...</span>
+                  <span>El Músico IA está componiendo el arreglo…</span>
                 </>
               ) : (
                 <>

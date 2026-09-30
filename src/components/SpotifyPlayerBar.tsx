@@ -787,7 +787,7 @@ export default function SpotifyPlayerBar({
                           className="ml-1 text-[var(--ink-2)] font-bold text-micro"
                           title="Procesando trasposición DSP con Pedalboard de Spotify"
                         >
-                          <ShowIcon inline emoji="🎛️" />Pedalboard...
+                          <ShowIcon inline emoji="🎛️" />Pedalboard…
                         </span>
                       )}
                     </span>

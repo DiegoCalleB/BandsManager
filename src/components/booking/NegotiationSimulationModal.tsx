@@ -159,7 +159,7 @@ export function NegotiationSimulationModal({
                   type="text"
                   value={simulationSubject}
                   onChange={(e) => onSubjectChange(e.target.value)}
-                  placeholder="Ej. Re: Propuesta..."
+                  placeholder="Ej. Re: Propuesta…"
                   className={`w-full rounded-[var(--r-s)] px-2 py-1 text-micro focus:outline-none font-sans bg-[var(--sunken)] text-[var(--ink)]`}
                 />
               </div>
@@ -177,7 +177,7 @@ export function NegotiationSimulationModal({
                 rows={3}
                 value={simulationCustomInstruction}
                 onChange={(e) => onCustomInstructionChange(e.target.value)}
-                placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)..."
+                placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)…"
                 className={`w-full rounded-[var(--r-s)] p-2.5 text-micro focus:outline-none font-sans leading-relaxed bg-[var(--sunken)] text-[var(--ink)]`}
               />
             </div>
@@ -192,7 +192,7 @@ export function NegotiationSimulationModal({
               >
                 {isGeneratingSimulation ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Generando Correo de Simulación...
+                    <Loader2 className="w-4 h-4 animate-spin" /> Generando Correo de Simulación…
                   </>
                 ) : (
                   <>

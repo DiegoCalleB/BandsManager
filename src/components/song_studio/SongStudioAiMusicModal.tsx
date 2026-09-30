@@ -137,7 +137,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                 type="text"
                 value={style}
                 onChange={(e) => setStyle(e.target.value)}
-                placeholder="Ej: Rock alternativo, post-punk, psicodelia..."
+                placeholder="Ej: Rock alternativo, post-punk, psicodelia…"
                 className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:font-sans"
               />
             </div>
@@ -150,7 +150,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={3}
-                placeholder="Describe la atmósfera, energía, instrumentación o propósito..."
+                placeholder="Describe la atmósfera, energía, instrumentación o propósito…"
                 className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:font-sans resize-none leading-relaxed"
               />
             </div>
@@ -230,7 +230,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               {isGenerating ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  Componiendo Soundtrack IA...
+                  Componiendo Soundtrack IA…
                 </>
               ) : (
                 <>

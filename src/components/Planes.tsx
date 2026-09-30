@@ -587,7 +587,7 @@ export const Planes: React.FC<PlanesProps> = ({
           {isOpeningPortal ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
-              <span>Abriendo Stripe...</span>
+              <span>Abriendo Stripe…</span>
             </>
           ) : (
             <>

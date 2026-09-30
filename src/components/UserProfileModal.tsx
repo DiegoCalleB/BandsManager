@@ -575,7 +575,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Tu nombre..."
+                placeholder="Tu nombre…"
                 className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--sunken)]"}`}
                 required
               />
@@ -678,7 +678,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   {uploadingLogo ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
-                      <span>Subiendo...</span>
+                      <span>Subiendo…</span>
                     </>
                   ) : (
                     <>
@@ -775,7 +775,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         required
                         value={createBandName}
                         onChange={(e) => setCreateBandName(e.target.value)}
-                        placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
+                        placeholder="Ej. Los Nocturnos, Cuarteto Acústico…"
                         className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                       />
                     </div>
@@ -789,7 +789,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           type="text"
                           value={createBandStyle}
                           onChange={(e) => setCreateBandStyle(e.target.value)}
-                          placeholder="Ej. Indie Rock, Pop..."
+                          placeholder="Ej. Indie Rock, Pop…"
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                         />
                       </div>
@@ -803,7 +803,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           onChange={(e) =>
                             setCreateBandLocation(e.target.value)
                           }
-                          placeholder="Ej. Madrid, Barcelona..."
+                          placeholder="Ej. Madrid, Barcelona…"
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                         />
                       </div>
@@ -869,7 +869,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         {isCreatingBand ? (
                           <>
                             <Loader2 className="w-3 h-3 animate-spin" />
-                            <span>Creando...</span>
+                            <span>Creando…</span>
                           </>
                         ) : (
                           <>
@@ -913,7 +913,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       {deletingBandId ? (
                         <>
                           <Loader2 className="w-3 h-3 animate-spin" />
-                          <span>Eliminando...</span>
+                          <span>Eliminando…</span>
                         </>
                       ) : (
                         <>
@@ -1290,7 +1290,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Dejar en blanco para mantener la actual..."
+                  placeholder="Dejar en blanco para mantener la actual…"
                   className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                 />
               </div>
@@ -1304,7 +1304,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Repite la nueva contraseña..."
+                    placeholder="Repite la nueva contraseña…"
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                   />
                 </div>
@@ -1360,7 +1360,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-ui cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97] ${"bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"}`}
             >
               {loading ? (
-                <span>Guardando cambios...</span>
+                <span>Guardando cambios…</span>
               ) : (
                 <>
                   <Check className="w-4 h-4" />

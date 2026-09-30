@@ -304,7 +304,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   rows={9}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Redacta el mensaje para el programador..."
+                  placeholder="Redacta el mensaje para el programador…"
                   className="w-full bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-[var(--ink-2)] text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-[var(--ok)] resize-y font-sans selection:bg-[var(--ok)]/30"
                 />
               </div>

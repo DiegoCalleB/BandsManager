@@ -706,7 +706,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 <textarea
                   rows={4}
                   required
-                  placeholder="Escribe las novedades, agradecimiento o anuncio exclusivo para tus seguidores..."
+                  placeholder="Escribe las novedades, agradecimiento o anuncio exclusivo para tus seguidores…"
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}
                   className="w-full bg-[var(--sunken)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"

@@ -398,7 +398,7 @@ export function ModoLocalEnVivoTab({
           Orden del día vacío: añade lo que vais a tocar
         </h3>
         <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
-          Ve a la pestaña "1. Orden del Día" para añadir canciones y bloques
+          Ve a la pestaña “1. Orden del Día” para añadir canciones y bloques
           antes de activar el modo local.
         </p>
       </div>
@@ -640,7 +640,7 @@ export function ModoLocalEnVivoTab({
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="Escribe anotaciones para la banda (ej. entrada con slap, cuidar coros, acento al final)..."
+                  placeholder="Escribe anotaciones para la banda (ej. entrada con slap, cuidar coros, acento al final)…"
                   value={currentItem?.enfoque || ""}
                   onChange={(e) => handleUpdateCurrentNote(e.target.value)}
                   className="w-full bg-transparent text-sm text-[var(--ink)] font-sans outline-none resize-none focus:transition-colors"

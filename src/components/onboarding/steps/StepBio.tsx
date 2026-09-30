@@ -74,7 +74,7 @@ export const StepBio: React.FC<StepBioProps> = ({
           rows={5}
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          placeholder="Cuenta la trayectoria de la banda, influencias, lanzamientos destacados y lo que transmitís en vuestros conciertos..."
+          placeholder="Cuenta la trayectoria de la banda, influencias, lanzamientos destacados y lo que transmitís en vuestros conciertos…"
           className="w-full px-4 py-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm leading-relaxed"
         />
       </div>
@@ -89,7 +89,7 @@ export const StepBio: React.FC<StepBioProps> = ({
             type="text"
             value={formato}
             onChange={(e) => setFormato(e.target.value)}
-            placeholder="Ej. Banda completa, Trío acústico..."
+            placeholder="Ej. Banda completa, Trío acústico…"
             className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
           />
         </div>

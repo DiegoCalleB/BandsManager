@@ -943,7 +943,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     rows={6}
                     value={modalRoadbook.inputList || ''}
                     onChange={(e) => updateRoadbookField(modalRoadbookKey, { inputList: e.target.value })}
-                    placeholder="1. Bombo (Beta 52)&#10;2. Caja Top (SM57)&#10;3. Bajo (D.I. Radial)&#10;4. Guitarra (e906)&#10;5. Voz (Beta 58)..."
+                    placeholder="1. Bombo (Beta 52)&#10;2. Caja Top (SM57)&#10;3. Bajo (D.I. Radial)&#10;4. Guitarra (e906)&#10;5. Voz (Beta 58)…"
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs font-mono leading-relaxed ${
                       'bg-[var(--surface)] text-[var(--ink)]'
                     }`}
@@ -1385,7 +1385,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               <input
                                 type="text"
                                 required
-                                placeholder="Ej: Camiseta Gira Oficial, Vinilo LP..."
+                                placeholder="Ej: Camiseta Gira Oficial, Vinilo LP…"
                                 value={newMerchNombre}
                                 onChange={(e) => setNewMerchNombre(e.target.value)}
                                 className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
@@ -1415,7 +1415,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               <label className={`block text-micro mb-1 ${textSub}`}>Talla / versión</label>
                               <input
                                 type="text"
-                                placeholder="Ej: M, L, XL, 12'', Pack..."
+                                placeholder="Ej: M, L, XL, 12'', Pack…"
                                 value={newMerchTalla}
                                 onChange={(e) => setNewMerchTalla(e.target.value)}
                                 className={`w-full px-2.5 py-1.5 rounded-[var(--r-m)] outline-none text-xs ${
@@ -2108,7 +2108,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     type="text"
                     value={newCierreItemText}
                     onChange={(e) => setNewCierreItemText(e.target.value)}
-                    placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)..."
+                    placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)…"
                     className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono ${
                       'bg-[var(--surface)] text-[var(--ink)]'
                     }`}

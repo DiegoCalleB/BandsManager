@@ -97,7 +97,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           type="text"
           value={festivalesDestacados}
           onChange={(e) => setFestivalesDestacados(e.target.value)}
-          placeholder="Ej. Sonorama Ribera 2024, Sala Sol (Madrid), Finalistas Villa de Madrid, Monkey Week..."
+          placeholder="Ej. Sonorama Ribera 2024, Sala Sol (Madrid), Finalistas Villa de Madrid, Monkey Week…"
           className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
         />
       </div>
@@ -133,7 +133,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
                 type="text"
                 value={newQuoteText}
                 onChange={(e) => setNewQuoteText(e.target.value)}
-                placeholder="Cita destacada (ej. Una de las propuestas más frescas del año...)"
+                placeholder="Cita destacada (ej. Una de las propuestas más frescas del año…)"
                 className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
               />
             </div>

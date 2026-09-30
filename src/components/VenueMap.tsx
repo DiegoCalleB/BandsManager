@@ -1017,7 +1017,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
               className={`px-3 py-1.5 rounded-[var(--r-m)] text-micro font-sans flex items-center gap-1.5 ${"bg-[var(--acc-soft)]  text-[var(--ink)]"}`}
             >
               <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
-              <span>Geolocalizando salas...</span>
+              <span>Geolocalizando salas…</span>
             </div>
           )}
 

@@ -497,7 +497,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <p className="text-micro text-[var(--ink-2)] font-mono max-w-md">
                       Analizando publicaciones de Instagram, TikTok, estilo de
                       comunicación, muletillas y tono de voz con Gemini Search
-                      Grounding...
+                      Grounding…
                     </p>
                   </div>
                 </div>
@@ -515,7 +515,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                             tono_comunicacion: e.target.value,
                           })
                         }
-                        placeholder="Cercano, directo, gamberro..."
+                        placeholder="Cercano, directo, gamberro…"
                       />
                     </div>
                     <div>
@@ -529,7 +529,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                             tratamiento_habitual: e.target.value,
                           })
                         }
-                        placeholder="Tú / Vosotros..."
+                        placeholder="Tú / Vosotros…"
                       />
                     </div>
                     <div>
@@ -540,7 +540,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         onChange={(e) =>
                           setDraft({ ...draft, nivel_energia: e.target.value })
                         }
-                        placeholder="Alta / Explosiva..."
+                        placeholder="Alta / Explosiva…"
                       />
                     </div>
                   </div>
@@ -558,7 +558,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           vocabulario_clave: e.target.value,
                         })
                       }
-                      placeholder="familia, pogo, aúpa..."
+                      placeholder="familia, pogo, aúpa…"
                     />
                   </div>
 
@@ -593,7 +593,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                             matiz_instagram: e.target.value,
                           })
                         }
-                        placeholder="Instagram: igual que el tono general..."
+                        placeholder="Instagram: igual que el tono general…"
                       />
                       <input
                         className={inputClass}
@@ -601,7 +601,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_tiktok: e.target.value })
                         }
-                        placeholder="TikTok: más gamberro y directo..."
+                        placeholder="TikTok: más gamberro y directo…"
                       />
                       <input
                         className={inputClass}
@@ -609,7 +609,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_youtube: e.target.value })
                         }
-                        placeholder="YouTube: más explicativo..."
+                        placeholder="YouTube: más explicativo…"
                       />
                       <input
                         className={inputClass}
@@ -617,7 +617,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         onChange={(e) =>
                           setDraft({ ...draft, matiz_facebook: e.target.value })
                         }
-                        placeholder="Facebook: más institucional..."
+                        placeholder="Facebook: más institucional…"
                       />
                     </div>
                   </div>
@@ -1073,7 +1073,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                         if (e.key === "Enter")
                                           handleAddLearnedRule("pitch", cat);
                                       }}
-                                      placeholder="+ añadir regla manual (protegida)..."
+                                      placeholder="+ añadir regla manual (protegida)…"
                                       disabled={savingManual}
                                       className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                     />
@@ -1098,7 +1098,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       ) : (
                         <p className="text-micro font-mono text-[var(--ink-2)]">
                           Todavía no hay reglas aprendidas. Corrige al menos 2
-                          pitches para la misma categoría (Salas, Festivales...)
+                          pitches para la misma categoría (Salas, Festivales…)
                           y se generarán solas, o pulsa "Entrenar ADN de tono
                           ahora". Para no esperar a eso, puedes pegar
                           directamente conversaciones reales buenas en{" "}
@@ -1253,7 +1253,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       if (e.key === "Enter")
                                         handleAddLearnedRule("reply", cat);
                                     }}
-                                    placeholder="+ añadir regla manual (protegida)..."
+                                    placeholder="+ añadir regla manual (protegida)…"
                                     disabled={savingManual}
                                     className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                   />
@@ -1278,8 +1278,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         <p className="text-micro font-mono text-[var(--ink-2)]">
                           Todavía no hay reglas aprendidas de respuestas.
                           Corrige al menos 2 respuestas para la misma categoría
-                          (Salas, Festivales...) y se generarán solas, o pulsa
-                          "Entrenar ADN de tono ahora". Para no esperar a eso,
+                          (Salas, Festivales…) y se generarán solas, o pulsa
+                          “Entrenar ADN de tono ahora”. Para no esperar a eso,
                           puedes pegar directamente conversaciones reales buenas
                           en{" "}
                           <strong className="text-[var(--acc)]">

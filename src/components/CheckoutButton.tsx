@@ -81,7 +81,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         {isLoading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Conectando con Stripe...</span>
+            <span>Conectando con Stripe…</span>
           </>
         ) : (
           children || (

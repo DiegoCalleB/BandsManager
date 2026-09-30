@@ -305,7 +305,7 @@ export function PerfectSetlistModal({
               <Wand2 className="w-12 h-12 text-[var(--ok)]/50 mx-auto mb-4" />
               <p className="text-[var(--ink-2)] mb-3">
                 Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan de cambios: reordenar canciones, quitar
-                las que no encajen, añadir otras del repertorio que sí, y sugerir bloques (presentación, pausa, bis...) donde falten.
+                las que no encajen, añadir otras del repertorio que sí, y sugerir bloques (presentación, pausa, bis…) donde falten.
               </p>
               <p className="text-xs text-[var(--ink-2)] mb-6">
                 No se toca este setlist: en cuanto se genere el plan, se trabaja sobre una copia nueva.
@@ -322,7 +322,7 @@ export function PerfectSetlistModal({
           {loading && (
             <div className="text-center py-12">
               <Loader className="w-8 h-8 animate-spin text-[var(--ok)] mx-auto mb-4" />
-              <p className="text-[var(--ink-2)]">Analizando setlist y catálogo...</p>
+              <p className="text-[var(--ink-2)]">Analizando setlist y catálogo…</p>
             </div>
           )}
 
@@ -445,7 +445,7 @@ export function PerfectSetlistModal({
                 rows={2}
                 value={comentarioFeedback}
                 onChange={(e) => setComentarioFeedback(e.target.value)}
-                placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'..."
+                placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'…"
                 className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
               />
               <div className="flex items-center gap-1.5 text-micro font-sans">

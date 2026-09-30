@@ -320,7 +320,7 @@ export function TemplateConfigSection({
               value={activeTemplate.body}
               onChange={(e) => activeTemplate.setBody(e.target.value)}
               className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none leading-relaxed transition-colors font-sans"
-              placeholder="Escribe el cuerpo base de la plantilla usando las etiquetas como {{nombre_sala}}, {{ciudad}}..."
+              placeholder="Escribe el cuerpo base de la plantilla usando las etiquetas como {{nombre_sala}}, {{ciudad}}…"
             />
           </div>
 
@@ -335,7 +335,7 @@ export function TemplateConfigSection({
               value={activeTemplate.guidelines}
               onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
               className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] placeholder:text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--ink-3)] focus:outline-none transition-colors"
-              placeholder="Ej: Mantén el mensaje en menos de 100 palabras, tono cercano, destaca nuestra sección rítmica..."
+              placeholder="Ej: Mantén el mensaje en menos de 100 palabras, tono cercano, destaca nuestra sección rítmica…"
             />
           </div>
 
@@ -395,7 +395,7 @@ export function TemplateConfigSection({
                 <Eye className="w-6 h-6 text-[var(--ink-2)] mx-auto" />
                 <p className="text-xs text-[var(--ink-2)] font-medium">Ninguna simulación activa</p>
                 <p className="text-xs text-[var(--ink-2)] max-w-xs mx-auto">
-                  Haz clic en <strong>"Simular Vista Previa"</strong> para ver cómo la IA adapta esta plantilla a un contacto real.
+                  Haz clic en <strong>“Simular Vista Previa”</strong> para ver cómo la IA adapta esta plantilla a un contacto real.
                 </p>
               </div>
             )}

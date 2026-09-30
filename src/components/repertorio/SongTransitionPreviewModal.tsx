@@ -880,7 +880,7 @@ export function SongTransitionPreviewModal({
                       )}
                       {isDetectingCuesA && (
                         <span className="text-micro text-[var(--ink-2)]">
-                          Analizando...
+                          Analizando…
                         </span>
                       )}
                     </div>
@@ -1055,7 +1055,7 @@ export function SongTransitionPreviewModal({
                       )}
                       {isDetectingCuesB && (
                         <span className="text-micro text-[var(--ink-2)]">
-                          Analizando...
+                          Analizando…
                         </span>
                       )}
                     </div>

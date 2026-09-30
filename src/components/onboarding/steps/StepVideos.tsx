@@ -126,7 +126,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
               type="text"
               value={newVideoUrl}
               onChange={(e) => setNewVideoUrl(e.target.value)}
-              placeholder="URL de YouTube (https://www.youtube.com/watch?v=... o youtu.be/...)"
+              placeholder="URL de YouTube (https://www.youtube.com/watch?v=… o youtu.be/…)"
               className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
             />
           </div>

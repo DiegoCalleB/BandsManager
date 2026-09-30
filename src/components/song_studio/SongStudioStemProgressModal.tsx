@@ -163,7 +163,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[var(--acc)] font-bold">Progreso: {Math.round(stemProgressModal.progressPct || 0)}%</span>
-                <span className="text-[var(--ink-2)] animate-pulse">Procesando frecuencia de audio...</span>
+                <span className="text-[var(--ink-2)] animate-pulse">Procesando frecuencia de audio…</span>
               </div>
               <div className="w-full h-2.5 bg-[var(--sunken)] rounded-[var(--r-pill)] overflow-hidden ">
                 <div

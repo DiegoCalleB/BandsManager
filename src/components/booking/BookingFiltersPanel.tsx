@@ -283,7 +283,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               <input
                 type="text"
                 autoFocus
-                placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
+                placeholder="Nombre del filtro (ej: Salas BCN > 300)…"
                 value={newFilterName}
                 onChange={(e) => setNewFilterName(e.target.value)}
                 className="px-2.5 py-1.5 text-xs rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] focus:outline-none w-48 sm:w-56"

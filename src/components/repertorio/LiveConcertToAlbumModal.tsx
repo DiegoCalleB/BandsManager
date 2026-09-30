@@ -1505,7 +1505,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   </div>
                   <input
                     type="text"
-                    placeholder="https://www.youtube.com/watch?v=..."
+                    placeholder="https://www.youtube.com/watch?v=…"
                     value={youtubeUrl}
                     onChange={(e) => setYoutubeUrl(e.target.value)}
                     className={`w-full px-3 py-2 text-sm rounded-[var(--r-s)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
@@ -1558,7 +1558,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     {isAnalyzing ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin" />{" "}
-                        Analizando...
+                        Analizando…
                       </>
                     ) : (
                       <>
@@ -2184,7 +2184,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   <>
                                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                                     <span className="hidden sm:inline">
-                                      Generando...
+                                      Generando…
                                     </span>
                                   </>
                                 ) : isPlayingThis ? (
@@ -2543,7 +2543,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                       e.target.value,
                                     )
                                   }
-                                  placeholder="[Intro]&#10;[Mim] [Do] [Sol] [Re]&#10;&#10;[Verso 1]&#10;[Mim]En la noche del concierto [Do]cantamos juntos..."
+                                  placeholder="[Intro]&#10;[Mim] [Do] [Sol] [Re]&#10;&#10;[Verso 1]&#10;[Mim]En la noche del concierto [Do]cantamos juntos…"
                                   rows={8}
                                   className="w-full p-3 font-sans text-xs rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--acc)] placeholder-[var(--ink-2)] focus:outline-none focus:leading-relaxed"
                                 />
@@ -2579,7 +2579,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   e.target.value,
                                 )
                               }
-                              placeholder="[Intro musical / Palabras del artista al público]..."
+                              placeholder="[Intro musical / Palabras del artista al público]…"
                               rows={2}
                               className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none leading-relaxed font-sans"
                             />
@@ -3019,7 +3019,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <p className="text-xs text-[var(--ink-2)]">
                         YouTube bloquea las peticiones automáticas desde centros
                         de datos con el mensaje{" "}
-                        <em>"Sign in to confirm you're not a bot"</em>. Al
+                        <em>“Sign in to confirm you're not a bot”</em>. Al
                         vincular las cookies de tu cuenta/canal, el servidor se
                         identifica legítimamente y descarga el vídeo o audio
                         completo al instante a máxima velocidad.
@@ -3030,14 +3030,14 @@ export const LiveConcertToAlbumModal: React.FC<
                         </p>
                         <p>
                           1. Instala la extensión gratuita de Chrome/Firefox{" "}
-                          <strong>"Get cookies.txt locally"</strong>.
+                          <strong>“Get cookies.txt locally”</strong>.
                         </p>
                         <p>
                           2. Abre YouTube con tu cuenta de la banda iniciada.
                         </p>
                         <p>
                           3. Haz clic en la extensión, pulsa{" "}
-                          <strong>"Export"</strong> y pega el contenido aquí o
+                          <strong>“Export”</strong> y pega el contenido aquí o
                           sube el archivo.
                         </p>
                       </div>
@@ -3401,14 +3401,14 @@ export const LiveConcertToAlbumModal: React.FC<
                       <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                         Copia la lista desde tu WhatsApp, notas o papel de
                         escenario y pégala aquí. El asistente asignará cada
-                        línea a la pista correspondiente (#1, #2, #3...) y
-                        limpiará automáticamente números iniciales ("1.", "01 -",
+                        línea a la pista correspondiente (#1, #2, #3…) y
+                        limpiará automáticamente números iniciales (“1.”, “01 -”,
                         etc.).
                       </p>
                       <p className="text-xs text-[var(--tentative)]/80">
-                        <ShowIcon inline emoji="💡" />Si una línea contiene palabras como <em>"speech"</em>
-                        , <em>"presentación"</em>, <em>"saludo"</em>,{" "}
-                        <em>"charla"</em> o <em>"agradecimientos"</em>, la
+                        <ShowIcon inline emoji="💡" />Si una línea contiene palabras como <em>“speech”</em>
+                        , <em>“presentación”</em>, <em>“saludo”</em>,{" "}
+                        <em>“charla”</em> o <em>“agradecimientos”</em>, la
                         clasificará automáticamente como Speech.
                       </p>
                     </div>

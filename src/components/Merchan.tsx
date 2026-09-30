@@ -664,7 +664,7 @@ export default function Merchan({
             {isGenerating ? (
               <>
                 <RefreshCw className="w-5 h-5 animate-spin" />
-                Procesando Capas Canvas...
+                Procesando Capas Canvas…
               </>
             ) : (
               <>
@@ -706,7 +706,7 @@ export default function Merchan({
                     className={`font-sans text-xs max-w-sm ${"text-[var(--ink-2)]"}`}
                   >
                     Configura las opciones, sube tu imagen o selecciona un logo
-                    y pulsa "Generar Diseño Mockup" para previsualizar los
+                    y pulsa “Generar Diseño Mockup” para previsualizar los
                     resultados.
                   </p>
                 </div>

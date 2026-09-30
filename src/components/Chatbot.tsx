@@ -2273,7 +2273,7 @@ export default function Chatbot({
             <div
               className={`p-3.5 rounded-[var(--r-m)] rounded-tl-none text-xs font-sans flex items-center gap-2 ${'bg-[var(--surface)] text-[var(--ink-2)]'}`}
             >
-              <RefreshCw className={`w-3.5 h-3.5 animate-spin ${'text-[var(--tentative)]'}`} /> Analizando base de datos Supabase...
+              <RefreshCw className={`w-3.5 h-3.5 animate-spin ${'text-[var(--tentative)]'}`} /> Analizando base de datos Supabase…
             </div>
           </div>
         )}
@@ -2312,7 +2312,7 @@ export default function Chatbot({
                 )}
                 {activeRun.status === 'in_progress' && (
                   <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -cyan-500/20">
-                    <ShowIcon inline emoji="⚙️" />Ejecutando...
+                    <ShowIcon inline emoji="⚙️" />Ejecutando…
                   </span>
                 )}
                 {activeRun.status === 'completed' && activeRun.conclusion === 'success' && (
@@ -2633,7 +2633,7 @@ export default function Chatbot({
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
+          placeholder="Escribe tu mensaje… (Enter para enviar, Shift+Enter para nueva línea)"
           className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-ui font-sans resize-none max-h-28 min-h-[38px] ${'bg-[var(--sunken)] text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]'}`}
         />
         <button

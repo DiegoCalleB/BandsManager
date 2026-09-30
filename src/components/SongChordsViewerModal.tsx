@@ -939,7 +939,7 @@ export function SongChordsViewerModal({
                               })
                             }
                             className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
-                            placeholder="Parón en compás 8..."
+                            placeholder="Parón en compás 8…"
                           />
                         </div>
 

@@ -816,7 +816,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   {zipLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
-                      <span>Empaquetando ZIP...</span>
+                      <span>Empaquetando ZIP…</span>
                     </>
                   ) : (
                     <>

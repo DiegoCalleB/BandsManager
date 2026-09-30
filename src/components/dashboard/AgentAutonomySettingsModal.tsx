@@ -1219,7 +1219,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           Nivel A
                         </span>
                         <h5 className="text-sm font-bold font-display text-[var(--ink)]">
-                          Solo "Llamada a la puerta"
+                          Solo “Llamada a la puerta”
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
                           El agente solo saluda y envía el Dossier EPK. En
@@ -1605,7 +1605,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           Crear borrador en Gmail
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
-                          El agente prepara el correo en la carpeta "Borradores"
+                          El agente prepara el correo en la carpeta “Borradores”
                           de tu Gmail con sala, asunto, pitch y dossier adjunto.
                           Puedes abrirlo, darle tu toque y pulsar Enviar desde
                           Gmail o desde el CRM.
@@ -1640,7 +1640,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           Envío directo tras aprobación
                         </h5>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-snug">
-                          Tras pulsar "Aprobar Propuesta" o "Aprobar Respuesta" en
+                          Tras pulsar “Aprobar Propuesta” o “Aprobar Respuesta” en
                           el CRM, el agente despacha el correo directamente al
                           email de la sala respetando las ventanas horarias
                           comerciales.
@@ -1673,14 +1673,14 @@ export const AgentAutonomySettingsModal: React.FC<
                       />
                       <div className="space-y-1">
                         <span className="text-xs font-bold text-[var(--ink-2)] block">
-                          Marcar correos como "Leídos" en Gmail / Outlook al
+                          Marcar correos como “Leídos” en Gmail / Outlook al
                           procesarlos
                         </span>
                         <p className="text-xs text-[var(--ink-2)] font-sans leading-relaxed">
                           {config.markAsReadInInbox ? (
                             <span className="text-[var(--acc)]">
                               <ShowIcon inline emoji="⚠️" />Activado: El Agente Lector quitará la marca de
-                              "No leído" en tu correo oficial cada vez que
+                              “No leído” en tu correo oficial cada vez que
                               analice un mensaje entrante.
                             </span>
                           ) : (
@@ -2549,7 +2549,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   <div className="flex flex-col items-center justify-center py-12 gap-2 text-[var(--ink-2)] font-sans text-xs">
                     <Loader2 className="w-6 h-6 animate-spin text-[var(--ok)]" />
                     <span>
-                      Cargando registros de auditoría desde Supabase...
+                      Cargando registros de auditoría desde Supabase…
                     </span>
                   </div>
                 ) : auditLogs.length === 0 ? (
@@ -2742,7 +2742,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   {isSaving ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-[var(--acc-ink)]" />
-                      <span>Guardando ajustes...</span>
+                      <span>Guardando ajustes…</span>
                     </>
                   ) : savedSuccess ? (
                     <>

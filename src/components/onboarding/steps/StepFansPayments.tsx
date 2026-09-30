@@ -169,7 +169,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 type="text"
                 value={fanRewardLink}
                 onChange={(e) => setFanRewardLink(e.target.value)}
-                placeholder="O pega un enlace de descarga externo (Dropbox, Drive, Mega...)"
+                placeholder="O pega un enlace de descarga externo (Dropbox, Drive, Mega…)"
                 className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
               />
             </div>
@@ -232,7 +232,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
               type="text"
               value={ibanNumber}
               onChange={(e) => setIbanNumber(e.target.value)}
-              placeholder="ES00 0000..."
+              placeholder="ES00 0000…"
               className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
             />
           </div>

@@ -299,7 +299,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
       {isLoading ? (
         <div className="flex items-center justify-center py-4 gap-2 text-xs font-sans text-[var(--ink-2)]">
           <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
-          <span>Consultando satélites meteorológicos en directo...</span>
+          <span>Consultando satélites meteorológicos en directo…</span>
         </div>
       ) : weatherData?.status === "future" ? (
         <div className="flex items-center gap-3 py-2 px-3 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-xs font-sans">

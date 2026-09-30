@@ -553,7 +553,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                       'bg-[var(--sunken)] text-[var(--ink)]'
                     }`}
                   >
-                    <option value="">Seleccionar repertorio...</option>
+                    <option value="">Seleccionar repertorio…</option>
                     {availableSetlists.map((s) => (
                       <option key={s.id} value={s.id}>
                         {s.nombre || s.title}

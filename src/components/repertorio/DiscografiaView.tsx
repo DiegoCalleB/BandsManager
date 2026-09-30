@@ -638,7 +638,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar canción, tono, letra..."
+            placeholder="Buscar canción, tono, letra…"
             className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-ui focus:outline-none focus:ring-2 focus:ring-[var(--acc)]/40 ${"bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-[var(--surface)]"}`}
           />
           {searchQuery && (
@@ -1088,7 +1088,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     {sortedAlbumSongs.length === 0 && (
                       <div className="text-center py-6 text-[var(--ink-2)] text-xs italic font-sans bg-[var(--ink)]/5 rounded-[var(--r-l)]">
-                        Disco sin canciones asignadas. Haz clic en "Gestionar"
+                        Disco sin canciones asignadas. Haz clic en “Gestionar”
                         para añadir temas a este álbum.
                       </div>
                     )}

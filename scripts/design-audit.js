@@ -117,6 +117,11 @@ const CHECKS = {
     pattern: />\s*[A-ZÁÉÍÓÚ][a-záéíóúñ]{2,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}[^<>{}\n]*</g,
     severity: 'warning',
   },
+  puntosSuspensivosEnTexto: {
+    description: 'tres puntos ASCII (...) en texto visible — la tipografía cuidada usa el carácter … ; los tres puntos sueltos son un rasgo de texto sin revisar',
+    pattern: />[^<>{}\n]*[A-Za-zÁ-úñÑ]\.\.\.(?=[\s)<?!,;:])[^<>{}\n]*</g,
+    severity: 'warning',
+  },
   mayusculasDecorativas: {
     description: 'uppercase de Tailwind — visual-identity §1/§6: caja de frase siempre; las versalitas eliminan la silueta de la palabra y cansan en sesiones largas (un literal ya escrito en mayúsculas en el JSX no lo detecta esta regla)',
     pattern: /(?<![\w-])uppercase(?![\w-])/g,

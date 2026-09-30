@@ -630,7 +630,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <span>
                         <strong>¡Firma visual copiada!</strong> Ahora ve a los
                         ajustes de firma de tu correo (Gmail, Outlook, Apple
-                        Mail...) y pulsa{" "}
+                        Mail…) y pulsa{" "}
                         <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-sans text-micro">
                           Ctrl + V
                         </kbd>{" "}
@@ -720,7 +720,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-2)] pl-1 leading-relaxed">
                         <li>
                           Haz clic arriba en{" "}
-                          <strong>"Copiar Firma Formateada"</strong>.
+                          <strong>“Copiar Firma Formateada”</strong>.
                         </li>
                         <li>
                           Abre tu Gmail y pulsa en la rueda de{" "}
@@ -754,7 +754,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-2)] pl-1 leading-relaxed">
                         <li>
                           Haz clic arriba en{" "}
-                          <strong>"Copiar Firma Formateada"</strong>.
+                          <strong>“Copiar Firma Formateada”</strong>.
                         </li>
                         <li>
                           En Outlook Web o App, entra en{" "}
@@ -780,18 +780,18 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-2)] pl-1 leading-relaxed">
                         <li>
                           Haz clic arriba en{" "}
-                          <strong>"Copiar Firma Formateada"</strong>.
+                          <strong>“Copiar Firma Formateada”</strong>.
                         </li>
                         <li>
                           En la app Mail de Mac, ve al menú superior{" "}
-                          <strong>Mail</strong> &gt; <strong>Ajustes...</strong>{" "}
+                          <strong>Mail</strong> &gt; <strong>Ajustes…</strong>{" "}
                           &gt; <strong>Firmas</strong>.
                         </li>
                         <li>
                           Añade una firma con el botón <strong>+</strong> y
                           desmarca la casilla{" "}
                           <em>
-                            "Usar siempre el tipo de letra predeterminado"
+                            “Usar siempre el tipo de letra predeterminado”
                           </em>
                           .
                         </li>

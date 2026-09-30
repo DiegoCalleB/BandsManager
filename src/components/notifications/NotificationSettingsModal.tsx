@@ -103,7 +103,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <span className="font-bold block text-sm">Permiso bloqueado en el navegador</span>
                   <p className="text-xs text-[var(--alert)]/80">
                     Las notificaciones están bloqueadas en los ajustes de tu navegador. Para recibirlas, haz clic en el icono del candado <ShowIcon inline emoji="🔒" />
-                    junto a la URL y permite las "Notificaciones".
+                    junto a la URL y permite las “Notificaciones”.
                   </p>
                 </div>
               </div>

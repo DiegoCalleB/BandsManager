@@ -281,7 +281,7 @@ export function MemberNotesModal({
                 rows={2}
                 value={generalRepertorioNote}
                 onChange={(e) => setGeneralRepertorioNote(e.target.value)}
-                placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
+                placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco…"
                 className="w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none bg-[var(--surface)] text-[var(--ink)]"
               />
             </div>

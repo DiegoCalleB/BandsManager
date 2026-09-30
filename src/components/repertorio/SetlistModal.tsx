@@ -104,7 +104,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 rows={3}
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
-                placeholder="ej. Repertorio de ritmo alto pensado para festivales..."
+                placeholder="ej. Repertorio de ritmo alto pensado para festivales…"
                 className={`w-full p-3 rounded-[var(--r-m)] font-medium text-xs focus:outline-none ${
                   'bg-[var(--sunken)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--ink-3)]'
                 }`}

@@ -155,7 +155,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               type="text"
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
-              placeholder="Ej: añadir forma de rayo, tonos dorados y negros, aire psicodélico..."
+              placeholder="Ej: añadir forma de rayo, tonos dorados y negros, aire psicodélico…"
               className="w-full bg-[var(--sunken)] focus:ring-1 focus:ring-[var(--ink-3)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink-2)] outline-none"
             />
           </div>
@@ -196,7 +196,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
             >
               {isGenerating ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Diseñando...
+                  <Loader2 className="w-4 h-4 animate-spin" /> Diseñando…
                 </>
               ) : generatedLogo ? (
                 <>
