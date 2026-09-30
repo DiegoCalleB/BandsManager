@@ -946,10 +946,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       >
         <div className="relative rounded-[var(--r-l)] bg-[var(--surface)]/95   p-3.5 sm:p-4 transition-ui duration-300 text-left overflow-hidden">
           {/* Halo ambiental sutil */}
-          <div
-            className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-[var(--r-pill)] bg-[var(--acc)]/10 blur-2xl"
-            aria-hidden="true"
-          />
 
           {/* Cabecera de la tarjeta: Screenshot / Imagen + Título + Badge */}
           <div className="relative flex items-start gap-3 sm:gap-3.5">
@@ -1513,13 +1509,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   className={`w-1 bg-[var(--acc)] rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-5" : "h-1.5"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)] rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-3 animate-bounce" : "h-2"}`}
+                  className={`w-1 bg-[var(--acc)] rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-3" : "h-2"}`}
                 />
                 <span
                   className={`w-1 bg-[var(--acc)] rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-4" : "h-1"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)] rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-2 animate-bounce" : "h-2.5"}`}
+                  className={`w-1 bg-[var(--acc)] rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-2" : "h-2.5"}`}
                 />
               </div>
             </div>
@@ -1585,10 +1581,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               )}
               <div
                 className="pointer-events-none absolute inset-0 bg-[var(--surface)] "
-                aria-hidden="true"
-              />
-              <div
-                className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-[var(--r-pill)] bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-300"
                 aria-hidden="true"
               />
               <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-[var(--acc)]/25  text-[var(--ink)] flex items-center justify-center shrink-0 transition-transform overflow-hidden">

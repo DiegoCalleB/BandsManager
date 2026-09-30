@@ -1398,7 +1398,7 @@ export function SongTransitionPreviewModal({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {/* POR QUÉ SÍ */}
                     <div className="space-y-1">
-                      <div className="flex items-center gap-1 text-micro font-bold text-[var(--ok)] tracking-wide">
+                      <div className="flex items-center gap-1 text-micro font-bold text-[var(--ok)]">
                         <ThumbsUp className="w-2.5 h-2.5" />
                         <span>
                           Por qué SÍ funciona ({diagnosis.porQueSi.length})
@@ -1434,7 +1434,7 @@ export function SongTransitionPreviewModal({
 
                     {/* POR QUÉ NO / CRÍTICA */}
                     <div className="space-y-1">
-                      <div className="flex items-center gap-1 text-micro font-bold text-[var(--alert)] tracking-wide">
+                      <div className="flex items-center gap-1 text-micro font-bold text-[var(--alert)]">
                         <ThumbsDown className="w-2.5 h-2.5" />
                         <span>
                           Puntos a vigilar ({diagnosis.porQueNo.length})

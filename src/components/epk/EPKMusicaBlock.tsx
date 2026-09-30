@@ -253,7 +253,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 </div>
                 <div className="flex items-center gap-1 h-5 shrink-0 px-2">
                   <span className="w-1 h-3 bg-[var(--acc)] rounded-[var(--r-pill)]" />
-                  <span className="w-1 h-5 bg-[var(--acc)] rounded-[var(--r-pill)] animate-bounce" />
+                  <span className="w-1 h-5 bg-[var(--acc)] rounded-[var(--r-pill)]" />
                   <span className="w-1 h-2 bg-[var(--acc)] rounded-[var(--r-pill)]" />
                 </div>
               </div>

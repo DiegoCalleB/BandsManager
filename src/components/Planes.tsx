@@ -658,7 +658,7 @@ export const Planes: React.FC<PlanesProps> = ({
           <span>Planes y Suscripciones</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-[var(--ink)]">
+        <h1 className="page-title">
           Planes diseñados para{" "}
           <span className="text-transparent bg-clip-text bg-[var(--acc)] ">
             músicos independientes
@@ -815,7 +815,7 @@ export const Planes: React.FC<PlanesProps> = ({
                     className={`w-4 h-4 mt-0.5 shrink-0 ${plan.isPopular ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
                   />
                   <div className="flex flex-col">
-                    <span className="text-xs font-sans font-bold tracking-wide">
+                    <span className="text-xs font-sans font-bold">
                       {plan.creditsLabel}
                     </span>
                     <span className="text-micro text-[var(--ink-2)] leading-tight">
@@ -1176,7 +1176,7 @@ export const Planes: React.FC<PlanesProps> = ({
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-lg font-bold font-display tracking-wide text-[var(--ink)]">
+            <h3 className="text-lg font-bold font-display text-[var(--ink)]">
               Garantía BandManager: Política de Planes y Datos Protegidos
             </h3>
             <p className="text-xs text-[var(--ink-2)]">

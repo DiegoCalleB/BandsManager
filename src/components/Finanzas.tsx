@@ -33,6 +33,7 @@ import { calculateFinancialSummary } from "../utils/financeUtils";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, Input, Select, Textarea } from './ui';
 
+import { formatEur } from '../utils/formatMoney';
 interface FinanzasProps {
   colors: ThemeColors;
   payments: Payment[];
@@ -213,11 +214,7 @@ export default function Finanzas({
           >
             Finanzas y libro contable
           </h4>
-          <h2
-            className={`text-xl font-bold font-display mt-1 ${textTitle}`}
-          >
-            CONTABILIDAD DE BANDA
-          </h2>
+          <h2 className="page-title mt-1">Contabilidad de la banda</h2>
         </div>
         <div className="flex gap-2.5 items-center flex-wrap">
           <button
@@ -240,7 +237,7 @@ export default function Finanzas({
           <span
             className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-micro font-sans font-bold ${"bg-[var(--ok)]/10  text-[var(--ok)]"}`}
           >
-            <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping shrink-0" />{" "}
+            <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0" />{" "}
             Auto-sync
           </span>
         </div>
@@ -282,46 +279,40 @@ export default function Finanzas({
         <div
           className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}
         >
-          <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--ok)]">
+          <div className="flex justify-between items-center text-xs font-sans font-semibold text-[var(--ink-2)]">
             <span>Ingresos cobrados</span>
             <TrendingUp className="w-4 h-4" />
           </div>
           <h3
-            className={`text-2xl font-black font-display tracking-tight ${textTitle}`}
+            className={`text-2xl font-bold font-display tabular-nums tracking-tight ${textTitle}`}
           >
-            +{totalIngresos.toLocaleString("es-ES")}€
+            {formatEur(totalIngresos, { signed: true })}
           </h3>
           <p className={`text-micro font-sans ${textSub}`}>
             {totalPendienteIngresos > 0
-              ? `+${totalPendienteIngresos.toLocaleString("es-ES")}€ pendientes de cobro`
+              ? `${formatEur(totalPendienteIngresos)} pendientes de cobro`
               : "Al día"}
           </p>
-          <div className="absolute right-[-10px] bottom-[-15px] opacity-5 pointer-events-none text-[var(--ok)]">
-            <DollarSign className="w-24 h-24" />
-          </div>
         </div>
 
         {/* Total expenses */}
         <div
           className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}
         >
-          <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--alert)]">
-            <span>Gastos Liquidados</span>
+          <div className="flex justify-between items-center text-xs font-sans font-semibold text-[var(--ink-2)]">
+            <span>Gastos liquidados</span>
             <TrendingDown className="w-4 h-4" />
           </div>
           <h3
-            className={`text-2xl font-black font-display tracking-tight ${textTitle}`}
+            className={`text-2xl font-bold font-display tabular-nums tracking-tight ${textTitle}`}
           >
-            -{totalGastos.toLocaleString("es-ES")}€
+            {formatEur(-totalGastos)}
           </h3>
           <p className={`text-micro font-sans ${textSub}`}>
             {totalPendienteGastos > 0
-              ? `-${totalPendienteGastos.toLocaleString("es-ES")}€ pendientes de pago`
+              ? `${formatEur(totalPendienteGastos)} pendientes de pago`
               : "Al día"}
           </p>
-          <div className="absolute right-[-10px] bottom-[-15px] pointer-events-none opacity-5 text-[var(--alert)]">
-            <DollarSign className="w-24 h-24" />
-          </div>
         </div>
 
         {/* Net balance */}
@@ -331,19 +322,15 @@ export default function Finanzas({
           }`}
         >
           <div
-            className={`flex justify-between items-center text-xs font-sans font-bold ${
-              balanceNeto >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"
-            }`}
+            className="flex justify-between items-center text-xs font-sans font-semibold text-[var(--ink-2)]"
           >
             <span>Balance de caja neto</span>
             <DollarSign className="w-4 h-4" />
           </div>
           <h3
-            className={`text-2xl font-black font-display tracking-tight ${textTitle}`}
+            className={`text-2xl font-bold font-display tabular-nums tracking-tight ${textTitle}`}
           >
-            {balanceNeto >= 0
-              ? `+${balanceNeto.toLocaleString("es-ES")}€`
-              : `${balanceNeto.toLocaleString("es-ES")}€`}
+            {formatEur(balanceNeto, { signed: true })}
           </h3>
           <p className={`text-micro font-sans ${textSub}`}>
             Caja total real cobrada menos gastos pagados
@@ -392,7 +379,7 @@ export default function Finanzas({
           onClick={() => setIsAddOpen(true)}
           className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${"bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]"}`}
         >
-          <Plus className="w-3.5 h-3.5" /> Registrar Operación
+          <Plus className="w-3.5 h-3.5" /> Registrar operación
         </button>
       </div>
 
@@ -429,8 +416,8 @@ export default function Finanzas({
                     <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
                       Total caché contratado
                     </span>
-                    <h4 className="text-xl font-bold text-[var(--acc)]">
-                      {totalConcertCache.toLocaleString("es-ES")}€
+                    <h4 className="text-xl font-bold text-[var(--ink)] tabular-nums">
+                      {formatEur(totalConcertCache)}
                     </h4>
                     <p className="text-micro text-[var(--ink-2)]">
                       {concerts.length} conciertos en catálogo
@@ -443,8 +430,8 @@ export default function Finanzas({
                     <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
                       Total gastos Gira
                     </span>
-                    <h4 className="text-xl font-bold text-[var(--alert)]">
-                      -{totalConcertGastos.toLocaleString("es-ES")}€
+                    <h4 className="text-xl font-bold text-[var(--ink)] tabular-nums">
+                      {formatEur(-totalConcertGastos)}
                     </h4>
                     <p className="text-micro text-[var(--ink-2)]">
                       Gasolina, dietas, furgoneta, hoteles
@@ -458,11 +445,11 @@ export default function Finanzas({
                       Beneficio neto acumulado
                     </span>
                     <h4
-                      className={`text-xl font-bold ${totalBeneficioNeto >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"}`}
+                      className={`text-xl font-bold text-[var(--ink)] tabular-nums`}
                     >
                       {totalBeneficioNeto >= 0
-                        ? `+${totalBeneficioNeto.toLocaleString("es-ES")}€`
-                        : `${totalBeneficioNeto.toLocaleString("es-ES")}€`}
+                        ? formatEur(totalBeneficioNeto, { signed: true })
+                        : formatEur(totalBeneficioNeto)}
                     </h4>
                     <p className="text-micro text-[var(--ink-2)]">
                       Beneficio tras cubrir gastos de gira
@@ -475,10 +462,10 @@ export default function Finanzas({
                     <span className="text-micro font-sans text-[var(--ink-2)] font-bold">
                       Beneficio medio / bolo
                     </span>
-                    <h4 className="text-xl font-bold text-[var(--acc)]/70">
+                    <h4 className="text-xl font-bold text-[var(--ink)] tabular-nums">
                       {mediaBeneficio >= 0
-                        ? `+${Math.round(mediaBeneficio)}€`
-                        : `${Math.round(mediaBeneficio)}€`}
+                        ? formatEur(Math.round(mediaBeneficio), { signed: true })
+                        : formatEur(Math.round(mediaBeneficio))}
                     </h4>
                     <p className="text-micro text-[var(--ink-2)]">
                       Rentabilidad media por actuación
@@ -493,7 +480,7 @@ export default function Finanzas({
           <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
             <div className="flex items-center justify-between  pb-3">
               <h3 className="text-sm font-bold text-[var(--acc)] flex items-center gap-2">
-                <Calculator className="w-4 h-4" /> Desglose de gastos &
+                <Calculator className="w-4 h-4" /> Desglose de gastos y
                 rentabilidad por bolo
               </h3>
               <span className="text-xs text-[var(--ink-2)]">
@@ -567,19 +554,19 @@ export default function Finanzas({
                       );
 
                       let alertBadge = {
-                        label: "🟢 Rentable",
+                        label: "Rentable",
                         bgColor: "bg-[var(--ok-soft)]/40 text-[var(--ok)]",
                       };
 
                       if (beneficioNeto < 0) {
                         alertBadge = {
-                          label: "🔴 En Pérdidas",
+                          label: "En pérdidas",
                           bgColor:
                             "bg-[var(--alert-soft)]/50 text-[var(--alert)]",
                         };
                       } else if (beneficioNeto < 150) {
                         alertBadge = {
-                          label: "🟡 Ajustado",
+                          label: "Ajustado",
                           bgColor: "bg-[var(--acc-soft)]  text-[var(--acc-ink)]",
                         };
                       }
@@ -622,8 +609,8 @@ export default function Finanzas({
                               </span>
                             )}
                           </td>
-                          <td className="p-3 font-sans font-bold text-[var(--acc)] text-sm">
-                            {c.cache ? `${c.cache}€` : "0€"}
+                          <td className="p-3 font-sans font-bold text-[var(--ink)] tabular-nums text-sm">
+                            {formatEur(c.cache || 0)}
                           </td>
                           <td className="p-3 text-xs text-[var(--ink-2)]">
                             {hasCustomGastos ? (
@@ -631,21 +618,21 @@ export default function Finanzas({
                                 <div>
                                   Gasolina:{" "}
                                   <span className="font-sans text-[var(--ink-2)]">
-                                    {gasolina}€
+                                    {formatEur(gasolina)}
                                   </span>{" "}
                                   | Dietas:{" "}
                                   <span className="font-sans text-[var(--ink-2)]">
-                                    {dietas}€
+                                    {formatEur(dietas)}
                                   </span>
                                 </div>
                                 <div>
                                   Furgoneta:{" "}
                                   <span className="font-sans text-[var(--ink-2)]">
-                                    {alquiler}€
+                                    {formatEur(alquiler)}
                                   </span>{" "}
                                   | Hotel:{" "}
                                   <span className="font-sans text-[var(--ink-2)]">
-                                    {alojamiento}€
+                                    {formatEur(alojamiento)}
                                   </span>
                                 </div>
                               </div>
@@ -655,20 +642,20 @@ export default function Finanzas({
                               </span>
                             )}
                           </td>
-                          <td className="p-3 font-sans text-[var(--alert)] font-semibold">
-                            -{totalGastosBolo}€
+                          <td className="p-3 font-sans text-[var(--ink)] tabular-nums font-semibold">
+                            {formatEur(-totalGastosBolo)}
                           </td>
                           <td className="p-3 font-sans font-bold text-sm">
                             <span
                               className={
                                 beneficioNeto >= 0
-                                  ? "text-[var(--ok)]"
-                                  : "text-[var(--alert)]"
+                                  ? "text-[var(--ink)]"
+                                  : "text-[var(--ink)]"
                               }
                             >
                               {beneficioNeto >= 0
-                                ? `+${beneficioNeto}€`
-                                : `${beneficioNeto}€`}
+                                ? formatEur(beneficioNeto, { signed: true })
+                                : formatEur(beneficioNeto)}
                             </span>
                             <span className="block text-micro text-[var(--ink-2)] font-normal">
                               Margen: {margenPct}%
@@ -1011,12 +998,12 @@ export default function Finanzas({
                       <span
                         className={`text-sm font-bold font-sans tracking-tight ${
                           p.tipo === "ingreso"
-                            ? "text-[var(--ok)]"
-                            : "text-[var(--alert)]"
+                            ? "text-[var(--ink)]"
+                            : "text-[var(--ink)]"
                         }`}
                       >
                         {p.tipo === "ingreso" ? "+" : "-"}
-                        {p.importe.toLocaleString("es-ES")}€
+                        {formatEur(p.importe)}
                       </span>
 
                       {/* Status checkbox toggle */}
@@ -1062,14 +1049,14 @@ export default function Finanzas({
                 </div>
                 <div className="flex justify-between pb-2 -dashed">
                   <span className={textSub}>Pendiente de cobro</span>
-                  <span className="text-[var(--ok)] font-bold">
-                    +{totalPendienteIngresos.toLocaleString("es-ES")}€
+                  <span className="text-[var(--ink)] font-bold tabular-nums">
+                    {formatEur(totalPendienteIngresos, { signed: true })}
                   </span>
                 </div>
                 <div className="flex justify-between pb-2 -dashed">
                   <span className={textSub}>Pendiente de pago</span>
-                  <span className="text-[var(--alert)] font-bold">
-                    -{totalPendienteGastos.toLocaleString("es-ES")}€
+                  <span className="text-[var(--ink)] font-bold tabular-nums">
+                    {formatEur(-totalPendienteGastos)}
                   </span>
                 </div>
                 <div className="flex justify-between font-bold text-xs pt-1">
@@ -1077,8 +1064,8 @@ export default function Finanzas({
                   <span
                     className={
                       totalPendienteIngresos - totalPendienteGastos >= 0
-                        ? "text-[var(--ok)]"
-                        : "text-[var(--alert)]"
+                        ? "text-[var(--ink)]"
+                        : "text-[var(--ink)]"
                     }
                   >
                     {(
@@ -1158,7 +1145,7 @@ export default function Finanzas({
                         {item.cat}
                       </span>
                       <span className={`${textSub}`}>
-                        {totalInCat.toLocaleString("es-ES")}€ (
+                        {formatEur(totalInCat)} (
                         {percent.toFixed(1)}%)
                       </span>
                     </div>
@@ -1217,7 +1204,7 @@ export default function Finanzas({
                   </div>
                   <div className="flex justify-between">
                     <span>Ingresos de Conciertos:</span>
-                    <span className="text-[var(--ok)] font-bold">
+                    <span className="text-[var(--ink)] font-bold tabular-nums">
                       {payments
                         .filter(
                           (p) =>

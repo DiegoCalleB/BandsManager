@@ -535,7 +535,6 @@ export function ModoLocalEnVivoTab({
       {viewMode === "escenario" && (
         <div className="p-4 sm:p-7 rounded-[var(--r-l)] bg-[var(--surface)] relative overflow-hidden space-y-6">
           {/* Subtle stage spotlight effect */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-[var(--acc)]/10 blur-3xl pointer-events-none" />
 
           {/* Top Header: Track Title & Musical Meta (100% Mobile Responsive) */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5">
@@ -1148,7 +1147,7 @@ function renderFormattedChords(
     return (
       <div
         key={idx}
-        className="text-[var(--ink)] py-0.5 leading-relaxed tracking-wide"
+        className="text-[var(--ink)] py-0.5 leading-relaxed"
         dangerouslySetInnerHTML={{ __html: processedLine }}
       />
     );

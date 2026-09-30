@@ -266,7 +266,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       </div>
 
       {/* ÁREA DE VISUALIZACIÓN / SIMULADOR CENTRADO */}
-      <main className="w-full flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[var(--surface)] via-[#100f0f] to-[#0a0a0a]">
+      <main className="w-full flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 flex items-center justify-center bg-[var(--sunken)]">
         {deviceMode === 'mobile' ? (
           /* MOCKUP ELEGANTE DE SMARTPHONE */
           <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-ui duration-200">

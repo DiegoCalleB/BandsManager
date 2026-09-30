@@ -370,7 +370,7 @@ export function CalendarWidget({
                     <span className="text-base font-bold leading-none text-[var(--acc-ink)] tabular-nums">
                       {item.day}
                     </span>
-                    <span className="text-micro font-semibold tracking-wide text-[var(--acc-ink)]/80 mt-0.5">
+                    <span className="text-micro font-semibold text-[var(--acc-ink)]/80 mt-0.5">
                       {item.month}
                     </span>
                   </div>
@@ -378,7 +378,7 @@ export function CalendarWidget({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span
-                        className={`text-micro px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tracking-wide ${
+                        className={`text-micro px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold ${
                           item.type === "concierto"
                             ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
                             : "bg-[var(--ok-soft)] text-[var(--ok)]"

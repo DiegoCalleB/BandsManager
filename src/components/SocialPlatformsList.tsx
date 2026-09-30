@@ -185,7 +185,7 @@ export const PLATFORM_CONFIG: Record<
       "bg-[var(--acc)]/10 ",
     borderClass: "",
     hoverClass:
-      "hover:from-[var(--acc)]/20 hover:via-[var(--acc)]/20 hover:to-[var(--acc)]/20 hover:text-[var(--alert)] hover:brightness-95",
+      " hover:text-[var(--alert)] hover:brightness-95",
   },
   youtube: {
     label: "YouTube",
@@ -514,7 +514,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
               <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 " />
               <span
                 className={
-                  isFullWidth ? "text-sm font-bold tracking-wide" : "truncate"
+                  isFullWidth ? "text-sm font-bold" : "truncate"
                 }
               >
                 {label}

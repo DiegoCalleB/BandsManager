@@ -382,7 +382,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         const wAlerts = getCachedEventWeatherAlerts(cCity, dIso);
                         return wAlerts[0] ? <CalendarWeatherBadge alert={wAlerts[0]} compact /> : null;
                       })()}
-                      {isToday && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] animate-ping shrink-0" />}
+                      {isToday && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] shrink-0" />}
                     </div>
                     <IconButton
                       label="Añadir evento a este día"
@@ -738,7 +738,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                       </span>
                       {isToday && (
                         <span className="text-micro font-mono font-bold text-[var(--acc)] flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] animate-ping" />
+                          <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] " />
                           Hoy
                         </span>
                       )}

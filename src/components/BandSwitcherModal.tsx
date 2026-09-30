@@ -605,7 +605,6 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/90 overflow-y-auto overscroll-contain animate-fadeIn">
         {/* Background ambient */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--acc)]/10 rounded-[var(--r-pill)] blur-3xl pointer-events-none" />
 
         {/* Main Container */}
         <div className="relative w-full max-w-4xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col p-6 md:p-10 text-center my-auto max-h-[90vh] overflow-y-auto">

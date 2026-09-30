@@ -129,6 +129,12 @@ const CHECKS = {
     severity: 'error',
     skipUi: true,
   },
+  movimientoDecorativo: {
+    description: 'animate-ping / animate-bounce, halos blur-xl..3xl o tracking-wide/wider/widest — craft-interfaces §4 y visual-identity §4: el movimiento tiene que tener función (animate-pulse solo para carga real); nada de puntos que laten, iconos que botan, halos ni tracking ancho',
+    pattern: /(?<![\w-])(?:animate-(?:ping|bounce)|blur-(?:xl|2xl|3xl)|tracking-(?:wide|wider|widest))(?![\w-])/g,
+    severity: 'error',
+    skipUi: true,
+  },
   textoSobreRelleno: {
     description: 'texto que no es --on-* sobre un relleno sólido de acento/estado (bg-[var(--acc|ok|alert)] + text-[var(--ink|ink-2|acc-ink|mismo tono)]) — contraste insuficiente (en Oscuro, invisible); usa text-[var(--on-acc|on-ok|on-alert)]',
     pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w\/-])/g,

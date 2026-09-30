@@ -370,7 +370,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           >
             {/* Corner Ping Beacon */}
             <span className="absolute -top-2 -right-2 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)] opacity-75"></span>
+              
               <span className="relative inline-flex rounded-[var(--r-pill)] h-4 w-4 bg-[var(--acc)]"></span>
             </span>
 
@@ -531,7 +531,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)] opacity-75"></span>
+                          
                           <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--acc)]"></span>
                         </span>
                         <span className="text-micro font-sans font-bold text-[var(--acc)]/70">

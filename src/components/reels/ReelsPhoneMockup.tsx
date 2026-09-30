@@ -370,7 +370,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           {/* Spotify Pill Sticker */}
           {showSpotifyBadge && (
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--scrim)]/85 text-[var(--on-scrim)] text-micro font-mono font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] " />
               <span className="truncate max-w-[180px]"><ShowIcon inline emoji="🎧" />Escucha · {videoMeta?.title || nombreBanda}</span>
             </div>
           )}

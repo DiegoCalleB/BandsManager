@@ -66,7 +66,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({ date, ci
     return (
       <div className={`p-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-[var(--ink)] text-xs space-y-1 ${className}`}>
         <div className="flex items-center gap-2 font-bold text-[var(--ink-2)]">
-          <AlertTriangle className="w-4 h-4 text-[var(--alert)] shrink-0 animate-bounce" />
+          <AlertTriangle className="w-4 h-4 text-[var(--alert)] shrink-0" />
           <span>{audit.title}</span>
         </div>
         <p className="text-xs text-[var(--alert)]/90 leading-relaxed font-sans">{audit.advice}</p>

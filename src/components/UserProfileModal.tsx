@@ -528,7 +528,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-sans text-[var(--ink-2)] tracking-wide">
+                      <span className="text-xs font-sans text-[var(--ink-2)]">
                         Plan:
                       </span>
                       <span className="text-xs font-bold text-[var(--acc)]/70 font-sans">

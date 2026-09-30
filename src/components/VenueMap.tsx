@@ -995,7 +995,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         <div
           className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
-          <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
+          <MapPin className="w-4 h-4 text-[var(--acc)]" />
           <div>
             <span className="font-bold">
               {activeCityFilter

@@ -2078,7 +2078,7 @@ export default function ReelsCenter({
           <span
             className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--ok)]/10 text-[var(--ok)]`}
           >
-            <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping shrink-0" />{" "}
+            <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0" />{" "}
             Auto-sync
           </span>
         </div>
@@ -3675,7 +3675,7 @@ export default function ReelsCenter({
                           <button
                             type="button"
                             onClick={handleDownloadCompletePack}
-                            className={`w-full py-2.5 px-3 rounded-[var(--r-s)] font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-ui ${
+                            className={`w-full py-2.5 px-3 rounded-[var(--r-s)] font-mono text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                               packDownloadedSuccess
                                 ? "bg-[var(--ok)] text-[var(--on-ok)] font-bold"
                                 : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--acc-ink)] "
@@ -3731,7 +3731,7 @@ export default function ReelsCenter({
                               type="button"
                               onClick={handlePublishNowDirectly}
                               disabled={isPublishingNow}
-                              className={`py-3 px-2 rounded-[var(--r-s)] font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
+                              className={`py-3 px-2 rounded-[var(--r-s)] font-mono text-xs font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
                                 isPublishingNow
                                   ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed"
                                   : "bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] active:scale-[0.97]"
@@ -3754,7 +3754,7 @@ export default function ReelsCenter({
                             <button
                               type="submit"
                               disabled={isScheduling}
-                              className={`py-3 px-2 rounded-[var(--r-s)] font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
+                              className={`py-3 px-2 rounded-[var(--r-s)] font-mono text-xs font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
                                 isScheduling
                                   ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed"
                                   : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] "
@@ -3783,7 +3783,7 @@ export default function ReelsCenter({
                         )}
 
                         {schedulingSuccess && (
-                          <div className="p-2.5 bg-[var(--ok)]/10 rounded-[var(--r-s)] text-[var(--ok)] text-xs text-center font-sans animate-bounce mt-2 flex items-center justify-center gap-1.5">
+                          <div className="p-2.5 bg-[var(--ok)]/10 rounded-[var(--r-s)] text-[var(--ok)] text-xs text-center font-sans mt-2 flex items-center justify-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
                             <span>¡Reel programado con éxito!</span>
                           </div>

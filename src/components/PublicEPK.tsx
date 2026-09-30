@@ -969,7 +969,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           )}
           {/* En móvil solo el nombre: con el selector de idioma al lado */}
           <span
-            className={`font-bold ${styles.accentText} tracking-wide text-sm sm:text-base whitespace-nowrap`}
+            className={`font-bold ${styles.accentText} text-sm sm:text-base whitespace-nowrap`}
           >
             <span className="sm:hidden">{bandName}</span>
             <span className="hidden sm:inline">{t("insigniaCabecera")}</span>

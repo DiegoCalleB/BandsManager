@@ -224,7 +224,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/20 text-[var(--ok)] font-sans text-micro font-bold inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] animate-ping" />
+              <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] " />
               Directo y concierto
             </span>
 
@@ -307,7 +307,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
       {activeSetlist && activeSetlist.items.length > 0 && (
         <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4 relative overflow-hidden">
           {/* Subtle top line */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--ok)]/60 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--hair)]" />
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Active Track Metadata & Heart Favorite */}
@@ -321,7 +321,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   />
                 ) : stagePlayingIndex !== null ? (
                   currentStageItem?.tipoItem === "cancion" ? (
-                    <Music className="w-6 h-6 text-[var(--ok)] animate-bounce" />
+                    <Music className="w-6 h-6 text-[var(--ok)]" />
                   ) : (
                     <Mic className="w-6 h-6 text-[var(--acc)]" />
                   )

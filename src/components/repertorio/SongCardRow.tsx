@@ -290,7 +290,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             {/* Status badge */}
             {song.estadoTema && (
               <span
-                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-medium tracking-wide ${
+                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-medium ${
                   song.estadoTema === 'listo'
                     ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
                     : song.estadoTema === 'ensayando'

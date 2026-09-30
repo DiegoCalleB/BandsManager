@@ -820,7 +820,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-micro font-medium tracking-wide inline-flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-micro font-medium inline-flex items-center gap-1">
                           <Disc3 className="w-3 h-3 text-[var(--acc)]" />
                           {album === "Singles / Sin Disco"
                             ? "SENCILLOS e INÉDITAS"

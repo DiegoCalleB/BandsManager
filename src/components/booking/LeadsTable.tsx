@@ -1000,7 +1000,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     <div className="flex items-start justify-between gap-1.5">
                       <div className="flex items-center gap-1.5 min-w-0 flex-1">
                         <h4
-                          className="font-display font-bold text-base sm:text-lg tracking-wide text-[var(--ink)] truncate notranslate"
+                          className="font-display font-bold text-base sm:text-lg text-[var(--ink)] truncate notranslate"
                           translate="no"
                         >
                           {lead.nombre_sala}

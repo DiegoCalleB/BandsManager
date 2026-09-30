@@ -130,7 +130,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-[var(--ink)] font-display tracking-wide">
+              <h3 className="text-lg font-bold text-[var(--ink)] font-display">
                 Exportar y imprimir QR en máxima calidad
               </h3>
               <p className="text-xs text-[var(--ink-2)] font-sans">

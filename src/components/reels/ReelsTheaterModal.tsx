@@ -300,7 +300,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 Clip #{selectedHighlightIndex + 1}
               </span>
               <div className="flex gap-1 items-center bg-[var(--scrim)]/40 py-1 px-2 rounded-full ">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--alert)] animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--alert)] " />
                 <span className="text-micro font-mono text-[var(--alert)] font-bold">1080P HD</span>
               </div>
             </div>

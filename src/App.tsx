@@ -1193,7 +1193,7 @@ export default function App() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <h1
-                    className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? "text-xs" : "text-xs sm:text-sm"}`}
+                    className={`font-bold font-display text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? "text-xs" : "text-xs sm:text-sm"}`}
                     translate="no"
                   >
                     {currentActiveBandName}
@@ -1434,7 +1434,7 @@ export default function App() {
                   )}
                   <div className="flex flex-col">
                     <h1
-                      className={`font-bold font-display tracking-wide text-[var(--ink)] leading-tight notranslate ${currentActiveBandName.length > 20 ? "text-xs" : currentActiveBandName.length > 12 ? "text-sm" : "text-base"}`}
+                      className={`font-bold font-display text-[var(--ink)] leading-tight notranslate ${currentActiveBandName.length > 20 ? "text-xs" : currentActiveBandName.length > 12 ? "text-sm" : "text-base"}`}
                       translate="no"
                     >
                       {currentActiveBandName}
@@ -1706,7 +1706,7 @@ export default function App() {
             <div className="flex flex-col items-center w-full px-1 gap-1">
               <div className="flex items-center justify-center gap-1 w-full">
                 <h1
-                  className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
+                  className={`font-bold font-display text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
                     currentActiveBandName.length > 22
                       ? "text-xs"
                       : currentActiveBandName.length > 14
@@ -2483,7 +2483,7 @@ export default function App() {
                       <Guitar className="w-5 h-5" />
                     )}
                     <span
-                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--acc)] animate-ping" : "bg-[var(--ok)] animate-ping"}`}
+                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--acc)] " : "bg-[var(--ok)] "}`}
                     />
                     <span
                       className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--tentative)]" : "bg-[var(--ok)]"}`}

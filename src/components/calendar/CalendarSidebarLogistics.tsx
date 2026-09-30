@@ -595,7 +595,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   </span>
                 )}
               </div>
-              <h3 className={`text-lg font-bold font-display tracking-wide mt-0.5 ${textTitle}`}>{selectedEventTitle}</h3>
+              <h3 className={`text-lg font-bold font-display mt-0.5 ${textTitle}`}>{selectedEventTitle}</h3>
               <p className={`text-micro font-mono mt-0.5 ${textSub}`}>
                 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
               </p>

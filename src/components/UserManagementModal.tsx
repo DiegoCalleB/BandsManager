@@ -396,7 +396,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-mono tracking-wider transition-ui flex items-center gap-1.5 shrink-0 ${
+              className={`px-4 py-2 text-xs font-bold font-mono transition-ui flex items-center gap-1.5 shrink-0 ${
                 activeTab === "band_info"
                   ? "text-[var(--acc-ink)] border-b-2 border-[var(--hair)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"

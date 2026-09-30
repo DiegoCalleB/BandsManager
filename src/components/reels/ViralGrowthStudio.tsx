@@ -63,7 +63,7 @@ export const SUBTITLE_STYLES: SubtitleStyleConfig[] = [
     name: 'Cinematic White (Pill)',
     colorClass: 'text-[var(--ink)] font-extrabold ',
     bgClass: 'bg-[var(--scrim)]/75 px-3 py-1 rounded-full ',
-    fontClass: 'font-sans tracking-wide',
+    fontClass: 'font-sans',
     preview: 'El público no se lo esperaba 👀'
   },
   {

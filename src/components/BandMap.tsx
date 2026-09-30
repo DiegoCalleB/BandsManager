@@ -612,7 +612,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
         <div
           className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
-          <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
+          <MapPin className="w-4 h-4 text-[var(--acc)]" />
           <div>
             <span className="font-bold">Mapa de bandas amigas</span>
             <span className="ml-2 text-micro opacity-75">

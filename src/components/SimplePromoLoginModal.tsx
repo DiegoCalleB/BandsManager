@@ -558,7 +558,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {loading ? (
                       'Creando cuenta...'

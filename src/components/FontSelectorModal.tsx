@@ -139,7 +139,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                     className={`p-3 rounded-[var(--r-s)] text-sm transition-ui ${"bg-[var(--surface)] text-[var(--ink)]"}`}
                     style={{ fontFamily: preset.displayFont }}
                   >
-                    <div className="font-bold text-base tracking-wide mb-1">
+                    <div className="font-bold text-base mb-1">
                       Bakandeya management hub 2026
                     </div>
                     <div

@@ -108,10 +108,6 @@ export function EnsayoCronometro({
 
   return (
     <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]  relative overflow-hidden">
-      {/* Background soft when running */}
-      {isActive && (
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-[var(--r-pill)] blur-3xl pointer-events-none" />
-      )}
 
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">

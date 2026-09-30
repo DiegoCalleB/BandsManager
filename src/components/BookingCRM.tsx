@@ -1612,7 +1612,7 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--ok)] opacity-75"></span>
+                          
                           <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--ok)]"></span>
                         </span>
                         <Activity className="w-4 h-4 text-[var(--ok)]" />
@@ -1882,7 +1882,7 @@ export default function BookingCRM({
               >
                 <div className="flex items-center gap-2">
                   <MapPin
-                    className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ? 'text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}
+                    className={`w-4 h-4 shrink-0 ${enrichStatusMsg.includes('¡Éxito!') ? 'text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}
                   />
                   <span>{enrichStatusMsg}</span>
                 </div>
@@ -2621,7 +2621,7 @@ export default function BookingCRM({
           });
           setIsAddingLeadModalOpen(true);
         }}
-        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] active:scale-[0.97] transition-ui cursor-pointer animate-bounce"
+        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] active:scale-[0.97] transition-ui cursor-pointer"
         style={{ animationDuration: '3s' }}
         title="Añadir contacto"
       >

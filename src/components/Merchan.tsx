@@ -345,10 +345,8 @@ export default function Merchan({
     <div className="space-y-6 max-w-6xl mx-auto pb-20">
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1
-            className={`text-2xl sm:text-3xl font-black font-display flex items-center gap-3 ${"text-[var(--ink)]"}`}
-          >
-            Taller de Merchandising IA
+          <h1 className="page-title flex items-center gap-3">
+            Taller de merchandising IA
           </h1>
           <p
             className={`text-xs sm:text-sm font-sans max-w-2xl leading-relaxed ${"text-[var(--ink-2)]"}`}
@@ -1073,7 +1071,7 @@ export default function Merchan({
               ) : (
                 /* Pantalla de Confirmación Posterior */
                 <div className="py-8 flex flex-col items-center text-center space-y-4">
-                  <div className="w-16 h-16 rounded-[var(--r-pill)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ink)] animate-bounce">
+                  <div className="w-16 h-16 rounded-[var(--r-pill)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ink)]">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
 

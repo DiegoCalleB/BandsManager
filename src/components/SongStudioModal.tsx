@@ -4276,7 +4276,7 @@ export default function SongStudioModal({
                               : 'bg-[var(--tentative)]/5 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/5'
                           } bg-[var(--acc)]/10`}
                         >
-                          <Wand2 className="w-5 h-5 text-[var(--tentative)] animate-bounce" />
+                          <Wand2 className="w-5 h-5 text-[var(--tentative)]" />
                           <span className="text-xs font-bold text-center">Base IA (Batería + bajo)</span>
                           <span className="text-micro text-[var(--tentative)]/80 text-center font-sans">
                             {genAiOnNewIdea ? '✓ Activado' : 'Generar Sintética'}
@@ -4841,7 +4841,7 @@ export default function SongStudioModal({
                               <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)] pt-1">
                                 <span className="text-[var(--ink-2)] font-bold flex items-center gap-1.5">
                                   {isPlaying ? (
-                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping" />
+                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] " />
                                   ) : (
                                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ink-3)]" />
                                   )}
@@ -5412,7 +5412,7 @@ export default function SongStudioModal({
                                                     {newTrackName.trim() || `Pista ${tracks.length + 1}`}
                                                   </span>
                                                   <span className="px-2 py-0.5 rounded bg-[var(--alert)] text-[var(--on-alert)] font-sans text-micro font-extrabold flex items-center gap-1 shadow">
-                                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] animate-ping" /> GRABANDO
+                                                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--surface)] " /> GRABANDO
                                                     ONDAS EN DIRECTO…
                                                   </span>
                                                 </div>
@@ -5622,7 +5622,7 @@ export default function SongStudioModal({
                                   <label
                                     className={`p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
                                   >
-                                    <Upload className={`w-5 h-5 text-[var(--ink-2)] ${isUploading ? 'animate-bounce' : ''}`} />
+                                    <Upload className={`w-5 h-5 text-[var(--ink-2)] ${isUploading ? 'animate-pulse' : ''}`} />
                                     <span className="text-xs font-semibold text-[var(--ink)]">
                                       {isUploading ? 'Subiendo pista...' : 'Subir Archivo de Pista'}
                                     </span>

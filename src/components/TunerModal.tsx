@@ -621,7 +621,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                     -50 Cents (Grave)
                   </span>
                   <span
-                    className={`font-bold ${isTunedIn ? "text-[var(--ok)] text-xs font-bold animate-bounce" : "text-[var(--ink-2)]"}`}
+                    className={`font-bold ${isTunedIn ? "text-[var(--ok)] text-xs font-bold" : "text-[var(--ink-2)]"}`}
                   >
                     {isTunedIn ? "¡AFINADO PERFECTO!" : "0 Cents"}
                   </span>

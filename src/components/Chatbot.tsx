@@ -2356,7 +2356,7 @@ export default function Chatbot({
                         dotColor = 'bg-[var(--alert)]';
                         textColor = 'text-[var(--alert)] font-bold';
                       } else if (isStepRunning) {
-                        dotColor = 'bg-[var(--acc)] animate-ping';
+                        dotColor = 'bg-[var(--acc)] ';
                         textColor = 'text-[var(--acc)] font-bold';
                       }
 

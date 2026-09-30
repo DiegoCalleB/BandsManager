@@ -2386,7 +2386,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("info")}
-          className={`pb-2 text-xs font-sans font-bold tracking-wide transition-ui px-3 cursor-pointer ${
+          className={`pb-2 text-xs font-sans font-bold transition-ui px-3 cursor-pointer ${
             activeTab === "info"
               ? "border-b-2 text-[var(--acc)]"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -2398,7 +2398,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("emails")}
-          className={`pb-2 text-xs font-sans font-bold tracking-wide transition-ui px-3 flex items-center gap-1.5 cursor-pointer ${
+          className={`pb-2 text-xs font-sans font-bold transition-ui px-3 flex items-center gap-1.5 cursor-pointer ${
             activeTab === "emails"
               ? "border-b-2 text-[var(--acc)]"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -2446,7 +2446,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("bitacora")}
-          className={`pb-2 text-xs font-sans font-bold tracking-wide transition-ui px-3 flex items-center gap-1.5 cursor-pointer ${
+          className={`pb-2 text-xs font-sans font-bold transition-ui px-3 flex items-center gap-1.5 cursor-pointer ${
             activeTab === "bitacora"
               ? "border-b-2 text-[var(--acc)]"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"

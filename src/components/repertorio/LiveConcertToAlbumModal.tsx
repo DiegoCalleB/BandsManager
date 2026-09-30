@@ -2283,7 +2283,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               ) : (
                                 <span className="text-base"><ShowIcon inline emoji="🗣️" /></span>
                               )}
-                              <label className="text-xs font-bold tracking-wide text-[var(--ink-2)]">
+                              <label className="text-xs font-bold text-[var(--ink-2)]">
                                 {track.type === "musica"
                                   ? "Nombre del Tema:"
                                   : "Nombre del Speech:"}

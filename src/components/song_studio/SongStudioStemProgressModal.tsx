@@ -22,8 +22,7 @@ import { Button, IconButton } from '../ui';
 const IrisPrismBanner: React.FC = () => {
   return (
     <div className="relative w-full h-20 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[var(--surface)] via-black to-black opacity-80" />
-      <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
+            <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
         <path d="M 0,40 L 160,40" stroke="white" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" className="" />
         <polygon points="160,15 220,65 160,65" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
         <polygon points="162,18 218,63 162,63" fill="rgba(255,255,255,0.05)" />
@@ -35,7 +34,7 @@ const IrisPrismBanner: React.FC = () => {
         <path d="M 195,43 L 400,70" stroke="#a855f7" strokeWidth="2" opacity="0.8" />
       </svg>
       <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)]/60 text-micro font-mono text-[var(--ink-2)]">
-        <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] animate-ping" />
+        <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] " />
         <span>Iris Espectro · Separación Multicapa por IA</span>
       </div>
     </div>

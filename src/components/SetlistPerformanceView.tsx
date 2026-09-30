@@ -1533,7 +1533,7 @@ const TeleprompterBlockPage: React.FC<{
     >
       <span className="text-5xl sm:text-7xl mb-6"><ShowIcon inline emoji={meta.icon} /></span>
       <h2
-        className={`text-2xl sm:text-4xl font-bold mb-6 tracking-wide ${glareMode ? "text-[var(--ink)]" : "text-[var(--acc)]/70"}`}
+        className={`text-2xl sm:text-4xl font-bold mb-6 ${glareMode ? "text-[var(--ink)]" : "text-[var(--acc)]/70"}`}
       >
         {item.tituloCustom || meta.label}
       </h2>

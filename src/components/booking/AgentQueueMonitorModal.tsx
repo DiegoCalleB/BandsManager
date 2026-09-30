@@ -183,9 +183,9 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-[var(--ink)] tracking-wide">Monitor de cola y workers en vivo</h2>
+                  <h2 className="text-base font-bold text-[var(--ink)]">Monitor de cola y workers en vivo</h2>
                   <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--ok)]/15 text-[var(--ink)] ">
-                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping" />
+                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] " />
                     Worker Online
                   </span>
                 </div>

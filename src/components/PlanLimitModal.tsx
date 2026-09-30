@@ -102,7 +102,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               <span className="text-micro font-sans font-bold text-[var(--on-acc)] bg-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
                 Límite de {currentPlanDef.name} alcanzado
               </span>
-              <h3 className="text-xl font-bold font-display tracking-wide text-[var(--ink)] mt-1">
+              <h3 className="text-xl font-bold font-display text-[var(--ink)] mt-1">
                 Cupo de {info.plural} completado ({currentCount})
               </h3>
             </div>

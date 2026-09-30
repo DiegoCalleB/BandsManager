@@ -227,7 +227,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
           </span>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-sans font-bold tracking-wide text-[var(--acc)]">
+              <span className="text-xs font-sans font-bold text-[var(--acc)]">
                 Previsión meteorológica
               </span>
               {hasAlerts && (

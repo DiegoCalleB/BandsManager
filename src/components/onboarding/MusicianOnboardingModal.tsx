@@ -63,7 +63,6 @@ export const MusicianOnboardingModal: React.FC<
         className="relative w-full max-w-2xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[92vh]"
       >
         {/* Decorative Top Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-[var(--acc)]/10 blur-3xl pointer-events-none" />
 
         {/* Header */}
         <div className="p-5 sm:p-6 pb-4 relative shrink-0">
@@ -107,7 +106,7 @@ export const MusicianOnboardingModal: React.FC<
             </div>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)] tracking-wide">
+          <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)]">
             ¡Hola, {bandName}! ¿Por dónde empezamos hoy?
           </h2>
           <p className="text-xs sm:text-sm text-[var(--ink-2)] mt-1 max-w-lg">
