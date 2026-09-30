@@ -210,6 +210,7 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 - [ ] Escala tipográfica (mínimo 11 px), zonas táctiles ≥ 40 px, movimiento y estados según **`craft-interfaces`**.
 - [ ] Probado en **Claro, Oscuro y Clásico**.
 - [ ] Serie temporal → `<CurveSeries>`; comparación de categorías → `<Onda>` con puntas redondeadas. Nunca una librería de gráficos.
+- [ ] Pestañas → `<Tabs>` (accesible, sin subrayado); leyenda/KPI de canal → `<ChannelChip>` con `CANAL_COLOR` (mismo color que su curva).
 - [ ] Estado vacío con voz propia, no «No hay datos».
 - [ ] Checklist anti-plantilla del §8 pasado.
 - [ ] Cabe en 3 bloques el primer viewport móvil (~390 px).
