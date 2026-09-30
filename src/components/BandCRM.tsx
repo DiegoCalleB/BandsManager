@@ -1265,7 +1265,7 @@ ${myBandName}`;
                   <th className="p-3">Fecha registro</th>
                   <th className="p-3">Estado cuenta</th>
                   <th className="p-3">Notas</th>
-                  <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10">
+                  <th className="p-3 font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10">
                     user_id
                   </th>
                   <th className="p-3 text-right text-[var(--acc-ink)] bg-[var(--acc)]/10 /20 font-bold">
@@ -1323,7 +1323,7 @@ ${myBandName}`;
                       <td className="p-3 text-[var(--ink-2)] max-w-xs truncate">
                         {band.notas || "—"}
                       </td>
-                      <td className="p-3 text-left font-bold text-[var(--acc)]/80 bg-[var(--acc)]/5 font-sans">
+                      <td className="p-3 text-left font-bold text-[var(--acc-ink)] bg-[var(--acc)]/5 font-sans">
                         {band.user_id || "—"}
                       </td>
                       <td className="p-3 text-right font-bold text-[var(--acc-ink)] bg-[var(--acc)]/5 /20 font-sans">

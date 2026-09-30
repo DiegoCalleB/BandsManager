@@ -2886,7 +2886,7 @@ export default function CalendarView({
                                 selectedConcert.estado_pago === 'pagado'
                                   ? 'bg-[var(--ok)]/20 text-[var(--ink)]'
                                   : selectedConcert.estado_pago === 'anticipo'
-                                    ? 'bg-[var(--tentative)]/50 text-[var(--acc)]/80'
+                                    ? 'bg-[var(--tentative)]/35 text-[var(--ink)]'
                                     : 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
                               }`}
                             >

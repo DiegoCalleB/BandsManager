@@ -331,7 +331,7 @@ const SECCIONES_TEMA: {
     key: 'outro',
     label: 'Outro / Final',
     icon: '🏁',
-    color: 'bg-[var(--acc)]/10 text-[var(--acc)]/80',
+    color: 'bg-[var(--acc)]/10 text-[var(--acc-ink)]',
   },
 ];
 
@@ -4273,7 +4273,7 @@ export default function SongStudioModal({
                           className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-left ${
                             genAiOnNewIdea
                               ? 'bg-[var(--tentative)]/10 text-[var(--tentative)]'
-                              : 'bg-[var(--tentative)]/5 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/5'
+                              : 'bg-[var(--tentative)]/5 text-[var(--ink)] hover:bg-[var(--tentative)]/5'
                           } bg-[var(--acc)]/10`}
                         >
                           <Wand2 className="w-5 h-5 text-[var(--tentative)]" />
@@ -4329,7 +4329,7 @@ export default function SongStudioModal({
                             <span className="text-xs font-sans font-bold text-[var(--tentative)]/80 flex items-center gap-1.5">
                               Ajustes de la base IA (Batería + bajo)
                             </span>
-                            <span className="text-micro font-sans text-[var(--tentative)]/80 bg-[var(--tentative)]/10 px-2 py-0.5 rounded">
+                            <span className="text-micro font-sans text-[var(--ink)] bg-[var(--tentative)]/10 px-2 py-0.5 rounded">
                               {selectedAudioFile || recordedAudioUrl || driveAudioUrl
                                 ? 'Se añadirá como Pista 2'
                                 : 'Será la Pista Principal'}
@@ -4911,7 +4911,7 @@ export default function SongStudioModal({
                                             className={`hidden sm:flex px-2 py-0.5 rounded text-micro font-sans items-center gap-1 font-bold ${
                                               idea.stemDegraded
                                                 ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                                                : 'bg-[var(--tentative)]/5 text-[var(--tentative)]/80'
+                                                : 'bg-[var(--tentative)]/5 text-[var(--ink)]'
                                             }`}
                                           >
                                             <span>Motor: {idea.stemEngineUsed.split('(')[0].trim()}</span>
@@ -5122,7 +5122,7 @@ export default function SongStudioModal({
                                                       }
                                                       className={`relative p-1 rounded cursor-pointer transition-ui shrink-0 ${
                                                         expandedTrackSettingsId === tr.id
-                                                          ? 'bg-[var(--tentative)]/30 text-[var(--tentative)]/80'
+                                                          ? 'bg-[var(--tentative)]/30 text-[var(--ink)]'
                                                           : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
                                                       }`}
                                                       title={`Ajustes de Pista: Paneo, Ecualizador 3 Bandas y Ajuste de Latencia${(tr.desfaseMs || 0) !== 0 ? ` · ${formatDesfase(tr.desfaseMs)}` : ''}`}

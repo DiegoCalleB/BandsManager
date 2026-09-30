@@ -45,7 +45,7 @@ import {
   Calendar,
   Heart,
 } from "lucide-react";
-import { OndaSeries } from "../ui/Onda";
+import { CurveSeries } from "../ui/CurveSeries";
 import { api } from "../../services/api";
 import {
   getDeterministicGrowthPlan,
@@ -930,11 +930,11 @@ export function ReelsMetricsView({
     return [0, Math.ceil(maxVisibleValue * 1.1)];
   }, [maxVisibleValue]);
 
-  // La Onda pinta barras, no curvas: como mucho 10 fechas repartidas por el periodo (siempre la
+  // Evolución temporal = curva suave. Como mucho 60 fechas repartidas por el periodo (siempre la
   // última) y una serie por canal activo.
-  const ondaSeries = React.useMemo(() => {
+  const curveSeries = React.useMemo(() => {
     const total = chartTimelineData.length;
-    const step = Math.max(1, Math.ceil(total / 10));
+    const step = Math.max(1, Math.ceil(total / 60));
     const sampled = chartTimelineData.filter((_: unknown, i: number) => i % step === 0 || i === total - 1);
     const etiqueta = (f: string) => {
       const parts = (f || "").split("-");
@@ -943,7 +943,7 @@ export function ReelsMetricsView({
     const canales = [
       { key: "instagram", on: hasInstagram && selectedChannels.instagram, label: "Instagram", color: "var(--acc)" },
       { key: "tiktok", on: hasTikTok && selectedChannels.tiktok, label: "TikTok", color: "var(--ink)" },
-      { key: "youtube", on: hasYouTube && selectedChannels.youtube, label: "YouTube", color: "color-mix(in oklab, var(--acc) 50%, var(--surface))" },
+      { key: "youtube", on: hasYouTube && selectedChannels.youtube, label: "YouTube", color: "var(--tentative)" },
       { key: "spotify", on: hasSpotify && selectedChannels.spotify, label: "Spotify", color: "var(--ok)" },
     ];
     return canales
@@ -1762,13 +1762,7 @@ export function ReelsMetricsView({
                   </div>
                 ) : (
                   <div className="h-full w-full flex items-end">
-                    <OndaSeries
-                      className="w-full"
-                      height={190}
-                      barWidth={ondaSeries.length > 2 ? 8 : 12}
-                      gap={2}
-                      series={ondaSeries}
-                    />
+                    <CurveSeries className="w-full" height={230} series={curveSeries} />
                   </div>
                 )}
               </div>

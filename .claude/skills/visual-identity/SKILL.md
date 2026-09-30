@@ -31,7 +31,7 @@ Esta skill es **la autoridad estética del repositorio** (qué se ve). Cómo se 
 
 El logo lleva dentro un espectro de audio. Ese espectro es el **único** lenguaje de visualización de datos de BandManager.
 
-- Toda serie temporal o comparativa se dibuja como **barras verticales de altura variable y puntas redondeadas** (`border-radius: 999px`): bolos por semana, crecimiento de fans, energía de un setlist, ingresos por mes, ocupación de una gira. Las puntas redondeadas no son decoración — son lo que separa un gráfico técnico de algo que se mira a gusto durante horas.
+- **Evolución en el tiempo** (crecimiento de redes y fans, energía de un setlist) se dibuja como **curva suave** (`CurveSeries`, `src/components/ui/CurveSeries.tsx`; interpolación monótona, trazo redondeado, guía con valores al pasar el puntero). **Comparar categorías discretas** (bolos por semana, ingresos por mes, ocupación de una gira) se dibuja como **barras verticales de altura variable y puntas redondeadas** (`border-radius: 999px`). Decisión de Diego: una serie temporal nunca va en barras. Las puntas redondeadas no son decoración — son lo que separa un gráfico técnico de algo que se mira a gusto durante horas.
 - Componente canónico: `src/components/ui/Onda.tsx`. **No instales librerías de gráficos** (Recharts, Chart.js, D3) sin discutirlo antes — rompen la firma visual y pesan.
 - Gramática de color fija, en los tres temas:
   - **`--acc`** (el color del módulo activo) = estado consumado: confirmado, cobrado, pico.
@@ -209,7 +209,7 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 - [ ] `font-mono` solo en dato tabular real.
 - [ ] Escala tipográfica (mínimo 11 px), zonas táctiles ≥ 40 px, movimiento y estados según **`craft-interfaces`**.
 - [ ] Probado en **Claro, Oscuro y Clásico**.
-- [ ] Toda serie de datos usa `<Onda>` con puntas redondeadas, no una librería de gráficos.
+- [ ] Serie temporal → `<CurveSeries>`; comparación de categorías → `<Onda>` con puntas redondeadas. Nunca una librería de gráficos.
 - [ ] Estado vacío con voz propia, no «No hay datos».
 - [ ] Checklist anti-plantilla del §8 pasado.
 - [ ] Cabe en 3 bloques el primer viewport móvil (~390 px).

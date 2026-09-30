@@ -41,3 +41,6 @@ export type { MenuItemProps } from './MenuItem';
 
 export { LinkButton, linkButtonVariants } from './LinkButton';
 export type { LinkButtonProps } from './LinkButton';
+
+export { CurveSeries } from './CurveSeries';
+export type { CurveSeriesProps } from './CurveSeries';

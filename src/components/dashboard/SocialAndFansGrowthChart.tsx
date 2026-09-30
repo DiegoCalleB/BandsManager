@@ -23,7 +23,7 @@ import {
   Calendar,
   Clock,
 } from "lucide-react";
-import { OndaSeries } from "../ui/Onda";
+import { CurveSeries } from "../ui/CurveSeries";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button } from '../ui';
 
@@ -466,11 +466,11 @@ export const SocialAndFansGrowthChart: React.FC<
 
   // Calculate dynamic Y-axis maximum domain based on active visible channels
 
-  // La Onda pinta barras, no curvas: se muestrean como mucho 10 fechas repartidas por el periodo
+  // Evolución temporal = curva suave. Como mucho 60 fechas repartidas por el periodo
   // (siempre incluida la última) y una serie por canal activo.
-  const ondaSeries = useMemo(() => {
+  const curveSeries = useMemo(() => {
     const total = chartTimelineData.length;
-    const step = Math.max(1, Math.ceil(total / 10));
+    const step = Math.max(1, Math.ceil(total / 60));
     const sampled = chartTimelineData.filter((_, i) => i % step === 0 || i === total - 1);
     const etiqueta = (f: string) => {
       const parts = (f || "").split("-");
@@ -480,7 +480,7 @@ export const SocialAndFansGrowthChart: React.FC<
       { key: "fans", label: "Fans registrados", color: "var(--acc)" },
       { key: "instagram", label: "Instagram", color: "var(--ok)" },
       { key: "tiktok", label: "TikTok", color: "var(--ink)" },
-      { key: "youtube", label: "YouTube", color: "var(--ink-2)" },
+      { key: "youtube", label: "YouTube", color: "var(--tentative)" },
       { key: "spotify", label: "Spotify", color: "var(--ink-3)" },
     ];
     return canales
@@ -1021,13 +1021,7 @@ export const SocialAndFansGrowthChart: React.FC<
           </div>
         ) : (
           <div className="h-full w-full flex items-end">
-            <OndaSeries
-              className="w-full"
-              height={190}
-              barWidth={ondaSeries.length > 3 ? 7 : 11}
-              gap={2}
-              series={ondaSeries}
-            />
+            <CurveSeries className="w-full" height={230} series={curveSeries} />
           </div>
         )}
       </div>
