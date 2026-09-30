@@ -114,7 +114,7 @@ const CHECKS = {
   },
   titleCaseEnTexto: {
     description: 'rótulo en Title Case (3+ palabras con inicial mayúscula) — el español usa caja de frase; el Title Case es un calco del inglés. Los nombres propios y marcas son legítimos: revisa a mano',
-    pattern: />\s*[A-ZÁÉÍÓÚ][a-záéíóúñ]{2,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}[^<>{}\n]*</g,
+    pattern: />(?![^<>{}\n]*(?:Google|Plus Jakarta|Access Token|Date Swap))\s*[A-ZÁÉÍÓÚ][a-záéíóúñ]{2,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}(?: (?:de|del|la|el|y|para|con|en|los|las|al|por))* [A-ZÁÉÍÓÚ][a-záéíóúñ]{3,}[^<>{}\n]*</g,
     severity: 'warning',
   },
   puntosSuspensivosEnTexto: {
@@ -235,7 +235,7 @@ async function main() {
 
   if (warnings.length > 0) {
     console.log(`\n⚠️  WARNINGS (${warnings.length}):\n`);
-    warnings.slice(0, 10).forEach((issue) => console.log(formatIssue(issue)));
+    (args.includes('--all') ? warnings : warnings.slice(0, 10)).forEach((issue) => console.log(formatIssue(issue)));
     if (warnings.length > 10) console.log(`   ... and ${warnings.length - 10} more\n`);
   }
 

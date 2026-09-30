@@ -45,7 +45,7 @@ export const SUBTITLE_STYLES: SubtitleStyleConfig[] = [
     id: 'gold',
     name: 'Indie Gold (Viral Bounce)',
     colorClass: 'text-[var(--acc-ink)] font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]',
-    bgClass: 'bg-[var(--scrim)]/50 px-2.5 py-1 rounded-xl bg-[var(--acc)]/10',
+    bgClass: 'bg-[var(--scrim)]/50 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10',
     fontClass: 'font-display',
     preview: 'CUANDO EL SOLO EXPLOTA 🔥🎸'
   },
@@ -53,7 +53,7 @@ export const SUBTITLE_STYLES: SubtitleStyleConfig[] = [
     id: 'neon',
     name: 'Cyber Neon (Hyperpop)',
     colorClass: 'text-[var(--acc-ink)] font-bold drop-shadow-[0_0_12px_rgba(6,182,212,0.9)]',
-    bgClass: 'bg-[var(--sunken)]/80 px-2.5 py-1 rounded-xl bg-[var(--acc)]/10',
+    bgClass: 'bg-[var(--sunken)]/80 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10',
     fontClass: 'font-mono',
     preview: 'ESTE RIFF CAMBIÓ TODO ⚡'
   },
@@ -297,12 +297,12 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
   };
 
   return (
-    <div className={`rounded-2xl p-4 sm:p-5 space-y-4 transition-ui `}>
+    <div className={`rounded-[var(--r-m)] p-4 sm:p-5 space-y-4 transition-ui `}>
       
       {/* Header with Title & Quick Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-[var(--ink)] ">
+          <div className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center text-[var(--ink)] ">
             <Flame className="w-4.5 h-4.5" />
           </div>
           <div>
@@ -336,7 +336,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           )}
 
           {/* Tab Buttons */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--scrim)]/40 self-start sm:self-auto overflow-x-auto shrink-0 max-w-full">
+          <div className="flex items-center gap-1 p-1 rounded-[var(--r-s)] bg-[var(--scrim)]/40 self-start sm:self-auto overflow-x-auto shrink-0 max-w-full">
             {[
               { id: 'hooks' as const, label: 'Ganchos A/B', icon: Sparkles },
               { id: 'retention' as const, label: 'Dinamismo & FX', icon: Repeat },
@@ -373,7 +373,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
             <div className="md:col-span-8 space-y-1.5">
               <label className="text-micro font-mono font-bold text-[var(--ink-2)] flex items-center justify-between">
-                <span>Gancho Visual en Pantalla (0 a 3 segundos):</span>
+                <span>Gancho visual en pantalla (0 a 3 segundos):</span>
                 <span className="text-micro text-[var(--ink-2)]">{currentHook.length} caracteres</span>
               </label>
               <div className="relative">
@@ -382,14 +382,14 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   value={currentHook}
                   onChange={(e) => onUpdateHook(e.target.value)}
                   placeholder="Ej: El fallo en el segundo 14 que el público convirtió en estribillo…"
-                  className="w-full rounded-xl bg-[var(--sunken)] px-3.5 py-2.5 text-xs font-sans font-bold text-[var(--ink)] focus:outline-none pr-52 bg-[var(--acc)]/10"
+                  className="w-full rounded-[var(--r-s)] bg-[var(--sunken)] px-3.5 py-2.5 text-xs font-sans font-bold text-[var(--ink)] focus:outline-none pr-52 bg-[var(--acc)]/10"
                 />
                 <div className="absolute right-1.5 top-1.5 bottom-1.5 flex items-center gap-1">
                   <button
                     type="button"
                     onClick={handleRunHookDoctor}
                     disabled={isAnalyzingDoctor}
-                    className="px-2.5 h-full rounded-lg bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
+                    className="px-2.5 h-full rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
                     title="Auditoría Anti-Cringe y Primer Comentario Fijado con IA"
                   >
                     <Stethoscope className={`w-3 h-3 ${isAnalyzingDoctor ? 'animate-spin' : ''}`} />
@@ -399,7 +399,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     type="button"
                     onClick={handleGenerateABVariants}
                     disabled={isGeneratingVariants}
-                    className="px-2.5 h-full rounded-lg hover:brightness-110 text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
+                    className="px-2.5 h-full rounded-[var(--r-s)] hover:brightness-110 text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
                     title="Generar 3 variantes optimizadas para el algoritmo"
                   >
                     <Sparkles className={`w-3 h-3 ${isGeneratingVariants ? 'animate-spin' : ''}`} />
@@ -411,7 +411,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
 
             {/* Score Card */}
             <div className="md:col-span-4">
-              <div className={`p-3 rounded-xl flex items-center justify-between gap-2.5 ${hookAnalysis.bg}`}>
+              <div className={`p-3 rounded-[var(--r-s)] flex items-center justify-between gap-2.5 ${hookAnalysis.bg}`}>
                 <div className="space-y-0.5">
                   <span className="text-micro font-mono font-bold text-[var(--ink-2)] block">
                     Viral Hook Score
@@ -435,17 +435,17 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
 
           {/* AI Hook Doctor Diagnosis & Pinned Comment Card */}
           {doctorError && (
-            <div className="p-3 bg-[var(--alert)]/10 rounded-xl text-[var(--alert)] text-xs flex gap-2 items-center">
+            <div className="p-3 bg-[var(--alert)]/10 rounded-[var(--r-s)] text-[var(--alert)] text-xs flex gap-2 items-center">
               <AlertTriangle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
               <span>{doctorError}</span>
             </div>
           )}
 
           {doctorDiagnosis && (
-            <div className="p-4 rounded-2xl bg-[var(--acc)]/40 space-y-3.5 animate-in fade-in duration-200">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/40 space-y-3.5 animate-in fade-in duration-200">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[var(--hair)]">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[var(--acc)] flex items-center justify-center text-[var(--on-acc)]">
+                  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] flex items-center justify-center text-[var(--on-acc)]">
                     <Stethoscope className="w-4 h-4" />
                   </div>
                   <div>
@@ -460,7 +460,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
 
                 <div className="flex items-center gap-2">
                   {/* Cringe Score Badge */}
-                  <div className={`px-2.5 py-1 rounded-lg text-micro font-mono font-bold flex items-center gap-1.5 ${
+                  <div className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-mono font-bold flex items-center gap-1.5 ${
                     doctorDiagnosis.cringeScore <= 25 
                       ? 'bg-[var(--ok)]/15 text-[var(--ink)] '
                       : doctorDiagnosis.cringeScore <= 55
@@ -474,7 +474,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   </div>
 
                   {/* Estimated Retention Badge */}
-                  <div className="px-2.5 py-1 rounded-lg bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro font-mono font-bold flex items-center gap-1">
+                  <div className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro font-mono font-bold flex items-center gap-1">
                     <TrendingUp className="w-3 h-3 text-[var(--acc-ink)]" />
                     <span>Retención 0-3s: {doctorDiagnosis.estimatedRetention3s}%</span>
                   </div>
@@ -500,7 +500,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                 
                 {/* Improved Hook & Copy Box */}
-                <div className="p-3 rounded-xl bg-[var(--scrim)]/50 space-y-2 flex flex-col justify-between bg-[var(--acc)]/10">
+                <div className="p-3 rounded-[var(--r-s)] bg-[var(--scrim)]/50 space-y-2 flex flex-col justify-between bg-[var(--acc)]/10">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
@@ -520,15 +520,15 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <button
                     type="button"
                     onClick={handleApplyDoctorImprovement}
-                    className="w-full py-1.5 rounded-lg hover:brightness-110 active:scale-[0.97] text-[var(--ink)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-ui"
+                    className="w-full py-1.5 rounded-[var(--r-s)] hover:brightness-110 active:scale-[0.97] text-[var(--ink)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-ui"
                   >
                     <CheckCheck className="w-3.5 h-3.5" />
-                    <span>Aplicar Mejora al Reel</span>
+                    <span>Aplicar mejora al reel</span>
                   </button>
                 </div>
 
                 {/* Pinned Comment Debate Box */}
-                <div className="p-3 rounded-xl bg-[var(--scrim)]/50 space-y-2 flex flex-col justify-between bg-[var(--acc)]/10">
+                <div className="p-3 rounded-[var(--r-s)] bg-[var(--scrim)]/50 space-y-2 flex flex-col justify-between bg-[var(--acc)]/10">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
@@ -547,7 +547,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <button
                     type="button"
                     onClick={handleCopyPinnedComment}
-                    className={`w-full py-1.5 rounded-lg text-micro font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-ui ${
+                    className={`w-full py-1.5 rounded-[var(--r-s)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-ui ${
                       copiedPinnedComment
                         ? 'bg-[var(--ok)] text-[var(--on-ok)] font-bold'
                         : 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] '
@@ -561,7 +561,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     ) : (
                       <>
                         <Copy className="w-3.5 h-3.5" />
-                        <span>Copiar Comentario Fijado</span>
+                        <span>Copiar comentario fijado</span>
                       </>
                     )}
                   </button>
@@ -589,7 +589,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     <div
                       key={variant.id}
                       onClick={() => handleApplyVariant(variant)}
-                      className={`p-3 rounded-xl transition-ui cursor-pointer flex flex-col justify-between text-left space-y-2 relative ${
+                      className={`p-3 rounded-[var(--r-s)] transition-ui cursor-pointer flex flex-col justify-between text-left space-y-2 relative ${
                         isSelected
                           ? 'bg-[var(--acc)]/15 ring-1 ring-[var(--acc)]'
                           : 'bg-[var(--sunken)]/70 hover:bg-[var(--sunken)]/90'
@@ -633,7 +633,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             
             {/* Seamless Loop Switch */}
-            <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2">
+            <div className="p-3.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--alert)] font-bold text-xs font-mono ">
                   <Repeat className="w-4 h-4 text-[var(--alert)]" />
@@ -646,7 +646,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     onChange={(e) => onToggleSeamlessLoop(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--alert)]"></div>
+                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-ui peer-checked:bg-[var(--alert)]"></div>
                 </label>
               </div>
               <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
@@ -655,7 +655,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             </div>
 
             {/* Punch-In Zoom Switch */}
-            <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2">
+            <div className="p-3.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <ZoomIn className="w-4 h-4 text-[var(--acc-ink)]" />
@@ -668,7 +668,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     onChange={(e) => onTogglePunchInZoom(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--acc)]"></div>
+                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-ui peer-checked:bg-[var(--acc)]"></div>
                 </label>
               </div>
               <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
@@ -677,7 +677,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             </div>
 
             {/* ⚡ Beat-Drop Rhythm FX Switch */}
-            <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2">
+            <div className="p-3.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Zap className="w-4 h-4 text-[var(--acc-ink)]" />
@@ -690,7 +690,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     onChange={(e) => onToggleBeatDropFx(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--acc)]"></div>
+                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-ui peer-checked:bg-[var(--acc)]"></div>
                 </label>
               </div>
               <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
@@ -699,7 +699,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             </div>
 
             {/* 🧠 Smart-Pan Stage Framing Switch */}
-            <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2">
+            <div className="p-3.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Radio className="w-4 h-4 text-[var(--acc-ink)]" />
@@ -716,7 +716,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     }}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--acc)]"></div>
+                  <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-ui peer-checked:bg-[var(--acc)]"></div>
                 </label>
               </div>
               <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
@@ -756,7 +756,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   key={style.id}
                   type="button"
                   onClick={() => onChangeSubtitleStyle(style.id)}
-                  className={`p-3 rounded-xl text-left transition-ui cursor-pointer flex flex-col justify-between space-y-3 ${
+                  className={`p-3 rounded-[var(--r-s)] text-left transition-ui cursor-pointer flex flex-col justify-between space-y-3 ${
                     isSelected
                       ? 'bg-[var(--acc)]/15 ring-1 ring-[var(--acc)]'
                       : 'bg-[var(--sunken)]/70 hover:bg-[var(--sunken)]'
@@ -769,7 +769,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     {isSelected && <Check className="w-3.5 h-3.5 text-[var(--acc-ink)]" />}
                   </div>
 
-                  <div className="w-full py-2 flex items-center justify-center bg-[var(--scrim)]/60 rounded-lg ">
+                  <div className="w-full py-2 flex items-center justify-center bg-[var(--scrim)]/60 rounded-[var(--r-s)] ">
                     <span className={`text-micro ${style.fontClass} ${style.colorClass} ${style.bgClass}`}>
                       {style.preview}
                     </span>
@@ -791,7 +791,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             
             {/* Spotify Pill */}
-            <div className={`p-3 rounded-xl space-y-2 transition-ui ${
+            <div className={`p-3 rounded-[var(--r-s)] space-y-2 transition-ui ${
               showSpotifyBadge ? 'bg-[var(--ok)]/10 ' : 'bg-[var(--sunken)]/70 '
             }`}>
               <div className="flex items-center justify-between">
@@ -812,7 +812,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             </div>
 
             {/* Retention Bar */}
-            <div className={`p-3 rounded-xl space-y-2 transition-ui ${
+            <div className={`p-3 rounded-[var(--r-s)] space-y-2 transition-ui ${
               showRetentionProgressBar ? 'bg-[var(--alert)]/10 ' : 'bg-[var(--sunken)]/70 '
             }`}>
               <div className="flex items-center justify-between">
@@ -833,7 +833,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             </div>
 
             {/* Tour / Concert Sticker */}
-            <div className={`p-3 rounded-xl space-y-2 transition-ui ${
+            <div className={`p-3 rounded-[var(--r-s)] space-y-2 transition-ui ${
               showTourSticker ? 'bg-[var(--acc)]/10 ' : 'bg-[var(--sunken)]/70 '
             }`}>
               <div className="flex items-center justify-between">
@@ -876,7 +876,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             
             {/* Multi-angle layout selector */}
-            <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2.5 text-left">
+            <div className="p-3.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 space-y-2.5 text-left">
               <span className="text-micro font-mono font-bold text-[var(--ink-2)] block">
                 Encuadre de Vídeo (Formato Vertical 9:16 Nativo):
               </span>
@@ -889,7 +889,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     key={l.id}
                     type="button"
                     onClick={() => onChangeLayoutMode(l.id)}
-                    className={`p-2.5 rounded-lg text-left transition-ui cursor-pointer ${
+                    className={`p-2.5 rounded-[var(--r-s)] text-left transition-ui cursor-pointer ${
                       layoutMode === l.id
                         ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold '
                         : 'bg-[var(--sunken)] text-[var(--ink-2)] '
@@ -903,7 +903,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             </div>
 
             {/* Safe Zone Overlay Toggle */}
-            <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2.5 text-left flex flex-col justify-between">
+            <div className="p-3.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 space-y-2.5 text-left flex flex-col justify-between">
               <div>
                 <span className="text-micro font-mono font-bold text-[var(--ink-2)] block">
                   Simulador de Safe-Zone (Zona Segura):

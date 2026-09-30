@@ -512,7 +512,7 @@ export function SongChordsViewerModal({
             {activeTab === "chords" && (
               <div className="flex flex-wrap items-center gap-3">
                 {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
-                <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-xl bg-[var(--acc)]/10">
+                <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
                   <button
                     type="button"
                     onClick={handleToggleAudio}
@@ -558,7 +558,7 @@ export function SongChordsViewerModal({
                         step={0.1}
                         value={audioCurrentTime}
                         onChange={handleSeekAudio}
-                        className="w-20 sm:w-28 h-1.5 bg-[var(--sunken)] rounded-lg appearance-none cursor-pointer accent-[var(--acc)]"
+                        className="w-20 sm:w-28 h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)]"
                         title="Barra de posición de reproducción"
                       />
 

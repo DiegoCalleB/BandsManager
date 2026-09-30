@@ -809,7 +809,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           }`}
                         >
                           <Sliders className="w-4 h-4 shrink-0 text-[var(--tentative)]" />
-                          <span>Abrir Modo Studio</span>
+                          <span>Abrir modo Studio</span>
                         </button>
                       )}
 

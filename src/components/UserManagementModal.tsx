@@ -472,7 +472,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
             {activeTab === "band_info" ? (
               <div className="space-y-5 animate-in fade-in duration-200">
                 {/* Band Logo Section */}
-                <div className="p-5 rounded-2xl bg-[var(--sunken)]/70 space-y-4 ">
+                <div className="p-5 rounded-[var(--r-m)] bg-[var(--sunken)]/70 space-y-4 ">
                   <div>
                     <h4 className="font-bold text-sm text-[var(--ink)] flex items-center gap-2">
                       <ImageIcon className="w-4 h-4 text-[var(--acc-ink)]" />
@@ -486,7 +486,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
                   <div className="flex flex-col sm:flex-row items-center gap-5 pt-2">
                     {/* Logo Box */}
-                    <div className="relative w-24 h-24 rounded-2xl bg-[var(--scrim)]/90 flex items-center justify-center p-2.5 overflow-hidden shrink-0">
+                    <div className="relative w-24 h-24 rounded-[var(--r-m)] bg-[var(--scrim)]/90 flex items-center justify-center p-2.5 overflow-hidden shrink-0">
                       {localLogo ? (
                         <img
                           src={localLogo}
@@ -519,7 +519,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
                     {/* Upload Action */}
                     <div className="flex-1 space-y-2.5 text-center sm:text-left">
-                      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-ui cursor-pointer active:scale-[0.97]">
+                      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-ui cursor-pointer active:scale-[0.97]">
                         <Upload className="w-4 h-4" />
                         <span>
                           {isUploadingLogo
@@ -548,12 +548,12 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 </div>
 
                 {/* Band Basic Info */}
-                <div className="p-4 rounded-2xl bg-[var(--sunken)]/60 text-xs space-y-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/60 text-xs space-y-3">
                   <h4 className="font-bold text-xs font-mono text-[var(--acc-ink)]/90">
                     Detalles del proyecto
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
+                    <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 ">
                       <span className="text-[var(--ink-2)] block text-micro font-mono ">
                         Nombre de la banda
                       </span>
@@ -561,7 +561,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                         {bandName || currentUser.bandName || "Mi Banda"}
                       </span>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
+                    <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]/80 ">
                       <span className="text-[var(--ink-2)] block text-micro font-mono ">
                         Total de músicos
                       </span>

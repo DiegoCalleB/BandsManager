@@ -137,7 +137,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
       <div className="pt-3 space-y-3">
         <div className="flex items-center gap-2">
           <ShoppingBag className="w-4 h-4 text-[var(--acc)]" />
-          <h4 className="text-xs font-semibold text-[var(--ink-2)]">Tienda de Merchandising y Productos Oficiales</h4>
+          <h4 className="text-xs font-semibold text-[var(--ink-2)]">Tienda de merchandising y productos oficiales</h4>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,7 +155,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Artículos Destacados en Directo</label>
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Artículos destacados en directo</label>
             <input
               type="text"
               value={merchHighlight}

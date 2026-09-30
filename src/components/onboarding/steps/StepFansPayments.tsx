@@ -110,7 +110,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Código de Descuento en Merch (Opcional)</label>
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Código de descuento en Merch (opcional)</label>
             <input
               type="text"
               value={discountCode}

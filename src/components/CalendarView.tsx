@@ -3025,7 +3025,7 @@ export default function CalendarView({
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span
-                              className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-black ${
+                              className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold ${
                                 isReu ? 'bg-[var(--tentative)] text-[var(--on-tentative)]' : 'bg-[var(--ok)] text-[var(--on-ok)]'
                               }`}
                             >
@@ -3057,7 +3057,7 @@ export default function CalendarView({
                         <button
                           type="button"
                           onClick={() => setShowEventFichaModal(true)}
-                          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-black flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97] ${
+                          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97] ${
                             isReu
                               ? 'bg-[var(--tentative)] hover:bg-[var(--tentative)]/80 text-[var(--on-tentative)]'
                               : 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)]'

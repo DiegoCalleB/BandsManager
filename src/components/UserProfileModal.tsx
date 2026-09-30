@@ -1132,7 +1132,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <div className="space-y-2 pt-2 ">
                         <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
                           <Type className="w-3.5 h-3.5 text-[var(--ok)]" />
-                          <span>Estilo de Fuente y Tipografía</span>
+                          <span>Estilo de fuente y tipografía</span>
                         </label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {FONT_PRESETS.map((p) => {

@@ -3461,7 +3461,7 @@ export default function ReelsCenter({
                             rows={4}
                             value={editedCopy}
                             onChange={(e) => setEditedCopy(e.target.value)}
-                            className={`w-full rounded-xl p-3 text-xs font-sans leading-relaxed focus:outline-none bg-[var(--sunken)] text-[var(--ink)] `}
+                            className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none bg-[var(--sunken)] text-[var(--ink)] `}
                           />
 
                           {/* Quick action: 1-Click Formatted Copy for Instagram/TikTok */}
@@ -3598,7 +3598,7 @@ export default function ReelsCenter({
 
                         {/* ⚡ Subida Automática Desatendida & Conexión de Cuenta */}
                         <div
-                          className={`p-3 rounded-xl space-y-2 ${
+                          className={`p-3 rounded-[var(--r-s)] space-y-2 ${
                             autoPublishEnabled
                               ? "bg-[var(--acc)]/10 "
                               : "bg-[var(--sunken)]/60 "
@@ -3622,7 +3622,7 @@ export default function ReelsCenter({
                                 }
                                 className="sr-only peer"
                               />
-                              <div className="w-7 h-4 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[var(--acc)]"></div>
+                              <div className="w-7 h-4 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-3 after:w-3 after:transition-ui peer-checked:bg-[var(--acc)]"></div>
                             </label>
                           </div>
 
@@ -3635,7 +3635,7 @@ export default function ReelsCenter({
                             );
                             if (acc && acc.status === "conectado") {
                               return (
-                                <div className="flex items-center justify-between text-micro font-mono bg-[var(--scrim)]/40 p-2 rounded-lg bg-[var(--ok)]/10">
+                                <div className="flex items-center justify-between text-micro font-mono bg-[var(--scrim)]/40 p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10">
                                   <div className="flex items-center gap-1 text-[var(--ok)] font-bold truncate">
                                     <ShieldCheck className="w-3 h-3 text-[var(--ok)] shrink-0" />
                                     <span className="truncate">
@@ -3649,7 +3649,7 @@ export default function ReelsCenter({
                               );
                             }
                             return (
-                              <div className="flex items-center justify-between text-micro font-mono bg-[var(--scrim)]/40 p-2 rounded-lg bg-[var(--acc)]/10">
+                              <div className="flex items-center justify-between text-micro font-mono bg-[var(--scrim)]/40 p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10">
                                 <span className="text-[var(--ink-2)]">
                                   Sin cuenta vinculada
                                 </span>
@@ -3676,7 +3676,7 @@ export default function ReelsCenter({
                           <button
                             type="button"
                             onClick={handleDownloadCompletePack}
-                            className={`w-full py-2.5 px-3 rounded-xl font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-ui ${
+                            className={`w-full py-2.5 px-3 rounded-[var(--r-s)] font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                               packDownloadedSuccess
                                 ? "bg-[var(--ok)] text-[var(--on-ok)] font-bold"
                                 : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--acc-ink)] "
@@ -3691,7 +3691,7 @@ export default function ReelsCenter({
                             ) : (
                               <>
                                 <Download className="w-4 h-4" />
-                                <span>Descargar Pack Completo</span>
+                                <span>Descargar pack completo</span>
                               </>
                             )}
                           </button>
@@ -3732,7 +3732,7 @@ export default function ReelsCenter({
                               type="button"
                               onClick={handlePublishNowDirectly}
                               disabled={isPublishingNow}
-                              className={`py-3 px-2 rounded-xl font-mono text-xs font-black tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
+                              className={`py-3 px-2 rounded-[var(--r-s)] font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
                                 isPublishingNow
                                   ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed"
                                   : "bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] active:scale-[0.97]"
@@ -3755,7 +3755,7 @@ export default function ReelsCenter({
                             <button
                               type="submit"
                               disabled={isScheduling}
-                              className={`py-3 px-2 rounded-xl font-mono text-xs font-black tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
+                              className={`py-3 px-2 rounded-[var(--r-s)] font-mono text-xs font-bold tracking-wider cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
                                 isScheduling
                                   ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed"
                                   : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] "
@@ -3777,7 +3777,7 @@ export default function ReelsCenter({
                         </div>
 
                         {publishNowSuccess && (
-                          <div className="p-2.5 bg-[var(--alert)]/10 rounded-lg text-[var(--alert)] text-xs text-center font-mono animate-fade-in mt-2 flex items-center justify-center gap-1.5">
+                          <div className="p-2.5 bg-[var(--alert)]/10 rounded-[var(--r-s)] text-[var(--alert)] text-xs text-center font-mono animate-fade-in mt-2 flex items-center justify-center gap-1.5">
                             <Check className="w-4 h-4 text-[var(--alert)]" />
                             <span>{publishNowSuccess}</span>
                           </div>
@@ -4079,11 +4079,11 @@ export default function ReelsCenter({
 
       {/* Modal de Conexión de Cuentas Oficiales (1-Clic sin fricción) */}
       {showConnectModal && (
-        <div className="fixed inset-0 z-[250] bg-[var(--scrim)]/80 flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-[var(--sunken)] w-full max-w-md rounded-2xl p-6 space-y-5 text-left relative">
+        <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-[var(--sunken)] w-full max-w-md rounded-[var(--r-m)] p-6 space-y-5 text-left relative">
             <button
               onClick={() => setShowConnectModal(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
+              className="absolute top-4 right-4 p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -4111,7 +4111,7 @@ export default function ReelsCenter({
                 value={connectHandleInput}
                 onChange={(e) => setConnectHandleInput(e.target.value)}
                 placeholder="@tubanda_oficial"
-                className="w-full rounded-xl bg-[var(--surface)] px-3.5 py-2.5 text-xs font-mono text-[var(--ink)] focus:outline-none bg-[var(--acc)]/10"
+                className="w-full rounded-[var(--r-s)] bg-[var(--surface)] px-3.5 py-2.5 text-xs font-mono text-[var(--ink)] focus:outline-none bg-[var(--acc)]/10"
               />
             </div>
 
@@ -4142,7 +4142,7 @@ export default function ReelsCenter({
                     type="button"
                     disabled={connectingPlatform !== null}
                     onClick={() => handleConnectSocialAccount(plat.id)}
-                    className={`p-3 rounded-xl bg-[var(--sunken)]/80 text-xs font-mono font-bold text-center transition-ui cursor-pointer flex flex-col items-center gap-1.5 ${plat.color} active:scale-[0.97] disabled:opacity-50`}
+                    className={`p-3 rounded-[var(--r-s)] bg-[var(--sunken)]/80 text-xs font-mono font-bold text-center transition-ui cursor-pointer flex flex-col items-center gap-1.5 ${plat.color} active:scale-[0.97] disabled:opacity-50`}
                   >
                     {connectingPlatform === plat.id ? (
                       <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc-ink)]" />
@@ -4155,7 +4155,7 @@ export default function ReelsCenter({
               </div>
             </div>
 
-            <div className="p-3 bg-[var(--sunken)]/80 rounded-xl text-micro font-mono text-[var(--ink-2)] flex items-start gap-2">
+            <div className="p-3 bg-[var(--sunken)]/80 rounded-[var(--r-s)] text-micro font-mono text-[var(--ink-2)] flex items-start gap-2">
               <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
               <span>
                 Tus permisos se almacenan de forma cifrada y solo se usan para

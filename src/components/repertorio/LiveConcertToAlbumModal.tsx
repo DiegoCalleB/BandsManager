@@ -2071,7 +2071,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   );
                                 }
                               }}
-                              className={`text-xs font-black px-2.5 py-1 rounded-[var(--r-s)] transition-ui cursor-pointer ${
+                              className={`text-xs font-bold px-2.5 py-1 rounded-[var(--r-s)] transition-ui cursor-pointer ${
                                 track.type === "musica"
                                   ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]  hover:bg-[var(--acc)]/30"
                                   : "bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30"
@@ -3097,7 +3097,7 @@ export const LiveConcertToAlbumModal: React.FC<
                           ) : (
                             <Check className="w-3.5 h-3.5" />
                           )}
-                          <span>Guardar y Habilitar Descargas</span>
+                          <span>Guardar y habilitar descargas</span>
                         </button>
                       </div>
                     </div>

@@ -4404,7 +4404,7 @@ export default function RepertorioSetlists({
                                                 }
                                               >
                                                 <span
-                                                  className={`w-4 h-4 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-black shrink-0 ${
+                                                  className={`w-4 h-4 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold shrink-0 ${
                                                     evalPrev?.status === "ok"
                                                       ? "bg-[var(--ok)]/30 text-[var(--ink)]"
                                                       : "bg-[var(--alert)]/30 text-[var(--ink)]"
@@ -4458,7 +4458,7 @@ export default function RepertorioSetlists({
                                                 }
                                               >
                                                 <span
-                                                  className={`w-4 h-4 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-black shrink-0 ${
+                                                  className={`w-4 h-4 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold shrink-0 ${
                                                     evalNext?.status === "ok"
                                                       ? "bg-[var(--ok)]/30 text-[var(--ink)]"
                                                       : "bg-[var(--alert)]/30 text-[var(--ink)]"

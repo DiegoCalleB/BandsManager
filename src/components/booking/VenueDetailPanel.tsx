@@ -3855,7 +3855,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
-                <span>Cargar Nudge de Seguimiento</span>
+                <span>Cargar nudge de seguimiento</span>
               </button>
             </div>
           )}
@@ -3947,7 +3947,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     {msg.resumen_ejecutivo && (
                       <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs space-y-1 bg-[var(--acc)]/10">
                         <div className="flex items-center justify-between text-micro font-mono text-[var(--acc)] font-bold">
-                          <span>Resumen y Estrategia Lector IA</span>
+                          <span>Resumen y estrategia lector IA</span>
                         </div>
                         <p className="text-[var(--ink-2)] italic">
                           {msg.resumen_ejecutivo}
@@ -4108,7 +4108,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--ok)] font-bold text-xs">
                   <Headphones className="w-4 h-4" />
-                  <span>Spotify City Demand</span>
+                  <span>Spotify city demand</span>
                 </div>
                 <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--ok)] text-[var(--on-ok)]">
                   {selectedLead.ciudad || "Madrid"}
@@ -4188,7 +4188,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <MapPin className="w-4 h-4" />
-                  <span>Google Places y Escenario</span>
+                  <span>Google Places y escenario</span>
                 </div>
                 {selectedLead.google_places_info?.rating && (
                   <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)] flex items-center gap-1 font-bold">
@@ -4617,7 +4617,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <CalendarDays className="w-4 h-4" />
-                  <span>Ventana de Programación y Lead Time</span>
+                  <span>Ventana de programación y lead time</span>
                 </div>
                 {selectedLead.booking_window_info
                   ?.estado_calendario_estimado && (
@@ -4720,7 +4720,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--alert)] font-bold text-xs">
                   <Flame className="w-4 h-4" />
-                  <span>Radar Eventos Locales y Alerta Clash</span>
+                  <span>Radar eventos locales y alerta clash</span>
                 </div>
                 {selectedLead.local_events_clash_info?.eventos_detectados && (
                   <span
@@ -4951,7 +4951,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center justify-between border-b border-[var(--hair)]/80 pb-2">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold text-xs">
                   <Handshake className="w-4 h-4" />
-                  <span>Bandas Locales Hermanadas (Co-Booking)</span>
+                  <span>Bandas locales hermanadas (co-Booking)</span>
                 </div>
                 <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--acc)] text-[var(--on-acc)] font-bold">
                   Taquilla Compartida

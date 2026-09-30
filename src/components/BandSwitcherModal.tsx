@@ -935,7 +935,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
         {/* Band Minimal Settings & Logo Modal (Gear Icon) */}
         {selectedBandForSettings && (
-          <div className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 animate-in fade-in duration-150 overflow-y-auto">
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 animate-in fade-in duration-150 overflow-y-auto">
             <div className="w-full max-w-md rounded-[var(--r-xl)] bg-[var(--surface)] text-[var(--ink)] p-6 sm:p-7 space-y-5 my-auto">
               {/* Header */}
               <div className="flex items-center justify-between border-b border-[var(--hair)] pb-4">

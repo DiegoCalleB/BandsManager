@@ -363,7 +363,7 @@ Firmado en conformidad por ambas partes.`;
                           </span>
                         </div>
                         <div className="pt-2 border-t border-[var(--hair)]">
-                          <span className="text-micro text-[var(--ink-2)] block">Rider Rápido en Escenario:</span>
+                          <span className="text-micro text-[var(--ink-2)] block">Rider rápido en escenario:</span>
                           <ul className="list-disc list-inside text-[var(--ink-2)] space-y-0.5 text-xs">
                             <li>2x D.I. activas para violín acústico (Canales 1-2)</li>
                             <li>1x D.I. estéreo para sintetizador analógico / percusión</li>
@@ -452,7 +452,7 @@ Firmado en conformidad por ambas partes.`;
                       <Share2 className="w-7 h-7 text-[var(--ink)]" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-[var(--ink)] font-display">Hoja de Ruta Digital para Móvil (Sin Login)</h4>
+                      <h4 className="text-sm font-bold text-[var(--ink)] font-display">Hoja de ruta digital para móvil (sin login)</h4>
                       <p className="text-xs text-[var(--ink-2)] mt-0.5">
                         Comparte este enlace directo con tus músicos, chófer y técnico de sonido para que tengan los horarios, ubicación y
                         teléfonos actualizados en vivo.

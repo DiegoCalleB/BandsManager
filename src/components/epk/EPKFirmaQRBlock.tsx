@@ -571,7 +571,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      <span>Copiar Firma Formateada (Gmail / Outlook)</span>
+                      <span>Copiar firma formateada (Gmail / Outlook)</span>
                     </>
                   )}
                 </button>

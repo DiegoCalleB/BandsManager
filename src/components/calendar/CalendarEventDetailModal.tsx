@@ -1250,7 +1250,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           Sección 3
                         </span>
                         <div>
-                          <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Control de Merchandising por Bolo</h3>
+                          <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Control de merchandising por bolo</h3>
                           <p className={`text-xs font-mono ${textSub}`}>
                             Inventario que sube a la furgoneta vs. stock final de noche, arqueo de Efectivo y Bizum
                           </p>
@@ -1497,7 +1497,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1.5 cursor-pointer"
                             >
                               <Check className="w-3.5 h-3.5" />
-                              <span>Guardar Producto en el Bolo</span>
+                              <span>Guardar producto en el bolo</span>
                             </button>
                           </div>
                         </motion.form>
@@ -1818,7 +1818,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         }`}
                       >
                         <div className="space-y-0.5">
-                          <span className="text-xs font-mono font-bold text-[var(--ink-2)]">Resumen del Dinero Recaudado en el Puesto:</span>
+                          <span className="text-xs font-mono font-bold text-[var(--ink-2)]">Resumen del dinero recaudado en el puesto:</span>
                           <p className="text-xs font-mono text-[var(--ink-2)]">
                             <ShowIcon inline emoji="💵" />{(merch.ingresosEfectivo || 0).toFixed(2)}€ Efectivo + <ShowIcon inline emoji="📱" />{(merch.ingresosBizum || 0).toFixed(2)}€ Bizum ={' '}
                             <strong className="text-[var(--ok)]">{totalCobradoReal.toFixed(2)}€ Total Ventas</strong>
@@ -1962,7 +1962,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 >
                   <h4 className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <Music className="w-3.5 h-3.5" />
-                    <span>Bandas y Cartel Compartido</span>
+                    <span>Bandas y cartel compartido</span>
                   </h4>
                   <p className={`text-xs font-mono ${textTitle}`}>
                     {Array.isArray(selectedConcert?.bandas_compartidas) && selectedConcert.bandas_compartidas.length > 0
@@ -1999,7 +1999,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)]">
                       Sección 5
                     </span>
-                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Checklist de Cierre de Material y Carga de Furgoneta</h3>
+                    <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Checklist de cierre de material y carga de furgoneta</h3>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button

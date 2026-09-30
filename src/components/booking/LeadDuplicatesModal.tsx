@@ -526,7 +526,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               title="Conserva este lead y añade todos los teléfonos, notas y datos de los demás"
                             >
                               <Merge className="w-3.5 h-3.5" />
-                              <span>Conservar y Fusionar Aquí</span>
+                              <span>Conservar y fusionar aquí</span>
                             </button>
 
                             <button

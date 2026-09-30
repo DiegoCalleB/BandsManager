@@ -956,7 +956,7 @@ export function OrdenDelDiaTab({
                       >
                         {/* Number in selection order */}
                         <div
-                          className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-black transition-ui ${
+                          className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-bold transition-ui ${
                             isSelected
                               ? "bg-[var(--acc)] text-[var(--on-acc)] scale-105"
                               : "text-[var(--ink-2)]"
@@ -1072,7 +1072,7 @@ export function OrdenDelDiaTab({
                     return (
                       <div
                         key={st.id}
-                        className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between gap-3 hover:transition-all"
+                        className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between gap-3 hover:transition-ui"
                       >
                         <div>
                           <p className="text-xs font-bold text-[var(--ink)]">

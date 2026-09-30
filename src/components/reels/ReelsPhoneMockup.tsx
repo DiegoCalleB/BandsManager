@@ -168,7 +168,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
       {/* Encuadre Rápido (16:9 Completo vs Izquierda/Centro/Derecha) */}
       {activeTab === 'analyzer' && ((inputType === 'youtube' && getYouTubeId(youtubeUrl)) || (inputType === 'file' && localVideoUrl)) && (
-        <div className="mb-2 px-1 flex items-center justify-between bg-[var(--sunken)]/80 p-1 rounded-xl text-micro font-mono">
+        <div className="mb-2 px-1 flex items-center justify-between bg-[var(--sunken)]/80 p-1 rounded-[var(--r-s)] text-micro font-mono">
           <span className="text-[var(--ink-2)] pl-1">Encuadre:</span>
           <div className="flex items-center gap-1">
             <button
@@ -362,7 +362,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           {/* Main Hook Sticker */}
           {highlights[selectedHighlightIndex]?.hookText && (
             <div className="w-full max-w-[260px] animate-in fade-in zoom-in-95 duration-200">
-              <div className="bg-[var(--sunken)]/90 px-3 py-1.5 rounded-xl text-center bg-[var(--acc)]/10">
+              <div className="bg-[var(--sunken)]/90 px-3 py-1.5 rounded-[var(--r-s)] text-center bg-[var(--acc)]/10">
                 <span className="text-micro font-display font-bold text-[var(--acc-ink)] leading-snug block ">
                   {highlights[selectedHighlightIndex].hookText}
                 </span>
@@ -380,7 +380,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
           {/* Tour Date / Ticket Sticker */}
           {showTourSticker && tourStickerText && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[var(--ink)] text-micro font-mono font-bold ">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-[var(--ink)] text-micro font-mono font-bold ">
               <span><ShowIcon inline emoji="🎟️" />{tourStickerText}</span>
             </div>
           )}
@@ -507,7 +507,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
       {/* ⏱️ Technical Timing Card (Cleanly Placed Below the Smartphone Screen) */}
       {activeTab === 'analyzer' && currentHighlight && (
-        <div className="mt-3 p-2.5 rounded-2xl bg-[var(--surface)] space-y-1.5">
+        <div className="mt-3 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
           <div className="flex justify-between items-center text-micro font-mono font-bold">
             <span className={isSeamlessLoop ? 'text-[var(--alert)] flex items-center gap-1' : 'text-[var(--acc-ink)]'}>
               {isSeamlessLoop ? '120% SEAMLESS LOOP' : 'RECORTE SELECCIONADO'}

@@ -5060,7 +5060,7 @@ export default function SongStudioModal({
                                                     <button
                                                       type="button"
                                                       onClick={() => handleToggleMuteTrack(idea, tr.id)}
-                                                      className={`px-1.5 py-0.5 rounded text-micro font-sans font-black cursor-pointer transition-ui shrink-0 ${
+                                                      className={`px-1.5 py-0.5 rounded text-micro font-sans font-bold cursor-pointer transition-ui shrink-0 ${
                                                         isMuted
                                                           ? 'bg-[var(--alert)] text-[var(--on-alert)] ring-1 ring-[var(--alert)]/50'
                                                           : 'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
@@ -5072,7 +5072,7 @@ export default function SongStudioModal({
                                                     <button
                                                       type="button"
                                                       onClick={() => handleToggleSoloTrack(idea, tr.id)}
-                                                      className={`px-1.5 py-0.5 rounded text-micro font-sans font-black cursor-pointer transition-ui shrink-0 ${
+                                                      className={`px-1.5 py-0.5 rounded text-micro font-sans font-bold cursor-pointer transition-ui shrink-0 ${
                                                         isSolo
                                                           ? 'bg-[var(--acc)] text-[var(--on-acc)] ring-1 ring-[var(--acc)]/60'
                                                           : 'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
@@ -5920,7 +5920,7 @@ export default function SongStudioModal({
                 </div>
 
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-                  <span className="text-[var(--ink-2)]">Grabar Pista Overdub</span>
+                  <span className="text-[var(--ink-2)]">Grabar pista overdub</span>
                   <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">R / Numpad *</kbd>
                 </div>
 

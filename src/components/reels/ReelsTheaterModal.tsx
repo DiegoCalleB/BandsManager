@@ -142,7 +142,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-[100] bg-[var(--scrim)]/95 flex items-center justify-center p-2 sm:p-4 lg:p-6 overflow-y-auto"
+      className="fixed inset-0 z-[9999] bg-[var(--scrim)]/95 flex items-center justify-center p-2 sm:p-4 lg:p-6 overflow-y-auto"
       onClick={onClose}
     >
       <div 
@@ -163,7 +163,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-6xl bg-[var(--sunken)] rounded-3xl flex flex-col lg:flex-row h-auto lg:h-[90vh] lg:max-h-[90vh] overflow-visible lg:overflow-hidden"
+        className="relative w-full max-w-6xl bg-[var(--sunken)] rounded-[var(--r-l)] flex flex-col lg:flex-row h-auto lg:h-[90vh] lg:max-h-[90vh] overflow-visible lg:overflow-hidden"
       >
         {/* Left Column: Big 9:16 phone mockup */}
         <div className="w-full lg:w-[460px] bg-[var(--sunken)]/80 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-[var(--hair)] relative select-none shrink-0">
@@ -224,7 +224,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       </video>
 
                       {currentSubtitleText && !renderedBurnedSubs && (
-                        <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--scrim)]/80 px-2 py-1.5 rounded-xl text-center bg-[var(--acc)]/10">
+                        <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--scrim)]/80 px-2 py-1.5 rounded-[var(--r-s)] text-center bg-[var(--acc)]/10">
                           <span className="text-micro font-sans font-bold text-[var(--acc-ink)] leading-tight">
                             <ShowIcon inline emoji="✨" />{currentSubtitleText} <ShowIcon inline emoji="✨" />
                           </span>
@@ -381,7 +381,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             </div>
 
             {/* Virality Card & Reason */}
-            <div className="p-4 rounded-2xl bg-[var(--sunken)]/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-micro font-mono text-[var(--ink-2)] block">Por qué este momento es viral</span>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed max-w-xl">
@@ -389,7 +389,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 </p>
               </div>
               
-              <div className="flex items-center gap-3 shrink-0 bg-[var(--sunken)] p-3 rounded-xl ">
+              <div className="flex items-center gap-3 shrink-0 bg-[var(--sunken)] p-3 rounded-[var(--r-s)] ">
                 <div className="relative w-12 h-12 flex items-center justify-center">
                   <span className="text-xs font-mono font-extrabold text-[var(--ink)]">
                     {highlights[selectedHighlightIndex]?.virality || 95}%
@@ -458,7 +458,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 };
 
                 return (
-                  <div className="p-5 rounded-2xl bg-[var(--sunken)]/60 space-y-4">
+                  <div className="p-5 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-[var(--acc-ink)]" />
@@ -480,10 +480,10 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       <div 
                         id="interactive-timeline-container"
                         onClick={handleTimelineClick}
-                        className="relative w-full h-10 bg-[var(--sunken)] rounded-xl overflow-hidden flex items-center cursor-pointer group"
+                        className="relative w-full h-10 bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden flex items-center cursor-pointer group"
                       >
                         <div 
-                          className="absolute top-1 bottom-1 bg-[var(--acc)]/20 rounded-md flex items-center justify-between px-2"
+                          className="absolute top-1 bottom-1 bg-[var(--acc)]/20 rounded-[var(--r-s)] flex items-center justify-between px-2"
                           style={{ left: `${startPct}%`, width: `${activeWidth}%` }}
                         >
                           <span className="text-micro font-mono text-[var(--acc-ink)] font-extrabold">START</span>
@@ -561,7 +561,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
             {/* Physical Cut & Render Actions */}
             {highlights[selectedHighlightIndex] && youtubeUrl && (
-              <div className="p-5 rounded-2xl bg-[var(--sunken)]/60 space-y-4">
+              <div className="p-5 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-4">
                 <div className="flex items-center gap-2">
                   <Film className="w-4 h-4 text-[var(--ok)] shrink-0" />
                   <span className="text-xs font-mono font-extrabold text-[var(--ink-2)] ">
@@ -601,7 +601,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       type="button"
                       onClick={() => setBurnSubtitles(v => !v)}
                       disabled={isCuttingVideo}
-                      className={`w-full px-3 py-1.5 rounded-lg text-micro font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
+                      className={`w-full px-3 py-1.5 rounded-[var(--r-s)] text-micro font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                         burnSubtitles
                           ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
                           : 'bg-[var(--sunken)] text-[var(--ink-2)]'
@@ -614,7 +614,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 </div>
 
                 {isCuttingVideo ? (
-                  <div className="bg-[var(--sunken)]/80 p-4 rounded-xl space-y-3">
+                  <div className="bg-[var(--sunken)]/80 p-4 rounded-[var(--r-s)] space-y-3">
                     <div className="flex items-center gap-3">
                       <RefreshCw className="w-5 h-5 text-[var(--acc-ink)] animate-spin" />
                       <span className="text-xs font-mono font-extrabold text-[var(--ink)]">
@@ -626,7 +626,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                     </p>
                   </div>
                 ) : renderedClipUrl ? (
-                  <div className="bg-[var(--ok)]/20 p-4 rounded-xl space-y-3">
+                  <div className="bg-[var(--ok)]/20 p-4 rounded-[var(--r-s)] space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
@@ -639,7 +639,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       <a
                         href={renderedClipUrl}
                         download={`reel-${highlights[selectedHighlightIndex]?.range || 'clip'}.mp4`}
-                        className="flex-1 px-3 py-1.5 rounded-lg bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--acc-ink)] flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--acc-ink)] flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>Descargar MP4</span>
@@ -650,10 +650,10 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                   <button
                     type="button"
                     onClick={handleCutPhysicalVideo}
-                    className="w-full py-3 px-4 rounded-xl font-bold text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-ui"
+                    className="w-full py-3 px-4 rounded-[var(--r-s)] font-bold text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-ui"
                   >
                     <Sparkles className="w-4 h-4 text-[var(--ink)] fill-[var(--ink-3)]" />
-                    <span>Renderizar Reel Físico + Auto-Subtítulos (9:16)</span>
+                    <span>Renderizar reel físico + auto-Subtítulos (9:16)</span>
                   </button>
                 )}
               </div>
@@ -679,12 +679,12 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 onChange={(e) => setEditedCopy(e.target.value)}
                 rows={5}
                 placeholder="Escribe el copy para tus redes…"
-                className="w-full text-xs font-sans bg-[var(--sunken)] rounded-xl p-3 text-[var(--ink)] focus:outline-none"
+                className="w-full text-xs font-sans bg-[var(--sunken)] rounded-[var(--r-s)] p-3 text-[var(--ink)] focus:outline-none"
               />
             </div>
 
             {/* Scheduling controls */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-[var(--sunken)]/30 ">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-[var(--r-s)] bg-[var(--sunken)]/30 ">
               <div>
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Plataforma</label>
                 <select aria-label="Plataforma"
@@ -694,7 +694,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                     setSelectedPlatform(nueva);
                     setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nueva));
                   }}
-                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-lg p-2 text-[var(--ink)]"
+                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)]"
                 >
                   <option value="Instagram">Instagram Reel</option>
                   <option value="TikTok">TikTok Video</option>
@@ -709,7 +709,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                   type="date"
                   value={scheduledDate}
                   onChange={(e) => setScheduledDate(e.target.value)}
-                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-lg p-2 text-[var(--ink)]"
+                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)]"
                 />
               </div>
 
@@ -719,7 +719,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                   type="time"
                   value={scheduledTime}
                   onChange={(e) => setScheduledTime(e.target.value)}
-                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-lg p-2 text-[var(--ink)]"
+                  className="w-full text-xs font-mono bg-[var(--sunken)] rounded-[var(--r-s)] p-2 text-[var(--ink)]"
                 />
               </div>
             </div>
@@ -740,7 +740,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
+                className="flex-1 sm:flex-none px-5 py-2.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
               >
                 Salir
               </button>

@@ -1353,7 +1353,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Wrench className="w-3 h-3" />
-                      <span>Abrir Logística Técnica Completa</span>
+                      <span>Abrir logística técnica completa</span>
                     </button>
                   </div>
                 );
@@ -1540,7 +1540,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Shirt className="w-3 h-3" />
-                      <span>Control Merchandising Completo</span>
+                      <span>Control merchandising completo</span>
                     </button>
                   </div>
                 );
@@ -1604,7 +1604,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <ShieldCheck className="w-3 h-3" />
-                      <span>Checklist Cierre Completo</span>
+                      <span>Checklist cierre completo</span>
                     </button>
                   </div>
                 );

@@ -76,7 +76,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan Estratégico de Crecimiento y Promoción</h3>
+                <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan estratégico de crecimiento y promoción</h3>
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
                   {growthPlan.horizonDays} Días
                 </span>
@@ -108,7 +108,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>Agenda Semanal Guiada</span>
+              <span>Agenda semanal guiada</span>
             </button>
 
             <button
@@ -299,7 +299,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {activeTab === 'pillars' && (
             <div className="space-y-4">
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
-                <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Resumen Ejecutivo y Diagnóstico</h4>
+                <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Resumen ejecutivo y diagnóstico</h4>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">{growthPlan.executiveSummary}</p>
               </div>
 

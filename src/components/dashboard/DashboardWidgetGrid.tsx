@@ -642,7 +642,7 @@ export function DashboardWidgetGrid({
         <div className="p-4 rounded-[var(--r-l)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs space-y-1.5">
           <div className="flex items-center gap-2 font-semibold text-[var(--acc-ink)]">
             <Info className="w-4 h-4 shrink-0" />
-            <span>Modo de Edición Activo:</span>
+            <span>Modo de edición activo:</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-[var(--acc-ink)]/85 pt-1">
             <div className="flex items-center gap-1.5">

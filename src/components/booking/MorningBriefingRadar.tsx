@@ -521,7 +521,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                     <div className="flex items-center gap-2.5">
                       <Compass className="w-5 h-5 text-[var(--acc)] shrink-0" />
                       <div>
-                        <h4 className="text-xs font-bold text-[var(--ink-2)] font-sans">Simulador de Clúster de Gira y Corredor</h4>
+                        <h4 className="text-xs font-bold text-[var(--ink-2)] font-sans">Simulador de clúster de gira y corredor</h4>
                         <p className="text-xs text-[var(--ink-2)]">
                           Elige una ciudad ancla para proyectar un fin de semana doble o triple en ruta:
                         </p>
@@ -567,7 +567,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                             className="w-full py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-xs font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer"
                           >
                             <Send className="w-3 h-3" />
-                            <span>Proponer Fecha Doble</span>
+                            <span>Proponer fecha doble</span>
                           </button>
                         </div>
                       ))}

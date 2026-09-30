@@ -449,7 +449,7 @@ export function SongModal({
 
                     {/* Internal Notes */}
                     <div>
-                      <label className="block text-[var(--ink-2)] text-xs mb-1">Notas Internas de Ejecución</label>
+                      <label className="block text-[var(--ink-2)] text-xs mb-1">Notas internas de ejecución</label>
                       <textarea
                         name="notasInternas"
                         rows={2}

@@ -71,7 +71,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <BellRing className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base sm:text-lg font-bold text-[var(--ink-2)] font-display">Notificaciones Push en el Navegador</h2>
+                <h2 className="text-base sm:text-lg font-bold text-[var(--ink-2)] font-display">Notificaciones push en el navegador</h2>
                 <p className="text-xs text-[var(--ink-2)]">Configura los avisos en tiempo real para leads, respuestas y agentes</p>
               </div>
             </div>
@@ -137,13 +137,13 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     {config.enabled ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4 text-[var(--ink-2)]" />}
                   </div>
                   <div>
-                    <span className="font-bold text-[var(--ink-2)] block text-xs">Notificaciones Push Activas</span>
+                    <span className="font-bold text-[var(--ink-2)] block text-xs">Notificaciones push activas</span>
                     <span className="text-xs text-[var(--ink-2)]">Interruptor general de avisos en este dispositivo</span>
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked={config.enabled} onChange={handleToggleMaster} className="sr-only peer" />
-                  <div className="w-11 h-6 bg-[var(--surface)] peer-focus:outline-hidden rounded-[var(--r-pill)] peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-[var(--r-pill)] after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--acc)]"></div>
+                  <div className="w-11 h-6 bg-[var(--surface)] peer-focus:outline-hidden rounded-[var(--r-pill)] peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-[var(--r-pill)] after:h-5 after:w-5 after:transition-ui peer-checked:bg-[var(--acc)]"></div>
                 </label>
               </div>
 
@@ -175,7 +175,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                       disabled={!config.enabled}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-[var(--surface)] peer-focus:outline-hidden rounded-[var(--r-pill)] peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-[var(--r-pill)] after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--acc)] peer-disabled:opacity-40"></div>
+                    <div className="w-11 h-6 bg-[var(--surface)] peer-focus:outline-hidden rounded-[var(--r-pill)] peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-[var(--r-pill)] after:h-5 after:w-5 after:transition-ui peer-checked:bg-[var(--acc)] peer-disabled:opacity-40"></div>
                   </label>
                 </div>
               </div>
@@ -211,7 +211,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <div className="flex items-start gap-2.5">
                     <MessageSquare className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
-                      <span className="font-bold text-[var(--ink-2)] block text-xs">Nuevas Respuestas y Mensajes Recibidos</span>
+                      <span className="font-bold text-[var(--ink-2)] block text-xs">Nuevas respuestas y mensajes recibidos</span>
                       <p className="text-xs text-[var(--ink-2)]">
                         Avisar cuando una sala o festival conteste a tus pitches o envíe un nuevo mensaje.
                       </p>
@@ -251,7 +251,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <div className="flex items-start gap-2.5">
                     <PartyPopper className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
-                      <span className="font-bold text-[var(--ink-2)] block text-xs">Conciertos Confirmados y Fechas Cerradas</span>
+                      <span className="font-bold text-[var(--ink-2)] block text-xs">Conciertos confirmados y fechas cerradas</span>
                       <p className="text-xs text-[var(--ink-2)]">Avisar cuando un lead pase formalmente a bolo cerrado en la gira.</p>
                     </div>
                   </div>
@@ -269,7 +269,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <div className="flex items-start gap-2.5">
                     <Radio className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
-                      <span className="font-bold text-[var(--ink-2)] block text-xs">Nuevas Salas Detectadas por el Scout</span>
+                      <span className="font-bold text-[var(--ink-2)] block text-xs">Nuevas salas detectadas por el scout</span>
                       <p className="text-xs text-[var(--ink-2)]">
                         Avisar cuando el agente Scout incorpore nuevos espacios a la base de datos.
                       </p>
@@ -295,7 +295,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer "
             >
               <Bell className="w-3.5 h-3.5 text-[var(--acc)]" />
-              <span>Probar Notificación Push</span>
+              <span>Probar notificación push</span>
             </button>
 
             <button

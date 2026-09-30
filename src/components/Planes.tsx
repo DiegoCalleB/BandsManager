@@ -849,7 +849,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 flex-wrap mb-1">
                           <span
-                            className={`text-micro font-sans font-black px-1.5 py-0.5 rounded ${
+                            className={`text-micro font-sans font-bold px-1.5 py-0.5 rounded ${
                               plan.isPopular
                                 ? "bg-[var(--acc)] text-[var(--on-acc)]"
                                 : plan.id === "cabeza_de_cartel"
@@ -1199,7 +1199,7 @@ export const Planes: React.FC<PlanesProps> = ({
           <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/60 space-y-2">
             <div className="flex items-center gap-2 text-[var(--ink-2)] font-sans font-bold text-xs">
               <Lock className="w-4 h-4 text-[var(--ink-2)]" />
-              <span>Cero Borrado de Datos</span>
+              <span>Cero borrado de datos</span>
             </div>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               Al bajar de plan o cancelar,{" "}
@@ -1214,7 +1214,7 @@ export const Planes: React.FC<PlanesProps> = ({
           <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/60 space-y-2">
             <div className="flex items-center gap-2 text-[var(--ink-2)] font-sans font-bold text-xs">
               <Gift className="w-4 h-4 text-[var(--ok)]" />
-              <span>Pegatinas y Regalos Tuyos</span>
+              <span>Pegatinas y regalos tuyos</span>
             </div>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               Los packs de pegatinas de vinilo de alta resistencia ya entregados

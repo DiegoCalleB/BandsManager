@@ -279,7 +279,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         {/* Dashboard de Resultados de Rentabilidad */}
         <div className="grid grid-cols-3 gap-2 pt-1 border-t border-[var(--hair)]/80">
           <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/80 text-center">
-            <span className="text-micro text-[var(--ink-2)] font-mono block">Gastos Viaje Estimados</span>
+            <span className="text-micro text-[var(--ink-2)] font-mono block">Gastos viaje estimados</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--alert)]">{totalTourExpenses} €</span>
             <span className="text-micro text-[var(--ink-2)] block">Gasolina: ~{estimatedFuelExpense}€</span>
           </div>
@@ -291,7 +291,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/80 text-center">
-            <span className="text-micro text-[var(--ink-2)] font-mono block">Beneficio con Sala Llena</span>
+            <span className="text-micro text-[var(--ink-2)] font-mono block">Beneficio con sala llena</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--ok)]">
               {Math.max(0, Math.round(venueCapacity * revenuePerTicketForBand + guaranteedCache - totalTourExpenses))} €
             </span>
@@ -327,7 +327,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           {/* Plantilla de réplica táctica pre-redactada */}
           <div className="pt-2 border-t border-[var(--hair)]/80">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-micro font-mono text-[var(--ink-2)]">Plantilla de Réplica Sugerida:</span>
+              <span className="text-micro font-mono text-[var(--ink-2)]">Plantilla de réplica sugerida:</span>
               <button
                 type="button"
                 onClick={() => copyToClipboard(sentimentAnalysis.suggestedDraft, () => {})}

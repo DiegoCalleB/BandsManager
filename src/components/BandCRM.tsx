@@ -1733,7 +1733,7 @@ ${myBandName}`;
                           title="Generar Pitch de Date Swap"
                         >
                           <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                          <span>Pitch Date Swap</span>
+                          <span>Pitch de intercambio de fechas</span>
                         </button>
 
                         {/* Edit */}

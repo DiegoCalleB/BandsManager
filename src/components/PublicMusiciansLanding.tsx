@@ -399,7 +399,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               <div className="space-y-2 pb-6 text-center sm:text-left">
                 <div className="inline-flex items-center gap-2 text-[var(--acc)] font-sans text-xs font-bold">
                   <Users className="w-4 h-4" />
-                  <span>Early Access Waitlist</span>
+                  <span>Lista de espera con acceso anticipado</span>
                 </div>
                 <h2 className="text-2xl font-black text-[var(--ink)]">
                   {t.formTitle}

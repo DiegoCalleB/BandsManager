@@ -1036,7 +1036,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
                 className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] space-y-1 font-sans text-xs z-[1100] ${"bg-[var(--surface)]/95 text-[var(--ink)]"}`}
               >
                 <div className="text-micro font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
-                  <span>Elegir Capa de Mapa</span>
+                  <span>Elegir capa de mapa</span>
                   <span className="text-micro font-normal text-[var(--ink-2)]">
                     ({Object.keys(MAP_STYLES).length} opciones)
                   </span>

@@ -2259,7 +2259,7 @@ export function PdfExportModal({
  por sitio en esta fila (noteLayout.mode ==='inline'); si no,
  el título vuelve a poder ocupar toda su anchura natural. */}
                                 <span
-                                  className={`font-black tracking-wide text-[var(--ink)] leading-none ${
+                                  className={`font-bold tracking-wide text-[var(--ink)] leading-none ${
                                     noteLayout && noteLayout.mode === "inline"
                                       ? "truncate min-w-0"
                                       : ""

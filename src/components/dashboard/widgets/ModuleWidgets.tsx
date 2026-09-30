@@ -298,7 +298,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
           </div>
           <div>
             <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Agente IA de Booking</h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">Redactor y Lector Autónomo</p>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Redactor y lector autónomo</p>
           </div>
         </div>
         {onNavigate && (
@@ -316,7 +316,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between">
         <div>
           <span className="text-lg font-sans font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
-          <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">Pendientes de Aprobación Humana</p>
+          <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">Pendientes de aprobación humana</p>
         </div>
         <span className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] text-micro font-sans font-bold">● Activo</span>
       </div>

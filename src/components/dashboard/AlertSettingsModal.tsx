@@ -335,7 +335,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Plan de Notificaciones Útiles</span>
+            <span>Plan de notificaciones útiles</span>
           </button>
         </div>
 
@@ -421,7 +421,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                             onChange={() => handleToggleRule(rule.id)}
                             className="sr-only peer"
                           />
-                          <div className="w-9 h-5 bg-[var(--surface)] peer-focus:outline-none rounded-[var(--r-pill)] peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-[var(--r-pill)] after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--acc)] peer-disabled:opacity-40"></div>
+                          <div className="w-9 h-5 bg-[var(--surface)] peer-focus:outline-none rounded-[var(--r-pill)] peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-[var(--r-pill)] after:h-4 after:w-4 after:transition-ui peer-checked:bg-[var(--acc)] peer-disabled:opacity-40"></div>
                         </label>
 
                         {/* Channels selection */}
@@ -474,7 +474,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
 
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Correo Electrónico Destinatario de Alertas:</label>
+                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Correo electrónico destinatario de alertas:</label>
                     <input
                       type="email"
                       value={config.recipientEmail || ''}
@@ -485,7 +485,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Frecuencia del Resumen del Mánager (Digest):</label>
+                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Frecuencia del resumen del mánager (digest):</label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       {[
                         { id: 'weekly_digest', label: 'Resumen Semanal', desc: 'Sugerido: Todos los lunes a primera hora.' },

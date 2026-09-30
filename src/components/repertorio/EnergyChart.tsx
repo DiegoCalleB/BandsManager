@@ -881,7 +881,7 @@ export function EnergyChart({
                     <div className="mt-1.5 pt-1">
                       <div className="flex items-center gap-1 font-bold">
                         <span
-                          className={`w-3.5 h-3.5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-black shrink-0 ${
+                          className={`w-3.5 h-3.5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold shrink-0 ${
                             d.transitionFromPrev.status === "ok"
                               ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                               : "bg-[var(--alert)]/20 text-[var(--ink)]"

@@ -269,7 +269,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               <div className="space-y-1">
                 <div className="flex items-center gap-2 font-bold text-[var(--ink)]">
                   <Server className="w-4 h-4 text-[var(--acc)]" />
-                  <span>Mantenimiento y Retención Automática (Auto-Vacuum)</span>
+                  <span>Mantenimiento y retención automática (auto-Vacuum)</span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                   Las tareas completadas se archivan automáticamente tras 7 días para preservar la máxima velocidad de lectura en
@@ -292,7 +292,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold text-[var(--ink)] flex items-center gap-2">
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  <span>Historial de Trabajos en la Cola (Últimos 10 eventos)</span>
+                  <span>Historial de trabajos en la cola (últimos 10 eventos)</span>
                 </h3>
                 <span className="text-xs text-[var(--ink-2)] font-mono">Se actualiza cada 3 s</span>
               </div>

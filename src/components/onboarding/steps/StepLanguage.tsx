@@ -92,7 +92,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
           </div>
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-sans font-bold">
-              <span>Primer Paso Obligatorio / First Step</span>
+              <span>Primer paso obligatorio / first step</span>
             </div>
             <h3 className="text-base sm:text-lg font-bold font-display text-[var(--ink)]">
               ¿En qué idioma quieres trabajar con tu banda?

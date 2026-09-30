@@ -1112,7 +1112,7 @@ export function GooglePlacesExplorerModal({
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4 text-[var(--acc-ink)]" />
-                      <span>Lanzar Búsqueda Masiva</span>
+                      <span>Lanzar búsqueda masiva</span>
                     </>
                   )}
                 </button>
@@ -1330,7 +1330,7 @@ export function GooglePlacesExplorerModal({
                     title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
                   >
                     <Building2 className="w-3.5 h-3.5 text-[var(--ok)]" />
-                    <span>Radar Cultural Público</span>
+                    <span>Radar cultural público</span>
                   </button>
 
                   <button

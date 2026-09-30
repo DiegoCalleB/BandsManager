@@ -332,7 +332,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 ) : (
                   <>
                     <RefreshCw className="w-4 h-4" />
-                    <span>Generar y Comparar Propuestas</span>
+                    <span>Generar y comparar propuestas</span>
                   </>
                 )}
               </button>

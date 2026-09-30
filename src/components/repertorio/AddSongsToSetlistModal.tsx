@@ -200,7 +200,7 @@ export function AddSongsToSetlistModal({
                     }`}
                   >
                     <div
-                      className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-black transition-ui ${
+                      className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-bold transition-ui ${
                         isSelected
                           ? "bg-[var(--sunken)] text-[var(--ink)] scale-105"
                           : "text-[var(--ink-2)]"

@@ -1703,7 +1703,7 @@ export default function App() {
             <div className="flex flex-col items-center w-full px-1 gap-1">
               <div className="flex items-center justify-center gap-1 w-full">
                 <h1
-                  className={`font-black font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
+                  className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
                     currentActiveBandName.length > 22
                       ? "text-xs"
                       : currentActiveBandName.length > 14
@@ -2020,7 +2020,7 @@ export default function App() {
 
           {/* Sync warning if backend fails */}
           {syncStatus === "error" && (
-            <div className="mb-4 p-3 bg-[var(--alert)]/10 rounded-lg text-[var(--alert)] text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+            <div className="mb-4 p-3 bg-[var(--alert)]/10 rounded-[var(--r-s)] text-[var(--alert)] text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
               <div className="flex gap-2 items-center">
                 <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
                 <span>
@@ -2299,7 +2299,7 @@ export default function App() {
                     />
                   ) : (
                     <div
-                      className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}
+                      className={`p-8 rounded-[var(--r-m)] text-center space-y-3 ${colors.card} `}
                     >
                       <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
                       <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60">

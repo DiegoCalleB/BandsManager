@@ -78,7 +78,7 @@ export function GenerateAllTemplatesModal({
         >
           <div className="flex items-center gap-2.5">
             <div
-              className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-black ${
+              className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold ${
                 isCampaign
                   ? 'bg-[var(--acc)]  text-[var(--on-acc)]'
                   : 'bg-[var(--acc)]  text-[var(--on-acc)]'

@@ -157,7 +157,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   onChange={(e) => setEstiloMusico(e.target.value)}
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
                 >
-                  <option value="Productor y Arreglista General">Productor y Arreglista General</option>
+                  <option value="Productor y Arreglista General">Productor y arreglista general</option>
                   <option value="Guitarrista Líder (Solos y Riffs)">Guitarrista Líder (Solos y Riffs)</option>
                   <option value="Bajista de Sesión (Grooves y Líneas)">Bajista de sesión (Grooves y líneas)</option>
                   <option value="Teclista / Sintetizador (Atmósferas)">Teclista / Sintetizador (Atmósferas)</option>
@@ -173,8 +173,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                   className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
                 >
                   <option value="Nuevo Riff o Puente Instrumental">Nuevo Riff o Puente Instrumental</option>
-                  <option value="Variación Armónica para el Estribillo">Variación Armónica para el Estribillo</option>
-                  <option value="Línea Melódica de Gancho (Hook)">Línea Melódica de Gancho (Hook)</option>
+                  <option value="Variación Armónica para el Estribillo">Variación armónica para el estribillo</option>
+                  <option value="Línea Melódica de Gancho (Hook)">Línea melódica de gancho (hook)</option>
                   <option value="Corte Rítmico o Transición Sorpresa">Corte Rítmico o Transición Sorpresa</option>
                   <option value="Outro Épico o Final de Canción">Outro Épico o Final de Canción</option>
                 </select>

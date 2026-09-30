@@ -77,7 +77,7 @@ export const MusicianOnboardingModal: React.FC<
 
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-sans font-bold">
-              <span>Primeros Pasos para Músicos</span>
+              <span>Primeros pasos para músicos</span>
             </div>
 
             {/* Quick Language Selector */}

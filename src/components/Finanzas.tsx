@@ -1003,7 +1003,7 @@ export default function Finanzas({
                     <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 sm: pt-2 sm:pt-0">
                       {/* Amount */}
                       <span
-                        className={`text-sm font-black font-sans tracking-tight ${
+                        className={`text-sm font-bold font-sans tracking-tight ${
                           p.tipo === "ingreso"
                             ? "text-[var(--ok)]"
                             : "text-[var(--alert)]"

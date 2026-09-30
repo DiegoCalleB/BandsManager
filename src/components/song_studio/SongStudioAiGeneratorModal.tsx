@@ -142,7 +142,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
             {/* Drum Style Selector */}
             {includeDrums && (
               <div>
-                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Patrón Rítmico de Batería</label>
+                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Patrón rítmico de batería</label>
                 <div className="grid grid-cols-4 gap-2">
                   {(['rock', 'pop', 'funk', 'reggae', 'ska', 'cumbia', 'punk'] as const).map((style) => (
                     <button

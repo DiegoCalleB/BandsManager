@@ -73,7 +73,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                 </div>
                 <div>
                   <h4 className="text-xs font-bold font-sans text-[var(--ink)] flex items-center gap-1.5">
-                    <span>Estilos de Banda y Tipografía</span>
+                    <span>Estilos de banda y tipografía</span>
                     <Zap className="w-3 h-3 text-[var(--acc)]" />
                   </h4>
                   <p className="text-micro text-[var(--ink-2)] font-sans">
@@ -101,7 +101,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
             {/* Presets Grid */}
             <div className="space-y-1.5">
               <label className="text-micro font-sans text-[var(--ink-2)] font-bold flex items-center justify-between">
-                <span>Transformar Nombre Actual:</span>
+                <span>Transformar nombre actual:</span>
                 <span className="text-[var(--acc)]/80 font-normal">
                   Clic para aplicar
                 </span>

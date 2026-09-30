@@ -67,7 +67,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
             </div>
 
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
-              <span className="text-[var(--ink-2)]">Grabar Pista Overdub</span>
+              <span className="text-[var(--ink-2)]">Grabar pista overdub</span>
               <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">R / Numpad *</kbd>
             </div>
 

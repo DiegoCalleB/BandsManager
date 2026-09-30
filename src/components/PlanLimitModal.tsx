@@ -183,7 +183,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               }}
               className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc-ink)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
             >
-              <span>Ver Comparativa Completa</span>
+              <span>Ver comparativa completa</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
           </div>
