@@ -401,7 +401,7 @@ export async function buildAvailableBandsForUser(
         role: 'leader',
         userId: targetUser.id,
         plan: 'cabeza_de_cartel',
-        logoUrl: '/images/logo_master_of_prompts.svg',
+        logoUrl: '',
         is_main: cleanCurrentBand === 'master-of-prompts',
       });
     } else {
@@ -411,7 +411,6 @@ export async function buildAvailableBandsForUser(
           b.bandName = 'Master of Prompts';
           b.nombre_banda = 'Master of Prompts';
           b.plan = 'cabeza_de_cartel';
-          b.logoUrl = '/images/logo_master_of_prompts.svg';
           b.is_main = cleanCurrentBand === 'master-of-prompts';
         }
       });
@@ -430,7 +429,7 @@ export async function buildAvailableBandsForUser(
         role: 'leader',
         userId: targetUser.id,
         plan: 'cabeza_de_cartel',
-        logoUrl: '/images/logo_herdeiros_do_codigo.svg',
+        logoUrl: '',
         is_main: cleanCurrentBand === 'os-herdeiros-do-codigo',
       });
     } else {
@@ -440,7 +439,6 @@ export async function buildAvailableBandsForUser(
           b.bandName = 'Os Herdeiros do Código';
           b.nombre_banda = 'Os Herdeiros do Código';
           b.plan = 'cabeza_de_cartel';
-          b.logoUrl = '/images/logo_herdeiros_do_codigo.svg';
           b.is_main = cleanCurrentBand === 'os-herdeiros-do-codigo';
         }
       });

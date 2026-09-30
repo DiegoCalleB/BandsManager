@@ -243,9 +243,9 @@ export const MASTER_OF_PROMPTS_REGISTERED_BAND = {
   spotify_youtube: "https://youtube.com/@mouredev",
   aforo_promedio: 1500,
   estado_cuenta: "activo",
-  logoUrl: "/images/logo_master_of_prompts.svg",
-  logo_url: "/images/logo_master_of_prompts.svg",
-  imagen_url: "/images/logo_master_of_prompts.svg",
+  logoUrl: "",
+  logo_url: "",
+  imagen_url: "",
   notas: "Banda seria estilo Metallica con temática de ingeniería de software e Inteligencia Artificial."
 };
 
@@ -264,8 +264,8 @@ export const HERDEIROS_REGISTERED_BAND = {
   instagram: "@mouredev",
   aforo_promedio: 400,
   estado_cuenta: "activo",
-  logoUrl: "/images/logo_herdeiros_do_codigo.svg",
-  logo_url: "/images/logo_herdeiros_do_codigo.svg",
+  logoUrl: "",
+  logo_url: "",
   notas: "Banda rock bravú galaica de Brais Moure"
 };
 

@@ -1210,10 +1210,8 @@ export const HERDEIROS_METRICS: SocialMetric[] = [
 
 export const HERDEIROS_EPK_CONFIG: EPKConfig = {
   biografia: "Os Herdeiros do Código é unha banda de Rock Bravú e Punk-Rock galaico nada en A Coruña (Galicia), liderada polo recoñecido creador e desenvolvedor Brais Moure (MoureDev) á batería, xunto a Xandre (voz/guitarra), Álvaro (guitarra solista) e Iago (baixo). Co espírito irónico e festeiro do movemento bravú dos 90 combinado con letras sobre a cultura do software, a intelixencia artificial e a retranca galega, a banda ofrece un directo de 75 minutos arrollador pensado para desatar pogos e facer cantar a todo o público de principio a fin.",
-  logoUrl: "/images/logo_herdeiros_do_codigo.svg",
-  bandPhotos: [
-    "/images/logo_herdeiros_do_codigo.svg"
-  ],
+  logoUrl: "",
+  bandPhotos: [],
   riderTecnico: "- Batería profesional (Pearl / Tama) con bombo de 22\", 2 toms aéreos, 1 goliath, caixa e 4 pés de prato (para Brais Moure)\n- 1 Cabezal Marshall JCM800 a válvulas con pantalla 4x12 Celestion V30 para guitarra solista\n- 1 Amplificador Fender Twin Reverb / Hot Rod Deluxe para guitarra rítmica\n- 1 Cabezal Ampeg SVT-CL a válvulas con pantalla 8x10 para baixo + Caixa de Inxección DI Radial J48\n- 3 Micrófonos dinámicos vocais Shure Beta 58A con pé reforzado\n- 4 Envíos de monitores independentes ou sistema IEM sen fíos\n- PA mínima recomendada: 4000W RMS para salas, 12000W para festivais",
   enlacesRedes: {
     spotify: "https://open.spotify.com/artist/mouredev",
@@ -2320,10 +2318,8 @@ export const MOP_METRICS: SocialMetric[] = [
 
 export const MASTER_OF_PROMPTS_EPK_CONFIG: EPKConfig = {
   biografia: "Master of Prompts es una apisonadora de Thrash Metal clásico forjada en A Coruña (Galicia). Con una estética implacable inspirada en la era dorada de Metallica (1986), afinaciones en Mi estándar y un virtuosismo rítmico a 210 BPM en downpicking estricto, la banda combina la potencia del metal pesado con líricas de ingeniería de software, arquitectura de compiladores y la rebelión de los modelos de inteligencia artificial.",
-  logoUrl: "/images/logo_master_of_prompts.svg",
-  bandPhotos: [
-    "/images/logo_master_of_prompts.svg"
-  ],
+  logoUrl: "",
+  bandPhotos: [],
   riderTecnico: "- 2 Cabezales Mesa Boogie Dual Rectifier a válvulas con pantallas 4x12 Celestion V30\n- 1 Cabezal Ampeg SVT-CL a válvulas con pantalla 8x10 para bajo + Línea DI Radial J48\n- Batería acústica profesional (Tama Starclassic / Pearl Masters) con DOBLE BOMBO de 22\", 3 toms y 2 goliaths (para Brais Moure)\n- Micrófonos vocales dinámicos Shure Beta 58A con pie reforzado y cableado Klotz\n- 4 Envíos estéreo de monitores inalámbricos In-Ear (Sennheiser G4 IEM)\n- PA mínima requerida: 6000W RMS estéreo para salas y 15000W para festivales",
   enlacesRedes: {
     spotify: "https://open.spotify.com/artist/mouredev",
