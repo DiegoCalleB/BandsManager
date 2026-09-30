@@ -1643,7 +1643,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         setIsExportLeadsOpen(true);
                       }}
-                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
                       <span>Exportar Leads (A la vista / Todos / Excel)</span>
@@ -1656,7 +1656,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         handleEnrichAddresses();
                       }}
-                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
+                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
                     >
                       <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
@@ -1771,7 +1771,7 @@ export default function BookingCRM({
                       id="toggle-filters-btn"
                       type="button"
                       onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
+                      className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                         activeFiltersCount > 0 || isMobileFiltersOpen
                           ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
                           : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1792,7 +1792,7 @@ export default function BookingCRM({
                         id="crm-campaign-filter-btn"
                         type="button"
                         onClick={() => setFilterByCampaign(!filterByCampaign)}
-                        className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                        className={`px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold font-sans transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer ${
                           filterByCampaign
                             ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
                             : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'

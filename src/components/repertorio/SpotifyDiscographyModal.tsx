@@ -536,7 +536,7 @@ export const SpotifyDiscographyModal: React.FC<
                     onClick={() =>
                       toggleSelectAll(selectedAlbumsCount < albums.length)
                     }
-                    className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold hover:bg-[var(--ink)]/5 transition flex items-center gap-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold hover:bg-[var(--ink)]/5 transition flex items-center gap-1.5 cursor-pointer"
                   >
                     {selectedAlbumsCount === albums.length ? (
                       <>
@@ -645,7 +645,7 @@ export const SpotifyDiscographyModal: React.FC<
                           <button
                             type="button"
                             onClick={() => toggleExpandAlbum(album.id)}
-                            className="px-3 py-1.5 rounded-[var(--r-m)] hover:bg-[var(--ink)]/10 text-xs font-sans font-bold flex items-center gap-1 cursor-pointer transition"
+                            className="px-3 py-1.5 rounded-[var(--r-pill)] hover:bg-[var(--ink)]/10 text-xs font-sans font-bold flex items-center gap-1 cursor-pointer transition"
                           >
                             <span>
                               {isExpanded ? "Ocultar Pistas" : "Ver Pistas"}

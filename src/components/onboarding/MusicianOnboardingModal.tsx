@@ -91,7 +91,7 @@ export const MusicianOnboardingModal: React.FC<
                     key={l.code}
                     type="button"
                     onClick={() => setAppLang(l.code)}
-                    className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-sans font-semibold transition-ui cursor-pointer flex items-center gap-1 ${
+                    className={`px-2 py-1 rounded-[var(--r-pill)] text-xs font-sans font-semibold transition-ui cursor-pointer flex items-center gap-1 ${
                       isSelected
                         ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold scale-105"
                         : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]"

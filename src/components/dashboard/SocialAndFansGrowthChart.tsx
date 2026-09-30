@@ -555,7 +555,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <button
                 type="button"
                 onClick={() => onNavigate("fans")}
-                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70"}`}
+                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70"}`}
                 title="Ir al gestor de comunidad, muro y capturas de fans"
               >
                 <Heart className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -565,7 +565,7 @@ export const SocialAndFansGrowthChart: React.FC<
               <button
                 type="button"
                 onClick={() => onNavigate("reels")}
-                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"}`}
+                className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97] ${"bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"}`}
                 title="Abrir el panel completo de métricas y sincronización"
               >
                 <Activity className="w-3.5 h-3.5" />
@@ -747,7 +747,7 @@ export const SocialAndFansGrowthChart: React.FC<
                   key={opt.id}
                   type="button"
                   onClick={() => setSelectedPeriod(opt.id)}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold transition-ui cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer ${
                     isSelected
                       ? "bg-[var(--acc)]  text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
@@ -784,7 +784,7 @@ export const SocialAndFansGrowthChart: React.FC<
         <button
           type="button"
           onClick={selectAllChannels}
-          className={`text-micro font-sans px-2.5 py-1 rounded-[var(--r-s)] transition-ui flex items-center gap-1 self-end md:self-auto cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+          className={`text-micro font-sans px-2.5 py-1 rounded-[var(--r-pill)] transition-ui flex items-center gap-1 self-end md:self-auto cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
           title="Restaurar y mostrar todos los canales disponibles"
         >
           <RefreshCw className="w-2.5 h-2.5" />
@@ -1010,7 +1010,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <button
               type="button"
               onClick={selectAllChannels}
-              className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-micro font-bold transition-ui cursor-pointer"
+              className="mt-3 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-micro font-bold transition-ui cursor-pointer"
             >
               Activar todos los canales
             </button>

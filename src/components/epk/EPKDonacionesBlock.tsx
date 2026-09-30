@@ -279,7 +279,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         },
                       })
                     }
-                    className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
+                    className={`p-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
                       (config.donacionRevolut?.metodoPorDefecto ||
                         "revolut") === "revolut"
                         ? "bg-[var(--acc)]/20 text-[var(--ink-2)]"
@@ -300,7 +300,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         },
                       })
                     }
-                    className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
+                    className={`p-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
                       config.donacionRevolut?.metodoPorDefecto === "paypal"
                         ? "bg-[var(--tentative)]/50 text-[var(--acc)]/80"
                         : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -320,7 +320,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         },
                       })
                     }
-                    className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
+                    className={`p-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
                       config.donacionRevolut?.metodoPorDefecto === "bizum"
                         ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
                         : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -503,7 +503,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       type="button"
                       onClick={() => traducirConIA(idioma.code)}
                       disabled={estaTraduciendo}
-                      className="text-xs bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
+                      className="text-xs bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-pill)] flex items-center gap-1.5 transition cursor-pointer"
                     >
                       {estaTraduciendo ? (
                         <>

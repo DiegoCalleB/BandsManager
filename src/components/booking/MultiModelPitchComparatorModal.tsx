@@ -250,7 +250,7 @@ export const MultiModelPitchComparatorModal: React.FC<
 
             <button
               onClick={onClose}
-              className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
+              className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -287,7 +287,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                       key={prov.id}
                       type="button"
                       onClick={() => handleToggleProvider(prov.id)}
-                      className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                         isSelected
                           ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
                           : "bg-[var(--bg)]/60 text-[var(--ink-2)] "
@@ -322,7 +322,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 onClick={handleRunComparison}
                 disabled={isLoading || selectedProviders.length === 0}
-                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans shrink-0"
               >
                 {isLoading ? (
                   <>
@@ -366,7 +366,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 type="button"
                 onClick={() => setVolumeScale("1")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold cursor-pointer transition-ui ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold cursor-pointer transition-ui ${
                   volumeScale === "1"
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -377,7 +377,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 type="button"
                 onClick={() => setVolumeScale("100")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold cursor-pointer transition-ui ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold cursor-pointer transition-ui ${
                   volumeScale === "100"
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -388,7 +388,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 type="button"
                 onClick={() => setVolumeScale("1000")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold cursor-pointer transition-ui ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold cursor-pointer transition-ui ${
                   volumeScale === "1000"
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -499,7 +499,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                           type="button"
                           onClick={() => handleCopyText(prop.text, idx)}
                           disabled={prop.status === "error"}
-                          className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
+                          className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
                           title="Copiar propuesta"
                         >
                           {isCopied ? (
@@ -716,7 +716,7 @@ export const MultiModelPitchComparatorModal: React.FC<
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] rounded-[var(--r-s)] text-xs cursor-pointer font-sans"
+              className="px-3 py-1 bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] rounded-[var(--r-pill)] text-xs cursor-pointer font-sans"
             >
               Cerrar
             </button>

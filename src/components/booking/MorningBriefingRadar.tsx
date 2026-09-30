@@ -268,7 +268,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 setActiveTab('priorities');
                 toggleExpanded(true);
               }}
-              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'priorities' ? 'bg-[var(--acc)] text-[var(--on-acc)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -282,7 +282,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 setActiveTab('routing');
                 toggleExpanded(true);
               }}
-              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'routing' ? 'bg-[var(--acc)] text-[var(--on-acc)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -294,7 +294,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
           <button
             type="button"
             onClick={() => toggleExpanded()}
-            className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+            className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             title={isExpanded ? 'Plegar radar' : 'Desplegar radar'}
           >
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -416,7 +416,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectLead(lead, { tab: 'copilot' })}
-                          className="px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer"
                         >
                           <TrendingUp className="w-3 h-3" />
                           <span>Copiloto</span>
@@ -427,7 +427,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                             <button
                               type="button"
                               onClick={() => onOpenRoadbookModal(lead)}
-                              className="p-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs transition-colors cursor-pointer"
+                              className="p-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs transition-colors cursor-pointer"
                               title="Ver / Imprimir Roadbook & Contrato"
                             >
                               <FileText className="w-3.5 h-3.5" />
@@ -437,7 +437,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                           <button
                             type="button"
                             onClick={() => onSelectLead(lead, { tab: 'emails' })}
-                            className="px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer"
+                            className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer"
                           >
                             <span>Atender</span>
                             <ChevronRight className="w-3.5 h-3.5" />

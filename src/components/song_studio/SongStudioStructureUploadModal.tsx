@@ -306,13 +306,13 @@ export const SongStudioStructureUploadModal: React.FC<
                       <div className="flex gap-2">
                         <button
                           onClick={handleCameraCapture}
-                          className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-sm font-semibold transition"
+                          className="flex-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-sm font-semibold transition"
                         >
                           <ShowIcon inline emoji="📸" />Capturar Foto
                         </button>
                         <button
                           onClick={stopCamera}
-                          className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
+                          className="flex-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
                         >
                           Cancelar
                         </button>
@@ -392,14 +392,14 @@ export const SongStudioStructureUploadModal: React.FC<
                             setSelectedFile(null);
                             setPreview(null);
                           }}
-                          className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
+                          className="flex-1 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
                         >
                           Cambiar Archivo
                         </button>
                         <button
                           onClick={handleProcessWithAI}
                           disabled={isProcessing}
-                          className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 disabled:bg-[var(--sunken)] text-[var(--on-acc)] text-sm font-semibold transition"
+                          className="flex-1 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 disabled:bg-[var(--sunken)] text-[var(--on-acc)] text-sm font-semibold transition"
                         >
                           <ShowIcon inline emoji="✨" />Procesar con IA
                         </button>

@@ -378,7 +378,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               {editable && !isLoading && toneData && !isEditing && (
                 <button
                   onClick={onReAnalyze}
-                  className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
+                  className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
                   title="Volver a rastrear redes con IA (sustituye lo que haya, incluidas ediciones a mano)"
                 >
                   <RefreshCw className="w-4 h-4" />
@@ -387,7 +387,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               {editable && !isLoading && toneData && !isEditing && (
                 <button
                   onClick={handleStartEdit}
-                  className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
+                  className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
                   title="Editar a mano"
                 >
                   <Pencil className="w-4 h-4" />
@@ -395,7 +395,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               )}
               <button
                 onClick={onClose}
-                className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
+                className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5 text-[var(--ink-2)]" />
               </button>
@@ -407,7 +407,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveModalTab("tone")}
-              className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
+              className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "tone"
                   ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -419,7 +419,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveModalTab("threads")}
-              className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
+              className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "threads"
                   ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -464,7 +464,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       onClick={() =>
                         setSelectedCategoryThread(cat.id as TemplateCategory)
                       }
-                      className={`py-1 px-2.5 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer ${
+                      className={`py-1 px-2.5 rounded-[var(--r-pill)] text-micro font-bold transition-ui cursor-pointer ${
                         isActive
                           ? "bg-[var(--acc)] text-[var(--on-acc)] font-extrabold"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -682,7 +682,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <button
                       onClick={handleSaveEdit}
                       disabled={isSaving}
-                      className="flex-1 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 text-[var(--on-ok)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
+                      className="flex-1 py-2.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 text-[var(--on-ok)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
                     >
                       <Save className="w-3.5 h-3.5" />{" "}
                       {isSaving ? "Guardando..." : "Guardar cambios"}
@@ -690,7 +690,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <button
                       onClick={handleCancelEdit}
                       disabled={isSaving}
-                      className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
+                      className="py-2.5 px-4 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
                     >
                       <XCircle className="w-3.5 h-3.5" /> Cancelar
                     </button>

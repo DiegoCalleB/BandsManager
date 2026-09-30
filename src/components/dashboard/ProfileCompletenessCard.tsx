@@ -406,7 +406,7 @@ export const ProfileCompletenessCard: React.FC<
           {onOpenAutonomyModal && (
             <button
               onClick={() => onOpenAutonomyModal()}
-              className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
+              className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
             >
               <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span className="hidden xs:inline">Autonomía & Caché</span>
@@ -415,7 +415,7 @@ export const ProfileCompletenessCard: React.FC<
 
           <button
             onClick={() => setShowAuditModal(true)}
-            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
+            className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
           >
             <HelpCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
             <span>Info</span>
@@ -423,7 +423,7 @@ export const ProfileCompletenessCard: React.FC<
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--acc)] text-xs font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer active:scale-[0.97]"
+            className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--acc)] text-xs font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer active:scale-[0.97]"
             title="Expandir/colapsar checklist"
           >
             <span>{isExpanded ? "Ocultar" : "Ver checklist"}</span>
@@ -563,7 +563,7 @@ export const ProfileCompletenessCard: React.FC<
                   {!pillar.completed && (
                     <button
                       onClick={() => handlePillarClick(pillar.view)}
-                      className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-micro shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
+                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-micro shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
                     >
                       Configurar
                     </button>
@@ -597,7 +597,7 @@ export const ProfileCompletenessCard: React.FC<
 
               <button
                 onClick={() => setShowAuditModal(false)}
-                className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 cursor-pointer"
+                className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -662,7 +662,7 @@ export const ProfileCompletenessCard: React.FC<
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setShowAuditModal(false)}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] font-bold font-sans text-xs hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold font-sans text-xs hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
               >
                 Entendido
               </button>

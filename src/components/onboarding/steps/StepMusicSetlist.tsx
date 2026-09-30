@@ -113,7 +113,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab("spotify")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
             musicSubTab === "spotify"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -125,7 +125,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab("upload")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
             musicSubTab === "upload"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -137,7 +137,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab("manual")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-pill)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
             musicSubTab === "manual"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -165,7 +165,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             <button
               type="submit"
               disabled={isSearchingSpotify || !spotifyQuery.trim()}
-              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
             >
               {isSearchingSpotify ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -241,7 +241,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     type="button"
                     onClick={onImportSpotifyTracks}
                     disabled={isImportingSpotify}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors"
                   >
                     {isImportingSpotify ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -346,7 +346,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                   type="button"
                   onClick={onAddManualSong}
                   disabled={!newManualTitle.trim()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Añadir Canción
@@ -385,7 +385,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     setShowBulkInput(false);
                   }}
                   disabled={!bulkText.trim()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Procesar e Importar Lista
@@ -448,7 +448,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             type="button"
             onClick={() => onGenerateSetlist(60)}
             disabled={isCreatingSetlist || totalImportedSongsCount === 0}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-medium transition-colors disabled:opacity-50"
           >
             <Layers className="w-3.5 h-3.5" />
             Crear Setlist Directo (60 min)
@@ -458,7 +458,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             type="button"
             onClick={() => onGenerateSetlist(45)}
             disabled={isCreatingSetlist || totalImportedSongsCount === 0}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs font-medium transition-colors disabled:opacity-50"
           >
             <Clock className="w-3.5 h-3.5" />
             Crear Setlist Festival / Showcase (45 min)

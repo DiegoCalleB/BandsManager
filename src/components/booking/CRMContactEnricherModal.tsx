@@ -109,7 +109,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
             <button
               onClick={onClose}
               disabled={isProcessing}
-              className="p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors"
+              className="p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -180,7 +180,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
               type="button"
               onClick={handleStartEnrichment}
               disabled={isProcessing || incompleteLeads.length === 0}
-              className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
                 <>

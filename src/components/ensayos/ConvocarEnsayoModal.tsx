@@ -132,7 +132,7 @@ export function ConvocarEnsayoModal({
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -260,7 +260,7 @@ export function ConvocarEnsayoModal({
                               type="button"
                               key={u.id}
                               onClick={() => toggleConvocado(u.id)}
-                              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-m)] text-xs transition-ui cursor-pointer ${
+                              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-pill)] text-xs transition-ui cursor-pointer ${
                                 isSelected
                                   ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
                                   : 'bg-[var(--surface)] text-[var(--ink-2)] '
@@ -320,7 +320,7 @@ export function ConvocarEnsayoModal({
                       <button
                         type="button"
                         onClick={handleAddObjetivo}
-                        className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
@@ -347,13 +347,13 @@ export function ConvocarEnsayoModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
+                className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
               >
                 {isEditing ? 'Guardar Cambios' : 'Convocar Ensayo'}
               </button>

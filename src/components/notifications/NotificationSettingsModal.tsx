@@ -77,7 +77,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -121,7 +121,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <button
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs shrink-0 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs shrink-0 transition-colors cursor-pointer"
                 >
                   Solicitar Permiso
                 </button>
@@ -162,7 +162,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <button
                     type="button"
                     onClick={onTriggerTestSound}
-                    className="text-micro text-[var(--ink-2)] hover:text-[var(--acc)] px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition-colors cursor-pointer"
+                    className="text-micro text-[var(--ink-2)] hover:text-[var(--acc)] px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
                     title="Reproducir sonido de prueba"
                   >
                     <ShowIcon inline emoji="🔊" />Probar
@@ -292,7 +292,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <button
               type="button"
               onClick={onTriggerTest}
-              className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer "
+              className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer "
             >
               <Bell className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Probar Notificación Push</span>
@@ -301,7 +301,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer"
+              className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer"
             >
               Guardar y Cerrar
             </button>

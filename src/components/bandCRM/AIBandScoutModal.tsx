@@ -219,7 +219,7 @@ export function AIBandScoutModal({
               <button
                 onClick={handleSearch}
                 disabled={isSearching}
-                className="px-6 py-2.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-m)] transition-ui disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-2.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] transition-ui disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSearching ? (
                   <>
@@ -315,7 +315,7 @@ export function AIBandScoutModal({
             <button
               onClick={handleImport}
               disabled={selectedBands.size === 0}
-              className="px-6 py-2 bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-m)] transition-ui shadow disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-pill)] transition-ui shadow disabled:opacity-50 flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               Importar {selectedBands.size} Bandas al CRM

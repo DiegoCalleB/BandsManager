@@ -115,13 +115,13 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4 stroke-[3]" />
                 <span>{setlistToEdit ? 'Guardar Cambios' : 'Crear Repertorio'}</span>

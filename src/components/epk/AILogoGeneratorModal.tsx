@@ -102,7 +102,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <p className="text-xs text-[var(--ink-2)]">Genera una identidad visual profesional para {bandName || 'tu banda'}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] hover:bg-[var(--surface)] transition">
+          <button onClick={onClose} className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -182,7 +182,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-[var(--r-m)] text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition"
+            className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition"
           >
             Cancelar
           </button>
@@ -192,7 +192,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold text-xs flex items-center gap-2 transition disabled:opacity-50 "
+              className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold text-xs flex items-center gap-2 transition disabled:opacity-50 "
             >
               {isGenerating ? (
                 <>
@@ -213,7 +213,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <button
                 type="button"
                 onClick={handleApplyLogo}
-                className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition"
+                className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition"
               >
                 <Check className="w-4 h-4" /> Aplicar al EPK
               </button>

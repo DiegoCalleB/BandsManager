@@ -73,7 +73,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer shrink-0"
+                className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer shrink-0"
               >
                 {copiedSyncUrl ? (
                   <>
@@ -136,7 +136,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           </a>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
           >
             Cerrar
           </button>

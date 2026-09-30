@@ -134,7 +134,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   key={g}
                   type="button"
                   onClick={() => setGenre(g)}
-                  className={`text-xs px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
+                  className={`text-xs px-2.5 py-1 rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                     genre.toLowerCase().includes(g.toLowerCase())
                       ? "bg-[var(--acc)]/20 text-[var(--acc)]/70  font-semibold"
                       : "bg-[var(--sunken)]/60 text-[var(--ink-2)] "
@@ -301,7 +301,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                 type="button"
                 onClick={() => logoInputRef.current?.click()}
                 disabled={isUploadingLogo}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-semibold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-semibold transition-colors cursor-pointer"
               >
                 <Upload className="w-3.5 h-3.5" />
                 {logoUrl

@@ -1982,7 +1982,7 @@ export default function Chatbot({
                           {pendingActions.length > 1 && (
                             <button
                               onClick={() => handleConfirmAllActions(msg.id, msg.proposedActions || [])}
-                              className={`text-micro font-bold font-sans px-2 py-1 rounded-[var(--r-s)] transition-ui active:scale-[0.97] ${'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]'}`}
+                              className={`text-micro font-bold font-sans px-2 py-1 rounded-[var(--r-pill)] transition-ui active:scale-[0.97] ${'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]'}`}
                             >
                               <ShowIcon inline emoji="⚡" />Aprobar Todos ({pendingActions.length})
                             </button>
@@ -2231,14 +2231,14 @@ export default function Chatbot({
                                   <button
                                     id={`confirm-proposal-btn-${msg.id}-${aIdx}`}
                                     onClick={() => handleConfirmAction(msg.id, realIdx, act)}
-                                    className={`flex-1 text-micro font-bold font-sans py-2 rounded-[var(--r-s)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+                                    className={`flex-1 text-micro font-bold font-sans py-2 rounded-[var(--r-pill)] transition-ui cursor-pointer active:scale-[0.97] active:opacity-90 ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
                                   >
                                     ✓ Aprobar esta
                                   </button>
                                   <button
                                     id={`dismiss-proposal-btn-${msg.id}-${aIdx}`}
                                     onClick={() => handleDismissAction(msg.id, realIdx, act)}
-                                    className={`px-3 py-2 text-micro font-sans rounded-[var(--r-s)] transition-colors cursor-pointer active:scale-[0.97] active:opacity-90 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                                    className={`px-3 py-2 text-micro font-sans rounded-[var(--r-pill)] transition-colors cursor-pointer active:scale-[0.97] active:opacity-90 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                                   >
                                     Descartar
                                   </button>
@@ -2648,7 +2648,7 @@ export default function Chatbot({
                 : 'Dar instrucciones por voz'
               : 'Tu navegador no soporta dictado por voz'
           }
-          className={`p-2.5 rounded-[var(--r-m)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
+          className={`p-2.5 rounded-[var(--r-pill)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
             isListening ? 'bg-[var(--alert)] text-[var(--on-alert)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
           }`}
         >
@@ -2658,7 +2658,7 @@ export default function Chatbot({
           id="chatbot-send-btn"
           type="submit"
           disabled={!inputText.trim() || isLoading}
-          className={`p-2.5 rounded-[var(--r-m)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 ${
+          className={`p-2.5 rounded-[var(--r-pill)] font-bold transition-ui flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.97] active:opacity-90 mb-0.5 ${
             inputText.trim() ? 'bg-[var(--ok)]/80 text-[var(--ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
           }`}
         >

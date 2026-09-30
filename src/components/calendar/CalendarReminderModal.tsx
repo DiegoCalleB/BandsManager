@@ -162,7 +162,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-3 py-1.5 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--sunken)] font-mono cursor-pointer"
+            className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--sunken)] font-mono cursor-pointer"
           >
             Cancelar
           </button>
@@ -170,7 +170,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             type="button"
             disabled={reminderSending}
             onClick={handleSendEventReminder}
-            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-xs font-bold text-[var(--on-acc)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-ui"
+            className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-xs font-bold text-[var(--on-acc)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-ui"
           >
             {reminderSending ? (
               <>

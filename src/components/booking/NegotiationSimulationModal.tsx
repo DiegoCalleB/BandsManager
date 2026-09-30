@@ -103,7 +103,7 @@ export function NegotiationSimulationModal({
                 <button
                   type="button"
                   onClick={() => onRoleChange('sala')}
-                  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`py-2 px-3 rounded-[var(--r-pill)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     simulationRole === 'sala'
                       ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
                       : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -114,7 +114,7 @@ export function NegotiationSimulationModal({
                 <button
                   type="button"
                   onClick={() => onRoleChange('banda')}
-                  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`py-2 px-3 rounded-[var(--r-pill)] font-sans font-bold text-micro flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     simulationRole === 'banda'
                       ? 'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]'
                       : 'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -231,7 +231,7 @@ export function NegotiationSimulationModal({
             <button
               type="button"
               onClick={onClose}
-              className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-micro transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
+              className={`px-2 py-1 rounded-[var(--r-pill)] font-sans text-micro transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
             >
               Cancelar
             </button>
@@ -239,7 +239,7 @@ export function NegotiationSimulationModal({
               type="button"
               onClick={onCommit}
               disabled={!simulationMessage || isGeneratingSimulation}
-              className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-micro flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.97] disabled:opacity-40 transition-ui bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]`}
+              className={`px-2 py-1 rounded-[var(--r-pill)] font-sans font-bold text-micro flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.97] disabled:opacity-40 transition-ui bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]`}
             >
               <Check className="w-4 h-4" /> Guardar y Sincronizar
             </button>

@@ -785,7 +785,7 @@ export function DashboardWidgetGrid({
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="p-2 rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -805,7 +805,7 @@ export function DashboardWidgetGrid({
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold whitespace-nowrap cursor-pointer transition-ui ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold whitespace-nowrap cursor-pointer transition-ui ${
                     selectedCategory === cat
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -846,7 +846,7 @@ export function DashboardWidgetGrid({
                       type="button"
                       onClick={() => handleAddWidget(item.type)}
                       disabled={isAlreadyAdded}
-                      className={`px-3.5 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold transition-ui shrink-0 flex items-center gap-1 ${
+                      className={`px-3.5 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold transition-ui shrink-0 flex items-center gap-1 ${
                         isAlreadyAdded
                           ? "bg-[var(--surface)] text-[var(--ink-2)] cursor-default"
                           : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] cursor-pointer active:scale-[0.97]"
@@ -871,7 +871,7 @@ export function DashboardWidgetGrid({
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-sans text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-sans text-xs font-bold cursor-pointer"
               >
                 Cerrar
               </button>

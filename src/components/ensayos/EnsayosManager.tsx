@@ -268,7 +268,7 @@ export function EnsayosManager({
                     setEditingRehearsal(currentRehearsal);
                     setShowConvocarModal(true);
                   }}
-                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
+                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer"
                   title="Editar datos de este ensayo"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
@@ -316,7 +316,7 @@ export function EnsayosManager({
                 setEditingRehearsal(null);
                 setShowConvocarModal(true);
               }}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
+              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ Convocar Ensayo</span>

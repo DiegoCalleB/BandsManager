@@ -265,7 +265,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
               <button
                 type="button"
                 onClick={handleResetDefaultOrder}
-                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 rounded-[var(--r-s)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
+                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 rounded-[var(--r-pill)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
                 title="Restablecer el orden estándar de fábrica"
               >
                 <RotateCcw className="w-3 h-3 text-[var(--ink-2)]" />
@@ -274,7 +274,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
               <button
                 type="button"
                 onClick={handlePresetMusicFirst}
-                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--acc)] rounded-[var(--r-s)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
+                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--acc)] rounded-[var(--r-pill)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
                 title="Poner la música, vídeos y reproductor al principio"
               >
                 <Music className="w-3 h-3 text-[var(--acc)]" />
@@ -283,7 +283,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
               <button
                 type="button"
                 onClick={handlePresetPromoterFirst}
-                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--acc)]/70 rounded-[var(--r-s)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
+                className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--acc)]/70 rounded-[var(--r-pill)] text-micro sm:text-xs font-semibold flex items-center gap-1 transition"
                 title="Poner datos de contratación, contacto y requisitos primero"
               >
                 <Briefcase className="w-3 h-3 text-[var(--acc)]" />
@@ -348,7 +348,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     <button
                       type="button"
                       onClick={() => handleToggleVisibility(item.id)}
-                      className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
+                      className={`p-1.5 rounded-[var(--r-pill)] text-xs transition cursor-pointer ${
                         item.isVisible
                           ? "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80"
                           : "bg-[var(--alert-soft)] text-[var(--alert)]/60 hover:bg-[var(--alert-soft)]"
@@ -371,7 +371,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       type="button"
                       onClick={() => handleMoveSection(index, "up")}
                       disabled={isFirst}
-                      className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
+                      className={`p-1.5 rounded-[var(--r-pill)] text-xs transition ${
                         isFirst
                           ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-2)]"
                           : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] cursor-pointer"
@@ -386,7 +386,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       type="button"
                       onClick={() => handleMoveSection(index, "down")}
                       disabled={isLast}
-                      className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
+                      className={`p-1.5 rounded-[var(--r-pill)] text-xs transition ${
                         isLast
                           ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-2)]"
                           : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] cursor-pointer"

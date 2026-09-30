@@ -44,7 +44,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-medium transition-ui duration-200 cursor-pointer active:scale-[0.97] ${
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-medium transition-ui duration-200 cursor-pointer active:scale-[0.97] ${
           isOpen
             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]"

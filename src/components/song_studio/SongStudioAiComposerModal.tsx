@@ -287,14 +287,14 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                     type="button"
                     onClick={handleGenerateIdea}
                     disabled={isGenerating}
-                    className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-sans font-bold text-[var(--ink-2)] transition-ui cursor-pointer"
+                    className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-sans font-bold text-[var(--ink-2)] transition-ui cursor-pointer"
                   >
                     <ShowIcon inline emoji="🔄" />Probar otra idea
                   </button>
                   <button
                     type="button"
                     onClick={handleAcceptAndAddIdea}
-                    className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                    className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Añadir como Nueva Idea al Tema</span>

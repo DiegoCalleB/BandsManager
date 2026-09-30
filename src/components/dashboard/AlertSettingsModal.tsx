@@ -291,7 +291,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
           <button
             id="close-alert-settings-modal-btn"
             onClick={onClose}
-            className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
+            className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -592,7 +592,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               type="button"
               onClick={handleSendTestDigest}
               disabled={sendingTestDigest}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] hover:text-[var(--acc)] text-xs font-semibold transition-ui flex items-center gap-1.5 disabled:opacity-50"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] hover:text-[var(--acc)] text-xs font-semibold transition-ui flex items-center gap-1.5 disabled:opacity-50"
             >
               <Mail className="w-3.5 h-3.5" />
               <span>{sendingTestDigest ? 'Enviando...' : 'Probar Email de Resumen'}</span>
@@ -605,7 +605,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               id="cancel-alert-settings-btn"
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold transition-colors"
+              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold transition-colors"
             >
               Cancelar
             </button>
@@ -614,7 +614,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               id="save-alert-settings-btn"
               type="button"
               onClick={handleSave}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97]"
             >
               {savedSuccess ? (
                 <>

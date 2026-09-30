@@ -92,7 +92,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
               <button
                 type="button"
                 onClick={() => onRemoveMember(m.id)}
-                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
+                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
                 title="Quitar miembro"
               >
                 <Trash2 className="w-4 h-4" />
@@ -148,7 +148,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             type="button"
             onClick={onAddMember}
             disabled={!newMemberName.trim()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir a la formación

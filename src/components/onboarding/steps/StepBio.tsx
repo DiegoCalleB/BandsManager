@@ -64,7 +64,7 @@ export const StepBio: React.FC<StepBioProps> = ({
           <button
             type="button"
             onClick={onGenerateBioAI}
-            className="inline-flex items-center gap-1.5 text-xs text-[var(--acc)] hover:text-[var(--acc)]/70 font-medium px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[var(--acc)] hover:text-[var(--acc)]/70 font-medium px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />
             Redactar con IA / Sugerencia

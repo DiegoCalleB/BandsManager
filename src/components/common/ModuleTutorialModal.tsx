@@ -434,7 +434,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                       setTimeout(() => locateTargetElement(true), 150);
                     }
                   }}
-                  className="p-1.5 px-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-xs font-sans"
+                  className="p-1.5 px-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-xs font-sans"
                   title={
                     isFloatingMode
                       ? "Expandir a tarjeta centrada"
@@ -476,7 +476,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 id={`tutorial-close-btn-${moduleId}`}
                 type="button"
                 onClick={() => onClose(dontShowAgain)}
-                className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
+                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
                 title="Cerrar guía (Esc)"
               >
                 <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -651,7 +651,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                   id={`tutorial-prev-btn-${moduleId}`}
                   type="button"
                   onClick={handlePrev}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink)]/80 text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1 active:scale-[0.97]"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink)]/80 text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1 active:scale-[0.97]"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Anterior</span>

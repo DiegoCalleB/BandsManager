@@ -362,7 +362,7 @@ export default function Merchan({
         {generatedDesigns.length > 0 && (
           <button
             onClick={handleClearAll}
-            className="self-start sm:self-center px-3 py-1.5 rounded-[var(--r-m)] text-[var(--alert)] hover:bg-[var(--alert)]/10 text-xs font-sans font-bold flex items-center gap-2 transition"
+            className="self-start sm:self-center px-3 py-1.5 rounded-[var(--r-pill)] text-[var(--alert)] hover:bg-[var(--alert)]/10 text-xs font-sans font-bold flex items-center gap-2 transition"
           >
             <Trash2 className="w-3.5 h-3.5" /> Vaciar Galería (
             {generatedDesigns.length})
@@ -844,14 +844,14 @@ export default function Merchan({
                             link.href = displayGraphic;
                             link.click();
                           }}
-                          className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition ${"bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--surface)]"}`}
+                          className={`px-4 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 transition ${"bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--surface)]"}`}
                         >
                           <Download className="w-4 h-4" />
                           Descargar Gráfico
                         </button>
                         <button
                           onClick={() => handleDelete(design.id)}
-                          className="px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 bg-[var(--alert)]/90 text-[var(--ink)] hover:bg-[var(--alert)] transition"
+                          className="px-4 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 bg-[var(--alert)]/90 text-[var(--ink)] hover:bg-[var(--alert)] transition"
                         >
                           <Trash2 className="w-4 h-4" />
                           Eliminar
@@ -901,7 +901,7 @@ export default function Merchan({
               <button
                 type="button"
                 onClick={() => setShowClaimModal(false)}
-                className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                 title="Cerrar ventana"
               >
                 <X className="w-5 h-5" />
@@ -1131,7 +1131,7 @@ export default function Merchan({
                   <button
                     type="button"
                     onClick={() => setClaimStep("success")}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans active:scale-[0.97] cursor-pointer flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans active:scale-[0.97] cursor-pointer flex items-center gap-2"
                   >
                     <PackageCheck className="w-4 h-4" />
                     <span>Pedir mis pegatinas</span>
@@ -1145,7 +1145,7 @@ export default function Merchan({
                       setShowClaimModal(false);
                       setHasGiftPending(false); // Canjeado
                     }}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-sans font-bold cursor-pointer transition-colors"
+                    className="px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-sans font-bold cursor-pointer transition-colors"
                   >
                     Entendido, volver al Taller
                   </button>

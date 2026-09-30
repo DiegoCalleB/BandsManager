@@ -1172,7 +1172,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <button
                 onClick={() => setStickyPlayerDismissed(true)}
                 title={t("playerCerrar")}
-                className="p-1.5 opacity-60 hover:opacity-100 rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition"
+                className="p-1.5 opacity-60 hover:opacity-100 rounded-[var(--r-pill)] hover:bg-[var(--sunken)] transition"
               >
                 <X className="w-4 h-4" />
               </button>

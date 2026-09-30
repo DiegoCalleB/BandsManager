@@ -274,7 +274,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             <button
               type="button"
               onClick={anadirVideo}
-              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-pill)] transition cursor-pointer"
             >
               + Añadir vídeo
             </button>
@@ -444,7 +444,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneTecnicoSonidoPropio", false)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-m)] text-xs font-medium transition-colors ${!config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${!config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                   >
                     De la sala / casa
                   </button>
@@ -453,7 +453,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneTecnicoSonidoPropio", true)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-m)] text-xs font-medium transition-colors ${config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                   >
                     Propio de la banda
                   </button>
@@ -473,7 +473,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneMerchandising", false)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-m)] text-xs font-medium transition-colors ${!config.datosContratacion?.tieneMerchandising ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${!config.datosContratacion?.tieneMerchandising ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                   >
                     No disponemos
                   </button>
@@ -482,7 +482,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneMerchandising", true)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-m)] text-xs font-medium transition-colors ${config.datosContratacion?.tieneMerchandising ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.tieneMerchandising ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                   >
                     Sí (tenemos stock)
                   </button>
@@ -518,7 +518,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         !config.datosContratacion?.transportePropio,
                       )
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-m)] text-xs font-medium transition-colors ${config.datosContratacion?.transportePropio ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.transportePropio ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                   >
                     {config.datosContratacion?.transportePropio
                       ? "Furgoneta propia"
@@ -532,7 +532,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         !config.datosContratacion?.hospedajeRequerido,
                       )
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-m)] text-xs font-medium transition-colors ${config.datosContratacion?.hospedajeRequerido ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.datosContratacion?.hospedajeRequerido ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                   >
                     {config.datosContratacion?.hospedajeRequerido
                       ? "Pide hotel"

@@ -30,6 +30,7 @@ description: Detalle y movimiento de la interfaz de BandManager.io — escala ti
   | `text-base` | 16 | Cuerpo en móvil, **todos los campos en móvil** (por debajo de 16 px iOS hace zoom al enfocar). |
   | `text-xl` / `text-2xl` | 20 / 28 | Títulos de sección / de pantalla. |
 
+- **Título de pantalla: la clase `page-title`** (20 px móvil · 24 px escritorio, display 700). Un solo tamaño para todos los módulos; nada de `text-4xl` ni `text-base` en un h1.
 - **Prohibido** `text-[7px]`…`text-[10px]` (el audit lo bloquea). Si algo no cabe a 11 px, se rediseña el contenedor, no se encoge la letra.
 - **Pesos: 400 / 500 / 600 / 700.** `font-black` solo en cifras grandes (`text-2xl`+). Todo en negrita no destaca nada.
 - `text-wrap: balance` en titulares y `pretty` en párrafos (ya en la base). Cifras en columna con `tabular-nums` (ya aplicado a `font-mono`, `time`, `table`).

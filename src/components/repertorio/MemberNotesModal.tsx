@@ -210,7 +210,7 @@ export function MemberNotesModal({
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -325,7 +325,7 @@ export function MemberNotesModal({
                     <button
                       type="button"
                       onClick={handleAddCustomMember}
-                      className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-[0.97]"
+                      className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] font-bold text-xs rounded-[var(--r-pill)] cursor-pointer transition-transform active:scale-[0.97]"
                     >
                       Añadir
                     </button>
@@ -392,7 +392,7 @@ export function MemberNotesModal({
                             handleReadinessChange(memberKey, level.value)
                           }
                           title={level.label}
-                          className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] transition-ui ${
+                          className={`text-micro font-sans px-2 py-1 rounded-[var(--r-pill)] transition-ui ${
                             memberReadiness[memberKey] === level.value
                               ? level.colorClass
                               : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
@@ -423,14 +423,14 @@ export function MemberNotesModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-[0.97] cursor-pointer ${
+              className={`px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-[0.97] cursor-pointer ${
                 savedSuccess
                   ? "bg-[var(--ok)] text-[var(--on-ok)]"
                   : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"

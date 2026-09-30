@@ -155,7 +155,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
         </div>
         <button
           onClick={onClose}
-          className="px-3 py-1.5 rounded-xl bg-[var(--sunken)] text-[var(--acc-ink)] hover:text-[var(--ink)] font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer "
+          className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--acc-ink)] hover:text-[var(--ink)] font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer "
         >
           <X className="w-4 h-4" /> <span>Cerrar</span>
         </button>
@@ -334,7 +334,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <button
               id="expanded-mute-btn"
               onClick={() => setIsPreviewMuted(!isPreviewMuted)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-neutral-850 active:scale-[0.97] transition-ui cursor-pointer select-none text-xs font-mono font-bold"
+              className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-neutral-850 active:scale-[0.97] transition-ui cursor-pointer select-none text-xs font-mono font-bold"
             >
               {isPreviewMuted ? (
                 <>
@@ -373,7 +373,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               <button
                 id="btn-close-theater"
                 onClick={onClose}
-                className="p-2 rounded-xl bg-[var(--sunken)]/50 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)]/50 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
                 title="Cerrar modo cine"
               >
                 <X className="w-5 h-5" />
@@ -513,7 +513,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                           <button
                             type="button"
                             onClick={() => handleAdjustCrop('start_minus')}
-                            className="flex-1 px-3 py-2 rounded-xl bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 cursor-pointer hover:bg-[var(--sunken)]"
                           >
                             <ChevronLeft className="w-4 h-4 text-[var(--ok)]" />
                             <span>-1s</span>
@@ -522,7 +522,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                             type="button"
                             disabled={start >= end - 1}
                             onClick={() => handleAdjustCrop('start_plus')}
-                            className="flex-1 px-3 py-2 rounded-xl bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 disabled:opacity-30 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 disabled:opacity-30 cursor-pointer hover:bg-[var(--sunken)]"
                           >
                             <span>+1s</span>
                             <ChevronRight className="w-4 h-4 text-[var(--acc-ink)]" />
@@ -537,7 +537,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                             type="button"
                             disabled={end <= start + 1}
                             onClick={() => handleAdjustCrop('end_minus')}
-                            className="flex-1 px-3 py-2 rounded-xl bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 disabled:opacity-30 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 disabled:opacity-30 cursor-pointer hover:bg-[var(--sunken)]"
                           >
                             <ChevronLeft className="w-4 h-4 text-[var(--acc-ink)]" />
                             <span>-1s</span>
@@ -545,7 +545,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                           <button
                             type="button"
                             onClick={() => handleAdjustCrop('end_plus')}
-                            className="flex-1 px-3 py-2 rounded-xl bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 cursor-pointer hover:bg-[var(--sunken)]"
+                            className="flex-1 px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1 cursor-pointer hover:bg-[var(--sunken)]"
                           >
                             <span>+1s</span>
                             <ChevronRight className="w-4 h-4 text-[var(--ok)]" />
@@ -583,7 +583,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                           type="button"
                           onClick={() => setCropMode(opcion.valor)}
                           disabled={isCuttingVideo}
-                          className={`px-2 py-1.5 rounded-lg text-micro font-mono font-bold cursor-pointer transition-ui ${
+                          className={`px-2 py-1.5 rounded-[var(--r-pill)] text-micro font-mono font-bold cursor-pointer transition-ui ${
                             cropMode === opcion.valor
                               ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                               : 'bg-[var(--sunken)] text-[var(--ink-2)]'
@@ -653,7 +653,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                     className="w-full py-3 px-4 rounded-xl font-bold text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-ui"
                   >
                     <Sparkles className="w-4 h-4 text-[var(--ink)] fill-[var(--ink-3)]" />
-                    <span><ShowIcon inline emoji="✂️" />Renderizar Reel Físico + Auto-Subtítulos (9:16)</span>
+                    <span>Renderizar Reel Físico + Auto-Subtítulos (9:16)</span>
                   </button>
                 )}
               </div>
@@ -749,7 +749,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 type="button"
                 onClick={(e) => handleSchedulePost(e)}
                 disabled={isScheduling || !editedCopy.trim()}
-                className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] active:scale-[0.97] transition-ui text-xs font-mono cursor-pointer disabled:opacity-40"
+                className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] active:scale-[0.97] transition-ui text-xs font-mono cursor-pointer disabled:opacity-40"
               >
                 {isScheduling ? 'Guardando...' : 'Aprobar y Programar Post'}
               </button>

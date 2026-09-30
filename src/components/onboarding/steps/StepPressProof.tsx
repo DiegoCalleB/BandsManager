@@ -152,7 +152,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
               type="button"
               onClick={onAddQuote}
               disabled={!newQuoteText.trim() || !newQuoteMedia.trim()}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
             >
               <Plus className="w-3.5 h-3.5" /> Añadir Cita
             </button>

@@ -52,7 +52,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 Generador de Pitch Date Swap: Bakandeya x {band.nombre_banda}
               </h3>
             </div>
-            <button onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer">
+            <button onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition-colors cursor-pointer">
               <X className="w-5 h-5 text-[var(--ink-2)]" />
             </button>
           </div>
@@ -121,7 +121,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                   setCopiedPitch(true);
                   setTimeout(() => setCopiedPitch(false), 2000);
                 }}
-                className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-m)] font-sans text-micro transition-ui cursor-pointer flex items-center gap-1.5"
+                className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-pill)] font-sans text-micro transition-ui cursor-pointer flex items-center gap-1.5"
               >
                 {copiedPitch ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
                 <span>{copiedPitch ? '¡Copiado! ' : 'Copiar Texto'}</span>

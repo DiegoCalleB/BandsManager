@@ -670,7 +670,7 @@ export default function PracticeModePanel({
                 <button
                   type="button"
                   onClick={onOpenStudio}
-                  className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                  className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
                   title="Abrir Studio multipista completo de este tema"
                 >
                   <Sliders className="w-3.5 h-3.5" />
@@ -679,7 +679,7 @@ export default function PracticeModePanel({
               )}
               <button
                 onClick={onClose}
-                className="p-2 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] shrink-0 cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] shrink-0 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -815,7 +815,7 @@ export default function PracticeModePanel({
                           key={sec.id}
                           type="button"
                           onClick={() => applySmartSectionLoop(sec)}
-                          className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-micro font-bold shrink-0 transition-ui cursor-pointer flex items-center gap-1.5 ${
+                          className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-bold shrink-0 transition-ui cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
                               ? 'bg-[var(--acc)] text-[var(--on-acc)] /40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
@@ -861,7 +861,7 @@ export default function PracticeModePanel({
                           key={spd}
                           type="button"
                           onClick={() => changeSpeed(spd)}
-                          className={`py-1 rounded-[var(--r-m)] text-center transition-ui cursor-pointer font-bold ${
+                          className={`py-1 rounded-[var(--r-pill)] text-center transition-ui cursor-pointer font-bold ${
                             isActive
                               ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                               : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
@@ -946,7 +946,7 @@ export default function PracticeModePanel({
                           key={st}
                           type="button"
                           onClick={() => setSemitonesOffset(st)}
-                          className={`py-1 rounded-[var(--r-m)] text-center transition-ui cursor-pointer font-bold ${
+                          className={`py-1 rounded-[var(--r-pill)] text-center transition-ui cursor-pointer font-bold ${
                             isActive
                               ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                               : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
@@ -963,7 +963,7 @@ export default function PracticeModePanel({
                     <button
                       onClick={() => setMetronomeOn((v) => !v)}
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}
-                      className={`flex-1 flex items-center justify-center gap-1.5 text-micro font-bold py-1 px-2 rounded-[var(--r-m)] transition-ui cursor-pointer ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 text-micro font-bold py-1 px-2 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                         metronomeOn
                           ? 'bg-[var(--acc)]/20 text-[var(--acc)]'
                           : 'bg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -975,7 +975,7 @@ export default function PracticeModePanel({
                     <button
                       onClick={markBeatAnchor}
                       title="Alinear claqueta con el primer beat"
-                      className={`text-micro font-bold py-1 px-2 rounded-[var(--r-m)] transition-ui cursor-pointer ${
+                      className={`text-micro font-bold py-1 px-2 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                         beatAnchorSec > 0
                           ? 'bg-[var(--ok)]/20 text-[var(--ok)]'
                           : 'bg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1075,7 +1075,7 @@ export default function PracticeModePanel({
                             {onApplyAsMainChords && (
                               <button
                                 onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
-                                className="flex items-center gap-1.5 text-micro font-sans px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--hair)]/15 text-[var(--hair)]/50 hover:bg-[var(--hair)]/25"
+                                className="flex items-center gap-1.5 text-micro font-sans px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--hair)]/15 text-[var(--hair)]/50 hover:bg-[var(--hair)]/25"
                               >
                                 <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
                               </button>
@@ -1096,21 +1096,21 @@ export default function PracticeModePanel({
                 <button
                   onClick={() => handleExport('sin-mi-pista')}
                   disabled={!myTrack || isExporting !== null}
-                  className="flex items-center gap-1.5 text-xs font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
+                  className="flex items-center gap-1.5 text-xs font-sans px-3 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
                 >
                   <Download className="w-3.5 h-3.5" /> {isExporting === 'sin-mi-pista' ? 'Generando…' : 'Sin mi pista'}
                 </button>
                 <button
                   onClick={() => handleExport('solo-mi-pista')}
                   disabled={!myTrack || isExporting !== null}
-                  className="flex items-center gap-1.5 text-xs font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--hair)]/10 text-[var(--acc)]/50 hover:bg-[var(--hair)]/20 disabled:opacity-40"
+                  className="flex items-center gap-1.5 text-xs font-sans px-3 py-2 rounded-[var(--r-pill)] bg-[var(--hair)]/10 text-[var(--acc)]/50 hover:bg-[var(--hair)]/20 disabled:opacity-40"
                 >
                   <Download className="w-3.5 h-3.5" /> {isExporting === 'solo-mi-pista' ? 'Generando…' : 'Solo mi pista'}
                 </button>
                 <button
                   onClick={() => handleExport('mezcla-actual')}
                   disabled={isExporting !== null}
-                  className="flex items-center gap-1.5 text-xs font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
+                  className="flex items-center gap-1.5 text-xs font-sans px-3 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
                 >
                   <Download className="w-3.5 h-3.5" /> {isExporting === 'mezcla-actual' ? 'Generando…' : 'Mi mezcla actual'}
                 </button>

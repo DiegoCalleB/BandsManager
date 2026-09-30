@@ -141,7 +141,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
+            className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

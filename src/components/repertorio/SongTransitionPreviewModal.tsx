@@ -704,7 +704,7 @@ export function SongTransitionPreviewModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
+                className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1095,7 +1095,7 @@ export function SongTransitionPreviewModal({
                         stopPlayback();
                         setPlaybackMode("real");
                       }}
-                      className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
+                      className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
                         playbackMode === "real"
                           ? "bg-[var(--ok)] text-[var(--on-ok)]"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1110,7 +1110,7 @@ export function SongTransitionPreviewModal({
                         stopPlayback();
                         setPlaybackMode("synth");
                       }}
-                      className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
+                      className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
                         playbackMode === "synth"
                           ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1128,7 +1128,7 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setAutoCueEnabled(!autoCueEnabled);
                     }}
-                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
                       autoCueEnabled
                         ? "bg-[var(--acc)]/15 text-[var(--acc)] "
                         : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1148,7 +1148,7 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "crossfade" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-semibold transition cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition cursor-pointer ${
                       config.style === "crossfade"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1162,7 +1162,7 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "segue" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-semibold transition cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition cursor-pointer ${
                       config.style === "segue"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1176,7 +1176,7 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setConfig((c) => ({ ...c, style: "pause" }));
                     }}
-                    className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-semibold transition cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold transition cursor-pointer ${
                       config.style === "pause"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1294,7 +1294,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={handleRestart}
-                    className="p-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition cursor-pointer"
+                    className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition cursor-pointer"
                     title="Rebobinar al inicio del enlace"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -1357,7 +1357,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("pros_cons")}
-                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === "pros_cons"
                         ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1373,7 +1373,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("metrics")}
-                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === "metrics"
                         ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1385,7 +1385,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("stagecraft")}
-                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === "stagecraft"
                         ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1572,7 +1572,7 @@ export function SongTransitionPreviewModal({
                     onInsertInterludio(itemA.id);
                     onClose();
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 transition cursor-pointer"
                 >
                   <MessageSquarePlus className="w-3 h-3" />
                   <span>Insertar Chapa</span>
@@ -1587,7 +1587,7 @@ export function SongTransitionPreviewModal({
                     onSwapSongs(indexA, indexB);
                     onClose();
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-bold flex items-center gap-1 transition cursor-pointer"
                 >
                   <ArrowLeftRight className="w-3 h-3" />
                   <span>Invertir (A ⇄ B)</span>
@@ -1598,7 +1598,7 @@ export function SongTransitionPreviewModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-bold transition cursor-pointer"
+              className="px-3.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-bold transition cursor-pointer"
             >
               Cerrar
             </button>

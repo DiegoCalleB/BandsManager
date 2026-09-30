@@ -42,7 +42,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             id="open-autonomy-config-btn"
             type="button"
             onClick={onOpenAutonomyModal}
-            className={`px-2.5 py-1 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97] ${
+            className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97] ${
               'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] '
             }`}
             title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
@@ -61,7 +61,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             onToggleAgents(nextVal);
             localStorage.setItem('bakandeya_agents_enabled', String(nextVal));
           }}
-          className={`px-2.5 py-1 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97] ${
+          className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97] ${
             agentsEnabled
               ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] '
               : 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] '

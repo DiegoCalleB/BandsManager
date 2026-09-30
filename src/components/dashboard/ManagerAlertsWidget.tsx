@@ -161,7 +161,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
             <button
               id="mark-all-read-alerts-btn"
               onClick={handleMarkAllRead}
-              className={`px-2 py-1 rounded-[var(--r-s)] ${
+              className={`px-2 py-1 rounded-[var(--r-pill)] ${
                 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]'
               } text-xs font-medium transition-ui flex items-center gap-1 cursor-pointer`}
               title="Marcar todas como leídas"
@@ -174,7 +174,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           <button
             id="toggle-expand-alerts-panel-btn"
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`p-1 rounded-[var(--r-m)] ${
+            className={`p-1 rounded-[var(--r-pill)] ${
               'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
             } transition-colors cursor-pointer`}
             title={isExpanded ? 'Plegar panel' : 'Desplegar panel'}
@@ -200,7 +200,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-all"
                 onClick={() => setFilterMode('all')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs cursor-pointer ${
                   filterMode === 'all'
                     ? 'bg-[var(--sunken)] text-[var(--ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -212,7 +212,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-unread"
                 onClick={() => setFilterMode('unread')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'unread'
                     ? 'bg-[var(--sunken)] text-[var(--ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -225,7 +225,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-urgent"
                 onClick={() => setFilterMode('urgent')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'urgent'
                     ? 'bg-[var(--alert)]/15 text-[var(--alert)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -244,7 +244,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-booking"
                 onClick={() => setFilterMode('booking')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs cursor-pointer ${
                   filterMode === 'booking'
                     ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -256,7 +256,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-finanzas"
                 onClick={() => setFilterMode('finanzas')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] font-medium transition-ui text-xs cursor-pointer ${
                   filterMode === 'finanzas'
                     ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -344,7 +344,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           <button
                             id={`toggle-read-alert-${alert.id}`}
                             onClick={(e) => handleToggleRead(alert.id, e)}
-                            className={`p-1 rounded-[var(--r-m)] ${'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
+                            className={`p-1 rounded-[var(--r-pill)] ${'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title={isRead ? 'Marcar como no leída' : 'Marcar como leída'}
                           >
                             {isRead ? (
@@ -357,7 +357,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           <button
                             id={`dismiss-alert-${alert.id}`}
                             onClick={(e) => handleDismiss(alert.id, e)}
-                            className={`p-1 rounded-[var(--r-m)] ${'text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
+                            className={`p-1 rounded-[var(--r-pill)] ${'text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title="Descartar alerta"
                           >
                             <X className="w-3.5 h-3.5" />
@@ -399,7 +399,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                                 }
                                 onExecuteAction(alert, act);
                               }}
-                              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97] shrink-0 cursor-pointer ${
+                              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97] shrink-0 cursor-pointer ${
                                 act.variant === 'secondary'
                                   ? 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)]'
                                   : actionBtnStyle

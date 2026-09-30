@@ -558,7 +558,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   type="button"
                   id="copy-rich-signature-btn"
                   onClick={handleCopyRichSignature}
-                  className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer ${
+                  className={`flex-1 px-4 py-2.5 rounded-[var(--r-pill)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer ${
                     copiadoFirma === "rich"
                       ? "bg-[var(--ok)] text-[var(--on-ok)] ring-2 ring-[var(--ok)]"
                       : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
@@ -583,7 +583,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     type="button"
                     id="copy-html-signature-btn"
                     onClick={handleCopyHtmlCode}
-                    className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                    className={`px-3 py-2.5 rounded-[var(--r-pill)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
                       copiadoFirma === "html"
                         ? "bg-[var(--ok)]/20 text-[var(--ink-2)]/40"
                         : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -604,7 +604,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     type="button"
                     id="copy-plain-signature-btn"
                     onClick={handleCopyPlainText}
-                    className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                    className={`px-3 py-2.5 rounded-[var(--r-pill)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
                       copiadoFirma === "text"
                         ? "bg-[var(--ok)]/20 text-[var(--ink-2)]/40"
                         : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -685,7 +685,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <button
                         type="button"
                         onClick={() => setInstructionTab("gmail")}
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
+                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === "gmail"
                             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -696,7 +696,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <button
                         type="button"
                         onClick={() => setInstructionTab("outlook")}
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
+                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === "outlook"
                             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -707,7 +707,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       <button
                         type="button"
                         onClick={() => setInstructionTab("apple")}
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
+                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === "apple"
                             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                             : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -840,7 +840,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <button
                   type="button"
                   onClick={handleCopyUrl}
-                  className="flex-1 px-3 py-2 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
+                  className="flex-1 px-3 py-2 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
                 >
                   {copiado ? (
                     <Check className="w-4 h-4" />

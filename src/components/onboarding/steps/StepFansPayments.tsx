@@ -161,7 +161,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 type="button"
                 onClick={() => leadMagnetInputRef.current?.click()}
                 disabled={isUploadingLeadMagnet}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-medium transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-medium transition-colors"
               >
                 {isUploadingLeadMagnet ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                 Subir Archivo de Regalo

@@ -108,7 +108,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
             </h3>
           </div>
-          <button onClick={() => onClose()} className="p-1 hover:bg-[var(--sunken)] rounded-[var(--r-m)] transition-colors">
+          <button onClick={() => onClose()} className="p-1 hover:bg-[var(--sunken)] rounded-[var(--r-pill)] transition-colors">
             <X className="w-5 h-5 text-[var(--ink-2)]" />
           </button>
         </div>
@@ -123,7 +123,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   type="button"
                   onClick={handleAiLookup}
                   disabled={isAiSearching || !formName.trim()}
-                  className="flex items-center gap-1.5 text-micro font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] transition-ui disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 text-micro font-mono font-bold px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] transition-ui disabled:opacity-50 cursor-pointer"
                 >
                   {isAiSearching ? (
                     <>
@@ -176,7 +176,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <button
                       type="button"
                       onClick={handleApplyAllAiData}
-                      className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-m)] text-micro hover:bg-[var(--acc-soft)] transition-ui cursor-pointer flex items-center gap-1 shadow"
+                      className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-micro hover:bg-[var(--acc-soft)] transition-ui cursor-pointer flex items-center gap-1 shadow"
                     >
                       <Check className="w-3.5 h-3.5" />
                       <span>Aplicar Todo</span>
@@ -184,7 +184,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setAiProposal(null)}
-                      className="p-1 hover:bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-colors cursor-pointer"
+                      className="p-1 hover:bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-pill)] transition-colors cursor-pointer"
                       title="Descartar propuesta"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -535,13 +535,13 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             <button
               type="button"
               onClick={() => onClose()}
-              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-micro rounded-[var(--r-m)] transition-colors cursor-pointer"
+              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-micro rounded-[var(--r-pill)] transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-micro rounded-[var(--r-m)] transition-ui cursor-pointer"
+              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer"
             >
               {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
             </button>

@@ -30,7 +30,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openU
     <div className="relative hidden md:block">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors flex items-center gap-1.5 ${compact ? 'p-1.5' : 'p-2'}`}
+        className={`rounded-[var(--r-pill)] bg-[var(--surface)]/60 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors flex items-center gap-1.5 ${compact ? 'p-1.5' : 'p-2'}`}
         title="Cambiar tema"
       >
         <Palette className="w-4 h-4" />

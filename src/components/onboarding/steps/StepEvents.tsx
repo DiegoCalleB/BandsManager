@@ -123,7 +123,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               <button
                 type="button"
                 onClick={() => onRemoveEvent(ev.id)}
-                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
+                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -263,7 +263,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
             type="button"
             onClick={onAddEvent}
             disabled={!newEventTitle.trim() || !newEventDate}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir a la Agenda

@@ -507,7 +507,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 stopReferenceTone();
                 onClose();
               }}
-              className="p-1.5 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+              className="p-1.5 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -553,7 +553,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                               }
                             }
                           }}
-                          className={`px-2 py-1 rounded-[var(--r-s)] font-bold transition-ui cursor-pointer ${
+                          className={`px-2 py-1 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer ${
                             isCatSelected
                               ? "bg-[var(--ok)] text-[var(--on-ok)]"
                               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -742,14 +742,14 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                           );
                         }
                       }}
-                      className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-bold text-micro font-sans hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold text-micro font-sans hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
                     >
                       <Volume2 className="w-3 h-3" />
                       Afinar con Sintetizador ({currentPreset.strings[0]?.note})
                     </button>
                     <button
                       onClick={startTuner}
-                      className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-sans text-micro transition-colors flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-sans text-micro transition-colors flex items-center gap-1 cursor-pointer"
                     >
                       <RefreshCw className="w-3 h-3" />
                       Reintentar micrófono
@@ -820,7 +820,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 stopReferenceTone();
                 onClose();
               }}
-              className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-sans text-xs font-bold transition-ui cursor-pointer"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-sans text-xs font-bold transition-ui cursor-pointer"
             >
               Cerrar
             </button>

@@ -86,7 +86,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
                 <button
                   type="button"
                   onClick={() => onToggleHighlightVideo(vid.id)}
-                  className={`p-1.5 rounded-[var(--r-s)] text-xs transition-colors ${
+                  className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-colors ${
                     vid.destacado
                       ? "text-[var(--acc)] bg-[var(--acc)]/10"
                       : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -102,7 +102,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
                 <button
                   type="button"
                   onClick={() => onRemoveVideo(vid.id)}
-                  className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
+                  className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
                   title="Eliminar vídeo"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -158,7 +158,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             type="button"
             onClick={onAddVideo}
             disabled={!newVideoUrl.trim()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir Vídeo

@@ -78,7 +78,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors cursor-pointer text-xs font-bold shrink-0 gap-1"
+            className="flex items-center justify-center px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors cursor-pointer text-xs font-bold shrink-0 gap-1"
             title="Cerrar ficha"
           >
             <X className="w-4 h-4" />

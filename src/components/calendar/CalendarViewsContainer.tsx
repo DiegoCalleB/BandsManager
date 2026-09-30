@@ -668,7 +668,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             <button
               onClick={() => setShowCreateModal('concert')}
-              className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/90 transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Añadir Evento</span>
@@ -688,7 +688,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             {agendaFilterPast !== 'all' && (
               <button
                 onClick={() => setAgendaFilterPast('all')}
-                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-ui "
+                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-ui "
               >
                 Ver todos los eventos
               </button>
@@ -862,7 +862,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   setViewingRehearsal(r);
                                 }
                               }}
-                              className="px-2 py-1 text-xs font-mono font-bold rounded-[var(--r-s)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] flex items-center gap-1 transition-ui cursor-pointer"
+                              className="px-2 py-1 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] flex items-center gap-1 transition-ui cursor-pointer"
                               title={isPast ? 'Editar datos, notas o caché del bolo realizado' : 'Editar evento'}
                             >
                               <Edit className="w-3 h-3" />

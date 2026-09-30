@@ -720,7 +720,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             handleSetMainBandAction(e, band.band_id)
                           }
                           disabled={isMain || !!settingMainBandId}
-                          className={`p-1.5 rounded-[var(--r-s)] transition-ui cursor-pointer flex items-center justify-center z-30 ${
+                          className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center z-30 ${
                             isMain
                               ? "text-[var(--acc)] bg-[var(--acc)]/60"
                               : "text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-[var(--surface)] hover:bg-[var(--surface)]/80 "
@@ -746,7 +746,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                 onClick={(e) =>
                                   handleMoveBand(band.band_id, "left", e)
                                 }
-                                className="p-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                                className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                                 title="Mover a la izquierda"
                               >
                                 <ArrowLeft className="w-3 h-3" />
@@ -757,7 +757,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                 onClick={(e) =>
                                   handleMoveBand(band.band_id, "right", e)
                                 }
-                                className="p-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                                className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                                 title="Mover a la derecha"
                               >
                                 <ArrowRightIcon className="w-3 h-3" />
@@ -776,7 +776,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             e.preventDefault();
                             setSelectedBandForSettings(band);
                           }}
-                          className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc-ink)] bg-[var(--surface)] hover:brightness-95 transition-ui cursor-pointer"
+                          className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--acc-ink)] bg-[var(--surface)] hover:brightness-95 transition-ui cursor-pointer"
                           title={`Ajustes mínimos y logotipo de ${band.bandName}`}
                         >
                           <Settings className="w-3.5 h-3.5" />
@@ -790,7 +790,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             handleRequestLeaveBand(band.band_id, band.bandName);
                           }}
                           disabled={!!leavingBandId}
-                          className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--surface)] hover:bg-[var(--alert-soft)] transition-ui cursor-pointer"
+                          className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--surface)] hover:bg-[var(--alert-soft)] transition-ui cursor-pointer"
                           title="Eliminar esta banda de mi usuario"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -927,7 +927,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
             </span>
             <button
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer font-medium"
+              className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer font-medium"
             >
               Mantener banda actual
             </button>
@@ -1151,7 +1151,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowCreateBandModal(false)}
-                      className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -1228,7 +1228,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setShowCreateBandModal(false)}
-                        className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
+                        className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
                       >
                         Cancelar
                       </button>
@@ -1238,7 +1238,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           !newBandName.trim() ||
                           (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)
                         }
-                        className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
                           isCreatingBand ? (
@@ -1272,7 +1272,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       type="button"
                       onClick={() => setCreateBandStep(1)}
                       disabled={isCreatingBand}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer disabled:opacity-50"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer disabled:opacity-50"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
                       <span>Volver a datos de la banda</span>
@@ -1281,7 +1281,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       type="button"
                       onClick={() => setShowCreateBandModal(false)}
                       disabled={isCreatingBand}
-                      className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -1304,7 +1304,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setNewBandFeatureCategory("all")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-ui cursor-pointer ${
+                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "all"
                             ? "bg-[var(--acc)] text-[var(--ink)]/20"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1315,7 +1315,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setNewBandFeatureCategory("booking")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-ui cursor-pointer ${
+                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "booking"
                             ? "bg-[var(--acc)] text-[var(--ink)]/20"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1326,7 +1326,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setNewBandFeatureCategory("media")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-ui cursor-pointer ${
+                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "media"
                             ? "bg-[var(--acc)] text-[var(--ink)]/20"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1337,7 +1337,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setNewBandFeatureCategory("finance")}
-                        className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-ui cursor-pointer ${
+                        className={`px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui cursor-pointer ${
                           newBandFeatureCategory === "finance"
                             ? "bg-[var(--acc)] text-[var(--ink)]/20"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1451,7 +1451,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex items-center gap-1.5 text-micro font-sans text-[var(--ink-2)] font-bold">
                         <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
-                        <span><ShowIcon inline emoji="🎁" />250 pegatinas gratis</span>
+                        <span>250 pegatinas gratis</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
@@ -1531,7 +1531,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center gap-1.5 text-micro font-sans text-[var(--acc)]/70 font-bold">
                         <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
-                        <span><ShowIcon inline emoji="🎁" />500 pegatinas gratis</span>
+                        <span>500 pegatinas gratis</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
@@ -1616,7 +1616,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--ok-soft)] flex items-center gap-1.5 text-micro font-sans text-[var(--ink-2)] font-bold">
                         <Sparkles className="w-3 h-3 text-[var(--ok)] shrink-0" />
-                        <span><ShowIcon inline emoji="🎁" />1.000 pegatinas + Express</span>
+                        <span>1.000 pegatinas + Express</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
@@ -1715,14 +1715,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setBandToDelete(null)}
-                  className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmLeaveBand}
-                  className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Sí, eliminar</span>
@@ -1774,7 +1774,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
                     <button
                       onClick={() => setShowUpgradeModal(false)}
-                      className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                      className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -1916,7 +1916,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                         );
                                       }
                                     }}
-                                    className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
+                                    className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
                                   >
                                     <Sparkles className="w-3 h-3 fill-[var(--ink-3)]" />
                                     <span>Seleccionar {plan.name}</span>
@@ -1932,7 +1932,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   <div className="px-6 py-3 bg-[var(--sunken)] flex justify-end">
                     <button
                       onClick={() => setShowUpgradeModal(false)}
-                      className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] transition-colors cursor-pointer"
+                      className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-sans bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] transition-colors cursor-pointer"
                     >
                       Cerrar
                     </button>

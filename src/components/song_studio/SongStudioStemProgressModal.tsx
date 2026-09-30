@@ -151,7 +151,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           <button
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
-            className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] hover:bg-[var(--ink)]/10 transition-colors"
+            className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--ink)]/10 transition-colors"
             title="Minimizar a segundo plano"
           >
             <X className="w-5 h-5" />
@@ -218,14 +218,14 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           <button
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
-            className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+            className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
           >
             Seguir en segundo plano
           </button>
           <button
             type="button"
             onClick={() => setStemProgressModal(null)}
-            className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold cursor-pointer"
+            className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold cursor-pointer"
           >
             Cerrar
           </button>

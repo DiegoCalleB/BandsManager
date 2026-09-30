@@ -1368,7 +1368,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
+              className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
               title="Cerrar asistente"
             >
               <X className="w-5 h-5" />
@@ -1386,7 +1386,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     key={step.key}
                     type="button"
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs whitespace-nowrap transition-ui ${
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-pill)] text-xs whitespace-nowrap transition-ui ${
                       isCurrent
                         ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                         : isPassed
@@ -1714,7 +1714,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                   <button
                     type="button"
                     onClick={handlePrevStep}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" /> Anterior
                   </button>
@@ -1741,7 +1741,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 <button
                   type="button"
                   onClick={handleNextStep}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-ui"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-semibold text-xs transition-ui"
                 >
                   {currentStepIndex === activeSteps.length - 1 ? (
                     <>

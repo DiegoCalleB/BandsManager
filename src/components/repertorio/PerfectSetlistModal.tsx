@@ -269,13 +269,13 @@ export function PerfectSetlistModal({
               {canUndo && (
                 <button
                   onClick={onUndo}
-                  className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
+                  className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
                   title="Deshacer el último cambio del setlist"
                 >
                   <ShowIcon inline emoji="↩️" />Deshacer
                 </button>
               )}
-              <button onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition">
+              <button onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -312,7 +312,7 @@ export function PerfectSetlistModal({
               </p>
               <button
                 onClick={() => onGenerate()}
-                className="bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+                className="bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
               >
                 Generar Plan
               </button>
@@ -453,7 +453,7 @@ export function PerfectSetlistModal({
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('este_setlist')}
-                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-ui ${
+                  className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui ${
                     feedbackScope === 'este_setlist'
                       ? 'bg-[var(--surface)]/70 text-[var(--ink)] font-bold'
                       : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -464,7 +464,7 @@ export function PerfectSetlistModal({
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('global')}
-                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-ui flex items-center gap-1 ${
+                  className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui flex items-center gap-1 ${
                     feedbackScope === 'global'
                       ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
                       : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -480,20 +480,20 @@ export function PerfectSetlistModal({
               <button
                 onClick={() => handleGenerateWithFeedback()}
                 title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
-                className="flex-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+                className="flex-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm"
               >
                 <ShowIcon inline emoji="🔄" />Regenerar
               </button>
               <button
                 onClick={() => handleGenerateWithFeedback(true)}
                 title="Crea una copia nueva desde cero en vez de reutilizar la actual"
-                className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+                className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm"
               >
                 <ShowIcon inline emoji="🆕" />Nueva copia
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+                className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm"
               >
                 Cerrar
               </button>

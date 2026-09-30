@@ -208,7 +208,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
             </div>
             <button
               onClick={onClose}
-              className="p-1 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
+              className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -259,7 +259,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                     setTargetDurationMin(mins);
                     setGenerateNewSetlist(false);
                   }}
-                  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer text-center ${
+                  className={`py-2 px-1 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer text-center ${
                     targetDurationMin === mins
                       ? "bg-[var(--surface)]/20 text-[var(--ok)]"
                       : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -315,7 +315,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 <button
                   type="button"
                   onClick={() => setGenerateNewSetlist(true)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
                 >
                   <ShowIcon inline emoji="⚡" />Autogenerar Setlist ({targetDurationMin} min)
                 </button>

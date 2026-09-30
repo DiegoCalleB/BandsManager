@@ -146,7 +146,7 @@ const FanFormLanguageSwitcher: React.FC<{
         type="button"
         onClick={() => onChange(l.code)}
         title={l.label}
-        className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+        className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
           language === l.code
             ? "bg-[var(--acc)]/20  text-[var(--acc)]/70 scale-105"
             : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:hover:text-[var(--ink)] opacity-80 hover:opacity-100"
@@ -1240,7 +1240,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <button
                 type="button"
                 onClick={handleShareWithFriend}
-                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97]"
+                className="py-2.5 px-3 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97]"
               >
                 {copiedShareLink ? (
                   <>
@@ -1552,7 +1552,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab("redes")}
-            className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-[var(--r-pill)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
               activeTab === "redes"
                 ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1563,7 +1563,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab("form")}
-            className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-[var(--r-pill)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
               activeTab === "form"
                 ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -2122,7 +2122,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <div className="pt-4 text-right">
               <button
                 onClick={() => setShowPrivacyModal(false)}
-                className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--on-acc)] font-bold font-sans text-xs rounded-[var(--r-m)] transition-colors"
+                className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--on-acc)] font-bold font-sans text-xs rounded-[var(--r-pill)] transition-colors"
               >
                 {t("understood")}
               </button>

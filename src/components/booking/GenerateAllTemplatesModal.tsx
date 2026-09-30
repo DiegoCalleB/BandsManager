@@ -110,7 +110,7 @@ export function GenerateAllTemplatesModal({
             type="button"
             onClick={onClose}
             disabled={isGenerating}
-            className={`p-2 rounded-[var(--r-m)] transition-colors cursor-pointer ${
+            className={`p-2 rounded-[var(--r-pill)] transition-colors cursor-pointer ${
               'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
             }`}
           >
@@ -249,7 +249,7 @@ export function GenerateAllTemplatesModal({
             type="button"
             onClick={onClose}
             disabled={isGenerating}
-            className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${
+            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
               'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
             }`}
           >
@@ -260,7 +260,7 @@ export function GenerateAllTemplatesModal({
             type="button"
             onClick={handleSubmit}
             disabled={isGenerating || !baseProposal.trim()}
-            className={`px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 hover:brightness-105 active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+            className={`px-5 py-2.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 hover:brightness-105 active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
               isCampaign
                 ? 'bg-[var(--acc)]  text-[var(--ink)]/25'
                 : 'bg-[var(--acc)]  text-[var(--ink)]/20'

@@ -91,7 +91,7 @@ export function EnsayoCronometro({
         </span>
         <button
           onClick={toggleTimer}
-          className={`p-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
+          className={`p-1 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
             isActive
               ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30"
               : "bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30"
@@ -162,7 +162,7 @@ export function EnsayoCronometro({
         <div className="flex items-center gap-1.5">
           <button
             onClick={toggleTimer}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isActive
                 ? "bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60"
                 : "bg-[var(--ok)] text-[var(--on-ok)] hover:bg-[var(--ok)]"
@@ -183,7 +183,7 @@ export function EnsayoCronometro({
 
           <button
             onClick={resetTimer}
-            className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+            className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             title="Reiniciar cronómetro"
           >
             <RotateCcw className="w-3.5 h-3.5" />

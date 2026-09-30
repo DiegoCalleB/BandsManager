@@ -156,7 +156,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 cursor-pointer"
+              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -214,7 +214,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                       `Asunto: ${currentTpl.subject}\n\n${currentTpl.body}`,
                     )
                   }
-                  className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-xs hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-xs hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
                 >
                   {copiedId === currentTpl.id ? (
                     <>
@@ -265,7 +265,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
           <div className="p-4 bg-[var(--sunken)] flex justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink)] font-sans text-xs font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink)] font-sans text-xs font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
             >
               Cerrar
             </button>

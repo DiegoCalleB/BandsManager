@@ -184,7 +184,7 @@ Firmado en conformidad por ambas partes.`;
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
+              className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -213,7 +213,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={() => setActiveTab('roadbook')}
-                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'roadbook' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
@@ -223,7 +223,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={() => setActiveTab('contract')}
-                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'contract' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
@@ -233,7 +233,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={() => setActiveTab('weblink')}
-                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1 text-xs font-semibold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'weblink' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                 }`}
               >
@@ -501,7 +501,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/30 hover:bg-[var(--ok)]/50 text-[var(--ok)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
                   title="Copiar texto formateado listo para WhatsApp"
                 >
                   {copiedWhatsApp ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -513,7 +513,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedContract ? '¡Contrato Copiado!' : 'Copiar Contrato'}</span>
@@ -523,7 +523,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
+                className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer"
                 title="Imprimir documento o guardar como PDF"
               >
                 <Printer className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -533,7 +533,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
+                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors cursor-pointer"
               >
                 Cerrar
               </button>

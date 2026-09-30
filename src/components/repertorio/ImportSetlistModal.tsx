@@ -261,7 +261,7 @@ export function ImportSetlistModal({
           </div>
           <button
             onClick={handleClose}
-            className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition"
+            className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-pill)] transition"
           >
             <X className="w-4 h-4" />
           </button>
@@ -285,7 +285,7 @@ export function ImportSetlistModal({
               {file && (
                 <button
                   onClick={handleAnalyze}
-                  className="bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+                  className="bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-pill)] transition font-medium"
                 >
                   Analizar
                 </button>
@@ -439,7 +439,7 @@ export function ImportSetlistModal({
             <button
               onClick={handleCreate}
               disabled={creating || !setlistName.trim()}
-              className="flex-1 bg-[var(--tentative)] hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
+              className="flex-1 bg-[var(--tentative)] hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm flex items-center justify-center gap-1.5"
             >
               {creating ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -449,7 +449,7 @@ export function ImportSetlistModal({
             </button>
             <button
               onClick={handleClose}
-              className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+              className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-pill)] transition font-medium text-sm"
             >
               Cancelar
             </button>

@@ -52,7 +52,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           </div>
           <div className="min-w-0">
-            <h1 className={`text-base sm:text-lg font-bold tracking-tight leading-none truncate ${'text-[var(--ink)]'}`}>Repertorios</h1>
+            <h1 className="page-title truncate">Repertorios</h1>
             <p className="text-xs text-[var(--ink-2)] mt-1 hidden sm:block truncate font-normal">
               {activeTab === 'setlists' && `${setlists.length} setlists de directo`}
               {activeTab === 'catalogo' && `${songCount} canciones · ${albumCount} álbumes y EPs`}
@@ -76,7 +76,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               id="tab-btn-setlists"
               type="button"
               onClick={() => setActiveTab('setlists')}
-              className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-ui cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs flex items-center gap-1.5 transition-ui cursor-pointer ${
                 activeTab === 'setlists'
                   ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
@@ -97,7 +97,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               id="tab-btn-catalogo"
               type="button"
               onClick={() => setActiveTab('catalogo')}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs flex items-center gap-1.5 transition-ui cursor-pointer font-medium ${
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs flex items-center gap-1.5 transition-ui cursor-pointer font-medium ${
                 activeTab === 'catalogo' ? 'bg-[var(--acc)]/12 text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -201,7 +201,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-create-setlist"
                 type="button"
                 onClick={onCreateSetlist}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
+                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97]"
                 title="Crear un nuevo setlist de concierto"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -211,7 +211,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               <button
                 type="button"
                 onClick={onImportSetlist}
-                className={`p-1.5 rounded-[var(--r-m)] transition cursor-pointer ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                className={`p-1.5 rounded-[var(--r-pill)] transition cursor-pointer ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
                 title="Importar repertorio desde foto o PDF impreso"
               >
                 <ImagePlus className="w-4 h-4" />
@@ -228,7 +228,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-subtab-albumes"
                 type="button"
                 onClick={() => setCatalogoViewMode('albumes')}
-                className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
+                className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'albumes'
                     ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -241,7 +241,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-subtab-canciones"
                 type="button"
                 onClick={() => setCatalogoViewMode('canciones')}
-                className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
+                className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'canciones'
                     ? 'bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -265,7 +265,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-add-song"
                 type="button"
                 onClick={onOpenNewSongModal}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 active:scale-[0.97]"
+                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 active:scale-[0.97]"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Nueva Canción</span>
@@ -274,7 +274,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-add-album"
                 type="button"
                 onClick={onOpenNewAlbumModal}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-ui cursor-pointer shrink-0 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
               >
                 <Disc3 className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span className="hidden xs:inline">Nuevo Álbum</span>

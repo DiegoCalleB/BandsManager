@@ -124,7 +124,7 @@ export const StepCompletedCelebration: React.FC<
             <button
               type="button"
               onClick={() => copyToClipboard(epkUrl, "epk")}
-              className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+              className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
               title="Copiar enlace EPK"
             >
               {copiedEpk ? (
@@ -167,7 +167,7 @@ export const StepCompletedCelebration: React.FC<
             <button
               type="button"
               onClick={() => copyToClipboard(fansUrl, "fans")}
-              className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+              className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
               title="Copiar enlace Fans"
             >
               {copiedFans ? (

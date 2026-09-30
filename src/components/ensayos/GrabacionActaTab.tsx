@@ -317,7 +317,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <button
                   type="button"
                   onClick={stopRecording}
-                  className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-[0.97] transition-ui"
+                  className="px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-[0.97] transition-ui"
                 >
                   <Square className="w-4 h-4 fill-current" />
                   <span>Detener Grabación ({formatTime(recordDuration)})</span>
@@ -373,7 +373,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   <button
                     type="button"
                     onClick={handleSaveRecording}
-                    className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-xs font-sans font-bold cursor-pointer"
+                    className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] text-xs font-sans font-bold cursor-pointer"
                   >
                     Guardar Grabación
                   </button>
@@ -481,7 +481,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             <button
               onClick={handleGenerateAIActa}
               disabled={isGeneratingActa}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-ui cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-ui cursor-pointer"
             >
               {isGeneratingActa ? (
                 <>
@@ -501,7 +501,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {acta && (
               <button
                 onClick={handleCopyToWhatsApp}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 text-xs font-sans font-bold transition-ui cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 text-xs font-sans font-bold transition-ui cursor-pointer"
                 title="Copiar formato listo para WhatsApp"
               >
                 {copied ? (

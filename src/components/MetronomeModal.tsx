@@ -237,7 +237,7 @@ export function MetronomeModal({
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+              className="p-1.5 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -372,7 +372,7 @@ export function MetronomeModal({
                     <button
                       key={sig}
                       onClick={() => setTimeSignature(sig)}
-                      className={`py-1 text-xs font-bold rounded-[var(--r-s)] transition-colors cursor-pointer ${
+                      className={`py-1 text-xs font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                         timeSignature === sig
                           ? "bg-[var(--acc)] text-[var(--on-acc)]"
                           : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
@@ -414,7 +414,7 @@ export function MetronomeModal({
                   <button
                     key={p.val}
                     onClick={() => setBpm(p.val)}
-                    className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium cursor-pointer transition-colors ${
                       bpm === p.val
                         ? "bg-[var(--acc)]/20  text-[var(--acc)]/70 font-bold"
                         : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"

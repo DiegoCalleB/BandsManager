@@ -90,7 +90,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
+            className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -101,7 +101,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('blueprint')}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'blueprint'
                   ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -113,7 +113,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
             <button
               onClick={() => setActiveTab('channels')}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'channels'
                   ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -125,7 +125,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
             <button
               onClick={() => setActiveTab('pillars')}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'pillars'
                   ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -203,7 +203,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                     <button
                       key={platform}
                       onClick={() => setSelectedChannel(platform)}
-                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer capitalize ${
+                      className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
                           ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                           : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -340,7 +340,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   onClose();
                   onNavigate('reels');
                 }}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-mono font-bold transition-ui flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-mono font-bold transition-ui flex items-center gap-1 cursor-pointer"
               >
                 <span>Ir al Radar de Redes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -350,7 +350,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui cursor-pointer"
             >
               Cerrar & Empezar
             </button>

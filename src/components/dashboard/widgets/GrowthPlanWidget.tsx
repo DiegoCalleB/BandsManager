@@ -86,7 +86,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <button
                 type="button"
                 onClick={onOpenGuidanceModal}
-                className="mt-2 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-mono font-bold transition-ui cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                className="mt-2 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-mono font-bold transition-ui cursor-pointer inline-flex items-center gap-1 shadow-xs"
               >
                 <span>Detalles</span>
                 <ChevronRight className="w-3 h-3" />

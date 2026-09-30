@@ -88,7 +88,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               onClose();
               setEditingShowItem(null);
             }}
-            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] hover:bg-[var(--sunken)] cursor-pointer"
+            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--sunken)] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -188,13 +188,13 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
                 onClose();
                 setEditingShowItem(null);
               }}
-              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:bg-[var(--sunken)] cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold text-[var(--ink-2)] hover:bg-[var(--sunken)] cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] text-xs font-mono cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] text-xs font-mono cursor-pointer flex items-center gap-1.5"
             >
               <span>Guardar en Setlist</span>
             </button>

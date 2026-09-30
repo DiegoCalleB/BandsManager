@@ -34,7 +34,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-colors cursor-pointer"
+              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -92,7 +92,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
             >
               Cancelar
             </button>

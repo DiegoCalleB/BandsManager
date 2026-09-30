@@ -386,7 +386,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <button
                         type="button"
                         onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
-                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
+                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
                       >
                         <Building2 className="w-3 h-3 text-[var(--acc)]" />
                         <span>Salas CRM</span>
@@ -401,7 +401,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setConcNotas(`Concierto agendado para la campaña "${camp.name}".`);
                         setShowCreateModal('concert');
                       }}
-                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
+                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Confirmar Concierto</span>
@@ -430,7 +430,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
-                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`py-1.5 px-3 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     'bg-[var(--ok)]/15 text-[var(--ok)] hover:bg-[var(--ok)]/25'
                   }`}
                 >
@@ -441,7 +441,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal('concert')}
-                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`py-1.5 px-3 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     'bg-[var(--acc)]/15 text-[var(--acc)] hover:bg-[var(--acc)]/25'
                   }`}
                 >
@@ -628,7 +628,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
-                  className={`hidden lg:flex px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer items-center gap-1 ${
+                  className={`hidden lg:flex px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer items-center gap-1 ${
                     'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Ampliar esta ficha en un modal centrado"
@@ -646,7 +646,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     setReminderErrorMsg(null);
                     setShowReminderModal(true);
                   }}
-                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Enviar un recordatorio por correo/notificación a los convocados"
@@ -658,7 +658,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
-                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Editar ficha completa del concierto"
@@ -670,7 +670,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}
-                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--ok-soft)] text-[var(--ok)] hover:bg-[var(--ok-soft)]'
                   }`}
                   title="Editar ficha completa del ensayo"
@@ -687,7 +687,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteConcert(selectedConcert.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   <ShowIcon inline emoji="🗑" />Eliminar
                 </button>
@@ -701,7 +701,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteRehearsal(selectedRehearsal.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   <ShowIcon inline emoji="🗑" />Eliminar
                 </button>
@@ -1030,7 +1030,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
                         setActiveStageSetlist(assignedSetlist);
                       }}
-                      className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-ui cursor-pointer"
+                      className="flex-1 py-2 px-3 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-ui cursor-pointer"
                       title="Lanzar Modo Escenario / Vista de Directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />

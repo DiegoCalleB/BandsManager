@@ -594,7 +594,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       key={l.code}
                       type="button"
                       onClick={() => setAppLang(l.code)}
-                      className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-sans font-semibold transition-ui cursor-pointer flex items-center gap-1 ${
+                      className={`px-2 py-1 rounded-[var(--r-pill)] text-xs font-sans font-semibold transition-ui cursor-pointer flex items-center gap-1 ${
                         isSelected
                           ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
                           : "text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80"
@@ -629,7 +629,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         setError(null);
                         setView("register");
                       }}
-                      className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] hover:bg-[var(--acc)]/30 transition-ui cursor-pointer flex items-center gap-1.5"
+                      className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] hover:bg-[var(--acc)]/30 transition-ui cursor-pointer flex items-center gap-1.5"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       <span>Crear / Acceder con Email en 10s</span>
@@ -839,7 +839,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       setError(null);
                       setView("login");
                     }}
-                    className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer shrink-0"
+                    className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer shrink-0"
                     title="Volver al inicio de sesión"
                   >
                     <ArrowLeft className="w-4 h-4" />
@@ -1390,7 +1390,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     <button
                       type="button"
                       onClick={() => setView("register")}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
                       <span>Volver al registro</span>

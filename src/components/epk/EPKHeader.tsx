@@ -134,7 +134,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             <button
               type="button"
               onClick={onSave}
-              className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition active:scale-[0.97] cursor-pointer"
+              className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition active:scale-[0.97] cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Guardar</span>
@@ -145,7 +145,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setShowMobileMenu((prev) => !prev)}
-                className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
+                className={`p-1.5 rounded-[var(--r-pill)] text-xs transition cursor-pointer ${
                   showMobileMenu
                     ? "bg-[var(--surface)]/60 text-[var(--acc)]/70"
                     : "bg-[var(--surface)]/80 text-[var(--ink-2)]/80 hover:text-[var(--ink)]"
@@ -256,7 +256,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           type="button"
           onClick={() => prevBlock && onSelectBlock(prevBlock.id)}
           disabled={!prevBlock}
-          className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
+          className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
           title="Bloque anterior"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -287,7 +287,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           type="button"
           onClick={() => nextBlock && onSelectBlock(nextBlock.id)}
           disabled={!nextBlock}
-          className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
+          className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
           title="Siguiente bloque"
         >
           <ChevronRight className="w-4 h-4" />
@@ -310,7 +310,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               Gestor Modular del Dossier
             </span>
           </div>
-          <h2 className="text-lg sm:text-xl font-bold font-sans text-[var(--ink)]">
+          <h2 className="page-title">
             EPK / Dossier de la Banda
           </h2>
           <p className="text-[var(--ink-2)] text-xs max-w-2xl leading-relaxed">
@@ -327,7 +327,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               id="tutorial-trigger-epk"
               type="button"
               onClick={onOpenTutorial}
-              className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer active:scale-[0.97]"
+              className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold rounded-[var(--r-pill)] flex items-center gap-1.5 transition cursor-pointer active:scale-[0.97]"
               title="Abrir guía interactiva del Dossier EPK"
             >
               <HelpCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -339,7 +339,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             id="epk-header-copy-btn"
             type="button"
             onClick={onCopyUrl}
-            className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer"
+            className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] text-xs font-semibold rounded-[var(--r-pill)] flex items-center gap-1.5 transition cursor-pointer"
             title="Copiar enlace web público del EPK"
           >
             {copiedPublicUrl ? (
@@ -365,7 +365,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={onSave}
-            className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs sm:text-sm rounded-[var(--r-m)] flex items-center gap-2 transition cursor-pointer"
+            className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs sm:text-sm rounded-[var(--r-pill)] flex items-center gap-2 transition cursor-pointer"
           >
             <Save className="w-4 h-4" />
             <span>Guardar Cambios</span>
@@ -383,7 +383,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("archivos")}
-            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-pill)] shrink-0 transition flex items-center gap-1 ${
               health.hasLogo
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -396,7 +396,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("perfil")}
-            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-pill)] shrink-0 transition flex items-center gap-1 ${
               health.hasBio
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -409,7 +409,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("archivos")}
-            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-pill)] shrink-0 transition flex items-center gap-1 ${
               health.hasDossier
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -422,7 +422,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("archivos")}
-            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition flex items-center gap-1 ${
+            className={`px-2 py-0.5 rounded-[var(--r-pill)] shrink-0 transition flex items-center gap-1 ${
               health.hasRider
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -435,7 +435,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("perfil")}
-            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition ${
+            className={`px-2 py-0.5 rounded-[var(--r-pill)] shrink-0 transition ${
               health.numMiembros > 0
                 ? "bg-[var(--ok)]/10 text-[var(--ok)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -450,7 +450,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("musica")}
-            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition ${
+            className={`px-2 py-0.5 rounded-[var(--r-pill)] shrink-0 transition ${
               health.numTemas > 0
                 ? "bg-[var(--acc)]/10 text-[var(--ink-2)]/20"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -463,7 +463,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => onSelectBlock("donaciones")}
-            className={`px-2 py-0.5 rounded-[var(--r-s)] shrink-0 transition ${
+            className={`px-2 py-0.5 rounded-[var(--r-pill)] shrink-0 transition ${
               health.numTraducciones > 0
                 ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
@@ -479,7 +479,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => setShowAiNotice(!showAiNotice)}
-            className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition ${
+            className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition ${
               showAiNotice
                 ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70"
@@ -527,7 +527,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               id={`epk-block-tab-${block.id}`}
               type="button"
               onClick={() => onSelectBlock(block.id)}
-              className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
+              className={`px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
                 isActive
                   ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                   : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"

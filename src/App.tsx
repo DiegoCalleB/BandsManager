@@ -1446,7 +1446,7 @@ export default function App() {
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] cursor-pointer"
+                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--sunken)] cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -1661,7 +1661,7 @@ export default function App() {
                       handleLogout();
                       setIsMobileMenuOpen(false);
                     }}
-                    className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+                    className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                     title="Cerrar Sesión"
                   >
                     <LogOut className="w-4 h-4" />
@@ -1988,7 +1988,7 @@ export default function App() {
                 />
                 <button
                   onClick={handleLogout}
-                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+                  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                   title="Cerrar Sesión"
                 >
                   <LogOut className="w-4 h-4" />
@@ -2028,7 +2028,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => fetchState()}
-                className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)]/60 font-sans text-micro rounded-md transition-ui cursor-pointer whitespace-nowrap active:scale-[0.97]"
+                className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)]/60 font-sans text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer whitespace-nowrap active:scale-[0.97]"
               >
                 Reintentar Conexión
               </button>

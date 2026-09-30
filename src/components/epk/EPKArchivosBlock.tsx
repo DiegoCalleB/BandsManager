@@ -74,7 +74,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <button
               type="button"
               onClick={() => setShowAiLogoModal(true)}
-              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--acc)] rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--acc)] rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" /> Generar con IA
             </button>
@@ -130,7 +130,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <button
                     type="button"
                     onClick={() => setConfig({ ...config, logoUrl: "" })}
-                    className="p-2.5 bg-[var(--sunken)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-m)] transition cursor-pointer"
+                    className="p-2.5 bg-[var(--sunken)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] transition cursor-pointer"
                     title="Eliminar logo"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -197,7 +197,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       dossierPdfName: "",
                     })
                   }
-                  className="p-2 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
+                  className="p-2 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] transition shrink-0 cursor-pointer"
                   title="Eliminar dossier"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -331,7 +331,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         riderPdfName: "",
                       })
                     }
-                    className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
+                    className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-pill)] transition shrink-0 cursor-pointer"
                     title="Eliminar PDF"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -492,7 +492,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-xs font-medium transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
                     >
                       De la sala
                     </button>
@@ -507,7 +507,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-xs font-medium transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-pill)] text-xs font-medium transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
                     >
                       Propia
                     </button>

@@ -370,7 +370,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
               type="button"
               onClick={handleDisconnectGmailOAuth}
               disabled={gmailOAuthDisconnecting}
-              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+              className="shrink-0 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
             >
               {gmailOAuthDisconnecting ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
@@ -441,7 +441,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
+              className="shrink-0 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
             >
               <RefreshCw className="w-3 h-3" />
               Cambiar cuenta
@@ -460,7 +460,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                   key={p}
                   type="button"
                   onClick={() => handleProviderChange(p)}
-                  className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
+                  className={`p-2.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                     provider === p
                       ? "bg-[var(--acc)]/20 text-[var(--tentative)]/40"
                       : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -611,7 +611,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                 setEditing(false);
                 setFeedback(null);
               }}
-              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-bold text-xs font-sans transition-ui cursor-pointer"
+              className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-bold text-xs font-sans transition-ui cursor-pointer"
             >
               Cancelar
             </button>

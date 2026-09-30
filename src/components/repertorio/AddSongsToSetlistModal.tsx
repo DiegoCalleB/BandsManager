@@ -140,7 +140,7 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={() => setOnlyFavoritos((p) => !p)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold cursor-pointer transition-colors ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer transition-colors ${
                   onlyFavoritos
                     ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                     : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -155,7 +155,7 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={selectAllFiltered}
-                className="px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
               >
                 Seleccionar todo lo filtrado ({filteredSongs.length})
               </button>
@@ -164,7 +164,7 @@ export function AddSongsToSetlistModal({
                 <button
                   type="button"
                   onClick={clearSelection}
-                  className="px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                  className="px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
                 >
                   Vaciar selección
                 </button>
@@ -249,7 +249,7 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
               >
                 Cancelar
               </button>
@@ -257,7 +257,7 @@ export function AddSongsToSetlistModal({
                 type="button"
                 disabled={selectedIds.length === 0}
                 onClick={handleSubmit}
-                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <ListPlus className="w-4 h-4 stroke-[3]" />
                 <span>

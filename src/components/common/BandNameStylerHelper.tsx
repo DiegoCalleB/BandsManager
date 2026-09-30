@@ -48,7 +48,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 transition-ui cursor-pointer active:scale-[0.97]"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 transition-ui cursor-pointer active:scale-[0.97]"
         title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
       >
         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
@@ -84,7 +84,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -172,7 +172,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-sans text-xs font-bold transition-colors cursor-pointer"
+                className="px-3 py-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-sans text-xs font-bold transition-colors cursor-pointer"
               >
                 Listo
               </button>

@@ -167,7 +167,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 <button
                   key={h}
                   onClick={() => setSelectedHorizon(h)}
-                  className={`px-2.5 py-1 text-micro font-sans rounded-[var(--r-s)] transition-ui cursor-pointer ${
+                  className={`px-2.5 py-1 text-micro font-sans rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                     selectedHorizon === h
                       ? "bg-[var(--tentative)]/80 text-[var(--ink)] font-bold shadow"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -183,7 +183,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               onClick={() =>
                 onRefreshPlanWithAI(selectedHorizon, customPrompt || undefined)
               }
-              className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer ${
+              className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer ${
                 isGeneratingAI
                   ? "bg-[var(--tentative)]/50 text-[var(--tentative)]/50 cursor-wait"
                   : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] "
@@ -276,7 +276,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
       <div className="flex items-center gap-2 pb-2 overflow-x-auto shrink-0">
         <button
           onClick={() => setSelectedTab("overview")}
-          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "overview"
               ? "bg-[var(--tentative)]/80 text-[var(--ink)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -288,7 +288,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab("weekly")}
-          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "weekly"
               ? "bg-[var(--tentative)]/80 text-[var(--ink)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -300,7 +300,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab("instagram")}
-          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "instagram"
               ? "bg-[var(--alert)] text-[var(--on-alert)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -312,7 +312,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab("tiktok")}
-          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "tiktok"
               ? "bg-[var(--tentative)] text-[var(--ink)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -324,7 +324,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab("youtube")}
-          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "youtube"
               ? "bg-[var(--alert)] text-[var(--on-alert)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -336,7 +336,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab("spotify")}
-          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === "spotify"
               ? "bg-[var(--ok)] text-[var(--on-ok)] shadow"
               : "text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -702,7 +702,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                         </p>
                         <button
                           onClick={() => copyToClipboard(hook, `hook-${hIdx}`)}
-                          className="p-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui shrink-0 cursor-pointer"
+                          className="p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui shrink-0 cursor-pointer"
                           title="Copiar gancho"
                         >
                           {copiedHook === `hook-${hIdx}` ? (

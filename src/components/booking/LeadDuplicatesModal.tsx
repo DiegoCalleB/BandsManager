@@ -262,7 +262,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className={`p-2 rounded-[var(--r-m)] transition-colors cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+              className={`p-2 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
             >
               <X className="w-5 h-5" />
             </button>
@@ -285,7 +285,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedFilter("all")}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                   selectedFilter === "all"
                     ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                     : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -297,7 +297,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter("same_email")}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "same_email"
                       ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -310,7 +310,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter("same_name_and_city")}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "same_name_and_city"
                       ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -323,7 +323,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter("similar_name_same_city")}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "similar_name_same_city"
                       ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -336,7 +336,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter("same_website")}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "same_website"
                       ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -353,7 +353,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 type="button"
                 disabled={isProcessing}
                 onClick={handleMergeAllAuto}
-                className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
+                className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Fusionar Todos Automáticamente</span>
@@ -518,7 +518,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               type="button"
                               disabled={isProcessing}
                               onClick={() => handleMergeGroup(group, lead.id)}
-                              className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                              className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                                 isSuggested
                                   ? "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
                                   : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
@@ -538,7 +538,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                   lead.nombre_sala,
                                 )
                               }
-                              className="p-1.5 rounded-[var(--r-s)] text-[var(--alert)] hover:bg-[var(--alert)]/20 hover:text-[var(--ink-2)] transition cursor-pointer"
+                              className="p-1.5 rounded-[var(--r-pill)] text-[var(--alert)] hover:bg-[var(--alert)]/20 hover:text-[var(--ink-2)] transition cursor-pointer"
                               title="Eliminar solo este registro individual"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -565,7 +565,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] transition cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-pill)] font-medium bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] transition cursor-pointer"
             >
               Cerrar
             </button>

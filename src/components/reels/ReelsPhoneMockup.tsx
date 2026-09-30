@@ -174,7 +174,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <button
               type="button"
               onClick={() => setPreviewFraming('fit')}
-              className={`px-2 py-0.5 rounded-lg transition-ui cursor-pointer ${
+              className={`px-2 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                 previewFraming === 'fit' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Muestra el vídeo 16:9 completo sin recortar nada"
@@ -184,7 +184,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <button
               type="button"
               onClick={() => setPreviewFraming('left')}
-              className={`px-1.5 py-0.5 rounded-lg transition-ui cursor-pointer ${
+              className={`px-1.5 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                 previewFraming === 'left' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Enfoca el tercio izquierdo (Músico/Cantante)"
@@ -194,7 +194,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <button
               type="button"
               onClick={() => setPreviewFraming('center')}
-              className={`px-1.5 py-0.5 rounded-lg transition-ui cursor-pointer ${
+              className={`px-1.5 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                 previewFraming === 'center' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Enfoca el centro del plano"
@@ -204,7 +204,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <button
               type="button"
               onClick={() => setPreviewFraming('right')}
-              className={`px-1.5 py-0.5 rounded-lg transition-ui cursor-pointer ${
+              className={`px-1.5 py-0.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                 previewFraming === 'right' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Enfoca el tercio derecho"

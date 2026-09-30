@@ -2038,7 +2038,7 @@ export default function ReelsCenter({
       >
         {/* HEADER / TITULO PRINCIPAL */}
         <div className="mb-2">
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-[var(--ink)] mb-2">
+          <h1 className="page-title mb-1">
             Medios
           </h1>
           <p className="text-sm font-sans text-[var(--ink-2)]">
@@ -2048,7 +2048,7 @@ export default function ReelsCenter({
         <div className="flex gap-2.5 items-center flex-wrap">
           <button
             onClick={handleOpenToneModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-ui cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-ui cursor-pointer"
             title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -2059,7 +2059,7 @@ export default function ReelsCenter({
             id="sync-reels-excel-btn"
             onClick={handleSyncReels}
             disabled={isSyncingReels}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isSyncingReels
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] "
@@ -2120,7 +2120,7 @@ export default function ReelsCenter({
         <button
           id="tab-btn-pipeline"
           onClick={() => setActiveTab("pipeline")}
-          className={`px-5 py-2.5 font-sans text-micro transition-ui duration-300 rounded-[var(--r-m)] cursor-pointer ${
+          className={`px-5 py-2.5 font-sans text-micro transition-ui duration-300 rounded-[var(--r-pill)] cursor-pointer ${
             activeTab === "pipeline"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold/10"
               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
@@ -2131,7 +2131,7 @@ export default function ReelsCenter({
         <button
           id="tab-btn-analyzer"
           onClick={() => setActiveTab("analyzer")}
-          className={`px-5 py-2.5 font-sans text-micro transition-ui duration-300 rounded-[var(--r-m)] flex items-center gap-1.5 cursor-pointer ${
+          className={`px-5 py-2.5 font-sans text-micro transition-ui duration-300 rounded-[var(--r-pill)] flex items-center gap-1.5 cursor-pointer ${
             activeTab === "analyzer"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold/10"
               : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]"
@@ -2508,7 +2508,7 @@ export default function ReelsCenter({
                       setInputType("file");
                       setAnalysisError(null);
                     }}
-                    className={`px-3.5 py-1.5 text-micro font-sans rounded-[var(--r-s)] transition-ui cursor-pointer ${
+                    className={`px-3.5 py-1.5 text-micro font-sans rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                       inputType === "file"
                         ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -2522,7 +2522,7 @@ export default function ReelsCenter({
                       setInputType("youtube");
                       setAnalysisError(null);
                     }}
-                    className={`px-3.5 py-1.5 text-micro font-sans rounded-[var(--r-s)] transition-ui cursor-pointer ${
+                    className={`px-3.5 py-1.5 text-micro font-sans rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                       inputType === "youtube"
                         ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -3207,7 +3207,7 @@ export default function ReelsCenter({
                               type="button"
                               onClick={handleReanalyzeClip}
                               disabled={isReanalyzingClip}
-                              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
+                              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                 isReanalyzingClip
                                   ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                                   : "bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]"
@@ -3298,7 +3298,7 @@ export default function ReelsCenter({
                             <button
                               type="button"
                               onClick={() => setClipFeedbackScope("este_reel")}
-                              className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-ui ${
+                              className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui ${
                                 clipFeedbackScope === "este_reel"
                                   ? "bg-[var(--surface)]/70 text-[var(--ink)] font-bold"
                                   : "bg-transparent text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -3309,7 +3309,7 @@ export default function ReelsCenter({
                             <button
                               type="button"
                               onClick={() => setClipFeedbackScope("global")}
-                              className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-ui flex items-center gap-1 ${
+                              className={`px-2 py-1 rounded-[var(--r-pill)] cursor-pointer transition-ui flex items-center gap-1 ${
                                 clipFeedbackScope === "global"
                                   ? "bg-[var(--acc)]/20 text-[var(--acc)] font-bold"
                                   : "bg-transparent text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -3484,7 +3484,7 @@ export default function ReelsCenter({
                             <button
                               type="button"
                               onClick={handleCopyFormattedPost}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-ui cursor-pointer shrink-0 ${
+                              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center gap-1.5 transition-ui cursor-pointer shrink-0 ${
                                 copiedNotification
                                   ? "bg-[var(--ok)] text-[var(--on-ok)] font-bold scale-105"
                                   : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--acc-ink)] bg-[var(--acc)]/10"
@@ -3561,7 +3561,7 @@ export default function ReelsCenter({
                                     ),
                                   );
                                 }}
-                                className={`py-2 px-2 rounded-[var(--r-s)] text-micro font-sans text-center transition-ui cursor-pointer ${
+                                className={`py-2 px-2 rounded-[var(--r-pill)] text-micro font-sans text-center transition-ui cursor-pointer ${
                                   selectedPlatform === plat.id
                                     ? "bg-[var(--acc)] -[var(--acc)] text-[var(--on-acc)] font-bold"
                                     : " hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]"
@@ -3694,7 +3694,7 @@ export default function ReelsCenter({
                             ) : (
                               <>
                                 <Download className="w-4 h-4" />
-                                <span><ShowIcon inline emoji="📦" />Descargar Pack Completo</span>
+                                <span>Descargar Pack Completo</span>
                               </>
                             )}
                           </button>
@@ -3703,7 +3703,7 @@ export default function ReelsCenter({
                             <button
                               type="button"
                               onClick={handleCaptureThumbnail}
-                              className={`py-2 px-3 rounded-lg text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
+                              className={`py-2 px-3 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                                 thumbnailCapturedSuccess
                                   ? "bg-[var(--ok)]/20 text-[var(--ok)] "
                                   : "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] "
@@ -3721,7 +3721,7 @@ export default function ReelsCenter({
                             <button
                               type="button"
                               onClick={handleCopyFormattedPost}
-                              className="py-2 px-3 rounded-lg bg-[var(--sunken)] hover:bg-[var(--sunken)] text-micro font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
+                              className="py-2 px-3 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--sunken)] text-micro font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
                               title="Copia el texto formateado al portapapeles"
                             >
                               <Copy className="w-3.5 h-3.5 text-[var(--acc-ink)]" />

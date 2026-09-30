@@ -689,7 +689,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("fans")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <QrCode className="w-4 h-4 text-[var(--acc)]" />
               <span>Códigos QR & Fans</span>
@@ -697,7 +697,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("epk")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--tentative)]/15 hover:bg-[var(--tentative)]/25 text-[var(--tentative)]/80 font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/15 hover:bg-[var(--tentative)]/25 text-[var(--tentative)]/80 font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <BookOpen className="w-4 h-4 text-[var(--acc)]" />
               <span>Dossier EPK</span>
@@ -706,7 +706,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("repertorio")}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
               >
                 <Disc3 className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Repertorio</span>
@@ -715,7 +715,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("calendario")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <Calendar className="w-4 h-4" />
               <span>Calendario</span>
@@ -750,7 +750,7 @@ export default function Dashboard({
                 <button
                   id="dashboard-promo-agenda-all-bands-btn"
                   onClick={() => setAgendaFilterMode("all")}
-                  className={`px-2.5 py-1 text-micro font-sans font-bold rounded-[var(--r-s)] transition-ui flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+                  className={`px-2.5 py-1 text-micro font-sans font-bold rounded-[var(--r-pill)] transition-ui flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
                     agendaFilterMode === "all"
                       ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -767,7 +767,7 @@ export default function Dashboard({
                 <button
                   id="dashboard-promo-agenda-active-band-btn"
                   onClick={() => setAgendaFilterMode("active")}
-                  className={`px-2.5 py-1 text-micro font-sans font-bold rounded-[var(--r-s)] transition-ui flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+                  className={`px-2.5 py-1 text-micro font-sans font-bold rounded-[var(--r-pill)] transition-ui flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
                     agendaFilterMode === "active"
                       ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -879,7 +879,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("calendario")}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui cursor-pointer inline-flex items-center gap-1.5 mx-auto"
+                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui cursor-pointer inline-flex items-center gap-1.5 mx-auto"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Ir al Calendario</span>
@@ -922,7 +922,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("fans")}
-                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
+                className="flex-1 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
               >
                 <QrCode className="w-4 h-4" />
                 <span>Gestionar QRs y Fans</span>
@@ -961,7 +961,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("epk")}
-                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
+                className="flex-1 px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Editar Dossier EPK</span>
@@ -1049,7 +1049,7 @@ export default function Dashboard({
       <div className="flex items-center justify-between gap-3 pb-1">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-xl sm:text-2xl font-display font-bold tracking-tight text-[var(--ink)]">
+            <h1 className="page-title">
               Panel
             </h1>
             <span className="text-xs text-[var(--ink-2)] tabular-nums hidden sm:inline">

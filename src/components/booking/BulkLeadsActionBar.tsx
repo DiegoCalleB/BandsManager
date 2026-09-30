@@ -144,7 +144,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
               <button
                 type="button"
                 onClick={isAllSelected ? onDeselectAll : onSelectAll}
-                className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer shrink-0 ${"hover:bg-[var(--surface)] text-[var(--acc)]"}`}
+                className={`p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer shrink-0 ${"hover:bg-[var(--surface)] text-[var(--acc)]"}`}
                 title={
                   isAllSelected
                     ? "Deseleccionar todo"
@@ -189,7 +189,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={onDeselectAll}
-              className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+              className={`md:hidden p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
               title="Cerrar selección"
             >
               <X className="w-4 h-4" />
@@ -203,7 +203,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
               <button
                 type="button"
                 onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"}`}
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"}`}
                 title="Cambiar el estado de todos los seleccionados"
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -254,7 +254,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkGeneratePitches}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--acc)]/40"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--acc)]/40"}`}
               title="Generar propuestas de pitch con IA para todos los seleccionados"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -266,7 +266,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkEnrich}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--tentative)]/40"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--tentative)]/40"}`}
               title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
             >
               <Search className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -278,7 +278,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={() => onBulkToggleFavorite(true)}
-              className={`p-1.5 rounded-[var(--r-m)] text-xs transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc)]/70"}`}
+              className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc)]/70"}`}
               title="Marcar como favoritos"
             >
               <Star className="w-4 h-4 fill-[var(--acc)]/30 text-[var(--acc)]" />
@@ -288,7 +288,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkExportCsv}
-              className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-semibold transition-ui flex items-center gap-1 cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+              className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-semibold transition-ui flex items-center gap-1 cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               title="Exportar selección a CSV"
             >
               <Download className="w-3.5 h-3.5" />
@@ -299,7 +299,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={() => setIsConfirmDeleteOpen(true)}
-              className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-ui cursor-pointer"
+              className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-pill)] transition-ui cursor-pointer"
               title={`Eliminar ${selectedCount} ${itemLabel}`}
             >
               <Trash2 className="w-4 h-4 text-[var(--alert)]" />
@@ -309,7 +309,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
             <button
               type="button"
               onClick={onDeselectAll}
-              className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+              className={`hidden md:flex p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
               title="Deseleccionar todo"
             >
               <X className="w-4 h-4" />
@@ -348,7 +348,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
               <button
                 type="button"
                 onClick={() => setIsConfirmDeleteOpen(false)}
-                className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
+                className="px-3.5 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
@@ -358,7 +358,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
                   setIsConfirmDeleteOpen(false);
                   onBulkDelete();
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] transition-colors cursor-pointer"
               >
                 Sí, eliminar {selectedCount}
               </button>

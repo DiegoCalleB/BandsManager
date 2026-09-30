@@ -240,7 +240,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                       setViewingConcert(null);
                     }
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-m)] text-micro font-mono bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20 flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20 flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3 h-3" />
                   <span>Eliminar</span>
@@ -250,13 +250,13 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 <button
                   type="button"
                   onClick={() => setViewingConcert(null)}
-                  className="px-2 py-1 text-micro font-mono rounded-[var(--r-m)] text-[var(--ink-2)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+                  className="px-2 py-1 text-micro font-mono rounded-[var(--r-pill)] text-[var(--ink-2)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer font-bold"
+                  className="px-3 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] transition-ui cursor-pointer font-bold"
                 >
                   Guardar Cambios
                 </button>

@@ -57,7 +57,7 @@ export function TemplateRecommendationsCard({
             type="button"
             onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
             disabled={isOptimizing}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50 ${
+            className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50 ${
               'bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-extrabold'
             }`}
             title="Aplica la recomendación del agente y re-redacta la plantilla y pautas con IA"
@@ -70,7 +70,7 @@ export function TemplateRecommendationsCard({
             <button
               type="button"
               onClick={onClose}
-              className={`p-1.5 rounded-[var(--r-m)] text-xs transition-colors cursor-pointer ${
+              className={`p-1.5 rounded-[var(--r-pill)] text-xs transition-colors cursor-pointer ${
                 'hover:bg-[var(--acc-soft)] text-[var(--ink-2)]'
               }`}
               title="Cerrar recomendaciones"

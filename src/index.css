@@ -480,3 +480,15 @@ textarea::-webkit-resizer {
     opacity: 0.45;
   }
 }
+
+/* Título de pantalla: UNO para todos los módulos (antes: 5 tamaños distintos, de text-base a text-5xl). */
+@utility page-title {
+  font-family: var(--font-display-current);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  font-size: 1.25rem;
+  color: var(--ink);
+  text-wrap: balance;
+  @media (min-width: 640px) { font-size: 1.5rem; }
+}

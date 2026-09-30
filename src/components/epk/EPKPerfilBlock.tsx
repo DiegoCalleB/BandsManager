@@ -392,7 +392,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 type="button"
                 onClick={handleAddSimilarBand}
                 disabled={!similarBandInput.trim()}
-                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir</span>
@@ -413,7 +413,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <button
               type="button"
               onClick={anadirMiembro}
-              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+              className="text-xs bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold px-3 py-1.5 rounded-[var(--r-pill)] transition cursor-pointer"
             >
               + Añadir miembro
             </button>

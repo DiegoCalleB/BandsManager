@@ -493,7 +493,7 @@ export const Planes: React.FC<PlanesProps> = ({
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -536,7 +536,7 @@ export const Planes: React.FC<PlanesProps> = ({
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -632,14 +632,14 @@ export const Planes: React.FC<PlanesProps> = ({
                   if (deGiraBtn)
                     deGiraBtn.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold transition-ui active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
               </button>
               <button
                 type="button"
                 onClick={() => setShowBanner(false)}
-                className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                 title="Cerrar aviso"
               >
                 <X className="w-4 h-4" />
@@ -675,7 +675,7 @@ export const Planes: React.FC<PlanesProps> = ({
             <button
               type="button"
               onClick={() => setBillingPeriod("monthly")}
-              className={`px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-ui cursor-pointer ${
+              className={`px-5 py-2 rounded-[var(--r-pill)] text-xs sm:text-sm font-bold transition-ui cursor-pointer ${
                 billingPeriod === "monthly"
                   ? "bg-[var(--surface)]/80 text-[var(--ink)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -686,7 +686,7 @@ export const Planes: React.FC<PlanesProps> = ({
             <button
               type="button"
               onClick={() => setBillingPeriod("annual")}
-              className={`relative px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-ui cursor-pointer flex items-center gap-2 ${
+              className={`relative px-5 py-2 rounded-[var(--r-pill)] text-xs sm:text-sm font-bold transition-ui cursor-pointer flex items-center gap-2 ${
                 billingPeriod === "annual"
                   ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1003,14 +1003,14 @@ export const Planes: React.FC<PlanesProps> = ({
             <button
               type="button"
               onClick={expandAllSections}
-              className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-pointer transition-colors"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-pointer transition-colors"
             >
               Expandir todo
             </button>
             <button
               type="button"
               onClick={collapseAllSections}
-              className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-pointer transition-colors"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-pointer transition-colors"
             >
               Colapsar todo
             </button>

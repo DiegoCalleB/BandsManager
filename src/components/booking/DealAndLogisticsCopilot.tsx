@@ -358,7 +358,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <button
               type="button"
               onClick={() => onOpenRoadbookModal(lead)}
-              className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold font-mono flex items-center gap-1 transition-ui cursor-pointer"
+              className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold font-mono flex items-center gap-1 transition-ui cursor-pointer"
             >
               <FileText className="w-3 h-3" />
               <span>Exportar PDF / Imprimir</span>

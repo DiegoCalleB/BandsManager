@@ -149,7 +149,7 @@ export function AddLeadModal({
                   type="button"
                   onClick={onModalScrape}
                   disabled={isModalScraping || !newLeadData.nombre_sala}
-                  className={`px-2 py-1 text-micro font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'}`}
+                  className={`px-2 py-1 text-micro font-sans rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'}`}
                   title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
                 >
                   {isModalScraping ? (
@@ -322,7 +322,7 @@ export function AddLeadModal({
                           type="button"
                           onClick={handleAutoSearchLogo}
                           disabled={isSearchingLogo || !newLeadData.nombre_sala}
-                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-ui cursor-pointer disabled:opacity-50"
+                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro rounded-[var(--r-pill)] flex items-center gap-1 font-bold transition-ui cursor-pointer disabled:opacity-50"
                         >
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
@@ -486,13 +486,13 @@ export function AddLeadModal({
               <button
                 type="button"
                 onClick={onClose}
-                className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-micro transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
+                className={`px-2 py-1 rounded-[var(--r-pill)] font-sans text-micro transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-micro font-bold transition-ui cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
+                className={`px-4 py-2 rounded-[var(--r-pill)] font-sans text-micro font-bold transition-ui cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
               >
                 {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
               </button>

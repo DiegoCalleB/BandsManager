@@ -1407,7 +1407,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             />
             <button
               onClick={handleStartEdit}
-              className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+              className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
               title="Editar ficha completa"
             >
               <Edit3 className="w-4 h-4" />
@@ -1417,7 +1417,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 onClick={() =>
                   onDeleteLead(selectedLead.id, selectedLead.nombre_sala)
                 }
-                className="p-2 rounded-[var(--r-m)] bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 title="Eliminar y guardar en lista negra"
               >
                 <Trash2 className="w-4 h-4 text-[var(--alert)]" />
@@ -1425,7 +1425,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             )}
             <button
               onClick={onClose}
-              className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+              className="p-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
               title="Cerrar panel"
             >
               <X className="w-4 h-4" />
@@ -1658,7 +1658,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               type="button"
               onClick={handleScanWithJina}
               disabled={isScanningJina}
-              className="px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+              className="px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
               title="Escanea el sitio web con Jina Reader para extraer móviles, fijos, emails de booking y especificaciones técnicas"
             >
               {isScanningJina ? (
@@ -1677,7 +1677,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               type="button"
               onClick={handleDetectVenueDates}
               disabled={isDetectingDates}
-              className="px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+              className="px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
               title="Analiza la cartelera de Wegow y ticketing para deducir qué fines de semana tienen libres"
             >
               {isDetectingDates ? (
@@ -1697,7 +1697,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 type="button"
                 onClick={handleEnrichInstagram}
                 disabled={isEnrichingInstagram}
-                className="px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+                className="px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
                 title="Extrae WhatsApp comercial y datos de contacto de su perfil de Instagram"
               >
                 {isEnrichingInstagram ? (
@@ -1865,7 +1865,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       }
                     }
                   }}
-                  className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors shrink-0 shadow-2xs"
+                  className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors shrink-0 shadow-2xs"
                   title="Inserta este hito histórico en el pitch para dar credibilidad de taquilla a la sala"
                 >
                   <TrendingUp className="w-3 h-3 text-[var(--acc)]" />
@@ -1990,7 +1990,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       key={`free-date-${idx}`}
                       type="button"
                       onClick={() => setShowWhatsAppModal(true)}
-                      className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-medium transition-colors cursor-pointer flex items-center gap-1 ${
+                      className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-medium transition-colors cursor-pointer flex items-center gap-1 ${
                         campaignIsActive
                           ? "bg-[var(--acc)]/80 text-[var(--acc)] hover:bg-[var(--acc)]"
                           : "bg-[var(--acc)]/80 text-[var(--acc)] hover:bg-[var(--acc)]"
@@ -2100,7 +2100,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={handleApprovePitchDirectly}
                   disabled={isCreatingDraft}
-                  className="px-3 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                  className="px-3 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] shrink-0 flex items-center gap-1 cursor-pointer disabled:opacity-50"
                 >
                   {isCreatingDraft ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2195,7 +2195,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       setIsCreatingDraft(false);
                     }
                   }}
-                  className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-pill)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                   title="Forzar el despacho inmediato de este correo por el Agente Enviador"
                 >
                   {isCreatingDraft ? (
@@ -2299,7 +2299,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <button
               onClick={handleEnrichLead}
               disabled={isEnrichingLead}
-              className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 text-micro rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+              className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 text-micro rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
               title="Scout Enriquecedor: Completa emails, webs y datos faltantes sin alucinaciones"
             >
               <Sparkles
@@ -2542,7 +2542,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         type="button"
                         onClick={handleAutoSearchLogo}
                         disabled={isSearchingLogo}
-                        className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-micro rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-ui cursor-pointer disabled:opacity-50"
+                        className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-micro rounded-[var(--r-pill)] flex items-center gap-1.5 font-bold transition-ui cursor-pointer disabled:opacity-50"
                       >
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                         <span>
@@ -2998,10 +2998,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   setEditedPitch(draft);
                   setIsEditingPitch(true);
                 }}
-                className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer"
+                className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
-                <span><ShowIcon inline emoji="⚡" />Cargar Nudge (40 palabras)</span>
+                <span>Cargar Nudge (40 palabras)</span>
               </button>
             </div>
           )}
@@ -3046,7 +3046,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           setIsEditingPitch(true);
                         }
                       }}
-                      className="px-2.5 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-micro rounded-[var(--r-m)] flex items-center gap-1 transition-ui cursor-pointer"
+                      className="px-2.5 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-micro rounded-[var(--r-pill)] flex items-center gap-1 transition-ui cursor-pointer"
                       title="Cargar la propuesta de respuesta sugerida por el playbook táctico"
                     >
                       <Sparkles className="w-3 h-3" />
@@ -3297,7 +3297,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             setIsEditingPitch(true);
                           }
                         }}
-                        className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--acc)] text-micro font-sans font-medium flex items-center gap-1 transition-ui cursor-pointer shadow-xs"
+                        className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--acc)] text-micro font-sans font-medium flex items-center gap-1 transition-ui cursor-pointer shadow-xs"
                         title={`Inserta la propuesta para la fecha libre ${fecha} en el borrador`}
                       >
                         <span><ShowIcon inline emoji="📅" />Proponer {fecha}</span>
@@ -3673,7 +3673,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         key={m.id}
                         type="button"
                         onClick={() => setSelectedAiModel(m.id)}
-                        className={`px-2 py-1 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                        className={`px-2 py-1 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                           isSelected
                             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
                             : "bg-[var(--bg)]/60 text-[var(--ink-2)] "
@@ -3701,7 +3701,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       type="button"
                       onClick={() => handleRevertPitch()}
                       disabled={isRevertingPitch || isRegeneratingPitch}
-                      className="px-3.5 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 disabled:opacity-50 text-[var(--acc)]/70 font-semibold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-ui font-sans"
+                      className="px-3.5 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 disabled:opacity-50 text-[var(--acc)]/70 font-semibold rounded-[var(--r-pill)] text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-ui font-sans"
                       title="Deshacer el último entrenamiento y restaurar la versión del pitch anterior"
                     >
                       {isRevertingPitch ? (
@@ -3717,7 +3717,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={() => handleRegeneratePitchWithFeedback()}
                   disabled={isRegeneratingPitch || isRevertingPitch}
-                  className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans"
+                  className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 disabled:opacity-50 text-[var(--on-acc)] font-bold rounded-[var(--r-pill)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans"
                 >
                   {isRegeneratingPitch ? (
                     <>
@@ -3859,10 +3859,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   }
                   setActiveTab("info");
                 }}
-                className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer"
+                className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer"
               >
                 <Sparkles className="w-3 h-3" />
-                <span><ShowIcon inline emoji="⚡" />Cargar Nudge de Seguimiento</span>
+                <span>Cargar Nudge de Seguimiento</span>
               </button>
             </div>
           )}
@@ -3989,7 +3989,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             handleAnalyzeMessageSentiment(msg.id, msg.mensaje)
                           }
                           disabled={isAnalyzingMessageSentiment === msg.id}
-                          className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)] text-micro font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                          className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                         >
                           {isAnalyzingMessageSentiment === msg.id ? (
                             <>
@@ -4096,7 +4096,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               type="button"
               onClick={handleEnrichAllApis}
               disabled={isEnrichingApis}
-              className="px-3 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+              className="px-3 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
               title="Volver a consultar todas las APIs en tiempo real"
             >
               <RefreshCw
@@ -4452,7 +4452,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={handleCalculateRoute}
                   disabled={isCalculatingRoute}
-                  className="px-2.5 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1 transition-ui cursor-pointer disabled:opacity-50"
+                  className="px-2.5 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1 transition-ui cursor-pointer disabled:opacity-50"
                   title="Recalcular ruta y gasolina"
                 >
                   <RefreshCw
@@ -4606,7 +4606,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchSocial}
                     disabled={isEnrichingSocial}
-                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingSocial ? "animate-spin" : ""}`}
@@ -4709,7 +4709,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchBookingWindow}
                     disabled={isEnrichingBookingWindow}
-                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingBookingWindow ? "animate-spin" : ""}`}
@@ -4837,7 +4837,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchLocalEvents}
                     disabled={isEnrichingLocalEvents}
-                    className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingLocalEvents ? "animate-spin" : ""}`}
@@ -4941,7 +4941,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchPressMedia}
                     disabled={isEnrichingPressMedia}
-                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingPressMedia ? "animate-spin" : ""}`}
@@ -5052,7 +5052,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     type="button"
                     onClick={handleFetchCoBooking}
                     disabled={isEnrichingCoBooking}
-                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw
                       className={`w-3 h-3 ${isEnrichingCoBooking ? "animate-spin" : ""}`}
@@ -5082,7 +5082,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   type="button"
                   onClick={() => handleRecalculateFinancial()}
                   disabled={isRecalculatingFinancial}
-                  className="px-3 py-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-m)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                  className="px-3 py-1 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                 >
                   <RefreshCw
                     className={`w-3.5 h-3.5 ${isRecalculatingFinancial ? "animate-spin" : ""}`}

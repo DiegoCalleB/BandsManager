@@ -3752,7 +3752,7 @@ export default function RepertorioSetlists({
                 <button
                   type="button"
                   onClick={() => setShowSetlistActionsMenu((v) => !v)}
-                  className={`p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:"}`}
+                  className={`p-1.5 rounded-[var(--r-pill)] transition-colors cursor-pointer ${"text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:"}`}
                   title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
                 >
                   <MoreHorizontal className="w-4 h-4" />
@@ -3939,7 +3939,7 @@ export default function RepertorioSetlists({
                               onClick={() =>
                                 setShowChartSettingsMenu((v) => !v)
                               }
-                              className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+                              className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-ui cursor-pointer"
                               title="Ajustes del gráfico (leyenda de colores, curva ideal)"
                             >
                               <Sliders className="w-3.5 h-3.5" />
@@ -4061,7 +4061,7 @@ export default function RepertorioSetlists({
                           <button
                             type="button"
                             onClick={() => setShowTonalidad((v) => !v)}
-                            className={`p-1 rounded-[var(--r-s)] transition-ui cursor-pointer ${
+                            className={`p-1 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                               showTonalidad
                                 ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -4078,7 +4078,7 @@ export default function RepertorioSetlists({
                         <button
                           type="button"
                           onClick={() => setShowEnergyMap((v) => !v)}
-                          className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+                          className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-ui cursor-pointer"
                           title={
                             showEnergyMap
                               ? "Ocultar el mapa de energía"
@@ -4094,7 +4094,7 @@ export default function RepertorioSetlists({
                         <button
                           type="button"
                           onClick={() => setShowConcertPlayer((v) => !v)}
-                          className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+                          className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-ui cursor-pointer"
                           title={
                             showConcertPlayer
                               ? "Ocultar reproductor de concierto"
@@ -4161,7 +4161,7 @@ export default function RepertorioSetlists({
                                 <button
                                   type="button"
                                   onClick={insertSuggestedChapa}
-                                  className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/60 hover:bg-[var(--ok)]/80 text-[var(--ok)]/40 transition-ui cursor-pointer font-medium shrink-0"
+                                  className="px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/60 hover:bg-[var(--ok)]/80 text-[var(--ok)]/40 transition-ui cursor-pointer font-medium shrink-0"
                                 >
                                   <ShowIcon inline emoji="➕" />Insertar aquí
                                 </button>
@@ -4392,7 +4392,7 @@ export default function RepertorioSetlists({
                                                     selectedIndex,
                                                   )
                                                 }
-                                                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
+                                                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                                   evalPrev?.status === "ok"
                                                     ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
                                                     : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
@@ -4446,7 +4446,7 @@ export default function RepertorioSetlists({
                                                     selectedIndex + 1,
                                                   )
                                                 }
-                                                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
+                                                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                                                   evalNext?.status === "ok"
                                                     ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
                                                     : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
@@ -5211,7 +5211,7 @@ export default function RepertorioSetlists({
                                   e.stopPropagation();
                                   handleOpenTransitionPreview(index - 1, index);
                                 }}
-                                className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 ${
+                                className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 ${
                                   evalUnion?.status === "ok"
                                     ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)]/35"
                                     : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)]/35"
@@ -5820,7 +5820,7 @@ export default function RepertorioSetlists({
                       catalogStatusFilter === "todos" ? "listo" : "todos",
                     )
                   }
-                  className={`px-3.5 py-2 rounded-[var(--r-m)] text-sm font-medium transition-colors flex items-center gap-2 ${
+                  className={`px-3.5 py-2 rounded-[var(--r-pill)] text-sm font-medium transition-colors flex items-center gap-2 ${
                     catalogStatusFilter === "listo"
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -5840,7 +5840,7 @@ export default function RepertorioSetlists({
                     setEditingSong(null);
                     setShowSongModal(true);
                   }}
-                  className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-medium text-sm flex items-center gap-2 transition-ui active:scale-[0.97]"
+                  className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-medium text-sm flex items-center gap-2 transition-ui active:scale-[0.97]"
                 >
                   <Plus className="w-4 h-4" />
                   <span className="hidden sm:inline">Tema</span>
@@ -5853,7 +5853,7 @@ export default function RepertorioSetlists({
                   onClick={() =>
                     setShowCatalogActionsMenu(!showCatalogActionsMenu)
                   }
-                  className="relative p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
+                  className="relative p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
                 >
                   <MoreHorizontal className="w-5 h-5" />
                 </button>
@@ -5902,7 +5902,7 @@ export default function RepertorioSetlists({
                           Array.from(selectedCatalogIds),
                         )
                       }
-                      className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] cursor-pointer transition-ui flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] cursor-pointer transition-ui flex items-center gap-1.5"
                     >
                       <ListPlus className="w-3.5 h-3.5" />
                       <span>Añadir a Repertorio…</span>
@@ -5912,7 +5912,7 @@ export default function RepertorioSetlists({
                       onClick={() =>
                         handleBulkDeleteSongs(Array.from(selectedCatalogIds))
                       }
-                      className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] cursor-pointer transition-ui flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] cursor-pointer transition-ui flex items-center gap-1.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Eliminar Seleccionadas</span>
@@ -5920,7 +5920,7 @@ export default function RepertorioSetlists({
                     <button
                       type="button"
                       onClick={clearCatalogSelection}
-                      className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] cursor-pointer transition-ui"
+                      className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] cursor-pointer transition-ui"
                     >
                       Cancelar
                     </button>

@@ -483,7 +483,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                         <button
                           type="button"
                           onClick={() => toggleAlertExpand(alert.id)}
-                          className={`p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
+                          className={`p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
                             isDanger
                               ? "hover:bg-[var(--alert-soft)]"
                               : "hover:bg-[var(--acc-soft)]"

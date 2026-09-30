@@ -327,7 +327,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               id="btn-magic-autopilot"
               type="button"
               onClick={onTriggerMagicAutopilot}
-              className="px-3 py-1.5 rounded-xl hover:brightness-110 active:scale-[0.97] text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-ui select-none bg-[var(--acc)]/10"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] hover:brightness-110 active:scale-[0.97] text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-ui select-none bg-[var(--acc)]/10"
               title="Aplica automáticamente el combo óptimo: Mejor hook, punch-in zoom, beat-drop, subtítulos oro y sincronía con gira"
             >
               <Sparkles className="w-3.5 h-3.5 fill-[var(--ink-3)] animate-spin" />
@@ -351,7 +351,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveStudioTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg text-micro font-mono font-bold flex items-center gap-1.5 transition-ui cursor-pointer whitespace-nowrap ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-mono font-bold flex items-center gap-1.5 transition-ui cursor-pointer whitespace-nowrap ${
                     isActive
                       ? 'bg-[var(--acc)] text-[var(--on-acc)] '
                       : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]/60'
@@ -681,7 +681,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Zap className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span><ShowIcon inline emoji="⚡" />Beat-Drop & Rhythm Impacts</span>
+                  <span>Beat-Drop & Rhythm Impacts</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -703,7 +703,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--acc-ink)] font-bold text-xs font-mono ">
                   <Radio className="w-4 h-4 text-[var(--acc-ink)]" />
-                  <span><ShowIcon inline emoji="🧠" />Smart-Pan Framing Dinámico</span>
+                  <span>Smart-Pan Framing Dinámico</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
@@ -916,7 +916,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <button
                 type="button"
                 onClick={onToggleSafeZone}
-                className={`py-2 px-3 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-ui cursor-pointer ${
+                className={`py-2 px-3 rounded-[var(--r-pill)] text-xs font-mono font-bold flex items-center justify-center gap-2 transition-ui cursor-pointer ${
                   showSafeZone
                     ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'

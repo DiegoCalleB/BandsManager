@@ -99,7 +99,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
             // keep unread until user chooses or marks read
           }
         }}
-        className={`relative p-2 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center justify-center ${
+        className={`relative p-2 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center ${
           isOpen
             ? 'bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs'
             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
@@ -146,7 +146,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 <button
                   type="button"
                   onClick={onMarkAllAsRead}
-                  className="text-micro font-mono text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
+                  className="text-micro font-mono text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-pill)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
                   title="Marcar todas como leídas"
                 >
                   <CheckCheck className="w-3 h-3" />
@@ -159,7 +159,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                   setIsOpen(false);
                   onOpenSettings();
                 }}
-                className="p-1 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
+                className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
                 title="Configuración de Notificaciones"
               >
                 <Settings className="w-3.5 h-3.5" />

@@ -337,7 +337,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={handleToggleAudio}
-                className={`p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center justify-center shrink-0 ${
+                className={`p-2.5 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center shrink-0 ${
                   isPlayingAudio
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : audioUrl
@@ -421,7 +421,7 @@ export function SongChordsViewerModal({
                 type="button"
                 onClick={handleGenerateWithAi}
                 disabled={isGeneratingAi}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                 title={
                   song.audioPrincipalUrl
                     ? "Reanalizar escuchando el audio real de la canción"
@@ -438,7 +438,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={() => setShowStructureUploadModal(true)}
-                className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ok)] transition cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ok)] transition cursor-pointer"
                 title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
               >
                 <Upload className="w-4 h-4" />
@@ -447,7 +447,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={() => setShowShareModal(true)}
-                className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
                 title="Compartir canción y acordes por WhatsApp o App"
               >
                 <MessageSquare className="w-4 h-4" />
@@ -456,7 +456,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
                 title="Imprimir Cifrado"
               >
                 <Printer className="w-4 h-4" />
@@ -471,7 +471,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={() => setActiveTab("chords")}
-                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   activeTab === "chords"
                     ? "bg-[var(--acc)] text-[var(--on-acc)] "
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -484,7 +484,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={() => setActiveTab("substitute")}
-                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   activeTab === "substitute"
                     ? "bg-[var(--acc)] text-[var(--on-acc)] "
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -497,7 +497,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={() => setActiveTab("edit")}
-                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   activeTab === "edit"
                     ? "bg-[var(--surface)]/80 text-[var(--ink)] "
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -516,7 +516,7 @@ export function SongChordsViewerModal({
                   <button
                     type="button"
                     onClick={handleToggleAudio}
-                    className={`p-1.5 rounded-lg font-bold flex items-center justify-center transition cursor-pointer ${
+                    className={`p-1.5 rounded-[var(--r-pill)] font-bold flex items-center justify-center transition cursor-pointer ${
                       isPlayingAudio
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] "
@@ -617,7 +617,7 @@ export function SongChordsViewerModal({
                   onClick={() =>
                     setNotation((prev) => (prev === "ES" ? "EN" : "ES"))
                   }
-                  className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] hover:text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer flex items-center gap-1"
+                  className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer flex items-center gap-1"
                   title="Cambiar entre Cifrado Latino (Do, Re, Mi) e Inglés (C, D, E)"
                 >
                   <span>Cifrado:</span>
@@ -631,7 +631,7 @@ export function SongChordsViewerModal({
                   <button
                     type="button"
                     onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                    className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
+                    className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1 transition cursor-pointer ${
                       isAutoScrolling
                         ? "bg-[var(--ok)] text-[var(--on-ok)]"
                         : "bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -673,7 +673,7 @@ export function SongChordsViewerModal({
                 <button
                   type="button"
                   onClick={() => setShowChordDiagrams(!showChordDiagrams)}
-                  className={`px-2.5 py-1 rounded-[var(--r-m)] font-bold transition cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-pill)] font-bold transition cursor-pointer ${
                     showChordDiagrams
                       ? "bg-[var(--acc)]/90 text-[var(--tentative)]/80"
                       : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -686,7 +686,7 @@ export function SongChordsViewerModal({
                 <button
                   type="button"
                   onClick={handleCopyChords}
-                  className="p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
+                  className="p-1.5 rounded-[var(--r-pill)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
                   title="Copiar texto de acordes"
                 >
                   {copiedText ? (
@@ -840,7 +840,7 @@ export function SongChordsViewerModal({
                       <button
                         type="button"
                         onClick={() => setActiveTab("edit")}
-                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
+                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
                       >
                         <Edit3 className="w-4 h-4" />
                         <span>Editar esta Ficha de Sustitución</span>
@@ -862,7 +862,7 @@ export function SongChordsViewerModal({
                       <button
                         type="button"
                         onClick={handleSaveEdits}
-                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <Save className="w-4 h-4" />
                         <span>Guardar Cambios</span>

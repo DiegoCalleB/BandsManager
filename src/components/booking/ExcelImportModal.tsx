@@ -768,7 +768,7 @@ export function ExcelImportModal({
               <button
                 type="button"
                 onClick={handleDownloadTemplate}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] transition-ui cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] transition-ui cursor-pointer"
                 title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
               >
                 <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -777,7 +777,7 @@ export function ExcelImportModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
+                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -895,7 +895,7 @@ export function ExcelImportModal({
                   <button
                     type="button"
                     onClick={handleDownloadTemplate}
-                    className="px-3 py-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-ui cursor-pointer"
+                    className="px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-ui cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Descargar Plantilla</span>
@@ -954,7 +954,7 @@ export function ExcelImportModal({
                         key={cat.id}
                         type="button"
                         onClick={() => setDefaultCategory(cat.id)}
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
                           defaultCategory === cat.id
                             ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold"
                             : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1351,7 +1351,7 @@ export function ExcelImportModal({
                         onClick={() =>
                           setFilterDuplicatesOnly(!filterDuplicatesOnly)
                         }
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1 transition-ui cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1 transition-ui cursor-pointer ${
                           filterDuplicatesOnly
                             ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60"
@@ -1365,14 +1365,14 @@ export function ExcelImportModal({
                     <button
                       type="button"
                       onClick={() => handleToggleSelectAll(true)}
-                      className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
+                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
                     >
                       Seleccionar Todos
                     </button>
                     <button
                       type="button"
                       onClick={() => handleToggleSelectAll(false)}
-                      className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
+                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60 font-medium cursor-pointer"
                     >
                       Deseleccionar Todos
                     </button>
@@ -1544,7 +1544,7 @@ export function ExcelImportModal({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Cambiar archivo</span>
@@ -1556,7 +1556,7 @@ export function ExcelImportModal({
                   type="button"
                   disabled={isImporting}
                   onClick={() => setStep(2)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer disabled:opacity-50"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Revisar mapeo</span>
@@ -1575,7 +1575,7 @@ export function ExcelImportModal({
                 <button
                   type="button"
                   onClick={buildParsedRows}
-                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer"
+                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer"
                 >
                   <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1587,7 +1587,7 @@ export function ExcelImportModal({
                   type="button"
                   disabled={isImporting || selectedCount === 0}
                   onClick={handleExecuteImport}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isImporting ? (
                     <>

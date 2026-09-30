@@ -305,7 +305,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={onOpenStudio}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${
                 ideasCount > 0
                   ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--ink)]'
                   : 'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]'
@@ -322,7 +322,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={onOpenChords}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
                 'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] '
               }`}
               title="Ver cifrado de acordes, armonía y letra"
@@ -361,7 +361,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={() => setShowMenu((prev) => !prev)}
-              className={`p-1.5 rounded-[var(--r-s)] transition-ui cursor-pointer ${
+              className={`p-1.5 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                 showMenu
                   ? 'bg-[var(--surface)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'

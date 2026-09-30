@@ -1639,7 +1639,7 @@ export function PdfExportModal({
             <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
               <button
                 onClick={() => handlePrint()}
-                className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-bold transition-ui flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-[0.97]/20"
+                className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-pill)] font-sans text-xs font-bold transition-ui flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-[0.97]/20"
               >
                 <Printer className="w-4 h-4" />
                 {/*"Músico(s)", no"Hoja(s)": cada uno puede generar más de una página física según
@@ -1655,7 +1655,7 @@ export function PdfExportModal({
               </button>
               <button
                 onClick={onClose}
-                className={`p-2 rounded-[var(--r-m)] transition-colors active:scale-[0.97] cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
+                className={`p-2 rounded-[var(--r-pill)] transition-colors active:scale-[0.97] cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1696,7 +1696,7 @@ export function PdfExportModal({
                     setPrintMode("all_members");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     printMode === "all_members"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1710,7 +1710,7 @@ export function PdfExportModal({
                     setPrintMode("single_member");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     printMode === "single_member"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1723,7 +1723,7 @@ export function PdfExportModal({
                     setPrintMode("master");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     printMode === "master"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1759,7 +1759,7 @@ export function PdfExportModal({
               <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <button
                   onClick={() => setViewDensity("sentado")}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     viewDensity === "sentado"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1770,7 +1770,7 @@ export function PdfExportModal({
                 </button>
                 <button
                   onClick={() => setViewDensity("de_pie")}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
+                  className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     viewDensity === "de_pie"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1968,7 +1968,7 @@ export function PdfExportModal({
                 <button
                   disabled={previewPageIndex <= 0}
                   onClick={() => setPreviewPageIndex((p) => Math.max(0, p - 1))}
-                  className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                  className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />{" "}
                   <span className="hidden sm:inline">Anterior</span>
@@ -1980,7 +1980,7 @@ export function PdfExportModal({
                       Math.min(membersToExport.length - 1, p + 1),
                     )
                   }
-                  className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                  className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
                 >
                   <span className="hidden sm:inline">Siguiente</span>{" "}
                   <ChevronRight className="w-3.5 h-3.5" />

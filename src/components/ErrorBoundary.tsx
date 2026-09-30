@@ -56,13 +56,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={this.handleReset}
-              className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-m)] flex items-center gap-2 transition"
+              className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-pill)] flex items-center gap-2 transition"
             >
               <RefreshCw className="w-4 h-4" /> Reintentar Cargar Módulo
             </button>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold rounded-[var(--r-m)] transition"
+              className="px-4 py-2 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold rounded-[var(--r-pill)] transition"
             >
               Recargar Aplicación
             </button>

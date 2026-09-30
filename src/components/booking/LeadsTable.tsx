@@ -478,7 +478,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/90 text-[var(--acc)] hover:bg-[var(--acc)]/90 transition-colors shadow-2xs group cursor-pointer"
             >
               <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
-              <span><ShowIcon inline emoji="🏖️" />FUERA DE TEMPORADA / VACACIONES</span>
+              <span>FUERA DE TEMPORADA / VACACIONES</span>
               <ExternalLink className="w-2.5 h-2.5 text-[var(--acc)]/80 group-hover:text-[var(--acc)] shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
@@ -839,7 +839,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             <button
               type="button"
               onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]/90 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--bg)]/90 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
             >
               {isAllSelected ? (
                 <>
@@ -868,7 +868,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               type="button"
               onClick={handleBatchScanDates}
               disabled={isScanningBatchDates}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/90 hover:bg-[var(--acc)] text-[var(--acc)] hover:text-[var(--ink)] transition-ui cursor-pointer shadow-xs disabled:opacity-50 text-xs font-sans font-semibold"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/90 hover:bg-[var(--acc)] text-[var(--acc)] hover:text-[var(--ink)] transition-ui cursor-pointer shadow-xs disabled:opacity-50 text-xs font-sans font-semibold"
               title="Escanea las carteleras de los recintos de la campaña para detectar sus fines de semana libres"
             >
               {isScanningBatchDates ? (
@@ -1788,7 +1788,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <button
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}
-                            className="px-2 py-1 bg-[var(--ok-soft)] hover:brightness-95 text-[var(--ok)] rounded-[var(--r-s)] text-micro font-bold transition-colors cursor-pointer inline-flex items-center gap-1"
+                            className="px-2 py-1 bg-[var(--ok-soft)] hover:brightness-95 text-[var(--ok)] rounded-[var(--r-pill)] text-micro font-bold transition-colors cursor-pointer inline-flex items-center gap-1"
                             title="Aprobar pitch directamente"
                           >
                             <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
@@ -1824,7 +1824,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             e.stopPropagation();
                             onSelectLead(lead);
                           }}
-                          className={`p-1.5 rounded-[var(--r-s)] transition-colors inline-flex items-center ${
+                          className={`p-1.5 rounded-[var(--r-pill)] transition-colors inline-flex items-center ${
                             isDetailOpen
                               ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                               : "bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]"

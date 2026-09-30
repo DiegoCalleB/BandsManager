@@ -823,7 +823,7 @@ export const AgentAutonomySettingsModal: React.FC<
 
             <button
               onClick={onClose}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -1720,22 +1720,22 @@ export const AgentAutonomySettingsModal: React.FC<
                       <button
                         type="button"
                         onClick={applyPresetRecommendedBooking}
-                        className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] flex items-center gap-1.5/10/20"
+                        className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] flex items-center gap-1.5/10/20"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span><ShowIcon inline emoji="🌟" />Sugerir Mejores Días (M-X-J)</span>
+                        <span>Sugerir Mejores Días (M-X-J)</span>
                       </button>
                       <button
                         type="button"
                         onClick={applyPresetCommercial}
-                        className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
+                        className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
                       >
                         <ShowIcon inline emoji="🏢" />Laborables L-V
                       </button>
                       <button
                         type="button"
                         onClick={applyPresetAllDay}
-                        className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans transition-ui cursor-pointer active:scale-[0.97]"
+                        className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans transition-ui cursor-pointer active:scale-[0.97]"
                       >
                         <ShowIcon inline emoji="⚡" />Toda la Semana (7d)
                       </button>
@@ -1972,7 +1972,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             type="button"
                             disabled={!isAdmin}
                             onClick={() => toggleHoraEnviador(hour)}
-                            className={`p-2 rounded-[var(--r-s)] text-center font-sans text-xs font-bold transition-ui ${
+                            className={`p-2 rounded-[var(--r-pill)] text-center font-sans text-xs font-bold transition-ui ${
                               !isAdmin
                                 ? "cursor-default"
                                 : "cursor-pointer active:scale-[0.97]"
@@ -2154,7 +2154,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         onClose();
                         onOpenBandProfile();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
                     >
                       Ir a Gestión de Banda ➔
                     </button>
@@ -2183,7 +2183,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         onClose();
                         onOpenTemplatesSection();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
                     >
                       Ver Plantillas ➔
                     </button>
@@ -2322,7 +2322,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         onClose();
                         onOpenTemplatesSection();
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
+                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer shrink-0"
                     >
                       Ver Hilos de Ejemplo ➔
                     </button>
@@ -2410,7 +2410,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                     toneOption,
                                   )
                                 }
-                                className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold transition-ui ${
+                                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui ${
                                   !isAdmin ? "cursor-default" : "cursor-pointer"
                                 } ${
                                   strategy.tone === toneOption
@@ -2462,7 +2462,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       type="button"
                       onClick={handleSaveResponseStrategies}
                       disabled={isSavingStrategies}
-                      className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-ui"
+                      className="ml-auto px-4 py-2 rounded-[var(--r-pill)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-ui"
                     >
                       {isSavingStrategies ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -2499,7 +2499,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       type="button"
                       onClick={handleExportAuditLogsCSV}
                       disabled={auditLogs.length === 0}
-                      className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                       title="Descargar historial de auditoría en formato CSV"
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -2509,7 +2509,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       type="button"
                       onClick={loadAuditLogs}
                       disabled={loadingAuditLogs}
-                      className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer"
+                      className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans flex items-center gap-1.5 cursor-pointer"
                     >
                       <RefreshCw
                         className={`w-3.5 h-3.5 ${loadingAuditLogs ? "animate-spin" : ""}`}
@@ -2729,7 +2729,7 @@ export const AgentAutonomySettingsModal: React.FC<
             <div className="flex items-center gap-2">
               <button
                 onClick={onClose}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-sans font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
               >
                 Cerrar
               </button>
@@ -2738,7 +2738,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 <button
                   onClick={handleSave}
                   disabled={isSaving || isLoading}
-                  className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold hover:bg-[var(--acc)]/60 disabled:opacity-50 transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
+                  className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold hover:bg-[var(--acc)]/60 disabled:opacity-50 transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
                 >
                   {isSaving ? (
                     <>

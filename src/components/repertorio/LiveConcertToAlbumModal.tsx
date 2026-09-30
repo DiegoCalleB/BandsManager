@@ -1443,7 +1443,7 @@ export const LiveConcertToAlbumModal: React.FC<
             </div>
             <button
               onClick={onClose}
-              className={`p-2 rounded-[var(--r-s)] transition-colors ${"hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+              className={`p-2 rounded-[var(--r-pill)] transition-colors ${"hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
             >
               <X className="w-5 h-5" />
             </button>
@@ -1498,7 +1498,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       ) : (
                         <>
                           <Lock className="w-3 h-3" />
-                          <span><ShowIcon inline emoji="🔐" />¿Es tu canal? Vincular sesión</span>
+                          <span>¿Es tu canal? Vincular sesión</span>
                         </>
                       )}
                     </button>
@@ -1553,7 +1553,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     onClick={handleAnalyzeConcert}
                     disabled={isAnalyzing || (!youtubeUrl && !uploadedFile)}
-                    className="px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 font-bold text-sm text-[var(--ink)]/10 disabled:opacity-50 flex items-center justify-center gap-2 transition-ui shrink-0"
+                    className="px-5 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 font-bold text-sm text-[var(--ink)]/10 disabled:opacity-50 flex items-center justify-center gap-2 transition-ui shrink-0"
                   >
                     {isAnalyzing ? (
                       <>
@@ -1641,7 +1641,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       <button
                         type="button"
                         onClick={() => setCookieModalOpen(true)}
-                        className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--acc)]/70 font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui text-xs"
+                        className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--acc)]/70 font-bold rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui text-xs"
                         title="Configurar cookies de la cuenta de YouTube para descargar automáticamente en el servidor sin bloqueos"
                       >
                         <Lock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1660,18 +1660,18 @@ export const LiveConcertToAlbumModal: React.FC<
                         title="Abrir Cobalt para descargar el MP3 completo de YouTube en 5 segundos y adjuntarlo aquí"
                       >
                         <Download className="w-3.5 h-3.5" />
-                        <span><ShowIcon inline emoji="📥" />Extraer MP3 (Cobalt)</span>
+                        <span>Extraer MP3 (Cobalt)</span>
                         <ExternalLink className="w-3 h-3 ml-0.5 opacity-70" />
                       </a>
 
                       <button
                         onClick={handleLoadDemoAudio}
                         disabled={isLinkingLocalFile}
-                        className="px-3 py-2 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui text-xs disabled:opacity-50"
+                        className="px-3 py-2 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui text-xs disabled:opacity-50"
                         title="Cargar audio de ensayo demo instantáneamente para probar muestras y transcripciones"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-[var(--ink)]" />
-                        <span><ShowIcon inline emoji="✨" />Cargar Demo</span>
+                        <span>Cargar Demo</span>
                       </button>
 
                       <label className="px-3.5 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold rounded-[var(--r-s)] cursor-pointer flex items-center justify-center gap-1.5 transition-ui text-xs">
@@ -1779,17 +1779,17 @@ export const LiveConcertToAlbumModal: React.FC<
 
                     <button
                       onClick={() => setShowQuickNamingModal(true)}
-                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/80 text-[var(--tentative)]/40 hover:bg-[var(--acc)]/80 flex items-center gap-1.5 transition-ui"
+                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/80 text-[var(--tentative)]/40 hover:bg-[var(--acc)]/80 flex items-center gap-1.5 transition-ui"
                       title="Abrir asistente para nombrar todos los temas y speeches rápidamente o pegar tu setlist"
                     >
                       <Tag className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                      <span><ShowIcon inline emoji="🏷️" />Nombrar Temas & Speeches</span>
+                      <span>Nombrar Temas & Speeches</span>
                     </button>
 
                     <button
                       onClick={handleAutoDetectCues}
                       disabled={isDetectingCues || tracks.length === 0}
-                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/80 text-[var(--tentative)]/40 hover:bg-[var(--acc)]/80 flex items-center gap-1.5 transition-ui"
+                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/80 text-[var(--tentative)]/40 hover:bg-[var(--acc)]/80 flex items-center gap-1.5 transition-ui"
                       title="Analiza la envolvente de audio para detectar con precisión el ataque musical de cada tema, descartando ruidos, charla o aplausos"
                     >
                       <Target
@@ -1810,18 +1810,18 @@ export const LiveConcertToAlbumModal: React.FC<
                     ) && (
                       <button
                         onClick={handleSnapAllTracksToCues}
-                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--tentative)] flex items-center gap-1.5 font-bold"
+                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--tentative)] flex items-center gap-1.5 font-bold"
                         title="Ajusta automáticamente los tiempos de inicio de todos los temas musicales al punto CUE exacto de entrada musical"
                       >
                         <Target className="w-3.5 h-3.5" />
-                        <span><ShowIcon inline emoji="⚡" />Ajustar Inicios a CUEs</span>
+                        <span>Ajustar Inicios a CUEs</span>
                       </button>
                     )}
 
                     <button
                       onClick={handleAutoClassifyTracks}
                       disabled={isClassifying || isTranscribingAll}
-                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--tentative)]/80 text-[var(--tentative)]/60 hover:bg-[var(--tentative)]/80 flex items-center gap-1.5 transition-ui"
+                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--tentative)]/80 text-[var(--tentative)]/60 hover:bg-[var(--tentative)]/80 flex items-center gap-1.5 transition-ui"
                       title="Identificar automáticamente si cada trozo es una canción o un discurso"
                     >
                       <Wand2
@@ -1835,7 +1835,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     <button
                       onClick={handleTranscribeAllConcert}
                       disabled={isTranscribingAll || tracks.length === 0}
-                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--ok)]/30 text-[var(--ink)] hover:bg-[var(--ok)]/50 flex items-center gap-1.5 transition-ui disabled:opacity-50"
+                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--ok)]/30 text-[var(--ink)] hover:bg-[var(--ok)]/50 flex items-center gap-1.5 transition-ui disabled:opacity-50"
                       title="Transcribir automáticamente todo el concierto (letras, acordes y speeches) usando Gemini IA"
                     >
                       <Sparkles
@@ -1850,7 +1850,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                     <button
                       onClick={() => setExpandAllChords(!expandAllChords)}
-                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/80 text-[var(--ink)] hover:bg-[var(--acc)]/80 flex items-center gap-1.5 transition-ui"
+                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/80 text-[var(--ink)] hover:bg-[var(--acc)]/80 flex items-center gap-1.5 transition-ui"
                       title="Mostrar u ocultar los editores de cifrado y letras de todas las canciones"
                     >
                       <Music2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1862,7 +1862,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     {selectedIndices.length >= 2 && (
                       <button
                         onClick={handleMergeSelectedTracks}
-                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 flex items-center gap-1.5 animate-bounce"
+                        className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 flex items-center gap-1.5 animate-bounce"
                       >
                         <GitMerge className="w-3.5 h-3.5" />
                         Fusionar Seleccionadas ({selectedIndices.length})
@@ -1871,7 +1871,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                     <button
                       onClick={() => handleAddCutTrack(tracks.length)}
-                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1"
+                      className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1"
                     >
                       <Plus className="w-3.5 h-3.5" /> Añadir Corte
                     </button>
@@ -1905,7 +1905,7 @@ export const LiveConcertToAlbumModal: React.FC<
                           );
                         }
                       }}
-                      className="px-3 py-1 bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold rounded-[var(--r-s)] text-xs shrink-0 shadow transition-ui flex items-center gap-1"
+                      className="px-3 py-1 bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold rounded-[var(--r-pill)] text-xs shrink-0 shadow transition-ui flex items-center gap-1"
                     >
                       <ShowIcon inline emoji="🗣️" />Convertir Pista 1 a Speech / Presentación
                     </button>
@@ -2174,7 +2174,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               <button
                                 onClick={() => handlePlaySnippetPreview(track)}
                                 disabled={isLoadingPreview}
-                                className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-ui ${
+                                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1 transition-ui ${
                                   isPlayingThis
                                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                                     : "bg-[var(--surface)] hover:bg-[var(--acc)] hover:text-[var(--ink)] text-[var(--ink-2)]"
@@ -2208,7 +2208,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               {/* Split track in two button */}
                               <button
                                 onClick={() => handleSplitTrack(track.index)}
-                                className="p-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--alert)] flex items-center gap-1 text-xs font-bold"
+                                className="p-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--alert)] flex items-center gap-1 text-xs font-bold"
                                 title="Dividir este tramo en 2 partes"
                               >
                                 <Scissors className="w-3.5 h-3.5" />
@@ -2223,7 +2223,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   onClick={() =>
                                     handleMergeWithNext(track.index)
                                   }
-                                  className="p-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]"
+                                  className="p-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]"
                                   title={`Fusionar con el siguiente (#${track.index + 1})`}
                                 >
                                   <Combine className="w-3.5 h-3.5" />
@@ -2352,7 +2352,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     title="Extrae las primeras palabras del speech para usarlas como nombre"
                                   >
                                     <Sparkles className="w-3 h-3 text-[var(--tentative)]" />
-                                    <span><ShowIcon inline emoji="💡" />Usar frase del speech</span>
+                                    <span>Usar frase del speech</span>
                                   </button>
                                 )}
                               </>
@@ -2453,7 +2453,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   disabled={
                                     transcribingChordsIndex === track.index
                                   }
-                                  className="px-2.5 py-1 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/40 flex items-center gap-1.5 transition-ui"
+                                  className="px-2.5 py-1 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/40 flex items-center gap-1.5 transition-ui"
                                   title="Generar o actualizar automáticamente letra transcrita con cifrado de acordes con Gemini AI"
                                 >
                                   <Sparkles
@@ -2472,7 +2472,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                         : track.index,
                                     )
                                   }
-                                  className="px-2.5 py-1 text-xs font-bold rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1"
+                                  className="px-2.5 py-1 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] flex items-center gap-1"
                                 >
                                   <Music2 className="w-3 h-3 text-[var(--acc)]" />
                                   {expandedChordsIndex === track.index ||
@@ -2824,7 +2824,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                             else snippetAudioRef.current.play();
                                           }
                                         }}
-                                        className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5/10/20"
+                                        className="px-4 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5/10/20"
                                       >
                                         {snippetIsPlaying ? (
                                           <Pause className="w-4 h-4" />
@@ -2945,7 +2945,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                     <button
                       onClick={handleCreateSetlistFromConcert}
-                      className="px-3.5 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--tentative)]/80 text-[var(--tentative)]/60 hover:bg-[var(--tentative)]/80 flex items-center gap-1.5 transition-ui"
+                      className="px-3.5 py-1.5 text-xs font-bold rounded-[var(--r-pill)] bg-[var(--tentative)]/80 text-[var(--tentative)]/60 hover:bg-[var(--tentative)]/80 flex items-center gap-1.5 transition-ui"
                     >
                       <ListPlus className="w-3.5 h-3.5 text-[var(--tentative)]" />{" "}
                       Crear Setlist
@@ -2961,7 +2961,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                   <button
                     onClick={handleSaveToCatalog}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 font-extrabold text-[var(--on-acc)] text-xs/10/20 flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 font-extrabold text-[var(--on-acc)] text-xs/10/20 flex items-center gap-2"
                   >
                     <Disc3 className="w-4 h-4" /> <ShowIcon inline emoji="💾" />Guardar como Álbum en la
                     Discografía
@@ -2999,7 +2999,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   </div>
                   <button
                     onClick={() => setCookieModalOpen(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]"
+                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)]"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -3073,7 +3073,7 @@ export const LiveConcertToAlbumModal: React.FC<
                       {hasYoutubeCookies ? (
                         <button
                           onClick={handleDeleteCookies}
-                          className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--alert)]/60 text-xs font-bold transition-ui"
+                          className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--alert)]/60 text-xs font-bold transition-ui"
                         >
                           Eliminar cookies actuales
                         </button>
@@ -3084,14 +3084,14 @@ export const LiveConcertToAlbumModal: React.FC<
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => setCookieModalOpen(false)}
-                          className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold"
+                          className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold"
                         >
                           Cancelar
                         </button>
                         <button
                           onClick={handleSaveCookies}
                           disabled={isSavingCookies || !cookiesInputText.trim()}
-                          className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-extrabold/10/20 disabled:opacity-50 flex items-center gap-1.5"
+                          className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-extrabold/10/20 disabled:opacity-50 flex items-center gap-1.5"
                         >
                           {isSavingCookies ? (
                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -3132,7 +3132,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   </div>
                   <button
                     onClick={() => setShowQuickNamingModal(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)] transition-colors"
+                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -3143,7 +3143,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     type="button"
                     onClick={() => setQuickNamingActiveTab("table")}
-                    className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
+                    className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
                       quickNamingActiveTab === "table"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3156,7 +3156,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     type="button"
                     onClick={() => setQuickNamingActiveTab("paste")}
-                    className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
+                    className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
                       quickNamingActiveTab === "paste"
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3232,7 +3232,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                   );
                                 }
                               }}
-                              className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-bold transition-ui flex items-center gap-1 cursor-pointer ${
+                              className={`px-2 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center gap-1 cursor-pointer ${
                                 tr.type === "musica"
                                   ? "bg-[var(--acc)]/20 text-[var(--acc)]/70  hover:bg-[var(--acc)]/30"
                                   : "bg-[var(--tentative)]/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/30"
@@ -3443,7 +3443,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         type="button"
                         onClick={handleApplyBatchPastedNames}
                         disabled={!batchPastedText.trim()}
-                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-extrabold text-xs disabled:opacity-50 transition-ui flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-extrabold text-xs disabled:opacity-50 transition-ui flex items-center gap-1.5"
                       >
                         <Check className="w-4 h-4" />
                         <span>Aplicar Nombres a las Pistas</span>
@@ -3457,7 +3457,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <button
                     type="button"
                     onClick={() => setShowQuickNamingModal(false)}
-                    className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold transition-colors"
+                    className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold transition-colors"
                   >
                     Listo / Cerrar
                   </button>

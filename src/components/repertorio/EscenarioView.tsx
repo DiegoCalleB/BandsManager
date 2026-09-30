@@ -270,7 +270,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
             <button
               onClick={() => setShowPdfPreview(true)}
-              className="px-2 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-sans font-extrabold text-micro rounded-[var(--r-m)] hover:bg-[var(--acc)]/50 transition-ui flex items-center gap-2 cursor-pointer"
+              className="px-2 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-sans font-extrabold text-micro rounded-[var(--r-pill)] hover:bg-[var(--acc)]/50 transition-ui flex items-center gap-2 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
               <span>Imprimir / Exportar</span>
@@ -392,7 +392,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
-                className={`p-2 rounded-[var(--r-m)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer ${
+                className={`p-2 rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer ${
                   showPedalShortcuts
                     ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
                     : "bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]"
@@ -432,7 +432,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                     setShowItemAudioUrl(currentStageItem.audioUrl || "");
                     setShowShowItemModal(true);
                   }}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer shrink-0 ml-1 "
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer shrink-0 ml-1 "
                   title="Grabar o subir audio para esta presentación / interludio"
                 >
                   <Mic className="w-4 h-4 text-[var(--acc)]" />
@@ -629,7 +629,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
-                className={`text-xs font-sans px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer ${
+                className={`text-xs font-sans px-3 py-1.5 rounded-[var(--r-pill)] flex items-center gap-1.5 transition-colors cursor-pointer ${
                   showPedalShortcuts
                     ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                     : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -642,7 +642,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowChordsPanel(!showChordsPanel)}
-                className={`text-xs font-sans px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
+                className={`text-xs font-sans px-3 py-1.5 rounded-[var(--r-pill)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
                   showChordsPanel
                     ? "bg-[var(--surface)]/20 text-[var(--ok)]/50"
                     : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -961,7 +961,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                             setShowItemAudioUrl(it.audioUrl || "");
                             setShowShowItemModal(true);
                           }}
-                          className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/70 hover:bg-[var(--acc)] text-[var(--acc)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 self-start sm:self-auto"
+                          className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/70 hover:bg-[var(--acc)] text-[var(--acc)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 self-start sm:self-auto"
                           title="Modificar Audio o Grabación de este evento"
                         >
                           <Mic className="w-3 h-3 text-[var(--acc)]" />

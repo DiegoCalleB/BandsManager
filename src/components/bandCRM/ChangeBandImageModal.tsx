@@ -118,7 +118,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                 <p className="text-xs text-[var(--ink-2)] font-sans">{band.nombre_banda}</p>
               </div>
             </div>
-            <button onClick={onClose} className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-s)] text-[var(--ink-2)]">
+            <button onClick={onClose} className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-pill)] text-[var(--ink-2)]">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -202,7 +202,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                 <button
                   onClick={handleSaveCustomUrl}
                   disabled={!customUrl.trim()}
-                  className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60"
+                  className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] hover:bg-[var(--acc)]/60"
                 >
                   Guardar
                 </button>

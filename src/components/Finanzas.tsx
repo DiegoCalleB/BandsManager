@@ -223,7 +223,7 @@ export default function Finanzas({
             id="sync-finanzas-excel-btn"
             onClick={handleSyncFinanzas}
             disabled={isSyncing}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isSyncing
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] "
@@ -357,7 +357,7 @@ export default function Finanzas({
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setActiveTab("rentabilidad")}
-            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-s)] transition-ui cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${
               activeTab === "rentabilidad"
                 ? colors.primary
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -367,7 +367,7 @@ export default function Finanzas({
           </button>
           <button
             onClick={() => setActiveTab("ledger")}
-            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-s)] transition-ui cursor-pointer ${
+            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer ${
               activeTab === "ledger"
                 ? colors.primary
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -377,7 +377,7 @@ export default function Finanzas({
           </button>
           <button
             onClick={() => setActiveTab("analytics")}
-            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-s)] transition-ui cursor-pointer ${
+            className={`px-3 py-1.5 font-sans text-micro font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer ${
               activeTab === "analytics"
                 ? colors.primary
                 : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -389,7 +389,7 @@ export default function Finanzas({
 
         <button
           onClick={() => setIsAddOpen(true)}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${"bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]"}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${"bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]"}`}
         >
           <Plus className="w-3.5 h-3.5" /> Registrar Operación
         </button>
@@ -712,7 +712,7 @@ export default function Finanzas({
                                   c.gastosDetalle?.notasGastos || "",
                                 );
                               }}
-                              className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 font-semibold rounded-[var(--r-s)] text-xs flex items-center gap-1 ml-auto transition cursor-pointer"
+                              className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 font-semibold rounded-[var(--r-pill)] text-xs flex items-center gap-1 ml-auto transition cursor-pointer"
                             >
                               <Edit3 className="w-3.5 h-3.5" /> Gastos
                             </button>
@@ -839,7 +839,7 @@ export default function Finanzas({
                 <div className="pt-2 flex justify-end gap-2">
                   <button
                     onClick={() => setEditingConcertId(null)}
-                    className="px-4 py-2 bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-bold rounded-[var(--r-m)]"
+                    className="px-4 py-2 bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-bold rounded-[var(--r-pill)]"
                   >
                     Cancelar
                   </button>
@@ -860,7 +860,7 @@ export default function Finanzas({
                       }
                       setEditingConcertId(null);
                     }}
-                    className="px-4 py-2 bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-m)]"
+                    className="px-4 py-2 bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold rounded-[var(--r-pill)]"
                   >
                     Guardar Gastos
                   </button>

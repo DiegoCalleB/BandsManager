@@ -443,7 +443,7 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 cursor-pointer"
+              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -453,7 +453,7 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month + 1, 1))}
-              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 cursor-pointer"
+              className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-pill)] hover:bg-[var(--surface)]/80 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

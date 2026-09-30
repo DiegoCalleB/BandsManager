@@ -105,7 +105,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-ui cursor-pointer"
+              className="px-5 py-2 rounded-[var(--r-pill)] text-xs font-bold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-ui cursor-pointer"
             >
               Entendido
             </button>

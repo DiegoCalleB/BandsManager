@@ -28,7 +28,7 @@ export const ModuleTutorialTrigger: React.FC<ModuleTutorialTriggerProps> = ({
         type="button"
         onClick={handleClick}
         title={`Abrir guía y tutorial interactivo de ${moduleId}`}
-        className={`p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--acc-ink)] transition-colors cursor-pointer flex items-center justify-center active:scale-[0.97] ${className}`}
+        className={`p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--acc-ink)] transition-colors cursor-pointer flex items-center justify-center active:scale-[0.97] ${className}`}
       >
         <HelpCircle className="w-4 h-4" />
       </button>

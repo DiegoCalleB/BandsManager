@@ -980,7 +980,7 @@ export function ReelsMetricsView({
           <button
             type="button"
             onClick={() => setActiveMainSection("metrics")}
-            className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-2 cursor-pointer ${
+            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-2 cursor-pointer ${
               activeMainSection === "metrics"
                 ? "bg-[var(--surface)] text-[var(--tentative)]"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -993,7 +993,7 @@ export function ReelsMetricsView({
           <button
             type="button"
             onClick={() => setActiveMainSection("growth_plan")}
-            className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui flex items-center gap-2 cursor-pointer ${
+            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-2 cursor-pointer ${
               activeMainSection === "growth_plan"
                 ? "bg-[var(--acc)]  text-[var(--ink)]/10 font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1060,11 +1060,11 @@ export function ReelsMetricsView({
                   setScanResult(null);
                   setShowScanModal(true);
                 }}
-                className="px-3.5 py-2.5 rounded-[var(--r-m)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui bg-[var(--acc-soft)]/40 text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]/60"
+                className="px-3.5 py-2.5 rounded-[var(--r-pill)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui bg-[var(--acc-soft)]/40 text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]/60"
                 title="Sube una captura de pantalla de tu Instagram, TikTok o Spotify y Gemini extraerá todas las métricas al instante"
               >
                 <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
-                <span><ShowIcon inline emoji="📸" />Escanear Captura IA</span>
+                <span>Escanear Captura IA</span>
               </button>
 
               {/* Instagram OAuth / Meta Graph API Button */}
@@ -1073,7 +1073,7 @@ export function ReelsMetricsView({
                   setIgModalMsg(null);
                   setShowIgModal(true);
                 }}
-                className={`px-3.5 py-2.5 rounded-[var(--r-m)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
+                className={`px-3.5 py-2.5 rounded-[var(--r-pill)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                   igStatus?.connected
                     ? "bg-[var(--alert-soft)]/40 text-[var(--alert)] hover:bg-[var(--alert-soft)]/60"
                     : "bg-[var(--surface)]/40 text-[var(--alert)] hover:bg-[var(--alert-soft)]"
@@ -1098,7 +1098,7 @@ export function ReelsMetricsView({
                     await loadContentItems();
                   }}
                   disabled={isScanningMetrics}
-                  className={`flex-1 md:flex-initial px-4 py-2.5 rounded-[var(--r-m)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
+                  className={`flex-1 md:flex-initial px-4 py-2.5 rounded-[var(--r-pill)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                     isScanningMetrics
                       ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                       : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)]"
@@ -1117,7 +1117,7 @@ export function ReelsMetricsView({
                 <button
                   onClick={onSyncMetrics}
                   disabled={isSyncingMetrics}
-                  className={`px-3 py-2.5 rounded-[var(--r-m)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
+                  className={`px-3 py-2.5 rounded-[var(--r-pill)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                     isSyncingMetrics
                       ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]"
@@ -1461,7 +1461,7 @@ export function ReelsMetricsView({
 
                   <button
                     onClick={selectAllChannels}
-                    className={`text-micro font-sans px-2.5 py-1 rounded-[var(--r-s)] transition-ui cursor-pointer flex items-center gap-1 ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                    className={`text-micro font-sans px-2.5 py-1 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1 ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
                     title="Mostrar todos los canales disponibles"
                   >
                     <RefreshCw className="w-2.5 h-2.5" />
@@ -1756,7 +1756,7 @@ export function ReelsMetricsView({
                     </p>
                     <button
                       onClick={selectAllChannels}
-                      className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-sans text-micro font-medium transition-ui"
+                      className="mt-3 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-sans text-micro font-medium transition-ui"
                     >
                       Activar todos los canales
                     </button>
@@ -2047,7 +2047,7 @@ export function ReelsMetricsView({
                   <button
                     type="submit"
                     disabled={isSavingMetric}
-                    className={`flex-1 py-2.5 rounded-[var(--r-m)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
+                    className={`flex-1 py-2.5 rounded-[var(--r-pill)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-ui ${
                       isSavingMetric
                         ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                         : "bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/15"
@@ -2337,7 +2337,7 @@ export function ReelsMetricsView({
               </div>
               <button
                 onClick={() => setShowIgModal(false)}
-                className="p-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2410,7 +2410,7 @@ export function ReelsMetricsView({
                     <button
                       onClick={handleDisconnectIg}
                       disabled={isConnectingIg}
-                      className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer"
                     >
                       <Unlink className="w-3 h-3" /> Desconectar
                     </button>
@@ -2519,7 +2519,7 @@ export function ReelsMetricsView({
                   <button
                     onClick={handleConnectIgToken}
                     disabled={isConnectingIg || !igTokenInput.trim()}
-                    className={`px-4 py-2.5 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer ${
+                    className={`px-4 py-2.5 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer ${
                       isConnectingIg || !igTokenInput.trim()
                         ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                         : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)]"
@@ -2608,7 +2608,7 @@ export function ReelsMetricsView({
               </a>
               <button
                 onClick={() => setShowIgModal(false)}
-                className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 Cerrar
               </button>
@@ -2644,7 +2644,7 @@ export function ReelsMetricsView({
               </div>
               <button
                 onClick={() => setShowScanModal(false)}
-                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-ui cursor-pointer"
+                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -2851,7 +2851,7 @@ export function ReelsMetricsView({
                   setScanImageBase64(null);
                   setScanResult(null);
                 }}
-                className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 Cerrar
               </button>

@@ -161,7 +161,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1.5 rounded-[var(--r-m)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
+              className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1.5 rounded-[var(--r-pill)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -214,7 +214,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   <button
                     type="button"
                     onClick={handleSavePhone}
-                    className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] rounded-[var(--r-m)] font-bold text-xs cursor-pointer"
+                    className="px-3 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] rounded-[var(--r-pill)] font-bold text-xs cursor-pointer"
                   >
                     Guardar
                   </button>
@@ -270,7 +270,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                       key={dateStr}
                       type="button"
                       onClick={() => insertDateInMessage(dateStr)}
-                      className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-mono font-bold transition-ui cursor-pointer flex items-center gap-1"
+                      className="px-2 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-mono font-bold transition-ui cursor-pointer flex items-center gap-1"
                     >
                       <span>+ {dateStr}</span>
                     </button>
@@ -331,7 +331,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer "
+                className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer "
               >
                 {copied ? (
                   <>
@@ -358,7 +358,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                     setInteractionLogged(true);
                   }}
                   disabled={interactionLogged}
-                  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`px-3 py-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     interactionLogged
                       ? 'bg-[var(--ok)]/60 text-[var(--ok)] opacity-80'
                       : 'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] '
@@ -375,7 +375,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold cursor-pointer"
+                className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold cursor-pointer"
               >
                 Cerrar
               </button>
@@ -384,7 +384,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 type="button"
                 onClick={handleOpenWhatsApp}
                 disabled={!hasValidPhone}
-                className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer ${
+                className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-2 transition-ui cursor-pointer ${
                   hasValidPhone
                     ? 'bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-extrabold/20'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] cursor-not-allowed'

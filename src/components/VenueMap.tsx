@@ -1025,7 +1025,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowStyleMenu(!showStyleMenu)}
-              className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+              className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
             >
               <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Estilo Mapa</span>
@@ -1066,7 +1066,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
           <button
             onClick={handleRecenter}
-            className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+            className={`px-3 py-2 rounded-[var(--r-pill)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
           >
             <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Centrar Vista</span>

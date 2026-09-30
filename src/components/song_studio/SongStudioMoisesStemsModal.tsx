@@ -51,7 +51,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('stems')}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
@@ -60,7 +60,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('how_it_works')}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'how_it_works'
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
@@ -71,7 +71,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('upload')}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
@@ -118,7 +118,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
               <button
                 type="button"
                 onClick={() => setShowMoisesStemsModal(null)}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
               >
                 Cancelar
               </button>
@@ -130,7 +130,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                     setShowMoisesStemsModal(null);
                   }
                 }}
-                className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
+                className="px-5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Comenzar Separación</span>

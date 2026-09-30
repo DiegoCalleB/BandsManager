@@ -1051,7 +1051,7 @@ export function GooglePlacesExplorerModal({
                 <button
                   type="button"
                   onClick={() => setShowDiscardedModal(true)}
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] transition-ui cursor-pointer"
+                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] transition-ui cursor-pointer"
                   title="Ver y gestionar sugerencias marcadas como no deseadas"
                 >
                   <Ban className="w-3.5 h-3.5 text-[var(--alert)]" />
@@ -1061,7 +1061,7 @@ export function GooglePlacesExplorerModal({
 
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
+                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1151,7 +1151,7 @@ export function GooglePlacesExplorerModal({
                             setMassFilterTipos([...massFilterTipos, item.id]);
                           }
                         }}
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 transition-ui cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition-ui cursor-pointer ${
                           isChecked
                             ? "bg-[var(--acc)]/60 text-[var(--acc)]/70 "
                             : "bg-[var(--bg)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -1219,7 +1219,7 @@ export function GooglePlacesExplorerModal({
                         key={cat.id}
                         type="button"
                         onClick={() => handleCategoryChange(cat.id)}
-                        className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
+                        className={`px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                           isSelected
                             ? "bg-[var(--acc)] text-[var(--on-acc)]"
                             : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]"
@@ -1315,7 +1315,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchMultiSource()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] font-semibold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                     title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
                   >
                     <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1326,7 +1326,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchPublicCultural()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] font-semibold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                     title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
                   >
                     <Building2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -1337,7 +1337,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearch()}
                     disabled={isSearching}
-                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-ui cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center justify-center gap-2 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     {isSearching ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1391,7 +1391,7 @@ export function GooglePlacesExplorerModal({
                   <button
                     key={city}
                     onClick={() => handleQuickCityClick(city)}
-                    className={`px-2.5 py-0.5 text-micro rounded-[var(--r-s)] transition-ui cursor-pointer font-medium ${
+                    className={`px-2.5 py-0.5 text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer font-medium ${
                       selectedCity === city
                         ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                         : "bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
@@ -1415,7 +1415,7 @@ export function GooglePlacesExplorerModal({
                       type="button"
                       onClick={() => handleSearchSimilarBands(band)}
                       disabled={isSearching}
-                      className="px-2.5 py-0.5 text-micro rounded-[var(--r-m)] transition-ui cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50"
+                      className="px-2.5 py-0.5 text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50"
                       title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
                     >
                       <ShowIcon inline emoji="🔍" />{band}
@@ -1425,7 +1425,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
                     disabled={isSearching}
-                    className="px-2.5 py-0.5 text-micro rounded-[var(--r-m)] font-bold transition-ui cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] ml-auto"
+                    className="px-2.5 py-0.5 text-micro rounded-[var(--r-pill)] font-bold transition-ui cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] ml-auto"
                   >
                     <ShowIcon inline emoji="⚡" />Rastrear Todas
                   </button>
@@ -1500,7 +1500,7 @@ export function GooglePlacesExplorerModal({
                     <button
                       onClick={handleExtractBatchEmails}
                       disabled={isExtractingBatch || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                      className="px-3.5 py-1.5 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                       title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
                     >
                       {isExtractingBatch ? (
@@ -1514,7 +1514,7 @@ export function GooglePlacesExplorerModal({
                     <button
                       onClick={handleImportToCRM}
                       disabled={isImporting || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                      className="px-3.5 py-1.5 bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] font-bold text-xs rounded-[var(--r-pill)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                     >
                       {isImporting ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1604,7 +1604,7 @@ export function GooglePlacesExplorerModal({
                             <button
                               type="button"
                               onClick={() => handleDiscardPlace(place)}
-                              className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/15 transition-ui cursor-pointer"
+                              className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/15 transition-ui cursor-pointer"
                               title="Marcar como no deseada (descartar para futuras búsquedas)"
                             >
                               <Ban className="w-3.5 h-3.5" />
@@ -1723,7 +1723,7 @@ export function GooglePlacesExplorerModal({
                                   handleExtractSingleEmail(place.place_id)
                                 }
                                 disabled={place.extractingEmail}
-                                className="px-2.5 py-1 bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 rounded-[var(--r-s)] font-bold text-micro flex items-center gap-1 transition-ui cursor-pointer disabled:opacity-50 shrink-0"
+                                className="px-2.5 py-1 bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 rounded-[var(--r-pill)] font-bold text-micro flex items-center gap-1 transition-ui cursor-pointer disabled:opacity-50 shrink-0"
                                 title="Agente Enriquecedor: Buscar email oficial verificado en la web de esta propuesta"
                               >
                                 {place.extractingEmail ? (
@@ -1810,7 +1810,7 @@ export function GooglePlacesExplorerModal({
                         <button
                           type="button"
                           onClick={() => handleRestorePlace(item.nombre_sala)}
-                          className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-ui"
+                          className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-ui"
                           title="Volver a permitir en sugerencias futuras"
                         >
                           <RotateCcw className="w-3 h-3" />
@@ -1835,7 +1835,7 @@ export function GooglePlacesExplorerModal({
                     <button
                       type="button"
                       onClick={() => setShowDiscardedModal(false)}
-                      className="px-4 py-1.5 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
+                      className="px-4 py-1.5 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-pill)] text-xs font-bold cursor-pointer"
                     >
                       Cerrar
                     </button>

@@ -695,10 +695,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       <div className="flex items-center justify-between gap-3 bg-[var(--surface)] rounded-[var(--r-l)] p-4 sm:p-6">
         <div className="min-w-0">
           <h2
-            className="text-lg sm:text-2xl font-black text-[var(--ink)] font-display flex items-center gap-2 sm:gap-3"
+            className="page-title flex items-center gap-2 sm:gap-3"
             title="Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento."
           >
-            <QrCode className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--acc)] shrink-0" />
+            <QrCode className="size-5 sm:size-6 text-[var(--acc)] shrink-0" />
             <span className="truncate">Captura QR & Fans</span>
           </h2>
           <p className="hidden sm:block text-[var(--ink-2)] font-sans text-sm mt-1">
@@ -718,7 +718,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               type="button"
               onClick={() => setShowFansHeaderMenu((v) => !v)}
               title="Previsualizar formulario, copiar enlace, registrar fan manual, exportar CSV o ver guía"
-              className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
+              className="p-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
@@ -863,7 +863,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedCityFilter("")}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                   selectedCityFilter === ""
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
@@ -931,7 +931,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   />
                   <button
                     type="submit"
-                    className="p-1 bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition cursor-pointer"
+                    className="p-1 bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-pill)] hover:bg-[var(--acc)]/60 transition cursor-pointer"
                     title="Guardar ciudad"
                   >
                     <Check className="w-3.5 h-3.5" />
@@ -942,7 +942,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       setIsAddingCity(false);
                       setNewCityInput("");
                     }}
-                    className="p-1 bg-[var(--sunken)] text-[var(--ink-2)] rounded-[var(--r-s)] hover:bg-[var(--surface)] transition cursor-pointer"
+                    className="p-1 bg-[var(--sunken)] text-[var(--ink-2)] rounded-[var(--r-pill)] hover:bg-[var(--surface)] transition cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -951,7 +951,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsAddingCity(true)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] flex items-center gap-1 transition cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] flex items-center gap-1 transition cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Añadir ciudad</span>
@@ -1009,7 +1009,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setViewMode("feed")}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "feed"
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1035,7 +1035,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setViewMode("table")}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "table"
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1048,7 +1048,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setViewMode("map")}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "map"
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1119,7 +1119,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             onDeleteFan(fan.id);
                           }
                         }}
-                        className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)]/20 hover:text-[var(--alert)] rounded-[var(--r-s)] transition cursor-pointer"
+                        className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)]/20 hover:text-[var(--alert)] rounded-[var(--r-pill)] transition cursor-pointer"
                         title="Eliminar Fan"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -1598,7 +1598,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       <button
                         type="button"
                         onClick={() => handleSaveIncentive()}
-                        className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-pill)] shadow transition flex items-center gap-1.5 cursor-pointer"
                       >
                         <Save className="w-3.5 h-3.5" /> Guardar Incentivo
                       </button>
@@ -1623,7 +1623,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => onNavigate?.("epk")}
-                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] text-xs font-bold font-sans rounded-[var(--r-pill)] shadow transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> Configurar en el
                     Dossier EPK
@@ -1743,7 +1743,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           key={l.code}
                           type="button"
                           onClick={() => setQrLanguage(l.code)}
-                          className={`py-2 px-2 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors ${
+                          className={`py-2 px-2 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors ${
                             qrLanguage === l.code
                               ? "bg-[var(--acc)]/15  text-[var(--acc)]/70"
                               : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
@@ -1970,13 +1970,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-5 py-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--surface)] cursor-pointer"
+                  className="px-5 py-2.5 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-xs font-bold rounded-[var(--r-pill)] transition hover:bg-[var(--surface)] cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--on-acc)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--on-acc)] font-sans text-xs font-bold rounded-[var(--r-pill)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" /> Guardar Fan
                 </button>

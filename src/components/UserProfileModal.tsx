@@ -491,7 +491,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+              className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -545,7 +545,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowUpgradeModal(true)}
-                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans transition-ui duration-200 active:scale-[0.97] flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] text-xs font-bold font-sans transition-ui duration-200 active:scale-[0.97] flex items-center gap-1.5 shrink-0 cursor-pointer"
                     >
                       <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
                       <span>Upgrade</span>
@@ -556,7 +556,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <button
                       type="button"
                       onClick={onOpenProfileWizard}
-                      className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 cursor-pointer"
                       title="Abrir Asistente de Inicio / Onboarding"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -867,7 +867,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         type="button"
                         onClick={handleCreateBandInProfile}
                         disabled={isCreatingBand || !createBandName.trim()}
-                        className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                       >
                         {isCreatingBand ? (
                           <>
@@ -911,7 +911,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       type="button"
                       onClick={handleConfirmDeleteBandInProfile}
                       disabled={!!deletingBandId}
-                      className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
                       {deletingBandId ? (
                         <>
@@ -1004,7 +1004,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                   })
                                 }
                                 title="Eliminar proyecto"
-                                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors cursor-pointer"
                               >
                                 {isDeleting ? (
                                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1400,7 +1400,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
             <button
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
             >
               Cerrar
             </button>
@@ -1433,7 +1433,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <button
                     onClick={() => setShowUpgradeModal(false)}
-                    className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+                    className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -1463,7 +1463,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               window.location.href = res.url;
                           } catch (e) {}
                         }}
-                        className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-micro rounded-[var(--r-s)] transition-ui cursor-pointer whitespace-nowrap"
+                        className="px-3 py-1 bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)] font-sans font-bold text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer whitespace-nowrap"
                       >
                         Actualizar Tarjeta
                       </button>
@@ -1510,7 +1510,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           alert("Error al conectar con Stripe: " + err.message);
                         }
                       }}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>Portal de Stripe</span>
                       <ExternalLink className="w-3 h-3" />
@@ -1652,7 +1652,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                     );
                                   }
                                 }}
-                                className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
+                                className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold font-sans text-xs transition-ui active:scale-[0.97] flex items-center gap-1 cursor-pointer"
                               >
                                 <Sparkles className="w-3 h-3 fill-neutral-950" />
                                 <span>Seleccionar {plan.name}</span>
@@ -1683,7 +1683,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   )}
                   <button
                     onClick={() => setShowUpgradeModal(false)}
-                    className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] transition-colors cursor-pointer"
+                    className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-sans bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] transition-colors cursor-pointer"
                   >
                     Cerrar
                   </button>

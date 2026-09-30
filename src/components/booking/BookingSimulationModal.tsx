@@ -83,7 +83,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors"
+              className="p-2 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -184,7 +184,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             <button
               onClick={handleCommit}
               disabled={!simulationMessage}
-              className="px-5 py-2 rounded-[var(--r-m)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 transition-ui flex items-center gap-2"
+              className="px-5 py-2 rounded-[var(--r-pill)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:brightness-95 disabled:opacity-50 transition-ui flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
               Registrar en Hilo de Emails

@@ -127,7 +127,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("booking", { campaignFilter: campaign.id })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "booking"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -144,7 +144,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("calendario", { selectedDate: firstTargetDate })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "calendario"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -161,7 +161,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("bandas", { campaignCities: campaign.targetCities })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "bandas"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -177,7 +177,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onOpenManager}
-            className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
+            className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
             title="Gestionar o cambiar campaña activa"
           >
             <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -187,7 +187,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onDeactivate}
-            className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)]/60 transition-colors shrink-0"
+            className="p-1 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)]/60 transition-colors shrink-0"
             title="Desactivar modo campaña (volver a modo general)"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

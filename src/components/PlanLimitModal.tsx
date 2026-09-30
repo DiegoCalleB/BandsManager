@@ -183,7 +183,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 onClose();
                 onNavigateToPlanes();
               }}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
             >
               <span>Ver Comparativa Completa</span>
               <ExternalLink className="w-3.5 h-3.5" />

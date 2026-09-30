@@ -141,7 +141,7 @@ export function TemplateConfigSection({
                   onSelectTemplateTab(tab.id);
                   setShowRecommendations(false);
                 }}
-                className={`py-1.5 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                className={`py-1.5 px-3 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                   isActive ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
                 }`}
               >
@@ -158,7 +158,7 @@ export function TemplateConfigSection({
             <button
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
-              className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer hover:brightness-95"
+              className="px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer hover:brightness-95"
               title="Genera las 7 plantillas desde una propuesta base"
             >
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -170,7 +170,7 @@ export function TemplateConfigSection({
             id="template-btn-save"
             type="button"
             onClick={onSaveTemplates}
-            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Guardar</span>
@@ -202,7 +202,7 @@ export function TemplateConfigSection({
           <button
             type="button"
             onClick={() => setShowRecommendations(!showRecommendations)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
               showRecommendations
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--acc)] '
@@ -216,7 +216,7 @@ export function TemplateConfigSection({
           <button
             type="button"
             onClick={() => setShowExamples(!showExamples)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
               showExamples
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] '
@@ -347,7 +347,7 @@ export function TemplateConfigSection({
                 type="button"
                 onClick={() => onOptimizeTemplate()}
                 disabled={isOptimizingTemplate}
-                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-micro font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
               >
                 <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
                 <span>{isOptimizingTemplate ? 'Optimizando...' : 'Optimizar con IA'}</span>
@@ -359,7 +359,7 @@ export function TemplateConfigSection({
               type="button"
               onClick={onTestPrompt}
               disabled={isTestingPrompt}
-              className={`px-2 py-1 font-sans text-micro rounded-[var(--r-s)] transition-ui cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
+              className={`px-2 py-1 font-sans text-micro rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
             >
               <Eye className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`} />
               <span>{isTestingPrompt ? 'Generando...' : 'Simular Vista Previa'}</span>
