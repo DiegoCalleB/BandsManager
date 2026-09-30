@@ -2454,8 +2454,8 @@ export default function App() {
                 isFloatingChatOpen
                   ? "bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)]"
                   : isChatLoading
-                    ? "bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50"
-                    : "bg-[var(--ok)] hover:brightness-95 text-[var(--on-ok)] "
+                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
+                    : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] "
               }`}
               title={
                 isChatLoading

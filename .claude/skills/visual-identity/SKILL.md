@@ -14,7 +14,7 @@ Esta skill es **la autoridad estética del repositorio** (qué se ve). Cómo se 
 ## ⚖️ 1. Las dos leyes
 
 > ## 1 · Un borde solo existe si significa algo. La separación es luz y espacio.
-> ## 2 · Cada módulo tiene su color. El resto es gris.
+> ## 2 · Un solo acento (el azul). El resto es gris. Los módulos se distinguen por icono y título, no por color.
 
 **Los músicos pasan de 4 a 6 horas seguidas dentro de la app.** La fatiga visual es la restricción que manda sobre cualquier consideración estética. Las seis causas reales, todas medibles:
 
@@ -74,19 +74,20 @@ La silueta del público con los brazos en alto es la única parte del logo con c
 }
 ```
 
-### Color por módulo — la segunda ley
-Cada módulo tiñe `--acc` para que el usuario sepa dónde está sin leer el título. Se aplica con `data-modulo` en el contenedor raíz de la vista.
+### Un solo acento — la segunda ley
+**Decisión de Diego (2026-09-30):** «el naranja por toda la app no me gusta; me gustaba más el azul que teníamos; no quiero tantísimos colores diferentes». Hasta entonces cada módulo teñía `--acc` con su tono (naranja, morado, rosa, verde, índigo, teal) y la app parecía un muestrario. **No se reintroduce el color por módulo.**
 
-| Módulo | Claro `--acc` / `--acc-soft` / `--acc-ink` | Oscuro `--acc` |
-|---|---|---|
-| Panel · Booking | `#D86E31` / `#F9EAE1` / `#813F18` | `#E99463` |
-| Repertorio | `#E0615C` / `#FDE9E7` / `#A83C37` | `#F08B84` |
-| Gira · Sala | `#17998C` / `#DDF1EE` / `#0E6B62` | `#4FC7B8` |
-| Finanzas | `#3C7EA8` / `#E2EDF4` / `#24587A` | `#6FB0D9` |
-| Fans · Reels | `#9B5FB5` / `#F0E7F5` / `#6F3D87` | `#C08FD6` |
+| Token | Claro | Oscuro | Para qué |
+|---|---|---|---|
+| `--acc` / `--acc-soft` / `--acc-ink` | `#2563EB` / `#DBEAFE` / `#1D4ED8` | `#60A5FA` / `#1E3A5F` / `#60A5FA` | El único acento: acciones, selección, datos destacados |
+| `--ok` | `#0D7A70` | `#4FC7B8` | Estado positivo (teal, análogo del azul) |
+| `--alert` | `#B3453C` | `#E27A70` | Solo errores reales |
+| `--tentative` | `#4F5F86` | `#A9B6D6` | «Posible»: gris azulado de la familia del azul |
 
-- **`--acc` y `--acc-ink` no son intercambiables.** `--acc` es para rellenos y elementos gráficos; `--acc-ink` es la versión oscurecida que pasa AA para texto sobre claro. El naranja de Panel/Booking `#D86E31` sobre blanco no llega a 4,5:1 — para texto va `#813F18`.
-- Panel/Booking usaron el ámbar de marca (`#F2CA50`) hasta el 2026-09-19: "se le da un sitio" resultó ser insuficiente — combinado con el sidebar (aún sin migrar, `App.tsx`, negro), dorado+negro leía a bróker cripto pese a tener cero bordes ni glow. El color por sí solo pesa más que la forma. La primera sustituta, terracota (`#C2703D`), duró minutos: el propio checklist del §8 la señala como paleta segura de diseño generado, junto a salvia/crema/azul polvoriento. El tono final es naranja quemado (`#D86E31`), más saturado (68% vs 52%) y sin el barniz "de buen gusto". El dorado de marca se queda en el logo y en `[data-theme="classic"]`, no vuelve a la UI de Espectro.
+- **`--acc` y `--acc-ink` no son intercambiables.** `--acc` es para rellenos y elementos gráficos; `--acc-ink` es la versión que pasa AA para texto sobre claro. Blanco sobre `--acc` da 5,2:1.
+- **Armonía = pocos tonos.** Un acento, un estado positivo, un estado de error y neutros fríos. Si necesitas distinguir cosas, usa forma, peso, posición o icono antes que un color nuevo. `python3 scripts/paleta-audit.py` falla si vuelve un override de `--acc` por módulo, si un estado tiene más croma que el acento o si «posible» sale de la familia del azul.
+- `data-modulo` se conserva como gancho (tests, futuro) pero **ya no cambia colores**. Clásico sigue con su ámbar de marca y es lo que hace reversible todo esto.
+- Historia, para no repetirla: ámbar de marca (dorado+negro leía a bróker) → terracota (paleta segura de diseño generado) → naranja quemado → un color por módulo → **un solo azul**.
 
 ### Repintado sin tocar componentes (Tailwind v4)
 ```css
@@ -191,7 +192,7 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 - [ ] Cero `slate`/`zinc`/`stone`/`gray` nuevos (solo `neutral`).
 - [ ] El radio sale de la escala y corresponde al peso del objeto.
 - [ ] Caja de frase en todo. Ni una mayúscula decorativa.
-- [ ] `--acc` viene del módulo (`data-modulo`), no hardcodeado.
+- [ ] `--acc` viene del token, no hardcodeado, y no hay un color nuevo por módulo.
 - [ ] Texto entre 10:1 y 14:1 de contraste. `--acc-ink` para texto, `--acc` para relleno.
 - [ ] `font-mono` solo en dato tabular real.
 - [ ] Escala tipográfica (mínimo 11 px), zonas táctiles ≥ 40 px, movimiento y estados según **`craft-interfaces`**.
