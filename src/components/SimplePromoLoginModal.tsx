@@ -477,7 +477,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 <div className="pt-3 text-center text-xs text-[var(--ink-2)] flex flex-col items-center justify-center gap-2">
                   <div className="flex items-center gap-1.5">
                     <Music className="w-3.5 h-3.5" />
-                    <span>Tus salas, tu repertorio y tu gira, en el mismo sitio</span>
+                    <span>Tus grupos, tus repertorios y tus ensayos, en el mismo sitio</span>
                   </div>
                   {onVolverALanding && (
                     <button
