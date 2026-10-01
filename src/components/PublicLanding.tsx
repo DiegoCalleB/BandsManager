@@ -358,12 +358,12 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
                   {!fotoError ? (
                     <img
                       src="/landing/diego-creador.jpg"
-                      alt="Diego tocando el bajo en directo"
+                      alt="Diego en el escenario tocando el bajo junto al contrabajo"
                       width={480}
                       height={600}
                       loading="lazy"
                       decoding="async"
-                      className="h-full w-full object-cover object-top"
+                      className="h-full w-full object-cover"
                       onError={() => setFotoError(true)}
                     />
                   ) : (

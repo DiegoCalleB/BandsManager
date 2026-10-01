@@ -1614,7 +1614,7 @@ ${myBandName}`;
                                 className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-[var(--r-s)] text-[var(--ink-2)] flex items-center gap-1 shrink-0 max-w-[140px]"
                                 title={band.localizacion}
                               >
-                                <MapPin className="w-3 h-3 text-[var(--alert)] shrink-0" />
+                                <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
                                 <span className="truncate">
                                   {band.localizacion}
                                 </span>
@@ -1726,18 +1726,6 @@ ${myBandName}`;
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
-                        {/* Analyze Tone */}
-                        <Button
-                          variant="neutral"
-                          size="xs"
-                          onClick={() => handleAnalyzeTone(band)}
-                          className="items-center justify-center gap-1"
-                          title="Analizar forma de expresarse y tono en redes sociales con IA Grounding"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-                          <span>Tono redes</span>
-                        </Button>
-
                         {/* Generate Pitch */}
                         <Button
                           variant="neutral"
@@ -1748,30 +1736,35 @@ ${myBandName}`;
                             setIsPitchModalOpen(true);
                           }}
                           className="flex-1 items-center justify-center gap-1.5"
-                          title="Generar pitch de date swap"
+                          title="Generar pitch de intercambio de fechas (date swap)"
                         >
                           <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                          <span>Pitch de intercambio de fechas</span>
+                          <span>Pitch de fechas</span>
                         </Button>
 
-                        {/* Edit */}
-                        <IconButton
-                          label="Editar banda"
-                          onClick={() => handleOpenEditModal(band)}
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </IconButton>
-
-                        {/* Delete */}
-                        <IconButton
-                          label="Eliminar banda"
-                          variant="danger"
-                          onClick={() =>
-                            handleDeleteBand(band.id, band.nombre_banda)
-                          }
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </IconButton>
+                        {/* More actions menu */}
+                        <ActionMenu
+                          label={`Más acciones para ${band.nombre_banda}`}
+                          items={[
+                            {
+                              label: "Tono en redes (IA)",
+                              icon: Sparkles,
+                              onSelect: () => handleAnalyzeTone(band),
+                            },
+                            {
+                              label: "Editar datos",
+                              icon: Edit3,
+                              onSelect: () => handleOpenEditModal(band),
+                            },
+                            {
+                              label: "Eliminar banda",
+                              icon: Trash2,
+                              tone: "danger",
+                              onSelect: () =>
+                                handleDeleteBand(band.id, band.nombre_banda),
+                            },
+                          ]}
+                        />
                       </div>
                     </div>
                   </div>
