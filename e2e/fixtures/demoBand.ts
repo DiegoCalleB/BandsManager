@@ -3,14 +3,19 @@
  * la plataforma (Bakandeya). Los retratos son ILUSTRACIONES generadas por scripts/landing/generar-demo-assets.mjs:
  * para usar fotos reales, sustituye los ficheros de public/landing/demo/ y cambia aquí las rutas.
  */
+import fs from 'node:fs';
+
+/** Foto real si existe (scripts/landing/importar_fotos.py); si no, el retrato/escena ilustrado .svg. */
+const demoImg = (base: string) => `/landing/demo/${base}.${fs.existsSync(`public/landing/demo/${base}.jpg`) ? 'jpg' : 'svg'}`;
+
 export const BANDA = { id: 'bakandeya', nombre: 'Bakandeya', logo: '/logo_bakandeya.jpg' };
 
 export const MIEMBROS = [
-  { id: 'm1', nombre: 'Lucía Ferrer', rol: 'Voz y carisma', fotoUrl: '/landing/demo/miembro-lucia.svg', bio: 'Letras, voz y la que te hace cantar en la tercera fila.', instagram: '@lucia.ferrer' },
-  { id: 'm2', nombre: 'Marcos Ibarra', rol: 'Violín solista', fotoUrl: '/landing/demo/miembro-marcos.svg', bio: 'Formado en conservatorio, desaprendido en los bares.', instagram: '@marcos.violin' },
-  { id: 'm3', nombre: 'Nuria Salgado', rol: 'Bajo y coros', fotoUrl: '/landing/demo/miembro-nuria.svg', bio: 'El suelo firme sobre el que todo salta.', instagram: '@nuria.bajo' },
-  { id: 'm4', nombre: 'Dani Quintana', rol: 'Percusión', fotoUrl: '/landing/demo/miembro-dani.svg', bio: 'Batería, cajón y todo lo que suene al golpearlo.', instagram: '@dani.q' },
-  { id: 'm5', nombre: 'Óscar Pardo', rol: 'Sintetizadores', fotoUrl: '/landing/demo/miembro-oscar.svg', bio: 'Analógico, cables y un ampli que no apaga nunca.', instagram: '@oscar.sintes' },
+  { id: 'm1', nombre: 'Lucía Ferrer', rol: 'Voz y carisma', fotoUrl: demoImg('miembro-lucia'), bio: 'Letras, voz y la que te hace cantar en la tercera fila.', instagram: '@lucia.ferrer' },
+  { id: 'm2', nombre: 'Marcos Ibarra', rol: 'Violín solista', fotoUrl: demoImg('miembro-marcos'), bio: 'Formado en conservatorio, desaprendido en los bares.', instagram: '@marcos.violin' },
+  { id: 'm3', nombre: 'Nuria Salgado', rol: 'Bajo y coros', fotoUrl: demoImg('miembro-nuria'), bio: 'El suelo firme sobre el que todo salta.', instagram: '@nuria.bajo' },
+  { id: 'm4', nombre: 'Dani Quintana', rol: 'Percusión', fotoUrl: demoImg('miembro-dani'), bio: 'Batería, cajón y todo lo que suene al golpearlo.', instagram: '@dani.q' },
+  { id: 'm5', nombre: 'Óscar Pardo', rol: 'Sintetizadores', fotoUrl: demoImg('miembro-oscar'), bio: 'Analógico, cables y un ampli que no apaga nunca.', instagram: '@oscar.sintes' },
 ];
 
 const T = (id: string, titulo: string, dur: string, seg: number, ton: string, bpm: number, en: number, disco: string, n: number) => ({
@@ -99,7 +104,7 @@ export const EPK_CONFIG = {
   mostrarBandasSimilares: true,
   logoUrl: BANDA.logo,
   miembros: MIEMBROS,
-  bandPhotos: ['/landing/demo/escena-1.svg', '/landing/demo/escena-2.svg', '/landing/demo/escena-3.svg'],
+  bandPhotos: [demoImg('escena-1'), demoImg('escena-2'), demoImg('escena-3')],
   riderTecnico: '1 PA estéreo acorde al aforo\n16 canales con 4 envíos de monitores\n2 micrófonos dinámicos de voz\nLíneas DI para violín y sintetizadores\nMicrofonía de percusión estándar\n1 línea DI para bajo',
   enlacesRedes: {
     instagram: 'https://instagram.com/bakandeya_oficial',
