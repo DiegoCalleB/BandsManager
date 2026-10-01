@@ -81,6 +81,9 @@ import { GlobalCampaignBar } from "./components/campaign/GlobalCampaignBar";
 const PublicLanding = safeLazy(() =>
   import("./components/PublicLanding").then((m) => ({ default: m.PublicLanding })),
 );
+const PublicTfmLanding = safeLazy(() =>
+  import("./components/PublicTfmLanding").then((m) => ({ default: m.PublicTfmLanding })),
+);
 const LoginModal = safeLazy(() =>
   import("./components/LoginModal").then((m) => ({ default: m.LoginModal })),
 );
@@ -1091,8 +1094,19 @@ export default function App() {
     );
   }, []);
 
+  const isTfmRoute = React.useMemo(() => {
+    const p = window.location.pathname.toLowerCase();
+    return (
+      p.startsWith("/landingpage_tfm") ||
+      p.startsWith("/landingpage-tfm") ||
+      p.startsWith("/landing-tfm") ||
+      p.startsWith("/tfm")
+    );
+  }, []);
+
   // Landing pública: solo en la raíz, sin sesión y sin parámetros (los enlaces de OAuth/invitación
   // traen query y deben ir directos al login). La app instalada (PWA) salta la landing.
+  // Si el usuario ya se ha registrado previamente en este dispositivo, va directo a la pantalla de login.
   const [verLogin, setVerLogin] = React.useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     const { pathname, search, hash } = window.location;
@@ -1100,11 +1114,23 @@ export default function App() {
     const instalada =
       window.matchMedia?.("(display-mode: standalone)").matches ||
       (navigator as unknown as { standalone?: boolean }).standalone === true;
-    return !raiz || !!search || !!hash || instalada;
+    const yaRegistrado =
+      localStorage.getItem("bandmanager_registered_user") === "true" ||
+      localStorage.getItem("bakandeya_remember_me") === "true" ||
+      Boolean(localStorage.getItem("bakandeya_user"));
+    return !raiz || !!search || !!hash || instalada || yaRegistrado;
   });
   React.useEffect(() => {
     const alVolver = () => {
-      if (window.location.pathname === "/") setVerLogin(false);
+      if (window.location.pathname === "/") {
+        const yaRegistrado =
+          localStorage.getItem("bandmanager_registered_user") === "true" ||
+          localStorage.getItem("bakandeya_remember_me") === "true" ||
+          Boolean(localStorage.getItem("bakandeya_user"));
+        if (!yaRegistrado) {
+          setVerLogin(false);
+        }
+      }
     };
     window.addEventListener("popstate", alVolver);
     return () => window.removeEventListener("popstate", alVolver);
@@ -1112,6 +1138,10 @@ export default function App() {
   const entrarDesdeLanding = React.useCallback(() => {
     window.history.pushState({}, "", "/login");
     setVerLogin(true);
+  }, []);
+  const volverALanding = React.useCallback(() => {
+    window.history.pushState({}, "", "/");
+    setVerLogin(false);
   }, []);
 
   if (isMusicianRoute) {
@@ -1160,6 +1190,14 @@ export default function App() {
     );
   }
 
+  if (isTfmRoute && !verLogin && !isLoggedIn) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
+        <PublicTfmLanding onEntrar={entrarDesdeLanding} />
+      </Suspense>
+    );
+  }
+
   // Auth Screen Render
   // Fase beta: ventana de acceso simplificada (login + alta directa en plan Promo, sin
   // selector de planes) para los primeros usuarios (bandas del festival Buskers). El
@@ -1184,7 +1222,7 @@ export default function App() {
         }
       >
         {USE_SIMPLE_LOGIN ? (
-          <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} />
+          <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} onVolverALanding={volverALanding} />
         ) : (
           <LoginModal onLoginSuccess={handleLoginSuccess} />
         )}
@@ -1711,13 +1749,15 @@ export default function App() {
           </div>
         )}
 
-        <aside className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
-          {/* Brand Header (Clickable Netflix Style Switcher) */}
-          <div
-            onClick={() => setShowBandSwitcherModal(true)}
-            className="p-3.5 flex flex-col gap-2 items-center text-center cursor-pointer group transition-colors duration-300 hover:bg-[var(--sunken)] relative"
-            title="Haz clic para cambiar de banda"
-          >
+        <aside className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-hidden border-r border-[var(--hair)]">
+          {/* Scrollable Middle Area (Brand, Nav, Campañas, Créditos, Soporte) */}
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar flex flex-col">
+            {/* Brand Header (Clickable Netflix Style Switcher) */}
+            <div
+              onClick={() => setShowBandSwitcherModal(true)}
+              className="p-3.5 flex flex-col gap-2 items-center text-center cursor-pointer group transition-colors duration-300 hover:bg-[var(--sunken)] relative"
+              title="Haz clic para cambiar de banda"
+            >
             <div className="relative group/logo">
               {currentActiveBandLogo ? (
                 <img
@@ -1964,25 +2004,28 @@ export default function App() {
             })()}
 
           <AiSupportWidget variant="sidebar" />
+          </div>
 
-          {/* Bottom User Profile */}
-          <div className="p-4 mt-auto">
+          {/* Bottom Fixed User Profile & Actions Footer */}
+          <div className="shrink-0 p-3 border-t border-[var(--hair)] bg-[var(--surface)] flex flex-col gap-2">
             {currentUser && (
-              <div className="flex flex-col gap-2 mb-4 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
+              <div className="flex items-center justify-between p-2 rounded-[var(--r-m)] bg-[var(--sunken)] gap-2">
                 <div
                   onClick={() => setShowUserProfileModal(true)}
-                  className="flex items-center gap-3 w-full cursor-pointer text-left group"
+                  className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer text-left group"
+                  title="Ver perfil de usuario"
                 >
                   <div
-                    className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform "
+                    className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-ui group-hover:brightness-105"
                     style={{
-                      backgroundColor: currentUser.avatarColor || "var(--acc)", color: textOnColor(currentUser.avatarColor || "var(--acc)"),
+                      backgroundColor: currentUser.avatarColor || "var(--acc)",
+                      color: textOnColor(currentUser.avatarColor || "var(--acc)"),
                     }}
                   >
-                    {currentUser.name ? currentUser.name.slice(0, 2) : "US"}
+                    {currentUser.name ? currentUser.name.slice(0, 2).toUpperCase() : "US"}
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-xs font-bold font-sans text-[var(--ink)] truncate">
+                    <span className="text-xs font-bold font-sans text-[var(--ink)] truncate group-hover:text-[var(--acc-ink)] transition-colors">
                       {currentUser.name}
                     </span>
                     <span
@@ -1993,24 +2036,34 @@ export default function App() {
                     </span>
                   </div>
                 </div>
+
+                <IconButton
+                  label="Cerrar Sesión"
+                  variant="danger"
+                  size="icon-xs"
+                  onClick={handleLogout}
+                  className="shrink-0"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </IconButton>
               </div>
             )}
 
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-1.5 min-w-0">
                 <img
                   src="/logo_bandmanager_symbol.png?v=4"
                   alt="BandManager.io"
-                  className="w-7 h-7 object-contain shrink-0 transition-ui cursor-pointer"
+                  className="w-6 h-6 object-contain shrink-0 cursor-pointer"
                   referrerPolicy="no-referrer"
                 />
-                <div className="flex flex-col text-left">
-                  <span className="text-micro font-bold font-display text-[var(--ink-2)] leading-none">
+                <div className="flex flex-col text-left min-w-0">
+                  <span className="text-micro font-bold font-display text-[var(--ink-2)] leading-none truncate">
                     BANDMANAGER<span className="text-[var(--acc)]">.io</span>
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 shrink-0">
                 <ThemeToggle compact openUpward />
                 <NotificationCenterBell
                   permission={notificationPermission}
@@ -2026,14 +2079,8 @@ export default function App() {
                     handleNavigate("booking", { selectedLeadId: leadId })
                   }
                   variant="desktop"
+                  openUpward
                 />
-                <IconButton
-                  label="Cerrar Sesión"
-                  variant="danger"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="w-4 h-4" />
-                </IconButton>
               </div>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { test, type Page } from '@playwright/test';
+import path from 'node:path';
 import { abrirApp, irAEscritorio, irAMovil, cerrarModales, MOVIL } from './helpers-visual';
 import { ESTADO_APP, CANCIONES, SETLISTS, RESPUESTA_EPK_PUBLICO, BANDAS_DISPONIBLES } from './fixtures/demoBand';
 
@@ -13,6 +14,12 @@ test.describe.configure({ timeout: 280_000 });
 const OUT = 'public/landing';
 
 async function simular(page: Page) {
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('bakandeya_calendar_months_desktop', '1');
+      localStorage.setItem('bakandeya_calendar_default_months', '1');
+    } catch {}
+  });
   // Cuenta de demo con DOS bandas (Bakandeya y Ruta 66): se sustituye solo la lista de bandas de la sesión.
   await page.route('**/api/auth/me', async (r) => {
     const res = await r.fetch();
@@ -31,11 +38,17 @@ for (const tema of ['light', 'dark'] as const) {
     await simular(page);
     await abrirApp(page, false);
     await page.evaluate((t) => { document.documentElement.dataset.theme = t; }, tema);
-    const foto = async (nombre: string) => { await page.waitForTimeout(800); await page.screenshot({ path: `${OUT}/${nombre}-${tema}.jpg`, type: 'jpeg', quality: 82, clip: { x: 240, y: 0, width: 1040, height: 800 } }); };
+    const foto = async (nombre: string) => { await page.waitForTimeout(800); const p = `${OUT}/${nombre}-${tema}.jpg`; console.log('>>> SAVING SCREENSHOT TO:', p); await page.screenshot({ path: p, type: 'jpeg', quality: 82, clip: { x: 240, y: 0, width: 1040, height: 800 } }); };
     await page.waitForTimeout(1200);
     await foto('panel');
     await irAEscritorio(page, 'booking'); await page.getByRole('button', { name: 'Detalles' }).first().click().catch(() => {}); await foto('booking');
-    await irAEscritorio(page, 'calendario'); await foto('calendario');
+    await irAEscritorio(page, 'calendario');
+    const b1m = page.locator('#calendar-view-1m-btn');
+    if (await b1m.isVisible().catch(() => false)) {
+      await b1m.click();
+    }
+    await page.waitForTimeout(800);
+    await foto('calendario');
     // «¿Quién toca hoy?»: la cuenta lleva Bakandeya y Ruta 66
     await page.locator('[title="Haz clic para cambiar de banda"]').first().click();
     await page.waitForTimeout(900);

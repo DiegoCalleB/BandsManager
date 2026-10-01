@@ -207,6 +207,7 @@ export function useAuth() {
       syncAllUserPreferencesFromUser(resolvedUser);
       localStorage.setItem('bakandeya_remember_me', 'true');
       localStorage.setItem('bakandeya_logged_in', 'true');
+      localStorage.setItem('bandmanager_registered_user', 'true');
       setIsLoggedIn(true);
     },
     [syncSessionCookie]
