@@ -192,6 +192,7 @@ import {
   Guitar,
   Sun,
   Moon,
+  ExternalLink,
 } from "lucide-react";
 import { Button, IconButton } from './components/ui';
 
@@ -1064,19 +1065,23 @@ export default function App() {
     });
   };
 
+  const [rutaActual, setRutaActual] = React.useState<string>(() =>
+    typeof window !== "undefined" ? window.location.pathname.toLowerCase() : "/"
+  );
+
   // Public Landing Routes
   const isFanRoute = React.useMemo(() => {
-    const p = window.location.pathname.toLowerCase();
+    const p = rutaActual;
     return (
       p.startsWith("/fans") ||
       p.startsWith("/unete") ||
       p.startsWith("/directo") ||
       p.startsWith("/fan")
     );
-  }, []);
+  }, [rutaActual]);
 
   const isMusicianRoute = React.useMemo(() => {
-    const p = window.location.pathname.toLowerCase();
+    const p = rutaActual;
     return (
       p.startsWith("/musicos") ||
       p.startsWith("/landing-musicos") ||
@@ -1085,31 +1090,73 @@ export default function App() {
       p.startsWith("/waitlist") ||
       p.startsWith("/bandas-registro")
     );
-  }, []);
+  }, [rutaActual]);
 
   const isEpkRoute = React.useMemo(() => {
-    const p = window.location.pathname.toLowerCase();
+    const p = rutaActual;
     return (
       p.startsWith("/epk") || p.startsWith("/dossier") || p.startsWith("/press")
     );
-  }, []);
+  }, [rutaActual]);
 
   const isTfmRoute = React.useMemo(() => {
-    const p = window.location.pathname.toLowerCase();
+    const p = rutaActual;
+    const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
     return (
       p.startsWith("/landingpage_tfm") ||
       p.startsWith("/landingpage-tfm") ||
       p.startsWith("/landing-tfm") ||
-      p.startsWith("/tfm")
+      p.startsWith("/tfm") ||
+      search.get("tfm") === "true"
     );
-  }, []);
+  }, [rutaActual]);
+
+  const isDirectLandingRoute = React.useMemo(() => {
+    const p = rutaActual;
+    const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+    return (
+      p === "/landing" ||
+      p.startsWith("/landing/") ||
+      p === "/landing-oficial" ||
+      p === "/landingpage" ||
+      p === "/landingpage_oficial" ||
+      p === "/oficial" ||
+      p === "/home" ||
+      p === "/info" ||
+      search.get("landing") === "true" ||
+      search.get("ver") === "landing"
+    );
+  }, [rutaActual]);
 
   // Landing pública: solo en la raíz, sin sesión y sin parámetros (los enlaces de OAuth/invitación
   // traen query y deben ir directos al login). La app instalada (PWA) salta la landing.
   // Si el usuario ya se ha registrado previamente en este dispositivo, va directo a la pantalla de login.
+  // EXCEPCIÓN: si se accede explícitamente a /landing, /landing-oficial o /landingpage_tfm, NO forzar login para permitir enseñar la landing.
   const [verLogin, setVerLogin] = React.useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     const { pathname, search, hash } = window.location;
+    const p = pathname.toLowerCase();
+    const urlParams = new URLSearchParams(search);
+
+    const esLandingDirecta =
+      p === "/landing" ||
+      p.startsWith("/landing/") ||
+      p === "/landing-oficial" ||
+      p === "/landingpage" ||
+      p === "/landingpage_oficial" ||
+      p === "/oficial" ||
+      p === "/home" ||
+      p === "/info" ||
+      p.startsWith("/landingpage_tfm") ||
+      p.startsWith("/landingpage-tfm") ||
+      p.startsWith("/landing-tfm") ||
+      p.startsWith("/tfm") ||
+      urlParams.get("landing") === "true" ||
+      urlParams.get("tfm") === "true" ||
+      urlParams.get("ver") === "landing";
+
+    if (esLandingDirecta) return false;
+
     const raiz = pathname === "/" || pathname === "/index.html";
     const instalada =
       window.matchMedia?.("(display-mode: standalone)").matches ||
@@ -1120,9 +1167,12 @@ export default function App() {
       Boolean(localStorage.getItem("bakandeya_user"));
     return !raiz || !!search || !!hash || instalada || yaRegistrado;
   });
+
   React.useEffect(() => {
     const alVolver = () => {
-      if (window.location.pathname === "/") {
+      const p = window.location.pathname.toLowerCase();
+      setRutaActual(p);
+      if (p === "/" || p === "/index.html") {
         const yaRegistrado =
           localStorage.getItem("bandmanager_registered_user") === "true" ||
           localStorage.getItem("bakandeya_remember_me") === "true" ||
@@ -1130,17 +1180,35 @@ export default function App() {
         if (!yaRegistrado) {
           setVerLogin(false);
         }
+      } else if (
+        p === "/landing" ||
+        p.startsWith("/landing/") ||
+        p === "/landing-oficial" ||
+        p.startsWith("/landingpage_tfm") ||
+        p.startsWith("/landingpage-tfm")
+      ) {
+        setVerLogin(false);
       }
     };
     window.addEventListener("popstate", alVolver);
     return () => window.removeEventListener("popstate", alVolver);
   }, []);
+
   const entrarDesdeLanding = React.useCallback(() => {
-    window.history.pushState({}, "", "/login");
-    setVerLogin(true);
-  }, []);
+    if (isLoggedIn) {
+      window.history.pushState({}, "", "/");
+      setRutaActual("/");
+      setVerLogin(false);
+    } else {
+      window.history.pushState({}, "", "/login");
+      setRutaActual("/login");
+      setVerLogin(true);
+    }
+  }, [isLoggedIn]);
+
   const volverALanding = React.useCallback(() => {
-    window.history.pushState({}, "", "/");
+    window.history.pushState({}, "", "/landing");
+    setRutaActual("/landing");
     setVerLogin(false);
   }, []);
 
@@ -1190,10 +1258,22 @@ export default function App() {
     );
   }
 
-  if (isTfmRoute && !verLogin && !isLoggedIn) {
+  // Landing TFM dedicada (/landingpage_TFM, /landing-tfm, /tfm)
+  // Accesible en cualquier momento (incluso usuarios registrados/logueados)
+  if (isTfmRoute && !verLogin) {
     return (
       <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
         <PublicTfmLanding onEntrar={entrarDesdeLanding} />
+      </Suspense>
+    );
+  }
+
+  // Landing Oficial dedicada (/landing, /landing-oficial, /?landing=true)
+  // Accesible en cualquier momento para enseñarla a salas, fans, socios o amigos
+  if (isDirectLandingRoute && !verLogin) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
+        <PublicLanding onEntrar={entrarDesdeLanding} />
       </Suspense>
     );
   }
@@ -2050,19 +2130,28 @@ export default function App() {
             )}
 
             <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-1.5 min-w-0">
+              <a
+                href="/landing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 min-w-0 group hover:opacity-80 transition-opacity"
+                title="Ver landing page oficial (abrir en pestaña nueva)"
+              >
                 <img
                   src="/logo_bandmanager_symbol.png?v=4"
                   alt="BandManager.io"
-                  className="w-6 h-6 object-contain shrink-0 cursor-pointer"
+                  className="w-6 h-6 object-contain shrink-0"
                   referrerPolicy="no-referrer"
                 />
                 <div className="flex flex-col text-left min-w-0">
-                  <span className="text-micro font-bold font-display text-[var(--ink-2)] leading-none truncate">
+                  <span className="text-micro font-bold font-display text-[var(--ink-2)] leading-none truncate group-hover:text-[var(--ink)]">
                     BANDMANAGER<span className="text-[var(--acc)]">.io</span>
                   </span>
+                  <span className="text-[10px] text-[var(--ink-3)] font-normal flex items-center gap-0.5">
+                    Landing <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100" />
+                  </span>
                 </div>
-              </div>
+              </a>
               <div className="flex items-center gap-1 shrink-0">
                 <ThemeToggle compact openUpward />
                 <NotificationCenterBell
