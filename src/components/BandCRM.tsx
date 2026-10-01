@@ -65,7 +65,7 @@ import {
 } from "./booking/BulkProgressModal";
 import { AddEditBandModal } from "./bandCRM/AddEditBandModal";
 import { ShowIcon } from './ui/ShowIcon';
-import { Button, IconButton, Input, Select } from './ui';
+import { ActionMenu, Button, IconButton, Input, Select } from './ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -284,7 +284,10 @@ export default function BandCRM({
   >("todos");
   const [styleFilter, setStyleFilter] = useState<string>("todos");
   const [locationFilter, setLocationFilter] = useState<string>("todos");
-  const [viewMode, setViewMode] = useState<"grid" | "table" | "map">("table");
+  // En móvil las tarjetas se leen sin scroll horizontal; la tabla queda para pantallas anchas.
+  const [viewMode, setViewMode] = useState<"grid" | "table" | "map">(() =>
+    typeof window !== "undefined" && window.innerWidth < 640 ? "grid" : "table",
+  );
 
   // Modal State
   const [isAddEditModalOpen, setIsAddEditModalOpen] = useState(false);
@@ -1120,10 +1123,10 @@ ${myBandName}`;
 
           <div className="h-4 w-px bg-[var(--surface)]/80 hidden sm:block" />
 
-          {/* Sub-tabs segmentadas */}
-          <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
+          {/* Sub-tabs segmentadas: solo si hay algo a lo que cambiar */}
+          <div className={`items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)] ${registeredBands.length > 0 ? 'flex' : 'hidden'}`}>
             <Button
-              variant={subTab === "co_booking" ? "neutral" : "ghost"}
+              variant={subTab === "co_booking" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setSubTab("co_booking")}
@@ -1169,7 +1172,7 @@ ${myBandName}`;
                 );
               }
             }}
-            className="items-center gap-1.5"
+            className="items-center gap-1.5 max-sm:hidden"
             title="Generar pitch de intercambio de fechas (date swap)"
           >
             <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
@@ -1181,7 +1184,7 @@ ${myBandName}`;
             size="xs"
             type="button"
             onClick={() => setIsScoutModalOpen(true)}
-            className="items-center gap-1.5"
+            className="items-center gap-1.5 max-sm:hidden"
             title="Scout IA: Buscar bandas para co-booking"
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -1203,12 +1206,21 @@ ${myBandName}`;
           <a
             href="/api/export-excel"
             download="band_data.xlsx"
-            className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-ui flex items-center gap-1.5 active:scale-[0.97] cursor-pointer"
+            className="max-sm:hidden px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-ui flex items-center gap-1.5 active:scale-[0.97] cursor-pointer"
             title="Exportar Excel completo (.xlsx)"
           >
             <FileSpreadsheet className="w-3.5 h-3.5 text-[var(--ok)]" />
             <span className="hidden sm:inline">Excel</span>
           </a>
+          <ActionMenu
+            className="sm:hidden"
+            label="Más acciones de grupos"
+            items={[
+              { label: "Date Swap", icon: Repeat, onSelect: () => { if (bands.length > 0) { setSelectedPitchBand(bands[0]); setIsPitchModalOpen(true); } else { alert("Añade primero una banda para generar un pitch de intercambio."); } } },
+              { label: "Scout IA", icon: Sparkles, onSelect: () => setIsScoutModalOpen(true) },
+              { label: "Exportar Excel", icon: FileSpreadsheet, onSelect: () => { const a = document.createElement("a"); a.href = "/api/export-excel"; a.download = "band_data.xlsx"; a.click(); } },
+            ]}
+          />
         </div>
       </div>
 
@@ -1419,8 +1431,8 @@ ${myBandName}`;
                     }
                     className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
                       selectedBandIds.length > 0
-                        ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/25"
-                        : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)] hover:opacity-90"
+                        : "max-sm:hidden bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title={
                       selectedBandIds.length === filteredBands.length

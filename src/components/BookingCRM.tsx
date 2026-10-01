@@ -1502,13 +1502,13 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         handleTriggerEnviadorAgent();
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--on-ok)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
                     >
                       <span className="flex items-center gap-2">
                         {isDispatchingEmails ? (
-                          <Loader2 className="w-4 h-4 text-[var(--ok)] animate-spin" />
+                          <Loader2 className="w-4 h-4 text-[var(--ink-2)] animate-spin" />
                         ) : (
-                          <Send className="w-4 h-4 text-[var(--ok)]" />
+                          <Send className="w-4 h-4 text-[var(--ink-2)]" />
                         )}
                         <span>
                           {isDispatchingEmails
@@ -1524,7 +1524,7 @@ export default function BookingCRM({
                         setIsPlacesExplorerOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <Search className="w-4 h-4" />
@@ -1539,10 +1539,10 @@ export default function BookingCRM({
                         setIsExcelImportOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
-                        <FileSpreadsheet className="w-4 h-4 text-[var(--ok)]" />
+                        <FileSpreadsheet className="w-4 h-4 text-[var(--ink-2)]" />
                         Importar Excel / CSV (Bandas y salas)
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1554,10 +1554,10 @@ export default function BookingCRM({
                         setIsDuplicatesModalOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
-                        <Copy className="w-4 h-4 text-[var(--acc)]" />
+                        <Copy className="w-4 h-4 text-[var(--ink-2)]" />
                         Detector y limpiador de duplicados
                       </span>
                       {duplicateGroupsCount > 0 ? (
@@ -1593,10 +1593,10 @@ export default function BookingCRM({
                         setIsAgentConfigOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
-                        <Bot className="w-4 h-4 text-[var(--acc)]" />
+                        <Bot className="w-4 h-4 text-[var(--ink-2)]" />
                         Configurar agentes IA (Autonomía y tono)
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1608,14 +1608,14 @@ export default function BookingCRM({
                         setIsQueueMonitorOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)]/90 text-[var(--on-ok)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
                           
                           <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--ok)]"></span>
                         </span>
-                        <Activity className="w-4 h-4 text-[var(--ok)]" />
+                        <Activity className="w-4 h-4 text-[var(--ink-2)]" />
                         <span>Monitor de cola y workers en vivo</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1630,10 +1630,10 @@ export default function BookingCRM({
                           document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 60);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
-                        <MessageSquareText className="w-4 h-4 text-[var(--acc)]" />
+                        <MessageSquareText className="w-4 h-4 text-[var(--ink-2)]" />
                         <span>Plantillas y hilos de ejemplo (Redactor IA)</span>
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -2051,12 +2051,12 @@ export default function BookingCRM({
                     id={`crm-filter-${tab.key}`}
                     key={tab.key}
                     onClick={() => setStatusFilter(tab.key)}
-                    className="shrink-0 items-center gap-1.5"
+                    className={`shrink-0 items-center gap-1.5 ${count === 0 && !isSelected && tab.key !== 'todos' ? 'max-sm:hidden' : ''}`}
                   >
                     <span>{tab.label}</span>
                     <span
                       className={`text-micro px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
-                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'
+                        isSelected ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'
                       }`}
                     >
                       {count}

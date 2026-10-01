@@ -20,7 +20,6 @@ import {
   Mail,
   ChevronDown,
   ChevronUp,
-  Zap,
   Clock,
   Plus,
   Search,
@@ -284,15 +283,11 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                   ? 'bg-[var(--sunken)] text-[var(--ink-2)] opacity-80'
                   : isUrgent
                     ? 'bg-[var(--alert)]/8 text-[var(--ink)]'
-                    : isWarning
-                      ? 'bg-[var(--acc-soft)] text-[var(--ink)]'
-                      : 'bg-[var(--sunken)] text-[var(--ink)]';
+                    : 'bg-[var(--sunken)] text-[var(--ink)]';
 
                 const badgeStyle = isUrgent
                   ? 'bg-[var(--alert)]/15 text-[var(--ink)] '
-                  : isWarning
-                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] '
-                    : 'bg-[var(--surface)] text-[var(--ok)] ';
+                  : 'bg-[var(--surface)] text-[var(--ink-2)] ';
 
                 const actionBtnStyle = isUrgent
                   ? 'bg-[var(--alert)] hover:brightness-95 text-[var(--on-alert)]'
@@ -331,6 +326,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           <Button
                             variant="ghost"
                             size="xs"
+                            className="max-sm:hidden"
                             id={`toggle-read-alert-${alert.id}`}
                             onClick={(e) => handleToggleRead(alert.id, e)}
                             title={isRead ? 'Marcar como no leída' : 'Marcar como leída'}
@@ -338,7 +334,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                             {isRead ? (
                               <EyeOff className="w-3.5 h-3.5" />
                             ) : (
-                              <Eye className={`w-3.5 h-3.5 ${'text-[var(--acc)]'}`} />
+                              <Eye className="w-3.5 h-3.5" />
                             )}
                           </Button>
 
@@ -367,14 +363,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
                     {/* Quick action button footer */}
                     <div
-                      className={`pt-2.5 border-t ${'border-[var(--hair)]'} flex flex-col gap-2`}
+                      className="pt-1 flex flex-col gap-2"
                     >
-                      <span
-                        className={`text-micro font-mono ${'text-[var(--ink-2)]'} flex items-center gap-1`}
-                      >
-                        <Zap className={`w-3 h-3 ${'text-[var(--acc)]'} shrink-0`} />
-                        Acciones disponibles
-                      </span>
 
                       <div className="flex items-center gap-2 flex-wrap">
                         {alert.actions && alert.actions.length > 0 ? (
@@ -390,7 +380,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                               }}
                               className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97] shrink-0 cursor-pointer ${
                                 act.variant === 'secondary'
-                                  ? 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)]'
+                                  ? 'text-[var(--ink-2)] hover:text-[var(--ink)] px-1'
                                   : actionBtnStyle
                               }`}
                             >

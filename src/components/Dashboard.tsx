@@ -790,10 +790,10 @@ export default function Dashboard({
                 prev === "clean" ? "full" : "clean",
               )
             }
-            className="items-center gap-1.5"
+            className="items-center gap-1.5 max-sm:hidden"
             title="Alternar entre vista esencial y vista completa"
           >
-            <Eye className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+            <Eye className="w-3.5 h-3.5 text-[var(--ink-2)]" />
             <span>
               {viewDensityMode === "clean"
                 ? "Vista Esencial"

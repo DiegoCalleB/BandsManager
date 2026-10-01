@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Tabs } from '../ui/Tabs';
 import { Lead, Concert, Tour } from '../../types';
 import {
   findTourRoutingOpportunities,
@@ -49,7 +50,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
   onApproveLead,
   onOpenRoadbookModal,
   isStitchLight = false,
-  bandName = 'Bakandeya',
+  bandName = 'la banda',
 }) => {
   // Estado de expansión del briefing (por defecto plegado para no ocupar espacio, persistido en localStorage)
   const [isExpanded, setIsExpanded] = useState<boolean>(() => {
@@ -236,12 +237,12 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
   const totalActionCount = priorityItems.repliedCount + priorityItems.draftCount;
 
   return (
-    <div className="w-full bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden transition-ui bg-[var(--acc)]/10">
+    <div className="w-full bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden transition-ui">
       {/* HEADER PRINCIPAL / RADAR DE ACCIÓN */}
-      <div className="p-3.5 sm:p-4 bg-[var(--acc)]/15  border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
+      <div className="p-3 sm:p-4 flex items-center justify-between gap-3 sm:flex-wrap">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0">
-            <Sparkles className="w-5 h-5 text-[var(--acc)]" />
+          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-center shrink-0">
+            <Sparkles className="w-5 h-5 text-[var(--ink-2)]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -249,12 +250,12 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 Briefing de la mañana · Radar del mánager
               </h3>
               {totalActionCount > 0 && (
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-bold font-mono">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink)] text-micro font-semibold tabular-nums">
                   {totalActionCount} urgentes
                 </span>
               )}
             </div>
-            <p className="text-xs text-[var(--ink-2)]">
+            <p className="hidden text-xs text-[var(--ink-2)] sm:block">
               Respuestas calientes, borradores agénticos y optimización de ruta para no perder dinero en carretera
             </p>
           </div>
@@ -262,7 +263,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
         {/* CONTROLES DEL BRIEFING: TABS Y TOGGLE */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
+          <div className="hidden items-center p-1 bg-[var(--sunken)] rounded-[var(--r-m)] sm:flex">
             <Button
               variant={activeTab === 'priorities' ? "selected" : "ghost"}
               size="xs"
@@ -307,6 +308,17 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
       {/* CONTENIDO DESPLEGABLE */}
       {isExpanded && (
         <div className="p-4 sm:p-5 space-y-4">
+          <Tabs<typeof activeTab>
+            className="sm:hidden"
+            layout="fill"
+            aria-label="Vistas del radar"
+            value={activeTab}
+            onChange={setActiveTab}
+            items={[
+              { id: 'priorities', label: `Acción de hoy (${priorityItems.all.length})` },
+              { id: 'routing', label: 'Enlaces de ruta' },
+            ]}
+          />
           {/* TAB 1: RADAR DE ACCIONES PRIORITARIAS DE HOY */}
           {activeTab === 'priorities' && (
             <div className="space-y-3">
