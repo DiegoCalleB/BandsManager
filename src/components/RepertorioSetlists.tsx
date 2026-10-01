@@ -3622,7 +3622,7 @@ export default function RepertorioSetlists({
         <div className="w-full">
           {/* MAIN EDITOR FOR ACTIVE SETLIST */}
           <div
-            className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] space-y-4 bg-[var(--surface)]`}
+            className={`w-full p-3 sm:p-6 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] space-y-2 sm:space-y-4 bg-[var(--surface)] max-lg:sticky max-lg:top-[-0.75rem] max-lg:z-20`}
           >
             <input data-raw
               className={`w-full flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 text-[var(--ink)]`}

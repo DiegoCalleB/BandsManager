@@ -42,8 +42,8 @@ import { SpotifyDiscographyModal } from "./SpotifyDiscographyModal";
 import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
-import { ShowIcon } from '../ui/ShowIcon';
-import { ActionMenu, Button, IconButton, Input } from '../ui';
+import { ShowIcon } from "../ui/ShowIcon";
+import { ActionMenu, Button, IconButton, Input } from "../ui";
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -594,7 +594,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <Disc className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--ok)] block">
-                      <ShowIcon inline emoji="🟢" />Traer de Spotify
+                      <ShowIcon inline emoji="🟢" />
+                      Traer de Spotify
                     </span>
                     <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Importa la discografía completa de la banda.
@@ -612,7 +613,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <Scissors className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--acc)] block">
-                      <ShowIcon inline emoji="🔴" />Concierto en vivo a disco
+                      <ShowIcon inline emoji="🔴" />
+                      Concierto en vivo a disco
                     </span>
                     <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Recorta y cataloga a partir del vídeo o audio de un
@@ -628,108 +630,110 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
       {/* Search + Filters Section */}
       <div className="w-full flex flex-col gap-3">
-        {/* Search Input Bar */}
-        <div className="relative w-full">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] pointer-events-none" />
-          <Input
-            size="sm"
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar canción, tono, letra…"
-            className="w-full pl-8 pr-7"
-          />
-          {searchQuery && (
-            <IconButton
-              label="Limpiar búsqueda"
-              size="icon-xs"
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="absolute right-2 top-1/2"
-            >
-              <X className="w-3 h-3" />
-            </IconButton>
-          )}
-        </div>
-
-        {/* Quick Filter Tabs + Action Icons */}
-        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <div
-            className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}
-          >
-            <Button
-              variant={activeFilterTab === "todos" ? "selected" : "ghost"}
-              size="xs"
-              type="button"
-              onClick={() => setActiveFilterTab("todos")}
-            >
-              Todos
-            </Button>
-            <Button
-              variant={activeFilterTab === "albumes" ? "selected" : "ghost"}
-              size="xs"
-              type="button"
-              onClick={() => setActiveFilterTab("albumes")}
-            >
-              Álbumes
-            </Button>
-            <Button
-              variant={activeFilterTab === "singles" ? "selected" : "ghost"}
-              size="xs"
-              type="button"
-              onClick={() => setActiveFilterTab("singles")}
-            >
-              Singles
-            </Button>
+        <div className="pin-top flex flex-col gap-3">
+          {/* Search Input Bar */}
+          <div className="relative w-full">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] pointer-events-none" />
+            <Input
+              size="sm"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar canción, tono, letra…"
+              className="w-full pl-8 pr-7"
+            />
+            {searchQuery && (
+              <IconButton
+                label="Limpiar búsqueda"
+                size="icon-xs"
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2"
+              >
+                <X className="w-3 h-3" />
+              </IconButton>
+            )}
           </div>
 
-          {/* Action Icons: Fold/Unfold & Dynamics */}
-          <div className="flex items-center gap-1.5 shrink-0 ml-auto">
-            {filteredAlbums.length > 0 && (
+          {/* Quick Filter Tabs + Action Icons */}
+          <div className="w-full flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <div
+              className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}
+            >
               <Button
-                variant="neutral"
+                variant={activeFilterTab === "todos" ? "selected" : "ghost"}
                 size="xs"
                 type="button"
-                onClick={toggleAllAlbums}
-                title={
-                  areAllExpanded
-                    ? "Plegar todos los discos"
-                    : "Desplegar todos los discos"
-                }
+                onClick={() => setActiveFilterTab("todos")}
               >
-                <Layers className="w-3.5 h-3.5" />
+                Todos
               </Button>
-            )}
+              <Button
+                variant={activeFilterTab === "albumes" ? "selected" : "ghost"}
+                size="xs"
+                type="button"
+                onClick={() => setActiveFilterTab("albumes")}
+              >
+                Álbumes
+              </Button>
+              <Button
+                variant={activeFilterTab === "singles" ? "selected" : "ghost"}
+                size="xs"
+                type="button"
+                onClick={() => setActiveFilterTab("singles")}
+              >
+                Singles
+              </Button>
+            </div>
 
-            {/* Analizar Dinámica Button (Compact & Discreet) */}
-            {songsPendingDynamicsAnalysis.length > 0 && (
-              <div className="relative inline-flex flex-col items-end">
+            {/* Action Icons: Fold/Unfold & Dynamics */}
+            <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+              {filteredAlbums.length > 0 && (
                 <Button
                   variant="neutral"
                   size="xs"
                   type="button"
-                  onClick={handleAnalyzeAllDynamics}
-                  disabled={dynamicsAnalysis?.running}
-                  className="items-center gap-1"
-                  title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
+                  onClick={toggleAllAlbums}
+                  title={
+                    areAllExpanded
+                      ? "Plegar todos los discos"
+                      : "Desplegar todos los discos"
+                  }
                 >
-                  {dynamicsAnalysis?.running ? (
-                    <>
-                      <Loader2 className="w-3 h-3 animate-spin text-[var(--ink-2)]" />
-                      <span>
-                        {dynamicsAnalysis.done}/{dynamicsAnalysis.total}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <Headphones className="w-3 h-3 text-[var(--ink-2)]" />
-                      <span className="hidden xs:inline">Audio IA</span>
-                      <span>({songsPendingDynamicsAnalysis.length})</span>
-                    </>
-                  )}
+                  <Layers className="w-3.5 h-3.5" />
                 </Button>
-              </div>
-            )}
+              )}
+
+              {/* Analizar Dinámica Button (Compact & Discreet) */}
+              {songsPendingDynamicsAnalysis.length > 0 && (
+                <div className="relative inline-flex flex-col items-end">
+                  <Button
+                    variant="neutral"
+                    size="xs"
+                    type="button"
+                    onClick={handleAnalyzeAllDynamics}
+                    disabled={dynamicsAnalysis?.running}
+                    className="items-center gap-1"
+                    title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
+                  >
+                    {dynamicsAnalysis?.running ? (
+                      <>
+                        <Loader2 className="w-3 h-3 animate-spin text-[var(--ink-2)]" />
+                        <span>
+                          {dynamicsAnalysis.done}/{dynamicsAnalysis.total}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Headphones className="w-3 h-3 text-[var(--ink-2)]" />
+                        <span className="hidden xs:inline">Audio IA</span>
+                        <span>({songsPendingDynamicsAnalysis.length})</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -880,10 +884,45 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <ActionMenu
                       label={`Más acciones de ${album}`}
                       items={[
-                        { label: "Gestionar canciones", icon: Edit3, hidden: !onEditAlbum, onSelect: () => onEditAlbum?.(album) },
-                        { label: "Exportar disco", icon: Download, hidden: sortedAlbumSongs.length === 0, onSelect: () => setExportModalData({ isOpen: true, albumName: album }) },
-                        { label: "Subir audios", icon: FolderUp, hidden: sortedAlbumSongs.length === 0, onSelect: () => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs }) },
-                        { label: "Eliminar álbum", icon: Trash2, tone: "danger", hidden: !onRequestDeleteAlbum || album === "Singles / Sin Disco", onSelect: () => onRequestDeleteAlbum?.(album, sortedAlbumSongs.length) },
+                        {
+                          label: "Gestionar canciones",
+                          icon: Edit3,
+                          hidden: !onEditAlbum,
+                          onSelect: () => onEditAlbum?.(album),
+                        },
+                        {
+                          label: "Exportar disco",
+                          icon: Download,
+                          hidden: sortedAlbumSongs.length === 0,
+                          onSelect: () =>
+                            setExportModalData({
+                              isOpen: true,
+                              albumName: album,
+                            }),
+                        },
+                        {
+                          label: "Subir audios",
+                          icon: FolderUp,
+                          hidden: sortedAlbumSongs.length === 0,
+                          onSelect: () =>
+                            setBulkUploadAlbum({
+                              name: album,
+                              songs: sortedAlbumSongs,
+                            }),
+                        },
+                        {
+                          label: "Eliminar álbum",
+                          icon: Trash2,
+                          tone: "danger",
+                          hidden:
+                            !onRequestDeleteAlbum ||
+                            album === "Singles / Sin Disco",
+                          onSelect: () =>
+                            onRequestDeleteAlbum?.(
+                              album,
+                              sortedAlbumSongs.length,
+                            ),
+                        },
                       ]}
                     />
 

@@ -795,6 +795,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       </div>
 
       <Tabs<typeof activeTab>
+        className="pin-top"
         aria-label="Secciones de fans"
         value={activeTab}
         onChange={setActiveTab}

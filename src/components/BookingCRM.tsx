@@ -2018,7 +2018,7 @@ export default function BookingCRM({
             </div>
 
             {/* Main Status Tabs Bar (Clean, no-scrollbar, single row) */}
-            <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar">
+            <div className="pin-top flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar">
               {(
                 [
                   { key: 'todos', label: 'Todos' },

@@ -2049,13 +2049,13 @@ export default function CalendarView({
   return (
     <div
       ref={calendarContainerRef}
-      className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${'text-[var(--ink)] bg-[var(--sunken)]'} font-sans items-stretch w-full max-w-full overflow-x-hidden ${
+      className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${'text-[var(--ink)] bg-[var(--sunken)]'} font-sans items-stretch w-full max-w-full overflow-x-clip ${
         isCalendarFullscreen ? 'fixed inset-0 z-[9999] p-4 sm:p-6 overflow-y-auto' : ''
       }`}
     >
       {/* LEFT: MONTH GRID CALENDAR (2/3 width) */}
       <div className={`${colors.card} p-6 flex flex-col justify-between lg:col-span-2`}>
-        <div>
+        <div className="max-lg:contents">
           {/* Header */}
           <div className={`pb-4 mb-4 ${''}`}>
             {/* Top title & Action buttons */}
@@ -2268,7 +2268,7 @@ export default function CalendarView({
           </div>
 
           {/* Month Navigation & Band Selector */}
-          <div className="flex flex-col 2xl:flex-row 2xl:items-center justify-between gap-3 mt-3 pt-2">
+          <div className="pin-top flex flex-col 2xl:flex-row 2xl:items-center justify-between gap-3 mt-3 pt-2">
             {/* Left: Navigation Buttons + Month/Period Title (Rock-solid, never jumps) */}
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="flex items-center gap-1 shrink-0">

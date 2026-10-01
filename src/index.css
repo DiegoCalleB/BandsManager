@@ -470,6 +470,19 @@ button:where(:not([data-no-hit]))::after {
   }
 }
 
+/* Barra que se queda fija arriba al hacer scroll en móvil/tablet (lo que el músico necesita tener siempre a la vista:
+   filtros, mes, acción principal). Va dentro de <main>, que es quien hace scroll; el margen negativo la lleva de borde a borde. */
+@utility pin-top {
+  @media (max-width: 1023px) {
+    position: sticky;
+    top: -0.75rem; /* compensa el padding de <main> para que quede pegada al borde superior */
+    z-index: 20;
+    background: var(--bg);
+    margin-inline: -0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
 /* Título de pantalla: UNO para todos los módulos (antes: 5 tamaños distintos, de text-base a text-5xl). */
 @utility page-title {
   font-family: var(--font-display-current);
