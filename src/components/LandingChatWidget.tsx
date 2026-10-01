@@ -141,6 +141,11 @@ const CONTENT_TFM = {
           'Curva de mapa de energía por concierto, modo escenario de alto contraste e impresión adaptada con notas personalizadas para cada miembro de la banda.',
       },
       {
+        label: '¿Cómo gestiona MoureDev sus dos bandas?',
+        answer:
+          'Brais Moure gestiona con la misma cuenta Os Herdeiros do Código (Rock Bravú) y Master of Prompts (Metal). El calendario conjunto evita solapes entre ensayos y fechas en Sala Capitol o Resurrection Fest.',
+      },
+      {
         label: '¿Qué modelo de negocio y planes tiene?',
         answer:
           'Cuenta con plan gratuito de entrada y suscripciones escalables con balance de créditos para procesamiento de audio y agentes autónomos.',
@@ -177,9 +182,9 @@ const CONTENT_TFM = {
           'Allows managing multiple musical projects under a single user tenant, with strict data boundaries and a unified shared calendar.',
       },
       {
-        label: 'What does the smart setlist engine provide?',
+        label: 'How does MoureDev manage both bands?',
         answer:
-          'Concert energy curve mapping, high-contrast live stage mode, and tailored printouts with custom notes for each instrument.',
+          'Brais Moure manages Os Herdeiros do Código and Master of Prompts from one account. The shared calendar eliminates clashes between rehearsals and venue gigs (Sala Capitol, Resurrection Fest).',
       },
       {
         label: 'What is the pricing model?',
@@ -348,7 +353,10 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
               <div className="flex flex-col gap-2">
                 <button
                   type="button"
-                  onClick={onEntrar}
+                  onClick={() => {
+                    setOpen(false);
+                    onEntrar();
+                  }}
                   className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] px-4 py-2.5 text-sm font-bold text-white transition hover:brightness-110 shadow-md"
                 >
                   {c.cta} <ArrowRight className="size-3.5" aria-hidden />

@@ -429,36 +429,58 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════
-            BLOQUE 5 — GESTIÓN MULTIBANDA & IRIS STEM SEPARATION
+            BLOQUE 5 — GESTIÓN MULTIBANDA & IRIS (Caso MoureDev)
         ══════════════════════════════════════════════════════════════════ */}
         <section id="multibanda-iris" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <div className="mb-14">
             <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--acc-ink)]">
-              {es ? 'Innovación Técnica del Sistema' : 'Technical System Innovation'}
+              {es ? 'Caso de Estudio TFM · Multitenancy Real' : 'TFM Case Study · Real Multi-tenancy'}
             </p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              {es ? 'Multibanda, Separación de Pistas Iris y Repertorios Inteligentes' : 'Multi-band, Iris Stem Separation & Smart Setlists'}
+              {es
+                ? 'Dos bandas, un creador: Os Herdeiros do Código & Master of Prompts'
+                : 'Two bands, one creator: Os Herdeiros do Código & Master of Prompts'}
             </h2>
+            <p className="mt-3 text-base text-[var(--ink-2)] max-w-3xl">
+              {es
+                ? 'Demostración práctica del sistema con las bandas de Brais Moure (MoureDev): gestionando simultáneamente Rock Bravú galaico y Thrash Metal sobre IA bajo una misma arquitectura unificada.'
+                : 'Practical system demonstration with Brais Moure (MoureDev) bands: simultaneously managing Galician Rock Bravú and AI Thrash Metal under one unified architecture.'}
+            </p>
           </div>
 
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14 mb-16">
             <div className="lg:col-span-5">
               <div className="inline-flex items-center gap-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-3 py-1 text-xs font-semibold text-[var(--acc-ink)] mb-4">
                 <Layers className="size-3.5" />
-                {es ? 'Multitenancy de Proyectos' : 'Multi-Project Tenancy'}
+                {es ? 'Multibanda en Acción' : 'Multi-band in Action'}
               </div>
               <h3 className="font-display text-2xl font-bold tracking-tight sm:text-3xl mb-4">
-                {es ? 'Dos o más bandas. Una sola cuenta.' : 'Multiple bands. One single account.'}
+                {es ? 'De Os Herdeiros do Código a Master of Prompts en 1 clic.' : 'From Os Herdeiros do Código to Master of Prompts in 1 tap.'}
               </h3>
               <p className="text-[var(--ink-2)] text-base leading-relaxed mb-4">
                 {es
-                  ? 'Cambias de banda en un toque: cada proyecto con su repertorio aislado, miembros, finanzas y salas. El calendario unificado cruza todas las fechas para impedir solapes de bolos o ensayos.'
-                  : 'Switch bands in one tap: isolated repertoires, members, finances, and calendar. The unified agenda prevents date collisions across projects.'}
+                  ? 'Brais Moure cambia de banda al instante: Os Herdeiros do Código con su gira por salas gallegas (Sala Capitol, Playa Club) y Master of Prompts preparando festivales pesados (Resurrection Fest). Cada banda con sus canciones, miembros y finanzas totalmente aisladas.'
+                  : 'Brais Moure switches bands instantly: Os Herdeiros do Código touring regional venues (Sala Capitol, Playa Club) and Master of Prompts preparing heavy festival stages (Resurrection Fest). Each project with independent song catalogs and finances.'}
               </p>
+              <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 border border-[var(--border)] text-xs text-[var(--ink-2)] space-y-2">
+                <div className="flex items-center justify-between font-semibold text-[var(--ink)]">
+                  <span>🎸 Os Herdeiros do Código</span>
+                  <span className="text-[var(--ok)]">Sala Capitol · Negociando 80/20</span>
+                </div>
+                <div className="flex items-center justify-between font-semibold text-[var(--ink)]">
+                  <span>⚡ Master of Prompts</span>
+                  <span className="text-[var(--acc-ink)]">Resurrection Fest · Confirmado</span>
+                </div>
+                <p className="text-[11px] text-[var(--ink-3)] pt-1 border-t border-[var(--border)]">
+                  {es
+                    ? '✓ El calendario conjunto alerta automáticamente para que ningún ensayo de Herdeiros coincida con un concierto de Master of Prompts.'
+                    : '✓ Unified calendar automatically prevents rehearsal clashes between both bands.'}
+                </p>
+              </div>
             </div>
             <div className="lg:col-span-7">
               <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-                <Captura nombre="bandas" movil="m-bandas" alt="Selector de multibanda" />
+                <Captura nombre="bandas" movil="m-bandas" alt="Selector multibanda con Os Herdeiros do Código y Master of Prompts" />
               </div>
             </div>
           </div>
@@ -466,28 +488,39 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
             <div className="order-2 lg:order-1 lg:col-span-7">
               <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-                <Captura nombre="repertorio" movil="m-repertorio" alt="Mapa de energía y repertorios" />
+                <Captura nombre="repertorio" movil="m-repertorio" alt="Setlist con mapa de energía de Master of Prompts" />
               </div>
             </div>
             <div className="order-1 lg:order-2 lg:col-span-5">
               <div className="inline-flex items-center gap-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-3 py-1 text-xs font-semibold text-[var(--acc-ink)] mb-4">
                 <Sliders className="size-3.5" />
-                {es ? 'Motor Acústico Iris' : 'Iris Acoustic Engine'}
+                {es ? 'Separación de Pistas Iris en Acción' : 'Iris Stems in Action'}
               </div>
               <h3 className="font-display text-2xl font-bold tracking-tight sm:text-3xl mb-4">
-                {es ? 'Separación de pistas y setlists por músico.' : 'Stem separation & personalized setlists.'}
+                {es ? 'Clavando los 214 BPM de "Master of Prompts".' : 'Nailing 214 BPM on "Master of Prompts".'}
               </h3>
               <p className="text-[var(--ink-2)] text-base leading-relaxed mb-4">
                 {es
-                  ? 'Iris extrae voz, bajo, batería, guitarra y teclas de cualquier audio para estudiar o ensayar en silencio. Además, cada músico imprime o lee su setlist adaptado (BPMs para batería, letras para voz, acordes para cuerdas).'
-                  : 'Iris isolates vocals, bass, drums, guitar, and keys for practice. Setlists dynamically format for each performer (BPMs for drums, lyrics for vocals, keys for guitars).'}
+                  ? 'Iris extrae de forma limpia las pistas del tema homónimo de Master of Prompts: la batería de doble bombo de Brais Moure, el riff afilado en Mi estándar y el bajo continuo. El músico silencia su instrumento para ensayar sobre el backing track a tempo real.'
+                  : 'Iris cleanly isolates stems from Master of Prompts title track: Brais Moure double-kick drumming, sharp E Standard guitar riffs, and heavy bass lines. Rehearse by muting your own track in real-time.'}
               </p>
+              <div className="flex flex-wrap gap-2 text-xs">
+                <span className="rounded-full bg-[var(--surface)] border border-[var(--border)] px-3 py-1 font-mono">
+                  🥁 Batería: Brais Moure
+                </span>
+                <span className="rounded-full bg-[var(--surface)] border border-[var(--border)] px-3 py-1 font-mono">
+                  ⚡ 214 BPM · Em
+                </span>
+                <span className="rounded-full bg-[var(--surface)] border border-[var(--border)] px-3 py-1 font-mono">
+                  🎸 Riff: Palmuting
+                </span>
+              </div>
             </div>
           </div>
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════
-            BLOQUE 6 — PRUEBA SOCIAL Y MÉTRICAS TFM
+            BLOQUE 6 — PRUEBA SOCIAL Y TESTIMONIOS (MoureDev)
         ══════════════════════════════════════════════════════════════════ */}
         <section className="bg-[var(--sunken)] py-16 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -514,24 +547,24 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
               {[
                 {
                   quote: es
-                    ? 'La combinación de contrato digital con señal retenida nos quitó el miedo a desplazarnos 400 km para tocar.'
-                    : 'Digital contracts with escrow deposits eliminated our fear of travelling 400km to perform.',
+                    ? 'Gestionar Os Herdeiros do Código y Master of Prompts a la vez era un lío constante de fechas. Con BandManager tengo el calendario conjunto sin solapes, contratos cerrados con Sala Capitol y las pistas de Iris para estudiar las baterías de metal a 214 BPM.'
+                    : 'Managing Os Herdeiros do Código and Master of Prompts simultaneously was a scheduling nightmare. With BandManager I have collision-free calendars, verified venue contracts, and Iris stems to practice metal drum parts at 214 BPM.',
+                  name: 'Brais Moure (MoureDev)',
+                  band: 'Batería, Os Herdeiros do Código & Master of Prompts',
+                },
+                {
+                  quote: es
+                    ? 'La sala firma el contrato digital desde el enlace móvil en 30 segundos y la señal del 50% entra en custodia Stripe al instante. Cero llamadas para reclamar transferencias.'
+                    : 'The venue signs the digital contract from the mobile link in 30 seconds and the 50% deposit enters Stripe escrow immediately. Zero chasing invoices.',
+                  name: 'Iván M.',
+                  band: 'Mánager de Gira, Tres Cuartos',
+                },
+                {
+                  quote: es
+                    ? 'La combinación de contratos digitales con señal retenida nos quitó el miedo a desplazarnos 400 km para tocar. Sabemos que el caché está asegurado antes de salir de viaje.'
+                    : 'Digital agreements with escrow deposits removed our fear of travelling 400km to perform. We know our fee is secured before loading the van.',
                   name: 'Laura G.',
                   band: 'Guitarrista, La Marea Roja',
-                },
-                {
-                  quote: es
-                    ? 'La sala firma desde el enlace móvil en 30 segundos. Nunca más tuvimos que perseguir transferencias post-bolo.'
-                    : 'The venue signed from the mobile link in 30 seconds. We never had to chase post-gig bank transfers again.',
-                  name: 'Iván M.',
-                  band: 'Mánager, Tres Cuartos',
-                },
-                {
-                  quote: es
-                    ? 'Llevar 3 bandas desde una misma cuenta y tener Iris para practicar en casa es un antes y un después.'
-                    : 'Managing 3 bands from one account with Iris stem isolation is a complete game changer.',
-                  name: 'Carla S.',
-                  band: 'Solista y Productora',
                 },
               ].map((t) => (
                 <div key={t.name} className="rounded-[var(--r-xl)] bg-[var(--surface)] p-6 shadow-sm">

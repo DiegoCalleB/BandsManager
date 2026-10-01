@@ -1106,6 +1106,7 @@ export default function App() {
 
   // Landing pública: solo en la raíz, sin sesión y sin parámetros (los enlaces de OAuth/invitación
   // traen query y deben ir directos al login). La app instalada (PWA) salta la landing.
+  // Si el usuario ya se ha registrado previamente en este dispositivo, va directo a la pantalla de login.
   const [verLogin, setVerLogin] = React.useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     const { pathname, search, hash } = window.location;
@@ -1113,11 +1114,23 @@ export default function App() {
     const instalada =
       window.matchMedia?.("(display-mode: standalone)").matches ||
       (navigator as unknown as { standalone?: boolean }).standalone === true;
-    return !raiz || !!search || !!hash || instalada;
+    const yaRegistrado =
+      localStorage.getItem("bandmanager_registered_user") === "true" ||
+      localStorage.getItem("bakandeya_remember_me") === "true" ||
+      Boolean(localStorage.getItem("bakandeya_user"));
+    return !raiz || !!search || !!hash || instalada || yaRegistrado;
   });
   React.useEffect(() => {
     const alVolver = () => {
-      if (window.location.pathname === "/") setVerLogin(false);
+      if (window.location.pathname === "/") {
+        const yaRegistrado =
+          localStorage.getItem("bandmanager_registered_user") === "true" ||
+          localStorage.getItem("bakandeya_remember_me") === "true" ||
+          Boolean(localStorage.getItem("bakandeya_user"));
+        if (!yaRegistrado) {
+          setVerLogin(false);
+        }
+      }
     };
     window.addEventListener("popstate", alVolver);
     return () => window.removeEventListener("popstate", alVolver);
@@ -1125,6 +1138,10 @@ export default function App() {
   const entrarDesdeLanding = React.useCallback(() => {
     window.history.pushState({}, "", "/login");
     setVerLogin(true);
+  }, []);
+  const volverALanding = React.useCallback(() => {
+    window.history.pushState({}, "", "/");
+    setVerLogin(false);
   }, []);
 
   if (isMusicianRoute) {
@@ -1173,7 +1190,7 @@ export default function App() {
     );
   }
 
-  if (isTfmRoute) {
+  if (isTfmRoute && !verLogin && !isLoggedIn) {
     return (
       <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
         <PublicTfmLanding onEntrar={entrarDesdeLanding} />
@@ -1205,7 +1222,7 @@ export default function App() {
         }
       >
         {USE_SIMPLE_LOGIN ? (
-          <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} />
+          <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} onVolverALanding={volverALanding} />
         ) : (
           <LoginModal onLoginSuccess={handleLoginSuccess} />
         )}

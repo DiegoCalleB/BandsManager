@@ -12,6 +12,7 @@ import { Button, Input, LinkButton } from './ui';
 // parrilla de 4 planes) se mantiene intacto y sin usar por ahora; ver el switch en App.tsx.
 interface SimplePromoLoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: unknown[]) => void;
+  onVolverALanding?: () => void;
 }
 
 type ViewState = 'login' | 'register' | 'reset-password';
@@ -133,7 +134,7 @@ const LoginBrandVideo: React.FC = () => {
   );
 };
 
-export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ onLoginSuccess }) => {
+export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ onLoginSuccess, onVolverALanding }) => {
   const [view, setView] = useState<ViewState>('login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -473,9 +474,20 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   </LinkButton>
                 </p>
 
-                <div className="pt-3 text-center text-xs text-[var(--ink-2)] flex items-center justify-center gap-1.5">
-                  <Music className="w-3.5 h-3.5" />
-                  <span>Tus salas, tu repertorio y tu gira, en el mismo sitio</span>
+                <div className="pt-3 text-center text-xs text-[var(--ink-2)] flex flex-col items-center justify-center gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <Music className="w-3.5 h-3.5" />
+                    <span>Tus salas, tu repertorio y tu gira, en el mismo sitio</span>
+                  </div>
+                  {onVolverALanding && (
+                    <button
+                      type="button"
+                      onClick={onVolverALanding}
+                      className="cursor-pointer text-[11px] text-[var(--ink-3)] hover:text-[var(--ink)] hover:underline transition-colors pt-1"
+                    >
+                      ← Volver a la página principal
+                    </button>
+                  )}
                 </div>
               </div>
             )}
