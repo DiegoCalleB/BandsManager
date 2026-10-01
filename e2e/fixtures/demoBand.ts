@@ -28,6 +28,35 @@ export const MIEMBROS = [
 const T = (id: string, titulo: string, dur: string, seg: number, ton: string, bpm: number, en: number, disco: string, n: number) => ({
   id, titulo, duracion: dur, duracionSegundos: seg, tonalidad: ton, bpm, energia: en, albumDisco: disco, ordenAlbum: n, band_id: 'bakandeya', estado: 'listo',
 });
+/** Notas y nivel de preparación de CADA miembro en los temas (las claves son los ids del roster de demo de Bakandeya). */
+const MIEMBROS_APP = [
+  { id: 'usr-1', nombre: 'Voz / Guitarra' },
+  { id: 'usr-2', nombre: 'Bajo / Coros' },
+  { id: 'usr-3', nombre: 'Batería / Percusión' },
+  { id: 'usr-4', nombre: 'Teclados / Sintes' },
+  { id: 'usr-5', nombre: 'Vientos / Metales' },
+];
+type Prep = 'aprendiendo' | 'casi_lista' | 'lista';
+const notasDe = (textos: string[], prep: Prep[]) => ({
+  notasMiembros: Object.fromEntries(MIEMBROS_APP.map((m, i) => [m.id, textos[i]])),
+  notasPorMiembro: MIEMBROS_APP.map((m, i) => ({ userId: m.id, memberName: m.nombre, nota: textos[i], estadoPreparacion: prep[i] })),
+});
+const NOTAS: Record<string, ReturnType<typeof notasDe>> = {
+  d3: notasDe(
+    ['Entras al 2º compás.', 'Coros en el estribillo.', 'Redoble antes del puente.', 'Pad largo en la intro.', 'Solo de 8 compases.'],
+    ['lista', 'casi_lista', 'lista', 'aprendiendo', 'casi_lista'],
+  ),
+  d1: notasDe(
+    ['Entras al 4º compás.', 'Sin coros hasta el segundo verso.', 'Escobillas hasta el estribillo.', 'Cuerdas suaves, sin sinte grave.', 'Silencio hasta el puente.'],
+    ['lista', 'lista', 'lista', 'casi_lista', 'lista'],
+  ),
+  d5: notasDe(
+    ['Tempo alto: cuenta de 4 rápida.', 'Octavas en la estrofa.', 'Bombo a negras en el puente.', 'Arpegiador a 1/8.', 'Dobla la melodía en el estribillo.'],
+    ['casi_lista', 'aprendiendo', 'lista', 'lista', 'aprendiendo'],
+  ),
+};
+
+const CON_NOTAS = (c: ReturnType<typeof T>) => (NOTAS[c.id] ? { ...c, ...NOTAS[c.id] } : c);
 export const CANCIONES = [
   T('d1', 'Calle Mayor', '3:42', 222, 'Am', 128, 12, 'Hojalata (2025)', 1),
   T('d2', 'Hojalata', '4:05', 245, 'Em', 138, 15, 'Hojalata (2025)', 2),
@@ -39,7 +68,7 @@ export const CANCIONES = [
   T('d8', 'El Último Tren a Vigo', '4:18', 258, 'Em', 132, 14, 'Ruido Blanco (EP)', 3),
   T('d9', 'Gaita Sintética', '3:36', 216, 'A', 140, 17, 'Single 2026', 1),
   T('d10', 'Bis de Madrugada', '4:44', 284, 'D', 118, 11, 'Single 2026', 2),
-];
+].map(CON_NOTAS);
 
 export const SETLISTS = [
   {

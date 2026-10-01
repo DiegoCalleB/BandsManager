@@ -44,6 +44,18 @@ for (const tema of ['light', 'dark'] as const) {
     await cerrarModales(page);
     await page.waitForTimeout(300);
     await irAEscritorio(page, 'repertorio'); await foto('repertorio');
+    // Setlist personalizado: notas de cada miembro bajo el tema…
+    const fila = page.getByText('Calle Mayor').locator('visible=true').first();
+    await fila.scrollIntoViewIfNeeded();
+    await page.evaluate(() => { const el = [...document.querySelectorAll('*')].find((e) => e.children.length === 0 && e.textContent === 'Calle Mayor'); el?.scrollIntoView({ block: 'start' }); });
+    await page.mouse.wheel(0, -90);
+    await foto('miembros');
+    // …y una hoja impresa por músico
+    await page.getByRole('button', { name: 'Imprimir repertorio' }).first().click();
+    await page.waitForTimeout(1800);
+    await page.screenshot({ path: `${OUT}/hojas-${tema}.jpg`, type: 'jpeg', quality: 82, clip: { x: 16, y: 18, width: 1248, height: 864 } });
+    await page.keyboard.press('Escape');
+    await cerrarModales(page);
     await irAEscritorio(page, 'fans');
     await page.getByRole('tab', { name: /3\. Dashboard/ }).first().click(); await foto('fans');
   });
