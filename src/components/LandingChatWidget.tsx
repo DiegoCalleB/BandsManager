@@ -56,6 +56,11 @@ const CONTENT_OFICIAL = {
           'Generas un QR para la mesa de merchan o la pantalla del escenario. El público lo escanea desde el móvil, se suscribe con consentimiento RGPD y se suman a tu base de fans y métricas de redes.',
       },
       {
+        label: '¿Cómo funciona la generación de Reels y vídeos para redes?',
+        answer:
+          'Puedes cortar clips verticales 9:16 de tus ensayos o directos para Instagram, TikTok y YouTube Shorts con subtítulos dinámicos de alto impacto y copys optimizados con ganchos.',
+      },
+      {
         label: '¿Funciona en el móvil durante el directo?',
         answer:
           'Totalmente. Se instala como app en el móvil con Modo Escenario de alto contraste: pantalla siempre encendida, acordes y letras legibles con poca luz y sin distracciones.',
@@ -95,6 +100,11 @@ const CONTENT_OFICIAL = {
         label: 'How does QR fan capture work?',
         answer:
           'Generate a QR code for your merch table or stage display. Fans scan it with their phone, sign up with full GDPR compliance, and feed your growing fan database and social metrics.',
+      },
+      {
+        label: 'How does the Reels generator work?',
+        answer:
+          'Easily clip 9:16 vertical videos of your gigs and rehearsals for Instagram, TikTok, and YouTube Shorts with animated subtitles and viral hook captions.',
       },
       {
         label: 'Does it work on mobile during shows?',

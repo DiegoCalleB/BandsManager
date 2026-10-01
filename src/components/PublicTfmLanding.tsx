@@ -12,6 +12,8 @@ import {
   Calendar,
   Layers,
   FileText,
+  Video,
+  Sparkles,
 } from 'lucide-react';
 import { Button } from './ui';
 import { useLanguage } from '../context/LanguageContext';
@@ -520,7 +522,85 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════
-            BLOQUE 6 — PRUEBA SOCIAL Y TESTIMONIOS (MoureDev)
+            BLOQUE 6 — GENERACIÓN DE REELS & DIFUSIÓN VIRAL
+        ══════════════════════════════════════════════════════════════════ */}
+        <section id="reels" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+            <div className="order-2 lg:order-1 lg:col-span-7">
+              {/* Mockup visual de Reel Vertical 9:16 */}
+              <div className="mx-auto max-w-xs overflow-hidden rounded-[2.5rem] border-4 border-[var(--ink)]/20 bg-black p-3 shadow-2xl relative">
+                <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[2rem] bg-gradient-to-b from-stone-900 via-stone-800 to-black p-4 flex flex-col justify-between text-white">
+                  <div className="flex items-center justify-between text-[11px] font-bold">
+                    <span className="flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 backdrop-blur-md">
+                      <Sparkles className="size-3 text-amber-400" />
+                      <span>Reel AI 9:16</span>
+                    </span>
+                    <div className="flex gap-1.5 text-[10px]">
+                      <span className="rounded bg-pink-500/80 px-1.5 py-0.5 font-bold">Instagram</span>
+                      <span className="rounded bg-cyan-500/80 px-1.5 py-0.5 font-bold">TikTok</span>
+                    </div>
+                  </div>
+
+                  <div className="text-center my-auto px-2">
+                    <p className="text-xs uppercase tracking-widest text-amber-400/90 font-mono mb-2">Master of Prompts · 214 BPM</p>
+                    <p className="text-xl font-black leading-tight tracking-tight drop-shadow-md">
+                      "SEEK AND DESTROY <span className="text-amber-400 bg-amber-400/20 px-1 rounded">THE LEGACY</span> CODE"
+                    </p>
+                    <span className="mt-2 inline-block rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] text-white/80">
+                      ⚡ Subtítulos sincronizados palabra a palabra
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs">
+                    <p className="font-bold flex items-center gap-1">
+                      <span>@masterofprompts</span>
+                      <span className="text-[10px] text-white/60">· En Vivo</span>
+                    </p>
+                    <p className="text-[11px] text-white/80 leading-snug">
+                      El riff que arrasa en el Resurrection Fest 🎸 ¿Te atreves con este tempo? #ThrashMetal #MoureDev
+                    </p>
+                    <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[11px] text-white/70">
+                      <span>🎵 Audio procesado con Iris</span>
+                      <span className="text-amber-300 font-semibold">+28.4K vistas</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2 lg:col-span-5">
+              <div className="inline-flex items-center gap-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-3 py-1 text-xs font-semibold text-[var(--acc-ink)] mb-4">
+                <Video className="size-3.5" />
+                {es ? 'Generación de Reels & Viralidad' : 'Reels Generation & Viral Growth'}
+              </div>
+              <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl mb-5">
+                {es
+                  ? 'Vídeos verticales automáticos para TikTok, Instagram y Shorts.'
+                  : 'Automated vertical videos for TikTok, Instagram, and Shorts.'}
+              </h2>
+              <div className="space-y-4 text-base text-[var(--ink-2)]">
+                <p>
+                  {es
+                    ? 'Corta y exporta momentos cumbre de conciertos o ensayos en formato vertical 9:16 listo para compartir en Instagram Reels, TikTok y YouTube Shorts sin salir de la plataforma.'
+                    : 'Clip and export peak live or rehearsal moments in vertical 9:16 format ready to publish across Instagram Reels, TikTok, and YouTube Shorts.'}
+                </p>
+                <p>
+                  {es
+                    ? 'Subtítulos animados de alta retención generados automáticamente: garantizan que el mensaje y la letra enganchen a los usuarios que ven los vídeos con el volumen silenciado.'
+                    : 'High-retention animated subtitles generated automatically: ensuring lyrics and hooks engage viewers scrolling on mute.'}
+                </p>
+                <p>
+                  {es
+                    ? 'Copys optimizados con ganchos de apertura y hashtags estratégicos para maximizar el alcance orgánico y la venta de entradas.'
+                    : 'Optimized captions with high-converting hooks and niche hashtags to drive organic reach and ticket sales.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 7 — PRUEBA SOCIAL Y TESTIMONIOS (MoureDev)
         ══════════════════════════════════════════════════════════════════ */}
         <section className="bg-[var(--sunken)] py-16 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
