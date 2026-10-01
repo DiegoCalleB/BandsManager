@@ -81,6 +81,9 @@ import { GlobalCampaignBar } from "./components/campaign/GlobalCampaignBar";
 const PublicLanding = safeLazy(() =>
   import("./components/PublicLanding").then((m) => ({ default: m.PublicLanding })),
 );
+const PublicTfmLanding = safeLazy(() =>
+  import("./components/PublicTfmLanding").then((m) => ({ default: m.PublicTfmLanding })),
+);
 const LoginModal = safeLazy(() =>
   import("./components/LoginModal").then((m) => ({ default: m.LoginModal })),
 );
@@ -1091,6 +1094,16 @@ export default function App() {
     );
   }, []);
 
+  const isTfmRoute = React.useMemo(() => {
+    const p = window.location.pathname.toLowerCase();
+    return (
+      p.startsWith("/landingpage_tfm") ||
+      p.startsWith("/landingpage-tfm") ||
+      p.startsWith("/landing-tfm") ||
+      p.startsWith("/tfm")
+    );
+  }, []);
+
   // Landing pública: solo en la raíz, sin sesión y sin parámetros (los enlaces de OAuth/invitación
   // traen query y deben ir directos al login). La app instalada (PWA) salta la landing.
   const [verLogin, setVerLogin] = React.useState<boolean>(() => {
@@ -1156,6 +1169,14 @@ export default function App() {
           currentBandName={currentActiveBandName}
           currentBandLogo={currentActiveBandLogo}
         />
+      </Suspense>
+    );
+  }
+
+  if (isTfmRoute) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
+        <PublicTfmLanding onEntrar={entrarDesdeLanding} />
       </Suspense>
     );
   }
