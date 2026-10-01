@@ -1946,35 +1946,21 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
                     (no se han encontrado datos de fechas de esta sala)
                   </span>
-                  <div className="flex items-center gap-2 text-micro font-mono text-[var(--ink-2)] pl-1">
-                    <span>
-                      Wegow:{" "}
-                      <strong
-                        className={
-                          wegowStatus === "ok"
-                            ? "text-[var(--ok)]"
-                            : "text-[var(--ink-2)]"
-                        }
-                      >
-                        {wegowStatus === "ok" ? "Conectado" : "Sin cartelera"}
-                      </strong>
-                    </span>
-                    <span>•</span>
-                    <span>
-                      Bandsintown:{" "}
-                      <strong
-                        className={
-                          bandsintownStatus === "ok"
-                            ? "text-[var(--acc)]"
-                            : "text-[var(--ink-2)]"
-                        }
-                      >
-                        {bandsintownStatus === "ok"
-                          ? "Contrastado"
-                          : "Sin datos"}
-                      </strong>
-                    </span>
-                  </div>
+                  {(wegowStatus === "ok" || bandsintownStatus === "ok") && (
+                    <div className="flex items-center gap-2 text-micro font-mono text-[var(--ink-2)] pl-1">
+                      {wegowStatus === "ok" && (
+                        <span>
+                          Wegow: <strong className="text-[var(--ok)]">Conectado</strong>
+                        </span>
+                      )}
+                      {wegowStatus === "ok" && bandsintownStatus === "ok" && <span>•</span>}
+                      {bandsintownStatus === "ok" && (
+                        <span>
+                          Bandsintown: <strong className="text-[var(--acc)]">Contrastado</strong>
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -2007,55 +1993,37 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2 text-micro font-mono text-[var(--ink-2)] pl-0.5">
-                  <a
-                    href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 hover:text-[var(--ok)] transition-colors cursor-pointer"
-                    title="Clic para ver cartelera en Wegow"
-                  >
-                    <span
-                      className={`w-1.5 h-1.5 rounded-[var(--r-pill)] ${wegowStatus === "ok" ? "bg-[var(--ok)]" : "bg-[var(--sunken)]"}`}
-                    ></span>
-                    <span>
-                      Wegow:{" "}
-                      <strong
-                        className={
-                          wegowStatus === "ok"
-                            ? "text-[var(--ok)]"
-                            : "text-[var(--ink-2)]"
-                        }
-                      >
-                        {wegowStatus === "ok" ? "✓ OK" : "Sin datos"}
-                      </strong>
-                    </span>
-                    <ExternalLink className="w-2 h-2 opacity-60" />
-                  </a>
-                  <span>•</span>
-                  <a
-                    href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 hover:text-[var(--acc)] transition-colors cursor-pointer"
-                    title="Clic para ver cartelera en Bandsintown"
-                  >
-                    <span
-                      className={`w-1.5 h-1.5 rounded-[var(--r-pill)] ${bandsintownStatus === "ok" ? "bg-[var(--acc)]" : "bg-[var(--sunken)]"}`}
-                    ></span>
-                    <span>
-                      Bandsintown:{" "}
-                      <strong
-                        className={
-                          bandsintownStatus === "ok"
-                            ? "text-[var(--acc)]"
-                            : "text-[var(--ink-2)]"
-                        }
-                      >
-                        {bandsintownStatus === "ok" ? "✓ OK" : "Sin datos"}
-                      </strong>
-                    </span>
-                    <ExternalLink className="w-2 h-2 opacity-60" />
-                  </a>
+                  {wegowStatus === "ok" && (
+                    <a
+                      href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 hover:text-[var(--ok)] transition-colors cursor-pointer"
+                      title="Clic para ver cartelera en Wegow"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]"></span>
+                      <span>
+                        Wegow: <strong className="text-[var(--ok)]">✓ OK</strong>
+                      </span>
+                      <ExternalLink className="w-2 h-2 opacity-60" />
+                    </a>
+                  )}
+                  {wegowStatus === "ok" && bandsintownStatus === "ok" && <span>•</span>}
+                  {bandsintownStatus === "ok" && (
+                    <a
+                      href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 hover:text-[var(--acc)] transition-colors cursor-pointer"
+                      title="Clic para ver cartelera en Bandsintown"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]"></span>
+                      <span>
+                        Bandsintown: <strong className="text-[var(--acc)]">✓ OK</strong>
+                      </span>
+                      <ExternalLink className="w-2 h-2 opacity-60" />
+                    </a>
+                  )}
                   {contrastado && (
                     <span className="text-[var(--on-acc)] font-bold bg-[var(--acc)] px-1 py-0.2 rounded ">
                       <ShowIcon inline emoji="⭐" />Multi-fuente contrastada
