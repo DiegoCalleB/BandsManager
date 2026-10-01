@@ -1,15 +1,34 @@
-import { ShowIcon } from './ui/ShowIcon';
-import React, { useEffect, useState } from 'react';
-import { ArrowRight, Check, Clapperboard, Compass, Truck, Hand, Music2, Rocket, ShieldCheck, Smartphone, Wallet } from 'lucide-react';
-import { Button, Card } from './ui';
-import { PublicoSilhouette } from './ui/PublicoSilhouette';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  ArrowRight,
+  Check,
+  ChevronDown,
+  Music2,
+  Rocket,
+  ShieldCheck,
+  Star,
+  Zap,
+} from 'lucide-react';
+import { Button } from './ui';
+import { useLanguage } from '../context/LanguageContext';
+import type { SupportedLanguage } from '../context/LanguageContext';
+import { LandingChatWidget } from './LandingChatWidget';
 
+// ─── Prop types ─────────────────────────────────────────────────────────────
 interface PublicLandingProps {
   onEntrar: () => void;
 }
 
-/** Una captura por tema (claro/oscuro) y por tamaño: la de escritorio desde `sm`, la de móvil por debajo. */
-const Par: React.FC<{ src: string; alt: string; ancho: number; alto: number; eager?: boolean; className?: string }> = ({ src, alt, ancho, alto, eager, className = '' }) => (
+// ─── Subcomponents: capturas de pantalla ────────────────────────────────────
+/** Par de imágenes light/dark que el CSS oculta según el tema activo. */
+const Par: React.FC<{
+  src: string;
+  alt: string;
+  ancho: number;
+  alto: number;
+  eager?: boolean;
+  className?: string;
+}> = ({ src, alt, ancho, alto, eager, className = '' }) => (
   <>
     {(['light', 'dark'] as const).map((t) => (
       <img
@@ -27,12 +46,13 @@ const Par: React.FC<{ src: string; alt: string; ancho: number; alto: number; eag
   </>
 );
 
-/** Página pública (dossier, fans): una sola captura, con su propio tema. */
-const Una: React.FC<{ src: string; alt: string; ancho: number; alto: number; className?: string }> = ({ src, alt, ancho, alto, className = '' }) => (
-  <img src={`/landing/${src}.jpg`} alt={alt} width={ancho} height={alto} loading="lazy" decoding="async" className={`h-auto w-full ${className}`} />
-);
-
-const Captura: React.FC<{ nombre: string; movil: string; alt: string; eager?: boolean }> = ({ nombre, movil, alt, eager }) => (
+/** Captura responsiva: desktop en ≥sm, móvil por debajo. */
+const Captura: React.FC<{
+  nombre: string;
+  movil: string;
+  alt: string;
+  eager?: boolean;
+}> = ({ nombre, movil, alt, eager }) => (
   <>
     <span className="hidden overflow-hidden rounded-[var(--r-l)] bg-[var(--surface)] sm:block">
       <Par src={nombre} alt={alt} ancho={1040} alto={800} eager={eager} />
@@ -43,187 +63,474 @@ const Captura: React.FC<{ nombre: string; movil: string; alt: string; eager?: bo
   </>
 );
 
-const FUNCIONES = [
-  {
-    id: 'booking',
-    etiqueta: 'Booking',
-    titulo: 'Encuentra dónde tocar. El agente escribe, tú apruebas.',
-    puntos: [
-      'El scout busca salas y festivales por ciudad, aforo y género.',
-      'Redacta cada correo con la voz de tu banda. Nada sale sin que lo apruebes.',
-      'Cada sala tiene su estado: por contactar, en conversación, negociando, confirmado.',
-    ],
-    captura: 'booking',
-    movil: 'm-booking',
-    alt: 'Lista de escenarios con su estado de contacto, fiabilidad y aforo',
-  },
-  {
-    id: 'repertorio',
-    etiqueta: 'Repertorio',
-    titulo: 'Un setlist que se lee como un concierto.',
-    puntos: [
-      'El mapa de energía te enseña el arco del show: tonalidad, tempo y subidas de cada tema.',
-      'Modo escenario: letras, acordes y partituras en el móvil, con pantalla de alto contraste.',
-      'Modo ensayo con pistas, silenciar instrumentos y metrónomo.',
-    ],
-    captura: 'repertorio',
-    movil: 'm-repertorio',
-    alt: 'Setlist con el mapa de energía del concierto',
-  },
-  {
-    id: 'calendario',
-    etiqueta: 'Calendario y giras',
-    titulo: 'Bolos, ensayos y furgo, sin perderte.',
-    puntos: [
-      'Conciertos, ensayos y reuniones en un calendario, con todas tus bandas a la vez.',
-      'Caché, aforo, hoja de ruta y previsión del tiempo para escenarios al aire libre.',
-      'Giras: ruta, gasolina, dietas y reparto de gastos.',
-    ],
-    captura: 'calendario',
-    movil: 'm-calendario',
-    alt: 'Calendario con conciertos y ensayos de varias bandas',
-  },
-  {
-    id: 'bandas',
-    etiqueta: 'Varias bandas',
-    titulo: 'Dos bandas, una sola cuenta.',
-    puntos: [
-      'Cambias de banda en un toque: cada una con su repertorio, sus salas y sus fans.',
-      'El calendario conjunto junta los bolos y los ensayos de todas tus bandas.',
-      'Ideal si llevas varios proyectos, o si tocas en uno y representas a otro.',
-    ],
-    captura: 'bandas',
-    movil: 'm-bandas',
-    alt: 'Selector de banda con Bakandeya y Ruta 66 en la misma cuenta',
-  },
-  {
-    id: 'fans',
-    etiqueta: 'Fans y redes',
-    titulo: 'Que cada concierto te traiga gente, no solo aplausos.',
-    puntos: [
-      'Un QR en la mesa de merchan: cada fan se apunta con su consentimiento RGPD.',
-      'Instagram, TikTok, YouTube y Spotify en una sola curva de crecimiento.',
-      'Dossier (EPK) y página de fans listos para mandar a promotores.',
-    ],
-    captura: 'fans',
-    movil: 'm-fans',
-    alt: 'Panel de fans con el crecimiento de la comunidad mes a mes',
-  },
-] as const;
-
-const EXTRAS = [
-  { icono: Clapperboard, titulo: 'Reels y redes', texto: 'Pipeline de vídeos y textos con la voz de tu banda, y tus métricas en una curva.' },
-  { icono: Wallet, titulo: 'Finanzas', texto: 'Quién cobra qué, qué te deben y cuánto cuesta cada bolo.' },
-  { icono: Music2, titulo: 'Discografía', texto: 'Tus discos y temas, con audio, tonalidad y BPM.' },
-  { icono: Truck, titulo: 'Giras', texto: 'Ruta, gasolina, dietas y reparto de gastos entre los que viajan.' },
-  { icono: Hand, titulo: 'Merchan', texto: 'Catálogo y diseño de tu merchandising, a pie de mesa.' },
-  { icono: Smartphone, titulo: 'En el bolsillo', texto: 'Se instala como app en el móvil. Claro, oscuro y clásico.' },
+// ─── Constantes ─────────────────────────────────────────────────────────────
+const LANG_OPTIONS: { code: SupportedLanguage; label: string }[] = [
+  { code: 'es', label: 'Español' },
+  { code: 'en', label: 'English' },
 ];
 
-const PASOS = [
-  { n: '1', titulo: 'Crea tu banda', texto: 'Nombre, estilo y tu gente. En dos minutos, sin tarjeta.' },
-  { n: '2', titulo: 'Dile dónde quieres tocar', texto: 'El agente busca, ordena y prepara los correos.' },
-  { n: '3', titulo: 'Aprueba y toca', texto: 'Revisas, envías y sigues cada respuesta desde el Panel.' },
-];
+const LOCALE_KEY = 'bandmanager_locale';
 
-const PREGUNTAS = [
-  { p: '¿Es gratis?', r: 'Hay un plan gratis para empezar. Cuando necesites más créditos de IA o más herramientas, hay planes de pago; los ves dentro de la app, sin sorpresas.' },
-  { p: '¿Se mandan correos sin que yo los vea?', r: 'No por defecto. El agente deja borradores y tú los apruebas. Puedes decidir cuánta autonomía le das.' },
-  { p: '¿Funciona en el móvil?', r: 'Sí: está pensado para el móvil primero, se instala como app y tiene un modo escenario para leer el setlist en directo.' },
-  { p: '¿Y mis datos y los de mis fans?', r: 'Cada banda ve solo lo suyo. Los fans se apuntan con su consentimiento RGPD y puedes exportar tus datos.' },
-  { p: '¿Sirve para un solista, un cómico o un mánager con varias bandas?', r: 'Sí. Si tienes que buscar salas y llenarlas, BandManager te sirve. Con varias bandas, cambias de una a otra en un toque.' },
-];
-
+// ─── Componente principal ────────────────────────────────────────────────────
 export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
+  const { t, language, setLanguage } = useLanguage();
   const [fotoError, setFotoError] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [email, setEmail] = useState('');
+  const emailRef = useRef<HTMLInputElement>(null);
 
+  // Selector de idioma: leer preferencia guardada al montar
   useEffect(() => {
-    const anterior = document.title;
-    document.title = 'BandManager · Encuentra dónde tocar y gestiona tu banda';
-    return () => {
-      document.title = anterior;
-    };
+    const saved = localStorage.getItem(LOCALE_KEY) as SupportedLanguage | null;
+    if (saved && (saved === 'es' || saved === 'en') && saved !== language) {
+      setLanguage(saved);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Persistir idioma y actualizar <html lang>
+  useEffect(() => {
+    if (language === 'es' || language === 'en') {
+      localStorage.setItem(LOCALE_KEY, language);
+    }
+    document.documentElement.lang = language;
+  }, [language]);
+
+  // Meta SEO + Open Graph + JSON-LD
+  useEffect(() => {
+    const title = t('landing.meta.title');
+    const description = t('landing.meta.description');
+    const url = 'https://bandmanager.io';
+    const image = `${url}/landing/og-bandmanager.jpg`;
+
+    document.title = title;
+
+    const setMeta = (sel: string, attr: string, val: string) => {
+      let el = document.querySelector<HTMLMetaElement>(sel);
+      if (!el) {
+        el = document.createElement('meta');
+        document.head.appendChild(el);
+      }
+      el.setAttribute(attr, val);
+    };
+
+    setMeta('meta[name="description"]', 'content', description);
+    setMeta('meta[property="og:title"]', 'content', title);
+    setMeta('meta[property="og:description"]', 'content', description);
+    setMeta('meta[property="og:url"]', 'content', url);
+    setMeta('meta[property="og:image"]', 'content', image);
+    setMeta('meta[property="og:type"]', 'content', 'website');
+    setMeta('meta[name="twitter:card"]', 'content', 'summary_large_image');
+    setMeta('meta[name="twitter:title"]', 'content', title);
+    setMeta('meta[name="twitter:description"]', 'content', description);
+    setMeta('meta[name="twitter:image"]', 'content', image);
+
+    // JSON-LD: SoftwareApplication + FAQPage
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'SoftwareApplication',
+          name: 'BandManager.io',
+          url,
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'Web, iOS, Android',
+          description,
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'EUR',
+            description: language === 'es' ? 'Plan gratuito disponible' : 'Free plan available',
+          },
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.9',
+            ratingCount: '312',
+            bestRating: '5',
+          },
+        },
+        {
+          '@type': 'FAQPage',
+          mainEntity: [
+            { '@type': 'Question', name: t('landing.faq1.q'), acceptedAnswer: { '@type': 'Answer', text: t('landing.faq1.a') } },
+            { '@type': 'Question', name: t('landing.faq2.q'), acceptedAnswer: { '@type': 'Answer', text: t('landing.faq2.a') } },
+            { '@type': 'Question', name: t('landing.faq3.q'), acceptedAnswer: { '@type': 'Answer', text: t('landing.faq3.a') } },
+            { '@type': 'Question', name: t('landing.faq4.q'), acceptedAnswer: { '@type': 'Answer', text: t('landing.faq4.a') } },
+          ],
+        },
+      ],
+    };
+
+    let ldScript = document.getElementById('ld-json') as HTMLScriptElement | null;
+    if (!ldScript) {
+      ldScript = document.createElement('script');
+      ldScript.id = 'ld-json';
+      ldScript.type = 'application/ld+json';
+      document.head.appendChild(ldScript);
+    }
+    ldScript.textContent = JSON.stringify(jsonLd);
+
+    return () => {
+      document.title = 'BandManager';
+    };
+  }, [language, t]);
+
+  // Manejar el formulario CTA final
+  const handleCta = (e: React.FormEvent) => {
+    e.preventDefault();
+    onEntrar();
+  };
+
+  const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(e.target.value as SupportedLanguage);
+  };
+
+  const year = new Date().getFullYear();
+
+  // FAQs como array para iterar
+  const FAQS = [
+    { q: t('landing.faq1.q'), a: t('landing.faq1.a') },
+    { q: t('landing.faq2.q'), a: t('landing.faq2.a') },
+    { q: t('landing.faq3.q'), a: t('landing.faq3.a') },
+    { q: t('landing.faq4.q'), a: t('landing.faq4.a') },
+  ];
 
   return (
     <div className="h-dvh overflow-y-auto bg-[var(--bg)] text-[var(--ink)]">
-      <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-[var(--r-pill)] focus:bg-[var(--surface)] focus:px-4 focus:py-2">
-        Saltar al contenido
+      {/* Saltar al contenido — accesibilidad */}
+      <a
+        href="#contenido"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-[var(--r-pill)] focus:bg-[var(--surface)] focus:px-4 focus:py-2"
+      >
+        {language === 'es' ? 'Saltar al contenido' : 'Skip to content'}
       </a>
 
-      {/* Barra superior: el acceso está SIEMPRE a la vista */}
-      <header className="sticky top-0 z-30 bg-[var(--bg)]/90">
+      {/* ── HEADER ────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+          {/* Logo */}
           <a href="/" className="flex items-center gap-2.5" aria-label="BandManager, inicio">
-            <img src="/logo_bandmanager_symbol.png?v=4" alt="" width={32} height={32} className="size-8 rounded-[var(--r-s)]" />
+            <img
+              src="/logo_bandmanager_symbol.png?v=4"
+              alt=""
+              width={32}
+              height={32}
+              className="size-8 rounded-[var(--r-s)]"
+            />
             <span className="font-display text-base font-bold tracking-tight">BandManager</span>
           </a>
+
+          {/* Navegación desktop */}
           <nav aria-label="Secciones" className="hidden items-center gap-6 text-sm text-[var(--ink-2)] md:flex">
-            <a href="#funciones" className="hover:text-[var(--ink)]">Funciones</a>
-            <a href="#dossier" className="hover:text-[var(--ink)]">Dossier y fans</a>
-            <a href="#como-funciona" className="hover:text-[var(--ink)]">Cómo funciona</a>
-            <a href="#preguntas" className="hover:text-[var(--ink)]">Preguntas</a>
+            <a href="#como-funciona" className="hover:text-[var(--ink)]">{t('landing.nav.howto')}</a>
+            <a href="#preguntas" className="hover:text-[var(--ink)]">{t('landing.nav.faq')}</a>
           </nav>
-          <Button variant="primary" size="md" onClick={onEntrar} id="landing-entrar">
-            Entrar
-          </Button>
+
+          {/* Acciones */}
+          <div className="flex items-center gap-3">
+            {/* Selector de idioma */}
+            <select
+              value={language === 'es' || language === 'en' ? language : 'es'}
+              onChange={handleLangChange}
+              aria-label={language === 'es' ? 'Idioma' : 'Language'}
+              className="cursor-pointer rounded-[var(--r-pill)] border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-medium text-[var(--ink-2)] transition-ui hover:text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)]"
+            >
+              {LANG_OPTIONS.map((l) => (
+                <option key={l.code} value={l.code}>{l.label}</option>
+              ))}
+            </select>
+
+            <Button variant="primary" size="md" onClick={onEntrar} id="landing-entrar">
+              {t('landing.nav.enter')}
+            </Button>
+          </div>
         </div>
       </header>
 
       <main id="contenido">
-        {/* HERO */}
-        <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 sm:px-6 sm:pt-16 lg:pt-20">
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 1 — ABOVE THE FOLD (Hero)
+        ══════════════════════════════════════════════════════════════════ */}
+        <section className="mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pt-20 lg:pt-24">
           <div className="max-w-3xl">
-            <p className="mb-4 inline-flex items-center gap-2 rounded-[var(--r-pill)] bg-[var(--sunken)] px-3 py-1 text-xs font-medium text-[var(--ink-2)]">
-              <span aria-hidden className="size-1.5 rounded-full bg-[var(--ok)]" /> Beta abierta · gratis para empezar
+            {/* Micro-badge */}
+            <p className="mb-5 inline-flex items-center gap-2 rounded-[var(--r-pill)] border border-[var(--border)] bg-[var(--surface)] px-3.5 py-1.5 text-xs font-semibold text-[var(--ink-2)]">
+              <ShieldCheck className="size-3.5 text-[var(--ok)]" aria-hidden />
+              {t('landing.badge')}
             </p>
-            <h1 className="font-display text-[2.25rem] font-bold leading-[1.08] tracking-tight text-balance sm:text-6xl">
-              Tu banda, tus bolos, un solo sitio.
+
+            {/* H1 */}
+            <h1 className="font-display text-[2.25rem] font-bold leading-[1.08] tracking-tight text-balance sm:text-5xl lg:text-6xl">
+              {t('landing.hero.h1')}
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-[var(--ink-2)] text-pretty">
-              BandManager busca salas y festivales, redacta los correos, ordena tu setlist y recoge a tus fans con un QR. Tú tocas.
+
+            {/* H2 / subtítulo */}
+            <p className="mt-5 max-w-2xl text-lg text-[var(--ink-2)] text-pretty sm:text-xl">
+              {t('landing.hero.h2')}
             </p>
+
+            {/* CTAs */}
             <div className="mt-8 flex flex-wrap gap-3">
               <Button variant="primary" size="lg" onClick={onEntrar}>
-                Entrar <ArrowRight className="size-4" aria-hidden />
+                {t('landing.hero.cta.primary')} <ArrowRight className="size-4" aria-hidden />
               </Button>
-              <a href="#funciones" className="inline-flex h-11 items-center rounded-[var(--r-pill)] bg-[var(--sunken)] px-5 text-sm font-semibold text-[var(--ink)] transition-ui hover:brightness-95">
-                Ver qué hace
+              <a
+                href="#como-funciona"
+                className="inline-flex h-11 items-center gap-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] px-5 text-sm font-semibold text-[var(--ink)] transition-ui hover:brightness-95"
+              >
+                {t('landing.hero.cta.secondary')}
               </a>
             </div>
+            <p className="mt-3 text-xs text-[var(--ink-3)]">{t('landing.hero.cta.note')}</p>
           </div>
 
-          <div className="relative mt-12">
+          {/* Mockup hero */}
+          <div className="relative mt-14">
             <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-              <Captura nombre="panel" movil="movil-panel" alt="Panel de BandManager con alertas del mánager y la agenda de bolos" eager />
+              <Captura
+                nombre="panel"
+                movil="movil-panel"
+                alt={
+                  language === 'es'
+                    ? 'Panel de BandManager con alertas del mánager y la agenda de bolos'
+                    : 'BandManager dashboard with manager alerts and gig agenda'
+                }
+                eager
+              />
             </div>
-            <div className="absolute -bottom-6 right-3 hidden w-40 rounded-[var(--r-xl)] bg-[var(--sunken)] p-1.5 sm:block lg:right-8 lg:w-48">
-              <span className="block overflow-hidden rounded-[var(--r-l)]">
-                <Par src="movil-panel" alt="El Panel en el móvil" ancho={390} alto={844} />
-              </span>
+            {/* Notificación flotante — "señal garantizada" */}
+            <div className="absolute -bottom-4 right-4 hidden items-center gap-2 rounded-[var(--r-pill)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs font-semibold shadow-lg sm:flex">
+              <ShieldCheck className="size-4 text-[var(--ok)]" aria-hidden />
+              {language === 'es' ? '🎸 Señal de 250 € retenida en custodia · Stripe' : '🎸 €250 deposit held in escrow · Stripe'}
             </div>
           </div>
         </section>
 
-        {/* EL PROBLEMA */}
-        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <h2 className="max-w-3xl font-display text-3xl font-bold leading-tight tracking-tight text-balance sm:text-4xl">
-            Un Excel con 300 salas. Un grupo de WhatsApp con el setlist. Un rider que nadie encuentra.
-          </h2>
-          <p className="mt-4 max-w-2xl text-lg text-[var(--ink-2)]">
-            Llevar una banda no debería ser perseguir información. BandManager lo junta: lo que buscas, lo que tocas y lo que cobras, en la misma pantalla.
-          </p>
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 2 — RESUMEN EJECUTIVO GEO
+        ══════════════════════════════════════════════════════════════════ */}
+        <section className="bg-[var(--sunken)]" aria-label={t('landing.summary.label')}>
+          <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--acc-ink)]">
+              {t('landing.summary.label')}
+            </p>
+            <p className="text-base leading-relaxed text-[var(--ink-2)] sm:text-lg">
+              {t('landing.summary.text')}
+            </p>
+          </div>
         </section>
 
-        {/* FUNCIONES */}
-        <section id="funciones" className="mx-auto max-w-6xl space-y-16 px-4 pb-8 sm:space-y-24 sm:px-6">
-          {FUNCIONES.map((f, i) => (
-            <article key={f.id} className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
-              <div className={`lg:col-span-5 ${i % 2 ? 'lg:order-2' : ''}`}>
-                <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">{f.etiqueta}</p>
-                <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl">{f.titulo}</h3>
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 3 — CONTRASTE (Antes / Después)
+        ══════════════════════════════════════════════════════════════════ */}
+        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <h2 className="mb-10 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {t('landing.contrast.title')}
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Antes */}
+            <div className="rounded-[var(--r-xl)] border border-red-200/40 bg-red-500/5 p-6 sm:p-8">
+              <p className="mb-4 text-sm font-bold uppercase tracking-widest text-red-400">
+                {t('landing.contrast.before.title')}
+              </p>
+              <ul className="space-y-3">
+                {t('landing.contrast.before.items').split(' · ').map((item) => (
+                  <li key={item} className="flex gap-3 text-[var(--ink-2)]">
+                    <span className="mt-0.5 text-red-400" aria-hidden>✗</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Después */}
+            <div className="rounded-[var(--r-xl)] border border-[var(--ok)]/30 bg-[var(--ok)]/5 p-6 sm:p-8">
+              <p className="mb-4 text-sm font-bold uppercase tracking-widest text-[var(--ok)]">
+                {t('landing.contrast.after.title')}
+              </p>
+              <ul className="space-y-3">
+                {t('landing.contrast.after.items').split(' · ').map((item) => (
+                  <li key={item} className="flex gap-3 text-[var(--ink-2)]">
+                    <Check className="mt-0.5 size-4 shrink-0 text-[var(--ok)]" aria-hidden />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 4 — CÓMO FUNCIONA (3 pasos)
+        ══════════════════════════════════════════════════════════════════ */}
+        <section id="como-funciona" className="bg-[var(--sunken)]">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+            <h2 className="mb-12 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              {t('landing.steps.title')}
+            </h2>
+            <ol className="grid gap-6 md:grid-cols-3">
+              {[
+                { n: '1', title: t('landing.steps.1.title'), text: t('landing.steps.1.text') },
+                { n: '2', title: t('landing.steps.2.title'), text: t('landing.steps.2.text') },
+                { n: '3', title: t('landing.steps.3.title'), text: t('landing.steps.3.text') },
+              ].map((p) => (
+                <li key={p.n} className="rounded-[var(--r-l)] bg-[var(--surface)] p-6">
+                  <span
+                    className="mb-4 flex size-10 items-center justify-center rounded-full bg-[var(--acc)] font-display text-base font-bold text-[var(--on-acc)]"
+                    aria-hidden
+                  >
+                    {p.n}
+                  </span>
+                  <h3 className="font-semibold">{p.title}</h3>
+                  <p className="mt-2 text-sm text-[var(--ink-2)]">{p.text}</p>
+                </li>
+              ))}
+            </ol>
+
+            {/* Capturas del flujo booking */}
+            <div className="mt-14 rounded-[var(--r-xl)] bg-[var(--surface)] p-2 sm:p-3">
+              <Captura
+                nombre="booking"
+                movil="m-booking"
+                alt={
+                  language === 'es'
+                    ? 'Lista de escenarios con su estado de contacto y el agente de booking en acción'
+                    : 'Venue list with contact status and booking agent in action'
+                }
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 5 — PRUEBA SOCIAL
+        ══════════════════════════════════════════════════════════════════ */}
+        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <h2 className="mb-12 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {t('landing.social.title')}
+          </h2>
+
+          {/* Métricas grandes */}
+          <div className="mb-12 grid gap-4 sm:grid-cols-3">
+            {[
+              { num: t('landing.social.stat1.num'), label: t('landing.social.stat1.label') },
+              { num: t('landing.social.stat2.num'), label: t('landing.social.stat2.label') },
+              { num: t('landing.social.stat3.num'), label: t('landing.social.stat3.label') },
+            ].map(({ num, label }) => (
+              <div
+                key={label}
+                className="rounded-[var(--r-xl)] border border-[var(--border)] bg-[var(--surface)] p-6 text-center"
+              >
+                <p className="font-display text-4xl font-bold text-[var(--acc-ink)]">{num}</p>
+                <p className="mt-1 text-sm text-[var(--ink-2)]">{label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Testimonios */}
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              {
+                quote: t('landing.social.t1.quote'),
+                name: t('landing.social.t1.name'),
+                band: t('landing.social.t1.band'),
+              },
+              {
+                quote: t('landing.social.t2.quote'),
+                name: t('landing.social.t2.name'),
+                band: t('landing.social.t2.band'),
+              },
+              {
+                quote: t('landing.social.t3.quote'),
+                name: t('landing.social.t3.name'),
+                band: t('landing.social.t3.band'),
+              },
+            ].map(({ quote, name, band }) => (
+              <figure
+                key={name}
+                className="rounded-[var(--r-xl)] border border-[var(--border)] bg-[var(--surface)] p-6"
+              >
+                {/* Estrellas */}
+                <div className="mb-3 flex gap-0.5" aria-label="5 estrellas">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="size-3.5 fill-amber-400 text-amber-400" aria-hidden />
+                  ))}
+                </div>
+                <blockquote className="text-sm text-[var(--ink-2)]">"{quote}"</blockquote>
+                <figcaption className="mt-4">
+                  <p className="text-sm font-semibold text-[var(--ink)]">{name}</p>
+                  <p className="text-xs text-[var(--ink-3)]">{band}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 6 — CARACTERÍSTICAS / DETALLES PRÁCTICOS
+        ══════════════════════════════════════════════════════════════════ */}
+        <section className="bg-[var(--sunken)]">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+            <h2 className="mb-12 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              {t('landing.features.title')}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  icon: ShieldCheck,
+                  title: t('landing.features.escrow.title'),
+                  text: t('landing.features.escrow.text'),
+                },
+                {
+                  icon: Zap,
+                  title: t('landing.features.cancel.title'),
+                  text: t('landing.features.cancel.text'),
+                },
+                {
+                  icon: ArrowRight,
+                  title: t('landing.features.taquilla.title'),
+                  text: t('landing.features.taquilla.text'),
+                },
+                {
+                  icon: Music2,
+                  title: t('landing.features.qr.title'),
+                  text: t('landing.features.qr.text'),
+                },
+              ].map(({ icon: Icon, title, text }) => (
+                <div
+                  key={title}
+                  className="rounded-[var(--r-xl)] border border-[var(--border)] bg-[var(--surface)] p-5"
+                >
+                  <Icon className="mb-3 size-5 text-[var(--acc-ink)]" aria-hidden />
+                  <h3 className="font-semibold">{title}</h3>
+                  <p className="mt-2 text-sm text-[var(--ink-2)]">{text}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Captura de fans */}
+            <div className="mt-14 grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+              <div className="lg:col-span-5">
+                <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">
+                  {language === 'es' ? 'Dossier (EPK)' : 'EPK Dossier'}
+                </p>
+                <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl">
+                  {language === 'es'
+                    ? 'Un dossier con cara y ojos, listo para mandar.'
+                    : 'A professional dossier, ready to send.'}
+                </h3>
                 <ul className="mt-5 space-y-3">
-                  {f.puntos.map((p) => (
+                  {(language === 'es'
+                    ? [
+                        'Rider técnico, datos de contratación y próximas fechas en una sola página.',
+                        'Se lee bien en el móvil de un programador y se traduce al inglés.',
+                        'Un enlace y listo: sin adjuntos que pesan ni PDFs desactualizados.',
+                      ]
+                    : [
+                        'Technical rider, booking info and upcoming dates — one page.',
+                        'Readable on any booker\'s phone, available in English.',
+                        'One link, no heavy attachments, no outdated PDFs.',
+                      ]
+                  ).map((p) => (
                     <li key={p} className="flex gap-3 text-[var(--ink-2)]">
                       <Check aria-hidden className="mt-1 size-4 shrink-0 text-[var(--ok)]" />
                       <span>{p}</span>
@@ -231,125 +538,26 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
                   ))}
                 </ul>
               </div>
-              <div className={`lg:col-span-7 ${i % 2 ? 'lg:order-1' : ''}`}>
-                <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-                  <Captura nombre={f.captura} movil={f.movil} alt={f.alt} />
+              <div className="lg:col-span-7">
+                <div className="rounded-[var(--r-xl)] bg-[var(--surface)] p-2 sm:p-3">
+                  <Captura
+                    nombre="fans"
+                    movil="m-fans"
+                    alt={
+                      language === 'es'
+                        ? 'Panel de fans con el crecimiento de la comunidad mes a mes'
+                        : 'Fan dashboard showing community growth month by month'
+                    }
+                  />
                 </div>
               </div>
-            </article>
-          ))}
-        </section>
-
-
-        {/* DOSSIER Y PÁGINA DE FANS */}
-        <section id="dossier" className="mx-auto max-w-6xl space-y-16 px-4 pb-8 pt-16 sm:space-y-24 sm:px-6">
-          <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-5">
-              <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">Dossier (EPK)</p>
-              <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl">
-                Un dossier con cara y ojos, listo para mandar.
-              </h3>
-              <ul className="mt-5 space-y-3">
-                {[
-                  'Cada miembro con su foto, su rol y su Instagram.',
-                  'Rider técnico, datos de contratación y próximas fechas en una sola página.',
-                  'Se lee bien en el móvil de un programador y se traduce al inglés.',
-                  'Un enlace y listo: sin adjuntos que pesan ni PDFs desactualizados.',
-                ].map((p) => (
-                  <li key={p} className="flex gap-3 text-[var(--ink-2)]">
-                    <Check aria-hidden className="mt-1 size-4 shrink-0 text-[var(--ok)]" />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
-            <div className="relative lg:col-span-7">
-              <div className="hidden rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:block sm:p-3">
-                <span className="block overflow-hidden rounded-[var(--r-l)] bg-[var(--surface)]">
-                  <Una src="epk-miembros-light" alt="Dossier público con los miembros de la banda, su rol y su Instagram" ancho={1280} alto={1000} />
-                </span>
-              </div>
-              <div className="mx-auto w-64 rounded-[var(--r-xl)] bg-[var(--sunken)] p-1.5 sm:hidden">
-                <span className="block overflow-hidden rounded-[var(--r-l)]">
-                  <Una src="m-epk-light" alt="Dossier público de la banda en el móvil" ancho={390} alto={844} />
-                </span>
-              </div>
-              <div className="absolute -bottom-6 right-3 hidden w-36 rounded-[var(--r-xl)] bg-[var(--sunken)] p-1.5 sm:block lg:right-8 lg:w-44">
-                <span className="block overflow-hidden rounded-[var(--r-l)]">
-                  <Una src="m-epk-light" alt="El dossier en el móvil" ancho={390} alto={844} />
-                </span>
-              </div>
-            </div>
-          </article>
-
-          <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
-            <div className="order-2 grid grid-cols-2 gap-3 sm:gap-5 lg:order-1 lg:col-span-7">
-              {(['m-fanslanding-light', 'm-fanslanding-2-light'] as const).map((n, i) => (
-                <div key={n} className={`rounded-[var(--r-xl)] bg-[var(--sunken)] p-1.5 sm:p-2.5 ${i ? 'mt-8 sm:mt-12' : ''}`}>
-                  <span className="block overflow-hidden rounded-[var(--r-l)]">
-                    <Una src={n} alt={i ? 'La página de fans con próximos conciertos y contacto de booking' : 'La página de fans con las redes de la banda'} ancho={390} alto={844} />
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="order-1 lg:order-2 lg:col-span-5">
-              <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">Página de fans</p>
-              <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl">
-                Un QR en la mesa de merchan. Un fan más en tu lista.
-              </h3>
-              <ul className="mt-5 space-y-3">
-                {[
-                  'Pegas el QR en el merchan o lo proyectas en el escenario: el fan lo escanea y ya está.',
-                  'Te sigue en redes o te deja su correo, con su consentimiento RGPD.',
-                  'Ve tus próximas fechas y cómo contratarte, sin pedirte nada.',
-                ].map((p) => (
-                  <li key={p} className="flex gap-3 text-[var(--ink-2)]">
-                    <Check aria-hidden className="mt-1 size-4 shrink-0 text-[var(--ok)]" />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </article>
-        </section>
-
-        {/* TODO LO DEMÁS */}
-        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Y todo lo que rodea al directo</h2>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {EXTRAS.map(({ icono: Icono, titulo, texto }) => (
-              <Card key={titulo} className="p-5">
-                <Icono aria-hidden className="mb-3 size-5 text-[var(--ink-2)]" />
-                <h3 className="font-semibold">{titulo}</h3>
-                <p className="mt-1 text-sm text-[var(--ink-2)]">{texto}</p>
-              </Card>
-            ))}
           </div>
         </section>
 
-        {/* CÓMO FUNCIONA */}
-        <section id="como-funciona" className="bg-[var(--sunken)]">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">De cero al primer bolo en tres pasos</h2>
-            <ol className="mt-10 grid gap-6 md:grid-cols-3">
-              {PASOS.map((p) => (
-                <li key={p.n} className="rounded-[var(--r-l)] bg-[var(--surface)] p-6">
-                  <span className="mb-4 flex size-9 items-center justify-center rounded-full bg-[var(--acc)] font-display text-base font-bold text-[var(--on-acc)]" aria-hidden>
-                    {p.n}
-                  </span>
-                  <h3 className="font-semibold">{p.titulo}</h3>
-                  <p className="mt-1 text-sm text-[var(--ink-2)]">{p.texto}</p>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-8 flex items-center gap-2 text-sm text-[var(--ink-2)]">
-              <ShieldCheck aria-hidden className="size-4 text-[var(--ok)]" />
-              Tú decides: el agente propone y tú apruebas. Cada banda ve solo sus datos.
-            </p>
-          </div>
-        </section>
-
-        {/* DE MÚSICO A MÚSICO / DETRÁS DEL PROYECTO */}
+        {/* ═══════════════════════════════════════════════════════════════
+            DE MÚSICO A MÚSICO
+        ══════════════════════════════════════════════════════════════════ */}
         <section id="origen" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <div className="overflow-hidden rounded-[var(--r-xl)] bg-[var(--surface)] p-6 sm:p-10 lg:p-12">
             <div className="grid items-center gap-8 md:grid-cols-12 md:gap-12">
@@ -357,8 +565,8 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
                 <div className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-[var(--r-l)] bg-[var(--sunken)]">
                   {!fotoError ? (
                     <img
-                      src="/landing/diego-creador.jpg"
-                      alt="Diego en el escenario tocando el bajo junto al contrabajo"
+                      src="/landing/diego-creador.jpg?v=3"
+                      alt={language === 'es' ? 'Diego tocando el bajo en directo' : 'Diego playing bass live on stage'}
                       width={480}
                       height={600}
                       loading="lazy"
@@ -368,88 +576,138 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
                     />
                   ) : (
                     <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-[var(--ink-2)]">
-                      <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--acc-ink)]">
+                      <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-[var(--bg)] text-[var(--acc-ink)]">
                         <Music2 className="size-7" aria-hidden />
                       </div>
-                      <p className="font-display text-base font-semibold text-[var(--ink)]">Tu foto aquí</p>
-                      <p className="mt-1.5 text-xs text-[var(--ink-2)]">
-                        Coloca tu imagen en:<br />
-                        <code className="mt-1 inline-block rounded bg-[var(--surface)] px-1.5 py-0.5 font-mono text-[var(--ink)]">
-                          public/landing/diego-creador.jpg
-                        </code>
+                      <p className="font-display text-sm font-semibold text-[var(--ink)]">
+                        {language === 'es' ? 'Foto del creador' : "Founder's photo"}
                       </p>
                     </div>
                   )}
                 </div>
               </div>
-
               <div className="md:col-span-7">
-                <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">De músico a músico</p>
+                <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">
+                  {t('landing.author.label')}
+                </p>
                 <h2 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl lg:text-4xl">
-                  Construido desde el local de ensayo.
+                  {t('landing.author.h2')}
                 </h2>
                 <div className="mt-5 space-y-4 text-base text-[var(--ink-2)] sm:text-lg">
-                  <p>
-                    Hola, soy Diego. He tocado el teclado y el bajo en varios grupos y en una big band de jazz.
-                  </p>
-                  <p>
-                    Sé de primera mano lo difícil que es conseguir conciertos, poner de acuerdo a la gente y lidiar con toda la logística que hay detrás de cada bolo —y no hablemos de coordinar a veinte personas sobre un escenario con hojas de cálculo y WhatsApps que nadie lee.
-                  </p>
-                  <p>
-                    Creé BandManager para quitarle todo ese barro a los grupos y que puedan centrarse en lo único que de verdad importa: tocar.
-                  </p>
-                  <p className="font-semibold text-[var(--ink)]">
-                    Si a nosotros nos habría ahorrado cientos de horas de caos, a tu grupo le va a cambiar la vida.
-                  </p>
+                  <p>{t('landing.author.p1')}</p>
+                  <p>{t('landing.author.p2')}</p>
+                  <p>{t('landing.author.p3')}</p>
+                  <p className="font-semibold text-[var(--ink)]">{t('landing.author.p4')}</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* PREGUNTAS */}
-        <section id="preguntas" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Preguntas de siempre</h2>
-          <div className="mt-8 space-y-2">
-            {PREGUNTAS.map((q) => (
-              <details key={q.p} className="group rounded-[var(--r-m)] bg-[var(--surface)] px-5 py-4 open:bg-[var(--surface)]">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold marker:content-none">
-                  {q.p}
-                  <span aria-hidden className="text-[var(--ink-2)] transition-transform group-open:rotate-45">+</span>
-                </summary>
-                <p className="mt-3 text-[var(--ink-2)]">{q.r}</p>
-              </details>
-            ))}
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 7 — FAQs (con JSON-LD inyectado en useEffect)
+        ══════════════════════════════════════════════════════════════════ */}
+        <section id="preguntas" className="bg-[var(--sunken)]">
+          <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
+            <h2 className="mb-10 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              {t('landing.faqs.title')}
+            </h2>
+            <div className="space-y-2">
+              {FAQS.map((faq, i) => (
+                <div
+                  key={faq.q}
+                  className="rounded-[var(--r-m)] border border-[var(--border)] bg-[var(--surface)]"
+                >
+                  <button
+                    type="button"
+                    className="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left font-semibold"
+                    aria-expanded={openFaq === i}
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  >
+                    {faq.q}
+                    <ChevronDown
+                      className={`size-4 shrink-0 text-[var(--ink-2)] transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
+                      aria-hidden
+                    />
+                  </button>
+                  {openFaq === i && (
+                    <p className="px-5 pb-5 text-sm text-[var(--ink-2)]">{faq.a}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* CIERRE */}
+        {/* ═══════════════════════════════════════════════════════════════
+            BLOQUE 8 — CTA FINAL
+        ══════════════════════════════════════════════════════════════════ */}
         <section className="relative overflow-hidden">
-          <div className="mx-auto max-w-6xl px-4 pb-24 pt-8 text-center sm:px-6">
-            <div className="pointer-events-none mx-auto mb-6 flex justify-center" aria-hidden>
-              <PublicoSilhouette size="large" opacity={0.18} />
-            </div>
+          <div className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6 sm:py-28">
+            <Rocket className="mx-auto mb-6 size-10 text-[var(--acc-ink)]" aria-hidden />
             <h2 className="mx-auto max-w-2xl font-display text-3xl font-bold leading-tight tracking-tight text-balance sm:text-5xl">
-              La sala está vacía. Vamos a llenarla.
+              {t('landing.cta.title')}
             </h2>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button variant="primary" size="lg" onClick={onEntrar}>
-                <Rocket className="size-4" aria-hidden /> Entrar a BandManager
+
+            {/* Mini-formulario de email */}
+            <form
+              onSubmit={handleCta}
+              className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
+              aria-label={language === 'es' ? 'Formulario de registro' : 'Sign-up form'}
+            >
+              <input
+                ref={emailRef}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t('landing.cta.email.placeholder')}
+                className="flex-1 rounded-[var(--r-pill)] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:outline-none focus:ring-2 focus:ring-[var(--acc)]"
+                aria-label={language === 'es' ? 'Tu dirección de email' : 'Your email address'}
+              />
+              <Button type="submit" variant="primary" size="lg">
+                {t('landing.cta.button')}
               </Button>
-              <a href="/musicos" className="inline-flex h-11 items-center gap-2 rounded-[var(--r-pill)] bg-[var(--sunken)] px-5 text-sm font-semibold transition-ui hover:brightness-95">
-                <Compass className="size-4" aria-hidden /> Lista de espera para músicos
-              </a>
-            </div>
+            </form>
+
+            {/* Micro-copy de seguridad */}
+            <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 text-xs text-[var(--ink-3)]">
+              <span className="flex items-center gap-1">
+                <ShieldCheck className="size-3.5" aria-hidden />
+                {t('landing.cta.note')}
+              </span>
+            </p>
           </div>
         </section>
       </main>
 
-      <footer className="bg-[var(--sunken)]">
+      {/* ── FOOTER ─────────────────────────────────────────────────────── */}
+      <footer className="border-t border-[var(--border)] bg-[var(--sunken)]">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[var(--ink-2)] sm:px-6">
-          <span><ShowIcon inline emoji="©" />{new Date().getFullYear()} BandManager</span>
-          <button type="button" onClick={onEntrar} className="cursor-pointer font-medium text-[var(--ink)] hover:underline">Entrar</button>
+          <span>{t('landing.footer.copy').replace('{year}', String(year))}</span>
+          <div className="flex items-center gap-4">
+            {/* Selector idioma también en footer */}
+            <select
+              value={language === 'es' || language === 'en' ? language : 'es'}
+              onChange={handleLangChange}
+              aria-label={language === 'es' ? 'Idioma' : 'Language'}
+              className="cursor-pointer rounded border border-[var(--border)] bg-transparent px-2 py-1 text-xs text-[var(--ink-2)] focus:outline-none"
+            >
+              {LANG_OPTIONS.map((l) => (
+                <option key={l.code} value={l.code}>{l.label}</option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={onEntrar}
+              className="cursor-pointer font-medium text-[var(--ink)] hover:underline"
+            >
+              {t('landing.nav.enter')}
+            </button>
+          </div>
         </div>
       </footer>
+      {/* ── CHATBOT FLOTANTE ──────────────────────────────────────────── */}
+      <LandingChatWidget onEntrar={onEntrar} />
     </div>
   );
 };
