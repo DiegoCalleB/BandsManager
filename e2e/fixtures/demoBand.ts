@@ -14,7 +14,7 @@ export const BANDA = { id: 'bakandeya', nombre: 'Bakandeya', logo: '/logo_bakand
 export const RUTA66 = { id: 'ruta66', band_id: 'band-ruta66', nombre: 'Ruta 66' };
 export const BANDAS_DISPONIBLES = [
   { band_id: 'band-bakandeya', bandName: 'BAKANDEYA', nombre_banda: 'BAKANDEYA', role: 'leader', userId: 'user-diego', plan: 'de_gira', logoUrl: '/logo_bakandeya.jpg', is_main: true },
-  { band_id: RUTA66.band_id, bandName: RUTA66.nombre, nombre_banda: RUTA66.nombre, role: 'leader', userId: 'user-diego', plan: 'cabeza_de_cartel', logoUrl: fs.existsSync('public/landing/demo/logo-ruta66.png') ? '/landing/demo/logo-ruta66.png' : '', is_main: false },
+  { band_id: RUTA66.band_id, bandName: RUTA66.nombre, nombre_banda: RUTA66.nombre, role: 'leader', userId: 'user-diego', plan: 'cabeza_de_cartel', logoUrl: fs.existsSync('public/landing/demo/logo-ruta66.jpg') ? '/landing/demo/logo-ruta66.jpg' : (fs.existsSync('public/landing/demo/logo-ruta66.png') ? '/landing/demo/logo-ruta66.png' : ''), is_main: false },
 ];
 
 export const MIEMBROS = [

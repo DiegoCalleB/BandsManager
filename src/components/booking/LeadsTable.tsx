@@ -257,49 +257,35 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
       return (
         <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-micro font-mono">
-          <a
-            href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(lead.nombre_sala)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer ${
-              wegowStatus === "ok"
-                ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                : wegowStatus === "error"
-                  ? "bg-[var(--alert)] text-[var(--on-alert)]"
-                  : "bg-[var(--sunken)]/80 text-[var(--ink-2)]"
-            }`}
-            title={
-              wegowStatus === "ok"
-                ? "Wegow API verificado - Clic para ver cartelera en Wegow"
-                : "Buscar esta sala en Wegow"
-            }
-          >
-            <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-current"></span>
-            Wegow: {wegowStatus === "ok" ? "✓ OK" : "Sin datos"}
-            <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
-          </a>
+          {wegowStatus === "ok" && (
+            <a
+              href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(lead.nombre_sala)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer bg-[var(--ok)] text-[var(--on-ok)]"
+              title="Wegow API verificado - Clic para ver cartelera en Wegow"
+            >
+              <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-current"></span>
+              Wegow: ✓ OK
+              <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
+            </a>
+          )}
 
-          <a
-            href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(lead.nombre_sala)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer ${
-              bandsintownStatus === "ok"
-                ? "bg-[var(--ink)] text-[var(--bg)]"
-                : "bg-[var(--sunken)]/80 text-[var(--ink-2)]"
-            }`}
-            title={
-              bandsintownStatus === "ok"
-                ? "Bandsintown verificado - Clic para ver en Bandsintown"
-                : "Buscar esta sala en Bandsintown"
-            }
-          >
-            <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-current"></span>
-            Bandsintown: {bandsintownStatus === "ok" ? "✓ OK" : "Sin datos"}
-            <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
-          </a>
+          {bandsintownStatus === "ok" && (
+            <a
+              href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(lead.nombre_sala)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer bg-[var(--ink)] text-[var(--bg)]"
+              title="Bandsintown verificado - Clic para ver en Bandsintown"
+            >
+              <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-current"></span>
+              Bandsintown: ✓ OK
+              <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
+            </a>
+          )}
 
           {contrastado && (
             <span className="text-micro text-[var(--on-acc)] font-bold bg-[var(--acc)] px-1 py-0.2 rounded">

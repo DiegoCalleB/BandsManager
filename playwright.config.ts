@@ -8,10 +8,13 @@ const FICHERO_SESION = 'e2e/.auth/user.json';
 // arrancado sin credenciales de Supabase/Stripe/Gemini: la app arranca igual y el login
 // funciona contra los usuarios semilla de src/db_seed.ts (la sincronización con Supabase en
 // /auth/login está en try/catch y sigue con el estado en memoria si falla).
+import fs from 'node:fs';
+
 /** El entorno trae Chromium preinstalado y sin descarga: se apunta al binario. */
+const DEFAULT_CHROME_WIN = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const LAUNCH_OPTIONS = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE
   ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE }
-  : undefined;
+  : (fs.existsSync(DEFAULT_CHROME_WIN) ? { executablePath: DEFAULT_CHROME_WIN } : undefined);
 
 export default defineConfig({
   testDir: './e2e',
@@ -66,7 +69,7 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:3000/api/health',
     reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
+    timeout: 180_000,
     env: {
       NODE_ENV: 'development',
       AGENT_EMAIL_MODE: 'draft',

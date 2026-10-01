@@ -212,7 +212,7 @@ function auditFile(filePath) {
   for (const [checkName, check] of Object.entries(CHECKS)) {
     if (!check.pattern) continue;
     // Las primitivas de components/ui/ y sus tests SON la implementación: no se auditan contra sí mismas.
-    if (check.skipUi && /components\/ui\//.test(filePath)) continue;
+    if (check.skipUi && /components[\\/]ui[\\/]/.test(filePath)) continue;
 
     let match;
     const regex = new RegExp(check.pattern.source, check.pattern.flags);

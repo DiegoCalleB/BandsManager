@@ -1055,12 +1055,12 @@ export function ReelsMetricsView({
                 }}
                 className={`px-3.5 py-2.5 rounded-[var(--r-pill)] font-sans text-micro font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                   igStatus?.connected
-                    ? "bg-[var(--alert-soft)]/40 text-[var(--alert)] hover:bg-[var(--alert-soft)]/60"
-                    : "bg-[var(--surface)]/40 text-[var(--alert)] hover:bg-[var(--alert-soft)]"
+                    ? "bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--sunken)]"
+                    : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
                 }`}
                 title="Configurar conexión oficial con Meta Graph API / Instagram OAuth"
               >
-                <Instagram className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+                <Instagram className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                 {igStatus?.connected ? (
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)]" />
@@ -1127,8 +1127,8 @@ export function ReelsMetricsView({
                 className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40"}`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-micro font-sans text-[var(--alert)] font-bold flex items-center gap-1.5">
-                    <Instagram className="w-3.5 h-3.5" /> Instagram
+                  <span className="text-micro font-sans text-[var(--ink)] font-bold flex items-center gap-1.5">
+                    <Instagram className="w-3.5 h-3.5 text-[var(--ink-2)]" /> Instagram
                   </span>
                   <div className="flex items-center gap-1.5">
                     <button
@@ -1152,7 +1152,7 @@ export function ReelsMetricsView({
                       className={`text-micro font-sans px-2 py-0.5 rounded flex items-center gap-1 transition-ui cursor-pointer ${
                         igStatus?.connected
                           ? "bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"
-                          : "bg-[var(--alert)]/10 text-[var(--alert)] hover:bg-[var(--alert)]/20"
+                          : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                       }`}
                       title="Verificar o conectar token oficial de Meta Graph API"
                     >
@@ -1164,7 +1164,7 @@ export function ReelsMetricsView({
                   </div>
                 </div>
                 <div>
-                  <div className="text-2xl font-black font-display tracking-tight text-[var(--alert)]">
+                  <div className="text-2xl font-black font-display tracking-tight text-[var(--ink)]">
                     {(
                       latestMetric?.instagram_followers ||
                       latestMetric?.instagram ||
@@ -1261,10 +1261,10 @@ export function ReelsMetricsView({
                 className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40"}`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-micro font-sans text-[var(--alert)] font-bold flex items-center gap-1.5">
-                    <Youtube className="w-3.5 h-3.5" /> YouTube
+                  <span className="text-micro font-sans text-[var(--ink)] font-bold flex items-center gap-1.5">
+                    <Youtube className="w-3.5 h-3.5 text-[var(--ink-2)]" /> YouTube
                   </span>
-                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--ink-2)]">
                     {latestMetric?.youtube_video_count ||
                       contentItems.length ||
                       0}{" "}
@@ -1272,7 +1272,7 @@ export function ReelsMetricsView({
                   </span>
                 </div>
                 <div>
-                  <div className="text-2xl font-black font-display tracking-tight text-[var(--alert)]">
+                  <div className="text-2xl font-black font-display tracking-tight text-[var(--ink)]">
                     {(
                       latestMetric?.youtube_subscribers ||
                       latestMetric?.youtube ||
@@ -1691,7 +1691,7 @@ export function ReelsMetricsView({
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
                     <label className="text-micro font-sans text-[var(--ink-2)] flex items-center gap-1">
-                      <Instagram className="w-3 h-3 text-[var(--alert)]" />{" "}
+                      <Instagram className="w-3 h-3 text-[var(--ink-2)]" />{" "}
                       Insta Segs.
                     </label>
                     <Input
@@ -1721,7 +1721,7 @@ export function ReelsMetricsView({
 
                   <div className="space-y-1">
                     <label className="text-micro font-sans text-[var(--ink-2)] flex items-center gap-1">
-                      <Youtube className="w-3 h-3 text-[var(--alert)]" />{" "}
+                      <Youtube className="w-3 h-3 text-[var(--ink-2)]" />{" "}
                       YouTube Subs.
                     </label>
                     <Input
@@ -2121,7 +2121,7 @@ export function ReelsMetricsView({
                 <div>
                   <h3 className="text-sm font-bold font-display flex items-center gap-2">
                     Instagram Platform Insights API
-                    <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--ink)] font-sans font-normal">
+                    <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-sans font-normal">
                       Meta Official
                     </span>
                   </h3>
@@ -2142,9 +2142,9 @@ export function ReelsMetricsView({
             {/* Modal Body */}
             <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto font-sans">
               {/* Official Documentation Reference */}
-              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5 text-xs text-[var(--alert)]">
-                  <ExternalLink className="w-4 h-4 text-[var(--alert)] shrink-0" />
+              <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 text-xs text-[var(--ink-2)]">
+                  <ExternalLink className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
                   <span>
                     Documentación Oficial Meta:{" "}
                     <strong className="text-[var(--ink)]">
@@ -2156,7 +2156,7 @@ export function ReelsMetricsView({
                   href="https://developers.facebook.com/documentation/instagram-platform/insights"
                   target="_blank"
                   rel="noreferrer"
-                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink)] text-micro font-sans font-bold flex items-center gap-1 transition-ui"
+                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink)] text-micro font-sans font-bold flex items-center gap-1 transition-ui"
                 >
                   Abrir Docs <ExternalLink className="w-2.5 h-2.5" />
                 </a>

@@ -70,12 +70,12 @@ export const MusicianOnboardingModal: React.FC<
             label="Cerrar guía"
             type="button"
             onClick={handleDismiss}
-            className="absolute top-5 right-5"
+            className="absolute top-5 right-5 z-20"
           >
             <X className="w-5 h-5" />
           </IconButton>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5 pr-12">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-sans font-bold">
               <span>Primeros pasos para músicos</span>
             </div>

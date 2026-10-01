@@ -20,7 +20,7 @@ const lum = h => { const [r, g, b] = rgb(h).map(lin); return 0.2126 * r + 0.7152
 const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
 const ON = { acc: 'on-acc', ok: 'on-ok', alert: 'on-alert', tentative: 'on-tentative' };
 const INK = { acc: 'acc-ink', ok: 'ok', alert: 'alert', tentative: 'tentative', ink: 'ink-2', 'ink-2': 'ink-2', 'ink-3': 'ink-2' };
-const files = execSync("git ls-files ':(glob)src/**/*.tsx'").toString().trim().split('\n').filter(f => !/__tests__|\.test\./.test(f));
+const files = execSync('git ls-files "src/**/*.tsx"').toString().trim().split('\n').filter(f => !/__tests__|\.test\./.test(f));
 const mezcla = (fg, bgc, al) => '#' + rgb(fg).map((v, i) => Math.round(v * al + rgb(bgc)[i] * (1 - al)).toString(16).padStart(2, '0')).join('');
 const minContraste = (bg, alfaB, tk) => Math.min(...['claro', 'oscuro'].map(nom => { const T = nom === 'claro' ? claro : oscuro; if (!T[bg] || !T[tk]) return 0; const fondo = mezcla(T[bg], AMBIENTE[nom], alfaB); return ratio(T[tk], fondo); }));
 const elegir = (bg, alfaB, tk) => { const cand = [...new Set([ON[bg], INK[tk], 'ink', 'ink-2', 'on-acc'].filter(Boolean))]; return cand.find(c => minContraste(bg, alfaB, c) >= 4.5) ?? null; };

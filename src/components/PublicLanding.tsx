@@ -1,3 +1,4 @@
+import { ShowIcon } from './ui/ShowIcon';
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Check, Clapperboard, Compass, Truck, Hand, Music2, Rocket, ShieldCheck, Smartphone, Wallet } from 'lucide-react';
 import { Button, Card } from './ui';
@@ -371,7 +372,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
                         <Music2 className="size-7" aria-hidden />
                       </div>
                       <p className="font-display text-base font-semibold text-[var(--ink)]">Tu foto aquí</p>
-                      <p className="mt-1.5 text-xs text-[var(--ink-3)]">
+                      <p className="mt-1.5 text-xs text-[var(--ink-2)]">
                         Coloca tu imagen en:<br />
                         <code className="mt-1 inline-block rounded bg-[var(--surface)] px-1.5 py-0.5 font-mono text-[var(--ink)]">
                           public/landing/diego-creador.jpg
@@ -445,7 +446,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
 
       <footer className="bg-[var(--sunken)]">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[var(--ink-2)] sm:px-6">
-          <span>© {new Date().getFullYear()} BandManager</span>
+          <span><ShowIcon inline emoji="©" />{new Date().getFullYear()} BandManager</span>
           <button type="button" onClick={onEntrar} className="cursor-pointer font-medium text-[var(--ink)] hover:underline">Entrar</button>
         </div>
       </footer>

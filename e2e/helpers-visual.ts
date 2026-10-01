@@ -53,6 +53,8 @@ export async function silenciarTutoriales(page: Page) {
   await page.addInitScript((modulos: string[]) => {
     try {
       for (const m of modulos) localStorage.setItem(`bm_tutorial_seen_${m}`, 'true');
+      localStorage.setItem('bandmanager_onboarding_completed', 'true');
+      localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
     } catch {
       /* sin localStorage: el cierre reactivo de cerrarModales() hace de red */
     }
@@ -98,7 +100,7 @@ export async function cerrarModales(page: Page) {
   for (let intento = 0; intento < 6; intento++) {
     const cierre = cierres.first();
     if (!(await cierre.isVisible({ timeout: 2_000 }).catch(() => false))) return;
-    await cierre.click();
+    await cierre.click({ force: true }).catch(() => {});
     await page.waitForTimeout(400);
   }
 }

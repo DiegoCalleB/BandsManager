@@ -33,6 +33,8 @@ setup('crear sesión reutilizable', async ({ page }) => {
   await page.addInitScript((modulos: string[]) => {
     try {
       for (const m of modulos) localStorage.setItem(`bm_tutorial_seen_${m}`, 'true');
+      localStorage.setItem('bandmanager_onboarding_completed', 'true');
+      localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
     } catch { /* sin localStorage */ }
   }, MODULOS_CON_TUTORIAL);
 
@@ -49,12 +51,12 @@ setup('crear sesión reutilizable', async ({ page }) => {
   const cierres = page.getByRole('button', {
     name: new RegExp(`^(${CIERRES_BIENVENIDA.join('|')})`),
   });
-  await cierres.first().waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
+  await cierres.first().waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
 
   for (let intento = 0; intento < 6; intento++) {
     const cierre = cierres.first();
     if (!(await cierre.isVisible({ timeout: 2_000 }).catch(() => false))) break;
-    await cierre.click();
+    await cierre.click({ force: true }).catch(() => {});
     await page.waitForTimeout(400);
   }
 
