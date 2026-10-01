@@ -246,7 +246,7 @@ export function CalendarWidget({
           {/* View Mode Switcher */}
           <div className="flex items-center rounded-[var(--r-pill)] p-1 gap-1 bg-[var(--sunken)]">
             <Button
-              variant={viewMode === "list" ? "primary" : "ghost"}
+              variant={viewMode === "list" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSetViewMode("list")}
@@ -257,7 +257,7 @@ export function CalendarWidget({
               <span className="hidden md:inline text-micro">Lista</span>
             </Button>
             <Button
-              variant={viewMode === "mini_month" ? "primary" : "ghost"}
+              variant={viewMode === "mini_month" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSetViewMode("mini_month")}
@@ -268,7 +268,7 @@ export function CalendarWidget({
               <span className="hidden md:inline text-micro">Mes</span>
             </Button>
             <Button
-              variant={viewMode === "weekly_grid" ? "primary" : "ghost"}
+              variant={viewMode === "weekly_grid" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSetViewMode("weekly_grid")}
@@ -283,7 +283,7 @@ export function CalendarWidget({
           {/* Band Scope Toggle */}
           {onSetAgendaFilterMode && (
             <Button
-              variant={agendaFilterMode === "all" ? "soft" : "neutral"}
+              variant={agendaFilterMode === "all" ? "inverse" : "neutral"}
               size="xs"
               type="button"
               onClick={() =>
@@ -318,7 +318,7 @@ export function CalendarWidget({
               Todos
             </Button>
             <Button
-              variant={filterType === "concierto" ? "soft" : "ghost"}
+              variant={filterType === "concierto" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSetFilterType("concierto")}
@@ -326,7 +326,7 @@ export function CalendarWidget({
               Bolos
             </Button>
             <Button
-              variant={filterType === "ensayo" ? "soft" : "ghost"}
+              variant={filterType === "ensayo" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSetFilterType("ensayo")}

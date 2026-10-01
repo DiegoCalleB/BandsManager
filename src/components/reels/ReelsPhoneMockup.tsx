@@ -133,7 +133,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             onClick={() => setShowSafeZone(!showSafeZone)}
             className={`w-7 h-7 rounded-full flex items-center justify-center transition-ui cursor-pointer ${
               showSafeZone 
-                ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' 
+                ? 'bg-[var(--ink)] text-[var(--bg)] font-bold' 
                 : 'bg-[var(--sunken)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] '
             }`}
             title="Cuadrícula Safe-Zone (TikTok y Reels)"
@@ -173,7 +173,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           <span className="text-[var(--ink-2)] pl-1">Encuadre:</span>
           <div className="flex items-center gap-1">
             <Button
-              variant={previewFraming === 'fit' ? "primary" : "ghost"}
+              variant={previewFraming === 'fit' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setPreviewFraming('fit')}
@@ -182,7 +182,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               <ShowIcon inline emoji="📺" />16:9 Completo
             </Button>
             <Button
-              variant={previewFraming === 'left' ? "primary" : "ghost"}
+              variant={previewFraming === 'left' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setPreviewFraming('left')}
@@ -191,7 +191,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               <ShowIcon inline emoji="👤" />Izq
             </Button>
             <Button
-              variant={previewFraming === 'center' ? "primary" : "ghost"}
+              variant={previewFraming === 'center' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setPreviewFraming('center')}
@@ -200,7 +200,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               <ShowIcon inline emoji="🎯" />Centro
             </Button>
             <Button
-              variant={previewFraming === 'right' ? "primary" : "ghost"}
+              variant={previewFraming === 'right' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setPreviewFraming('right')}

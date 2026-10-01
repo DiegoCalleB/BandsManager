@@ -3665,7 +3665,7 @@ export default function RepertorioSetlists({
               {/* MODO ENSAYO: atril de ensayo con pistas Iris */}
               <Button
                 id="btn-rehearsal-mode-header"
-                variant="soft"
+                variant="neutral"
                 size="sm"
                 onClick={() => {
                   if (activeSetlist) {
@@ -3682,7 +3682,7 @@ export default function RepertorioSetlists({
               </Button>
 
               {/* ASISTENTE IA: análisis (Cerebro) y setlist perfecto (Optimizar) en un solo sitio */}
-              <div className="relative shrink-0">
+              <div className="relative hidden shrink-0 sm:block">
                 <Button
                   id="btn-ai-analysis-header"
                   variant="neutral"
@@ -3695,7 +3695,7 @@ export default function RepertorioSetlists({
                   <span className="hidden sm:inline">Asistente IA</span>
                   <span className="sm:hidden">IA</span>
                   {aiAnalysisResult?.overallScore && (
-                    <Chip tone="acc" className="tabular-nums">{aiAnalysisResult.overallScore}</Chip>
+                    <Chip tone="neutral" className="tabular-nums">{aiAnalysisResult.overallScore}</Chip>
                   )}
                 </Button>
                 {showAssistantChooser && (
@@ -3739,6 +3739,7 @@ export default function RepertorioSetlists({
                 id="btn-print-setlist-header"
                 variant="ghost"
                 size="icon-sm"
+                className="hidden sm:inline-flex"
                 onClick={() => setShowPdfPreview(true)}
                 title="Imprimir repertorio o exportar a PDF / atril en papel"
                 aria-label="Imprimir repertorio"
@@ -3765,13 +3766,37 @@ export default function RepertorioSetlists({
                     <div
                       className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                     >
+                      {/* En móvil el asistente IA vive aquí: menos botones a la vista */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowSetlistActionsMenu(false);
+                          setShowAIAnalysisModal(true);
+                        }}
+                        className="flex w-full cursor-pointer items-center gap-2 rounded-[var(--r-m)] px-2.5 py-2 text-left text-[var(--ink)] transition hover:bg-[var(--surface)] sm:hidden"
+                      >
+                        <Brain className="w-3.5 h-3.5 shrink-0" /> Asistente IA: ver análisis
+                        {aiAnalysisResult?.overallScore ? ` (${aiAnalysisResult.overallScore})` : ""}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowSetlistActionsMenu(false);
+                          setPerfectSetlistPlan(null);
+                          setPerfectSetlistError(null);
+                          setShowPerfectSetlistModal(true);
+                        }}
+                        className="flex w-full cursor-pointer items-center gap-2 rounded-[var(--r-m)] px-2.5 py-2 text-left text-[var(--ink)] transition hover:bg-[var(--surface)] sm:hidden"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 shrink-0" /> Generar plan de cambios
+                      </button>
                       <button
                         type="button"
                         onClick={() => {
                           setShowSetlistActionsMenu(false);
                           handleShareSetlist(activeSetlist);
                         }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ok)] transition cursor-pointer flex items-center gap-2 ${"hover:bg-[var(--surface)]"}`}
+                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ink)] transition cursor-pointer flex items-center gap-2 ${"hover:bg-[var(--surface)]"}`}
                       >
                         <MessageSquare className="w-3.5 h-3.5 shrink-0" />{" "}
                         Compartir repertorio
@@ -3782,7 +3807,7 @@ export default function RepertorioSetlists({
                           setShowSetlistActionsMenu(false);
                           setAssigningSetlist(activeSetlist);
                         }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ok)] transition cursor-pointer flex items-center gap-2 ${"hover:bg-[var(--surface)]"}`}
+                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ink)] transition cursor-pointer flex items-center gap-2 ${"hover:bg-[var(--surface)]"}`}
                       >
                         <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />{" "}
                         Asignar a bolo/ensayo
@@ -3900,13 +3925,14 @@ export default function RepertorioSetlists({
                       <div className="flex items-center gap-2 shrink-0">
                         {canUndoReorder && (
                           <Button
-                            variant="soft"
+                            variant="neutral"
                             size="sm"
                             onClick={undoLastReorder}
                             title="Deshacer el último reordenamiento del setlist"
+                            aria-label="Deshacer"
                           >
                             <Undo2 className="size-4" aria-hidden="true" />
-                            Deshacer
+                            <span className="hidden sm:inline">Deshacer</span>
                           </Button>
                         )}
                         {showEnergyMap && (
@@ -3915,9 +3941,10 @@ export default function RepertorioSetlists({
                             size="sm"
                             onClick={optimizeSetlistTransitions}
                             title="Reordena las canciones (nunca las chapas/bloques) para suavizar los saltos de tonalidad, tempo y energía entre temas consecutivos — sin tocar tu canción de apertura"
+                            aria-label="Optimizar orden"
                           >
                             <Wand2 className="size-4" aria-hidden="true" />
-                            Optimizar orden
+                            <span className="hidden sm:inline">Optimizar orden</span>
                           </Button>
                         )}
                         {showEnergyMap && (
@@ -3926,9 +3953,10 @@ export default function RepertorioSetlists({
                             size="sm"
                             onClick={suggestChapaSpot}
                             title="Busca la transición entre canciones que más chirría (tonalidad, tempo, energía) — ahí es donde una chapa/interludio hablado se nota menos"
+                            aria-label="¿Dónde chapa?"
                           >
                             <MessageCircle className="size-4" aria-hidden="true" />
-                            ¿Dónde chapa?
+                            <span className="hidden sm:inline">¿Dónde chapa?</span>
                           </Button>
                         )}
                         {showEnergyMap && (
@@ -5000,7 +5028,7 @@ export default function RepertorioSetlists({
                                           }
                                           className={`px-1 py-1 rounded text-micro font-sans font-bold transition cursor-pointer ${
                                             desiredKey === note
-                                              ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                                              ? "bg-[var(--ink)] text-[var(--bg)]"
                                               : "bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70"
                                           }`}
                                         >
@@ -5143,7 +5171,7 @@ export default function RepertorioSetlists({
                                         }
                                         className={`w-5 h-5 rounded text-micro font-sans font-bold flex items-center justify-center transition disabled:opacity-50 ${
                                           currentVal1a10 === val
-                                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                                            ? "bg-[var(--ink)] text-[var(--bg)]"
                                             : "bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70"
                                         }`}
                                       >
@@ -5829,7 +5857,7 @@ export default function RepertorioSetlists({
                   }
                   className={`px-3.5 py-2 rounded-[var(--r-pill)] text-sm font-medium transition-colors flex items-center gap-2 ${
                     catalogStatusFilter === "listo"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      ? "bg-[var(--ink)] text-[var(--bg)]"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >

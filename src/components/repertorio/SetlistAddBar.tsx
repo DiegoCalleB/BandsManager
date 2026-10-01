@@ -121,7 +121,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
       {/* Acciones de añadir: envuelven en móvil (antes se superponían) */}
       <div className="flex flex-wrap items-center gap-2">
         <Button
-          variant="soft"
+          variant="neutral"
           size="sm"
           onClick={() => setIsAddSongsModalOpen(true)}
           title="Seleccionar y añadir varias canciones del catálogo de una sola vez"

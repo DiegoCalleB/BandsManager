@@ -211,7 +211,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
           {/* Segmented Event Type Selector */}
           <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-5 ">
             <Button
-              variant={showCreateModal === 'concert' && !concIsPosible ? "primary" : "ghost"}
+              variant={showCreateModal === 'concert' && !concIsPosible ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => {
@@ -224,7 +224,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <span>Concierto</span>
             </Button>
             <Button
-              variant={showCreateModal === 'rehearsal' ? "primary" : "ghost"}
+              variant={showCreateModal === 'rehearsal' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setShowCreateModal('rehearsal')}
@@ -234,7 +234,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <span>Ensayo</span>
             </Button>
             <Button
-              variant={showCreateModal === 'reunion' ? "primary" : "ghost"}
+              variant={showCreateModal === 'reunion' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setShowCreateModal('reunion')}
@@ -244,7 +244,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
               <span>Reunión</span>
             </Button>
             <Button
-              variant={showCreateModal === 'concert' && concIsPosible ? "primary" : "ghost"}
+              variant={showCreateModal === 'concert' && concIsPosible ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => {

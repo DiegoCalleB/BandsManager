@@ -252,7 +252,7 @@ export function EnsayosManager({
                   currentRehearsal?.estado === "completado"
                     ? "bg-[var(--ok)]/15 text-[var(--ink)]"
                     : currentRehearsal?.estado === "en_curso"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                      ? "bg-[var(--ink)] text-[var(--bg)] "
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 }`}
               >

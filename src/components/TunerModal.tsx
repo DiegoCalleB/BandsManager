@@ -537,7 +537,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                       const isCatSelected = selectedCategory === cat;
                       return (
                         <Button
-                          variant={isCatSelected ? "primary" : "ghost"}
+                          variant={isCatSelected ? "selected" : "ghost"}
                           size="xs"
                           key={cat}
                           onClick={() => {
@@ -785,7 +785,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                       }}
                       className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans flex flex-col items-center justify-center gap-1 transition-ui cursor-pointer ${
                         isTonePlaying
-                          ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
+                          ? "bg-[var(--ink)] text-[var(--bg)] font-bold scale-105"
                           : isSelected
                             ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
                             : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"

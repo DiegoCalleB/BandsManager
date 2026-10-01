@@ -270,7 +270,7 @@ export function AIBandScoutModal({
                       <div className="flex items-center gap-4">
                         <div
                           className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center shrink-0
- ${selectedBands.has(idx) ? "bg-[var(--acc)] text-[var(--on-acc)]" : ""}`}
+ ${selectedBands.has(idx) ? "bg-[var(--ink)] text-[var(--bg)]" : ""}`}
                         >
                           {selectedBands.has(idx) && (
                             <CheckCircle2 className="w-4 h-4" />

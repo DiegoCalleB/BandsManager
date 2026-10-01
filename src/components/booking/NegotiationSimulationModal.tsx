@@ -102,7 +102,7 @@ export function NegotiationSimulationModal({
               <label className={`block text-micro font-sans ${textSub}`}>¿Quién emite la respuesta simulada?</label>
               <div className="grid grid-cols-2 gap-2">
                 <Button
-                  variant={simulationRole === 'sala' ? "primary" : "neutral"}
+                  variant={simulationRole === 'sala' ? "inverse" : "neutral"}
                   size="sm"
                   type="button"
                   onClick={() => onRoleChange('sala')}
@@ -111,7 +111,7 @@ export function NegotiationSimulationModal({
                   <Building className="w-4 h-4" /> Sala o festival (Entrante)
                 </Button>
                 <Button
-                  variant={simulationRole === 'banda' ? "primary" : "neutral"}
+                  variant={simulationRole === 'banda' ? "inverse" : "neutral"}
                   size="sm"
                   type="button"
                   onClick={() => onRoleChange('banda')}

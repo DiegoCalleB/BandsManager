@@ -649,7 +649,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
                     }}
                     className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-xs font-bold transition-ui cursor-pointer flex items-center justify-between gap-2 ${
                       mapStyle === key
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)]"
                         : "hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     }`}
                   >

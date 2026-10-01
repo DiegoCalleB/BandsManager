@@ -187,7 +187,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   <span
                     className={`text-micro font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
                       isSelected
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)]"
                         : "bg-[var(--sunken)] text-[var(--ink-2)]"
                     }`}
                   >
@@ -299,7 +299,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
             />
             <div className="flex items-center gap-2">
               <Button
-                variant="soft"
+                variant="neutral"
                 size="sm"
                 type="button"
                 onClick={() => logoInputRef.current?.click()}

@@ -433,7 +433,7 @@ export function OrdenDelDiaTab({
             )}
             {historyStack.length > 0 && (
               <Button
-                variant="soft"
+                variant="neutral"
                 size="xs"
                 type="button"
                 onClick={handleUndoReorder}
@@ -906,7 +906,7 @@ export function OrdenDelDiaTab({
                   </Select>
 
                   <Button
-                    variant={onlyFavorites ? "soft" : "neutral"}
+                    variant={onlyFavorites ? "inverse" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={() => setOnlyFavorites((p) => !p)}
@@ -964,7 +964,7 @@ export function OrdenDelDiaTab({
                         onClick={() => toggleSongSelection(s.id)}
                         className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
                           isSelected
-                            ? "bg-[var(--acc)]  text-[var(--on-acc)]"
+                            ? "bg-[var(--ink)]  text-[var(--bg)]"
                             : "bg-[var(--sunken)] hover:bg-[var(--surface)] hover:"
                         }`}
                       >
@@ -972,7 +972,7 @@ export function OrdenDelDiaTab({
                         <div
                           className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-bold transition-ui ${
                             isSelected
-                              ? "bg-[var(--acc)] text-[var(--on-acc)] scale-105"
+                              ? "bg-[var(--ink)] text-[var(--bg)] scale-105"
                               : "text-[var(--ink-2)]"
                           }`}
                         >
@@ -1182,7 +1182,7 @@ export function OrdenDelDiaTab({
                           }}
                           className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-sans transition-ui cursor-pointer ${
                             blockTipo === key
-                              ? "bg-[var(--acc)]  text-[var(--on-acc)] font-bold"
+                              ? "bg-[var(--ink)]  text-[var(--bg)] font-bold"
                               : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
                           }`}
                         >

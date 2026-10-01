@@ -557,7 +557,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                   {onOpenProfileWizard && (
                     <Button
-                      variant="soft"
+                      variant="raised"
                       size="xs"
                       type="button"
                       onClick={onOpenProfileWizard}

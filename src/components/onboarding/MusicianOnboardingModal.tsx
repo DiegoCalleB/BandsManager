@@ -91,7 +91,7 @@ export const MusicianOnboardingModal: React.FC<
                     onClick={() => setAppLang(l.code)}
                     className={`px-2 py-1 rounded-[var(--r-pill)] text-xs font-sans font-semibold transition-ui cursor-pointer flex items-center gap-1 ${
                       isSelected
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
+                        ? "bg-[var(--ink)] text-[var(--bg)] font-bold scale-105"
                         : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]"
                     }`}
                     title={l.label}

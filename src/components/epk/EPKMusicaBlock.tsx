@@ -309,7 +309,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     }
                     className={`shrink-0 w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center text-sm transition cursor-pointer ${
                       v.destacado
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                        ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                         : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
                     }`}
                   >
@@ -452,7 +452,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 </span>
                 <div className="flex gap-2">
                   <Button
-                    variant={!config.datosContratacion?.tieneTecnicoSonidoPropio ? "soft" : "neutral"}
+                    variant={!config.datosContratacion?.tieneTecnicoSonidoPropio ? "inverse" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={() =>
@@ -463,7 +463,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     De la sala / casa
                   </Button>
                   <Button
-                    variant={config.datosContratacion?.tieneTecnicoSonidoPropio ? "soft" : "neutral"}
+                    variant={config.datosContratacion?.tieneTecnicoSonidoPropio ? "inverse" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={() =>
@@ -485,7 +485,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 </span>
                 <div className="flex gap-2">
                   <Button
-                    variant={!config.datosContratacion?.tieneMerchandising ? "soft" : "neutral"}
+                    variant={!config.datosContratacion?.tieneMerchandising ? "inverse" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={() =>
@@ -496,7 +496,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     No disponemos
                   </Button>
                   <Button
-                    variant={config.datosContratacion?.tieneMerchandising ? "soft" : "neutral"}
+                    variant={config.datosContratacion?.tieneMerchandising ? "inverse" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={() =>
@@ -532,7 +532,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 </span>
                 <div className="flex gap-2">
                   <Button
-                    variant={config.datosContratacion?.transportePropio ? "soft" : "neutral"}
+                    variant={config.datosContratacion?.transportePropio ? "inverse" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={() =>
@@ -548,7 +548,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       : "Sin furgoneta"}
                   </Button>
                   <Button
-                    variant={config.datosContratacion?.hospedajeRequerido ? "soft" : "neutral"}
+                    variant={config.datosContratacion?.hospedajeRequerido ? "inverse" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={() =>

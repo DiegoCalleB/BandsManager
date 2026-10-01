@@ -591,7 +591,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                         { valor: 'none' as const, etiqueta: 'Original' }
                       ]).map(opcion => (
                         <Button
-                          variant={cropMode === opcion.valor ? "primary" : "neutral"}
+                          variant={cropMode === opcion.valor ? "inverse" : "neutral"}
                           size="xs"
                           key={opcion.valor}
                           type="button"

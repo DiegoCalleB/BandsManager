@@ -1204,7 +1204,7 @@ export default function App() {
                   />
                 </div>
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={(e) => {
@@ -1236,7 +1236,7 @@ export default function App() {
                 variant="mobile"
               />
               <Button
-                variant="soft"
+                variant="neutral"
                 size="xs"
                 type="button"
                 onClick={() => setShowOnboardingModal(true)}
@@ -1248,7 +1248,7 @@ export default function App() {
               </Button>
               {!isPromoPlan && (
                 <Button
-                  variant={activeCampaign ? "soft" : "neutral"}
+                  variant={activeCampaign ? "inverse" : "neutral"}
                   size="xs"
                   onClick={() => setShowCampaignModal(true)}
                   className="items-center gap-1.5"
@@ -1730,7 +1730,7 @@ export default function App() {
 
           <div className="px-3 pt-2.5 pb-1">
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               type="button"
               onClick={() => setShowOnboardingModal(true)}

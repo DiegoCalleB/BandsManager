@@ -287,7 +287,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             onClick={(e) => e.stopPropagation()}
             className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer ${
               bandsintownStatus === "ok"
-                ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                ? "bg-[var(--ink)] text-[var(--bg)]"
                 : "bg-[var(--sunken)]/80 text-[var(--ink-2)]"
             }`}
             title={
@@ -819,7 +819,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             {["todos", "televisión", "radio", "redes", "managements"].map(
               (type) => (
                 <Button
-                  variant={mediaTypeFilter === type ? "primary" : "neutral"}
+                  variant={mediaTypeFilter === type ? "inverse" : "neutral"}
                   size="xs"
                   key={type}
                   onClick={() => setMediaTypeFilter(type as any)}
@@ -977,7 +977,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <div
                         className={`w-5 h-5 rounded-[var(--r-s)] flex items-center justify-center transition-ui ${
                           isChecked
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                            ? "bg-[var(--ink)] text-[var(--bg)]"
                             : "bg-[var(--bg)]/80 group-hover:bg-[var(--sunken)]"
                         }`}
                       >
@@ -1078,7 +1078,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               : lead.financial_break_even.entradas_break_even /
                                     (lead.aforo || 250) <=
                                   0.7
-                                ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                                ? "bg-[var(--ink)] text-[var(--bg)] "
                                 : "bg-[var(--alert)] text-[var(--on-alert)] "
                           }`}
                           title={`Break-Even: Cubre gastos vendiendo ${lead.financial_break_even.entradas_break_even} entradas (${Math.round((lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) * 100)}% del aforo)`}
@@ -1359,7 +1359,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       }}
                       className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1 min-h-[38px] ${
                         isDetailOpen
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                          ? "bg-[var(--ink)] text-[var(--bg)]"
                           : "bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--ink-3)]/60"
                       }`}
                     >
@@ -1787,7 +1787,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         {(lead.estado === "pendiente_aprobacion" ||
                           lead.estado === "nuevo") && (
                           <Button
-                            variant="soft"
+                            variant="neutral"
                             size="xs"
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}
@@ -1822,7 +1822,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         )}
 
                         <Button
-                          variant={isDetailOpen ? "primary" : "neutral"}
+                          variant={isDetailOpen ? "inverse" : "neutral"}
                           size="xs"
                           type="button"
                           onClick={(e) => {

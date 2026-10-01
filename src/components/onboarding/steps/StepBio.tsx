@@ -63,7 +63,7 @@ export const StepBio: React.FC<StepBioProps> = ({
             Biografía / resumen de prensa
           </label>
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             type="button"
             onClick={onGenerateBioAI}

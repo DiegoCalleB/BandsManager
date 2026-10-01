@@ -11,6 +11,7 @@ import { Song, Setlist, SetlistItem } from "../../types";
 import { getAuthHeaders } from "../../services/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input, Select } from '../ui';
+import { ModalPortal } from "../common/ModalPortal";
 
 type SongAction = "link_matched" | "link_other" | "create_new" | "discard";
 
@@ -251,8 +252,9 @@ export function ImportSetlistModal({
   ).length;
 
   return (
+    <ModalPortal isOpen onClose={onClose}>
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
-      <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto pointer-events-auto">
+      <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85dvh] overflow-y-auto pointer-events-auto">
         <div className="sticky top-0 z-10 bg-[var(--sunken)] p-3 flex justify-between items-center">
           <div className="flex items-center gap-2.5">
             <ImagePlus className="w-5 h-5 text-[var(--ink-2)]" />
@@ -460,5 +462,6 @@ export function ImportSetlistModal({
         )}
       </div>
     </div>
+    </ModalPortal>
   );
 }

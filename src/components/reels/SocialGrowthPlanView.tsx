@@ -332,7 +332,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
         </Button>
 
         <Button
-          variant={selectedTab === "spotify" ? "primary" : "ghost"}
+          variant={selectedTab === "spotify" ? "selected" : "ghost"}
           size="xs"
           onClick={() => setSelectedTab("spotify")}
           className="items-center gap-1.5 whitespace-nowrap"

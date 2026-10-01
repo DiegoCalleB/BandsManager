@@ -349,7 +349,7 @@ export function MetronomeModal({
                       className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-sans font-bold text-sm transition-ui duration-75 ${
                         isActive
                           ? isAccent
-                            ? "bg-[var(--acc)] text-[var(--on-acc)] scale-105"
+                            ? "bg-[var(--ink)] text-[var(--bg)] scale-105"
                             : "bg-[var(--ok)] text-[var(--on-ok)] scale-105"
                           : "bg-[var(--ink)]/5 text-[var(--ink-2)]"
                       }`}
@@ -371,7 +371,7 @@ export function MetronomeModal({
                 <div className="grid grid-cols-3 gap-1">
                   {[4, 3, 2].map((sig) => (
                     <Button
-                      variant={timeSignature === sig ? "primary" : "neutral"}
+                      variant={timeSignature === sig ? "inverse" : "neutral"}
                       size="xs"
                       key={sig}
                       onClick={() => setTimeSignature(sig)}

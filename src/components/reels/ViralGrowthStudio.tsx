@@ -325,7 +325,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           {onTriggerMagicAutopilot && (
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               id="btn-magic-autopilot"
               type="button"
@@ -351,7 +351,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               const isActive = activeStudioTab === tab.id;
               return (
                 <Button
-                  variant={isActive ? "primary" : "ghost"}
+                  variant={isActive ? "selected" : "ghost"}
                   size="xs"
                   key={tab.id}
                   type="button"
@@ -894,7 +894,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     onClick={() => onChangeLayoutMode(l.id)}
                     className={`p-2.5 rounded-[var(--r-s)] text-left transition-ui cursor-pointer ${
                       layoutMode === l.id
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold '
+                        ? 'bg-[var(--ink)] text-[var(--bg)] font-bold '
                         : 'bg-[var(--sunken)] text-[var(--ink-2)] '
                     }`}
                   >
@@ -917,7 +917,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               </div>
 
               <Button
-                variant={showSafeZone ? "soft" : "neutral"}
+                variant={showSafeZone ? "inverse" : "neutral"}
                 size="sm"
                 type="button"
                 onClick={onToggleSafeZone}

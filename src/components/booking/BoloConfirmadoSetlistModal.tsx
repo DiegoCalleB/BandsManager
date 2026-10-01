@@ -368,7 +368,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                       <div
                         className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center shrink-0 ${
                           isSelected
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                            ? "bg-[var(--ink)] text-[var(--bg)]"
                             : "ring-1 ring-[var(--hair)]"
                         }`}
                       >

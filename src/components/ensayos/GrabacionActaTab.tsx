@@ -507,7 +507,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
             {acta && (
               <Button
-                variant="soft"
+                variant="neutral"
                 size="sm"
                 onClick={handleCopyToWhatsApp}
                 className="items-center gap-1.5"

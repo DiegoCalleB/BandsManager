@@ -22,12 +22,18 @@ export const buttonVariants = cva(
       variant: {
         /** La acción principal de la pantalla. Solo una por vista. */
         primary: 'bg-[var(--acc)] text-[var(--on-acc)] hover:brightness-95',
-        /** Acción secundaria con la firma del módulo. */
+        /** Firma del módulo, con mesura: un solo `soft` por vista como mucho. Lo habitual es `neutral`. */
         soft: 'bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:brightness-95',
         /** Acción neutra: la que no debe competir con el acento. */
         neutral: 'bg-[var(--sunken)] text-[var(--ink)] hover:brightness-95',
         /** Terciaria: solo texto/icono hasta que se pasa por encima. */
         ghost: 'bg-transparent text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]',
+        /** Neutra elevada: para botones sobre un panel hundido (`--sunken`), donde `neutral` se confundiría con el fondo. */
+        raised: 'bg-[var(--surface)] text-[var(--ink)] hover:brightness-95',
+        /** Opción elegida dentro de una pista hundida (segmentado). Neutra: seleccionar no es la acción principal. */
+        selected: 'bg-[var(--surface)] text-[var(--ink)] hover:brightness-95',
+        /** Filtro/chip elegido fuera de una pista: tinta invertida, sin azul. */
+        inverse: 'bg-[var(--ink)] text-[var(--bg)] hover:opacity-90',
         /** Destructiva. Rojo solo aquí y en errores reales. */
         danger: 'bg-[var(--alert-soft)] text-[var(--alert)] hover:brightness-95',
       },

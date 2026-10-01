@@ -1388,7 +1388,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     onClick={() => setCurrentStepIndex(idx)}
                     className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-pill)] text-xs whitespace-nowrap transition-ui ${
                       isCurrent
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                        ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                         : isPassed
                           ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/25"
                           : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"

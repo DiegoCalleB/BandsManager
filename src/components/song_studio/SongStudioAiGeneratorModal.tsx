@@ -147,7 +147,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                 <div className="grid grid-cols-4 gap-2">
                   {(['rock', 'pop', 'funk', 'reggae', 'ska', 'cumbia', 'punk'] as const).map((style) => (
                     <Button
-                      variant={drumStyle === style ? "primary" : "neutral"}
+                      variant={drumStyle === style ? "inverse" : "neutral"}
                       size="sm"
                       key={style}
                       type="button"

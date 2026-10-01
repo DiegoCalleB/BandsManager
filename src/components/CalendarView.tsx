@@ -2110,7 +2110,7 @@ export default function CalendarView({
                     title="Añadir concierto, ensayo o reunión"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>+ Evento</span>
+                    <span>Evento</span>
                     <ChevronDown className="w-3 h-3 ml-0.5 opacity-80" />
                   </Button>
 
@@ -2188,7 +2188,7 @@ export default function CalendarView({
 
                 {/* Móvil: lo secundario, fuera de la vista (AGENTS.md §6) */}
                 <Button
-                  variant={showMobileSearch ? "primary" : "neutral"}
+                  variant={showMobileSearch ? "inverse" : "neutral"}
                   size="sm"
                   type="button"
                   onClick={() => setShowMobileSearch((v) => !v)}
@@ -2289,7 +2289,7 @@ export default function CalendarView({
                   <ChevronRight className="w-4 h-4" />
                 </Button>
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   onClick={handleGoToday}
                   className="shrink-0"
@@ -2303,7 +2303,7 @@ export default function CalendarView({
                 {calendarViewMode === '2m' ? (
                   <>
                     {monthNames[currentMonth]} - {monthNames[nextMonth]}{' '}
-                    <span className="text-[var(--acc)] font-sans text-base">
+                    <span className="text-[var(--ink-2)] font-sans text-base">
                       {currentYear === nextMonthYear ? currentYear : `${currentYear}/${nextMonthYear}`}
                     </span>
                   </>
@@ -2316,20 +2316,20 @@ export default function CalendarView({
                       <>
                         Semana {first.getDate()} {monthNames[first.getMonth()].slice(0, 3)} - {last.getDate()}{' '}
                         {monthNames[last.getMonth()].slice(0, 3)}{' '}
-                        <span className="text-[var(--acc)] font-sans text-base">{last.getFullYear()}</span>
+                        <span className="text-[var(--ink-2)] font-sans text-base">{last.getFullYear()}</span>
                       </>
                     );
                   })()
                 ) : calendarViewMode === 'agenda' ? (
                   <>
                     Agenda{' '}
-                    <span className="text-[var(--acc)] font-sans text-base">
+                    <span className="text-[var(--ink-2)] font-sans text-base">
                       {monthNames[currentMonth]} {currentYear}
                     </span>
                   </>
                 ) : (
                   <>
-                    {monthNames[currentMonth]} <span className="text-[var(--acc)] font-sans text-base">{currentYear}</span>
+                    {monthNames[currentMonth]} <span className="text-[var(--ink-2)] font-sans text-base">{currentYear}</span>
                   </>
                 )}
               </h2>
@@ -2351,7 +2351,7 @@ export default function CalendarView({
                     }
                     className={`px-2 py-0.5 text-micro font-sans font-bold rounded transition-ui cursor-pointer ${
                       calendarViewMode === '1m'
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                        ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                         : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
@@ -2368,7 +2368,7 @@ export default function CalendarView({
                     }
                     className={`hidden sm:inline-block px-2 py-0.5 text-micro font-sans font-bold rounded transition-ui cursor-pointer ${
                       calendarViewMode === '2m'
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                        ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                         : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
@@ -2380,7 +2380,7 @@ export default function CalendarView({
                     title="Vista Semana estilo Google Calendar (7 días detallados)"
                     className={`px-2 py-0.5 text-micro font-sans font-bold rounded transition-ui cursor-pointer flex items-center gap-1 ${
                       calendarViewMode === 'week'
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                        ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                         : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
@@ -2393,7 +2393,7 @@ export default function CalendarView({
                     title="Vista agenda / lista estilo Google Calendar"
                     className={`px-2 py-0.5 text-micro font-sans font-bold rounded transition-ui cursor-pointer flex items-center gap-1 ${
                       calendarViewMode === 'agenda'
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                        ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                         : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
@@ -2425,7 +2425,7 @@ export default function CalendarView({
                   title={isCalendarFullscreen ? 'Salir de pantalla completa (Esc)' : 'Ver el calendario a pantalla completa'}
                   className={`hidden sm:flex px-2 py-1 text-micro font-sans font-bold rounded-[var(--r-pill)] transition-ui cursor-pointer items-center gap-1.5 shrink-0 ${
                     isCalendarFullscreen
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                      ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                       : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
                   }`}
                 >
@@ -2515,7 +2515,7 @@ export default function CalendarView({
                             <span
                               className={`text-micro font-sans px-1.5 py-0.2 rounded font-semibold ${
                                 devicePrefs[selectedConfigDevice] === '1'
-                                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                                  ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                               }`}
                             >
@@ -2545,7 +2545,7 @@ export default function CalendarView({
                             <span
                               className={`text-micro font-sans px-1.5 py-0.2 rounded font-semibold ${
                                 devicePrefs[selectedConfigDevice] === '2'
-                                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                                  ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                               }`}
                             >
@@ -2586,7 +2586,7 @@ export default function CalendarView({
             {isMultiBandUser && (
               <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 shrink-0 ${'bg-[var(--sunken)]'}`}>
                 <Button
-                  variant={filterBandMode === 'all' ? "primary" : "ghost"}
+                  variant={filterBandMode === 'all' ? "selected" : "ghost"}
                   size="xs"
                   id="calendar-view-all-bands-btn"
                   onClick={() => setFilterBandMode('all')}
@@ -2616,7 +2616,7 @@ export default function CalendarView({
                 </Button>
 
                 <Button
-                  variant={filterBandMode === 'active' ? "primary" : "ghost"}
+                  variant={filterBandMode === 'active' ? "selected" : "ghost"}
                   size="xs"
                   id="calendar-view-active-band-btn"
                   onClick={() => setFilterBandMode('active')}
@@ -2800,7 +2800,7 @@ export default function CalendarView({
             {/* Botones de acción rápida para la fecha seleccionada */}
             <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
               <Button
-                variant="soft"
+                variant="raised"
                 size="xs"
                 type="button"
                 onClick={() => setShowCreateModal('concert')}
@@ -2809,7 +2809,7 @@ export default function CalendarView({
                 <span><ShowIcon inline emoji="🎸" /></span> + Concierto
               </Button>
               <Button
-                variant="soft"
+                variant="raised"
                 size="xs"
                 type="button"
                 onClick={() => setShowCreateModal('rehearsal')}
@@ -2923,7 +2923,7 @@ export default function CalendarView({
                             <span>1. Técnica</span>
                           </button>
                           <Button
-                            variant="soft"
+                            variant="neutral"
                             size="xs"
                             type="button"
                             onClick={() => {

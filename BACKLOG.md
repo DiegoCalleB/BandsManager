@@ -121,6 +121,12 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+### Deuda: modales sin portal (recortados en móvil)
+* **Qué:** `SongTransitionPreviewModal` se renderizaba dentro de un ancestro que recortaba cabecera y pie y no se podía cerrar en móvil (arreglado con `ModalPortal` + test `e2e/modal-uniones.spec.ts`; igual en PerfectSetlist, SetlistAIAnalysis, ShowItem, ImportSetlist y SpotifyDiscography). Quedan ~35 ficheros con un overlay `fixed inset-0` que no pasan por `ModalPortal`/`createPortal` (p. ej. `PracticeModePanel`, `CampaignManagerModal`, `AlertSettingsModal`, `GrowthGuidanceModal`, `ReelsTheaterModal`, `AILogoGeneratorModal`…).
+* **Siguiente paso:** probar cada uno a 390×700 y envolver en `ModalPortal` los que se recorten; valorar una regla en `design-audit` que exija portal a los overlays modales.
+
+---
+
 ## 🔨 En curso
 
 _(vacío)_

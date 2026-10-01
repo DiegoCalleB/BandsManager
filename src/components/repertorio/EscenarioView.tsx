@@ -393,7 +393,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
               {/* Bluetooth Pedal Indicator & Info */}
               <Button
-                variant={showPedalShortcuts ? "soft" : "neutral"}
+                variant={showPedalShortcuts ? "inverse" : "neutral"}
                 size="sm"
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
@@ -630,7 +630,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
             <div className="flex items-center gap-2">
               <Button
-                variant={showPedalShortcuts ? "soft" : "neutral"}
+                variant={showPedalShortcuts ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
@@ -914,7 +914,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                           }}
                           className={`w-8 h-8 rounded-[var(--r-pill)] flex items-center justify-center cursor-pointer transition-ui ${
                             isPlayingThis
-                              ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105"
+                              ? "bg-[var(--ink)] text-[var(--bg)] font-bold scale-105"
                               : "bg-[var(--surface)] text-[var(--acc)] hover:bg-[var(--acc)] hover:text-[var(--ink)]"
                           }`}
                           title={

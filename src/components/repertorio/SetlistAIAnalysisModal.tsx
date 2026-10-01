@@ -23,6 +23,7 @@ import {
 import { openWhatsAppChat } from "../../utils/whatsapp";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
+import { ModalPortal } from "../common/ModalPortal";
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -577,6 +578,7 @@ export function SetlistAIAnalysisModal({
   const hasChart = !!chartData && chartData.length > 0 && !!yDomain;
 
   return (
+    <ModalPortal isOpen onClose={onClose}>
     // Centrado y con el Mapa de Energía integrado dentro (justo debajo del header) — así las
     // sugerencias resaltan directamente sobre este mini-gráfico en vez de depender de ver el
     // modal y el gráfico grande de fondo a la vez sin que se tapen. El drag (más abajo) se deja
@@ -584,7 +586,7 @@ export function SetlistAIAnalysisModal({
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
       <div
         ref={scrollContainerRef}
-        className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-3xl max-h-[90vh] overflow-y-auto pointer-events-auto"
+        className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-3xl max-h-[90dvh] overflow-y-auto pointer-events-auto"
         style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
       >
         {/* Todo lo de aquí dentro (header, gráfico, score, arco, sugerencias, áreas de mejora) es
@@ -616,7 +618,7 @@ export function SetlistAIAnalysisModal({
               <div className="flex items-center gap-1.5">
                 {canUndo && (
                   <Button
-                    variant="soft"
+                    variant="neutral"
                     size="xs"
                     onClick={onUndo}
                     onMouseDown={(e) => e.stopPropagation()}
@@ -1046,5 +1048,6 @@ export function SetlistAIAnalysisModal({
         )}
       </div>
     </div>
+    </ModalPortal>
   );
 }

@@ -73,7 +73,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               <ImageIcon className="w-5 h-5" /> Logo oficial de la banda
             </h3>
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               type="button"
               onClick={() => setShowAiLogoModal(true)}
@@ -489,7 +489,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   </label>
                   <div className="flex gap-1.5 pt-0.5">
                     <Button
-                      variant={!config.riderConfig?.microfoniaPropia ? "soft" : "neutral"}
+                      variant={!config.riderConfig?.microfoniaPropia ? "inverse" : "neutral"}
                       size="xs"
                       type="button"
                       onClick={() =>
@@ -506,7 +506,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       De la sala
                     </Button>
                     <Button
-                      variant={config.riderConfig?.microfoniaPropia ? "soft" : "neutral"}
+                      variant={config.riderConfig?.microfoniaPropia ? "inverse" : "neutral"}
                       size="xs"
                       type="button"
                       onClick={() =>

@@ -384,7 +384,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   <div className="pt-2 flex flex-col sm:flex-row gap-2">
                     {onNavigate && (
                       <Button
-                        variant="soft"
+                        variant="neutral"
                         size="xs"
                         type="button"
                         onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
@@ -432,25 +432,25 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               </div>
               <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
                   className="items-center justify-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>+ Agendar ensayo</span>
+                  <span>Agendar ensayo</span>
                 </Button>
 
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => setShowCreateModal('concert')}
                   className="items-center justify-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>+ Agendar concierto</span>
+                  <span>Agendar concierto</span>
                 </Button>
               </div>
             </>
@@ -476,7 +476,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   { id: 'campañas', label: 'Campañas' },
                 ].map((f) => (
                   <Button
-                    variant={upcomingFilter === f.id ? "soft" : "ghost"}
+                    variant={upcomingFilter === f.id ? "selected" : "ghost"}
                     size="xs"
                     key={f.id}
                     onClick={() => setUpcomingFilter(f.id as any)}
@@ -603,7 +603,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <div className="flex flex-col gap-1.5 shrink-0 self-start">
               {(selectedConcert || selectedRehearsal) && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
@@ -616,7 +616,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               )}
               {(selectedConcert || selectedRehearsal) && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => {
@@ -633,7 +633,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               )}
               {selectedConcert && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
@@ -645,7 +645,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               )}
               {selectedRehearsal && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}

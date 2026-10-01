@@ -2049,7 +2049,7 @@ export default function ReelsCenter({
         </div>
         <div className="flex gap-2.5 items-center flex-wrap">
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             onClick={handleOpenToneModal}
             className="items-center gap-1.5"
@@ -2493,7 +2493,7 @@ export default function ReelsCenter({
                   style={{ borderColor: "#e2e8f0" }}
                 >
                   <Button
-                    variant={inputType === "file" ? "primary" : "ghost"}
+                    variant={inputType === "file" ? "selected" : "ghost"}
                     size="xs"
                     type="button"
                     onClick={() => {
@@ -2504,7 +2504,7 @@ export default function ReelsCenter({
                     <ShowIcon inline emoji="📂" />Archivo de vídeo
                   </Button>
                   <Button
-                    variant={inputType === "youtube" ? "primary" : "ghost"}
+                    variant={inputType === "youtube" ? "selected" : "ghost"}
                     size="xs"
                     type="button"
                     onClick={() => {
@@ -2820,7 +2820,7 @@ export default function ReelsCenter({
                     }
                     className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                       (inputType === "file" ? selectedFile : youtubeUrl)
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                        ? "bg-[var(--ink)] text-[var(--bg)] "
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
                     }`}
                   >
@@ -3293,7 +3293,7 @@ export default function ReelsCenter({
                               Solo este corte
                             </button>
                             <Button
-                              variant={clipFeedbackScope === "global" ? "soft" : "ghost"}
+                              variant={clipFeedbackScope === "global" ? "selected" : "ghost"}
                               size="xs"
                               type="button"
                               onClick={() => setClipFeedbackScope("global")}
@@ -3433,7 +3433,7 @@ export default function ReelsCenter({
                                   title={tab.tip}
                                   className={`px-2 py-1 rounded text-micro font-mono font-bold transition-ui cursor-pointer ${
                                     copyObjective === tab.id
-                                      ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                                      ? "bg-[var(--ink)] text-[var(--bg)] "
                                       : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
                                   }`}
                                 >
@@ -3466,7 +3466,7 @@ export default function ReelsCenter({
                                 ))}
                             </div>
                             <Button
-                              variant={copiedNotification ? "primary" : "soft"}
+                              variant={copiedNotification ? "primary" : "neutral"}
                               size="xs"
                               type="button"
                               onClick={handleCopyFormattedPost}
@@ -3545,7 +3545,7 @@ export default function ReelsCenter({
                                 }}
                                 className={`py-2 px-2 rounded-[var(--r-pill)] text-micro font-sans text-center transition-ui cursor-pointer ${
                                   selectedPlatform === plat.id
-                                    ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                                    ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                                     : " bg-[var(--surface)] text-[var(--ink-2)]"
                                 }`}
                               >
@@ -3684,7 +3684,7 @@ export default function ReelsCenter({
 
                           <div className="grid grid-cols-2 gap-2">
                             <Button
-                              variant={thumbnailCapturedSuccess ? "soft" : "neutral"}
+                              variant={thumbnailCapturedSuccess ? "inverse" : "neutral"}
                               size="sm"
                               type="button"
                               onClick={handleCaptureThumbnail}

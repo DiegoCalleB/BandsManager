@@ -38,7 +38,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
       <div className="flex items-center gap-2 shrink-0">
         {isAdmin && (
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             id="open-autonomy-config-btn"
             type="button"

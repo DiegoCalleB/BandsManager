@@ -1313,7 +1313,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     {/* Filter category pills */}
                     <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
                       <Button
-                        variant={newBandFeatureCategory === "all" ? "primary" : "neutral"}
+                        variant={newBandFeatureCategory === "all" ? "inverse" : "neutral"}
                         size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("all")}
@@ -1321,7 +1321,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         Todas las funciones
                       </Button>
                       <Button
-                        variant={newBandFeatureCategory === "booking" ? "primary" : "neutral"}
+                        variant={newBandFeatureCategory === "booking" ? "inverse" : "neutral"}
                         size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("booking")}
@@ -1329,7 +1329,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <ShowIcon inline emoji="🎯" />Booking y salas
                       </Button>
                       <Button
-                        variant={newBandFeatureCategory === "media" ? "primary" : "neutral"}
+                        variant={newBandFeatureCategory === "media" ? "inverse" : "neutral"}
                         size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("media")}
@@ -1337,7 +1337,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <ShowIcon inline emoji="📱" />Redes, EPK y fans
                       </Button>
                       <Button
-                        variant={newBandFeatureCategory === "finance" ? "primary" : "neutral"}
+                        variant={newBandFeatureCategory === "finance" ? "inverse" : "neutral"}
                         size="xs"
                         type="button"
                         onClick={() => setNewBandFeatureCategory("finance")}

@@ -101,7 +101,7 @@ test.describe('modales · hoja inferior', () => {
   const abrirNuevoEscenario = async (page: Page) => {
     await abrirApp(page, true);
     await irAMovil(page, 'calendario');
-    await page.getByRole('button', { name: /\+ Evento/ }).first().click();
+    await page.getByRole('button', { name: 'Evento', exact: true }).first().click();
     await page.getByRole('button', { name: /\+ Concierto/ }).first().click();
     await page.waitForTimeout(500);
   };

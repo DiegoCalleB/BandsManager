@@ -442,7 +442,7 @@ export function ModoLocalEnVivoTab({
         <div
           className={`fixed top-16 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-[var(--r-l)] font-sans text-xs font-bold flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 ${
             swipeToast.dir === "left"
-              ? "bg-[var(--acc)] text-[var(--on-acc)]"
+              ? "bg-[var(--ink)] text-[var(--bg)]"
               : "bg-[var(--ok)] text-[var(--on-ok)]"
           }`}
         >
@@ -464,7 +464,7 @@ export function ModoLocalEnVivoTab({
                 onClick={() => setActiveIndex(idx)}
                 className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-[var(--r-pill)] font-sans text-xs whitespace-nowrap transition-ui cursor-pointer ${
                   isCurrent
-                    ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-102"
+                    ? "bg-[var(--ink)] text-[var(--bg)] font-bold scale-102"
                     : item.evaluacion === "bordada"
                       ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                       : item.evaluacion === "repetir"
@@ -489,7 +489,7 @@ export function ModoLocalEnVivoTab({
           {/* Toggle Escenario vs Atril */}
           <div className="flex items-center p-0.5 bg-[var(--sunken)] rounded-[var(--r-m)]">
             <Button
-              variant={viewMode === "escenario" ? "primary" : "ghost"}
+              variant={viewMode === "escenario" ? "selected" : "ghost"}
               size="xs"
               onClick={() => setViewMode("escenario")}
               className="items-center gap-1"
@@ -500,7 +500,7 @@ export function ModoLocalEnVivoTab({
             </Button>
 
             <Button
-              variant={viewMode === "atril" ? "primary" : "ghost"}
+              variant={viewMode === "atril" ? "selected" : "ghost"}
               size="xs"
               onClick={() => setViewMode("atril")}
               className="items-center gap-1"
@@ -759,7 +759,7 @@ export function ModoLocalEnVivoTab({
               </span>
 
               <Button
-                variant={currentItem?.evaluacion === "bordada" ? "primary" : "soft"}
+                variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
                 size="sm"
                 onClick={() => handleSetEvaluation("bordada")}
                 className="flex-1 sm:flex-none items-center justify-center gap-1.5"
@@ -859,7 +859,7 @@ export function ModoLocalEnVivoTab({
                 onClick={() => setIsAutoScrolling(!isAutoScrolling)}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold cursor-pointer transition-ui ${
                   isAutoScrolling
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                    ? "bg-[var(--ink)] text-[var(--bg)]"
                     : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
@@ -875,7 +875,7 @@ export function ModoLocalEnVivoTab({
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3].map((spd) => (
                   <Button
-                    variant={scrollSpeed === spd ? "primary" : "ghost"}
+                    variant={scrollSpeed === spd ? "selected" : "ghost"}
                     size="xs"
                     key={spd}
                     onClick={() => setScrollSpeed(spd)}
@@ -948,7 +948,7 @@ export function ModoLocalEnVivoTab({
 
               {/* Toggle Chord Boxes */}
               <Button
-                variant={showChordDiagrams ? "primary" : "neutral"}
+                variant={showChordDiagrams ? "inverse" : "neutral"}
                 size="sm"
                 onClick={() => setShowChordDiagrams(!showChordDiagrams)}
                 title="Ver diagramas de acordes de guitarra"
@@ -1037,7 +1037,7 @@ export function ModoLocalEnVivoTab({
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 shrink-0">
               <div className="flex items-center gap-1.5 w-full sm:w-auto">
                 <Button
-                  variant={currentItem?.evaluacion === "bordada" ? "primary" : "soft"}
+                  variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
                   size="xs"
                   onClick={() => handleSetEvaluation("bordada")}
                   className="flex-1 sm:flex-none items-center justify-center gap-1"

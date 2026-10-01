@@ -673,7 +673,7 @@ export const SocialAndFansGrowthChart: React.FC<
               const isSelected = selectedPeriod === opt.id;
               return (
                 <Button
-                  variant={isSelected ? "primary" : "ghost"}
+                  variant={isSelected ? "selected" : "ghost"}
                   size="xs"
                   key={opt.id}
                   type="button"

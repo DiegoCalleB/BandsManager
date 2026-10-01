@@ -1851,7 +1851,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
 
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => {
@@ -2304,7 +2304,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </span>
               )}
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               onClick={handleEnrichLead}
               disabled={isEnrichingLead}
@@ -2547,7 +2547,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </label>
                     <div className="flex items-center gap-2">
                       <Button
-                        variant="soft"
+                        variant="neutral"
                         size="xs"
                         type="button"
                         onClick={handleAutoSearchLogo}
@@ -2653,7 +2653,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             }
                             className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-ui cursor-pointer ${
                               editedLeadInfo.icono === emoji
-                                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110"
+                                ? "bg-[var(--ink)] text-[var(--bg)] font-bold scale-110"
                                 : "bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60"
                             }`}
                           >
@@ -4016,7 +4016,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     {!msg.sentimiento && (
                       <div className="flex justify-end pt-1">
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           type="button"
                           onClick={() =>
@@ -4400,7 +4400,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         ? "bg-[var(--ok)] text-[var(--on-ok)]"
                         : selectedLead.email_verification
                               .entregabilidad_score >= 50
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                          ? "bg-[var(--ink)] text-[var(--bg)]"
                           : "bg-[var(--alert)] text-[var(--on-alert)]"
                     }`}
                   >
@@ -4570,7 +4570,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         ? "bg-[var(--ok)] text-[var(--on-ok)]"
                         : selectedLead.social_engagement.calidad_promo_sala ===
                             "media"
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                          ? "bg-[var(--ink)] text-[var(--bg)]"
                           : "bg-[var(--alert)] text-[var(--on-alert)]"
                     }`}
                   >
@@ -4676,7 +4676,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         ? "bg-[var(--ok)] text-[var(--on-ok)]"
                         : selectedLead.booking_window_info
                               .estado_calendario_estimado === "llenandose"
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                          ? "bg-[var(--ink)] text-[var(--bg)]"
                           : "bg-[var(--alert)] text-[var(--on-alert)]"
                     }`}
                   >
@@ -4782,7 +4782,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         : selectedLead.local_events_clash_info.eventos_detectados.some(
                               (e) => e.nivel_riesgo_solapamiento === "medio",
                             )
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                          ? "bg-[var(--ink)] text-[var(--bg)]"
                           : "bg-[var(--ok)] text-[var(--on-ok)]"
                     }`}
                   >
@@ -4850,7 +4850,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                                   ev.nivel_riesgo_solapamiento === "alto"
                                     ? "bg-[var(--alert)] text-[var(--on-alert)] "
                                     : ev.nivel_riesgo_solapamiento === "medio"
-                                      ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                                      ? "bg-[var(--ink)] text-[var(--bg)] "
                                       : "bg-[var(--ok)] text-[var(--on-ok)] "
                                 }`}
                               >
@@ -5356,7 +5356,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     onClick={() => setInteractionType(type)}
                     className={`px-2 py-1 rounded text-micro font-bold transition-ui cursor-pointer ${
                       interactionType === type
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                        ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >

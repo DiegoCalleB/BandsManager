@@ -101,7 +101,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         <div className="px-5 py-2.5 bg-[var(--sunken)] border-b border-[var(--hair)] flex items-center justify-between gap-2 overflow-x-auto shrink-0">
           <div className="flex items-center gap-1.5">
             <Button
-              variant={activeTab === 'blueprint' ? "primary" : "ghost"}
+              variant={activeTab === 'blueprint' ? "selected" : "ghost"}
               size="xs"
               onClick={() => setActiveTab('blueprint')}
               className="items-center gap-1.5"
@@ -111,7 +111,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             </Button>
 
             <Button
-              variant={activeTab === 'channels' ? "primary" : "ghost"}
+              variant={activeTab === 'channels' ? "selected" : "ghost"}
               size="xs"
               onClick={() => setActiveTab('channels')}
               className="items-center gap-1.5"
@@ -121,7 +121,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             </Button>
 
             <Button
-              variant={activeTab === 'pillars' ? "primary" : "ghost"}
+              variant={activeTab === 'pillars' ? "selected" : "ghost"}
               size="xs"
               onClick={() => setActiveTab('pillars')}
               className="items-center gap-1.5"
@@ -200,7 +200,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       onClick={() => setSelectedChannel(platform)}
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
-                          ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+                          ? 'bg-[var(--ink)] text-[var(--bg)]'
                           : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                       }`}
                     >

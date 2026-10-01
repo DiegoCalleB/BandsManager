@@ -368,7 +368,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 Escala:
               </span>
               <Button
-                variant={volumeScale === "1" ? "primary" : "ghost"}
+                variant={volumeScale === "1" ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setVolumeScale("1")}
@@ -376,7 +376,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 1 Pitch
               </Button>
               <Button
-                variant={volumeScale === "100" ? "primary" : "ghost"}
+                variant={volumeScale === "100" ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setVolumeScale("100")}
@@ -384,7 +384,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 100 Salas (1 Gira)
               </Button>
               <Button
-                variant={volumeScale === "1000" ? "primary" : "ghost"}
+                variant={volumeScale === "1000" ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setVolumeScale("1000")}

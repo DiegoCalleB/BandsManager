@@ -135,12 +135,12 @@ for (const tema of TEMAS) {
 const MODALES: Record<string, (p: Page) => Promise<void>> = {
   'evento-concierto': async (p) => {
     await irAEscritorio(p, 'calendario');
-    await p.getByRole('button', { name: /\+ Evento/ }).first().click();
+    await p.getByRole('button', { name: 'Evento', exact: true }).first().click();
     await p.getByRole('button', { name: /\+ Concierto/ }).first().click();
   },
   'evento-ensayo': async (p) => {
     await irAEscritorio(p, 'calendario');
-    await p.getByRole('button', { name: /\+ Evento/ }).first().click();
+    await p.getByRole('button', { name: 'Evento', exact: true }).first().click();
     await p.getByRole('button', { name: /\+ Ensayo/ }).first().click();
   },
   'ficha-evento': async (p) => {

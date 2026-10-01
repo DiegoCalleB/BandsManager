@@ -533,7 +533,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               onClick={() => onSelectBlock(block.id)}
               className={`px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
                 isActive
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                  ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                   : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
               }`}
             >

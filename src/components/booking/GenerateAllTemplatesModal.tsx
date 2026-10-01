@@ -81,7 +81,7 @@ export function GenerateAllTemplatesModal({
             <div
               className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold ${
                 isCampaign
-                  ? 'bg-[var(--acc)]  text-[var(--on-acc)]'
+                  ? 'bg-[var(--ink)]  text-[var(--bg)]'
                   : 'bg-[var(--acc)]  text-[var(--on-acc)]'
               }`}
             >

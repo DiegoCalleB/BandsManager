@@ -77,7 +77,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
           </div>
 
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             type="button"
             onClick={onClose}

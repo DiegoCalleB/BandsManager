@@ -47,7 +47,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
     <div className={`relative inline-block ${className}`}>
       {/* Trigger Button */}
       <Button
-        variant="soft"
+        variant="neutral"
         size="xs"
         type="button"
         onClick={() => setIsOpen(!isOpen)}

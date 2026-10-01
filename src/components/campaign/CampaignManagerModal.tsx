@@ -569,7 +569,7 @@ export function CampaignManagerModal({
                   </label>
 
                   <Button
-                    variant="soft"
+                    variant="neutral"
                     size="xs"
                     type="button"
                     onClick={() => setIsMultiTemplatesModalOpen(true)}
@@ -602,7 +602,7 @@ export function CampaignManagerModal({
                     const isSelected = activePitchCategory === cat.id;
                     return (
                       <Button
-                        variant={isSelected ? "soft" : "neutral"}
+                        variant={isSelected ? "inverse" : "neutral"}
                         size="xs"
                         key={cat.id}
                         type="button"
@@ -672,7 +672,7 @@ export function CampaignManagerModal({
                   </span>
                 </div>
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   onClick={handleStartCreate}
                   className="items-center gap-1.5"
@@ -694,7 +694,7 @@ export function CampaignManagerModal({
                   <div
                     className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
                       !activeCampaign
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                     }`}
                   >

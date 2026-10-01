@@ -404,7 +404,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
           {/* Main Tabs Navigation */}
           <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] ">
             <Button
-              variant={activeModalTab === "tone" ? "primary" : "ghost"}
+              variant={activeModalTab === "tone" ? "selected" : "ghost"}
               size="sm"
               type="button"
               onClick={() => setActiveModalTab("tone")}
@@ -414,7 +414,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               <span>ADN de Tono y Personalidad</span>
             </Button>
             <Button
-              variant={activeModalTab === "threads" ? "primary" : "ghost"}
+              variant={activeModalTab === "threads" ? "selected" : "ghost"}
               size="sm"
               type="button"
               onClick={() => setActiveModalTab("threads")}
@@ -454,7 +454,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   const isActive = selectedCategoryThread === cat.id;
                   return (
                     <Button
-                      variant={isActive ? "primary" : "ghost"}
+                      variant={isActive ? "selected" : "ghost"}
                       size="xs"
                       key={cat.id}
                       type="button"

@@ -610,7 +610,7 @@ export function DashboardWidgetGrid({
             )}
 
             <Button
-              variant="soft"
+              variant="neutral"
               size="sm"
               type="button"
               onClick={() => setIsAddModalOpen(true)}
@@ -881,7 +881,7 @@ export function DashboardWidgetGrid({
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold whitespace-nowrap cursor-pointer transition-ui ${
                     selectedCategory === cat
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      ? "bg-[var(--ink)] text-[var(--bg)]"
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                   }`}
                 >

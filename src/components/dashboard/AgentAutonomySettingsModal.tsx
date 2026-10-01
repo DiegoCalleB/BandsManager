@@ -1985,7 +1985,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 : "cursor-pointer active:scale-[0.97]"
                             } ${
                               isSelected
-                                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                                ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                                 : isPrimeTime
                                   ? "bg-[var(--surface)] text-[var(--acc)]/70 hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
                                   : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
@@ -2509,7 +2509,7 @@ export const AgentAutonomySettingsModal: React.FC<
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
-                      variant="soft"
+                      variant="neutral"
                       size="xs"
                       type="button"
                       onClick={handleExportAuditLogsCSV}

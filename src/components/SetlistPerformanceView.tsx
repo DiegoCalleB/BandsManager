@@ -625,7 +625,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 className={`px-2.5 py-1 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                   modeArchetype === "directo"
                     ? glareMode
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      ? "bg-[var(--ink)] text-[var(--bg)]"
                       : "bg-[var(--acc)] text-[var(--on-acc)]"
                     : glareMode
                       ? "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -675,7 +675,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             {/* Quick action: Ensayo con pistas Iris */}
             {!isBlock && currentSong && irisStemIdea && (
               <Button
-                variant={glareMode ? "soft" : "soft"}
+                variant={glareMode ? "neutral" : "neutral"}
                 size="xs"
                 id="btn-stage-practice-mode"
                 type="button"
@@ -963,7 +963,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
           {!isBlock && irisStemIdea && (
             <Button
-              variant={glareMode ? "soft" : "soft"}
+              variant={glareMode ? "neutral" : "neutral"}
               size="xs"
               type="button"
               onClick={() => handleLaunchPractice()}
@@ -1360,7 +1360,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       }}
                       className={`p-3 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition ${
                         isCurrent
-                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                          ? "bg-[var(--ink)] text-[var(--bg)]"
                           : "bg-[var(--bg)]/60 text-[var(--ink-2)]"
                       } hover:brightness-95`}
                     >
@@ -1398,7 +1398,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                         <span
                           className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center text-xs font-sans font-bold shrink-0 ${
                             isCurrent
-                              ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                              ? "bg-[var(--ink)] text-[var(--bg)]"
                               : "bg-[var(--sunken)] text-[var(--ink-2)]"
                           }`}
                         >
@@ -1439,7 +1439,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     <div className="flex items-center gap-1.5 pt-1">
                       {songIrisIdea ? (
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           type="button"
                           onClick={() => {

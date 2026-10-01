@@ -269,7 +269,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                 <div className="flex flex-wrap gap-1.5">
                   {detectedDates.map((dateStr) => (
                     <Button
-                      variant="soft"
+                      variant="neutral"
                       size="xs"
                       key={dateStr}
                       type="button"

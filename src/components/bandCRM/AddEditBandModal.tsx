@@ -121,7 +121,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               <div className="flex items-center justify-between">
                 <label className="block text-micro font-mono text-[var(--ink-2)]">Nombre de la banda / artista *</label>
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={handleAiLookup}

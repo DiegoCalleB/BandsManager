@@ -592,7 +592,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   const isSelected = currentAppLang === l.code;
                   return (
                     <Button
-                      variant={isSelected ? "primary" : "ghost"}
+                      variant={isSelected ? "selected" : "ghost"}
                       size="xs"
                       key={l.code}
                       type="button"

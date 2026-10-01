@@ -25,6 +25,7 @@ import { apiFetch } from "../../utils/api";
 import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input } from '../ui';
+import { ModalPortal } from "../common/ModalPortal";
 
 interface SpotifyTrack {
   id: string;
@@ -324,9 +325,10 @@ export const SpotifyDiscographyModal: React.FC<
   if (!isOpen) return null;
 
   return (
+    <ModalPortal isOpen onClose={onClose}>
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 animate-fadeIn">
       <div
-        className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-ui ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+        className={`w-full max-w-4xl max-h-[90dvh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-ui ${"bg-[var(--surface)] text-[var(--ink)]"}`}
       >
         {/* Header Modal Bar */}
         <div className="p-5 sm:p-6 flex items-center justify-between bg-[var(--ok)]/20 ">
@@ -807,5 +809,6 @@ export const SpotifyDiscographyModal: React.FC<
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

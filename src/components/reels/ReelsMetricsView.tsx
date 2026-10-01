@@ -1033,7 +1033,7 @@ export function ReelsMetricsView({
             <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
               {/* AI Multimodal Screenshot Scanner Button */}
               <Button
-                variant="soft"
+                variant="neutral"
                 onClick={() => {
                   setScanError(null);
                   setScanSuccess(null);

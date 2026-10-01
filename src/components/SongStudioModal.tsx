@@ -4036,7 +4036,7 @@ export default function SongStudioModal({
                 onClick={toggleIsFullScreen}
                 className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                   isFullScreen
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)]/60'
+                    ? 'bg-[var(--ink)] text-[var(--bg)] font-bold hover:bg-[var(--acc)]/60'
                     : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'
                 }`}
                 title={isFullScreen ? 'Salir de Pantalla Completa' : 'Poner Modo Studio en Pantalla Completa'}
@@ -4737,7 +4737,7 @@ export default function SongStudioModal({
                                   </button>
                                   <IconButton
                                     label="Elegir pistas y motor de separación (Iris Studio, Iris Cloud o Iris Básico)"
-                                    variant="soft"
+                                    variant="neutral"
                                     type="button"
                                     onClick={() => setShowMoisesStemsModal(idea)}
                                     className="flex"
@@ -4821,7 +4821,7 @@ export default function SongStudioModal({
                                 <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                                   {selectedSongBaseUrl && !tracks.some((t) => t.audioUrl === selectedSongBaseUrl) && (
                                     <Button
-                                      variant="soft"
+                                      variant="neutral"
                                       size="xs"
                                       type="button"
                                       onClick={() => {
@@ -5090,7 +5090,7 @@ export default function SongStudioModal({
                                                       onClick={() => handleToggleSoloTrack(idea, tr.id)}
                                                       className={`px-1.5 py-0.5 rounded text-micro font-sans font-bold cursor-pointer transition-ui shrink-0 ${
                                                         isSolo
-                                                          ? 'bg-[var(--acc)] text-[var(--on-acc)] ring-1 ring-[var(--acc)]/60'
+                                                          ? 'bg-[var(--ink)] text-[var(--bg)] ring-1 ring-[var(--acc)]/60'
                                                           : 'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
                                                       }`}
                                                       title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"
@@ -5198,7 +5198,7 @@ export default function SongStudioModal({
 
                                                   {/* Clean Noise Filter Button */}
                                                   <Button
-                                                    variant={cleaningTrackId === tr.id ? "soft" : "soft"}
+                                                    variant={cleaningTrackId === tr.id ? "neutral" : "neutral"}
                                                     size="xs"
                                                     type="button"
                                                     onClick={() => handleCleanTrackAudio(idea, tr)}
@@ -5520,7 +5520,7 @@ export default function SongStudioModal({
                                             <button
                                               type="button"
                                               onClick={() => setAutoLatencyTrimMs(120)}
-                                              className={`px-1.5 py-0.5 rounded text-micro font-sans transition-colors ${autoLatencyTrimMs === 120 ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
+                                              className={`px-1.5 py-0.5 rounded text-micro font-sans transition-colors ${autoLatencyTrimMs === 120 ? 'bg-[var(--ink)] text-[var(--bg)] font-bold' : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
                                               title="Recorte estándar para altavoces o auriculares de cable en PC (120ms)"
                                             >
                                               PC (120ms)
@@ -5528,7 +5528,7 @@ export default function SongStudioModal({
                                             <button
                                               type="button"
                                               onClick={() => setAutoLatencyTrimMs(240)}
-                                              className={`px-1.5 py-0.5 rounded text-micro font-sans transition-colors ${autoLatencyTrimMs === 240 ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
+                                              className={`px-1.5 py-0.5 rounded text-micro font-sans transition-colors ${autoLatencyTrimMs === 240 ? 'bg-[var(--ink)] text-[var(--bg)] font-bold' : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
                                               title="Recorte para teléfonos móviles y tablets (240ms)"
                                             >
                                               Móvil (240ms)
@@ -5536,7 +5536,7 @@ export default function SongStudioModal({
                                             <button
                                               type="button"
                                               onClick={() => setAutoLatencyTrimMs(300)}
-                                              className={`px-1.5 py-0.5 rounded text-micro font-sans transition-colors ${autoLatencyTrimMs === 300 ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
+                                              className={`px-1.5 py-0.5 rounded text-micro font-sans transition-colors ${autoLatencyTrimMs === 300 ? 'bg-[var(--ink)] text-[var(--bg)] font-bold' : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
                                               title="Recorte para auriculares bluetooth tipo airPods o sony (300ms)"
                                             >
                                               Bluetooth (300ms)

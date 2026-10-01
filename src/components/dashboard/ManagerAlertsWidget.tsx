@@ -237,7 +237,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               </button>
 
               <Button
-                variant={filterMode === 'booking' ? "soft" : "ghost"}
+                variant={filterMode === 'booking' ? "selected" : "ghost"}
                 size="xs"
                 id="filter-alerts-booking"
                 onClick={() => setFilterMode('booking')}
@@ -246,7 +246,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               </Button>
 
               <Button
-                variant={filterMode === 'finanzas' ? "soft" : "ghost"}
+                variant={filterMode === 'finanzas' ? "selected" : "ghost"}
                 size="xs"
                 id="filter-alerts-finanzas"
                 onClick={() => setFilterMode('finanzas')}

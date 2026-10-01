@@ -895,7 +895,7 @@ export function ExcelImportModal({
                     </div>
                   </div>
                   <Button
-                    variant="soft"
+                    variant="neutral"
                     size="sm"
                     type="button"
                     onClick={handleDownloadTemplate}
@@ -960,7 +960,7 @@ export function ExcelImportModal({
                         onClick={() => setDefaultCategory(cat.id)}
                         className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
                           defaultCategory === cat.id
-                            ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                            ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                             : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
@@ -1352,7 +1352,7 @@ export function ExcelImportModal({
 
                     {duplicatesCount > 0 && (
                       <Button
-                        variant={filterDuplicatesOnly ? "primary" : "neutral"}
+                        variant={filterDuplicatesOnly ? "inverse" : "neutral"}
                         size="xs"
                         type="button"
                         onClick={() =>

@@ -257,7 +257,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             onClick={() => setSelectedSlot("show")}
             className={`px-2 py-0.5 rounded text-micro font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
               selectedSlot === "show"
-                ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                ? "bg-[var(--ink)] text-[var(--bg)]"
                 : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             }`}
           >
@@ -268,7 +268,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             onClick={() => setSelectedSlot("soundcheck")}
             className={`px-2 py-0.5 rounded text-micro font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
               selectedSlot === "soundcheck"
-                ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                ? "bg-[var(--ink)] text-[var(--bg)]"
                 : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             }`}
           >

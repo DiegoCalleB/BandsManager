@@ -74,7 +74,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 ${'bg-[var(--sunken)]'}`}
           >
             <Button
-              variant={activeTab === 'setlists' ? "primary" : "ghost"}
+              variant={activeTab === 'setlists' ? "selected" : "ghost"}
               size="xs"
               id="tab-btn-setlists"
               type="button"
@@ -93,7 +93,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             </Button>
 
             <Button
-              variant={activeTab === 'catalogo' ? "soft" : "ghost"}
+              variant={activeTab === 'catalogo' ? "selected" : "ghost"}
               size="xs"
               id="tab-btn-catalogo"
               type="button"
@@ -197,7 +197,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             {/* Setlist Quick Action Buttons */}
             <div className="flex items-center gap-1.5 shrink-0">
               <Button
-                variant="primary"
+                variant="neutral"
                 size="xs"
                 id="btn-create-setlist"
                 type="button"
@@ -227,7 +227,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             {/* Sub-view switcher inside Catálogo */}
             <div className={`hidden md:flex items-center gap-1 p-0.5 rounded-[var(--r-m)] shrink-0 ${'bg-[var(--sunken)]'}`}>
               <Button
-                variant={catalogoViewMode === 'albumes' ? "soft" : "ghost"}
+                variant={catalogoViewMode === 'albumes' ? "selected" : "ghost"}
                 size="xs"
                 id="btn-subtab-albumes"
                 type="button"
@@ -238,7 +238,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 <span>Por Álbumes / EPs ({albumCount})</span>
               </Button>
               <Button
-                variant={catalogoViewMode === 'canciones' ? "soft" : "ghost"}
+                variant={catalogoViewMode === 'canciones' ? "selected" : "ghost"}
                 size="xs"
                 id="btn-subtab-canciones"
                 type="button"
@@ -276,7 +276,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-add-album"
                 type="button"
                 onClick={onOpenNewAlbumModal}
-                className="items-center gap-1 sm:gap-1.5 shrink-0"
+                className="hidden items-center gap-1 sm:gap-1.5 shrink-0 md:inline-flex"
               >
                 <Disc3 className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span className="hidden xs:inline">Nuevo álbum</span>

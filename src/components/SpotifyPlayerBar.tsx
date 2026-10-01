@@ -859,7 +859,7 @@ export default function SpotifyPlayerBar({
 
                 {/* Crossfade Toggle — fundido real de 5s al pasar al siguiente tema de la cola */}
                 <Button
-                  variant={crossfadeEnabled ? "soft" : "ghost"}
+                  variant={crossfadeEnabled ? "selected" : "ghost"}
                   onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
                   title={crossfadeEnabled ? 'Fundido entre temas activado (5s)' : 'Activar fundido entre temas (5s)'}
                 >
@@ -941,7 +941,7 @@ export default function SpotifyPlayerBar({
 
               {/* Studio / Arreglos Button */}
               <Button
-                variant="soft"
+                variant="neutral"
                 size="xs"
                 onClick={() => onOpenStudio(song)}
                 className="items-center gap-1.5"
@@ -953,7 +953,7 @@ export default function SpotifyPlayerBar({
 
               {/* Iris Stem Separator Button */}
               <Button
-                variant="soft"
+                variant="neutral"
                 size="xs"
                 onClick={() => (onOpenIris ? onOpenIris(song) : onOpenStudio(song))}
                 className="items-center gap-1.5"

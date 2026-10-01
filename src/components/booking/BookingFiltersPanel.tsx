@@ -93,7 +93,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Categoría de contactos</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
             <Button
-              variant={sectionTab === 'salas' ? "primary" : "ghost"}
+              variant={sectionTab === 'salas' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSelectSectionTab('salas')}
@@ -103,7 +103,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               <span>Escenarios</span>
             </Button>
             <Button
-              variant={sectionTab === 'medios' ? "primary" : "ghost"}
+              variant={sectionTab === 'medios' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSelectSectionTab('medios')}
@@ -113,7 +113,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               <span>Medios</span>
             </Button>
             <Button
-              variant={sectionTab === 'grupos' ? "primary" : "ghost"}
+              variant={sectionTab === 'grupos' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => handleSelectSectionTab('grupos')}
@@ -135,14 +135,14 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 onClose();
               }}
               className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
-                viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === 'grid' ? 'bg-[var(--ink)] text-[var(--bg)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
               <span>Tarjetas</span>
             </button>
             <Button
-              variant={viewMode === 'table' ? "primary" : "ghost"}
+              variant={viewMode === 'table' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => {
@@ -155,7 +155,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               <span>Detalles</span>
             </Button>
             <Button
-              variant={viewMode === 'map' ? "primary" : "soft"}
+              variant={viewMode === 'map' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => {
@@ -228,7 +228,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         <p className="text-micro font-bold text-[var(--ink-2)]">Opciones rápidas</p>
         <div className="flex items-center gap-2 flex-wrap">
           <Button
-            variant={onlyFavoritesFilter ? "soft" : "neutral"}
+            variant={onlyFavoritesFilter ? "inverse" : "neutral"}
             size="xs"
             type="button"
             onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
@@ -239,7 +239,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           </Button>
 
           <Button
-            variant={onlyVerifiedFilter ? "soft" : "neutral"}
+            variant={onlyVerifiedFilter ? "inverse" : "neutral"}
             size="xs"
             type="button"
             onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
@@ -268,7 +268,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           {/* Button to save current filter */}
           {!isSavingFilterOpen ? (
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               type="button"
               onClick={() => setIsSavingFilterOpen(true)}
@@ -382,7 +382,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 ] as const)
           ).map((t) => (
             <Button
-              variant={typeFilter === t.key ? "primary" : "neutral"}
+              variant={typeFilter === t.key ? "inverse" : "neutral"}
               size="xs"
               key={t.key}
               type="button"
@@ -423,7 +423,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             const count = cityCounts[cityName] || 0;
             return (
               <Button
-                variant={isSelected ? "soft" : "neutral"}
+                variant={isSelected ? "inverse" : "neutral"}
                 size="xs"
                 key={cityName}
                 type="button"

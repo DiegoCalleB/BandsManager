@@ -324,7 +324,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setSelectedDate(d)}
                 className={`flex flex-col items-center justify-center p-2 rounded-[var(--r-m)] transition-ui cursor-pointer ${
                   isSelected
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                    ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                     : isToday
                       ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold'
                       : 'bg-[var(--sunken)] text-[var(--ink)] '
@@ -691,7 +691,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             </p>
             {agendaFilterPast !== 'all' && (
               <Button
-                variant="soft"
+                variant="neutral"
                 size="xs"
                 onClick={() => setAgendaFilterPast('all')}
                 className="mt-3"
@@ -728,7 +728,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                       <span
                         className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
                           isToday
-                            ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                            ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                             : isDatePast
                               ? 'bg-[var(--surface)]/80 text-[var(--ink-2)]'
                               : 'bg-[var(--surface)] text-[var(--ink-2)]'
@@ -859,7 +859,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
                             {/* Botón directo de Editar para ver y editar conciertos pasados o futuros */}
                             <Button
-                              variant="soft"
+                              variant="neutral"
                               size="xs"
                               type="button"
                               onClick={(e) => {

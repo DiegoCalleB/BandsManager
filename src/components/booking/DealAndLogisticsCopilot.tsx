@@ -358,7 +358,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 
           {onOpenRoadbookModal && (
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               type="button"
               onClick={() => onOpenRoadbookModal(lead)}

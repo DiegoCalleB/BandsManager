@@ -1134,7 +1134,7 @@ ${myBandName}`;
 
             {registeredBands.length > 0 && (
               <Button
-                variant={subTab === "registered_bands" ? "soft" : "ghost"}
+                variant={subTab === "registered_bands" ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => {
@@ -1155,7 +1155,7 @@ ${myBandName}`;
         {/* Derecha: Acciones rápidas en una sola fila */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             id="band-btn-[#date-swap-pitch]"
             type="button"
@@ -1177,7 +1177,7 @@ ${myBandName}`;
           </Button>
 
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             type="button"
             onClick={() => setIsScoutModalOpen(true)}
@@ -1451,7 +1451,7 @@ ${myBandName}`;
                     onClick={() => setViewMode("grid")}
                     className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
                       viewMode === "grid"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)]"
                         : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title="Vista en tarjetas"
@@ -1459,7 +1459,7 @@ ${myBandName}`;
                     <LayoutGrid className="w-4 h-4" />
                   </button>
                   <Button
-                    variant={viewMode === "table" ? "primary" : "ghost"}
+                    variant={viewMode === "table" ? "selected" : "ghost"}
                     size="xs"
                     id="view-table-btn"
                     type="button"
@@ -1469,7 +1469,7 @@ ${myBandName}`;
                     <List className="w-4 h-4" />
                   </Button>
                   <Button
-                    variant={viewMode === "map" ? "primary" : "ghost"}
+                    variant={viewMode === "map" ? "selected" : "ghost"}
                     size="xs"
                     id="view-map-btn"
                     type="button"
@@ -1716,7 +1716,7 @@ ${myBandName}`;
                       <div className="flex items-center gap-2">
                         {/* Analyze Tone */}
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           onClick={() => handleAnalyzeTone(band)}
                           className="items-center justify-center gap-1"
@@ -1728,7 +1728,7 @@ ${myBandName}`;
 
                         {/* Generate Pitch */}
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           onClick={() => {
                             setCustomPitchText("");
@@ -1925,7 +1925,7 @@ ${myBandName}`;
                         <td className="py-2 px-3 text-right align-middle whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
                             <Button
-                              variant="soft"
+                              variant="neutral"
                               size="xs"
                               onClick={() => handleAnalyzeTone(band)}
                               className="items-center gap-1"
@@ -1936,7 +1936,7 @@ ${myBandName}`;
                             </Button>
 
                             <Button
-                              variant="soft"
+                              variant="neutral"
                               size="xs"
                               onClick={() => {
                                 setCustomPitchText("");

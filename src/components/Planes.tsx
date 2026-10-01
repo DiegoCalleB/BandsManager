@@ -686,7 +686,7 @@ export const Planes: React.FC<PlanesProps> = ({
               Mensual
             </button>
             <Button
-              variant={billingPeriod === "annual" ? "primary" : "ghost"}
+              variant={billingPeriod === "annual" ? "selected" : "ghost"}
               size="sm"
               type="button"
               onClick={() => setBillingPeriod("annual")}
@@ -807,7 +807,7 @@ export const Planes: React.FC<PlanesProps> = ({
                 <div
                   className={`p-3 rounded-[var(--r-l)] flex items-start gap-2.5 ${
                     plan.isPopular
-                      ? "bg-[var(--acc)]  text-[var(--on-acc)]"
+                      ? "bg-[var(--ink)]  text-[var(--bg)]"
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                   }`}
                 >
@@ -839,7 +839,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       <div
                         className={`p-1.5 rounded-[var(--r-m)] shrink-0 ${
                           plan.isPopular
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                            ? "bg-[var(--ink)] text-[var(--bg)]"
                             : plan.id === "cabeza_de_cartel"
                               ? "bg-[var(--ok)] text-[var(--on-ok)]"
                               : "bg-[var(--surface)] text-[var(--ink)]"
@@ -852,7 +852,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           <span
                             className={`text-micro font-sans font-bold px-1.5 py-0.5 rounded ${
                               plan.isPopular
-                                ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                                ? "bg-[var(--ink)] text-[var(--bg)]"
                                 : plan.id === "cabeza_de_cartel"
                                   ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                                   : "bg-[var(--sunken)]/20 text-[var(--ink-2)]"
@@ -902,7 +902,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           <div
                             className={`p-0.5 rounded-[var(--r-pill)] mt-0.5 shrink-0 ${
                               plan.isPopular
-                                ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                                ? "bg-[var(--ink)] text-[var(--bg)]"
                                 : "bg-[var(--ok)]/20 text-[var(--ink)]"
                             }`}
                           >

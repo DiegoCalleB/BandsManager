@@ -112,7 +112,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
       {/* Sub tabs */}
       <div className="flex rounded-[var(--r-m)] bg-[var(--bg)]/80 p-1">
         <Button
-          variant={musicSubTab === "spotify" ? "primary" : "ghost"}
+          variant={musicSubTab === "spotify" ? "selected" : "ghost"}
           size="sm"
           type="button"
           onClick={() => setMusicSubTab("spotify")}
@@ -122,7 +122,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           Importar de Spotify
         </Button>
         <Button
-          variant={musicSubTab === "upload" ? "primary" : "ghost"}
+          variant={musicSubTab === "upload" ? "selected" : "ghost"}
           size="sm"
           type="button"
           onClick={() => setMusicSubTab("upload")}
@@ -132,7 +132,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           Subir audio (MP3 / WAV)
         </Button>
         <Button
-          variant={musicSubTab === "manual" ? "primary" : "ghost"}
+          variant={musicSubTab === "manual" ? "selected" : "ghost"}
           size="sm"
           type="button"
           onClick={() => setMusicSubTab("manual")}
@@ -452,7 +452,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
 
         <div className="flex flex-wrap gap-2 pt-1">
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             type="button"
             onClick={() => onGenerateSetlist(60)}

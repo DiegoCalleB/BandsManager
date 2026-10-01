@@ -287,7 +287,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 onClick={() => setSelectedFilter("all")}
                 className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                   selectedFilter === "all"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                    ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                     : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -299,7 +299,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   onClick={() => setSelectedFilter("same_email")}
                   className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "same_email"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                      ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                   }`}
                 >
@@ -312,7 +312,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   onClick={() => setSelectedFilter("same_name_and_city")}
                   className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "same_name_and_city"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                      ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                   }`}
                 >
@@ -325,7 +325,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   onClick={() => setSelectedFilter("similar_name_same_city")}
                   className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "similar_name_same_city"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                      ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                   }`}
                 >
@@ -338,7 +338,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   onClick={() => setSelectedFilter("same_website")}
                   className={`px-3 py-1.5 rounded-[var(--r-pill)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === "same_website"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                      ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                   }`}
                 >

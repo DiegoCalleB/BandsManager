@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
   Play,
   Pause,
@@ -62,6 +62,7 @@ import {
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Select } from '../ui';
+import { ModalPortal } from "../common/ModalPortal";
 
 interface SongTransitionPreviewModalProps {
   isOpen: boolean;
@@ -632,13 +633,13 @@ export function SongTransitionPreviewModal({
   const currentGains = getTransitionGains(currentTime, timeline, config);
 
   return (
-    <AnimatePresence>
+    <ModalPortal isOpen onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-3 bg-[var(--scrim)]/80 overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 8 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 8 }}
-          className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col text-[var(--ink)]"
+          className="relative w-full max-w-4xl max-h-[calc(100dvh-1rem)] bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col text-[var(--ink)]"
         >
           {/* Compact Header */}
           <div className="flex items-center justify-between px-3.5 py-2 bg-[var(--sunken)] shrink-0">
@@ -703,7 +704,7 @@ export function SongTransitionPreviewModal({
 
               <IconButton
                 label="Cerrar"
-                size="icon-xs"
+                size="icon-sm"
                 type="button"
                 onClick={onClose}
               >
@@ -913,7 +914,7 @@ export function SongTransitionPreviewModal({
                 <div
                   className={`w-7 h-7 rounded-[var(--r-pill)] flex items-center justify-center transition ${
                     currentGains.isCrossfading
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] scale-110"
+                      ? "bg-[var(--ink)] text-[var(--bg)] scale-110"
                       : "bg-[var(--sunken)] text-[var(--ink-2)]"
                   }`}
                 >
@@ -1093,7 +1094,7 @@ export function SongTransitionPreviewModal({
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <div className="flex items-center p-0.5 bg-[var(--surface)] rounded-[var(--r-s)]">
                     <Button
-                      variant={playbackMode === "real" ? "primary" : "ghost"}
+                      variant={playbackMode === "real" ? "selected" : "ghost"}
                       size="xs"
                       type="button"
                       onClick={() => {
@@ -1106,7 +1107,7 @@ export function SongTransitionPreviewModal({
                       <span>Audio real</span>
                     </Button>
                     <Button
-                      variant={playbackMode === "synth" ? "primary" : "ghost"}
+                      variant={playbackMode === "synth" ? "selected" : "ghost"}
                       size="xs"
                       type="button"
                       onClick={() => {
@@ -1142,7 +1143,7 @@ export function SongTransitionPreviewModal({
                 {/* Transition Style Selector */}
                 <div className="flex items-center gap-1 bg-[var(--surface)] p-0.5 rounded-[var(--r-s)]">
                   <Button
-                    variant={config.style === "crossfade" ? "primary" : "ghost"}
+                    variant={config.style === "crossfade" ? "selected" : "ghost"}
                     size="xs"
                     type="button"
                     onClick={() => {
@@ -1153,7 +1154,7 @@ export function SongTransitionPreviewModal({
                     Fundido ({config.fadeDurationSec}s)
                   </Button>
                   <Button
-                    variant={config.style === "segue" ? "primary" : "ghost"}
+                    variant={config.style === "segue" ? "selected" : "ghost"}
                     size="xs"
                     type="button"
                     onClick={() => {
@@ -1164,7 +1165,7 @@ export function SongTransitionPreviewModal({
                     Corte (0s)
                   </Button>
                   <Button
-                    variant={config.style === "pause" ? "primary" : "ghost"}
+                    variant={config.style === "pause" ? "selected" : "ghost"}
                     size="xs"
                     type="button"
                     onClick={() => {
@@ -1549,7 +1550,7 @@ export function SongTransitionPreviewModal({
             <div className="flex flex-wrap items-center gap-1.5">
               {onInsertInterludio && itemA && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => {
@@ -1590,6 +1591,6 @@ export function SongTransitionPreviewModal({
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </ModalPortal>
   );
 }

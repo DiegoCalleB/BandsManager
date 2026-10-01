@@ -600,7 +600,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                     </button>
 
                     <Button
-                      variant={fanUserReactions.fire ? "soft" : "neutral"}
+                      variant={fanUserReactions.fire ? "inverse" : "neutral"}
                       size="xs"
                       type="button"
                       onClick={() => handleReactFan(fan.id, "fire")}
@@ -626,7 +626,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                     </button>
 
                     <Button
-                      variant={fanUserReactions.applause ? "soft" : "neutral"}
+                      variant={fanUserReactions.applause ? "inverse" : "neutral"}
                       size="xs"
                       type="button"
                       onClick={() => handleReactFan(fan.id, "applause")}

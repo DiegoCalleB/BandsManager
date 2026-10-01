@@ -1844,7 +1844,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     </button>
 
                     <Button
-                      variant="soft"
+                      variant="neutral"
                       size="xs"
                       onClick={handleTranscribeAllConcert}
                       disabled={isTranscribingAll || tracks.length === 0}
@@ -2190,7 +2190,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                 disabled={isLoadingPreview}
                                 className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1 transition-ui ${
                                   isPlayingThis
-                                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                                    ? "bg-[var(--ink)] text-[var(--bg)]"
                                     : "bg-[var(--surface)] hover:bg-[var(--acc)] hover:text-[var(--ink)] text-[var(--ink-2)]"
                                 }`}
                                 title="Reproducir este trozo para escucharlo y clasificarlo"
@@ -2462,7 +2462,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
                               <div className="flex items-center gap-2">
                                 <Button
-                                  variant="soft"
+                                  variant="neutral"
                                   size="xs"
                                   onClick={() =>
                                     handleTranscribeSongChordsAndLyrics(track)
@@ -2877,7 +2877,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                           }
                                           className={`px-1.5 py-0.5 rounded font-bold ${
                                             snippetSpeed === spd
-                                              ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                                              ? "bg-[var(--ink)] text-[var(--bg)]"
                                               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                                           }`}
                                         >
@@ -3170,7 +3170,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     onClick={() => setQuickNamingActiveTab("table")}
                     className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
                       quickNamingActiveTab === "table"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                     }`}
                   >
@@ -3183,7 +3183,7 @@ export const LiveConcertToAlbumModal: React.FC<
                     onClick={() => setQuickNamingActiveTab("paste")}
                     className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui ${
                       quickNamingActiveTab === "paste"
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                     }`}
                   >

@@ -174,7 +174,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                 <div
                   className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center transition-ui ${
                     isSelected
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      ? "bg-[var(--ink)] text-[var(--bg)]"
                       : "ring-1 ring-[var(--hair)] bg-[var(--surface)]/80 text-transparent"
                   }`}
                 >

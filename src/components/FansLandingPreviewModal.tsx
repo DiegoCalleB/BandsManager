@@ -87,7 +87,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           {/* Selector de Pantalla / Estado */}
           <div className="flex bg-[var(--sunken)] rounded-[var(--r-m)] p-1">
             <Button
-              variant={previewScreen === 'form' ? "primary" : "ghost"}
+              variant={previewScreen === 'form' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setPreviewScreen('form')}
@@ -97,7 +97,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <span>{t('previewTabForm')}</span>
             </Button>
             <Button
-              variant={previewScreen === 'success' ? "primary" : "ghost"}
+              variant={previewScreen === 'success' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setPreviewScreen('success')}
@@ -139,7 +139,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             <Globe2 className="w-3 h-3 text-[var(--ink-2)] ml-1 mr-0.5" />
             {FAN_FORM_LANGUAGES.map((l) => (
               <Button
-                variant={selectedLanguage === l.code ? "soft" : "ghost"}
+                variant={selectedLanguage === l.code ? "selected" : "ghost"}
                 size="xs"
                 key={l.code}
                 type="button"
@@ -210,7 +210,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             type="button"
             onClick={() => setPreviewScreen('form')}
             className={`px-2.5 py-1 rounded text-xs font-sans font-bold transition-ui ${
-              previewScreen === 'form' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)]'
+              previewScreen === 'form' ? 'bg-[var(--ink)] text-[var(--bg)]' : 'text-[var(--ink-2)]'
             }`}
           >
             {t('previewTabForm')}

@@ -264,7 +264,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
         <div className="flex items-center gap-2">
           <div className="flex items-center p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
             <Button
-              variant={activeTab === 'priorities' ? "primary" : "ghost"}
+              variant={activeTab === 'priorities' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => {
@@ -278,7 +278,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
             </Button>
 
             <Button
-              variant={activeTab === 'routing' ? "primary" : "ghost"}
+              variant={activeTab === 'routing' ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => {
@@ -416,7 +416,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                       {/* Botones de acción rápida */}
                       <div className="pt-2 border-t border-[var(--hair)]/80 flex items-center justify-between gap-2">
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           type="button"
                           onClick={() => onSelectLead(lead, { tab: 'copilot' })}

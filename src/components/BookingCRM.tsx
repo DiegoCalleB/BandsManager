@@ -1429,7 +1429,7 @@ export default function BookingCRM({
                   </Button>
 
                   <Button
-                    variant="soft"
+                    variant="neutral"
                     size="xs"
                     id="open-templates-direct-btn"
                     type="button"
@@ -1448,7 +1448,7 @@ export default function BookingCRM({
 
                   {/* Botón Herramientas & IA */}
                   <Button
-                    variant={isMobileToolsOpen ? "soft" : "neutral"}
+                    variant={isMobileToolsOpen ? "inverse" : "neutral"}
                     size="xs"
                     id="open-tools-btn"
                     type="button"
@@ -1656,7 +1656,7 @@ export default function BookingCRM({
                     </button>
 
                     <Button
-                      variant="soft"
+                      variant="neutral"
                       type="button"
                       onClick={() => {
                         setIsMobileToolsOpen(false);
@@ -1790,7 +1790,7 @@ export default function BookingCRM({
                   {/* Filters & Campaign — PC only, Mobile in Herramientas */}
                   <div className="hidden sm:flex items-center gap-1.5 shrink-0">
                     <Button
-                      variant={activeFiltersCount > 0 || isMobileFiltersOpen ? "soft" : "neutral"}
+                      variant={activeFiltersCount > 0 || isMobileFiltersOpen ? "inverse" : "neutral"}
                       size="sm"
                       id="toggle-filters-btn"
                       type="button"
@@ -1809,7 +1809,7 @@ export default function BookingCRM({
 
                     {activeCampaign && (
                       <Button
-                        variant={filterByCampaign ? "soft" : "neutral"}
+                        variant={filterByCampaign ? "inverse" : "neutral"}
                         size="sm"
                         id="crm-campaign-filter-btn"
                         type="button"
@@ -1833,7 +1833,7 @@ export default function BookingCRM({
                 <div className="flex items-center justify-between sm:justify-start gap-1 shrink-0">
                   <div className="p-1 rounded-[var(--r-m)] flex items-center gap-1 bg-[var(--sunken)]">
                     <Button
-                      variant={viewMode === 'grid' ? "primary" : "ghost"}
+                      variant={viewMode === 'grid' ? "selected" : "ghost"}
                       size="xs"
                       id="crm-view-grid"
                       type="button"
@@ -1845,7 +1845,7 @@ export default function BookingCRM({
                       <span className="hidden sm:inline">Tarjetas</span>
                     </Button>
                     <Button
-                      variant={viewMode === 'table' ? "primary" : "ghost"}
+                      variant={viewMode === 'table' ? "selected" : "ghost"}
                       size="xs"
                       id="crm-view-table"
                       type="button"
@@ -1857,7 +1857,7 @@ export default function BookingCRM({
                       <span className="hidden sm:inline">Detalles</span>
                     </Button>
                     <Button
-                      variant={viewMode === 'map' ? "primary" : "ghost"}
+                      variant={viewMode === 'map' ? "selected" : "ghost"}
                       size="xs"
                       id="crm-view-map"
                       type="button"
@@ -2046,7 +2046,7 @@ export default function BookingCRM({
 
                 return (
                   <Button
-                    variant={isSelected ? "soft" : "neutral"}
+                    variant={isSelected ? "inverse" : "neutral"}
                     size="xs"
                     id={`crm-filter-${tab.key}`}
                     key={tab.key}
@@ -2415,7 +2415,7 @@ export default function BookingCRM({
 
           <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
             <Button
-              variant={isTemplatesSectionOpen ? "soft" : "neutral"}
+              variant={isTemplatesSectionOpen ? "inverse" : "neutral"}
               size="xs"
               type="button"
               onClick={(e) => {

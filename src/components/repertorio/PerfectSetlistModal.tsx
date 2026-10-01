@@ -4,6 +4,7 @@ import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionA
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Textarea } from '../ui';
+import { ModalPortal } from "../common/ModalPortal";
 
 /** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
@@ -253,8 +254,9 @@ export function PerfectSetlistModal({
   const hasChart = !!chartData && chartData.length > 0 && !!yDomain;
 
   return (
+    <ModalPortal isOpen onClose={onClose}>
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
-      <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto pointer-events-auto">
+      <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85dvh] overflow-y-auto pointer-events-auto">
         {/* Header + Mapa de Energía en un único bloque sticky, mismo patrón que el Análisis IA —
  así el gráfico se ve siempre arriba mientras se hace scroll por las acciones del plan. */}
         <div className="sticky top-0 z-10 bg-[var(--surface)]">
@@ -269,7 +271,7 @@ export function PerfectSetlistModal({
             <div className="flex items-center gap-1.5">
               {canUndo && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   onClick={onUndo}
                   className="items-center gap-1"
@@ -466,7 +468,7 @@ export function PerfectSetlistModal({
                   Solo este plan
                 </button>
                 <Button
-                  variant={feedbackScope === 'global' ? "soft" : "ghost"}
+                  variant={feedbackScope === 'global' ? "selected" : "ghost"}
                   size="xs"
                   type="button"
                   onClick={() => setFeedbackScope('global')}
@@ -505,5 +507,6 @@ export function PerfectSetlistModal({
         )}
       </div>
     </div>
+    </ModalPortal>
   );
 }

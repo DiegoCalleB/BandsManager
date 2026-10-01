@@ -352,7 +352,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             </button>
           ) : onOpenChords ? (
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               type="button"
               onClick={onOpenChords}

@@ -164,7 +164,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
           ) : (
             <div className="flex gap-2">
               <Button
-                variant="soft"
+                variant="neutral"
                 size="sm"
                 type="button"
                 onClick={() => leadMagnetInputRef.current?.click()}

@@ -1524,7 +1524,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {/* Dual Tab Mode Switcher */}
         <div className="flex bg-[var(--sunken)] p-1.5 rounded-[var(--r-l)] text-xs font-sans">
           <Button
-            variant={activeTab === "redes" ? "primary" : "ghost"}
+            variant={activeTab === "redes" ? "selected" : "ghost"}
             type="button"
             onClick={() => setActiveTab("redes")}
             className="flex-1 items-center justify-center gap-2"
@@ -1532,7 +1532,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <span>{t("tabFollow")}</span>
           </Button>
           <Button
-            variant={activeTab === "form" ? "primary" : "ghost"}
+            variant={activeTab === "form" ? "selected" : "ghost"}
             type="button"
             onClick={() => setActiveTab("form")}
             className="flex-1 items-center justify-center gap-2"

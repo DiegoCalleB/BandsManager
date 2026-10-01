@@ -22,7 +22,7 @@ export interface TabsProps<T extends string = string> {
 }
 
 /**
- * Pestañas de una vista. La activa se marca con relleno suave del acento (no con borde, Ley 1) y
+ * Pestañas de una vista. La activa se marca con un escalón de luminancia neutro (no con borde, Ley 1, ni con azul: seleccionar no es la acción principal) y
  * el grupo es accesible de verdad: `role="tablist"`, `aria-selected`, foco itinerante y flechas
  * ← → / Inicio / Fin. Si la fila no cabe, se desliza en horizontal sin barra visible.
  */
@@ -65,7 +65,7 @@ export function Tabs<T extends string = string>({ items, value, onChange, layout
               'flex min-h-10 cursor-pointer items-center gap-2 rounded-[var(--r-pill)] px-4 py-2 text-xs',
               layout === 'fill' ? 'justify-center px-2 text-center' : 'shrink-0 whitespace-nowrap',
               'text-xs transition-ui focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--acc)]',
-              activa ? 'bg-[var(--acc-soft)] font-semibold text-[var(--acc-ink)]' : 'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]',
+              activa ? 'bg-[var(--surface)] font-semibold text-[var(--ink)]' : 'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]',
             )}
           >
             {Icon && <Icon aria-hidden className="size-4 shrink-0" />}

@@ -837,7 +837,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <Button
-                variant={selectedCityFilter === "" ? "primary" : "neutral"}
+                variant={selectedCityFilter === "" ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setSelectedCityFilter("")}
@@ -859,7 +859,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     onClick={() => setSelectedCityFilter(city)}
                     className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                       isSelected
-                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                        ? "bg-[var(--ink)] text-[var(--bg)]"
                         : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     }`}
                   >
@@ -987,7 +987,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               {/* View Switcher */}
               <div className="flex items-center gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)]">
                 <Button
-                  variant={viewMode === "feed" ? "primary" : "ghost"}
+                  variant={viewMode === "feed" ? "selected" : "ghost"}
                   size="xs"
                   type="button"
                   onClick={() => setViewMode("feed")}
@@ -1002,7 +1002,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   onClick={() => setViewMode("grid")}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "grid"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      ? "bg-[var(--ink)] text-[var(--bg)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Vista en tarjetas"
@@ -1011,7 +1011,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <span>Tarjetas</span>
                 </button>
                 <Button
-                  variant={viewMode === "table" ? "primary" : "ghost"}
+                  variant={viewMode === "table" ? "selected" : "ghost"}
                   size="xs"
                   type="button"
                   onClick={() => setViewMode("table")}
@@ -1022,7 +1022,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <span>Tabla CRM</span>
                 </Button>
                 <Button
-                  variant={viewMode === "map" ? "primary" : "ghost"}
+                  variant={viewMode === "map" ? "selected" : "ghost"}
                   size="xs"
                   type="button"
                   onClick={() => setViewMode("map")}

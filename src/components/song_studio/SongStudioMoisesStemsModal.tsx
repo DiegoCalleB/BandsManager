@@ -51,7 +51,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
 
         <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">
           <Button
-            variant={moisesTab === 'stems' ? "primary" : "neutral"}
+            variant={moisesTab === 'stems' ? "inverse" : "neutral"}
             size="xs"
             type="button"
             onClick={() => setMoisesTab('stems')}
@@ -60,7 +60,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             <Sliders className="w-3.5 h-3.5" /> Separar pistas
           </Button>
           <Button
-            variant={moisesTab === 'how_it_works' ? "primary" : "neutral"}
+            variant={moisesTab === 'how_it_works' ? "inverse" : "neutral"}
             size="xs"
             type="button"
             onClick={() => setMoisesTab('how_it_works')}
@@ -69,7 +69,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             <Info className="w-3.5 h-3.5" /> ¿Cómo funciona?
           </Button>
           <Button
-            variant={moisesTab === 'upload' ? "primary" : "neutral"}
+            variant={moisesTab === 'upload' ? "inverse" : "neutral"}
             size="xs"
             type="button"
             onClick={() => setMoisesTab('upload')}

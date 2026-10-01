@@ -43,7 +43,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       ref={dropdownRef}
     >
       <Button
-        variant={isOpen ? "soft" : "neutral"}
+        variant={isOpen ? "inverse" : "neutral"}
         size="xs"
         type="button"
         onClick={() => setIsOpen(!isOpen)}

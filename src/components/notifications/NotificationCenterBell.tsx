@@ -93,7 +93,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
     <div className="relative inline-block text-left" ref={dropdownRef}>
       {/* Bell Button */}
       <Button
-        variant={isOpen ? "soft" : "ghost"}
+        variant={isOpen ? "selected" : "ghost"}
         size="sm"
         type="button"
         onClick={() => {

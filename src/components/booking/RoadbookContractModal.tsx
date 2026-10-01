@@ -212,7 +212,7 @@ Firmado en conformidad por ambas partes.`;
             {/* Pestañas */}
             <div className="flex items-center gap-1 bg-[var(--sunken)]/90 p-1 rounded-[var(--r-m)] ">
               <Button
-                variant={activeTab === 'roadbook' ? "primary" : "ghost"}
+                variant={activeTab === 'roadbook' ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setActiveTab('roadbook')}
@@ -222,7 +222,7 @@ Firmado en conformidad por ambas partes.`;
                 <span>Roadbook y horarios</span>
               </Button>
               <Button
-                variant={activeTab === 'contract' ? "primary" : "ghost"}
+                variant={activeTab === 'contract' ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setActiveTab('contract')}
@@ -232,7 +232,7 @@ Firmado en conformidad por ambas partes.`;
                 <span>Acuerdo / Contrato</span>
               </Button>
               <Button
-                variant={activeTab === 'weblink' ? "primary" : "ghost"}
+                variant={activeTab === 'weblink' ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setActiveTab('weblink')}
@@ -502,7 +502,7 @@ Firmado en conformidad por ambas partes.`;
             <div className="flex items-center gap-2 ml-auto">
               {activeTab === 'roadbook' && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
@@ -516,7 +516,7 @@ Firmado en conformidad por ambas partes.`;
 
               {activeTab === 'contract' && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}

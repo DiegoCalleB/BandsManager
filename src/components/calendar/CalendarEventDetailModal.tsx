@@ -389,7 +389,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                   <div className="hidden sm:flex flex-wrap items-center gap-1.5">
                   <Button
-                    variant="soft"
+                    variant="neutral"
                     size="xs"
                     type="button"
                     onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
@@ -401,7 +401,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </Button>
 
                   <Button
-                    variant="soft"
+                    variant="neutral"
                     size="xs"
                     type="button"
                     onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
@@ -524,7 +524,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               className={`flex items-center gap-1.5 pb-2.5 overflow-x-auto shrink-0 ${''}`}
             >
               <Button
-                variant={modalActiveTab === 'resumen' ? "primary" : "neutral"}
+                variant={modalActiveTab === 'resumen' ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('resumen')}
@@ -533,7 +533,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <span><ShowIcon inline emoji="📋" />Resumen y info</span>
               </Button>
               <Button
-                variant={modalActiveTab === 'tecnica' ? "primary" : "neutral"}
+                variant={modalActiveTab === 'tecnica' ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('tecnica')}
@@ -543,7 +543,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <span>1. Logística técnica</span>
               </Button>
               <Button
-                variant={modalActiveTab === 'contactos' ? "primary" : "neutral"}
+                variant={modalActiveTab === 'contactos' ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('contactos')}
@@ -558,7 +558,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 )}
               </Button>
               <Button
-                variant={modalActiveTab === 'merchan' ? "primary" : "neutral"}
+                variant={modalActiveTab === 'merchan' ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('merchan')}
@@ -573,7 +573,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 )}
               </Button>
               <Button
-                variant={modalActiveTab === 'postshow' ? "primary" : "neutral"}
+                variant={modalActiveTab === 'postshow' ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('postshow')}
@@ -586,7 +586,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 )}
               </Button>
               <Button
-                variant={modalActiveTab === 'cierre' ? "primary" : "neutral"}
+                variant={modalActiveTab === 'cierre' ? "inverse" : "neutral"}
                 size="xs"
                 type="button"
                 onClick={() => setModalActiveTab('cierre')}
@@ -1238,7 +1238,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           type="button"
                           onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
@@ -1500,7 +1500,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <Shirt className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
                           <p className={`text-xs font-mono ${textSub}`}>Sin merchan apuntado para este bolo.</p>
                           <Button
-                            variant="soft"
+                            variant="neutral"
                             size="xs"
                             type="button"
                             onClick={() => setShowAddMerchForm(true)}

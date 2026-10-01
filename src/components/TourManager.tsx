@@ -998,7 +998,7 @@ export default function TourManager({
                   <div className="pt-4 mt-4 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <Button
-                        variant="soft"
+                        variant="neutral"
                         size="xs"
                         type="button"
                         onClick={() => handleVolcarEnFinanzas(tour)}
@@ -1011,7 +1011,7 @@ export default function TourManager({
 
                       {onNavigate && (
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           type="button"
                           onClick={() =>
@@ -1127,7 +1127,7 @@ export default function TourManager({
                         {/* Selector Banda Completa vs Parcial */}
                         <div className="flex rounded-[var(--r-s)] bg-[var(--sunken)] p-1">
                           <Button
-                            variant={formConvocatoriaTipo === "completa" ? "primary" : "ghost"}
+                            variant={formConvocatoriaTipo === "completa" ? "selected" : "ghost"}
                             size="xs"
                             type="button"
                             onClick={() => {
@@ -1140,7 +1140,7 @@ export default function TourManager({
                             <ShowIcon inline emoji="👥" />Banda Completa ({availableMembers.length})
                           </Button>
                           <Button
-                            variant={formConvocatoriaTipo === "parcial" ? "primary" : "ghost"}
+                            variant={formConvocatoriaTipo === "parcial" ? "selected" : "ghost"}
                             size="xs"
                             type="button"
                             onClick={() => setFormConvocatoriaTipo("parcial")}
@@ -1195,7 +1195,7 @@ export default function TourManager({
                                   <div
                                     className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${
                                       isSelected
-                                        ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                                        ? "bg-[var(--ink)] text-[var(--bg)]"
                                         : ""
                                     }`}
                                   >
@@ -1279,7 +1279,7 @@ export default function TourManager({
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <Button
-                            variant="soft"
+                            variant="neutral"
                             size="xs"
                             type="button"
                             onClick={() => handleAddVehicle(0)}
@@ -1503,7 +1503,7 @@ export default function TourManager({
                         </p>
                       </div>
                       <Button
-                        variant="soft"
+                        variant="neutral"
                         size="xs"
                         type="button"
                         onClick={addStop}

@@ -85,7 +85,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
 
               <div className="flex items-center gap-1">
                 <Button
-                  variant={vid.destacado ? "soft" : "ghost"}
+                  variant={vid.destacado ? "selected" : "ghost"}
                   size="xs"
                   type="button"
                   onClick={() => onToggleHighlightVideo(vid.id)}

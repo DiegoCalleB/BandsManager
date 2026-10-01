@@ -270,7 +270,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   <Button variant={(config.donacionRevolut?.metodoPorDefecto ||
-                        "revolut") === "revolut" ? "soft" : "neutral"} size="sm"
+                        "revolut") === "revolut" ? "inverse" : "neutral"} size="sm"
                     type="button"
                     onClick={() =>
                       setConfig({
@@ -307,7 +307,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     PayPal
                   </button>
                   <Button
-                    variant={config.donacionRevolut?.metodoPorDefecto === "bizum" ? "soft" : "neutral"}
+                    variant={config.donacionRevolut?.metodoPorDefecto === "bizum" ? "inverse" : "neutral"}
                     size="sm"
                     type="button"
                     onClick={() =>

@@ -581,7 +581,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
                 <div className="flex items-center gap-1.5">
                   <Button
-                    variant={copiadoFirma === "html" ? "soft" : "neutral"}
+                    variant={copiadoFirma === "html" ? "inverse" : "neutral"}
                     type="button"
                     id="copy-html-signature-btn"
                     onClick={handleCopyHtmlCode}
@@ -599,7 +599,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   </Button>
 
                   <Button
-                    variant={copiadoFirma === "text" ? "soft" : "neutral"}
+                    variant={copiadoFirma === "text" ? "inverse" : "neutral"}
                     type="button"
                     id="copy-plain-signature-btn"
                     onClick={handleCopyPlainText}
@@ -678,7 +678,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     {/* Tabs de clientes */}
                     <div className="flex items-center gap-1.5 pb-2">
                       <Button
-                        variant={instructionTab === "gmail" ? "soft" : "ghost"}
+                        variant={instructionTab === "gmail" ? "selected" : "ghost"}
                         size="xs"
                         type="button"
                         onClick={() => setInstructionTab("gmail")}
@@ -686,7 +686,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         <ShowIcon inline emoji="🔴" />Gmail
                       </Button>
                       <Button
-                        variant={instructionTab === "outlook" ? "soft" : "ghost"}
+                        variant={instructionTab === "outlook" ? "selected" : "ghost"}
                         size="xs"
                         type="button"
                         onClick={() => setInstructionTab("outlook")}
@@ -694,7 +694,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         <ShowIcon inline emoji="🔵" />Outlook / Microsoft 365
                       </Button>
                       <Button
-                        variant={instructionTab === "apple" ? "soft" : "ghost"}
+                        variant={instructionTab === "apple" ? "selected" : "ghost"}
                         size="xs"
                         type="button"
                         onClick={() => setInstructionTab("apple")}

@@ -669,7 +669,7 @@ export default function PracticeModePanel({
             <div className="flex items-center gap-2 shrink-0">
               {onOpenStudio && (
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={onOpenStudio}
@@ -821,7 +821,7 @@ export default function PracticeModePanel({
                           onClick={() => applySmartSectionLoop(sec)}
                           className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-micro font-bold shrink-0 transition-ui cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
-                              ? 'bg-[var(--acc)] text-[var(--on-acc)] /40 ring-1 ring-[var(--acc)]'
+                              ? 'bg-[var(--ink)] text-[var(--bg)] /40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
                                 ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                                 : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 '
@@ -867,7 +867,7 @@ export default function PracticeModePanel({
                           onClick={() => changeSpeed(spd)}
                           className={`py-1 rounded-[var(--r-pill)] text-center transition-ui cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                              ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                               : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >
@@ -952,7 +952,7 @@ export default function PracticeModePanel({
                           onClick={() => setSemitonesOffset(st)}
                           className={`py-1 rounded-[var(--r-pill)] text-center transition-ui cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                              ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                               : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
                           }`}
                         >
@@ -1040,7 +1040,7 @@ export default function PracticeModePanel({
                       <button
                         onClick={() => toggleSolo(tr.id)}
                         title="Solo (aislar, solo en mi mezcla)"
-                        className={`w-6 h-6 rounded text-micro font-sans font-bold ${eff.solo ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                        className={`w-6 h-6 rounded text-micro font-sans font-bold ${eff.solo ? 'bg-[var(--ink)] text-[var(--bg)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                       >
                         S
                       </button>
@@ -1098,7 +1098,7 @@ export default function PracticeModePanel({
               <span className="text-xs font-sans font-semibold text-[var(--ink-2)]">Descargar para escuchar offline</span>
               <div className="flex flex-wrap gap-2">
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="sm"
                   onClick={() => handleExport('sin-mi-pista')}
                   disabled={!myTrack || isExporting !== null}

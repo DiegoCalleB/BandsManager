@@ -1154,7 +1154,7 @@ export function GooglePlacesExplorerModal({
                         }}
                         className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition-ui cursor-pointer ${
                           isChecked
-                            ? "bg-[var(--acc)] text-[var(--on-acc)] "
+                            ? "bg-[var(--ink)] text-[var(--bg)] "
                             : "bg-[var(--bg)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                         }`}
                       >
@@ -1224,7 +1224,7 @@ export function GooglePlacesExplorerModal({
                         onClick={() => handleCategoryChange(cat.id)}
                         className={`px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                           isSelected
-                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                            ? "bg-[var(--ink)] text-[var(--bg)]"
                             : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]"
                         }`}
                         title={cat.desc}
@@ -1402,7 +1402,7 @@ export function GooglePlacesExplorerModal({
                 </span>
                 {QUICK_CITIES.map((city) => (
                   <Button
-                    variant={selectedCity === city ? "primary" : "neutral"}
+                    variant={selectedCity === city ? "inverse" : "neutral"}
                     size="xs"
                     key={city}
                     onClick={() => handleQuickCityClick(city)}
@@ -1421,7 +1421,7 @@ export function GooglePlacesExplorerModal({
                   </span>
                   {similarBands.map((band, idx) => (
                     <Button
-                      variant="soft"
+                      variant="neutral"
                       size="xs"
                       key={idx}
                       type="button"
@@ -1433,7 +1433,7 @@ export function GooglePlacesExplorerModal({
                     </Button>
                   ))}
                   <Button
-                    variant="soft"
+                    variant="neutral"
                     size="xs"
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
@@ -1826,7 +1826,7 @@ export function GooglePlacesExplorerModal({
                           </p>
                         </div>
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           type="button"
                           onClick={() => handleRestorePlace(item.nombre_sala)}

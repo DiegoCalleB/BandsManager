@@ -135,7 +135,7 @@ export function TemplateConfigSection({
             const IconComp = tab.icon;
             return (
               <Button
-                variant={isActive ? "primary" : "ghost"}
+                variant={isActive ? "selected" : "ghost"}
                 size="xs"
                 key={tab.id}
                 type="button"
@@ -157,7 +157,7 @@ export function TemplateConfigSection({
         <div className="flex items-center gap-2 shrink-0">
           {onGenerateAllTemplates && (
             <Button
-              variant="soft"
+              variant="neutral"
               size="xs"
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
@@ -349,7 +349,7 @@ export function TemplateConfigSection({
           <div className="flex items-center gap-2 pt-1">
             {onOptimizeTemplate && (
               <Button
-                variant="soft"
+                variant="neutral"
                 size="sm"
                 type="button"
                 onClick={() => onOptimizeTemplate()}

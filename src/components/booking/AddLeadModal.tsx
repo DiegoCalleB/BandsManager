@@ -148,7 +148,7 @@ export function AddLeadModal({
                       : 'Nombre de la Sala / Festival *'}
                 </label>
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={onModalScrape}
@@ -323,7 +323,7 @@ export function AddLeadModal({
                       <label className="text-xs font-semibold text-[var(--ink-2)]">Logo o icono</label>
                       <div className="flex items-center gap-2">
                         <Button
-                          variant="soft"
+                          variant="neutral"
                           size="xs"
                           type="button"
                           onClick={handleAutoSearchLogo}
@@ -382,7 +382,7 @@ export function AddLeadModal({
                             onClick={() => setNewLeadData((prev) => ({ ...prev, icono: emoji }))}
                             className={`w-7 h-7 rounded-[var(--r-m)] text-xs flex items-center justify-center transition-ui cursor-pointer ${
                               newLeadData.icono === emoji
-                                ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-105 shadow-xs'
+                                ? 'bg-[var(--ink)] text-[var(--bg)] font-bold scale-105 shadow-xs'
                                 : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
                             }`}
                           >

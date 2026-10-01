@@ -91,7 +91,7 @@ export function EnsayoCronometro({
           {formatTime(seconds)}
         </span>
         <Button
-          variant={isActive ? "soft" : "soft"}
+          variant={isActive ? "neutral" : "neutral"}
           size="xs"
           onClick={toggleTimer}
           title={isActive ? "Pausar Cronómetro" : "Iniciar Cronómetro"}
@@ -112,7 +112,7 @@ export function EnsayoCronometro({
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           <div
-            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--acc)] text-[var(--on-acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
+            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--ink)] text-[var(--bg)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
           >
             <Clock className={`w-4 h-4 ${isActive ? "" : ""}`} />
           </div>

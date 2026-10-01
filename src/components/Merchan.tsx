@@ -427,7 +427,7 @@ export default function Merchan({
                 onClick={() => setProductType("camiseta")}
                 className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-ui ${
                   productType === "camiseta"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                    ? "bg-[var(--ink)] text-[var(--bg)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -438,7 +438,7 @@ export default function Merchan({
                 onClick={() => setProductType("pegatina")}
                 className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-ui ${
                   productType === "pegatina"
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                    ? "bg-[var(--ink)] text-[var(--bg)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -600,7 +600,7 @@ export default function Merchan({
                   onClick={() => setRemoveBgMode(m.id as any)}
                   className={`py-1.5 px-1 rounded text-micro font-sans font-bold transition ${
                     removeBgMode === m.id
-                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      ? "bg-[var(--ink)] text-[var(--bg)]"
                       : "bg-[var(--surface)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]"
                   }`}
                 >

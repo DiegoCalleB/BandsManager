@@ -88,7 +88,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
       <div className="flex items-center gap-3">
         {isAdmin ? (
           <Button
-            variant="soft"
+            variant="neutral"
             size="xs"
             type="button"
             onClick={onOpenAutonomyModal}

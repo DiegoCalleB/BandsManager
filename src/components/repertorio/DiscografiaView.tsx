@@ -43,7 +43,7 @@ import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton, Input } from '../ui';
+import { ActionMenu, Button, IconButton, Input } from '../ui';
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -511,16 +511,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-4" data-modulo="discografia">
-      {/* Header: Stats */}
-      <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] transition-ui bg-[var(--surface)]">
-        <p className="text-[var(--ink-2)] text-xs">
-          {safeSongs.length > 1 ? "lanzamientos" : "lanzamiento"} •{" "}
-          {safeSongs.length} temas
-        </p>
-      </div>
-
       {/* Action Buttons: Exportar + Nuevo Disco */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+      <div className="flex flex-row flex-wrap items-center gap-2">
         <Button
           variant="neutral"
           size="xs"
@@ -529,13 +521,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           className="items-center gap-1.5"
           title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
         >
-          <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
+          <Download className="w-3.5 h-3.5" />
           <span>Exportar</span>
         </Button>
 
         <div className="relative">
           <Button
-            variant="primary"
+            variant="neutral"
             size="xs"
             type="button"
             onClick={() => setShowCreateAlbumMenu((v) => !v)}
@@ -666,7 +658,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}
           >
             <Button
-              variant={activeFilterTab === "todos" ? "primary" : "ghost"}
+              variant={activeFilterTab === "todos" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setActiveFilterTab("todos")}
@@ -674,7 +666,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               Todos
             </Button>
             <Button
-              variant={activeFilterTab === "albumes" ? "primary" : "ghost"}
+              variant={activeFilterTab === "albumes" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setActiveFilterTab("albumes")}
@@ -682,7 +674,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               Álbumes
             </Button>
             <Button
-              variant={activeFilterTab === "singles" ? "primary" : "ghost"}
+              variant={activeFilterTab === "singles" ? "selected" : "ghost"}
               size="xs"
               type="button"
               onClick={() => setActiveFilterTab("singles")}
@@ -705,7 +697,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     : "Desplegar todos los discos"
                 }
               >
-                <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
+                <Layers className="w-3.5 h-3.5" />
               </Button>
             )}
 
@@ -713,7 +705,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             {songsPendingDynamicsAnalysis.length > 0 && (
               <div className="relative inline-flex flex-col items-end">
                 <Button
-                  variant="soft"
+                  variant="neutral"
                   size="xs"
                   type="button"
                   onClick={handleAnalyzeAllDynamics}
@@ -862,7 +854,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   >
                     {sortedAlbumSongs.length > 0 && onSelectSong && (
                       <Button
-                        variant="primary"
+                        variant="neutral"
                         size="xs"
                         type="button"
                         onClick={handlePlayAlbum}
@@ -885,73 +877,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       </Button>
                     )}
 
-                    {onEditAlbum && (
-                      <Button
-                        variant="neutral"
-                        size="xs"
-                        type="button"
-                        onClick={() => onEditAlbum(album)}
-                        className="items-center gap-1.5"
-                        title="Gestionar las canciones de este álbum"
-                      >
-                        <Edit3 className="w-3.5 h-3.5 text-[var(--acc)]" />
-                        <span className="hidden xs:inline">Gestionar</span>
-                      </Button>
-                    )}
-
-                    {/* Per-Album Export Button */}
-                    {sortedAlbumSongs.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setExportModalData({
-                            isOpen: true,
-                            albumName: album,
-                          });
-                        }}
-                        className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${"bg-[var(--surface)]/80 text-[var(--acc-ink)] hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]"}`}
-                        title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
-                      >
-                        <Download className="w-3.5 h-3.5 text-[var(--acc)]" />
-                        <span className="hidden lg:inline">Exportar</span>
-                      </button>
-                    )}
-
-                    {/* Bulk Audio Master Uploader Button */}
-                    {sortedAlbumSongs.length > 0 && (
-                      <Button
-                        variant="soft"
-                        size="xs"
-                        type="button"
-                        onClick={() =>
-                          setBulkUploadAlbum({
-                            name: album,
-                            songs: sortedAlbumSongs,
-                          })
-                        }
-                        className="items-center gap-1.5"
-                        title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
-                      >
-                        <FolderUp className="w-3.5 h-3.5" />
-                        <span className="hidden md:inline">Subir audios</span>
-                      </Button>
-                    )}
-
-                    {onRequestDeleteAlbum &&
-                      album !== "Singles / Sin Disco" && (
-                        <IconButton
-                          label="Eliminar álbum"
-                          variant="danger"
-                          type="button"
-                          onClick={() =>
-                            onRequestDeleteAlbum(album, sortedAlbumSongs.length)
-                          }
-                          className="shrink-0"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </IconButton>
-                      )}
+                    <ActionMenu
+                      label={`Más acciones de ${album}`}
+                      items={[
+                        { label: "Gestionar canciones", icon: Edit3, hidden: !onEditAlbum, onSelect: () => onEditAlbum?.(album) },
+                        { label: "Exportar disco", icon: Download, hidden: sortedAlbumSongs.length === 0, onSelect: () => setExportModalData({ isOpen: true, albumName: album }) },
+                        { label: "Subir audios", icon: FolderUp, hidden: sortedAlbumSongs.length === 0, onSelect: () => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs }) },
+                        { label: "Eliminar álbum", icon: Trash2, tone: "danger", hidden: !onRequestDeleteAlbum || album === "Singles / Sin Disco", onSelect: () => onRequestDeleteAlbum?.(album, sortedAlbumSongs.length) },
+                      ]}
+                    />
 
                     {/* Expand / Collapse Toggle Button */}
                     <button
@@ -962,8 +896,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       }}
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${
                         isExpanded
-                          ? "bg-[var(--acc)]/15  text-[var(--acc-ink)]"
-                          : "bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]"
+                          ? "bg-[var(--sunken)] text-[var(--ink)]"
+                          : "bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                       }`}
                     >
                       <span className="hidden xs:inline">

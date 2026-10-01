@@ -342,7 +342,7 @@ export function SongChordsViewerModal({
                 onClick={handleToggleAudio}
                 className={`p-2.5 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center shrink-0 ${
                   isPlayingAudio
-                    ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                    ? "bg-[var(--ink)] text-[var(--bg)]"
                     : audioUrl
                       ? "bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)]"
                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -471,7 +471,7 @@ export function SongChordsViewerModal({
             {/* TABS SELECTOR */}
             <div className="flex items-center bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
               <Button
-                variant={activeTab === "chords" ? "primary" : "ghost"}
+                variant={activeTab === "chords" ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setActiveTab("chords")}
@@ -482,7 +482,7 @@ export function SongChordsViewerModal({
               </Button>
 
               <Button
-                variant={activeTab === "substitute" ? "primary" : "ghost"}
+                variant={activeTab === "substitute" ? "selected" : "ghost"}
                 size="xs"
                 type="button"
                 onClick={() => setActiveTab("substitute")}
@@ -512,7 +512,7 @@ export function SongChordsViewerModal({
                 {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
                 <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
                   <Button
-                    variant={isPlayingAudio ? "primary" : "soft"}
+                    variant={isPlayingAudio ? "primary" : "neutral"}
                     size="xs"
                     type="button"
                     onClick={handleToggleAudio}
@@ -670,7 +670,7 @@ export function SongChordsViewerModal({
 
                 {/* TOGGLE CHORD DIAGRAMS */}
                 <Button
-                  variant={showChordDiagrams ? "primary" : "neutral"}
+                  variant={showChordDiagrams ? "inverse" : "neutral"}
                   size="xs"
                   type="button"
                   onClick={() => setShowChordDiagrams(!showChordDiagrams)}

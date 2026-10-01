@@ -210,6 +210,8 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 - [ ] Escala tipográfica (mínimo 11 px), zonas táctiles ≥ 40 px, movimiento y estados según **`craft-interfaces`**.
 - [ ] Probado en **Claro, Oscuro y Clásico**.
 - [ ] Serie temporal → `<CurveSeries>`; comparación de categorías → `<Onda>` con puntas redondeadas. Nunca una librería de gráficos.
+- [ ] **Una sola acción primaria por vista** (`variant="primary"`). Seleccionar una opción NO es primaria: segmentados → `selected`, filtros → `inverse`, secundarias → `neutral` (`raised` sobre paneles hundidos). El azul de relleno es solo para la acción principal, el día de hoy y el item activo del menú.
+- [ ] Secundarias de una tarjeta/fila detrás de `<ActionMenu>` (⋯), no una fila de botones.
 - [ ] Pestañas → `<Tabs>` (accesible, sin subrayado); leyenda/KPI de canal → `<ChannelChip>` con `CANAL_COLOR` (mismo color que su curva).
 - [ ] Estado vacío con voz propia, no «No hay datos».
 - [ ] Checklist anti-plantilla del §8 pasado.

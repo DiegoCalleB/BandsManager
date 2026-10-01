@@ -77,7 +77,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                 { id: 'guitarra', label: 'Guitarra solista' },
               ].map((item) => (
                 <Button
-                  variant={aiTrackGenInstrument === item.id ? "primary" : "neutral"}
+                  variant={aiTrackGenInstrument === item.id ? "inverse" : "neutral"}
                   key={item.id}
                   type="button"
                   onClick={() => setAiTrackGenInstrument(item.id)}

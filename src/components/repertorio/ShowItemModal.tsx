@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
+import { ModalPortal } from "../common/ModalPortal";
 
 interface ShowItemModalProps {
   isOpen: boolean;
@@ -70,6 +71,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
   };
 
   return (
+    <ModalPortal isOpen onClose={onClose}>
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
       <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card} bg-[var(--acc)]/10`}>
         <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
@@ -210,5 +212,6 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 };
