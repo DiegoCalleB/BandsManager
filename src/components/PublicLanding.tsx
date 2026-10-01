@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, Check, Clapperboard, Compass, Truck, Hand, Music2, Rocket, ShieldCheck, Smartphone, Wallet } from 'lucide-react';
 import { Button, Card } from './ui';
 import { PublicoSilhouette } from './ui/PublicoSilhouette';
@@ -134,6 +134,8 @@ const PREGUNTAS = [
 ];
 
 export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
+  const [fotoError, setFotoError] = useState(false);
+
   useEffect(() => {
     const anterior = document.title;
     document.title = 'BandManager · Encuentra dónde tocar y gestiona tu banda';
@@ -343,6 +345,64 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               <ShieldCheck aria-hidden className="size-4 text-[var(--ok)]" />
               Tú decides: el agente propone y tú apruebas. Cada banda ve solo sus datos.
             </p>
+          </div>
+        </section>
+
+        {/* DE MÚSICO A MÚSICO / DETRÁS DEL PROYECTO */}
+        <section id="origen" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <div className="overflow-hidden rounded-[var(--r-xl)] bg-[var(--surface)] p-6 sm:p-10 lg:p-12">
+            <div className="grid items-center gap-8 md:grid-cols-12 md:gap-12">
+              <div className="md:col-span-5">
+                <div className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-[var(--r-l)] bg-[var(--sunken)]">
+                  {!fotoError ? (
+                    <img
+                      src="/landing/diego-creador.jpg"
+                      alt="Diego tocando el bajo en directo"
+                      width={480}
+                      height={600}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover object-top"
+                      onError={() => setFotoError(true)}
+                    />
+                  ) : (
+                    <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-[var(--ink-2)]">
+                      <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--acc-ink)]">
+                        <Music2 className="size-7" aria-hidden />
+                      </div>
+                      <p className="font-display text-base font-semibold text-[var(--ink)]">Tu foto aquí</p>
+                      <p className="mt-1.5 text-xs text-[var(--ink-3)]">
+                        Coloca tu imagen en:<br />
+                        <code className="mt-1 inline-block rounded bg-[var(--surface)] px-1.5 py-0.5 font-mono text-[var(--ink)]">
+                          public/landing/diego-creador.jpg
+                        </code>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="md:col-span-7">
+                <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">De músico a músico</p>
+                <h2 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl lg:text-4xl">
+                  Construido desde el local de ensayo.
+                </h2>
+                <div className="mt-5 space-y-4 text-base text-[var(--ink-2)] sm:text-lg">
+                  <p>
+                    Hola, soy Diego. He tocado el teclado y el bajo en varios grupos y en una big band de jazz.
+                  </p>
+                  <p>
+                    Sé de primera mano lo difícil que es conseguir conciertos, poner de acuerdo a la gente y lidiar con toda la logística que hay detrás de cada bolo —y no hablemos de coordinar a veinte personas sobre un escenario con hojas de cálculo y WhatsApps que nadie lee.
+                  </p>
+                  <p>
+                    Creé BandManager para quitarle todo ese barro a los grupos y que puedan centrarse en lo único que de verdad importa: tocar.
+                  </p>
+                  <p className="font-semibold text-[var(--ink)]">
+                    Si a nosotros nos habría ahorrado cientos de horas de caos, a tu grupo le va a cambiar la vida.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
