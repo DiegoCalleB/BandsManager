@@ -1522,22 +1522,24 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           )}
 
         {/* Dual Tab Mode Switcher */}
-        <div className="flex bg-[var(--sunken)] p-1.5 rounded-[var(--r-l)] text-xs font-sans">
+        <div className="flex bg-[var(--sunken)] p-1 rounded-[var(--r-l)] text-xs font-sans">
           <Button
             variant={activeTab === "redes" ? "selected" : "ghost"}
+            size="sm"
             type="button"
             onClick={() => setActiveTab("redes")}
-            className="flex-1 items-center justify-center gap-2"
+            className="flex-1 items-center justify-center gap-1.5 px-2"
           >
-            <span>{t("tabFollow")}</span>
+            <span className="truncate">{t("tabFollow")}</span>
           </Button>
           <Button
             variant={activeTab === "form" ? "selected" : "ghost"}
+            size="sm"
             type="button"
             onClick={() => setActiveTab("form")}
-            className="flex-1 items-center justify-center gap-2"
+            className="flex-1 items-center justify-center gap-1.5 px-2"
           >
-            <span>{t("tabJoin")}</span>
+            <span className="truncate">{t("tabJoin")}</span>
           </Button>
         </div>
 
