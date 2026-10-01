@@ -218,22 +218,20 @@ export default function Finanzas({
           <h2 className="page-title mt-1">Contabilidad de la banda</h2>
         </div>
         <div className="flex gap-2.5 items-center flex-wrap">
-          <button
+          <Button
             id="sync-finanzas-excel-btn"
+            variant="neutral"
+            size="xs"
             onClick={handleSyncFinanzas}
             disabled={isSyncing}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
-              isSyncing
-                ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
-                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] "
-            }`}
+            className="items-center gap-1.5"
             title="Sincronizar todas las transacciones financieras"
           >
             <RefreshCw
               className={`w-3 h-3 ${isSyncing ? "animate-spin" : ""}`}
             />
-            {isSyncing ? "Sincronizando..." : "Actualizar en Excel"}
-          </button>
+            <span>{isSyncing ? "Sincronizando..." : "Actualizar en Excel"}</span>
+          </Button>
 
           <span
             className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-micro font-sans font-bold ${"bg-[var(--ok)]/10  text-[var(--ok)]"}`}
@@ -354,12 +352,15 @@ export default function Finanzas({
           ]}
         />
 
-        <button
+        <Button
+          variant="primary"
+          size="xs"
           onClick={() => setIsAddOpen(true)}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${"bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--on-tentative)]"}`}
+          className="items-center gap-1.5 shrink-0"
         >
-          <Plus className="w-3.5 h-3.5" /> Registrar operación
-        </button>
+          <Plus className="w-3.5 h-3.5" />
+          <span>Registrar operación</span>
+        </Button>
       </div>
 
       {/* Active Tab View */}
@@ -1104,9 +1105,9 @@ export default function Finanzas({
                 { cat: "transporte", color: "bg-[var(--acc)]" },
                 { cat: "alojamiento", color: "bg-[var(--acc)]" },
                 { cat: "comida", color: "bg-[var(--ok)]" },
-                { cat: "promo", color: "bg-[var(--alert)]" },
+                { cat: "promo", color: "bg-[var(--acc)]" },
                 { cat: "merchandising", color: "bg-[var(--acc)]" },
-                { cat: "otros", color: "bg-[var(--ink-3)]" },
+                { cat: "otros", color: "bg-[var(--ink-2)]" },
               ].map((item) => {
                 const totalInCat = payments
                   .filter(

@@ -300,12 +300,12 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
         </button>
 
         <Button
-          variant={selectedTab === "instagram" ? "danger" : "ghost"}
+          variant={selectedTab === "instagram" ? "selected" : "ghost"}
           size="xs"
           onClick={() => setSelectedTab("instagram")}
           className="items-center gap-1.5 whitespace-nowrap"
         >
-          <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
+          <Instagram className="w-3.5 h-3.5 text-[var(--ink-2)]" />
           <span>Instagram ({igCount.toLocaleString()})</span>
         </Button>
 
@@ -322,12 +322,12 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
         </button>
 
         <Button
-          variant={selectedTab === "youtube" ? "danger" : "ghost"}
+          variant={selectedTab === "youtube" ? "selected" : "ghost"}
           size="xs"
           onClick={() => setSelectedTab("youtube")}
           className="items-center gap-1.5 whitespace-nowrap"
         >
-          <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" />
+          <Youtube className="w-3.5 h-3.5 text-[var(--ink-2)]" />
           <span>YouTube ({ytSubs.toLocaleString()})</span>
         </Button>
 
@@ -382,12 +382,12 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               ).length;
               const channelColor =
                 channel.platform === "instagram"
-                  ? "text-[var(--alert)] bg-[var(--alert)]/5"
+                  ? "text-[var(--acc-ink)] bg-[var(--acc)]/10"
                   : channel.platform === "tiktok"
-                    ? "text-[var(--acc-ink)] bg-[var(--acc)]/5"
+                    ? "text-[var(--acc-ink)] bg-[var(--acc)]/10"
                     : channel.platform === "youtube"
-                      ? "text-[var(--alert)] bg-[var(--alert)]/5"
-                      : "text-[var(--ok)] bg-[var(--ok)]/5";
+                      ? "text-[var(--ink-2)] bg-[var(--surface)]"
+                      : "text-[var(--ok)] bg-[var(--ok)]/10";
 
               return (
                 <div
@@ -397,13 +397,13 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       {channel.platform === "instagram" && (
-                        <Instagram className="w-4 h-4 text-[var(--alert)]" />
+                        <Instagram className="w-4 h-4 text-[var(--ink-2)]" />
                       )}
                       {channel.platform === "tiktok" && (
                         <Video className="w-4 h-4 text-[var(--acc)]" />
                       )}
                       {channel.platform === "youtube" && (
-                        <Youtube className="w-4 h-4 text-[var(--alert)]" />
+                        <Youtube className="w-4 h-4 text-[var(--ink-2)]" />
                       )}
                       {channel.platform === "spotify" && (
                         <Music2 className="w-4 h-4 text-[var(--ok)]" />
@@ -511,7 +511,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
                   <div className="flex items-center gap-1.5 text-micro font-sans font-bold mb-2">
                     {dayPlan.recommendedPlatform === "instagram" && (
-                      <span className="text-[var(--alert)] flex items-center gap-1">
+                      <span className="text-[var(--ink-2)] flex items-center gap-1">
                         <Instagram className="w-3 h-3" /> Instagram
                       </span>
                     )}
@@ -521,7 +521,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                       </span>
                     )}
                     {dayPlan.recommendedPlatform === "youtube" && (
-                      <span className="text-[var(--alert)] flex items-center gap-1">
+                      <span className="text-[var(--ink-2)] flex items-center gap-1">
                         <Youtube className="w-3 h-3" /> YouTube
                       </span>
                     )}
@@ -558,7 +558,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   : currentChannel.platform === "tiktok"
                     ? "bg-[var(--acc)]/20 "
                     : currentChannel.platform === "youtube"
-                      ? "bg-[var(--alert)]/20 "
+                      ? "bg-[var(--surface)] "
                       : "bg-[var(--ok)]/20 "
               }`}
             >
@@ -566,13 +566,13 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 <div>
                   <div className="flex items-center gap-2">
                     {currentChannel.platform === "instagram" && (
-                      <Instagram className="w-5 h-5 text-[var(--alert)]" />
+                      <Instagram className="w-5 h-5 text-[var(--ink-2)]" />
                     )}
                     {currentChannel.platform === "tiktok" && (
                       <Video className="w-5 h-5 text-[var(--acc)]" />
                     )}
                     {currentChannel.platform === "youtube" && (
-                      <Youtube className="w-5 h-5 text-[var(--alert)]" />
+                      <Youtube className="w-5 h-5 text-[var(--ink-2)]" />
                     )}
                     {currentChannel.platform === "spotify" && (
                       <Music2 className="w-5 h-5 text-[var(--ok)]" />
@@ -748,7 +748,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   )}
 
                 {/* Errores Críticos a Evitar (Don'ts) */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)] space-y-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert-soft)] space-y-3">
                   <h4 className="text-xs font-sans font-bold text-[var(--alert)] flex items-center gap-1.5">
                     <AlertCircle className="w-4 h-4" />
                     Errores típicos de músicos a evitar

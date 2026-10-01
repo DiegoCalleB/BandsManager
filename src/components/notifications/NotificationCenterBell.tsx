@@ -139,7 +139,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
             } z-[9999] bg-[var(--surface)] border border-[var(--hair)] shadow-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col animate-in fade-in duration-200`}
           >
             {/* Header */}
-            <div className="p-3 border-b border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between shrink-0">
+            <div className="p-3 border-b border-[var(--hair)] flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <BellRing className="w-4 h-4 text-[var(--acc)]" />
                 <span className="font-bold text-xs text-[var(--ink)] font-display">Notificaciones</span>
