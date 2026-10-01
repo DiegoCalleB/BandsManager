@@ -32,3 +32,16 @@ test('login con un usuario semilla lleva al panel de la banda', async ({ page })
   await expect(page.locator(SELECTOR_PANEL_AUTENTICADO).first()).toBeVisible({ timeout: 15_000 });
   await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toHaveCount(0);
 });
+
+test('la landing carga todas sus capturas (ninguna imagen rota)', async ({ page }) => {
+  await page.goto('/');
+  const scroller = page.locator('.h-dvh.overflow-y-auto');
+  const alto = await scroller.evaluate((el) => el.scrollHeight);
+  for (let y = 0; y <= alto; y += 600) {
+    await scroller.evaluate((el, yy) => { el.scrollTop = yy; }, y);
+    await page.waitForTimeout(120);
+  }
+  await page.waitForTimeout(800);
+  const rotas = await page.evaluate(() => [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && getComputedStyle(i).display !== 'none').map((i) => i.src));
+  expect(rotas, `imágenes rotas: ${rotas.join(', ')}`).toEqual([]);
+});

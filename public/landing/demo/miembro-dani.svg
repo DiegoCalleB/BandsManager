@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Retrato ilustrado de dani">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F59E0B"/><stop offset="1" stop-color="#DC2626"/></linearGradient></defs>
+<rect width="400" height="400" fill="url(#g)"/>
+<circle cx="330" cy="70" r="46" fill="#fff" opacity=".12"/><circle cx="60" cy="340" r="70" fill="#fff" opacity=".1"/>
+
+<path d="M70 400 C70 330 130 300 200 300 C270 300 330 330 330 400Z" fill="#E5E7EB"/>
+<rect x="176" y="262" width="48" height="52" rx="18" fill="#A8714F"/>
+<ellipse cx="200" cy="205" rx="68" ry="82" fill="#A8714F"/>
+<path d="M130 160 C128 90 170 62 200 62 C232 62 272 90 270 160 L130 160Z" fill="#111111"/><rect x="124" y="148" width="152" height="22" rx="11" fill="#9CA3AF"/>
+
+<g fill="#1F2937"><ellipse cx="172" cy="208" rx="6" ry="7"/><ellipse cx="228" cy="208" rx="6" ry="7"/></g>
+
+<path d="M178 245 Q200 262 222 245" fill="none" stroke="#7C2D12" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+</svg>

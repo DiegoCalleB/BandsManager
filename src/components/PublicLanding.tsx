@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowRight, Check, Compass, FileText, Hand, Layers, Music2, Rocket, ShieldCheck, Smartphone, Wallet } from 'lucide-react';
+import { ArrowRight, Check, Clapperboard, Compass, Hand, Layers, Music2, Rocket, ShieldCheck, Smartphone, Wallet } from 'lucide-react';
 import { Button, Card } from './ui';
 import { PublicoSilhouette } from './ui/PublicoSilhouette';
 
@@ -24,6 +24,11 @@ const Par: React.FC<{ src: string; alt: string; ancho: number; alto: number; eag
       />
     ))}
   </>
+);
+
+/** Página pública (dossier, fans): una sola captura, con su propio tema. */
+const Una: React.FC<{ src: string; alt: string; ancho: number; alto: number; className?: string }> = ({ src, alt, ancho, alto, className = '' }) => (
+  <img src={`/landing/${src}.jpg`} alt={alt} width={ancho} height={alto} loading="lazy" decoding="async" className={`h-auto w-full ${className}`} />
 );
 
 const Captura: React.FC<{ nombre: string; movil: string; alt: string; eager?: boolean }> = ({ nombre, movil, alt, eager }) => (
@@ -93,7 +98,7 @@ const FUNCIONES = [
 ] as const;
 
 const EXTRAS = [
-  { icono: FileText, titulo: 'Dossier (EPK)', texto: 'Bio, fotos, rider y enlaces en una página que mandas con un clic.' },
+  { icono: Clapperboard, titulo: 'Reels y redes', texto: 'Pipeline de vídeos y textos con la voz de tu banda, y tus métricas en una curva.' },
   { icono: Wallet, titulo: 'Finanzas', texto: 'Quién cobra qué, qué te deben y cuánto cuesta cada bolo.' },
   { icono: Music2, titulo: 'Discografía', texto: 'Tus discos y temas, con audio, tonalidad y BPM.' },
   { icono: Layers, titulo: 'Varias bandas', texto: 'Cambia de banda en un toque. Cada una ve solo lo suyo.' },
@@ -139,6 +144,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
           </a>
           <nav aria-label="Secciones" className="hidden items-center gap-6 text-sm text-[var(--ink-2)] md:flex">
             <a href="#funciones" className="hover:text-[var(--ink)]">Funciones</a>
+            <a href="#dossier" className="hover:text-[var(--ink)]">Dossier y fans</a>
             <a href="#como-funciona" className="hover:text-[var(--ink)]">Cómo funciona</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">Preguntas</a>
           </nav>
@@ -216,6 +222,79 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               </div>
             </article>
           ))}
+        </section>
+
+
+        {/* DOSSIER Y PÁGINA DE FANS */}
+        <section id="dossier" className="mx-auto max-w-6xl space-y-16 px-4 pb-8 pt-16 sm:space-y-24 sm:px-6">
+          <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-5">
+              <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">Dossier (EPK)</p>
+              <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl">
+                Un dossier con cara y ojos, listo para mandar.
+              </h3>
+              <ul className="mt-5 space-y-3">
+                {[
+                  'Cada miembro con su foto, su rol y su Instagram.',
+                  'Rider técnico, datos de contratación y próximas fechas en una sola página.',
+                  'Se lee bien en el móvil de un programador y se traduce al inglés.',
+                  'Un enlace y listo: sin adjuntos que pesan ni PDFs desactualizados.',
+                ].map((p) => (
+                  <li key={p} className="flex gap-3 text-[var(--ink-2)]">
+                    <Check aria-hidden className="mt-1 size-4 shrink-0 text-[var(--ok)]" />
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="relative lg:col-span-7">
+              <div className="hidden rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:block sm:p-3">
+                <span className="block overflow-hidden rounded-[var(--r-l)] bg-[var(--surface)]">
+                  <Una src="epk-miembros-light" alt="Dossier público con los miembros de la banda, su rol y su Instagram" ancho={1280} alto={1000} />
+                </span>
+              </div>
+              <div className="mx-auto w-64 rounded-[var(--r-xl)] bg-[var(--sunken)] p-1.5 sm:hidden">
+                <span className="block overflow-hidden rounded-[var(--r-l)]">
+                  <Una src="m-epk-light" alt="Dossier público de la banda en el móvil" ancho={390} alto={844} />
+                </span>
+              </div>
+              <div className="absolute -bottom-6 right-3 hidden w-36 rounded-[var(--r-xl)] bg-[var(--sunken)] p-1.5 sm:block lg:right-8 lg:w-44">
+                <span className="block overflow-hidden rounded-[var(--r-l)]">
+                  <Una src="m-epk-light" alt="El dossier en el móvil" ancho={390} alto={844} />
+                </span>
+              </div>
+            </div>
+          </article>
+
+          <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+            <div className="order-2 grid grid-cols-2 gap-3 sm:gap-5 lg:order-1 lg:col-span-7">
+              {(['m-fanslanding-light', 'm-fanslanding-2-light'] as const).map((n, i) => (
+                <div key={n} className={`rounded-[var(--r-xl)] bg-[var(--sunken)] p-1.5 sm:p-2.5 ${i ? 'mt-8 sm:mt-12' : ''}`}>
+                  <span className="block overflow-hidden rounded-[var(--r-l)]">
+                    <Una src={n} alt={i ? 'La página de fans con próximos conciertos y contacto de booking' : 'La página de fans con las redes de la banda'} ancho={390} alto={844} />
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="order-1 lg:order-2 lg:col-span-5">
+              <p className="mb-3 text-sm font-semibold text-[var(--acc-ink)]">Página de fans</p>
+              <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-balance sm:text-3xl">
+                Un QR en la mesa de merchan. Un fan más en tu lista.
+              </h3>
+              <ul className="mt-5 space-y-3">
+                {[
+                  'Pegas el QR en el merchan o lo proyectas en el escenario: el fan lo escanea y ya está.',
+                  'Te sigue en redes o te deja su correo, con su consentimiento RGPD.',
+                  'Ve tus próximas fechas y cómo contratarte, sin pedirte nada.',
+                ].map((p) => (
+                  <li key={p} className="flex gap-3 text-[var(--ink-2)]">
+                    <Check aria-hidden className="mt-1 size-4 shrink-0 text-[var(--ok)]" />
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </article>
         </section>
 
         {/* TODO LO DEMÁS */}
