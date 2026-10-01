@@ -9,14 +9,22 @@ test.use({ viewport: { width: 390, height: 844 } });
 
 const SELECTOR_PANEL_AUTENTICADO = '[title*="cambiar de banda"]';
 
-test('sin sesión, la raíz muestra el login, no el panel', async ({ page }) => {
+test('sin sesión, la raíz muestra la landing y "Entrar" lleva al login', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Tu banda, tus bolos');
   await expect(page.locator(SELECTOR_PANEL_AUTENTICADO)).toHaveCount(0);
+  await page.locator('#landing-entrar').click();
+  await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toBeVisible();
+  await expect(page).toHaveURL(/\/login$/);
+});
+
+test('/login va directo al formulario, sin landing', async ({ page }) => {
+  await page.goto('/login');
+  await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toBeVisible();
 });
 
 test('login con un usuario semilla lleva al panel de la banda', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/login');
   await page.getByPlaceholder('Correo electrónico o Usuario').fill('diego');
   await page.getByPlaceholder('Contraseña').fill('bakandeya2026');
   await page.getByRole('button', { name: 'Entrar a mi cuenta' }).click();

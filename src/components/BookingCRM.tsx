@@ -354,7 +354,10 @@ export default function BookingCRM({
     }
   }, [initialSelectedLeadId, leads]);
 
-  const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>('table');
+  // En móvil, tarjetas: la tabla de 10 columnas no cabe en 390 px.
+  const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>(() =>
+    typeof window !== 'undefined' && window.innerWidth < 640 ? 'grid' : 'table',
+  );
 
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   const [bulkProgressState, setBulkProgressState] = useState<{

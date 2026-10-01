@@ -78,6 +78,9 @@ import { AiSupportWidget } from "./components/dashboard/AiUsageSupportWidget";
 import { ThemeToggle } from "./components/common/ThemeToggle";
 import { GlobalCampaignBar } from "./components/campaign/GlobalCampaignBar";
 
+const PublicLanding = safeLazy(() =>
+  import("./components/PublicLanding").then((m) => ({ default: m.PublicLanding })),
+);
 const LoginModal = safeLazy(() =>
   import("./components/LoginModal").then((m) => ({ default: m.LoginModal })),
 );
@@ -1088,6 +1091,29 @@ export default function App() {
     );
   }, []);
 
+  // Landing pública: solo en la raíz, sin sesión y sin parámetros (los enlaces de OAuth/invitación
+  // traen query y deben ir directos al login). La app instalada (PWA) salta la landing.
+  const [verLogin, setVerLogin] = React.useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    const { pathname, search, hash } = window.location;
+    const raiz = pathname === "/" || pathname === "/index.html";
+    const instalada =
+      window.matchMedia?.("(display-mode: standalone)").matches ||
+      (navigator as unknown as { standalone?: boolean }).standalone === true;
+    return !raiz || !!search || !!hash || instalada;
+  });
+  React.useEffect(() => {
+    const alVolver = () => {
+      if (window.location.pathname === "/") setVerLogin(false);
+    };
+    window.addEventListener("popstate", alVolver);
+    return () => window.removeEventListener("popstate", alVolver);
+  }, []);
+  const entrarDesdeLanding = React.useCallback(() => {
+    window.history.pushState({}, "", "/login");
+    setVerLogin(true);
+  }, []);
+
   if (isMusicianRoute) {
     return (
       <Suspense
@@ -1141,6 +1167,13 @@ export default function App() {
   // quiera reabrir el registro público con todos los planes — basta con volver a poner
   // esta constante a false.
   const USE_SIMPLE_LOGIN = true;
+  if (!isLoggedIn && !verLogin) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
+        <PublicLanding onEntrar={entrarDesdeLanding} />
+      </Suspense>
+    );
+  }
   if (!isLoggedIn) {
     return (
       <Suspense

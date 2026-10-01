@@ -470,6 +470,11 @@ button:where(:not([data-no-hit]))::after {
   }
 }
 
+/* Capturas de la landing: la que corresponde al tema (el Clásico es oscuro). */
+:root:not([data-theme="dark"]):not([data-theme="classic"]) .shot-dark { display: none; }
+:root[data-theme="dark"] .shot-light,
+:root[data-theme="classic"] .shot-light { display: none; }
+
 /* Barra que se queda fija arriba al hacer scroll en móvil/tablet (lo que el músico necesita tener siempre a la vista:
    filtros, mes, acción principal). Va dentro de <main>, que es quien hace scroll; el margen negativo la lleva de borde a borde. */
 @utility pin-top {

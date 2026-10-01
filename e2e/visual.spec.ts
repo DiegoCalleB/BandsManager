@@ -54,7 +54,7 @@ test.describe('regresión visual — escritorio', () => {
     // Este sí necesita contexto limpio: comprueba la pantalla de acceso.
     await page.clock.setFixedTime(INSTANTE_FIJO);
     await silenciarTutoriales(page);
-    await page.goto('/');
+    await page.goto('/login');
     await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toBeVisible();
     await prepararPagina(page);
     await expect(page).toHaveScreenshot('login-escritorio.png', COMPARACION);
@@ -93,7 +93,7 @@ test.describe('regresión visual — móvil', () => {
     // Este sí necesita contexto limpio: comprueba la pantalla de acceso.
     await page.clock.setFixedTime(INSTANTE_FIJO);
     await silenciarTutoriales(page);
-    await page.goto('/');
+    await page.goto('/login');
     await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toBeVisible();
     await prepararPagina(page);
     await expect(page).toHaveScreenshot('login-movil.png', COMPARACION);

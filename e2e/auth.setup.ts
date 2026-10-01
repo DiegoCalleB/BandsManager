@@ -36,7 +36,7 @@ setup('crear sesión reutilizable', async ({ page }) => {
     } catch { /* sin localStorage */ }
   }, MODULOS_CON_TUTORIAL);
 
-  await page.goto('/');
+  await page.goto('/login');
   await page.getByPlaceholder('Correo electrónico o Usuario').fill(USUARIO_SEMILLA.usuario);
   await page.getByPlaceholder('Contraseña').fill(USUARIO_SEMILLA.clave);
   await page.getByRole('button', { name: 'Entrar a mi cuenta' }).click();

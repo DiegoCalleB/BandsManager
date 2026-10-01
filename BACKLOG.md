@@ -127,6 +127,13 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+### Landing pública (`/`) — siguientes pasos
+* **Hecho (octubre 2026):** `PublicLanding` en `/` para quien no tiene sesión (la PWA instalada y los enlaces con query/hash van directos al login); `/login` abre el formulario sin landing; capturas con datos de demo ficticios generadas con `LANDING_SHOTS=1 npx playwright test --project=visual landing-capturas` (salen en `public/landing/`).
+* **Pendiente:** precios visibles (decisión de Diego), versión en inglés, SEO real (la app es una SPA: valorar una página estática/prerender para la raíz), páginas legales (privacidad, condiciones) enlazadas desde el pie, vídeo corto del flujo agente → aprobación, y revisar las capturas cuando cambie la UI.
+* **Deuda detectada al hacerla:** tarjetas de redes de Fans (`ReelsMetricsView`) con badges solapados («OAuth / Token») y títulos en rojo; tarjetas de Booking en móvil con chips «Sin datos» de Wegow/Bandsintown que añaden ruido.
+
+---
+
 ## 🔨 En curso
 
 _(vacío)_
