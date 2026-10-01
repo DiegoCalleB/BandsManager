@@ -43,7 +43,7 @@ export const NextGigStrip: React.FC<NextGigStripProps> = ({ concerts, onNavigate
             {porCobrar > 0 ? ` · Por cobrar ${porCobrar.toLocaleString('es-ES')} €` : ''}
           </span>
         </span>
-        <ChevronRight aria-hidden className="size-4 shrink-0 text-[var(--ink-3)]" />
+        <ChevronRight aria-hidden className="size-4 shrink-0 text-[var(--ink-2)]" />
       </button>
     </div>
   );
