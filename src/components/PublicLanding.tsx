@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowRight, Check, Clapperboard, Compass, Hand, Layers, Music2, Rocket, ShieldCheck, Smartphone, Wallet } from 'lucide-react';
+import { ArrowRight, Check, Clapperboard, Compass, Truck, Hand, Music2, Rocket, ShieldCheck, Smartphone, Wallet } from 'lucide-react';
 import { Button, Card } from './ui';
 import { PublicoSilhouette } from './ui/PublicoSilhouette';
 
@@ -83,6 +83,19 @@ const FUNCIONES = [
     alt: 'Calendario con conciertos y ensayos de varias bandas',
   },
   {
+    id: 'bandas',
+    etiqueta: 'Varias bandas',
+    titulo: 'Dos bandas, una sola cuenta.',
+    puntos: [
+      'Cambias de banda en un toque: cada una con su repertorio, sus salas y sus fans.',
+      'El calendario conjunto junta los bolos y los ensayos de todas tus bandas.',
+      'Ideal si llevas varios proyectos, o si tocas en uno y representas a otro.',
+    ],
+    captura: 'bandas',
+    movil: 'm-bandas',
+    alt: 'Selector de banda con Bakandeya y Ruta 66 en la misma cuenta',
+  },
+  {
     id: 'fans',
     etiqueta: 'Fans y redes',
     titulo: 'Que cada concierto te traiga gente, no solo aplausos.',
@@ -101,7 +114,7 @@ const EXTRAS = [
   { icono: Clapperboard, titulo: 'Reels y redes', texto: 'Pipeline de vídeos y textos con la voz de tu banda, y tus métricas en una curva.' },
   { icono: Wallet, titulo: 'Finanzas', texto: 'Quién cobra qué, qué te deben y cuánto cuesta cada bolo.' },
   { icono: Music2, titulo: 'Discografía', texto: 'Tus discos y temas, con audio, tonalidad y BPM.' },
-  { icono: Layers, titulo: 'Varias bandas', texto: 'Cambia de banda en un toque. Cada una ve solo lo suyo.' },
+  { icono: Truck, titulo: 'Giras', texto: 'Ruta, gasolina, dietas y reparto de gastos entre los que viajan.' },
   { icono: Hand, titulo: 'Merchan', texto: 'Catálogo y diseño de tu merchandising, a pie de mesa.' },
   { icono: Smartphone, titulo: 'En el bolsillo', texto: 'Se instala como app en el móvil. Claro, oscuro y clásico.' },
 ];

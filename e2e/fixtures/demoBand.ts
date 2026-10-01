@@ -10,6 +10,13 @@ const demoImg = (base: string) => `/landing/demo/${base}.${fs.existsSync(`public
 
 export const BANDA = { id: 'bakandeya', nombre: 'Bakandeya', logo: '/logo_bakandeya.jpg' };
 
+/** Segunda banda de la cuenta de demo: el mánager lleva Bakandeya y Ruta 66 (de ahí «Varias bandas»). Solo eventos ficticios. */
+export const RUTA66 = { id: 'ruta66', band_id: 'band-ruta66', nombre: 'Ruta 66' };
+export const BANDAS_DISPONIBLES = [
+  { band_id: 'band-bakandeya', bandName: 'BAKANDEYA', nombre_banda: 'BAKANDEYA', role: 'leader', userId: 'user-diego', plan: 'de_gira', logoUrl: '/logo_bakandeya.jpg', is_main: true },
+  { band_id: RUTA66.band_id, bandName: RUTA66.nombre, nombre_banda: RUTA66.nombre, role: 'leader', userId: 'user-diego', plan: 'cabeza_de_cartel', logoUrl: fs.existsSync('public/landing/demo/logo-ruta66.png') ? '/landing/demo/logo-ruta66.png' : '', is_main: false },
+];
+
 export const MIEMBROS = [
   { id: 'm1', nombre: 'Lucía Ferrer', rol: 'Voz y carisma', fotoUrl: demoImg('miembro-lucia'), bio: 'Letras, voz y la que te hace cantar en la tercera fila.', instagram: '@lucia.ferrer' },
   { id: 'm2', nombre: 'Marcos Ibarra', rol: 'Violín solista', fotoUrl: demoImg('miembro-marcos'), bio: 'Formado en conservatorio, desaprendido en los bares.', instagram: '@marcos.violin' },
@@ -82,6 +89,16 @@ export const CONCIERTOS = (
   id: 'c' + i, fecha, sala, ciudad, cache, aforo_vendido: 0, aforo_total: 400, contrato_firmado: true, estado_pago, notas: '', tipo: 'sala', band_id: 'bakandeya',
 }));
 
+const C66 = (id: string, fecha: string, sala: string, ciudad: string, cache: number, tipo: string) => ({
+  id, fecha, sala, ciudad, cache, aforo_vendido: 0, aforo_total: 500, contrato_firmado: true, estado_pago: 'pendiente', notas: '', tipo, band_id: RUTA66.band_id, bandName: RUTA66.nombre,
+});
+export const CONCIERTOS_RUTA66 = [
+  C66('r66-1', '2026-06-19', 'Bar La Gasolinera', 'Burgos', 500, 'sala'),
+  C66('r66-2', '2026-07-04', 'Club Interestatal', 'Alcalá de Henares', 650, 'sala'),
+  C66('r66-3', '2026-07-18', 'Fiestas de San Roque', 'Segovia', 1800, 'ayuntamiento'),
+];
+export const ENSAYOS_RUTA66 = [{ id: 'r66-e1', fecha: '2026-06-24', hora: '21:00', lugar: 'Local Ruta 66', asistentes: [], notas: '', estado: 'programado', tipo_evento: 'ensayo', band_id: RUTA66.band_id, bandName: RUTA66.nombre }];
+
 export const ENSAYOS = [{ id: 'r1', fecha: '2026-06-17', hora: '19:30', lugar: 'Local de ensayo', asistentes: [], notas: '', estado: 'programado', tipo_evento: 'ensayo', band_id: 'bakandeya' }];
 
 export const FANS = Array.from({ length: 46 }, (_, i) => ({
@@ -132,7 +149,7 @@ export const RESPUESTA_EPK_PUBLICO = {
 };
 
 export const ESTADO_APP = {
-  leads: LEADS, rehearsals: ENSAYOS, concerts: CONCIERTOS, posts: [], payments: [], metrics: METRICAS, songs: CANCIONES, setlists: SETLISTS,
+  leads: LEADS, rehearsals: [...ENSAYOS, ...ENSAYOS_RUTA66], concerts: [...CONCIERTOS, ...CONCIERTOS_RUTA66], posts: [], payments: [], metrics: METRICAS, songs: CANCIONES, setlists: SETLISTS,
   bands: [], tours: [], fans: FANS, campaigns: [], messages: [], runOfShow: {}, gearChecklists: {}, epkConfig: EPK_CONFIG, autonomyConfig: {},
   registeredBands: [], users: [], categoryTemplates: {},
 };

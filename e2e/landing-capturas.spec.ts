@@ -1,6 +1,6 @@
 import { test, type Page } from '@playwright/test';
 import { abrirApp, irAEscritorio, irAMovil, cerrarModales, MOVIL } from './helpers-visual';
-import { ESTADO_APP, CANCIONES, SETLISTS, RESPUESTA_EPK_PUBLICO } from './fixtures/demoBand';
+import { ESTADO_APP, CANCIONES, SETLISTS, RESPUESTA_EPK_PUBLICO, BANDAS_DISPONIBLES } from './fixtures/demoBand';
 
 /**
  * Genera las capturas de la landing pública (public/landing/*.jpg) con la BANDA DE DEMO (e2e/fixtures/demoBand.ts):
@@ -13,6 +13,12 @@ test.describe.configure({ timeout: 280_000 });
 const OUT = 'public/landing';
 
 async function simular(page: Page) {
+  // Cuenta de demo con DOS bandas (Bakandeya y Ruta 66): se sustituye solo la lista de bandas de la sesión.
+  await page.route('**/api/auth/me', async (r) => {
+    const res = await r.fetch();
+    const datos = await res.json();
+    await r.fulfill({ response: res, json: { ...datos, availableBands: BANDAS_DISPONIBLES, multipleBands: true } });
+  });
   await page.route('**/api/state*', (r) => r.fulfill({ json: ESTADO_APP }));
   await page.route('**/api/songs', (r) => r.fulfill({ json: { songs: CANCIONES } }));
   await page.route('**/api/setlists', (r) => r.fulfill({ json: { setlists: SETLISTS } }));
@@ -30,6 +36,13 @@ for (const tema of ['light', 'dark'] as const) {
     await foto('panel');
     await irAEscritorio(page, 'booking'); await page.getByRole('button', { name: 'Detalles' }).first().click().catch(() => {}); await foto('booking');
     await irAEscritorio(page, 'calendario'); await foto('calendario');
+    // «¿Quién toca hoy?»: la cuenta lleva Bakandeya y Ruta 66
+    await page.locator('[title="Haz clic para cambiar de banda"]').first().click();
+    await page.waitForTimeout(900);
+    await page.screenshot({ path: `${OUT}/bandas-${tema}.jpg`, type: 'jpeg', quality: 82, clip: { x: 120, y: 0, width: 1040, height: 800 } });
+    await page.keyboard.press('Escape');
+    await cerrarModales(page);
+    await page.waitForTimeout(300);
     await irAEscritorio(page, 'repertorio'); await foto('repertorio');
     await irAEscritorio(page, 'fans');
     await page.getByRole('tab', { name: /3\. Dashboard/ }).first().click(); await foto('fans');
@@ -46,6 +59,11 @@ for (const tema of ['light', 'dark'] as const) {
     await page.screenshot({ path: `${OUT}/movil-panel-${tema}.jpg`, type: 'jpeg', quality: 82 });
     await irAMovil(page, 'repertorio'); await foto('repertorio');
     await irAMovil(page, 'calendario'); await foto('calendario');
+    await page.locator('[title="Toca para cambiar de banda"]').first().click();
+    await page.getByText('Selector visual').first().click().catch(() => {});
+    await foto('bandas');
+    await page.keyboard.press('Escape');
+    await page.reload(); await cerrarModales(page);
     await barra().nth(4).click(); await page.waitForTimeout(500);
     await page.getByRole('button', { name: /^Directorio/ }).first().click({ timeout: 3000 }).catch(() => {});
     await page.waitForTimeout(500);

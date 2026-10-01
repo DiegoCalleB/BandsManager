@@ -214,7 +214,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                     setSelectedEventId(dayEvents[0].id);
                   }
                 }}
-                className={`relative min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-[var(--r-s)] flex flex-col justify-between transition-ui duration-150 cursor-pointer overflow-hidden ${borderAndBgClass}`}
+                className={`relative min-w-0 w-full min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-[var(--r-s)] flex flex-col justify-between transition-ui duration-150 cursor-pointer overflow-hidden ${borderAndBgClass}`}
               >
                 <div className="flex items-center justify-between w-full">
                   <span
