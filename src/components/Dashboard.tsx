@@ -30,6 +30,7 @@ import { DashboardWidgetGrid } from "./dashboard/DashboardWidgetGrid";
 import { NeedsAttentionBanner } from "./dashboard/NeedsAttentionBanner";
 import { ConvocarEnsayoModal } from "./ensayos/ConvocarEnsayoModal";
 import { ManagerAlertsWidget } from "./dashboard/ManagerAlertsWidget";
+import { NextGigStrip } from "./dashboard/NextGigStrip";
 import { AlertSettingsModal } from "./dashboard/AlertSettingsModal";
 import {
   generateManagerAlerts,
@@ -886,6 +887,9 @@ export default function Dashboard({
           </div>
         </div>
       </div>
+
+      {/* Móvil: próximo bolo y lo que te deben, siempre a la vista */}
+      <NextGigStrip concerts={concerts} onNavigate={onNavigate} />
 
       {/* Solo se pinta si hay algo realmente esperando demasiado — no es un widget del catálogo
  a propósito, es una alerta, no contenido que se pueda ordenar o quitar. */}
