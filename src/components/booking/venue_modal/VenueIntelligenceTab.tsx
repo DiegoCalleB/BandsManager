@@ -86,7 +86,23 @@ export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
 
         <QuickDealSimulator
           lead={lead}
-          onUpdateLead={(updates) => onUpdateLead(lead.id, updates)}
+          onSaveDeal={async (dealData) => {
+            onUpdateLead(lead.id, {
+              financial_break_even: {
+                ...(lead.financial_break_even || {
+                  entradas_break_even: 0,
+                  beneficio_estimado_lleno: 0,
+                  beneficio_por_musico_estimado: 0,
+                }),
+                precio_entrada_anticipada: dealData.precioAnticipada,
+                precio_entrada_taquilla: dealData.precioTaquilla,
+                alquiler_sala_fijo: dealData.alquilerSalaFijo,
+                porcentaje_sala: dealData.porcentajeSala,
+                gastos_produccion_fijos: dealData.gastosProduccionFijos,
+                num_musicos: dealData.numMusicos,
+              },
+            });
+          }}
         />
       </div>
     </div>
