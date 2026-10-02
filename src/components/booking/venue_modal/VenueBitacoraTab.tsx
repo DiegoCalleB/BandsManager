@@ -9,9 +9,9 @@ interface VenueBitacoraTabProps {
 }
 
 export const VenueBitacoraTab: React.FC<VenueBitacoraTabProps> = ({ lead, onUpdateLead }) => {
-  const [tipo, setTipo] = useState<'Llamada' | 'Email' | 'WhatsApp' | 'Presencial'>('Llamada');
+  const [tipo, setTipo] = useState<InteractionLog['tipo']>('Llamada');
   const [notas, setNotas] = useState('');
-  const [resultado, setResultado] = useState('Interesado');
+  const [resultado, setResultado] = useState<InteractionLog['resultado']>('Interesado');
   const [isAdding, setIsAdding] = useState(false);
 
   const logs: InteractionLog[] = lead.historial_contacto || [];
@@ -81,7 +81,8 @@ export const VenueBitacoraTab: React.FC<VenueBitacoraTabProps> = ({ lead, onUpda
                 <option value="Llamada">Llamada telefónica</option>
                 <option value="WhatsApp">Mensaje WhatsApp</option>
                 <option value="Email">Correo electrónico</option>
-                <option value="Presencial">Reunión presencial</option>
+                <option value="Reunión">Reunión presencial / online</option>
+                <option value="Otro">Otro</option>
               </Select>
             </div>
 
@@ -90,15 +91,15 @@ export const VenueBitacoraTab: React.FC<VenueBitacoraTabProps> = ({ lead, onUpda
               <Select
                 size="sm"
                 value={resultado}
-                onChange={(e) => setResultado(e.target.value)}
+                onChange={(e) => setResultado(e.target.value as InteractionLog['resultado'])}
                 wrapperClassName="w-full text-xs"
               >
                 <option value="Interesado">Interesado (avanza)</option>
-                <option value="Negociando">Negociando caché/fecha</option>
+                <option value="Enviar propuesta">Enviar propuesta</option>
+                <option value="Seguimiento pendiente">Seguimiento pendiente</option>
                 <option value="Acuerdo cerrado">Acuerdo cerrado</option>
-                <option value="Volver a llamar">Volver a llamar más adelante</option>
-                <option value="Sin respuesta">Sin respuesta / Buzón</option>
-                <option value="Rechazado">Rechazado / Fechas llenas</option>
+                <option value="Info recibida">Info recibida</option>
+                <option value="Rechazado">Rechazado</option>
               </Select>
             </div>
           </div>

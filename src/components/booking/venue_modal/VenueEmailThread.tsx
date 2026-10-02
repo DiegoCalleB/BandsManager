@@ -79,7 +79,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
       ) : (
         <div className="space-y-3">
           {messages.map((msg, idx) => {
-            const isFromVenue = msg.remitente === 'sala' || msg.direction === 'inbound';
+            const isFromVenue = msg.remitente === 'sala';
             return (
               <div
                 key={msg.id || `msg-${idx}`}
@@ -100,13 +100,13 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    {!isFromVenue && <EmailDeliveryTicks status={msg.delivery_status || 'enviado'} />}
+                    {!isFromVenue && <EmailDeliveryTicks lead={lead} size="sm" />}
                     {msg.asunto && <span className="text-micro font-medium text-[var(--ink-2)] truncate max-w-[150px]">{msg.asunto}</span>}
                   </div>
                 </div>
 
                 <div className="whitespace-pre-wrap leading-relaxed text-xs text-[var(--ink)] pt-1">
-                  {msg.cuerpo || msg.texto || msg.snippet}
+                  {msg.mensaje}
                 </div>
               </div>
             );

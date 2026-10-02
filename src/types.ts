@@ -215,6 +215,8 @@ export interface Lead {
   ultimo_mensaje_recibido?: string;
   contexto_extra?: string;
   notas: string;
+  cache_habitual?: number;
+  porcentaje_taquilla?: number;
   hilo_emails?: EmailMessage[];
   historial_contacto?: InteractionLog[];
   icono?: string;

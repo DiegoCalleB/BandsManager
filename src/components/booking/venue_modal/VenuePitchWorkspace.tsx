@@ -501,9 +501,8 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
           isOpen={showComparator}
           onClose={() => setShowComparator(false)}
           lead={lead}
-          bandName={bandName}
           activeCampaign={activeCampaign}
-          onSelectPitch={(selectedText) => {
+          onSelectProposal={(selectedText) => {
             setEditedPitch(selectedText);
             onUpdateLead(lead.id, { pitch_generado: selectedText });
             setShowComparator(false);
