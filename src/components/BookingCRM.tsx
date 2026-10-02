@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig, Concert, Tour } from '../types';
 import DirectionsCard from './DirectionsCard';
+import ErrorBoundary from './ErrorBoundary';
 import { apiFetch } from '../utils/api';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { useSavedFilters } from '../hooks/useSavedFilters';
@@ -2347,53 +2348,57 @@ export default function BookingCRM({
         {/* DETAILED WORKSPACE PANEL (Desktop view - rendered when a lead is selected) */}
         {selectedLead && (
           <div ref={interventionPanelRef} className="hidden lg:block space-y-6 lg:col-span-1 transition-ui duration-300">
-            <VenueDetailPanel
-              selectedLead={selectedLead}
-              onClose={() => setSelectedLead(null)}
-              onUpdateLead={onUpdateLead}
-              getStatusBadgeClass={getStatusBadgeClass}
-              getStatusLabel={getStatusLabel}
-              getStatusDotColor={getStatusDotColor}
-              normalizeStatus={normalizeStatus}
-              normalizeType={normalizeType}
-              autoDetectVenueAddress={autoDetectVenueAddress}
-              onDeleteLead={handleDeleteSingleLead}
-              sectionTab={sectionTab}
-              activeCampaign={activeCampaign}
-              onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
-              isUploadingLeadLogo={isUploadingLeadLogo}
-              initialTab={venueDetailInitialTab}
-              onOpenRoadbookModal={(lead) => {
-                setRoadbookModalLead(lead);
-                setIsRoadbookModalOpen(true);
-              }}
-              onFilterByRouteCity={setRouteAnchorCity}
-              bandName={effectiveBandName}
-              concerts={concerts}
-            />
+            <ErrorBoundary>
+              <VenueDetailPanel
+                selectedLead={selectedLead}
+                onClose={() => setSelectedLead(null)}
+                onUpdateLead={onUpdateLead}
+                getStatusBadgeClass={getStatusBadgeClass}
+                getStatusLabel={getStatusLabel}
+                getStatusDotColor={getStatusDotColor}
+                normalizeStatus={normalizeStatus}
+                normalizeType={normalizeType}
+                autoDetectVenueAddress={autoDetectVenueAddress}
+                onDeleteLead={handleDeleteSingleLead}
+                sectionTab={sectionTab}
+                activeCampaign={activeCampaign}
+                onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
+                isUploadingLeadLogo={isUploadingLeadLogo}
+                initialTab={venueDetailInitialTab}
+                onOpenRoadbookModal={(lead) => {
+                  setRoadbookModalLead(lead);
+                  setIsRoadbookModalOpen(true);
+                }}
+                onFilterByRouteCity={setRouteAnchorCity}
+                bandName={effectiveBandName}
+                concerts={concerts}
+              />
+            </ErrorBoundary>
           </div>
         )}
 
         {/* MOBILE BOTTOM SHEET FOR TOUCH / SMARTPHONES */}
-        <MobileBottomSheet
-          selectedLead={selectedLead}
-          onClose={() => setSelectedLead(null)}
-          onUpdateLead={onUpdateLead}
-          onDeleteLead={handleDeleteSingleLead}
-          getStatusBadgeClass={getStatusBadgeClass}
-          getStatusLabel={getStatusLabel}
-          getStatusDotColor={getStatusDotColor}
-          normalizeStatus={normalizeStatus}
-          normalizeType={normalizeType}
-          autoDetectVenueAddress={autoDetectVenueAddress}
-          sectionTab={sectionTab}
-          activeCampaign={activeCampaign}
-          onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
-          isUploadingLeadLogo={isUploadingLeadLogo}
-          onFilterByRouteCity={setRouteAnchorCity}
-          bandName={effectiveBandName}
-          concerts={concerts}
-        />
+        <ErrorBoundary>
+          <MobileBottomSheet
+            selectedLead={selectedLead}
+            onClose={() => setSelectedLead(null)}
+            onUpdateLead={onUpdateLead}
+            onDeleteLead={handleDeleteSingleLead}
+            getStatusBadgeClass={getStatusBadgeClass}
+            getStatusLabel={getStatusLabel}
+            getStatusDotColor={getStatusDotColor}
+            normalizeStatus={normalizeStatus}
+            normalizeType={normalizeType}
+            autoDetectVenueAddress={autoDetectVenueAddress}
+            sectionTab={sectionTab}
+            activeCampaign={activeCampaign}
+            onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
+            isUploadingLeadLogo={isUploadingLeadLogo}
+            onFilterByRouteCity={setRouteAnchorCity}
+            bandName={effectiveBandName}
+            concerts={concerts}
+          />
+        </ErrorBoundary>
       </div>
 
       {/* 3. EMAIL TEMPLATES & AI SETTINGS EDITOR CARD */}

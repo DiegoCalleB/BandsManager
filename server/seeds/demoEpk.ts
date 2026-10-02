@@ -1,8 +1,13 @@
+import {
+  HERDEIROS_EPK_CONFIG,
+  MASTER_OF_PROMPTS_EPK_CONFIG,
+} from "../../src/data/mouredevBandsSeed.js";
+
 /**
  * Semillas de demostración del servidor.
  *
- * Bakandeya es la banda de la propia plataforma: su EPK de ejemplo vive aquí, aislado, y no en las
- * rutas de lectura. Toda banda que no tenga EPK guardado recibe la base vacía.
+ * Bakandeya, Master of Prompts y Os Herdeiros do Código tienen aquí sus semillas base aisladas.
+ * Toda banda que no tenga EPK guardado recibe la base vacía.
  */
 export const EMPTY_EPK_CONFIG = {
   biografia: "",
@@ -17,6 +22,8 @@ export const EMPTY_EPK_CONFIG = {
 };
 
 const DEMO_EPK_BY_BAND: Record<string, Record<string, unknown>> = {
+  "master-of-prompts": MASTER_OF_PROMPTS_EPK_CONFIG as any,
+  "os-herdeiros-do-codigo": HERDEIROS_EPK_CONFIG as any,
   bakandeya: {
     biografia:
       "Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",

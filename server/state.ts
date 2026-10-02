@@ -585,7 +585,7 @@ export function ensureMouredevBandsData(state: any): boolean {
   if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
   const epkHerdeirosKeys = [HERDEIROS_BAND_ID, 'os-herdeiros-do-codigo', 'reg-os-herdeiros-do-codigo'];
   for (const k of epkHerdeirosKeys) {
-    if (!state.epkConfigsByBand[k] || !state.epkConfigsByBand[k].riderTecnico || state.epkConfigsByBand[k].riderTecnico.includes('por definir')) {
+    if (!state.epkConfigsByBand[k]) {
       state.epkConfigsByBand[k] = HERDEIROS_EPK_CONFIG;
       changed = true;
     }
@@ -593,7 +593,7 @@ export function ensureMouredevBandsData(state: any): boolean {
 
   const epkMopKeys = [MASTER_OF_PROMPTS_BAND_ID, 'master-of-prompts', 'reg-master-of-prompts'];
   for (const k of epkMopKeys) {
-    if (!state.epkConfigsByBand[k] || !state.epkConfigsByBand[k].riderTecnico || state.epkConfigsByBand[k].riderTecnico.includes('por definir')) {
+    if (!state.epkConfigsByBand[k]) {
       state.epkConfigsByBand[k] = MASTER_OF_PROMPTS_EPK_CONFIG;
       changed = true;
     }

@@ -58,6 +58,7 @@ const RepertorioSetlists = safeLazy(
 const Merchan = safeLazy(() => import("./components/Merchan"));
 const Chatbot = safeLazy(() => import("./components/Chatbot"));
 const EPKManager = safeLazy(() => import("./components/EPKManager"));
+const SongStudioModal = safeLazy(() => import("./components/SongStudioModal"));
 const EnsayosManager = safeLazy(() =>
   import("./components/ensayos/EnsayosManager").then((m) => ({
     default: m.EnsayosManager,
@@ -916,14 +917,35 @@ export default function App() {
     document.documentElement.setAttribute("data-theme", resolvedTheme);
   };
 
+  const [activeGlobalStudioSong, setActiveGlobalStudioSong] = useState<any | null>(null);
+  const [activeGlobalStudioOpenIris, setActiveGlobalStudioOpenIris] = useState(false);
+
   const handleOpenStudio = (song: any) => {
-    // Placeholder for Studio editor integration
-    console.log("Open Studio for song:", song);
+    if (!song) return;
+    setActiveGlobalStudioOpenIris(false);
+    setActiveGlobalStudioSong(song);
   };
 
   const handleOpenIris = (song: any) => {
-    // Placeholder for Iris integration
-    console.log("Open Iris for song:", song);
+    if (!song) return;
+    setActiveGlobalStudioOpenIris(true);
+    setActiveGlobalStudioSong(song);
+  };
+
+  const handleUpdateSongFromGlobalStudio = (updatedSong: any) => {
+    setActiveGlobalStudioSong(updatedSong);
+    const token = localStorage.getItem("bakandeya_token") || localStorage.getItem("token") || "";
+    if (updatedSong?.id) {
+      fetch("/api/songs/" + updatedSong.id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(currentActiveBandId ? { "x-band-id": currentActiveBandId } : {}),
+        },
+        body: JSON.stringify(updatedSong),
+      }).catch((err) => console.error("Error updating song from global studio:", err));
+    }
   };
 
   const activeBandConcerts = React.useMemo(() => {
@@ -2805,6 +2827,23 @@ export default function App() {
           onOpenStudio={handleOpenStudio}
           onOpenIris={handleOpenIris}
         />
+
+        {activeGlobalStudioSong && (
+          <Suspense fallback={null}>
+            <SongStudioModal
+              song={activeGlobalStudioSong}
+              colors={colors}
+              onClose={() => {
+                setActiveGlobalStudioSong(null);
+                setActiveGlobalStudioOpenIris(false);
+              }}
+              onUpdateSong={handleUpdateSongFromGlobalStudio}
+              currentUser={currentUser}
+              currentUsername={currentUser?.name || currentUser?.username}
+              initialOpenIrisModal={activeGlobalStudioOpenIris}
+            />
+          </Suspense>
+        )}
       </div>
     </PlayerProvider>
   );

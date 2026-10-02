@@ -17,24 +17,55 @@ import {
   Maximize2,
   Copy,
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { Button, IconButton } from '../ui';
 
+const IRIS_PRISM_RAY_COLORS = ['#f43f5e', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#a855f7'];
+
 const IrisPrismBanner: React.FC = () => {
+  const targets = [10, 22, 34, 46, 58, 70];
   return (
-    <div className="relative w-full h-20 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
-            <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
-        <path d="M 0,40 L 160,40" stroke="white" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" className="" />
-        <polygon points="160,15 220,65 160,65" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-        <polygon points="162,18 218,63 162,63" fill="rgba(255,255,255,0.05)" />
-        <path d="M 195,43 L 400,10" stroke="#f43f5e" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,22" stroke="#f97316" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,34" stroke="#eab308" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,46" stroke="#22c55e" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,58" stroke="#06b6d4" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,70" stroke="#a855f7" strokeWidth="2" opacity="0.8" />
+    <div className="relative w-full h-24 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
+      <svg viewBox="0 0 400 80" className="w-full h-full absolute inset-0" preserveAspectRatio="none">
+        {/* Prisma */}
+        <polygon points="160,15 220,65 160,65" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
+        <polygon points="162,18 218,63 162,63" fill="rgba(255,255,255,0.03)" />
+
+        {/* Rayo de luz blanco animado entrando al prisma */}
+        <motion.path
+          d="M 0,40 L 160,40"
+          stroke="white"
+          strokeWidth="2.5"
+          strokeDasharray="6 3"
+          animate={{ opacity: [0.35, 1, 0.35] }}
+          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+        />
+        <motion.circle
+          cy={40}
+          r={3.5}
+          fill="white"
+          animate={{ cx: [0, 160, 0], opacity: [0, 1, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+        />
+
+        {/* Espectro arcoíris de 6 colores saliendo del prisma en cascada */}
+        {targets.map((y, i) => (
+          <motion.line
+            key={i}
+            x1={195}
+            y1={43}
+            x2={400}
+            y2={y}
+            stroke={IRIS_PRISM_RAY_COLORS[i]}
+            strokeWidth={2.5}
+            strokeLinecap="round"
+            animate={{ opacity: [0.25, 1, 0.25] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut', delay: i * 0.14 }}
+          />
+        ))}
       </svg>
-      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)]/60 text-micro font-mono text-[var(--ink-2)]">
-        <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] " />
+      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 backdrop-blur-xs text-micro font-mono text-[var(--ink-2)] border border-[var(--hair)]/20 shadow-xs">
+        <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] animate-pulse" />
         <span>Iris Espectro · Separación Multicapa por IA</span>
       </div>
     </div>

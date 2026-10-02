@@ -1319,7 +1319,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       )}
 
       {/* HEADER CARD */}
-      <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-4 sm:p-5800 space-y-4">
+      <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-4 sm:p-5 space-y-4">
         {/* Title Bar */}
         <div className="flex justify-between items-start gap-2">
           <div className="flex items-center gap-3">
