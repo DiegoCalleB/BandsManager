@@ -585,7 +585,7 @@ export function ensureMouredevBandsData(state: any): boolean {
   if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
   const epkHerdeirosKeys = [HERDEIROS_BAND_ID, 'os-herdeiros-do-codigo', 'reg-os-herdeiros-do-codigo'];
   for (const k of epkHerdeirosKeys) {
-    if (!state.epkConfigsByBand[k] || !state.epkConfigsByBand[k].riderTecnico || state.epkConfigsByBand[k].riderTecnico.includes('por definir')) {
+    if (!state.epkConfigsByBand[k]) {
       state.epkConfigsByBand[k] = HERDEIROS_EPK_CONFIG;
       changed = true;
     }
@@ -593,7 +593,7 @@ export function ensureMouredevBandsData(state: any): boolean {
 
   const epkMopKeys = [MASTER_OF_PROMPTS_BAND_ID, 'master-of-prompts', 'reg-master-of-prompts'];
   for (const k of epkMopKeys) {
-    if (!state.epkConfigsByBand[k] || !state.epkConfigsByBand[k].riderTecnico || state.epkConfigsByBand[k].riderTecnico.includes('por definir')) {
+    if (!state.epkConfigsByBand[k]) {
       state.epkConfigsByBand[k] = MASTER_OF_PROMPTS_EPK_CONFIG;
       changed = true;
     }
@@ -607,11 +607,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.leads.push(l);
       changed = true;
-    } else {
-      if (state.leads[existingIdx].band_id !== l.band_id || state.leads[existingIdx].tipo !== l.tipo) {
-        state.leads[existingIdx] = { ...state.leads[existingIdx], ...l };
-        changed = true;
-      }
     }
   }
 
@@ -623,11 +618,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.bands.push(b);
       changed = true;
-    } else {
-      if (state.bands[existingIdx].band_id !== b.band_id || state.bands[existingIdx].nombre_banda !== b.nombre_banda) {
-        state.bands[existingIdx] = { ...state.bands[existingIdx], ...b };
-        changed = true;
-      }
     }
   }
 
@@ -639,11 +629,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.songs.push(s);
       changed = true;
-    } else {
-      if (state.songs[existingIdx].band_id !== s.band_id || state.songs[existingIdx].titulo !== s.titulo) {
-        state.songs[existingIdx] = { ...state.songs[existingIdx], ...s };
-        changed = true;
-      }
     }
   }
 
@@ -655,11 +640,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.setlists.push(sl);
       changed = true;
-    } else {
-      if (state.setlists[existingIdx].band_id !== sl.band_id || state.setlists[existingIdx].nombre !== sl.nombre) {
-        state.setlists[existingIdx] = { ...state.setlists[existingIdx], ...sl };
-        changed = true;
-      }
     }
   }
 
@@ -671,11 +651,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.concerts.push(c);
       changed = true;
-    } else {
-      if (state.concerts[existingIdx].band_id !== c.band_id) {
-        state.concerts[existingIdx] = { ...state.concerts[existingIdx], ...c };
-        changed = true;
-      }
     }
   }
 
@@ -687,11 +662,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.rehearsals.push(r);
       changed = true;
-    } else {
-      if (state.rehearsals[existingIdx].band_id !== r.band_id) {
-        state.rehearsals[existingIdx] = { ...state.rehearsals[existingIdx], ...r };
-        changed = true;
-      }
     }
   }
 
@@ -703,11 +673,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.tours.push(t);
       changed = true;
-    } else {
-      if (state.tours[existingIdx].band_id !== t.band_id) {
-        state.tours[existingIdx] = { ...state.tours[existingIdx], ...t };
-        changed = true;
-      }
     }
   }
 
@@ -719,11 +684,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.payments.push(p);
       changed = true;
-    } else {
-      if (state.payments[existingIdx].band_id !== p.band_id) {
-        state.payments[existingIdx] = { ...state.payments[existingIdx], ...p };
-        changed = true;
-      }
     }
   }
 
@@ -735,11 +695,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.fans.push(f);
       changed = true;
-    } else {
-      if (state.fans[existingIdx].band_id !== f.band_id) {
-        state.fans[existingIdx] = { ...state.fans[existingIdx], ...f };
-        changed = true;
-      }
     }
   }
 
@@ -751,11 +706,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.posts.push(po);
       changed = true;
-    } else {
-      if (state.posts[existingIdx].band_id !== po.band_id) {
-        state.posts[existingIdx] = { ...state.posts[existingIdx], ...po };
-        changed = true;
-      }
     }
   }
 
@@ -767,11 +717,6 @@ export function ensureMouredevBandsData(state: any): boolean {
     if (existingIdx === -1) {
       state.metrics.push(me);
       changed = true;
-    } else {
-      if (state.metrics[existingIdx].band_id !== me.band_id) {
-        state.metrics[existingIdx] = { ...state.metrics[existingIdx], ...me };
-        changed = true;
-      }
     }
   }
 
