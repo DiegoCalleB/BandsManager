@@ -1221,10 +1221,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shadow-2xs hover:bg-[var(--acc)] transition-colors"
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-semibold bg-pink-500/15 text-pink-500 border border-pink-500/25 shadow-2xs hover:bg-pink-500/25 transition-colors"
                       title={`Instagram: ${lead.instagram}`}
                     >
-                      <Instagram className="w-3 h-3 text-[var(--acc)] shrink-0" />
+                      <Instagram className="w-3 h-3 text-pink-500 shrink-0" />
                       <span className="hidden xs:inline">
                         {lead.instagram.startsWith("@")
                           ? lead.instagram
@@ -1271,10 +1271,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer shadow-xs min-h-[38px]"
+                        className="p-2 sm:px-2.5 sm:py-1.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/20 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer shadow-xs min-h-[38px] group"
                         title={`Abrir Instagram (${lead.instagram})`}
                       >
-                        <Instagram className="w-4 h-4 text-[var(--acc)]" />
+                        <Instagram className="w-4 h-4 text-pink-500 group-hover:scale-110 transition-transform" />
                         <span className="hidden xs:inline text-xs">
                           Instagram
                         </span>
@@ -1701,10 +1701,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-0.5 text-[var(--acc)] hover:text-[var(--acc)]"
+                                className="inline-flex items-center gap-0.5 text-pink-500 hover:text-pink-600 font-medium"
                                 title={`Instagram: ${lead.instagram}`}
                               >
-                                <Instagram className="w-2.5 h-2.5 shrink-0" />
+                                <Instagram className="w-2.5 h-2.5 text-pink-500 shrink-0" />
                                 <span className="truncate max-w-[65px]">
                                   {lead.instagram.replace(/^@/, "")}
                                 </span>
@@ -1746,10 +1746,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] rounded transition-colors inline-flex items-center"
+                            className="p-1.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/20 rounded transition-colors inline-flex items-center"
                             title={`Abrir perfil de Instagram (${lead.instagram})`}
                           >
-                            <Instagram className="w-3.5 h-3.5 text-[var(--acc)]" />
+                            <Instagram className="w-3.5 h-3.5 text-pink-500" />
                           </a>
                         ) : null}
 
