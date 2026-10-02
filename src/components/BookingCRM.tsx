@@ -93,10 +93,8 @@ import { TemplateConfigSection } from './booking/TemplateConfigSection';
 import { TemplateRecommendationsCard } from './booking/TemplateRecommendationsCard';
 import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
-import { GenerateAllTemplatesModal } from './booking/GenerateAllTemplatesModal';
 import { LeadsTable } from './booking/LeadsTable';
-import { VenueDetailPanel } from './booking/VenueDetailPanel';
-import { MobileBottomSheet } from './booking/MobileBottomSheet';
+import { VenueWorkspaceModal } from './booking/venue_modal/VenueWorkspaceModal';
 import { MorningBriefingRadar } from './booking/MorningBriefingRadar';
 import { RoadbookContractModal } from './booking/RoadbookContractModal';
 import { isLeadVerificado } from '../utils/leadReliability';
@@ -1356,9 +1354,9 @@ export default function BookingCRM({
       className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
     >
       {/* 2. LEADS CRM WORKSPACE */}
-      <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-ui duration-300`}>
-        {/* LEADS LIST AREA (Takes 100% width when no lead is selected, or 2/3 when detail panel is open) */}
-        <div className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-ui duration-300`}>
+      <div className="w-full items-start transition-ui duration-300">
+        {/* LEADS LIST AREA (Always 100% full width — detail opens in workspace modal) */}
+        <div className="w-full space-y-4 transition-ui duration-300">
           <div className="space-y-3 sm:space-y-4">
             {/* Header: Tabs + Unified Action Buttons */}
             <div className="flex flex-col gap-3">
@@ -2344,40 +2342,13 @@ export default function BookingCRM({
           </div>
         </div>
 
-        {/* DETAILED WORKSPACE PANEL (Desktop view - rendered when a lead is selected) */}
-        {selectedLead && (
-          <div ref={interventionPanelRef} className="hidden lg:block space-y-6 lg:col-span-1 transition-ui duration-300">
-            <VenueDetailPanel
-              selectedLead={selectedLead}
-              onClose={() => setSelectedLead(null)}
-              onUpdateLead={onUpdateLead}
-              getStatusBadgeClass={getStatusBadgeClass}
-              getStatusLabel={getStatusLabel}
-              getStatusDotColor={getStatusDotColor}
-              normalizeStatus={normalizeStatus}
-              normalizeType={normalizeType}
-              autoDetectVenueAddress={autoDetectVenueAddress}
-              onDeleteLead={handleDeleteSingleLead}
-              sectionTab={sectionTab}
-              activeCampaign={activeCampaign}
-              onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
-              isUploadingLeadLogo={isUploadingLeadLogo}
-              initialTab={venueDetailInitialTab}
-              onOpenRoadbookModal={(lead) => {
-                setRoadbookModalLead(lead);
-                setIsRoadbookModalOpen(true);
-              }}
-              onFilterByRouteCity={setRouteAnchorCity}
-              bandName={effectiveBandName}
-              concerts={concerts}
-            />
-          </div>
-        )}
-
-        {/* MOBILE BOTTOM SHEET FOR TOUCH / SMARTPHONES */}
-        <MobileBottomSheet
-          selectedLead={selectedLead}
+        {/* UNIFIED VENUE WORKSPACE MODAL (Desktop & Mobile) */}
+        <VenueWorkspaceModal
+          isOpen={Boolean(selectedLead)}
           onClose={() => setSelectedLead(null)}
+          leads={filteredLeads}
+          selectedLead={selectedLead}
+          onSelectLead={handleOpenLead}
           onUpdateLead={onUpdateLead}
           onDeleteLead={handleDeleteSingleLead}
           getStatusBadgeClass={getStatusBadgeClass}
@@ -2390,6 +2361,7 @@ export default function BookingCRM({
           activeCampaign={activeCampaign}
           onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
           isUploadingLeadLogo={isUploadingLeadLogo}
+          initialTab={venueDetailInitialTab === 'info' ? 'pitch' : (venueDetailInitialTab as any)}
           onFilterByRouteCity={setRouteAnchorCity}
           bandName={effectiveBandName}
           concerts={concerts}
