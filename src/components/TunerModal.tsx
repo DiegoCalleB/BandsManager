@@ -585,7 +585,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                         <span
                           className={`px-1.5 py-0.2 rounded text-micro font-sans shrink-0 ${
                             p.category === "ukulele"
-                              ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                              ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                               : p.category === "bass"
                                 ? "bg-[var(--tentative)] text-[var(--on-tentative)]"
                                 : "bg-[var(--ok)]/20 text-[var(--ink)]"
@@ -676,7 +676,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                           isTunedIn
                             ? "bg-[var(--ok)]/20 text-[var(--ink)]"
                             : pitch.cents < 0
-                              ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                              ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                               : "bg-[var(--alert)]/20 text-[var(--ink)]"
                         }`}
                       >

@@ -511,7 +511,7 @@ export const Planes: React.FC<PlanesProps> = ({
       {currentUser?.plan_pendiente && (
         <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15  text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
               <Calendar className="w-6 h-6" />
             </div>
             <div>
@@ -1050,7 +1050,7 @@ export const Planes: React.FC<PlanesProps> = ({
                     className="w-full p-4 sm:p-5 flex items-center justify-between bg-[var(--sunken)] hover:bg-[var(--surface)] transition-colors cursor-pointer text-left"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                      <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)]">
                         <IconComp className="w-4 h-4" />
                       </div>
                       <span className="text-sm sm:text-base font-bold font-display text-[var(--ink)]">

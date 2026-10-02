@@ -2013,7 +2013,7 @@ export default function Chatbot({
                                   return (
                                     <div className="space-y-2">
                                       <div
-                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc-ink)]'}`}
+                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--ink)]'}`}
                                       >
                                         <span>{acc.bpm} BPM</span>
                                         <span>· Tono {acc.keyName}</span>
@@ -2125,7 +2125,7 @@ export default function Chatbot({
                                   return (
                                     <div className="space-y-2">
                                       <div
-                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc-ink)]'}`}
+                                        className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--ink)]'}`}
                                       >
                                         <span>{instrumentLabels[idea.instrument]}</span>
                                         <span>· {idea.bpm} BPM</span>
@@ -2304,7 +2304,7 @@ export default function Chatbot({
               <div className="flex items-center justify-between">
                 <span className="text-micro font-sans text-[var(--ink-2)]">Estado</span>
                 {activeRun.status === 'queued' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink)]">
                     <ShowIcon inline emoji="🕒" />En Cola
                   </span>
                 )}
@@ -2314,7 +2314,7 @@ export default function Chatbot({
                   </span>
                 )}
                 {activeRun.status === 'in_progress' && (
-                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                  <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--ink)]">
                     <ShowIcon inline emoji="⚙️" />Ejecutando…
                   </span>
                 )}

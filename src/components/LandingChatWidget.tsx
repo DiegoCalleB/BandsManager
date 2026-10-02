@@ -11,6 +11,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, MessageCircle, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { Button } from './ui';
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 
@@ -290,22 +291,22 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
           role="dialog"
           aria-modal="true"
           aria-label={lang === 'es' ? 'Asistente de BandManager' : 'BandManager Assistant'}
-          className="fixed bottom-24 right-4 z-50 flex w-[min(23rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-[var(--r-xl)] border border-[var(--border)] bg-[var(--surface)] shadow-2xl sm:right-6"
+          className="fixed bottom-24 right-4 z-50 flex w-[min(23rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-[var(--r-xl)] bg-[var(--surface)] sm:right-6"
           style={{ maxHeight: 'calc(100dvh - 8rem)' }}
         >
           {/* Cabecera */}
-          <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--acc)] px-4 py-3">
+          <div className="flex items-center justify-between bg-[var(--acc)] px-4 py-3 text-[var(--on-acc)]">
             <div className="flex items-center gap-2">
-              <span className="flex size-7 items-center justify-center rounded-full bg-white/20">
-                <MessageCircle className="size-4 text-white" aria-hidden />
+              <span className="flex size-7 items-center justify-center rounded-full bg-[var(--ink)]/20">
+                <MessageCircle className="size-4 text-inherit" aria-hidden />
               </span>
               <div>
-                <p className="text-sm font-semibold text-white">
+                <p className="text-sm font-semibold text-inherit">
                   BandManager {mode === 'tfm' ? '· TFM' : ''}
                 </p>
                 <div className="flex items-center gap-1.5">
-                  <span className="size-1.5 rounded-full bg-green-400" aria-hidden />
-                  <span className="text-[10px] text-white/80">
+                  <span className="size-1.5 rounded-full bg-[var(--ok)]" aria-hidden />
+                  <span className="text-micro opacity-80">
                     {lang === 'es' ? 'En línea' : 'Online'}
                   </span>
                 </div>
@@ -315,7 +316,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
               type="button"
               onClick={() => setOpen(false)}
               aria-label={c.close}
-              className="cursor-pointer rounded-full p-1 text-white/80 transition hover:bg-white/20 hover:text-white"
+              className="cursor-pointer rounded-full p-1 opacity-80 transition hover:bg-[var(--ink)]/20 hover:opacity-100"
             >
               <X className="size-4" />
             </button>
@@ -329,10 +330,10 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
                 className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <p
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-snug ${
+                  className={`max-w-[85%] rounded-[var(--r-m)] px-4 py-2.5 text-sm leading-snug ${
                     msg.from === 'bot'
-                      ? 'rounded-tl-sm bg-[var(--sunken)] text-[var(--ink)]'
-                      : 'rounded-tr-sm bg-[var(--acc)] text-white'
+                      ? 'rounded-tl-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)]'
+                      : 'rounded-tr-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)]'
                   }`}
                 >
                   {msg.text}
@@ -343,39 +344,41 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
           </div>
 
           {/* Acciones: preguntas rápidas o CTA tras responder */}
-          <div className="border-t border-[var(--border)] p-3 space-y-2">
+          <div className="p-3 space-y-2 bg-[var(--sunken)]/40">
             {!answered ? (
               // Botones de preguntas rápidas
               <div className="flex flex-col gap-1.5 max-h-52 overflow-y-auto pr-1">
                 {c.questions.map((q) => (
-                  <button
+                  <Button
                     key={q.label}
-                    type="button"
+                    variant="neutral"
+                    size="xs"
                     onClick={() => handleQuestion(q)}
-                    className="w-full cursor-pointer rounded-[var(--r-pill)] border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-left text-xs font-medium text-[var(--ink)] transition hover:bg-[var(--sunken)] hover:border-[var(--acc)]"
+                    className="w-full justify-start text-left"
                   >
-                    {q.label}
-                  </button>
+                    <span>{q.label}</span>
+                  </Button>
                 ))}
               </div>
             ) : (
               // Post-respuesta: CTA + opción de reiniciar
               <div className="flex flex-col gap-2">
-                <button
-                  type="button"
+                <Button
+                  variant="primary"
+                  size="md"
                   onClick={() => {
                     setOpen(false);
                     onEntrar();
                   }}
-                  className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] px-4 py-2.5 text-sm font-bold text-white transition hover:brightness-110 shadow-md"
+                  className="w-full justify-center gap-1.5"
                 >
-                  {c.cta} <ArrowRight className="size-3.5" aria-hidden />
-                </button>
+                  <span>{c.cta}</span> <ArrowRight className="size-3.5" aria-hidden />
+                </Button>
                 <div className="flex items-center justify-between">
                   <button
                     type="button"
                     onClick={handleRestart}
-                    className="cursor-pointer text-xs text-[var(--ink-3)] hover:text-[var(--ink)] hover:underline"
+                    className="cursor-pointer text-xs text-[var(--ink-2)] hover:text-[var(--ink)] hover:underline"
                   >
                     {c.restart}
                   </button>
@@ -399,7 +402,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
         onClick={() => { setOpen((v) => !v); setUnread(false); }}
         aria-label={open ? c.close : c.open}
         aria-expanded={open}
-        className="fixed bottom-5 right-4 z-50 flex size-14 cursor-pointer items-center justify-center rounded-full bg-[var(--acc)] text-white shadow-xl transition-all hover:scale-105 hover:brightness-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--acc)]/50 sm:right-6"
+        className="fixed bottom-5 right-4 z-50 flex size-14 cursor-pointer items-center justify-center rounded-full bg-[var(--acc)] text-[var(--on-acc)] transition-ui hover:brightness-110 active:scale-[0.97] focus-visible:outline-none sm:right-6"
       >
         {open ? (
           <X className="size-6" aria-hidden />
@@ -410,7 +413,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
         {/* Indicador de mensaje no leído */}
         {!open && unread && (
           <span
-            className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm"
+            className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-[var(--alert)] text-micro font-bold text-[var(--on-alert)]"
             aria-hidden
           >
             1

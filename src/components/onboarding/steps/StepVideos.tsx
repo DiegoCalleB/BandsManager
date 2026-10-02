@@ -67,7 +67,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
                       </span>
                     )}
                     {vid.destacado && (
-                      <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-medium flex items-center gap-1">
+                      <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)] font-medium flex items-center gap-1">
                         <Award className="w-3 h-3" /> Destacado
                       </span>
                     )}

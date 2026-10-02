@@ -2066,7 +2066,7 @@ export default function ReelsCenter({
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isSyncingReels
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
-                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] "
+                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink)] "
             }`}
             title="Sincronizar todas las publicaciones de redes sociales"
           >
@@ -2180,9 +2180,9 @@ export default function ReelsCenter({
                               <span
                                 className={`text-micro font-sans px-1.5 py-0.5 rounded font-bold ${
                                   post.plataforma === "Instagram"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                     : post.plataforma === "TikTok"
-                                      ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                      ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                       : "bg-[var(--surface)]/80 text-[var(--ink)]"
                                 }`}
                               >
@@ -2255,9 +2255,9 @@ export default function ReelsCenter({
                               <span
                                 className={`text-micro font-sans px-1.5 py-0.5 rounded font-bold ${
                                   post.plataforma === "Instagram"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                     : post.plataforma === "TikTok"
-                                      ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                      ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                       : "bg-[var(--surface)]/80 text-[var(--ink)]"
                                 }`}
                               >
@@ -2339,9 +2339,9 @@ export default function ReelsCenter({
                               <span
                                 className={`text-micro font-sans px-1.5 py-0.5 rounded font-bold ${
                                   post.plataforma === "Instagram"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                     : post.plataforma === "TikTok"
-                                      ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                      ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                       : "bg-[var(--surface)]/80 text-[var(--ink)]"
                                 }`}
                               >
@@ -2582,7 +2582,7 @@ export default function ReelsCenter({
                     ) : (
                       <div className="space-y-3">
                         <div
-                          className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
+                          className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--ink)]`}
                         >
                           <Upload className="w-5 h-5" />
                         </div>
@@ -2606,7 +2606,7 @@ export default function ReelsCenter({
                   >
                     <div className="space-y-4 max-w-xl mx-auto text-center">
                       <div
-                        className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
+                        className={`w-12 h-12 rounded-[var(--r-pill)] flex items-center justify-center mx-auto bg-[var(--acc)]/10 text-[var(--ink)]`}
                       >
                         <Youtube className="w-5 h-5" />
                       </div>
@@ -2660,7 +2660,7 @@ export default function ReelsCenter({
                       )}
 
                       {!isFetchingMeta && metaError && (
-                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-micro text-[var(--acc-ink)] font-sans text-left flex items-start gap-2">
+                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-micro text-[var(--ink)] font-sans text-left flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                           <span>
                             {metaError} Puedes analizarlo igualmente, pero los
@@ -2695,7 +2695,7 @@ export default function ReelsCenter({
                               )}
                               {videoMeta.durationKnown ? (
                                 <span
-                                  className={`px-1.5 py-0.5 rounded font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
+                                  className={`px-1.5 py-0.5 rounded font-bold bg-[var(--acc)]/10 text-[var(--ink)]`}
                                 >
                                   {formatTime(videoMeta.duration)}
                                 </span>
@@ -2886,7 +2886,7 @@ export default function ReelsCenter({
                 {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
  presentaban como si los hubiera elegido el modelo. */}
                 {!analysisError && analysisNotice && (
-                  <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs flex gap-2 items-start">
+                  <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--ink)] text-xs flex gap-2 items-start">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>{analysisNotice}</span>
                   </div>
@@ -3170,7 +3170,7 @@ export default function ReelsCenter({
                             />
                           </div>
                           <span
-                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 bg-[var(--acc)]/10 text-[var(--acc-ink)]`}
+                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 bg-[var(--acc)]/10 text-[var(--ink)]`}
                           >
                             {highlights[selectedHighlightIndex]?.range}
                           </span>
@@ -3789,7 +3789,7 @@ export default function ReelsCenter({
                           </div>
                         )}
                         {scheduleWarnings.length > 0 && (
-                          <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs font-sans mt-2 space-y-1">
+                          <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--ink)] text-xs font-sans mt-2 space-y-1">
                             {scheduleWarnings.map((aviso) => (
                               <div
                                 key={aviso}
@@ -3854,9 +3854,9 @@ export default function ReelsCenter({
                             <span
                               className={`text-micro font-sans px-2 py-0.5 rounded font-bold ${
                                 post.plataforma === "Instagram"
-                                  ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                  ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                   : post.plataforma === "TikTok"
-                                    ? "bg-[var(--acc)]/10 text-[var(--acc-ink)]"
+                                    ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                                     : "bg-[var(--surface)]/80 text-[var(--ink)]"
                               }`}
                             >
@@ -4123,7 +4123,7 @@ export default function ReelsCenter({
                   {
                     id: "TikTok" as const,
                     name: "TikTok",
-                    color: "hover:text-[var(--acc-ink)] bg-[var(--acc)]/10",
+                    color: "hover:text-[var(--on-acc)] bg-[var(--acc)]/10",
                   },
                 ].map((plat) => (
                   <button

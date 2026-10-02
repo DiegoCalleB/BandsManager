@@ -294,7 +294,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                   song.estadoTema === 'listo'
                     ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
                     : song.estadoTema === 'ensayando'
-                      ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)]'
+                      ? 'bg-[var(--acc)]/15 text-[var(--ink)]'
                       : 'bg-[var(--surface)]text-[var(--ink-2)]'
                 }`}
               >

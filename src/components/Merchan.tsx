@@ -459,7 +459,7 @@ export default function Merchan({
                 onClick={() => setAssetType("logo")}
                 className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "logo"
-                    ? "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
+                    ? "bg-[var(--acc)]/15 text-[var(--ink)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -470,7 +470,7 @@ export default function Merchan({
                 onClick={() => setAssetType("portada")}
                 className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "portada"
-                    ? "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
+                    ? "bg-[var(--acc)]/15 text-[var(--ink)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >
@@ -484,7 +484,7 @@ export default function Merchan({
                 }}
                 className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "custom"
-                    ? "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
+                    ? "bg-[var(--acc)]/15 text-[var(--ink)]"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                 }`}
               >

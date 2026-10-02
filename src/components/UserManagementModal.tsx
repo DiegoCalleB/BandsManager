@@ -559,7 +559,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 @{u.username}
                               </span>
                               {isLeader ? (
-                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc-ink)] flex items-center gap-1">
+                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink)] flex items-center gap-1">
                                   <Shield className="w-2.5 h-2.5" />
                                   <span>Admin</span>
                                 </span>

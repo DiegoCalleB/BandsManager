@@ -19,10 +19,10 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
       <div className="grid grid-cols-2 gap-1.5 px-3 pb-1.5 pt-0.5">
         <button
           onClick={onOpenMetronome}
-          className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui cursor-pointer text-left active:scale-[0.97] group"
+          className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink)] transition-ui cursor-pointer text-left active:scale-[0.97] group"
           title="Abrir metrónomo webAudio Pro"
         >
-          <div className="p-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-transform shrink-0">
+          <div className="p-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)] transition-transform shrink-0">
             <Clock className="w-3.5 h-3.5" />
           </div>
           <div className="flex flex-col min-w-0">
@@ -52,7 +52,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
     <div className="grid grid-cols-2 gap-2 px-3.5 pb-1.5 pt-0.5">
       <button
         onClick={onOpenMetronome}
-        className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui cursor-pointer text-left active:scale-[0.97]"
+        className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink)] transition-ui cursor-pointer text-left active:scale-[0.97]"
         title="Abrir metrónomo webAudio Pro"
       >
         <Clock className="w-4 h-4 text-[var(--acc)] shrink-0" />

@@ -87,7 +87,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
       {/* Header Banner */}
       <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15 ">
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center justify-center shrink-0 mt-0.5">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] flex items-center justify-center shrink-0 mt-0.5">
             <Globe className="w-5 h-5 text-[var(--acc)]" />
           </div>
           <div className="space-y-1">
@@ -199,7 +199,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
       {/* Impact Breakdown Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
         <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-start gap-2.5">
-          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] shrink-0">
+          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink)] shrink-0">
             <Languages className="w-4 h-4" />
           </div>
           <div>
@@ -214,7 +214,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
         </div>
 
         <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-start gap-2.5">
-          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] shrink-0">
+          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink)] shrink-0">
             <MessageSquareText className="w-4 h-4" />
           </div>
           <div>

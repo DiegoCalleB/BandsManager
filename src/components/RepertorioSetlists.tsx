@@ -4090,7 +4090,7 @@ export default function RepertorioSetlists({
                             onClick={() => setShowTonalidad((v) => !v)}
                             className={`p-1 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                               showTonalidad
-                                ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                                ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
                             }`}
                             title={
@@ -4570,7 +4570,7 @@ export default function RepertorioSetlists({
                                     key={i}
                                     className={`px-2 py-0.5 rounded text-micro font-sans font-medium flex items-center gap-1 transition ${
                                       w.type === "warning"
-                                        ? "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
+                                        ? "bg-[var(--acc)]/10 text-[var(--ink)] "
                                         : w.type === "success"
                                           ? "bg-[var(--ok)]/10 text-[var(--ink-2)]"
                                           : "bg-[var(--acc)]/10 text-[var(--ink-2)]"
@@ -5063,7 +5063,7 @@ export default function RepertorioSetlists({
                             className={`text-micro font-sans px-1 py-0.5 rounded shrink-0 ${
                               song.estructuraVerificada
                                 ? "bg-[var(--ok)]/15 text-[var(--ink)]"
-                                : "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
+                                : "bg-[var(--acc)]/15 text-[var(--ink)]"
                             }`}
                             title={
                               song.estructuraVerificada
@@ -6008,7 +6008,7 @@ export default function RepertorioSetlists({
                     <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink)] font-medium">
                       Studio
                     </span>
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] font-medium">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] font-medium">
                       Notas
                     </span>
                     <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] font-medium">

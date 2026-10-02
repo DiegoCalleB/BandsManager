@@ -1061,6 +1061,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       telefono_movil: cleanVal(selectedLead.telefono_movil),
       telefono_fijo: cleanVal(selectedLead.telefono_fijo),
     });
+    setActiveTab("info");
     setIsEditingLeadInfo(true);
   };
 
@@ -1459,7 +1460,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </span>
                 )}
                 {selectedLead.temperatura_lead && (
-                  <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-mono">
+                  <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink)] font-mono">
                     {selectedLead.temperatura_lead === "muy_caliente"
                       ? "Muy Caliente"
                       : selectedLead.temperatura_lead === "caliente"
@@ -1720,7 +1721,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           {/* Feedback Banner for Scout Tools */}
           {scoutActionFeedback && (
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-sans flex items-center gap-2 animate-fadeIn">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)] text-xs font-sans flex items-center gap-2 animate-fadeIn">
               <span>{scoutActionFeedback}</span>
             </div>
           )}
@@ -1832,7 +1833,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             return (
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-between gap-2.5 flex-wrap animate-fadeIn">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0 text-[var(--acc-ink)]">
+                  <div className="w-7 h-7 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0 text-[var(--ink)]">
                     <PartyPopper className="w-3.5 h-3.5" />
                   </div>
                   <div className="min-w-0">
@@ -2290,7 +2291,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         </div>
 
         {enrichStatusMsg && (
-          <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc-ink)] text-xs font-sans flex items-center gap-1.5 animate-fadeIn">
+          <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--ink)] text-xs font-sans flex items-center gap-1.5 animate-fadeIn">
             <span>{enrichStatusMsg}</span>
           </div>
         )}
@@ -2868,7 +2869,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       type="button"
                       onClick={handleAutoExtractFestivalDates}
                       disabled={isExtractingDates}
-                      className="px-2 py-0.5 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-micro font-bold flex items-center gap-1 transition-ui cursor-pointer"
+                      className="px-2 py-0.5 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] text-micro font-bold flex items-center gap-1 transition-ui cursor-pointer"
                       title="Buscar fechas del festival automáticamente con IA y base de datos de festivales"
                     >
                       <Sparkles className="w-3 h-3 text-[var(--acc)]" />
@@ -3063,7 +3064,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           {selectedLead.fechas_propuestas_sala.map((f, i) => (
                             <span
                               key={i}
-                              className="px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] text-micro font-mono"
+                              className="px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)] text-micro font-mono"
                             >
                               {f}
                             </span>
@@ -3109,7 +3110,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             (r, i) => (
                               <span
                                 key={i}
-                                className="px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] text-micro"
+                                className="px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)] text-micro"
                               >
                                 {r}
                               </span>
@@ -3156,7 +3157,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowMultiModelModal(true)}
-                  className="px-2.5 py-1 bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded text-xs text-[var(--acc-ink)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui"
+                  className="px-2.5 py-1 bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded text-xs text-[var(--ink)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui"
                   title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
                 >
                   <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -3377,14 +3378,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     label: "Pedir Pre-reserva (Hold 48h)",
                     text: "\n\nPara dejarla asegurada mientras cuadramos la logística de viaje y disponibilidad de los músicos, ¿os parece bien dejar la fecha en Pre-reserva (Hold / Option 1) durante 48 horas? En cuanto lo coordinemos os damos confirmación definitiva para formalizar contrato y rider.",
                     color:
-                      "text-[var(--acc-ink)] bg-[var(--acc)]/10 hover:brightness-95",
+                      "text-[var(--ink)] bg-[var(--acc)]/10 hover:brightness-95",
                   },
                   {
                     id: "curfew",
                     label: "Preguntar Curfew / Horarios",
                     text: "\n\nPor coordinar bien la duración del pase y prueba de sonido: ¿cuál es el horario estricto de finalización de música en vivo (curfew) de la sala y tenéis limitador de decibelios?",
                     color:
-                      "text-[var(--acc-ink)] bg-[var(--acc)]/10 hover:brightness-95",
+                      "text-[var(--ink)] bg-[var(--acc)]/10 hover:brightness-95",
                   },
                   {
                     id: "taquilla",
@@ -3398,7 +3399,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     label: "Confirmar D.I. y Rider",
                     text: "\n\nEn cuanto a producción: os pasamos nuestro rider técnico para que lo reviséis. ¿Nos podéis facilitar el rider técnico de la sala para revisarlo con el equipo?",
                     color:
-                      "text-[var(--acc-ink)] bg-[var(--acc)]/10 hover:brightness-95",
+                      "text-[var(--ink)] bg-[var(--acc)]/10 hover:brightness-95",
                   },
                 ].map((pill) => (
                   <button
@@ -3478,7 +3479,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[var(--acc)]/70 font-sans flex items-center gap-1.5">
                     Aprendizaje agéntico y ADN de tono
-                    <span className="text-micro bg-[var(--acc)]/20 text-[var(--acc-ink)] px-1.5 py-0.5 rounded font-sans font-normal">
+                    <span className="text-micro bg-[var(--acc)]/20 text-[var(--ink)] px-1.5 py-0.5 rounded font-sans font-normal">
                       Dynamic Few-Shot
                     </span>
                   </span>
@@ -3670,7 +3671,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         onClick={() => setSelectedAiModel(m.id)}
                         className={`px-2 py-1 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                           isSelected
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
+                            ? "bg-[var(--acc)]/20 text-[var(--ink)] "
                             : "bg-[var(--bg)]/60 text-[var(--ink-2)] "
                         } hover:brightness-95`}
                         title={`Coste aproximado por pitch: ${m.cost}`}
@@ -3763,7 +3764,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             <span>{new Date(log.fecha).toLocaleString()}</span>
                             <div className="flex items-center gap-2">
                               {log.alcance === "global" ? (
-                                <span className="px-1.5 py-0.5 bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded text-micro font-bold flex items-center gap-1">
+                                <span className="px-1.5 py-0.5 bg-[var(--acc)]/20 text-[var(--ink)] rounded text-micro font-bold flex items-center gap-1">
                                   Memoria global
                                 </span>
                               ) : (
@@ -3923,7 +3924,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       </span>
                     )}
                     {msg.remitente === "sala" && msg.intencion_etiqueta && (
-                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-medium bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-medium bg-[var(--acc)]/20 text-[var(--ink)]">
                         {msg.intencion_etiqueta}
                       </span>
                     )}
@@ -4076,13 +4077,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           {/* Top Bar with Refresh All APIs button */}
           <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] flex items-center justify-between flex-wrap gap-2.5">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)]">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
                 <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-2">
                   <span>Inteligencia multi-Fuente conectada</span>
-                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-mono font-bold ">
+                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-mono font-bold ">
                     11 Herramientas activas
                   </span>
                 </h4>
@@ -4299,7 +4300,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         (banda, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-medium"
+                            className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] text-xs font-medium"
                           >
                             <ShowIcon inline emoji="🎸" />{banda}
                           </span>

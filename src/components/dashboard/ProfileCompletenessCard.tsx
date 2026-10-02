@@ -346,7 +346,7 @@ export const ProfileCompletenessCard: React.FC<
     if (percentage >= 50)
       return {
         label: "Entrenamiento Intermedio",
-        color: "bg-[var(--acc)]/15 text-[var(--acc-ink)] ",
+        color: "bg-[var(--acc)]/15 text-[var(--ink)] ",
       };
     return {
       label: "Entrenamiento Inicial",
@@ -381,7 +381,7 @@ export const ProfileCompletenessCard: React.FC<
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3/60">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] flex items-center justify-center shrink-0 font-sans font-bold text-sm">
+          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)] flex items-center justify-center shrink-0 font-sans font-bold text-sm">
             {percentage}%
           </div>
           <div>
@@ -584,7 +584,7 @@ export const ProfileCompletenessCard: React.FC<
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-[var(--acc)]/20 rounded-[var(--r-m)] text-[var(--acc-ink)]">
+                <div className="p-2.5 bg-[var(--acc)]/20 rounded-[var(--r-m)] text-[var(--ink)]">
                   <Bot className="w-6 h-6" />
                 </div>
                 <div>

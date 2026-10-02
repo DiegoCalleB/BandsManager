@@ -29,13 +29,13 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
       {/* CABECERA DEL BLOQUE: visible en escritorio o cuando es vista continua'todo' */}
       <div className={`${isAllView ? 'flex' : 'hidden sm:flex'} items-center justify-between pb-3 flex-wrap gap-2`}>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+          <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)] shrink-0">
             <Icon className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               {meta.number && (
-                <span className="text-micro font-sans font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10 px-1.5 py-0.5 rounded">
+                <span className="text-micro font-sans font-bold text-[var(--ink)] bg-[var(--acc)]/10 px-1.5 py-0.5 rounded">
                   Bloque {meta.number} de 8
                 </span>
               )}

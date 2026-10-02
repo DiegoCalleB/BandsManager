@@ -603,7 +603,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </h1>
             {isOffline && (
               <span
-                className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center gap-1"
+                className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--ink)] flex items-center gap-1"
                 title="Modo Escenario Offline Guard activo — Letras y acordes guardados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
@@ -658,7 +658,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
                 glareMode
                   ? "bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"
-                  : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)]"
+                  : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)]"
               }`}
               title="Repertorio completo: ver todos los temas, estado de pistas Iris y accesos directos a Studio"
             >
@@ -979,7 +979,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             currentSong?.estructuraDocumentoUrl &&
             !currentSong?.estructuraVerificada && (
               <span
-                className="font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                className="font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)]"
                 title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
               >
                 <ShowIcon inline emoji="⚠️" />sin verificar
@@ -1190,7 +1190,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setLiveTransposeOffset(0)}
-                  className="ml-1 text-micro px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
+                  className="ml-1 text-micro px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
                   title="Restablecer tono"
                 >
                   {liveTransposeOffset > 0
@@ -1315,7 +1315,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             {/* Drawer Header */}
             <div className="p-4 flex items-center justify-between bg-[var(--surface)]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] flex items-center justify-center">
                   <ListMusic className="w-4 h-4" />
                 </div>
                 <div>
@@ -1701,7 +1701,7 @@ const ChordSheetPage: React.FC<{
               <button
                 type="button"
                 onClick={() => onLiveTransposeChange(0)}
-                className="ml-1 text-micro px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 transition cursor-pointer"
+                className="ml-1 text-micro px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 transition cursor-pointer"
                 title="Restablecer al tono del repertorio"
               >
                 {liveTransposeOffset > 0
@@ -1770,7 +1770,7 @@ const ChordSheetPage: React.FC<{
             onClick={onToggleTeleprompterMode}
             className={`px-2.5 py-1 text-xs font-sans font-bold rounded-[var(--r-pill)] transition flex items-center gap-1.5 cursor-pointer ${
               teleprompterMode === "scroll"
-                ? "bg-[var(--acc)]/20  text-[var(--acc-ink)]"
+                ? "bg-[var(--acc)]/20  text-[var(--ink)]"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
             title={
@@ -1883,7 +1883,7 @@ const ChordSheetPage: React.FC<{
                   onClick={() => onChangeTeleprompterSpeed(speed)}
                   className={`px-2 py-1 rounded text-xs transition cursor-pointer ${
                     teleprompterSpeed === speed
-                      ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold"
+                      ? "bg-[var(--acc)]/20 text-[var(--ink)] font-bold"
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >

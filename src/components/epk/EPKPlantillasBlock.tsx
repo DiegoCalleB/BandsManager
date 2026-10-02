@@ -128,7 +128,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2/80">
             <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)] shrink-0">
                 <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
               <div>
@@ -229,7 +229,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     <span
                       className={`block w-full py-0.5 sm:py-1 text-center rounded-[var(--r-s)] sm:rounded-[var(--r-s)] text-micro sm:text-xs font-bold font-sans transition ${
                         isSelected
-                          ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                           : "bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
                       }`}
                     >
@@ -246,7 +246,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2/80">
             <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)] shrink-0">
                 <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
               <div>
@@ -316,7 +316,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     <div
                       className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
                         item.isVisible
-                          ? "bg-[var(--acc)]/10  text-[var(--acc-ink)]"
+                          ? "bg-[var(--acc)]/10  text-[var(--ink)]"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                       }`}
                     >

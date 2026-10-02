@@ -58,7 +58,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
               <div
                 className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold text-xs ${
                   m.isLeader
-                    ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                    ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                     : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >
@@ -70,7 +70,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
                     {m.name}
                   </span>
                   {m.isLeader && (
-                    <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-medium">
+                    <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink)] font-medium">
                       Líder / Creador
                     </span>
                   )}

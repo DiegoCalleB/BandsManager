@@ -622,7 +622,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
           {/* Top Header */}
           <div className="flex flex-col items-center mb-6 md:mb-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs font-sans font-bold mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs font-sans font-bold mb-3">
               <span>Perfil y selección de banda</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black font-display text-[var(--ink)]">
@@ -815,7 +815,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <div className="w-full h-full rounded-[var(--r-m)] bg-[var(--acc)]/15 flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1">
+                        <div className="w-full h-full rounded-[var(--r-m)] bg-[var(--acc)]/15 flex flex-col items-center justify-center text-[var(--ink)] gap-1">
                           <Guitar className="w-8 h-8 opacity-80" />
                           <span className="text-xs font-bold font-sans text-[var(--ink-2)]">
                             {band.bandName.slice(0, 2).toUpperCase()}
@@ -944,7 +944,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               {/* Header */}
               <div className="flex items-center justify-between border-b border-[var(--hair)] pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+                  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--ink)] shrink-0">
                     <Settings className="w-5 h-5" />
                   </div>
                   <div>
@@ -1074,7 +1074,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   <span className="text-[var(--ink-2)] font-mono">
                     Plan Actual:
                   </span>
-                  <span className="font-sans font-semibold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro">
+                  <span className="font-sans font-semibold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] text-micro">
                     {selectedBandForSettings.plan
                       ? selectedBandForSettings.plan.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase())
                       : "Emergente"}
@@ -1139,7 +1139,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                 <div className="space-y-5">
                   <div className="flex items-center justify-between pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+                      <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--ink)] shrink-0">
                         <Guitar className="w-6 h-6" />
                       </div>
                       <div>
@@ -1527,7 +1527,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         </p>
                       </div>
 
-                      <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center gap-1.5 text-micro font-sans text-[var(--acc-ink)] font-bold">
+                      <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center gap-1.5 text-micro font-sans text-[var(--ink)] font-bold">
                         <span>500 pegatinas gratis</span>
                       </div>
 
@@ -1805,7 +1805,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                     {plan.name}
                                   </span>
                                   {isCurrent && (
-                                    <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                                    <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)]">
                                       Plan actual
                                     </span>
                                   )}
@@ -1836,7 +1836,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                     : "Cambio de plan inmediato"}
                                 </span>
                                 {isCurrent ? (
-                                  <span className="text-micro font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center gap-1">
+                                  <span className="text-micro font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--ink)] flex items-center gap-1">
                                     <Check className="w-3 h-3 text-[var(--acc)]" />
                                     <span>Activo</span>
                                   </span>

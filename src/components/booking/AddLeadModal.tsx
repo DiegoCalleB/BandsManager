@@ -107,7 +107,7 @@ export function AddLeadModal({
           {/* Header */}
           <div className="flex items-center justify-between pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)]">
+              <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--ink)]">
                 {sectionTab === 'medios' ? (
                   <Radio className="w-4 h-4 text-[var(--alert)]" />
                 ) : sectionTab === 'grupos' ? (
@@ -182,7 +182,7 @@ export function AddLeadModal({
 
             {/* Status Messages */}
             {isModalScraping && (
-              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 bg-[var(--acc)]/10 text-[var(--acc-ink)] ">
+              <div className="p-2.5 rounded-[var(--r-m)] text-xs flex items-center gap-2 bg-[var(--acc)]/10 text-[var(--ink)] ">
                 <Loader2 className="w-4 h-4 animate-spin shrink-0 text-[var(--acc)]" />
                 <span className="font-medium">{modalScrapeStatus}</span>
               </div>

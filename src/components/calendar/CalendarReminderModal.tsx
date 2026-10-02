@@ -56,7 +56,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
       >
         <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)]">
               <Bell className="w-5 h-5" />
             </div>
             <div>
@@ -105,7 +105,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             </label>
             <div className="flex flex-wrap gap-1 font-mono text-micro">
               {effectiveBandMembers.map((m: any, idx: number) => (
-                <span key={idx} className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] ">
+                <span key={idx} className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink)] ">
                   <ShowIcon inline emoji="👤" />{m.name} {m.email ? `(${m.email})` : ''}
                 </span>
               ))}

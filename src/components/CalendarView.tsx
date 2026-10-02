@@ -2065,7 +2065,7 @@ export default function CalendarView({
                 <p className="hidden sm:block text-xs text-[var(--ink-2)] mt-0.5">Directos, ensayos y reuniones</p>
                 <div className="hidden sm:flex items-center gap-1.5 text-micro font-sans font-bold mt-2 flex-wrap max-w-full">
                   <span
-                    className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] flex items-center gap-1"
+                    className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] flex items-center gap-1"
                     title="Eventos visibles vs Total"
                   >
                     <Calendar className="w-3 h-3" /> {filteredConcerts.length + filteredRehearsals.length}/
@@ -2260,7 +2260,7 @@ export default function CalendarView({
                 )}
               </div>
               {calendarSearchTerm && (
-                <div className="text-xs font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+                <div className="text-xs font-mono shrink-0 px-2 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)] ">
                   {filteredConcerts.length + filteredRehearsals.length} resultados
                 </div>
               )}
@@ -2440,7 +2440,7 @@ export default function CalendarView({
                   >
                     <div className="flex items-center justify-between pb-2.5 mb-310">
                       <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+                        <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)]">
                           <Settings className="w-3.5 h-3.5" />
                         </div>
                         <div>
@@ -2762,7 +2762,7 @@ export default function CalendarView({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-310">
             <div className="flex items-center gap-3">
               <div
-                className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-bold shrink-0 ${'bg-[var(--acc)]/15 /40 text-[var(--acc-ink)]'}`}
+                className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-bold shrink-0 ${'bg-[var(--acc)]/15 /40 text-[var(--ink)]'}`}
               >
                 <span className="text-sm leading-none">{selectedDate.getDate()}</span>
                 <span className="text-micro mt-0.5 opacity-80">{monthNames[selectedDate.getMonth()]?.slice(0, 3)}</span>
@@ -2778,7 +2778,7 @@ export default function CalendarView({
                     })}
                   </h4>
                   {dayEventsList.length > 0 && (
-                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)]">
                       {dayEventsList.length} {dayEventsList.length === 1 ? 'evento' : 'eventos'}
                     </span>
                   )}
@@ -2877,7 +2877,7 @@ export default function CalendarView({
                               {bandInfo.name}
                             </span>
                             {selectedConcert.cache ? (
-                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10">
+                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold text-[var(--ink)] bg-[var(--acc)]/10">
                                 <ShowIcon inline emoji="💰" />{selectedConcert.cache.toLocaleString('es-ES')} €
                               </span>
                             ) : null}
@@ -2887,7 +2887,7 @@ export default function CalendarView({
                                   ? 'bg-[var(--ok)]/20 text-[var(--ink)]'
                                   : selectedConcert.estado_pago === 'anticipo'
                                     ? 'bg-[var(--tentative)]/35 text-[var(--ink)]'
-                                    : 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
+                                    : 'bg-[var(--acc)]/20 text-[var(--ink)]'
                               }`}
                             >
                               {selectedConcert.estado_pago === 'pagado'

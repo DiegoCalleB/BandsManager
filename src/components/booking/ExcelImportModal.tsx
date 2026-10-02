@@ -1330,7 +1330,7 @@ export function ExcelImportModal({
                       {selectedCount} de {parsedRows.length} seleccionados
                     </span>
                     {duplicatesCount > 0 && (
-                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-semibold flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-semibold flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         {duplicatesCount} ya registrados en CRM
                       </span>
@@ -1478,7 +1478,7 @@ export function ExcelImportModal({
                             <div className="flex items-center gap-1.5">
                               <span>{row.nombre_sala}</span>
                               {row.isDuplicate && (
-                                <span className="px-1.5 py-0.2 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                                <span className="px-1.5 py-0.2 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)]">
                                   Existente
                                 </span>
                               )}

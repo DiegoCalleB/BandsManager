@@ -137,7 +137,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   onClick={() => setGenre(g)}
                   className={`text-xs px-2.5 py-1 rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                     genre.toLowerCase().includes(g.toLowerCase())
-                      ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]  font-semibold"
+                      ? "bg-[var(--acc)]/20 text-[var(--ink)]  font-semibold"
                       : "bg-[var(--sunken)]/60 text-[var(--ink-2)] "
                   } hover:brightness-95`}
                 >
@@ -230,7 +230,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                 className="w-12 h-12 rounded-[var(--r-m)] object-cover shrink-0"
               />
             ) : (
-              <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold flex items-center justify-center shrink-0 text-base">
+              <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] font-bold flex items-center justify-center shrink-0 text-base">
                 {previewName.charAt(0).toUpperCase()}
               </div>
             )}

@@ -93,8 +93,8 @@ export function GenerateAllTemplatesModal({
                 <span
                   className={`text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-mono font-bold ${
                     isCampaign
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
-                      : 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                      ? 'bg-[var(--acc)]/20 text-[var(--ink)] '
+                      : 'bg-[var(--acc)]/20 text-[var(--ink)] '
                   }`}
                 >
                   7 Categorías en 1 clic
@@ -129,7 +129,7 @@ export function GenerateAllTemplatesModal({
 
           {/* Campaign Context Pill (if in campaign mode) */}
           {isCampaign && campaignContext && (
-            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs space-y-1.5">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs space-y-1.5">
               <div className="flex items-center gap-2 font-bold text-[var(--acc)]">
                 <span>Contexto de Campaña detectado:</span>
               </div>
@@ -217,7 +217,7 @@ export function GenerateAllTemplatesModal({
                   >
                     <div
                       className={`p-1.5 rounded-[var(--r-m)] shrink-0 mt-0.5 ${
-                        isCampaign ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)]' : 'bg-[var(--acc)]/10 text-[var(--acc-ink)]'
+                        isCampaign ? 'bg-[var(--acc)]/15 text-[var(--ink)]' : 'bg-[var(--acc)]/10 text-[var(--ink)]'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />

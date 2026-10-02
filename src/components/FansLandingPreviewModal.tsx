@@ -64,7 +64,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       <header className="w-full bg-[var(--surface)] px-3 sm:px-5 py-2.5 shrink-0 z-30 flex items-center justify-between gap-2">
         {/* Lado Izquierdo: Título y Estado */}
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+          <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--ink)] shrink-0">
             <Eye className="w-4 h-4" />
           </div>
           <div className="min-w-0">
@@ -72,7 +72,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-display truncate">
                 {t('previewModalTitle')}
               </h2>
-              <span className="hidden md:inline-flex items-center gap-1 text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold">
+              <span className="hidden md:inline-flex items-center gap-1 text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] font-bold">
                 {t('previewProductionSyncBadge')}
               </span>
             </div>
@@ -256,7 +256,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               type="button"
               onClick={() => setSelectedLanguage(l.code)}
               className={`px-1.5 py-0.5 rounded text-xs font-sans ${
-                selectedLanguage === l.code ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold' : 'text-[var(--ink-2)] opacity-60'
+                selectedLanguage === l.code ? 'bg-[var(--acc)]/20 text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] opacity-60'
               }`}
             >
               {l.flag}

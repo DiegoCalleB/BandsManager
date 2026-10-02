@@ -949,7 +949,7 @@ export function BulkAlbumAudioUploaderModal({
                             <span
                               className={`px-2 py-1 rounded text-xs font-sans flex items-center gap-1 ${
                                 item.chordsSource === "plantilla_generica"
-                                  ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                                  ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                                   : "bg-[var(--ok)]/20 text-[var(--ink)]"
                               }`}
                               title={

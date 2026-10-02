@@ -231,7 +231,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
             {/* Offline Robustness Badge */}
             {!isOnline ? (
               <span
-                className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-sans text-micro font-bold inline-flex items-center gap-1.5"
+                className="px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-sans text-micro font-bold inline-flex items-center gap-1.5"
                 title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
@@ -342,12 +342,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       Audio real
                     </span>
                   ) : stagePlayingIndex !== null ? (
-                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold">
+                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro bg-[var(--acc)]/20 text-[var(--ink)] font-bold">
                       Simulación
                     </span>
                   ) : null}
                   {isCrossfading && nextStageSong && (
-                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro bg-[var(--acc)]/20 text-[var(--ink)] font-bold flex items-center gap-1">
                       <ShowIcon inline emoji="🔀" />Fundiendo → {formatSongTitle(nextStageSong.titulo)}
                     </span>
                   )}
@@ -507,7 +507,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 onClick={() => setStageCrossfadeEnabled(!stageCrossfadeEnabled)}
                 className={`w-10 h-10 rounded-[var(--r-pill)] flex items-center justify-center cursor-pointer transition-ui text-base ${
                   stageCrossfadeEnabled
-                    ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                    ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                     : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
                 title={
@@ -577,7 +577,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                     (AirTurn, PageFlip, Donner, iRig):
                   </span>
                 </span>
-                <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)]">
                   Activo
                 </span>
               </div>
@@ -943,7 +943,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                                 "Interludio / Evento del Show"}
                             </span>
                             {it.audioUrl && (
-                              <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold flex items-center gap-1">
+                              <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-bold flex items-center gap-1">
                                 <Mic className="w-3 h-3" /> Audio real
                               </span>
                             )}

@@ -146,7 +146,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
             <p className="text-xs font-sans text-[var(--ink-2)]">Temas guardados en catálogo</p>
           </div>
         </div>
-        <span className="text-micro font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold">Iris IA activo</span>
+        <span className="text-micro font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--ink)] font-bold">Iris IA activo</span>
       </div>
     </div>
   );
@@ -201,7 +201,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)]">
             <Users className="w-5 h-5" />
           </div>
           <div>
@@ -228,7 +228,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
         <button
           type="button"
           onClick={() => onNavigate && onNavigate('fans')}
-          className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-ui flex flex-col items-center justify-center cursor-pointer"
+          className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink)] transition-ui flex flex-col items-center justify-center cursor-pointer"
         >
           <QrCode className={`w-5 h-5 ${'text-[var(--acc)]'} mb-1`} />
           <span className="text-xs font-sans font-bold">Generar QR concierto</span>
@@ -289,7 +289,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)]">
             <Bot className="w-5 h-5" />
           </div>
           <div>

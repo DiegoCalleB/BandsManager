@@ -326,7 +326,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   isSelected
                     ? 'bg-[var(--ink)] text-[var(--bg)] font-bold'
                     : isToday
-                      ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold'
+                      ? 'bg-[var(--acc)]/15 text-[var(--ink)] font-bold'
                       : 'bg-[var(--sunken)] text-[var(--ink)] '
                 } hover:brightness-95`}
               >
@@ -335,7 +335,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 {totalEvents > 0 && (
                   <span
                     className={`text-micro px-1.5 py-0.2 rounded-[var(--r-pill)] font-mono font-bold ${
-                      isSelected ? 'bg-[var(--surface)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
+                      isSelected ? 'bg-[var(--surface)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--ink)]'
                     }`}
                   >
                     {totalEvents} {totalEvents === 1 ? 'evt' : 'evts'}
@@ -619,7 +619,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
               Agenda Cronológica ({allEventsList.length} eventos)
             </span>
             {calendarSearchTerm.trim() && (
-              <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
+              <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] ">
                 Filtrado por: "{calendarSearchTerm}"
               </span>
             )}
@@ -812,10 +812,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded ${
                                     isConcert
                                       ? isPast
-                                        ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] '
-                                        : 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                                        ? 'bg-[var(--acc)]/15 text-[var(--ink)] '
+                                        : 'bg-[var(--acc)]/20 text-[var(--ink)] '
                                       : isReu
-                                        ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                                        ? 'bg-[var(--acc)]/20 text-[var(--ink)] '
                                         : 'bg-[var(--ok)]/20 text-[var(--ink)] '
                                   }`}
                                 >

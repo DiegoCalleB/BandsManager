@@ -1027,7 +1027,7 @@ export function GooglePlacesExplorerModal({
           {/* Header */}
           <div className="p-4 sm:p-5 flex items-center justify-between shrink-0 bg-[var(--bg)]/60">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)]">
                 <Search className="w-5 h-5" />
               </div>
               <div>
@@ -1035,7 +1035,7 @@ export function GooglePlacesExplorerModal({
                   <h2 className="text-base font-bold font-display text-[var(--acc)]">
                     Buscador de Salas y Nuevos Leads (Scout Descubridor)
                   </h2>
-                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] font-sans font-bold">
+                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)] font-sans font-bold">
                     IA + Google Places
                   </span>
                 </div>
@@ -1075,7 +1075,7 @@ export function GooglePlacesExplorerModal({
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10  space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div className="flex items-start sm:items-center gap-2.5">
-                  <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+                  <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     <Target className="w-5 h-5" />
                   </div>
                   <div>
@@ -1580,7 +1580,7 @@ export function GooglePlacesExplorerModal({
                                 </h4>
                                 {place.alreadyInCrm && (
                                   <span
-                                    className="text-micro px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded font-bold shrink-0"
+                                    className="text-micro px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--ink)] rounded font-bold shrink-0"
                                     title="Este contacto ya existe en tu CRM de Leads"
                                   >
                                     En CRM ({place.crmStatus || "Registrado"})
@@ -1606,7 +1606,7 @@ export function GooglePlacesExplorerModal({
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             {place.rating && (
-                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--acc-ink)] rounded-[var(--r-s)] text-micro font-bold">
+                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--ink)] rounded-[var(--r-s)] text-micro font-bold">
                                 <Star className="w-3 h-3 fill-[var(--acc)]" />
                                 <span>{place.rating}</span>
                                 {place.user_ratings_total && (
@@ -1655,7 +1655,7 @@ export function GooglePlacesExplorerModal({
 
                           <div className="flex items-center gap-1.5">
                             {place.genero && (
-                              <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] font-medium">
+                              <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink)] font-medium">
                                 <Music2 className="w-2.5 h-2.5 shrink-0" />
                                 <span className="truncate max-w-[130px]">
                                   {place.genero}

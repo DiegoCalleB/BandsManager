@@ -149,7 +149,7 @@ const FanFormLanguageSwitcher: React.FC<{
         title={l.label}
         className={`px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
           language === l.code
-            ? "bg-[var(--acc)]/20  text-[var(--acc-ink)] scale-105"
+            ? "bg-[var(--acc)]/20  text-[var(--ink)] scale-105"
             : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:hover:text-[var(--ink)] opacity-80 hover:opacity-100"
         }`}
       >
@@ -964,7 +964,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight leading-snug">
                   {label}
                 </h3>
-                <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold shrink-0">
+                <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] font-bold shrink-0">
                   {t("revolutBadge") || "Contribución"}
                 </span>
               </div>
@@ -1110,7 +1110,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="absolute top-0 inset-x-0 h-1 bg-[var(--acc)] " />
 
           {isPreview && (
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-sans flex items-center justify-between gap-2">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)] text-xs font-sans flex items-center justify-between gap-2">
               <span className="flex items-center gap-1 font-bold">
                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                 {t("interactiveSimulation")}
@@ -1306,7 +1306,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       <Briefcase className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                       {t("bookingTitle")}
                     </div>
-                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink)]">
                       {t("bookingBadgeLive")}
                     </span>
                   </div>
@@ -1377,7 +1377,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   href="/musicos"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] font-sans text-xs font-bold transition-ui "
+                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink)] font-sans text-xs font-bold transition-ui "
                 >
                   {t("musicianBannerCTA")}
                 </a>
@@ -1651,7 +1651,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     <Calendar className="w-3.5 h-3.5" />{" "}
                     {t("upcomingShowsTitle") || "Próximos Conciertos"}
                   </span>
-                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] font-bold">
                     {upcomingConcerts.length}{" "}
                     {upcomingConcerts.length === 1 ? "fecha" : "fechas"}
                   </span>
@@ -1677,7 +1677,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                             {c.ciudad}
                           </p>
                         </div>
-                        <span className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro font-bold shrink-0 font-sans">
+                        <span className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] text-micro font-bold shrink-0 font-sans">
                           {c.fecha}
                         </span>
                       </div>
@@ -1973,7 +1973,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       {t("bookingTitle")}
                     </span>
                   </div>
-                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink)] font-bold">
                     {t("bookingBadgeLive")}
                   </span>
                 </div>
@@ -2050,7 +2050,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 href="/musicos"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc-ink)] font-sans text-xs font-bold transition-ui "
+                className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink)] font-sans text-xs font-bold transition-ui "
               >
                 {t("musicianBannerCTA")}
               </a>

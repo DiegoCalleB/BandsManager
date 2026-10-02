@@ -28,7 +28,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
       {/* Widget Header */}
       <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)] ">
             <Rocket className="w-5 h-5" />
           </div>
           <div>
@@ -36,7 +36,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <h3 className="text-base font-bold font-display text-[var(--ink-2)]">
                 Guía de crecimiento y promoción
               </h3>
-              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
+              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--ink)] ">
                 {growthPlan?.horizonDays || 30}D
               </span>
             </div>
@@ -68,7 +68,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
         <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 flex items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] font-mono text-micro font-bold">
+              <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)] font-mono text-micro font-bold">
                 {todayBlueprint.day} · {todayBlueprint.recommendedPlatform}
               </span>
               <span className="text-xs font-bold text-[var(--ink-2)] truncate">{todayBlueprint.focus}</span>

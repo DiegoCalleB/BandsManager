@@ -174,7 +174,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                   type="button"
                   onClick={() => setEstado('pendiente')}
                   className={`py-2 px-3 rounded-[var(--r-pill)] text-xs font-semibold transition-ui ${
-                    estado === 'pendiente' ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]' : 'bg-[var(--surface)]/40 text-[var(--ink-2)]'
+                    estado === 'pendiente' ? 'bg-[var(--acc)]/20 text-[var(--ink)]' : 'bg-[var(--surface)]/40 text-[var(--ink-2)]'
                   }`}
                 >
                   Pendiente / Cobro futuro

@@ -121,7 +121,7 @@ export function ConvocarEnsayoModal({
           {/* Header */}
           <div className="flex items-center justify-between p-4 sm:p-5">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)]">
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
@@ -264,7 +264,7 @@ export function ConvocarEnsayoModal({
                               onClick={() => toggleConvocado(u.id)}
                               className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-pill)] text-xs transition-ui cursor-pointer ${
                                 isSelected
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--ink)] font-bold'
                                   : 'bg-[var(--surface)] text-[var(--ink-2)] '
                               } hover:brightness-95`}
                             >

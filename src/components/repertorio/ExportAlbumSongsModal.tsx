@@ -675,7 +675,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   </span>
                 </div>
                 {songsWithAudio.length < targetSongs.length && (
-                  <span className="text-xs text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-s)] shrink-0">
+                  <span className="text-xs text-[var(--ink)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-s)] shrink-0">
                     {targetSongs.length - songsWithAudio.length} sin MP3 subido
                   </span>
                 )}

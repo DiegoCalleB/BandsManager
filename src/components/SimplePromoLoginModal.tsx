@@ -483,7 +483,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <button
                       type="button"
                       onClick={onVolverALanding}
-                      className="cursor-pointer text-[11px] text-[var(--ink-3)] hover:text-[var(--ink)] hover:underline transition-colors pt-1"
+                      className="cursor-pointer text-[11px] text-[var(--ink-2)] hover:text-[var(--ink)] hover:underline transition-colors pt-1"
                     >
                       ← Volver a la página principal
                     </button>

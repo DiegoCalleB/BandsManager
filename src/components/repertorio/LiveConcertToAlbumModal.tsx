@@ -1432,7 +1432,7 @@ export const LiveConcertToAlbumModal: React.FC<
                   <h2 className="text-2xl font-black tracking-tight">
                     Live concert to album generator
                   </h2>
-                  <span className="px-2 py-0.5 text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded-[var(--r-pill)]">
+                  <span className="px-2 py-0.5 text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] rounded-[var(--r-pill)]">
                     v2.0 Híbrido
                   </span>
                 </div>
@@ -1601,7 +1601,7 @@ export const LiveConcertToAlbumModal: React.FC<
               </div>
 
               {isAnalyzing && (
-                <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-xs text-[var(--acc-ink)] flex items-center gap-2">
+                <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-xs text-[var(--ink)] flex items-center gap-2">
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   <span>{analysisStatus}</span>
                 </div>
@@ -1613,7 +1613,7 @@ export const LiveConcertToAlbumModal: React.FC<
               <div className="space-y-4">
                 {/* Local File / YouTube Audio Availability Status Banner */}
                 {(!audioAvailable || youtubeBlocked) && (
-                  <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs space-y-3">
+                  <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs space-y-3">
                     <div className="flex items-start gap-2.5">
                       <AlertTriangle className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                       <div>
@@ -1742,7 +1742,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         disabled={history.length === 0}
                         className={`px-2 py-1 text-xs font-bold rounded flex items-center gap-1 transition-ui ${
                           history.length > 0
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
+                            ? "bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
                             : "text-[var(--ink-2)] cursor-not-allowed opacity-50"
                         }`}
                         title="Deshacer última acción (Ctrl+Z)"
@@ -1761,7 +1761,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         disabled={redoStack.length === 0}
                         className={`px-2 py-1 text-xs font-bold rounded flex items-center gap-1 transition-ui ${
                           redoStack.length > 0
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
+                            ? "bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
                             : "text-[var(--ink-2)] cursor-not-allowed opacity-50"
                         }`}
                         title="Rehacer acción cancelada (ctrl+Y / ctrl+Shift+Z)"
@@ -2165,7 +2165,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                     onClick={() =>
                                       handleSnapTrackStartToCue(track.index)
                                     }
-                                    className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)] text-[var(--acc-ink)] hover:text-[var(--ink)] rounded font-sans text-micro font-bold transition-ui cursor-pointer"
+                                    className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)] text-[var(--ink)] hover:text-[var(--ink)] rounded font-sans text-micro font-bold transition-ui cursor-pointer"
                                     title="Ajustar tiempo de inicio para que arranque exactamente en este CUE musical"
                                   >
                                     <ShowIcon inline emoji="⚡" />Ajustar inicio
@@ -2531,7 +2531,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                       "
                                     </span>
                                   </div>
-                                  <span className="text-micro bg-[var(--acc)]/20 text-[var(--acc-ink)] px-2 py-0.5 rounded-[var(--r-s)] font-sans font-bold shrink-0 flex items-center gap-1">
+                                  <span className="text-micro bg-[var(--acc)]/20 text-[var(--ink)] px-2 py-0.5 rounded-[var(--r-s)] font-sans font-bold shrink-0 flex items-center gap-1">
                                     Ver completo ➔
                                   </span>
                                 </div>
@@ -2610,7 +2610,7 @@ export const LiveConcertToAlbumModal: React.FC<
                             <div className="mt-3 p-3.5 bg-[var(--surface)]  rounded-[var(--r-m)] space-y-3 animate-fade-in ring-2 ring-[var(--acc)]/20">
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
                                 <div className="flex items-center gap-2">
-                                  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+                                  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--ink)] shrink-0">
                                     <Volume2 className="w-4 h-4" />
                                   </div>
                                   <div>
@@ -2672,7 +2672,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                         activeSnippet.trackIndex,
                                       )
                                     }
-                                    className="px-2.5 py-1 text-micro font-bold rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/40 transition-ui flex items-center gap-1"
+                                    className="px-2.5 py-1 text-micro font-bold rounded bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/40 transition-ui flex items-center gap-1"
                                     title="Fijar el punto de inicio de este corte en el segundo actual de reproducción"
                                   >
                                     <ShowIcon inline emoji="📍" />Ajustar Inicio (
@@ -3004,7 +3004,7 @@ export const LiveConcertToAlbumModal: React.FC<
               <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-4 text-[var(--ink-2)]">
                 <div className="flex items-center justify-between pb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)]">
+                    <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--ink)]">
                       <Key className="w-4 h-4" />
                     </div>
                     <div>
@@ -3259,7 +3259,7 @@ export const LiveConcertToAlbumModal: React.FC<
                               }}
                               className={`px-2 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui flex items-center gap-1 cursor-pointer ${
                                 tr.type === "musica"
-                                  ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]  hover:bg-[var(--acc)]/30"
+                                  ? "bg-[var(--acc)]/20 text-[var(--ink)]  hover:bg-[var(--acc)]/30"
                                   : "bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30"
                               }`}
                               title="Haz clic para alternar entre canción y speech"

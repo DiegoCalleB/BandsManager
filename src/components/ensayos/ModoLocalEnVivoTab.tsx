@@ -1134,7 +1134,7 @@ function renderFormattedChords(
     if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
       return (
         <div key={idx} className="pt-3 pb-1">
-          <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-xs font-sans font-bold">
+          <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] text-xs font-sans font-bold">
             {line.trim()}
           </span>
         </div>

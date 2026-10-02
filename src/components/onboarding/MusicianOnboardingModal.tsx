@@ -76,7 +76,7 @@ export const MusicianOnboardingModal: React.FC<
           </IconButton>
 
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5 pr-12">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs font-sans font-bold">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] text-xs font-sans font-bold">
               <span>Primeros pasos para músicos</span>
             </div>
 
@@ -123,7 +123,7 @@ export const MusicianOnboardingModal: React.FC<
             className="group relative p-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)]  transition-ui cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 "
           >
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0 transition-transform">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0 transition-transform">
                 <Calendar className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -145,7 +145,7 @@ export const MusicianOnboardingModal: React.FC<
 
             <button
               type="button"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc-ink)] group-hover:text-[var(--on-acc)] text-xs font-sans font-bold transition-ui shrink-0 cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--ink)] group-hover:text-[var(--on-acc)] text-xs font-sans font-bold transition-ui shrink-0 cursor-pointer"
             >
               <span>Ir al Calendario</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -158,7 +158,7 @@ export const MusicianOnboardingModal: React.FC<
             className="group relative p-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--acc-soft)] transition-ui cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
           >
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0 transition-transform">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0 transition-transform">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -166,7 +166,7 @@ export const MusicianOnboardingModal: React.FC<
                   <h3 className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--acc)] transition-colors">
                     Crear mi Dossier (EPK) para salas
                   </h3>
-                  <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                  <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)]">
                     Recomendado
                   </span>
                 </div>
@@ -180,7 +180,7 @@ export const MusicianOnboardingModal: React.FC<
 
             <button
               type="button"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc-ink)] group-hover:text-[var(--on-acc)] text-xs font-sans font-bold transition-ui shrink-0 cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--ink)] group-hover:text-[var(--on-acc)] text-xs font-sans font-bold transition-ui shrink-0 cursor-pointer"
             >
               <span>Configurar dossier</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

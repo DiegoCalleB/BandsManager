@@ -96,7 +96,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
         <div className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] flex items-center justify-center">
                 <Radio className="w-5 h-5" />
               </div>
               <div>

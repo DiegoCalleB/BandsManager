@@ -307,7 +307,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
             <div className="z-10 space-y-2 mt-auto text-left">
               <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-[var(--acc)]/20 flex items-center justify-center text-micro font-mono font-bold text-[var(--acc-ink)]">{nombreBanda.charAt(0).toUpperCase()}</span>
+                <span className="w-5 h-5 rounded-full bg-[var(--acc)]/20 flex items-center justify-center text-micro font-mono font-bold text-[var(--ink)]">{nombreBanda.charAt(0).toUpperCase()}</span>
                 <div>
                   <span className="text-micro font-bold text-[var(--ink)] block truncate max-w-[120px]">{instagramHandle || nombreBanda}</span>
                   <span className="text-micro font-mono text-[var(--ink-2)] block truncate max-w-[120px]">{nombreBanda}</span>
@@ -363,10 +363,10 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+                  <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--ink)] ">
                     Highlight de alto impacto
                   </span>
-                  <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+                  <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--ink)] ">
                     {highlights[selectedHighlightIndex]?.range || 'N/D'}
                   </span>
                 </div>
@@ -470,7 +470,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                           Línea de tiempo interactiva
                         </span>
                       </div>
-                      <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                      <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/10 text-[var(--ink)]">
                         REPRODUCIENDO CROP
                       </span>
                     </div>
@@ -503,7 +503,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
                       <div className="flex justify-between text-micro font-mono text-[var(--ink-2)] px-1">
                         <span><ShowIcon inline emoji="⏱️" />Inicio: <strong className="text-[var(--ink)] font-bold">{formatTime(start)}</strong></span>
-                        <span className="text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2.5 py-0.5 rounded-full font-bold">
+                        <span className="text-[var(--ink)] bg-[var(--acc)]/10 px-2.5 py-0.5 rounded-full font-bold">
                           Duración: {duration} segundos
                         </span>
                         <span><ShowIcon inline emoji="⏱️" />Fin: <strong className="text-[var(--ink)] font-bold">{formatTime(end)}</strong></span>

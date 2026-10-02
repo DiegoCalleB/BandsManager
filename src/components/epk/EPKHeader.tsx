@@ -300,7 +300,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)]">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-micro font-sans font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)] text-micro font-sans font-bold">
               Kit de Prensa y EPK
             </span>
             <span className="text-xs text-[var(--ink-2)] hidden sm:inline">
@@ -485,7 +485,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             onClick={() => setShowAiNotice(!showAiNotice)}
             className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition ${
               showAiNotice
-                ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
+                ? "bg-[var(--acc)]/20 text-[var(--ink)] "
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             }`}
             title="Ver integración con chatbot y agentes de IA"

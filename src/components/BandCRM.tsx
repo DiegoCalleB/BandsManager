@@ -1032,7 +1032,7 @@ export default function BandCRM({
         );
       case "concierto_agendado":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc-ink)] whitespace-nowrap shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink)] whitespace-nowrap shrink-0">
             <Zap className="w-3 h-3 text-[var(--acc)] shrink-0" />
             <span>Concierto Agendado</span>
           </span>
@@ -1277,10 +1277,10 @@ ${myBandName}`;
                   <th className="p-3">Fecha registro</th>
                   <th className="p-3">Estado cuenta</th>
                   <th className="p-3">Notas</th>
-                  <th className="p-3 font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10">
+                  <th className="p-3 font-bold text-[var(--ink)] bg-[var(--acc)]/10">
                     user_id
                   </th>
-                  <th className="p-3 text-right text-[var(--acc-ink)] bg-[var(--acc)]/10 /20 font-bold">
+                  <th className="p-3 text-right text-[var(--ink)] bg-[var(--acc)]/10 /20 font-bold">
                     band_id
                   </th>
                 </tr>
@@ -1335,10 +1335,10 @@ ${myBandName}`;
                       <td className="p-3 text-[var(--ink-2)] max-w-xs truncate">
                         {band.notas || "—"}
                       </td>
-                      <td className="p-3 text-left font-bold text-[var(--acc-ink)] bg-[var(--acc)]/5 font-sans">
+                      <td className="p-3 text-left font-bold text-[var(--ink)] bg-[var(--acc)]/5 font-sans">
                         {band.user_id || "—"}
                       </td>
-                      <td className="p-3 text-right font-bold text-[var(--acc-ink)] bg-[var(--acc)]/5 /20 font-sans">
+                      <td className="p-3 text-right font-bold text-[var(--ink)] bg-[var(--acc)]/5 /20 font-sans">
                         {band.band_id || band.bandId || "band-1"}
                       </td>
                     </tr>

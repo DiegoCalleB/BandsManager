@@ -40,7 +40,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <BarChart3 className="w-5 h-5" /> Cifras clave (social proof)
             </h3>
-            <span className="text-micro font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-micro font-bold text-[var(--ink)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               {config.cifrasClave?.habilitado ? "✓ Visible en EPK" : "Oculto"}
             </span>
           </div>
@@ -132,7 +132,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <Quote className="w-5 h-5" /> Reseñas y citas de prensa
             </h3>
-            <span className="text-micro font-bold text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-micro font-bold text-[var(--ink)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               {config.resenasPrensa?.habilitado ? "✓ Visible en EPK" : "Oculto"}
             </span>
           </div>

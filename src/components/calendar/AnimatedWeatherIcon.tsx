@@ -394,7 +394,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
         return {
           bg: isDanger
             ? "bg-[var(--alert)]/25 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20 text-[var(--acc-ink)]",
+            : "bg-[var(--acc)]/20 text-[var(--ink)]",
         };
       case "rain":
         return {
@@ -406,19 +406,19 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
         return {
           bg: isDanger
             ? "bg-[var(--alert)]/25 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20 text-[var(--acc-ink)]",
+            : "bg-[var(--acc)]/20 text-[var(--ink)]",
         };
       case "wind":
         return {
           bg: isDanger
             ? "bg-[var(--alert)]/25 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20 text-[var(--acc-ink)]",
+            : "bg-[var(--acc)]/20 text-[var(--ink)]",
         };
       default:
         return {
           bg: isDanger
             ? "bg-[var(--alert)]/25 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20 text-[var(--acc-ink)]",
+            : "bg-[var(--acc)]/20 text-[var(--ink)]",
         };
     }
   };

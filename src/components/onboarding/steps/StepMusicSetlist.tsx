@@ -101,7 +101,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             Discografía, canciones y generador de setlists
           </h3>
         </div>
-        <span className="text-xs px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] font-medium">
+        <span className="text-xs px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)] font-medium">
           {totalImportedSongsCount}{" "}
           {totalImportedSongsCount === 1
             ? "canción en repertorio"
@@ -214,7 +214,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                           onClick={() => onToggleTrackSelection(track.id)}
                           className={`flex items-center justify-between p-2 rounded-[var(--r-s)] text-left text-xs transition-colors ${
                             isSelected
-                              ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                              ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                               : "bg-[var(--sunken)]/40 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                           }`}
                         >
@@ -272,7 +272,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             onClick={() => audioInputRef.current?.click()}
             className="  rounded-[var(--r-l)] p-8 text-center cursor-pointer transition-colors bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70"
           >
-            <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--acc)]/10 text-[var(--acc-ink)] flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--acc)]/10 text-[var(--ink)] flex items-center justify-center mx-auto mb-3">
               <Upload className="w-6 h-6" />
             </div>
             <h4 className="text-sm font-semibold text-[var(--ink)] mb-1">

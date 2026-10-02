@@ -697,7 +697,7 @@ export default function PracticeModePanel({
                 Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
               </div>
             ) : (
-              <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+              <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink)]">
                 No hemos podido identificar tu pista. Pídele a quien administra la banda que te asigne un instrumento (Voz, Batería, Bajo,
                 Guitarras, Teclados o Arreglos) en Gestión de Miembros — mientras tanto puedes usar la mezcla manual de abajo.
               </div>
@@ -749,7 +749,7 @@ export default function PracticeModePanel({
                       <div className="flex items-center gap-1.5">
                         <span className="text-[var(--ink)] font-bold">{formatTime(currentTime)}</span>
                         {currentActiveSection && (
-                          <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
+                          <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink)] ">
                             <ShowIcon inline emoji={currentActiveSection.icon} /> {currentActiveSection.name}
                           </span>
                         )}
@@ -823,7 +823,7 @@ export default function PracticeModePanel({
                             isLoopActive
                               ? 'bg-[var(--ink)] text-[var(--bg)] /40 ring-1 ring-[var(--acc)]'
                               : isPlayheadInside
-                                ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                                ? 'bg-[var(--acc)]/20 text-[var(--ink)] '
                                 : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 '
                           }`}
                           title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
@@ -849,7 +849,7 @@ export default function PracticeModePanel({
                     </span>
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] ${
-                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] ' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
+                        speed !== 1 ? 'bg-[var(--acc)]/20 text-[var(--ink)] ' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
                       }`}
                     >
                       {targetBpm} BPM ({speed.toFixed(2)}x)
@@ -925,7 +925,7 @@ export default function PracticeModePanel({
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-[var(--r-m)] ${
                         semitonesOffset !== 0
-                          ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                          ? 'bg-[var(--acc)]/20 text-[var(--ink)] '
                           : 'bg-[var(--ink)]/5 text-[var(--ink-2)] '
                       }`}
                     >
@@ -969,7 +969,7 @@ export default function PracticeModePanel({
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}
                       className={`flex-1 flex items-center justify-center gap-1.5 text-micro font-bold py-1 px-2 rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                         metronomeOn
-                          ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
+                          ? 'bg-[var(--acc)]/20 text-[var(--ink)]'
                           : 'bg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >

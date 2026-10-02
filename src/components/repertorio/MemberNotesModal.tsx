@@ -236,10 +236,10 @@ export function MemberNotesModal({
                 <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)]">
                   <ShowIcon inline emoji="✅" />{summary.lista} listos
                 </span>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)]">
                   <ShowIcon inline emoji="🔶" />{summary.casiLista} casi
                 </span>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)]">
                   <ShowIcon inline emoji="🌱" />{summary.aprendiendo} aprendiendo
                 </span>
                 {summary.sinOpinar > 0 && (

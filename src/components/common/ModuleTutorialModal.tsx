@@ -292,17 +292,17 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
         "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]",
     },
     amber: {
-      badgeBg: "bg-[var(--acc)]/15 text-[var(--acc-ink)] ",
-      iconBox: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--ink)] ",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--ink)] ",
       activeDot: "bg-[var(--acc)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold",
-      hookBorder: " bg-[var(--acc)]/10 text-[var(--acc-ink)]",
+      hookBorder: " bg-[var(--acc)]/10 text-[var(--ink)]",
       highlightText: "text-[var(--acc)]",
       targetCard: " bg-[var(--acc)]/5",
-      targetBadge: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--ink)] ",
       targetBtn:
-        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] ",
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] ",
     },
     blue: {
       badgeBg: "bg-[var(--acc)]/15 text-[var(--ink)]",

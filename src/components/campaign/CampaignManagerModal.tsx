@@ -582,7 +582,7 @@ export function CampaignManagerModal({
                 </div>
 
                 {templateGenerationFeedback && (
-                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs flex items-center justify-between">
+                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs flex items-center justify-between">
                     <span>{templateGenerationFeedback}</span>
                     <button
                       type="button"

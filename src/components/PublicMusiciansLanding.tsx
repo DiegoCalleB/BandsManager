@@ -214,7 +214,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 onClick={() => handleLanguageChange(lang.code)}
                 className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-ui ${
                   currentLang === lang.code
-                    ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]  scale-105"
+                    ? "bg-[var(--acc)]/20 text-[var(--ink)]  scale-105"
                     : "bg-[var(--surface)]/60  hover:opacity-70 hover:opacity-100"
                 }`}
                 title={lang.label}
@@ -233,7 +233,7 @@ export const PublicMusiciansLanding: React.FC = () => {
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-12">
         {/* Optional Origin Band Badge */}
         {originInfo.fromBand && (
-          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-xs font-sans text-[var(--acc-ink)] animate-in fade-in">
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-xs font-sans text-[var(--ink)] animate-in fade-in">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-[var(--acc)]" />
               <span>
@@ -275,7 +275,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs font-sans font-bold mt-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs font-sans font-bold mt-1">
               <span>{t.badge}</span>
             </div>
           </div>
@@ -296,7 +296,7 @@ export const PublicMusiciansLanding: React.FC = () => {
         {/* FEATURE CARDS */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)]">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
               <QrCode className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-[var(--ink)] text-base font-sans">
@@ -308,7 +308,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           </div>
 
           <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)]">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
               <FileText className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-[var(--ink)] text-base font-sans">
@@ -320,7 +320,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           </div>
 
           <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)]">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
               <Music className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-[var(--ink)] text-base font-sans">
@@ -335,7 +335,7 @@ export const PublicMusiciansLanding: React.FC = () => {
         {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
  concretas todavía por confirmar */}
         <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/10 ">
-          <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--ink)] shrink-0">
             <Rocket className="w-5 h-5" />
           </div>
           <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">

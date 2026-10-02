@@ -58,7 +58,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
               }}
               className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-ui cursor-pointer group flex items-center gap-3"
             >
-              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc-ink)] transition-transform shrink-0">
+              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)] transition-transform shrink-0">
                 <FolderMinus className="w-5 h-5" />
               </div>
               <div>

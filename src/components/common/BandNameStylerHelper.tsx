@@ -71,7 +71,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between pb-2.5">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)] font-bold text-xs">
+                <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--ink)] font-bold text-xs">
                   Я
                 </div>
                 <div>

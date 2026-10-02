@@ -77,7 +77,7 @@ export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, on
                   isViable
                     ? 'bg-[var(--ok)]/20 text-[var(--ink)] '
                     : isAjustado
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                      ? 'bg-[var(--acc)]/20 text-[var(--ink)] '
                       : 'bg-[var(--alert)]/20 text-[var(--ink)] '
                 }`}
               >

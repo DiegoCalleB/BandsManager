@@ -88,7 +88,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs font-sans text-left transition-colors cursor-pointer ${
                     isSelected
-                      ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold"
+                      ? "bg-[var(--acc)]/15 text-[var(--ink)] font-bold"
                       : "text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
                   }`}
                 >

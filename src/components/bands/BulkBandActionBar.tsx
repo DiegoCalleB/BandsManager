@@ -55,7 +55,7 @@ const BAND_STATUS_OPTIONS: {
   {
     status: "pendiente_respuesta",
     label: "Pendiente Respuesta",
-    color: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
+    color: "bg-[var(--acc)]/20 text-[var(--ink)] ",
     icon: Clock,
   },
   {

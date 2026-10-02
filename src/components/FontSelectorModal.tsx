@@ -39,7 +39,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
           >
             <div className="flex items-center gap-3">
               <div
-                className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${"bg-[var(--acc)]/15 text-[var(--acc-ink)]"}`}
+                className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${"bg-[var(--acc)]/15 text-[var(--ink)]"}`}
               >
                 <Type className="w-5 h-5" />
               </div>
@@ -108,7 +108,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                               ? "bg-[var(--surface)]/15 text-[var(--ok)] "
                               : preset.isSoft
                                 ? "bg-[var(--acc)]/15 text-[var(--ink)] "
-                                : "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
+                                : "bg-[var(--acc)]/15 text-[var(--ink)]"
                           }`}
                         >
                           {preset.badge}

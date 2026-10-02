@@ -54,7 +54,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openU
                   key={p.id}
                   onClick={() => handleThemeChange(p.id)}
                   className={`w-full px-3 py-2 text-left text-xs font-sans font-semibold flex items-center justify-between gap-2 transition-colors ${
-                    isSelected ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)]' : 'text-[var(--ink-2)] hover:bg-[var(--surface)]/60'
+                    isSelected ? 'bg-[var(--acc)]/15 text-[var(--ink)]' : 'text-[var(--ink-2)] hover:bg-[var(--surface)]/60'
                   }`}
                   title={p.descripcion}
                 >

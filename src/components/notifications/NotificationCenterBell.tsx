@@ -144,7 +144,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 <BellRing className="w-4 h-4 text-[var(--acc)]" />
                 <span className="font-bold text-xs text-[var(--ink)] font-display">Notificaciones</span>
                 {unreadCount > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-micro font-mono text-[var(--acc-ink)] font-bold">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-micro font-mono text-[var(--ink)] font-bold">
                     {unreadCount} nuevas
                   </span>
                 )}
@@ -156,7 +156,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     data-raw
                     type="button"
                     onClick={onMarkAllAsRead}
-                    className="text-micro font-mono text-[var(--acc-ink)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-pill)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
+                    className="text-micro font-mono text-[var(--on-acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-pill)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
                     title="Marcar todas como leídas"
                   >
                     <CheckCheck className="w-3 h-3" />
@@ -239,7 +239,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                       </div>
                       <p className="text-xs text-[var(--ink-2)] line-clamp-2 leading-tight">{item.body}</p>
                       {item.leadName && (
-                        <span className="inline-block text-micro font-mono text-[var(--acc-ink)] font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
+                        <span className="inline-block text-micro font-mono text-[var(--ink)] font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
                           <ShowIcon inline emoji="📍" />{item.leadName}
                         </span>
                       )}
@@ -279,7 +279,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                   setIsOpen(false);
                   onOpenSettings();
                 }}
-                className="text-micro font-bold text-[var(--acc-ink)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 "
+                className="text-micro font-bold text-[var(--ink)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 "
               >
                 <Settings className="w-3 h-3" />
                 <span>Configurar avisos</span>

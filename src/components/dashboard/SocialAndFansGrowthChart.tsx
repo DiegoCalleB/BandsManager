@@ -547,7 +547,7 @@ export const SocialAndFansGrowthChart: React.FC<
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 ">
         <div className="flex items-center gap-3">
           <div
-            className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${"bg-[var(--acc)]/20 text-[var(--acc-ink)]"}`}
+            className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${"bg-[var(--acc)]/20 text-[var(--ink)]"}`}
           >
             <TrendingUp className="w-5 h-5" />
           </div>

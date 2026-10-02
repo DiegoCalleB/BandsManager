@@ -1388,7 +1388,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <div className="bg-[var(--surface)]/50 rounded-[var(--r-l)] p-6 flex flex-col space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-micro font-sans font-bold px-2.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                    <span className="text-micro font-sans font-bold px-2.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)]">
                       Festivales y Buskers
                     </span>
                     <span className="text-xl font-bold text-[var(--ink)]">

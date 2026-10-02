@@ -484,7 +484,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     @{currentUser.username} •{" "}
                     {isAdmin ? "Administrador" : "Músico"}
                   </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--ink)]">
                     {currentPlanDef.name}
                   </span>
                 </p>
@@ -684,7 +684,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                 </div>
 
-                <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97]">
+                <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97]">
                   {uploadingLogo ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
@@ -848,7 +848,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                   onClick={() => setCreateBandPlan(pKey)}
                                   className={`p-2 rounded-[var(--r-s)] text-left text-xs transition-ui cursor-pointer ${
                                     isPlanSelected
-                                      ? "bg-[var(--acc)]/20  text-[var(--acc-ink)]"
+                                      ? "bg-[var(--acc)]/20  text-[var(--ink)]"
                                       : "bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]"
                                   }`}
                                 >
@@ -967,7 +967,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           key={b.band_id}
                           className={`w-full p-2.5 rounded-[var(--r-m)] flex items-center justify-between gap-3 transition-ui ${
                             isSelected
-                              ? "bg-[var(--acc)]/15  text-[var(--acc-ink)]"
+                              ? "bg-[var(--acc)]/15  text-[var(--ink)]"
                               : "bg-[var(--surface)] text-[var(--ink-2)]"
                           }`}
                         >
@@ -1068,7 +1068,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         onClick={() => setLanguage(lang.code)}
                         className={`p-2.5 rounded-[var(--r-m)] text-left transition-ui cursor-pointer flex items-center justify-between gap-2 active:scale-[0.97] ${
                           isSelected
-                            ? "bg-[var(--acc)]/20  text-[var(--acc-ink)] font-bold"
+                            ? "bg-[var(--acc)]/20  text-[var(--ink)] font-bold"
                             : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                         }`}
                       >
@@ -1128,7 +1128,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 onClick={() => onThemeChange(key as ThemeName)}
                                 className={`p-2 rounded-[var(--r-m)] text-left transition-ui cursor-pointer flex items-center justify-between gap-1.5 ${
                                   isSelected
-                                    ? "bg-[var(--acc)]/15  text-[var(--acc-ink)] font-bold"
+                                    ? "bg-[var(--acc)]/15  text-[var(--ink)] font-bold"
                                     : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                                 }`}
                               >
@@ -1216,7 +1216,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         }}
                         className={`p-2 rounded-[var(--r-m)] text-left transition-ui cursor-pointer flex items-center justify-between gap-1.5 ${
                           isSelected
-                            ? "bg-[var(--acc)]/15  text-[var(--acc-ink)] font-bold"
+                            ? "bg-[var(--acc)]/15  text-[var(--ink)] font-bold"
                             : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                         }`}
                         title={p.descripcion}
@@ -1574,7 +1574,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 {plan.badge}
                               </span>
                               {isCurrent && (
-                                <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                                <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)]">
                                   Plan actual
                                 </span>
                               )}
@@ -1618,7 +1618,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 : "Cambio de plan inmediato"}
                             </span>
                             {isCurrent ? (
-                              <span className="text-micro font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center gap-1">
+                              <span className="text-micro font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--ink)] flex items-center gap-1">
                                 <Check className="w-3 h-3 text-[var(--acc)]" />
                                 <span>Activo</span>
                               </span>

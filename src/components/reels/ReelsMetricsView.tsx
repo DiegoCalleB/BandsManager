@@ -1222,7 +1222,7 @@ export function ReelsMetricsView({
                       <Camera className="w-2.5 h-2.5" />
                       <span>Escanear</span>
                     </button>
-                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--ink)]">
                       {latestMetric?.tiktok_video_count
                         ? `${latestMetric.tiktok_video_count} vídeos`
                         : "Reels / TikTok"}
@@ -1352,7 +1352,7 @@ export function ReelsMetricsView({
                     <Heart className="w-3.5 h-3.5 text-[var(--acc)] fill-[var(--acc)]/20" />{" "}
                     Fans Registrados
                   </span>
-                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--ink)]">
                     100% RGPD
                   </span>
                 </div>

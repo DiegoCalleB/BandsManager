@@ -184,8 +184,8 @@ export const MultiModelPitchComparatorModal: React.FC<
   };
 
   const getProviderBadge = (id: string) => {
-    if (id === "gemini") return "bg-[var(--acc)]/15 text-[var(--acc-ink)] ";
-    if (id === "deepseek") return "bg-[var(--acc)]/15 text-[var(--acc-ink)]";
+    if (id === "gemini") return "bg-[var(--acc)]/15 text-[var(--ink)] ";
+    if (id === "deepseek") return "bg-[var(--acc)]/15 text-[var(--ink)]";
     return "bg-[var(--sunken)] text-[var(--ink-2)]";
   };
 
@@ -228,7 +228,7 @@ export const MultiModelPitchComparatorModal: React.FC<
           {/* HEADER */}
           <div className="px-5 py-3.5800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc-ink)]">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--ink)]">
                 <Layers className="w-5 h-5" />
               </div>
               <div>
@@ -236,7 +236,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   <h2 className="text-base font-bold text-[var(--ink)] font-display">
                     Comparador A/B: DeepSeek <ShowIcon inline emoji="🚀" />vs. Gemini <ShowIcon inline emoji="⚡" />
                   </h2>
-                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--ink)]">
                     A/B testing + costes reales (€)
                   </span>
                 </div>
@@ -290,7 +290,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                       onClick={() => handleToggleProvider(prov.id)}
                       className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                         isSelected
-                          ? "bg-[var(--acc)]/20 text-[var(--acc-ink)] "
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] "
                           : "bg-[var(--bg)]/60 text-[var(--ink-2)] "
                       } hover:brightness-95`}
                     >
@@ -529,7 +529,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                             className={`text-micro font-bold px-2 py-0.5 rounded ${
                               isDeepSeek
                                 ? "bg-[var(--ok)]/15 text-[var(--ink)]"
-                                : "bg-[var(--acc)]/15 text-[var(--acc-ink)] "
+                                : "bg-[var(--acc)]/15 text-[var(--ink)] "
                             }`}
                           >
                             {isDeepSeek ? "10x más barato" : "Ultra rápido"}
@@ -596,7 +596,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                             className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                               isSelected
                                 ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                                : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] "
+                                : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] "
                             }`}
                           >
                             {isSelected ? (

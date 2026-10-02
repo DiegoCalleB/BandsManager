@@ -95,7 +95,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
 
           {/* Header */}
           <div className="flex items-start gap-4">
-            <div className="p-3 rounded-[var(--r-l)] bg-[var(--acc)]/15 text-[var(--acc-ink)] shrink-0">
+            <div className="p-3 rounded-[var(--r-l)] bg-[var(--acc)]/15 text-[var(--ink)] shrink-0">
               <Lock className="w-7 h-7" />
             </div>
             <div>

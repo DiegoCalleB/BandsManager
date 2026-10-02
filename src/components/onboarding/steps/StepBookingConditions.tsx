@@ -143,7 +143,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             onClick={() => setRequiereAlojamiento(!requiereAlojamiento)}
             className={`w-full p-3 rounded-[var(--r-m)] text-left transition-ui flex items-center justify-between ${
               requiereAlojamiento
-                ? "bg-[var(--acc)]/10  text-[var(--acc-ink)]"
+                ? "bg-[var(--acc)]/10  text-[var(--ink)]"
                 : "bg-[var(--bg)] text-[var(--ink-2)]"
             }`}
           >

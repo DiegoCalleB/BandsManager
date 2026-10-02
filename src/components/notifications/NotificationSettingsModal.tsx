@@ -68,7 +68,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--acc)]/30 ">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] flex items-center justify-center">
                 <BellRing className="w-5 h-5" />
               </div>
               <div>
@@ -136,7 +136,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               {/* Master toggle */}
               <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)] flex items-center justify-center">
                     {config.enabled ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4 text-[var(--ink-2)]" />}
                   </div>
                   <div>

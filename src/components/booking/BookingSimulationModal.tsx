@@ -72,7 +72,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
         >
           <div className="p-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)]">
                 <Bot className="w-6 h-6" />
               </div>
               <div>
@@ -163,7 +163,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 space-y-3">
                 <div className="flex items-center justify-between pb-2">
                   <span className="font-semibold text-[var(--ink-2)]">Vista previa del mensaje</span>
-                  <span className="text-micro px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)]">Listo para registrar</span>
+                  <span className="text-micro px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink)]">Listo para registrar</span>
                 </div>
                 <Textarea
                   rows={5}

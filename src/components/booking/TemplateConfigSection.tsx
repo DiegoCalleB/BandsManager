@@ -209,7 +209,7 @@ export function TemplateConfigSection({
             onClick={() => setShowRecommendations(!showRecommendations)}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
               showRecommendations
-                ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                ? 'bg-[var(--acc)]/20 text-[var(--ink)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--acc)] '
             } hover:brightness-95`}
           >
@@ -223,7 +223,7 @@ export function TemplateConfigSection({
             onClick={() => setShowExamples(!showExamples)}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold transition-ui cursor-pointer ${
               showExamples
-                ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
+                ? 'bg-[var(--acc)]/20 text-[var(--ink)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] '
             } hover:brightness-95`}
           >
@@ -271,7 +271,7 @@ export function TemplateConfigSection({
 
       {/* Optimization Feedback Message */}
       {optimizationFeedbackMsg && (
-        <div className="p-3 bg-[var(--acc)]/15 text-[var(--acc-ink)] text-xs rounded-[var(--r-m)] flex items-center justify-between animate-in fade-in">
+        <div className="p-3 bg-[var(--acc)]/15 text-[var(--ink)] text-xs rounded-[var(--r-m)] flex items-center justify-between animate-in fade-in">
           <span>{optimizationFeedbackMsg}</span>
           {onClearFeedbackMsg && (
             <button type="button" onClick={onClearFeedbackMsg} className="text-[var(--acc)] font-bold ml-2 hover:text-[var(--ink)]">

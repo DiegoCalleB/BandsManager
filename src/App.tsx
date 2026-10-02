@@ -130,6 +130,7 @@ const CampaignManagerModal = safeLazy(() =>
     default: m.CampaignManagerModal,
   })),
 );
+const SongStudioModal = safeLazy(() => import("./components/SongStudioModal"));
 import {
   FontPresetKey,
   applyFontPreset,
@@ -916,14 +917,18 @@ export default function App() {
     document.documentElement.setAttribute("data-theme", resolvedTheme);
   };
 
+  const [globalStudioSong, setGlobalStudioSong] = useState<any | null>(null);
+  const [globalStudioOpenIris, setGlobalStudioOpenIris] =
+    useState<boolean>(false);
+
   const handleOpenStudio = (song: any) => {
-    // Placeholder for Studio editor integration
-    console.log("Open Studio for song:", song);
+    setGlobalStudioOpenIris(false);
+    setGlobalStudioSong(song);
   };
 
   const handleOpenIris = (song: any) => {
-    // Placeholder for Iris integration
-    console.log("Open Iris for song:", song);
+    setGlobalStudioOpenIris(true);
+    setGlobalStudioSong(song);
   };
 
   const activeBandConcerts = React.useMemo(() => {
@@ -2147,7 +2152,7 @@ export default function App() {
                   <span className="text-micro font-bold font-display text-[var(--ink-2)] leading-none truncate group-hover:text-[var(--ink)]">
                     BANDMANAGER<span className="text-[var(--acc)]">.io</span>
                   </span>
-                  <span className="text-[10px] text-[var(--ink-3)] font-normal flex items-center gap-0.5">
+                  <span className="text-micro text-[var(--ink-2)] font-normal flex items-center gap-0.5">
                     Landing <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100" />
                   </span>
                 </div>
@@ -2798,6 +2803,24 @@ export default function App() {
             onTriggerTest={triggerTestNotification}
             onTriggerTestSound={triggerTestNotificationSound}
           />
+
+          {/* Song Studio Global Modal */}
+          {globalStudioSong && (
+            <SongStudioModal
+              song={globalStudioSong}
+              colors={colors}
+              onClose={() => {
+                setGlobalStudioSong(null);
+                setGlobalStudioOpenIris(false);
+              }}
+              onUpdateSong={(updatedSong: any) => {
+                setGlobalStudioSong(updatedSong);
+              }}
+              currentUser={currentUser}
+              currentUsername={currentUser?.name || currentUser?.username}
+              initialOpenIrisModal={globalStudioOpenIris}
+            />
+          )}
         </Suspense>
 
         <GlobalPlayer

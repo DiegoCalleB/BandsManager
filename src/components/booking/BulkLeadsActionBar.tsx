@@ -52,7 +52,7 @@ const STATUS_OPTIONS: {
   {
     status: "pendiente_aprobacion",
     label: "Pendiente Aprobación",
-    color: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
+    color: "bg-[var(--acc)]/20 text-[var(--ink)] ",
     icon: Clock,
   },
   {
@@ -70,7 +70,7 @@ const STATUS_OPTIONS: {
   {
     status: "contactado",
     label: "Contactado",
-    color: "bg-[var(--acc)]/20 text-[var(--acc-ink)]",
+    color: "bg-[var(--acc)]/20 text-[var(--ink)]",
     icon: MessageSquare,
   },
   {

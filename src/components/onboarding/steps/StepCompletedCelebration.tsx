@@ -103,7 +103,7 @@ export const StepCompletedCelebration: React.FC<
                 Dossier EPK Online
               </h4>
             </div>
-            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-medium">
+            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-medium">
               Para salas y festivales
             </span>
           </div>

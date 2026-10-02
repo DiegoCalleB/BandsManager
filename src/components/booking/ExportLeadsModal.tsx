@@ -149,7 +149,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between pb-4800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)]">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--ink)]">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
@@ -193,7 +193,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   <span className="text-xs font-bold">
                     Contactos a la vista con filtro actual
                   </span>
-                  <span className="text-xs font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                  <span className="text-xs font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)]">
                     {filteredLeads.length} contactos
                   </span>
                 </div>
@@ -252,7 +252,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                     <span className="text-xs font-bold">
                       Solo contactos seleccionados
                     </span>
-                    <span className="text-xs font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                    <span className="text-xs font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)]">
                       {selectedLeads.length} seleccionados
                     </span>
                   </div>

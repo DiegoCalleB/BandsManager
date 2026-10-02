@@ -26,7 +26,7 @@ export const EMAIL_TEMPLATES = [
     title: "1. Proposal Inicial a Sala de Conciertos (Aforo 200 - 600 pax)",
     type: "Booking directo",
     icon: Building2,
-    badgeColor: "bg-[var(--acc)]/20 text-[var(--acc-ink)] ",
+    badgeColor: "bg-[var(--acc)]/20 text-[var(--ink)] ",
     subject: "Propuesta de Concierto - {bandName} en {nombre_sala} (Gira 2026)",
     body: `Hola team de {nombre_sala},
 
@@ -140,7 +140,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
           {/* Modal Header */}
           <div className="p-5 bg-[var(--sunken)] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)]">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
@@ -175,7 +175,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                     onClick={() => setSelectedTemplate(tpl.id)}
                     className={`p-3 rounded-[var(--r-m)] text-left transition-ui flex flex-col justify-between gap-2 cursor-pointer ${
                       isSelected
-                        ? "bg-[var(--acc)]/20  text-[var(--acc-ink)]"
+                        ? "bg-[var(--acc)]/20  text-[var(--ink)]"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]"
                     }`}
                   >
@@ -253,7 +253,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc-ink)] text-xs flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs flex items-center gap-2">
               <span>
                 <strong>Consejo de Agentes AI:</strong> El Agente Redactor
                 utiliza este mismo estilo directo y conciso al generar

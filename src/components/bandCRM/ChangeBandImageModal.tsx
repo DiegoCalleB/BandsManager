@@ -168,7 +168,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
               className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 rounded-[var(--r-m)] flex items-center justify-between transition-ui cursor-pointer disabled:opacity-50"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-[var(--acc)]/20 text-[var(--acc-ink)] rounded-[var(--r-s)]">
+                <div className="p-2 bg-[var(--acc)]/20 text-[var(--ink)] rounded-[var(--r-s)]">
                   {isSearching ? (
                     <Loader2 className="w-5 h-5 animate-spin text-[var(--acc)]" />
                   ) : (

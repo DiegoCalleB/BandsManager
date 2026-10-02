@@ -752,7 +752,7 @@ export function OrdenDelDiaTab({
                               </span>
                             )}
                             {item.evaluacion === "regular" && (
-                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)]">
+                              <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)]">
                                 <ShowIcon inline emoji="🟡" />Regular
                               </span>
                             )}

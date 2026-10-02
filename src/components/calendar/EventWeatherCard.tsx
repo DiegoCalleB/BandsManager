@@ -215,8 +215,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
               hasAlerts
                 ? dangerAlertsCount > 0
                   ? "bg-[var(--alert)]/20 text-[var(--ink)]"
-                  : "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
-                : "bg-[var(--acc)]/15 text-[var(--acc-ink)]"
+                  : "bg-[var(--acc)]/20 text-[var(--ink)]"
+                : "bg-[var(--acc)]/15 text-[var(--ink)]"
             }`}
           >
             {hasAlerts ? (
@@ -392,7 +392,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 whileHover={{ scale: 1.05 }}
                 className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-ui ${
                   (weatherData.windGusts || 0) >= 40
-                    ? "bg-[var(--acc)]/20  text-[var(--acc-ink)]"
+                    ? "bg-[var(--acc)]/20  text-[var(--ink)]"
                     : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >

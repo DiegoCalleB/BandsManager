@@ -673,7 +673,7 @@ export function SetlistAIAnalysisModal({
                       key={i}
                       className={`px-2 py-0.5 rounded text-micro font-sans font-medium flex items-center gap-1 transition ${
                         w.type === "warning"
-                          ? "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
+                          ? "bg-[var(--acc)]/10 text-[var(--ink)] "
                           : w.type === "success"
                             ? "bg-[var(--ok)]/10 text-[var(--ink-2)]"
                             : "bg-[var(--acc)]/10 text-[var(--ink-2)]"

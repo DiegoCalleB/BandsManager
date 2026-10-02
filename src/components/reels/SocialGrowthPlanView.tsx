@@ -382,9 +382,9 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               ).length;
               const channelColor =
                 channel.platform === "instagram"
-                  ? "text-[var(--acc-ink)] bg-[var(--acc)]/10"
+                  ? "text-[var(--ink)] bg-[var(--acc)]/10"
                   : channel.platform === "tiktok"
-                    ? "text-[var(--acc-ink)] bg-[var(--acc)]/10"
+                    ? "text-[var(--ink)] bg-[var(--acc)]/10"
                     : channel.platform === "youtube"
                       ? "text-[var(--ink-2)] bg-[var(--surface)]"
                       : "text-[var(--ok)] bg-[var(--ok)]/10";
@@ -620,7 +620,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                       action.impact === "critico"
                         ? "bg-[var(--alert)]/10 text-[var(--alert)]"
                         : action.impact === "alto"
-                          ? "bg-[var(--acc)]/10 text-[var(--acc-ink)] "
+                          ? "bg-[var(--acc)]/10 text-[var(--ink)] "
                           : "bg-[var(--tentative)] text-[var(--on-tentative)]";
 
                     return (

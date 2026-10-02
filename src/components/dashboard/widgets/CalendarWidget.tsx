@@ -485,7 +485,7 @@ export function CalendarWidget({
                     isSelected
                       ? "bg-[var(--acc)]/20 text-[var(--ink)] font-bold"
                       : isToday
-                        ? "bg-[var(--acc)]/10 text-[var(--acc-ink)] font-bold"
+                        ? "bg-[var(--acc)]/10 text-[var(--ink)] font-bold"
                         : dayEvents.length > 0
                           ? "bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]"
                           : "bg-[var(--sunken)]/50 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -545,7 +545,7 @@ export function CalendarWidget({
                       <span
                         className={`text-micro px-1.5 py-0.5 rounded font-bold ${
                           evt.type === "concierto"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                            ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                             : "bg-[var(--ok)]/20 text-[var(--ink)]"
                         }`}
                       >
@@ -619,7 +619,7 @@ export function CalendarWidget({
                         }
                         className={`text-micro p-1 rounded font-bold truncate cursor-pointer ${
                           e.type === "concierto"
-                            ? "bg-[var(--acc)]/20 text-[var(--acc-ink)]"
+                            ? "bg-[var(--acc)]/20 text-[var(--ink)]"
                             : "bg-[var(--ok)]/20 text-[var(--ink)]"
                         }`}
                         title={`${e.type.toUpperCase()}: ${e.title}`}

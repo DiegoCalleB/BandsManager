@@ -246,8 +246,8 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
     score = Math.min(98, Math.max(20, score));
 
     if (score >= 85) return { score, label: 'Viral Explosivo', color: 'text-[var(--alert)]', bg: 'bg-[var(--alert)]/15 ' };
-    if (score >= 70) return { score, label: 'Alto Impacto', color: 'text-[var(--acc-ink)]', bg: 'bg-[var(--acc)]/15 ' };
-    return { score, label: 'Mejorable', color: 'text-[var(--acc-ink)]', bg: 'bg-[var(--acc)]/10 ' };
+    if (score >= 70) return { score, label: 'Alto Impacto', color: 'text-[var(--on-acc)]', bg: 'bg-[var(--acc)]/15 ' };
+    return { score, label: 'Mejorable', color: 'text-[var(--on-acc)]', bg: 'bg-[var(--acc)]/10 ' };
   };
 
   const hookAnalysis = calculateHookScore(currentHook);
@@ -466,7 +466,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     doctorDiagnosis.cringeScore <= 25 
                       ? 'bg-[var(--ok)]/15 text-[var(--ink)] '
                       : doctorDiagnosis.cringeScore <= 55
-                        ? 'bg-[var(--acc)]/15 text-[var(--acc-ink)] '
+                        ? 'bg-[var(--acc)]/15 text-[var(--ink)] '
                         : 'bg-[var(--alert)]/15 text-[var(--ink)] '
                   }`}>
                     <span>Cringe Factor: {doctorDiagnosis.cringeScore}/100</span>
@@ -476,7 +476,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   </div>
 
                   {/* Estimated Retention Badge */}
-                  <div className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro font-mono font-bold flex items-center gap-1">
+                  <div className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1">
                     <TrendingUp className="w-3 h-3 text-[var(--acc-ink)]" />
                     <span>Retención 0-3s: {doctorDiagnosis.estimatedRetention3s}%</span>
                   </div>
@@ -862,7 +862,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                 <button
                   type="button"
                   onClick={onSyncFromTourCRM}
-                  className="w-full text-micro font-mono text-[var(--ink)] hover:text-[var(--acc-ink)] bg-[var(--scrim)]/40 hover:bg-[var(--scrim)]/60 rounded py-1 flex items-center justify-center gap-1 cursor-pointer transition-ui bg-[var(--acc)]/10"
+                  className="w-full text-micro font-mono text-[var(--ink)] hover:text-[var(--on-acc)] bg-[var(--scrim)]/40 hover:bg-[var(--scrim)]/60 rounded py-1 flex items-center justify-center gap-1 cursor-pointer transition-ui bg-[var(--acc)]/10"
                 >
                   <Sparkles className="w-2.5 h-2.5" /> Sincronizar con próxima fecha CRM
                 </button>

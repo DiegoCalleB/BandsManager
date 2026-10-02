@@ -401,7 +401,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                           {config.donacionRevolut?.titulo ||
                             "Colabora con la banda"}
                         </h3>
-                        <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc-ink)] font-bold shrink-0">
+                        <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink)] font-bold shrink-0">
                           Contribución
                         </span>
                       </div>
@@ -522,7 +522,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 </div>
 
                 {desactualizada && (
-                  <div className="rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc-ink)] p-3 text-xs flex items-start gap-2">
+                  <div className="rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink)] p-3 text-xs flex items-start gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>
                       Has modificado el texto en español desde la última

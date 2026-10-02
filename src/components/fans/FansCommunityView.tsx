@@ -214,7 +214,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         return {
           label: "Fan Fundador",
           icon: Star,
-          bg: "bg-[var(--acc)]/15 text-[var(--acc-ink)] ",
+          bg: "bg-[var(--acc)]/15 text-[var(--ink)] ",
           dot: "bg-[var(--acc)]",
         };
       case "superfan":
@@ -279,7 +279,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 <span className="text-xs font-sans font-bold text-[var(--acc)]">
                   Muro oficial de la banda
                 </span>
-                <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] flex items-center gap-1">
+                <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)] flex items-center gap-1">
                   <Megaphone className="w-2.5 h-2.5" /> Oficial
                 </span>
               </div>
@@ -331,7 +331,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         >
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc-ink)] font-bold">
+              <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--ink)] font-bold">
                 <Pin className="w-4 h-4" />
               </div>
               <div>
@@ -339,7 +339,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   <span className="font-bold text-[var(--ink)] text-sm">
                     {ann.autor}
                   </span>
-                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-sans font-bold">
+                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-sans font-bold">
                     Noticia banda
                   </span>
                 </div>
@@ -549,7 +549,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
                 {/* Favorite Song Badge */}
                 {fan.cancionFavorita && (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-xs font-sans text-[var(--acc-ink)]">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-xs font-sans text-[var(--ink)]">
                     <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
                     <span>
                       Tema favorito:{" "}

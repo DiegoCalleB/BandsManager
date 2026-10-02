@@ -269,7 +269,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc-ink)]">
+              <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)]">
                 <Mic className="w-5 h-5" />
               </div>
               <div>

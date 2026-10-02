@@ -644,7 +644,7 @@ export function SongTransitionPreviewModal({
           {/* Compact Header */}
           <div className="flex items-center justify-between px-3.5 py-2 bg-[var(--sunken)] shrink-0">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+              <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)] shrink-0">
                 <Headphones className="w-3.5 h-3.5" />
               </div>
               <div>
@@ -652,7 +652,7 @@ export function SongTransitionPreviewModal({
                   <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight">
                     Comprobar unión y transición
                   </h2>
-                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--ink)]">
                     #{indexA + 1} ➔ #{indexB + 1}
                   </span>
                   <span
@@ -1130,7 +1130,7 @@ export function SongTransitionPreviewModal({
                     }}
                     className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold flex items-center gap-1 transition cursor-pointer ${
                       autoCueEnabled
-                        ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] "
+                        ? "bg-[var(--acc)]/15 text-[var(--ink)] "
                         : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title="Auto-CUE Inteligente: Detecta y salta automáticamente los huecos de silencio y aplausos al principio y final de canciones en directo"

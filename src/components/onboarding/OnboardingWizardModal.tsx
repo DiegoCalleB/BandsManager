@@ -1351,7 +1351,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
           <div className="p-5 sm:p-6 flex items-center justify-between bg-[var(--bg)]/50">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] font-semibold">
+                <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-semibold">
                   Configuración inicial · plan{" "}
                   {userPlanId.toUpperCase().replace("_", " ")}
                 </span>
@@ -1390,7 +1390,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                       isCurrent
                         ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
                         : isPassed
-                          ? "bg-[var(--acc)]/15 text-[var(--acc-ink)] hover:bg-[var(--acc)]/25"
+                          ? "bg-[var(--acc)]/15 text-[var(--ink)] hover:bg-[var(--acc)]/25"
                           : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                     }`}
                   >

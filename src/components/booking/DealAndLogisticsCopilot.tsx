@@ -84,7 +84,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       return {
         tone: 'closed_schedule',
         label: 'Agenda de temporada cerrada',
-        color: 'text-[var(--acc-ink)] bg-[var(--acc)]/10 ',
+        color: 'text-[var(--ink)] bg-[var(--acc)]/10 ',
         tactic:
           'No insistas para esta temporada. Agradece la respuesta y pide fecha exacta de apertura del próximo trimestre para entrar los primeros.',
         suggestedSubject: `Re: Concierto en ${lead.nombre_sala} - Fechas próxima temporada`,
@@ -103,7 +103,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       return {
         tone: 'budget_concern',
         label: 'Objeción económica / Caché',
-        color: 'text-[var(--acc-ink)] bg-[var(--acc)]/10 ',
+        color: 'text-[var(--ink)] bg-[var(--acc)]/10 ',
         tactic: 'Ofrece pasar a formato mixto (fijo mínimo + taquilla compartida) o proponer fecha doble con banda local amiga.',
         suggestedSubject: `Re: Adaptación de propuesta económica para ${lead.nombre_sala}`,
         suggestedDraft: `Entendemos perfectamente vuestra postura y valoramos mucho el esfuerzo que hacéis por mantener la música en vivo. Lo primordial para nosotros es tocar en vuestra sala.\n\n¿Os encajaría plantearlo a taquilla con un porcentaje del 80/20 a nuestro favor, o bien organizar una fecha compartida con una banda local que active la venta anticipada?\n\nEstamos abiertos a encontrar la fórmula que os sea cómoda.`,
@@ -131,7 +131,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
     return {
       tone: 'open_reply',
       label: 'Conversación en curso',
-      color: 'text-[var(--acc-ink)] bg-[var(--acc)]/10 ',
+      color: 'text-[var(--ink)] bg-[var(--acc)]/10 ',
       tactic: 'Responde aclarando las dudas técnicas y manteniendo la iniciativa con una llamada a la acción clara.',
       suggestedSubject: `Re: Detalles concierto Bakandeya en ${lead.nombre_sala}`,
       suggestedDraft: `Hola de nuevo,\n\nMuchas gracias por las indicaciones. Por nuestra parte estamos totalmente alineados con la propuesta. ¿Queréis que os mandemos el cartel editable o preferís coordinar la comunicación vosotros?`,
@@ -214,7 +214,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
               isBreakEvenFeasible
                 ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
-                : 'bg-[var(--acc)]/15 text-[var(--acc-ink)]'
+                : 'bg-[var(--acc)]/15 text-[var(--ink)]'
             }`}
           >
             {isBreakEvenFeasible ? 'Bolo Viable' : 'Requiere >60% Aforo'}

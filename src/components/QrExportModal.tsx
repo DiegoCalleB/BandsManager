@@ -126,7 +126,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
         {/* Cabecera */}
         <div className="flex items-center justify-between pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-l)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc-ink)]">
+            <div className="w-10 h-10 rounded-[var(--r-l)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -168,7 +168,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                   <FileText className="w-4 h-4 text-[var(--acc)]" />
                   Cartel A4 completo
                 </span>
-                <span className="text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] px-2 py-0.5 rounded-[var(--r-s)]">
+                <span className="text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Recomendado
                 </span>
               </div>

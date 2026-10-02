@@ -72,13 +72,13 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         {/* Modal Header */}
         <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--acc)]/10 ">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] ">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan estratégico de crecimiento y promoción</h3>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] ">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--ink)] ">
                   {growthPlan.horizonDays} Días
                 </span>
               </div>
@@ -220,7 +220,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Estrategia para {channelData.name}</h4>
-                      <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)] ">
+                      <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--ink)] ">
                         {channelData.growthStage}
                       </span>
                     </div>

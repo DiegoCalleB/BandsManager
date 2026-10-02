@@ -321,7 +321,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                   key={sf.id}
                   className={`group relative shrink-0 flex items-center rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                     isActive
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold shadow-xs'
+                      ? 'bg-[var(--acc)]/20 text-[var(--ink)] font-bold shadow-xs'
                       : 'bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)]'
                   }`}
                 >

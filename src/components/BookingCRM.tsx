@@ -1649,7 +1649,7 @@ export default function BookingCRM({
                         setRoadbookModalLead(selectedLead || leads[0] || null);
                         setIsRoadbookModalOpen(true);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc-ink)] transition-ui cursor-pointer active:scale-[0.97]"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-[var(--acc)]" />
@@ -1941,7 +1941,7 @@ export default function BookingCRM({
               <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
                 <span className="text-micro font-bold text-[var(--acc)] shrink-0">Filtros:</span>
                 {selectedCityFilter && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     <ShowIcon inline emoji="📍" />{selectedCityFilter}
                     <IconButton label="Cerrar" type="button" onClick={() => setSelectedCityFilter('')}>
                       <X className="w-3 h-3" />
@@ -1949,7 +1949,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {typeFilter !== 'todos' && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     <ShowIcon inline emoji="🏛️" />{typeFilter}
                     <IconButton label="Cerrar" type="button" onClick={() => setTypeFilter('todos')}>
                       <X className="w-3 h-3" />
@@ -1957,7 +1957,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {onlyFavoritesFilter && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     <ShowIcon inline emoji="⭐" />Favoritos
                     <IconButton label="Cerrar" type="button" onClick={() => setOnlyFavoritesFilter(false)}>
                       <X className="w-3 h-3" />
@@ -1973,7 +1973,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {minCapacityFilter > 0 && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     &gt;{minCapacityFilter} pax
                     <IconButton label="Cerrar" type="button" onClick={() => setMinCapacityFilter(0)}>
                       <X className="w-3 h-3" />
@@ -1981,7 +1981,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {activeSavedFilterId && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                     <ShowIcon inline emoji="📌" />{savedFilters.find((f) => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
                     <IconButton label="Cerrar" type="button" onClick={() => setActiveSavedFilterId(null)}>
                       <X className="w-3 h-3" />

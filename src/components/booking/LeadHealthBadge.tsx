@@ -69,7 +69,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     return {
       type: 'caliente',
       label: hasClickedEpk ? '🔥 EPK Visto' : multipleOpens ? '🔥 Releyendo' : '🔥 Lead Caliente',
-      badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold',
+      badgeClass: 'bg-[var(--acc)]/20 text-[var(--ink)] font-bold',
       icon: '🔥',
       description: desc,
     };
@@ -82,7 +82,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
       return {
         type: 'seguimiento',
         label: 'Seguimiento Necesario',
-        badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-bold',
+        badgeClass: 'bg-[var(--acc)]/20 text-[var(--ink)] font-bold',
         icon: '⏳',
         description: `Enviado hace ${days}d sin respuesta`,
       };
@@ -95,7 +95,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     return {
       type: 'frio',
       label: 'Lead Frío',
-      badgeClass: 'bg-[var(--acc)]/20 text-[var(--acc-ink)] font-medium',
+      badgeClass: 'bg-[var(--acc)]/20 text-[var(--ink)] font-medium',
       icon: '🧊',
       description: `Sin interacción desde hace ${days}d`,
     };

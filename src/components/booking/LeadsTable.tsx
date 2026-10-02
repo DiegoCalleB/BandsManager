@@ -709,7 +709,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     ) {
       return (
         <span
-          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0 shadow-xs"
+          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-bold bg-[var(--acc)]/20 text-[var(--ink)] shrink-0 shadow-xs"
           title="Interés alto"
         >
           <Flame className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -720,7 +720,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     if (temp === "tibio") {
       return (
         <span
-          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-medium bg-[var(--acc)]/15 text-[var(--acc-ink)] shrink-0"
+          className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-medium bg-[var(--acc)]/15 text-[var(--ink)] shrink-0"
           title="En evaluación / Interés templado"
         >
           <span><ShowIcon inline emoji="🌤️" />Tibio</span>
@@ -753,28 +753,28 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     }
     if (intent === "pedir_cache") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] ">
           <ShowIcon inline emoji="💰" />Negociación caché
         </span>
       );
     }
     if (intent === "pedir_info_tecnica") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] ">
           <ShowIcon inline emoji="🎛️" />Pide rider
         </span>
       );
     }
     if (intent === "rechazo_programacion_llena") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] ">
           <ShowIcon inline emoji="⏳" />Prog. Llena
         </span>
       );
     }
     if (intent === "derivar_contacto") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+        <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] ">
           <ShowIcon inline emoji="📋" />Deriva contacto
         </span>
       );
@@ -843,7 +843,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               )}
             </button>
             {selectedLeadIds.length > 0 && (
-              <span className="text-[var(--acc-ink)] font-bold bg-[var(--acc)]/15 px-2 py-0.5 rounded-[var(--r-s)] text-xs">
+              <span className="text-[var(--ink)] font-bold bg-[var(--acc)]/15 px-2 py-0.5 rounded-[var(--r-s)] text-xs">
                 {selectedLeadIds.length} selecc.
               </span>
             )}
@@ -1117,7 +1117,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         {lead.fechas_propuestas_sala &&
                           lead.fechas_propuestas_sala.length > 0 && (
                             <span
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro font-mono font-semibold"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] text-micro font-mono font-semibold"
                               title={`Fechas propuestas por la sala: ${lead.fechas_propuestas_sala.join(", ")}`}
                             >
                               <Calendar className="w-3 h-3 text-[var(--acc)] shrink-0" />
@@ -1155,7 +1155,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
                     {/* Tactical Playbook Chip */}
                     {lead.estrategia_playbook && (
-                      <div className="p-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-micro text-[var(--acc-ink)] flex items-center justify-between gap-1">
+                      <div className="p-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-micro text-[var(--ink)] flex items-center justify-between gap-1">
                         <span className="truncate font-medium flex items-center gap-1">
                           <Zap className="w-3 h-3 text-[var(--acc)] shrink-0" />
                           <span>{lead.estrategia_playbook.titulo}</span>
@@ -1302,7 +1302,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <button
                         type="button"
                         onClick={(e) => handleQuickApprovePitch(e, lead)}
-                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px]"
+                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px]"
                         title="Aprobar pitch directamente para envío"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1325,7 +1325,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             pitchDraft: nudgeText,
                           });
                         }}
-                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px] shadow-xs"
+                        className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer min-h-[38px] shadow-xs"
                         title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                       >
                         <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1799,7 +1799,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                 pitchDraft: nudgeText,
                               });
                             }}
-                            className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] rounded text-micro font-bold transition-ui cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
+                            className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] rounded text-micro font-bold transition-ui cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
                             title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                           >
                             <Clock className="w-3 h-3 text-[var(--acc)]" />

@@ -185,7 +185,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
                   )}
                   {isLandline && (
                     <span
-                      className="text-micro font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc-ink)] flex items-center gap-1"
+                      className="text-micro font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink)] flex items-center gap-1"
                       title="Parece un teléfono fijo; puede no tener WhatsApp habilitado"
                     >
                       <AlertTriangle className="w-3 h-3" /> Posible fijo

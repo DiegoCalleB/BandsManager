@@ -352,7 +352,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   {modalBandInfo.initials}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc-ink)] inline-flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--ink)] inline-flex items-center gap-1">
                     <ShowIcon inline emoji="🎸" />{modalBandInfo.name}
                   </span>
                   <h3 className={`text-lg sm:text-xl font-bold font-display mt-1 line-clamp-2 sm:truncate ${textTitle}`}>{selectedEventTitle}</h3>
@@ -1197,17 +1197,17 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   camisetas: {
                     icon: <Shirt className="w-3.5 h-3.5" />,
                     label: 'Camisetas',
-                    color: 'text-[var(--acc-ink)] bg-[var(--acc)]/15',
+                    color: 'text-[var(--ink)] bg-[var(--acc)]/15',
                   },
                   vinilos: {
                     icon: <Disc3 className="w-3.5 h-3.5" />,
                     label: 'Vinilos',
-                    color: 'text-[var(--acc-ink)] bg-[var(--acc)]/15',
+                    color: 'text-[var(--ink)] bg-[var(--acc)]/15',
                   },
                   musica: {
                     icon: <Music className="w-3.5 h-3.5" />,
                     label: 'Música (CD/Tape)',
-                    color: 'text-[var(--acc-ink)] bg-[var(--acc)]/15',
+                    color: 'text-[var(--ink)] bg-[var(--acc)]/15',
                   },
                   accesorios: {
                     icon: <Tag className="w-3.5 h-3.5" />,
@@ -1605,7 +1605,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                       <button
                                         type="button"
                                         onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, { stockFinal: 0 })}
-                                        className="text-micro font-mono px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc-ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
+                                        className="text-micro font-mono px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30 cursor-pointer"
                                         title="Marcar como agotado tras el concierto"
                                       >
                                         Agotado (0)
@@ -1812,7 +1812,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               diferenciaCuadre === 0
                                 ? 'bg-[var(--ok)]/20 text-[var(--ink)]'
                                 : diferenciaCuadre > 0
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--ink)]'
                                   : 'bg-[var(--alert)]/20 text-[var(--ink)]'
                             }`}
                           >

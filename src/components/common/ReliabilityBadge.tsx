@@ -25,7 +25,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
   let levelText = "Fiabilidad Alta";
 
   if (score < 50) {
-    badgeColor = "bg-[var(--acc)]/15 text-[var(--acc-ink)] ";
+    badgeColor = "bg-[var(--acc)]/15 text-[var(--ink)] ";
     barColor = "bg-[var(--acc)]";
     levelText = "Fiabilidad Media";
   }
