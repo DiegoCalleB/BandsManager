@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   Sparkles,
   X,
@@ -19,22 +20,74 @@ import {
 } from 'lucide-react';
 import { Button, IconButton } from '../ui';
 
+const IRIS_PRISM_RAYS = [
+  { d: 'M 195,43 L 400,10', color: '#f43f5e' },
+  { d: 'M 195,43 L 400,22', color: '#f97316' },
+  { d: 'M 195,43 L 400,34', color: '#eab308' },
+  { d: 'M 195,43 L 400,46', color: '#22c55e' },
+  { d: 'M 195,43 L 400,58', color: '#06b6d4' },
+  { d: 'M 195,43 L 400,70', color: '#a855f7' },
+];
+
 const IrisPrismBanner: React.FC = () => {
   return (
     <div className="relative w-full h-20 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
-            <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
-        <path d="M 0,40 L 160,40" stroke="white" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" className="" />
-        <polygon points="160,15 220,65 160,65" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-        <polygon points="162,18 218,63 162,63" fill="rgba(255,255,255,0.05)" />
-        <path d="M 195,43 L 400,10" stroke="#f43f5e" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,22" stroke="#f97316" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,34" stroke="#eab308" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,46" stroke="#22c55e" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,58" stroke="#06b6d4" strokeWidth="2" opacity="0.8" />
-        <path d="M 195,43 L 400,70" stroke="#a855f7" strokeWidth="2" opacity="0.8" />
+      <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
+        {/* Rayo de luz blanco entrante animado */}
+        <motion.path
+          d="M 0,40 L 160,40"
+          stroke="white"
+          strokeWidth="2.5"
+          strokeDasharray="6 3"
+          opacity={0.85}
+          animate={{ strokeDashoffset: [0, -18] }}
+          transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
+        />
+        {/* Partícula de energía viajando hacia el prisma */}
+        <motion.circle
+          cy={40}
+          r={3}
+          fill="white"
+          animate={{ cx: [0, 160], opacity: [0.1, 1, 0.1] }}
+          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+        />
+        {/* Prisma óptico de cristal */}
+        <polygon points="160,15 220,65 160,65" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
+        <motion.polygon
+          points="162,18 218,63 162,63"
+          fill="rgba(255,255,255,0.08)"
+          animate={{ opacity: [0.05, 0.25, 0.05] }}
+          transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
+        />
+        {/* Destello focal de refracción */}
+        <motion.circle
+          cx={195}
+          cy={43}
+          r={4}
+          fill="white"
+          animate={{ scale: [0.8, 1.6, 0.8], opacity: [0.6, 1, 0.6] }}
+          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+        />
+        {/* Rayos del espectro multicolor descompuesto flotando/fluyendo en cascada */}
+        {IRIS_PRISM_RAYS.map((ray, i) => (
+          <motion.path
+            key={i}
+            d={ray.d}
+            stroke={ray.color}
+            strokeWidth="2.5"
+            strokeDasharray="8 4"
+            opacity={0.85}
+            animate={{ strokeDashoffset: [0, -24], opacity: [0.4, 1, 0.4] }}
+            transition={{ repeat: Infinity, duration: 1.4, ease: 'linear', delay: i * 0.12 }}
+          />
+        ))}
       </svg>
-      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)]/60 text-micro font-mono text-[var(--ink-2)]">
-        <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)] " />
+      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)]/85 text-micro font-mono text-[var(--ink-2)]">
+        <motion.span
+          className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]"
+          animate={{ opacity: [0.3, 1, 0.3] }}
+          transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }}
+        />
         <span>Iris Espectro · Separación Multicapa por IA</span>
       </div>
     </div>
