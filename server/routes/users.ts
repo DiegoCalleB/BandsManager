@@ -381,7 +381,7 @@ export async function buildAvailableBandsForUser(
     userEmail.includes('brais');
 
   if (isBraisMoure) {
-    targetUser.instrument = 'Batería';
+    targetUser.instrument = targetUser.instrument || 'Batería';
     const cleanCurrentBand = cleanBandId(targetUser.band_id);
     const effectivePlan = normalizePlan(targetUser.plan || 'cabeza_de_cartel');
     const withoutBakandeya = availableBands.filter(
@@ -408,9 +408,6 @@ export async function buildAvailableBandsForUser(
       withoutBakandeya.forEach((b) => {
         if (cleanBandId(b.band_id) === 'master-of-prompts') {
           b.band_id = 'band-master-of-prompts';
-          b.bandName = 'Master of Prompts';
-          b.nombre_banda = 'Master of Prompts';
-          b.plan = 'cabeza_de_cartel';
           b.is_main = cleanCurrentBand === 'master-of-prompts';
         }
       });
@@ -436,9 +433,6 @@ export async function buildAvailableBandsForUser(
       withoutBakandeya.forEach((b) => {
         if (cleanBandId(b.band_id) === 'os-herdeiros-do-codigo') {
           b.band_id = 'band-os-herdeiros-do-codigo';
-          b.bandName = 'Os Herdeiros do Código';
-          b.nombre_banda = 'Os Herdeiros do Código';
-          b.plan = 'cabeza_de_cartel';
           b.is_main = cleanCurrentBand === 'os-herdeiros-do-codigo';
         }
       });
@@ -1841,15 +1835,15 @@ router.get('/auth/me', async (req, res) => {
     user.email?.toLowerCase().includes('brais');
 
   if (isBraisUser) {
-    user.instrument = 'Batería';
+    user.instrument = user.instrument || 'Batería';
     user.plan = normalizePlan(user.plan || 'cabeza_de_cartel');
     const cleanCurrent = cleanBandId(user.band_id);
     if (cleanCurrent === 'master-of-prompts') {
       user.band_id = 'band-master-of-prompts';
-      user.bandName = 'Master of Prompts';
+      user.bandName = user.bandName || 'Master of Prompts';
     } else if (cleanCurrent === 'os-herdeiros-do-codigo') {
       user.band_id = 'band-os-herdeiros-do-codigo';
-      user.bandName = 'Os Herdeiros do Código';
+      user.bandName = user.bandName || 'Os Herdeiros do Código';
     } else if (!user.band_id || cleanCurrent === 'bakandeya') {
       user.band_id = 'band-master-of-prompts';
       user.bandName = 'Master of Prompts';

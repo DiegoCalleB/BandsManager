@@ -97,7 +97,8 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     userEmail.includes('brais');
 
   if (isBraisMoureUser) {
-    foundUser.instrument = 'Batería';
+    // Valores por defecto, no forzados: si Brais edita su banda/instrumento, se respeta.
+    foundUser.instrument = foundUser.instrument || 'Batería';
     addBandIdAndVariants('band-os-herdeiros-do-codigo');
     addBandIdAndVariants('band-master-of-prompts');
     allowedBandIds.delete('bakandeya');
@@ -107,10 +108,10 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     const cleanUserCurrent = (foundUser.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
     if (cleanUserCurrent === 'master-of-prompts') {
       foundUser.band_id = 'band-master-of-prompts';
-      foundUser.bandName = 'Master of Prompts';
+      foundUser.bandName = foundUser.bandName || 'Master of Prompts';
     } else if (cleanUserCurrent === 'os-herdeiros-do-codigo') {
       foundUser.band_id = 'band-os-herdeiros-do-codigo';
-      foundUser.bandName = 'Os Herdeiros do Código';
+      foundUser.bandName = foundUser.bandName || 'Os Herdeiros do Código';
     } else if (!foundUser.band_id || cleanUserCurrent === 'bakandeya') {
       foundUser.band_id = 'band-master-of-prompts';
       foundUser.bandName = 'Master of Prompts';

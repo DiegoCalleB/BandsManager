@@ -347,17 +347,17 @@ export function ensureBakandeyaBandId(state: any): boolean {
       ) {
         const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
         if (cleanCurrent === 'master-of-prompts') {
-          if (u.band_id !== 'band-master-of-prompts' || u.bandName !== 'Master of Prompts' || u.instrument !== 'Batería') {
+          if (u.band_id !== 'band-master-of-prompts' || !u.bandName || !u.instrument) {
             u.band_id = 'band-master-of-prompts';
-            u.bandName = 'Master of Prompts';
-            u.instrument = 'Batería';
+            u.bandName = u.bandName || 'Master of Prompts';
+            u.instrument = u.instrument || 'Batería';
             changed = true;
           }
         } else if (cleanCurrent === 'os-herdeiros-do-codigo') {
-          if (u.band_id !== 'band-os-herdeiros-do-codigo' || u.bandName !== 'Os Herdeiros do Código' || u.instrument !== 'Batería') {
+          if (u.band_id !== 'band-os-herdeiros-do-codigo' || !u.bandName || !u.instrument) {
             u.band_id = 'band-os-herdeiros-do-codigo';
-            u.bandName = 'Os Herdeiros do Código';
-            u.instrument = 'Batería';
+            u.bandName = u.bandName || 'Os Herdeiros do Código';
+            u.instrument = u.instrument || 'Batería';
             changed = true;
           }
         } else {
@@ -1068,7 +1068,7 @@ export function loadState(): any {
             existing.email = initUser.email;
             changed = true;
           }
-          if (existing.instrument !== initUser.instrument) {
+          if (!existing.instrument) {
             existing.instrument = initUser.instrument;
             changed = true;
           }
