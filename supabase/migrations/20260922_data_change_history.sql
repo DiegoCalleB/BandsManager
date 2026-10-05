@@ -61,7 +61,13 @@ BEGIN
   INSERT INTO public.data_change_history(tabla, fila_id, band_id, operacion, datos_anteriores)
   VALUES (TG_TABLE_NAME, v_fila_id, v_band_id, TG_OP, to_jsonb(OLD));
 
-  RETURN OLD;
+  -- En un trigger BEFORE UPDATE el valor devuelto ES la fila que se guarda. Devolver OLD
+  -- descartaba en silencio todos los UPDATE (la fila se quedaba igual, sin error). Para DELETE
+  -- devolver OLD es lo correcto; para UPDATE hay que devolver NEW.
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  END IF;
+  RETURN NEW;
 END;
 $$;
 

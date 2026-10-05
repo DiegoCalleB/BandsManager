@@ -89,6 +89,14 @@ export async function dbGetEpkConfig(bandId: string) {
     audioPreview: data.audio_preview || {},
     cifrasClave: data.cifras_clave || {},
     resenasPrensa: data.resenas_prensa || {},
+    genero: data.genero || '',
+    fraseImpacto: data.frase_impacto || '',
+    bandasSimilares: Array.isArray(data.bandas_similares) ? data.bandas_similares : [],
+    mostrarBandasSimilares: !!data.mostrar_bandas_similares,
+    riderConfig: data.rider_config || {},
+    idioma: data.idioma || undefined,
+    fontStyle: data.font_style || undefined,
+    tipografia: data.tipografia || undefined,
     plantilla: (data.plantilla as any) || 'stage',
     ordenSecciones: (data.orden_secciones as any) || undefined,
     seccionesOcultas: (data.secciones_ocultas as any) || undefined,
@@ -391,6 +399,25 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
           : existing?.audioPreview) || {},
     cifras_clave: mergedCifras,
     resenas_prensa: mergedResenas,
+    // Campos que el editor del EPK permite cambiar pero que antes no tenían columna ni se
+    // escribían aquí: se editaban en pantalla y se perdían en el siguiente refresco. Con
+    // `!== undefined` un borrado intencional ('' o []) también se respeta.
+    genero: config.genero !== undefined ? config.genero : (existing?.genero ?? ''),
+    frase_impacto:
+      config.fraseImpacto !== undefined ? config.fraseImpacto : (existing?.fraseImpacto ?? ''),
+    bandas_similares:
+      config.bandasSimilares !== undefined
+        ? config.bandasSimilares
+        : (existing?.bandasSimilares ?? []),
+    mostrar_bandas_similares:
+      config.mostrarBandasSimilares !== undefined
+        ? !!config.mostrarBandasSimilares
+        : !!existing?.mostrarBandasSimilares,
+    rider_config:
+      config.riderConfig !== undefined ? config.riderConfig : (existing?.riderConfig ?? {}),
+    idioma: config.idioma !== undefined ? config.idioma : (existing?.idioma ?? null),
+    font_style: config.fontStyle !== undefined ? config.fontStyle : (existing?.fontStyle ?? null),
+    tipografia: config.tipografia !== undefined ? config.tipografia : (existing?.tipografia ?? null),
     plantilla:
       (config.plantilla !== undefined
         ? config.plantilla

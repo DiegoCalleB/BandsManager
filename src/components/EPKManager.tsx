@@ -16,6 +16,7 @@ import { EPKDonacionesBlock } from './epk/EPKDonacionesBlock';
 import { EPKFirmaQRBlock } from './epk/EPKFirmaQRBlock';
 import { EPKPlantillasBlock } from './epk/EPKPlantillasBlock';
 import { normalizePlan } from '../utils/planPermissions';
+import { camposNoGuardados } from '../utils/epkVerificacion';
 import { getPublicEpkUrl } from '../utils/bandHash';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
@@ -329,7 +330,19 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         },
       };
 
-      await api.updateEpkConfig(payload);
+      const respuesta: any = await api.updateEpkConfig(payload);
+
+      // El servidor devuelve la fila leída de la BD tras guardar. Si algún campo enviado no
+      // coincide, el 200 era engañoso (la BD no cambió): se avisa en vez de dar por bueno el guardado.
+      const noGuardados = camposNoGuardados(payload, respuesta?.epkConfig);
+      if (noGuardados.length > 0) {
+        console.error('[EPK] El servidor respondió OK pero no persistió:', noGuardados, { payload, guardado: respuesta?.epkConfig });
+        setSaveError(
+          `El servidor respondió "guardado" pero la base de datos no refleja estos cambios: ${noGuardados.join(', ')}. ` +
+            'No cierres la pantalla y avisa al desarrollador (detalle en la consola del navegador, F12).'
+        );
+        return;
+      }
 
       if (onSave) {
         onSave(payload);
@@ -339,7 +352,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       setTimeout(() => setSavedSuccess(false), 3500);
     } catch (err: any) {
       console.error('Error saving EPK config:', err);
-      setSaveError(err?.message || 'No se pudo guardar el dossier. Inténtalo de nuevo.');
+      const estado = typeof err?.status === 'number' ? ` (HTTP ${err.status})` : '';
+      setSaveError(
+        (err?.message || 'No se pudo guardar el dossier. Inténtalo de nuevo.') + estado
+      );
     } finally {
       setSaving(false);
     }
