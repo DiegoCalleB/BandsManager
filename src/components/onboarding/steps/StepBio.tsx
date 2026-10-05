@@ -1,0 +1,131 @@
+import React from "react";
+import { FileText, Sparkles, Clock, Users } from "lucide-react";
+import { Button, Input, Textarea } from '../../ui';
+
+interface StepBioProps {
+  slogan: string;
+  setSlogan: (slogan: string) => void;
+  bio: string;
+  setBio: (bio: string) => void;
+  formato: string;
+  setFormato: (formato: string) => void;
+  numMusicos: number;
+  setNumMusicos: (n: number) => void;
+  duracionDirecto: string;
+  setDuracionDirecto: (dur: string) => void;
+  onGenerateBioAI: () => void;
+}
+
+export const StepBio: React.FC<StepBioProps> = ({
+  slogan,
+  setSlogan,
+  bio,
+  setBio,
+  formato,
+  setFormato,
+  numMusicos,
+  setNumMusicos,
+  duracionDirecto,
+  setDuracionDirecto,
+  onGenerateBioAI,
+}) => {
+  return (
+    <div className="space-y-6 animate-in fade-in duration-200">
+      <div className="flex items-center gap-2 pb-2">
+        <FileText className="w-5 h-5 text-[var(--acc)]" />
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Biografía, slogan y formato directo
+        </h3>
+      </div>
+
+      {/* Slogan */}
+      <div>
+        <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+          Slogan / frase de impacto
+        </label>
+        <Input
+          type="text"
+          value={slogan}
+          onChange={(e) => setSlogan(e.target.value)}
+          placeholder="Ej. Guitarras afiladas y melodías directas al corazón"
+          className="w-full"
+        />
+        <p className="text-xs text-[var(--ink-2)] mt-1">
+          Aparece en la cabecera del Dossier de Prensa interactivo (EPK) y en el
+          QR de fans.
+        </p>
+      </div>
+
+      {/* Biografía con Asistente */}
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="text-xs font-medium text-[var(--ink-2)]">
+            Biografía / resumen de prensa
+          </label>
+          <Button
+            variant="neutral"
+            size="xs"
+            type="button"
+            onClick={onGenerateBioAI}
+            className="items-center gap-1.5"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Redactar con IA / sugerencia
+          </Button>
+        </div>
+        <Textarea
+          rows={5}
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          placeholder="Cuenta la trayectoria de la banda, influencias, lanzamientos destacados y lo que transmitís en vuestros conciertos…"
+          className="w-full"
+        />
+      </div>
+
+      {/* Formato de Directo */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+            Formato de escenario
+          </label>
+          <Input
+            size="sm"
+            type="text"
+            value={formato}
+            onChange={(e) => setFormato(e.target.value)}
+            placeholder="Ej. Banda completa, Trío acústico…"
+            className="w-full"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+            Músicos en escenario
+          </label>
+          <Input size="sm" aria-label="Músicos en escenario"
+            type="number"
+            min={1}
+            max={25}
+            value={numMusicos}
+            onChange={(e) => setNumMusicos(Number(e.target.value))}
+            className="w-full"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+            Duración típica del show
+          </label>
+          <Input
+            size="sm"
+            type="text"
+            value={duracionDirecto}
+            onChange={(e) => setDuracionDirecto(e.target.value)}
+            placeholder="Ej. 60 - 75 min"
+            className="w-full"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};

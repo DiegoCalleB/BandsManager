@@ -1,0 +1,277 @@
+import { describe, it, expect } from 'vitest';
+import {
+  parseRmsCurve,
+  ventanasConMasEnergia,
+  resumirEnergiaParaPrompt,
+  analizarEnergiaAudio,
+  medirVariacionInterna,
+  calcularVolumenPromedioAudio,
+  calcularEnergiaMultifactor,
+  DB_SILENCIO,
+  type PuntoEnergia,
+  construirFiltroPreprocesamientoDirecto,
+  resolverFuenteAudioLocal,
+} from '../audioEnergy';
+
+/** Salida real de `ametadata=print`, tal cual la escupe ffmpeg. */
+const SALIDA_FFMPEG = `frame:0    pts:0       pts_time:0
+lavfi.astats.Overall.RMS_level=-47.118214
+frame:1    pts:8000    pts_time:1
+lavfi.astats.Overall.RMS_level=-31.605195
+frame:2    pts:16000   pts_time:2
+lavfi.astats.Overall.RMS_level=-21.093191
+`;
+
+describe('parseRmsCurve', () => {
+  it('lee los pares pts_time / RMS_level de ffmpeg', () => {
+    expect(parseRmsCurve(SALIDA_FFMPEG)).toEqual([
+      { t: 0, db: -47.118214 },
+      { t: 1, db: -31.605195 },
+      { t: 2, db: -21.093191 },
+    ]);
+  });
+
+  it('convierte el -inf del silencio en un suelo, no en -Infinity', () => {
+    // ffmpeg imprime literalmente `-inf` en el silencio absoluto; sin esto, cualquier
+    // media posterior daría -Infinity o NaN y se llevaría por delante la detección.
+    const curva = parseRmsCurve('pts_time:0\nlavfi.astats.Overall.RMS_level=-inf\n');
+    expect(curva).toEqual([{ t: 0, db: DB_SILENCIO }]);
+    expect(Number.isFinite(curva[0].db)).toBe(true);
+  });
+
+  it('trata nan igual que el silencio', () => {
+    expect(parseRmsCurve('pts_time:5\nlavfi.astats.Overall.RMS_level=nan\n')).toEqual([
+      { t: 5, db: DB_SILENCIO },
+    ]);
+  });
+
+  it('ignora una medición sin su marca de tiempo', () => {
+    expect(parseRmsCurve('lavfi.astats.Overall.RMS_level=-20\n')).toEqual([]);
+  });
+
+  it('devuelve vacío ante entradas vacías', () => {
+    expect(parseRmsCurve('')).toEqual([]);
+    expect(parseRmsCurve(null)).toEqual([]);
+    expect(parseRmsCurve(undefined)).toEqual([]);
+  });
+});
+
+describe('ventanasConMasEnergia', () => {
+  /** 60 s: flojo salvo un subidón claro entre el 30 y el 45. */
+  const curva: PuntoEnergia[] = [];
+  for (let t = 0; t < 60; t++) curva.push({ t, db: t >= 30 && t < 45 ? -10 : -45 });
+
+  it('encuentra el tramo donde de verdad suena la banda', () => {
+    const [mejor] = ventanasConMasEnergia(curva, { duracion: 10, maxVentanas: 3 })
+      .slice()
+      .sort((a, b) => b.score - a.score);
+    expect(mejor.start).toBeGreaterThanOrEqual(30);
+    expect(mejor.end).toBeLessThanOrEqual(45);
+    expect(mejor.score).toBe(100);
+  });
+
+  it('respeta la duración pedida', () => {
+    for (const v of ventanasConMasEnergia(curva, { duracion: 15 })) {
+      expect(v.end - v.start).toBe(15);
+    }
+  });
+
+  it('no devuelve ventanas solapadas', () => {
+    const vs = ventanasConMasEnergia(curva, { duracion: 10, maxVentanas: 4 });
+    for (let i = 1; i < vs.length; i++) {
+      expect(vs[i].start).toBeGreaterThanOrEqual(vs[i - 1].end);
+    }
+  });
+
+  it('las devuelve en orden cronológico', () => {
+    const vs = ventanasConMasEnergia(curva, { duracion: 5, maxVentanas: 4 });
+    const inicios = vs.map((v) => v.start);
+    expect(inicios).toEqual([...inicios].sort((a, b) => a - b));
+  });
+
+  it('con volumen plano no inventa un ganador: todo al 50', () => {
+    const plana: PuntoEnergia[] = [];
+    for (let t = 0; t < 40; t++) plana.push({ t, db: -20 });
+    for (const v of ventanasConMasEnergia(plana, { duracion: 10 })) {
+      expect(v.score).toBe(50);
+    }
+  });
+
+  it('devuelve vacío si el vídeo es más corto que la ventana pedida', () => {
+    expect(ventanasConMasEnergia(curva, { duracion: 120 })).toEqual([]);
+  });
+
+  it('aguanta una curva vacía o basura', () => {
+    expect(ventanasConMasEnergia([], { duracion: 10 })).toEqual([]);
+    expect(ventanasConMasEnergia(null as any, { duracion: 10 })).toEqual([]);
+    expect(ventanasConMasEnergia([{ t: 0, db: -20 }], { duracion: 10 })).toEqual([]);
+  });
+
+  it('no se descoloca si la curva llega desordenada', () => {
+    const desordenada = [...curva].reverse();
+    const [mejor] = ventanasConMasEnergia(desordenada, { duracion: 10 })
+      .slice()
+      .sort((a, b) => b.score - a.score);
+    expect(mejor.start).toBeGreaterThanOrEqual(30);
+  });
+});
+
+describe('resumirEnergiaParaPrompt', () => {
+  it('escribe los tramos en mm:ss con su puntuación', () => {
+    const texto = resumirEnergiaParaPrompt([
+      { start: 95, end: 125, db: -12, score: 100 },
+      { start: 200, end: 230, db: -30, score: 40 },
+    ]);
+    expect(texto).toContain('1:35-2:05 (energía 100/100)');
+    expect(texto).toContain('3:20-3:50 (energía 40/100)');
+    expect(texto).toContain('volumen medido');
+  });
+
+  it('sin tramos no mete ruido en el prompt', () => {
+    expect(resumirEnergiaParaPrompt([])).toBe('');
+  });
+});
+
+describe('medirVariacionInterna', () => {
+  it('un tema plano (mismo volumen todo el rato) no tiene variación interna', () => {
+    const plana: PuntoEnergia[] = Array.from({ length: 30 }, (_, t) => ({ t, db: -20 }));
+    expect(medirVariacionInterna(plana)).toBe(0);
+  });
+
+  it('un tema con contraste real (baladea y luego explota) da variación alta', () => {
+    const contraste: PuntoEnergia[] = [];
+    for (let t = 0; t < 60; t++) contraste.push({ t, db: t % 20 < 10 ? -45 : -10 });
+    expect(medirVariacionInterna(contraste)).toBeGreaterThanOrEqual(6);
+  });
+
+  it('nunca pasa de 10 ni de 0, por muy extrema que sea la curva', () => {
+    const extrema: PuntoEnergia[] = Array.from({ length: 40 }, (_, t) => ({ t, db: t % 2 === 0 ? DB_SILENCIO : 0 }));
+    const v = medirVariacionInterna(extrema);
+    expect(v).toBeLessThanOrEqual(10);
+    expect(v).toBeGreaterThanOrEqual(0);
+  });
+
+  it('sin curva medible (audio no analizable) devuelve 0', () => {
+    expect(medirVariacionInterna([])).toBe(0);
+    expect(medirVariacionInterna(null as any)).toBe(0);
+    expect(medirVariacionInterna([{ t: 0, db: -20 }])).toBe(0);
+  });
+});
+
+describe('analizarEnergiaAudio', () => {
+  it('un fichero inexistente devuelve curva vacía en vez de lanzar', async () => {
+    // El análisis de highlights tiene que seguir aunque no se pueda medir el audio.
+    await expect(analizarEnergiaAudio('/no/existe/audio.mp3', { timeoutMs: 5000 })).resolves.toEqual([]);
+  }, 20_000);
+
+  it('sin fuente no llama a ffmpeg', async () => {
+    await expect(analizarEnergiaAudio('')).resolves.toEqual([]);
+  });
+});
+
+describe('resolverFuenteAudioLocal', () => {
+  // blob:/data:/indexeddb: son URLs que solo existen en la memoria del navegador que las creó —
+  // pasárselas a ffmpeg tal cual (como si fueran una ruta local) fallaba con un críptico
+  // "Protocol not found" en vez de reconocer que ese audio nunca llegó a subirse de verdad.
+  it.each(['blob:', 'data:', 'indexeddb:'])('rechaza URLs %s (locales del navegador) sin intentar tratarlas como ruta local', async (prefijo) => {
+    await expect(resolverFuenteAudioLocal(`${prefijo}https://ejemplo.com/algo`)).resolves.toBeNull();
+  });
+
+  it('una ruta local de verdad no se rechaza', async () => {
+    const resultado = await resolverFuenteAudioLocal('/tmp/audio_real.mp3');
+    expect(resultado).not.toBeNull();
+    expect(resultado?.ruta).toBe('/tmp/audio_real.mp3');
+  });
+
+  it('resuelve rutas relativas a la carpeta public de samples', async () => {
+    const resultado = await resolverFuenteAudioLocal('/audio/samples/sample_03_fuego_asfalto.mp3');
+    expect(resultado).not.toBeNull();
+    expect(resultado?.ruta).toContain('sample_03_fuego_asfalto.mp3');
+  });
+
+  it('sin fuente devuelve null', async () => {
+    await expect(resolverFuenteAudioLocal('')).resolves.toBeNull();
+  });
+});
+
+describe('calcularVolumenPromedioAudio', () => {
+  it('devuelve la media de dB filtrando el silencio', () => {
+    const curva: PuntoEnergia[] = [
+      { t: 0, db: -20 },
+      { t: 0.1, db: -20 },
+      { t: 0.2, db: DB_SILENCIO }, // por debajo del umbral, se descarta
+    ];
+    expect(calcularVolumenPromedioAudio(curva)).toBe(-20);
+  });
+
+  it('devuelve null si todo es silencio o la curva está vacía', () => {
+    expect(calcularVolumenPromedioAudio([])).toBeNull();
+    expect(calcularVolumenPromedioAudio(null as any)).toBeNull();
+    expect(calcularVolumenPromedioAudio([{ t: 0, db: DB_SILENCIO }])).toBeNull();
+  });
+});
+
+
+describe('calcularEnergiaMultifactor', () => {
+  const bandStats = { minBpm: 80, maxBpm: 160, minDb: -35, maxDb: -15, minOnsetDensity: 1, maxOnsetDensity: 5 };
+
+  it('tempo rápido + volumen alto + densidad rítmica alta da energía cerca del máximo', () => {
+    const energia = calcularEnergiaMultifactor(160, -15, 5, bandStats);
+    expect(energia).toBeGreaterThanOrEqual(17);
+  });
+
+  it('tempo lento + volumen bajo + densidad rítmica baja da energía cerca del mínimo', () => {
+    const energia = calcularEnergiaMultifactor(80, -35, 1, bandStats);
+    expect(energia).toBeLessThanOrEqual(4);
+  });
+
+  it('nunca se sale de 1-20', () => {
+    expect(calcularEnergiaMultifactor(1000, 0, 100, bandStats)).toBeLessThanOrEqual(20);
+    expect(calcularEnergiaMultifactor(-1000, -200, -100, bandStats)).toBeGreaterThanOrEqual(1);
+  });
+
+  it('con toda la banda en el mismo tempo, volumen y densidad, no inventa contraste: energía media', () => {
+    const plano = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25, minOnsetDensity: 3, maxOnsetDensity: 3 };
+    expect(calcularEnergiaMultifactor(120, -25, 3, plano)).toBe(10);
+  });
+
+  it('un tercer factor con más rango que los otros dos no impide diferenciar por él', () => {
+    // BPM y dB planos (sin variedad real), pero la densidad rítmica sí varía en la banda: la
+    // canción más densa debe puntuar más alto que la más espaciada.
+    const bandStatsDensidadVaria = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25, minOnsetDensity: 1, maxOnsetDensity: 6 };
+    const densa = calcularEnergiaMultifactor(120, -25, 6, bandStatsDensidadVaria);
+    const espaciada = calcularEnergiaMultifactor(120, -25, 1, bandStatsDensidadVaria);
+    expect(densa).toBeGreaterThan(espaciada);
+  });
+});
+
+describe('construirFiltroPreprocesamientoDirecto', () => {
+  it('genera cadena por defecto con filtro rumble, dehiss y loudnorm estándar', () => {
+    const filtro = construirFiltroPreprocesamientoDirecto();
+    expect(filtro).toContain('highpass=f=35:poles=2');
+    expect(filtro).toContain('lowpass=f=15500:poles=2');
+    expect(filtro).toContain('loudnorm=I=-14:TP=-1:LRA=11');
+  });
+
+  it('permite desactivar de-rumble o de-hiss según el caso de uso', () => {
+    const sinFiltros = construirFiltroPreprocesamientoDirecto({
+      filtroRumble: false,
+      deHiss: false,
+      targetLufs: -16,
+      truePeakDb: -1.5,
+      lraTarget: 9
+    });
+    expect(sinFiltros).not.toContain('highpass');
+    expect(sinFiltros).not.toContain('lowpass');
+    expect(sinFiltros).toBe('loudnorm=I=-16:TP=-1.5:LRA=9');
+  });
+
+  it('limita los parámetros de loudnorm a valores seguros y válidos para ffmpeg', () => {
+    const seguro = construirFiltroPreprocesamientoDirecto({
+      targetLufs: -50, // fuera de rango: clampea a -24
+      truePeakDb: 10,  // clipping imposible: clampea a -0.1
+      lraTarget: 100   // fuera de rango: clampea a 20
+    });
+    expect(seguro).toContain('loudnorm=I=-24:TP=-0.1:LRA=20');
+  });
+});

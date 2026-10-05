@@ -1,0 +1,131 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'claude/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: |
+          set +e
+          npx tsc --noEmit > /tmp/tsc_output.txt 2>&1
+          set -e
+          cat /tmp/tsc_output.txt
+
+          TOTAL=$(grep -cE "error TS" /tmp/tsc_output.txt || true)
+          CRASH=$(grep -cE "error TS(2304|2551|2552)" /tmp/tsc_output.txt || true)
+          echo "Total errores tsc: $TOTAL"
+          echo "Errores de clase 'revienta al usarlo' (TS2304/TS2551/TS2552): $CRASH"
+
+          # Tolerancia cero para nombres no declarados / imports que faltan /
+          # métodos inexistentes: esto son ReferenceError/TypeError garantizados
+          # en cuanto se ejecute esa ruta de código, no solo avisos de tipos.
+          if [ "$CRASH" -gt 0 ]; then
+            echo "::error::Hay $CRASH errores de tipo 'Cannot find name' - revientan en producción, no son solo avisos de tipos. Revisa el log de arriba."
+            exit 1
+          fi
+
+          # Ratchet: no dejar que la deuda de tipos general crezca respecto al
+          # baseline conocido (2026-08-29: el recuento real es 0). Baja este
+          # número cuando arregles avisos existentes; nunca lo subas sin
+          # justificar por qué. Margen de 5 sobre 0 para no ser tan frágil
+          # como para romper CI por una sola actualización menor de @types.
+          BASELINE=5
+          if [ "$TOTAL" -gt "$BASELINE" ]; then
+            echo "::error::El total de errores de tsc ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear."
+            exit 1
+          fi
+
+      - name: Guardarraíles de diseño (Espectro)
+        run: npm run audit:diseno
+
+      - name: Build check (bundle con esbuild)
+        run: npm run lint
+
+      - name: ESLint ratchet
+        run: |
+          set +e
+          npx eslint . -f json > /tmp/eslint_output.json
+          set -e
+
+          TOTAL=$(node -e "const fs=require('fs'); const d=JSON.parse(fs.readFileSync('/tmp/eslint_output.json','utf8')); console.log(d.reduce((n,f)=>n+f.messages.length,0));")
+          HOOKS_ROTOS=$(node -e "const fs=require('fs'); const d=JSON.parse(fs.readFileSync('/tmp/eslint_output.json','utf8')); console.log(d.reduce((n,f)=>n+f.messages.filter(m=>m.ruleId==='react-hooks/rules-of-hooks').length,0));")
+          echo "Total hallazgos de eslint: $TOTAL"
+          echo "Violaciones de rules-of-hooks (hooks condicionales/tras return - cuentan cambia entre renders): $HOOKS_ROTOS"
+
+          # Ratchet, NO tolerancia cero (2026-09-17): el comentario anterior decía "recuento
+          # real 2026-09-03: 0" y exigía 0 - pero una reauditoría encontró 43 violaciones reales,
+          # todas concentradas en un único archivo (src/components/repertorio/
+          # SongTransitionPreviewModal.tsx: `if (!isOpen || !songA || !songB) return null;` antes
+          # de ~44 hooks). Es un bug real (orden de hooks cambia entre abrir/cerrar el modal), no
+          # falso positivo - pero arreglarlo bien exige revisar que ninguno de esos hooks dispare
+          # efectos secundarios (detección de audio, llamadas a API) cuando el modal está cerrado,
+          # y probarlo en navegador antes de mergear (ver AGENTS.md, "UI o frontend" en las
+          # instrucciones de sesión). No se aplica aquí a ciegas. Baseline = deuda real conocida,
+          # concentrada y trackeada - baja este número en cuanto se arregle ese archivo, nunca lo
+          # subas sin justificar por qué, y si aparece en un archivo NUEVO trátalo como el bug real
+          # que es, no como más margen del ratchet.
+          HOOKS_BASELINE=43
+          if [ "$HOOKS_ROTOS" -gt "$HOOKS_BASELINE" ]; then
+            echo "::error::Hay $HOOKS_ROTOS violaciones de react-hooks/rules-of-hooks (baseline conocido: $HOOKS_BASELINE, todas en SongTransitionPreviewModal.tsx). Si son nuevas en OTRO archivo, es un bug real de verdad - arréglalo, no subas el baseline."
+            exit 1
+          fi
+
+          # Ratchet: no dejar que la deuda general de eslint (sobre todo no-explicit-any /
+          # no-unused-vars heredados de AI Studio) crezca por encima del baseline conocido
+          # (2026-09-17: recuento real en develop 3737, reauditado y corregido desde un baseline
+          # de 2816 que ya llevaba tiempo desactualizado - ver AGENTS.md sobre por qué un número
+          # fijo aquí caduca solo). Baja este número cuando arregles hallazgos existentes; nunca
+          # lo subas sin justificar por qué. Margen de 20 para no romper CI por una sola
+          # actualización menor de eslint/typescript-eslint.
+          BASELINE=3757
+          if [ "$TOTAL" -gt "$BASELINE" ]; then
+            echo "::error::El total de hallazgos de eslint ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear - no hace falta arreglar la deuda existente, pero no añadas más."
+            exit 1
+          fi
+
+      - name: Verify docs references
+        run: npm run verify:docs
+
+      - name: Tests
+        run: npm test
+
+      # Smoke E2E con Playwright (e2e/) - corre contra el servidor de dev sin credenciales de
+      # Supabase/Stripe/Gemini (login funciona contra los usuarios semilla de src/db_seed.ts,
+      # ver AGENTS.md §5.1.2). continue-on-error hasta que esté verificado en un par de runs
+      # reales de GitHub Actions (solo se probó dentro del entorno de Claude Code al escribirlo)
+      # - quitar continue-on-error en cuanto esté confirmado en verde aquí.
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E smoke tests
+        continue-on-error: true
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

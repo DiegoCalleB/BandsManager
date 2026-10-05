@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es" class="overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Sin maximum-scale ni user-scalable=no: bloquear el pellizco para ampliar es un fallo de
+         accesibilidad (WCAG 1.4.4). El zoom al enfocar de iOS ya se evita con campos a 16 px. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>BandManager.io</title>
+    <meta name="description" content="Plataforma integral para músicos y bandas independientes: automatización de booking, logística de gira, repertorio, EPK, captación de fans y finanzas con IA agéntica." />
+    <!-- Favicon & Brand Icons -->
+    <!-- ?v=4: los favicons son lo más agresivo que cachea el navegador (Chrome/Android
+         a veces ni con recarga forzada lo sueltan) - cambiar la URL es lo único que
+         garantiza que se vuelva a pedir tras cambiar el icono. Súbelo cada vez que el
+         símbolo cambie de verdad. -->
+    <link rel="icon" type="image/png" href="/logo_bandmanager_symbol.png?v=4" />
+    <link rel="apple-touch-icon" href="/icon-192.png?v=4" />
+    <!-- Color de la barra del navegador = fondo de Espectro (--bg) en cada tema. temaEspectro.ts lo
+         sincroniza si el usuario elige un tema distinto al del sistema. -->
+    <meta name="theme-color" content="#F6F7F9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101216" media="(prefers-color-scheme: dark)" />
+
+    <!-- PWA: instalable desde el móvil -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BandManager.io" />
+
+    <!-- Open Graph Meta Tags (Previsualización en WhatsApp / Telegram / Redes) -->
+    <meta property="og:title" content="BandManager.io — el mánager que llevas en el bolsillo" />
+    <meta property="og:description" content="Salas a las que escribir, fechas, repertorio, EPK y fans. Todo para tocar más y gestionar menos." />
+    <meta property="og:image" content="https://bandmanager.io/og-cover.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="BandManager.io: la onda del logo sobre el fondo de la aplicación" />
+    <meta property="og:site_name" content="BandManager.io" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://bandmanager.io/og-cover.png" />
+    <!-- Tema: estampa data-theme antes de pintar para evitar el fogonazo
+         blanco en la primera carga. Debe ir ANTES del CSS y del bundle.
+         Espejo de src/utils/temaEspectro.ts — si cambia el contrato de
+         'bm-tema' o los temas válidos, cambia los dos. -->
+    <script>
+      (function () {
+        try {
+          var p = localStorage.getItem('bm-tema');
+          if (p !== 'light' && p !== 'dark' && p !== 'classic' && p !== 'system') p = 'light';
+          var r = p === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : p;
+          document.documentElement.setAttribute('data-theme', r);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+    <!-- Onest va autoalojada (@fontsource-variable/onest, importada en main.tsx): sin petición a Google, sin retardo, sin depender de terceros. Las demás tipografías del selector se piden bajo demanda. -->
+  </head>
+  <body class="bg-[var(--bg)] text-[var(--ink)] overflow-x-hidden">
+    <div id="root" class="overflow-x-hidden max-w-full"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

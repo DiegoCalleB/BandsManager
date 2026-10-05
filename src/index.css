@@ -1,0 +1,501 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* Sistema «Espectro» — ver skills/visual-identity/SKILL.md.
+   Por defecto [data-theme="classic"]: no cambia el aspecto actual. */
+@import "./styles/tokens.css";
+
+:root {
+  --font-sans-current: "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display-current: "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@theme {
+  --font-sans: var(--font-sans-current, "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif);
+  --font-display: var(--font-display-current, "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif);
+
+  /* Escala tipográfica: 11 (micro) · 12 (xs) · 14 (sm) · 16 (base). Ver craft-interfaces. */
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.45;
+
+  /* Movimiento por defecto de `transition`: rápido y con salida fuerte, nunca `ease-in`. */
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip !important;
+  font-family: var(--font-sans-current);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.font-display {
+  font-family: var(--font-display-current);
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip !important;
+}
+
+/* Custom minimal glassmorphism scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--ink-rgb), 0.15);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--ink-rgb), 0.25);
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Espectro: los controles nativos no traen borde propio; si lo llevan, es con token. */
+button, iframe {
+  border: none;
+}
+/* Los campos SÍ pueden llevar borde con token (Ley 1: «campo en reposo»). Va en @layer base para que las
+   utilidades de Tailwind (`border`, `border-[var(--line)]`) le ganen; sin capa, este reset las anulaba. */
+@layer base {
+  input, textarea, select {
+    border: 0 solid transparent;
+  }
+}
+/* Foco: el ratón no dibuja anillo, el teclado SIEMPRE (accesibilidad). Antes se apagaba el
+   outline de button/input en todo caso y navegar con Tab era a ciegas. */
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: none;
+}
+:where(button, a, input, select, textarea, summary, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Iconography with clean precision */
+.lucide {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* --- MICRO-ANIMATIONS & HIGH PERFORMANCE TACTILE UI --- */
+
+/* Targeted interactive press effect with Apple spring physics */
+.btn-interactive,
+.btn-primary,
+.btn-secondary {
+  will-change: transform, background-color, border-color, box-shadow;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-interactive:active:not(:disabled),
+.btn-primary:active:not(:disabled),
+.btn-secondary:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Primary Modern Action Button - Studio Calm */
+.btn-primary {
+  background-color: var(--acc);
+  color: var(--on-acc);
+  font-weight: 600;
+  border-radius: 0.75rem;
+  padding: 0.55rem 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--acc);
+  opacity: 0.9;
+  box-shadow: none;
+}
+
+/* Secondary Sleek Surface Button */
+.btn-secondary {
+  background-color: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  border-radius: 0.75rem;
+  padding: 0.55rem 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(8px);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--sunken);
+  border-color: transparent;
+  color: var(--ink);
+}
+
+/* Minimalist Card Container - Studio Surface */
+.card-minimal {
+  background-color: var(--surface);
+  border-radius: 0.875rem;
+  transition: background-color 0.15s ease;
+}
+
+.card-minimal:hover {
+  background-color: var(--sunken);
+}
+
+.card-interactive {
+  background-color: var(--surface);
+  border-radius: 0.875rem;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.card-interactive:hover {
+  background-color: var(--sunken);
+  transform: translateY(-2px);
+}
+
+/* Entrance animations — solo opacity, nunca transform.
+ *
+ * Antes tenían un translate3d/scale de "from" que volvía a transform:none en "to". Con
+ * animation-fill-mode:forwards (ver .animate-fade-in/.animate-pop-in abajo), el navegador
+ * mantiene el valor animado de "transform" indefinidamente incluso después de terminar la
+ * animación — getComputedStyle() ya no devuelve la palabra 'none', devuelve una matriz
+ * identidad (matrix(1,0,0,1,0,0)), que SÍ cuenta como "transform distinto de none" a
+ * efectos de containing block. Cualquier position:fixed descendiente (un modal, un menú)
+ * deja de posicionarse contra el viewport y pasa a posicionarse contra esta caja.
+ *
+ * Esto es justo lo que rompía el modal de "Añadir Widget" en producción (sesión
+ * 2026-09-23): App.tsx:~1393 envuelve CADA vista de la app en un div con animate-fade-in
+ * — no era un bug de ese modal en concreto, afectaba a cualquier position:fixed montado
+ * dentro de cualquier vista. El z-index nunca fue suficiente por sí solo: el contenedor
+ * ya estaba mal posicionado antes de comparar z-index con nada.
+ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pop-in {
+  animation: popIn 0.12s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Modal Viewport Fixes */
+.modal-backdrop-safe {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Subtle Glow Effect for Active Statuses */
+.glow-amber {
+  box-shadow: none;
+  background-color: var(--acc-soft);
+}
+
+.glow-emerald {
+  box-shadow: none;
+  background-color: var(--ok-soft);
+}
+
+/* --- GOOGLE TRANSLATE STYLING CLEANUP --- */
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-spinner-pos,
+.goog-te-gadget-icon,
+.goog-te-menu-value span,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+#google_translate_element {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+iframe.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Ensure notranslate elements keep original typography */
+.notranslate {
+  font-style: normal;
+}
+
+/* Tarjeta de donación (Revolut/PayPal): micro-animaciones sutiles para llamar la atención sin
+   ruido — nada de urgencia falsa, solo movimiento suave que invita a mirar dos veces. Un único
+   tono ámbar compartido entre ambos botones para que se sienta un solo sistema, en vez de un
+   azul de marca compitiendo con el negro minimalista que ya lleva el botón de Revolut. */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.18); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+  60%, 100% { transform: scale(1); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 3.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-heartbeat,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
+  }
+}
+
+/* Móvil táctil: backdrop-filter con blur obliga a la GPU a varias pasadas por frame (calor y
+   batería). Espectro ya prohíbe el blur, pero si queda algún resto heredado se apaga aquí y se
+   sustituye por la superficie opaca del tema activo (token, no un negro fijo que rompería el
+   tema claro). */
+@media (hover: none) and (pointer: coarse) {
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: var(--surface) !important;
+  }
+
+  .animate-pulse {
+    animation-duration: 3.5s !important;
+  }
+
+  .animate-ping {
+    animation-duration: 3s !important;
+  }
+}
+
+/* =========================================================================
+   TEXTAREAS AMPLIABLES Y ESPACIOSAS (EXPANDABLE & RESIZABLE TEXTAREAS)
+   ========================================================================= */
+textarea {
+  resize: vertical !important;
+  min-height: 5.5rem;
+  line-height: 1.5;
+}
+
+/* Permitir que textareas específicas de inputs rápidos de una línea o modales pequeños tengan control */
+textarea.resize-y {
+  resize: vertical !important;
+}
+
+textarea::-webkit-resizer {
+  background-color: transparent;
+  background-image: radial-gradient(circle at center, rgba(212, 212, 216, 0.45) 1.5px, transparent 1.5px);
+  background-size: 5px 5px;
+}
+
+
+
+/* ═══════════ CRAFT — detalle y movimiento (skills/craft-interfaces) ═══════════ */
+@layer base {
+  /* Sin el retardo de doble toque y sin el parpadeo gris al pulsar en móvil. */
+  button, a, [role="button"], input, select, textarea, label, summary {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Titulares que no dejan una palabra huérfana; párrafos sin viudas. */
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+
+  /* Cifras en columna: importes, BPM, fechas y cualquier dato tabular (font-mono = dato). */
+  .font-mono, .tabular-nums, input[type="number"], time, table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Un campo por debajo de 16px hace que iOS haga zoom al enfocarlo. */
+  @media (max-width: 767px) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+    select, textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Zona de pulsación ampliada sin cambiar el diseño: la ampliación es invisible. Táctil: +8px por
+   lado (≥ 44px con el control típico de 28px). Ratón: +4px por lado, que sube los iconos de 22px y
+   los enlaces de 16px de alto al mínimo de 24px de WCAG 2.2 (2.5.8). Solo para controles que no
+   son ya contenedor posicionado. */
+button:where(:not(.absolute):not(.fixed):not(.sticky):not(.relative):not([data-no-hit])) {
+  position: relative;
+}
+button:where(:not([data-no-hit]))::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+@media (pointer: coarse) {
+  button:where(:not([data-no-hit]))::after {
+    inset: -8px;
+  }
+}
+
+/* Movimiento reducido: se quita el movimiento, no la información (opacidad y color se quedan). */
+/* MENÚS Y POPOVERS — «origin-aware» (Emil Kowalski): un menú no aparece de la nada ni escala desde el centro;
+   crece desde el botón que lo abre. 150 ms, solo transform y opacity, sin salida animada. Cada menú declara
+   su origen con --menu-origin (por defecto arriba a la derecha, que es donde cuelgan casi todos).            */
+@keyframes menu-pop { from { opacity: 0; transform: scale(0.95) translateY(-2px); } to { opacity: 1; transform: none; } }
+.menu-pop {
+  transform-origin: var(--menu-origin, top right);
+  animation: menu-pop var(--dur-hover) var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) { .menu-pop { animation: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* `transition-all` está prohibido (anima layout sin querer y cuesta rendimiento). Esta utilidad lo
+   sustituye con una lista explícita: color, opacidad, transform, filtro y las dimensiones que
+   mueven barras y acordeones. Duración y curva salen de los valores por defecto de @theme. */
+@utility transition-ui {
+  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow,
+    transform, translate, scale, rotate, filter, width, height, max-height, flex-basis;
+  transition-timing-function: var(--default-transition-timing-function);
+  transition-duration: var(--default-transition-duration);
+}
+
+/* ═══════════ MODALES — entrada suave y hoja inferior en móvil (craft-interfaces §4, §5) ═══════════
+   Se aplica a todo modal que pase por <ModalPortal>. El overlay es el `fixed inset-0` y el panel su
+   hijo no absoluto (un fondo `absolute inset-0` aparte se ignora). Solo transform y opacity; la entrada dura --dur-modal y no hay salida animada (el
+   componente se desmonta al cerrar). */
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-pop { from { opacity: 0; transform: scale(0.96) translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes modal-sheet { from { transform: translateY(24px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+
+[data-modal-root] > .fixed.inset-0 {
+  animation: modal-fade var(--dur-pop) var(--ease-out) both;
+}
+[data-modal-root] > .fixed.inset-0 > :not(.absolute):not(.fixed) {
+  animation: modal-pop var(--dur-modal) var(--ease-out) both;
+}
+
+@media (max-width: 639px) {
+  /* Hoja inferior: pegada abajo, ancho completo, esquinas superiores redondeadas, asa de arrastre.
+     Solo si el overlay es flex (centra su panel); los demás se quedan como estaban. */
+  [data-modal-root] > .fixed.inset-0.flex {
+    align-items: flex-end;
+    padding: 0;
+  }
+  [data-modal-root] > .fixed.inset-0.flex > :not(.absolute):not(.fixed) {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    max-height: 92dvh;
+    overflow-y: auto;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+    animation: modal-sheet var(--dur-modal) var(--ease-sheet) both;
+  }
+  [data-modal-root] > .fixed.inset-0.flex > :not(.absolute):not(.fixed)::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 4px;
+    margin: 8px auto 4px;
+    border-radius: 999px;
+    background: var(--ink-3);
+    opacity: 0.45;
+  }
+}
+
+/* Capturas de la landing: la que corresponde al tema (el Clásico es oscuro). */
+:root:not([data-theme="dark"]):not([data-theme="classic"]) .shot-dark { display: none; }
+:root[data-theme="dark"] .shot-light,
+:root[data-theme="classic"] .shot-light { display: none; }
+
+/* Barra que se queda fija arriba al hacer scroll en móvil/tablet (lo que el músico necesita tener siempre a la vista:
+   filtros, mes, acción principal). Va dentro de <main>, que es quien hace scroll; el margen negativo la lleva de borde a borde. */
+@utility pin-top {
+  @media (max-width: 1023px) {
+    position: sticky;
+    top: -0.75rem; /* compensa el padding de <main> para que quede pegada al borde superior */
+    z-index: 20;
+    background: var(--bg);
+    margin-inline: -0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Título de pantalla: UNO para todos los módulos (antes: 5 tamaños distintos, de text-base a text-5xl). */
+@utility page-title {
+  font-family: var(--font-display-current);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  font-size: 1.25rem;
+  color: var(--ink);
+  text-wrap: balance;
+  @media (min-width: 640px) { font-size: 1.5rem; }
+}

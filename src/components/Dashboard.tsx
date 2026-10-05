@@ -1,0 +1,1049 @@
+import React, { useState, useRef } from "react";
+import {
+  Lead,
+  LeadType,
+  LeadStatus,
+  ThemeColors,
+  SocialMetric,
+  Concert,
+  Rehearsal,
+  EPKConfig,
+  Tour,
+  Fan,
+  SocialPost,
+  Setlist,
+  Song,
+} from "../types";
+import { useLanguage } from "../context/LanguageContext";
+import { usePlayer } from "../context/PlayerContext";
+import { isSameBandId } from "../utils/bandUtils";
+import { api } from "../services/api";
+import { apiFetch } from "../utils/api";
+import DirectionsCard from "./DirectionsCard";
+import { PublicoSilhouette } from "./ui/PublicoSilhouette";
+import { AddLeadModal } from "./dashboard/AddLeadModal";
+import { ProfileCompletenessCard } from "./dashboard/ProfileCompletenessCard";
+import { AiSupportWidget, AiUsageCard } from "./dashboard/AiUsageSupportWidget";
+import { EmailTemplatesModal } from "./dashboard/EmailTemplatesModal";
+import { AgentAutonomySettingsModal } from "./dashboard/AgentAutonomySettingsModal";
+import { SocialAndFansGrowthChart } from "./dashboard/SocialAndFansGrowthChart";
+import { DashboardWidgetGrid } from "./dashboard/DashboardWidgetGrid";
+import { NeedsAttentionBanner } from "./dashboard/NeedsAttentionBanner";
+import { ConvocarEnsayoModal } from "./ensayos/ConvocarEnsayoModal";
+import { ManagerAlertsWidget } from "./dashboard/ManagerAlertsWidget";
+import { NextGigStrip } from "./dashboard/NextGigStrip";
+import { AlertSettingsModal } from "./dashboard/AlertSettingsModal";
+import {
+  generateManagerAlerts,
+  ManagerAlert,
+  AlertAction,
+} from "../utils/managerAlerts";
+import { MobileBottomSheet } from "./booking/MobileBottomSheet";
+import {
+  autoDetectVenueAddress,
+  normalizeStatus,
+  normalizeType,
+} from "../utils/bookingUtils";
+import {
+  leadStatusDotColor,
+  leadStatusBadgeClass,
+  leadStatusLabel,
+} from "../utils/leadStatusPresentation";
+import { normalizePlan, hasModuleAccess } from "../utils/planPermissions";
+import {
+  Search,
+  MapPin,
+  Music,
+  Mic,
+  DoorClosed,
+  Globe,
+  Phone,
+  Instagram,
+  Plus,
+  X,
+  Calendar,
+  AlertCircle,
+  Sparkles,
+  Loader2,
+  Check,
+  RefreshCw,
+  Database,
+  Bot,
+  Activity,
+  ArrowRight,
+  CheckCircle2,
+  Radio,
+  Building2,
+  Clock,
+  CheckCircle,
+  Hourglass,
+  Send,
+  Users,
+  ShieldCheck,
+  Play,
+  Navigation,
+  FileText,
+  BookOpen,
+  Disc3,
+  Truck,
+  Heart,
+  Info,
+  Copy,
+  Sliders,
+  Gift,
+  Crown,
+  QrCode,
+  Settings,
+  Eye,
+} from "lucide-react";
+import { Button, IconButton, MenuItem } from './ui';
+
+export type NavigationOptions = {
+  sectionTab?: "salas" | "medios" | "grupos";
+  statusFilter?: LeadStatus | "todos" | string;
+  selectedLeadId?: string;
+  selectedEventId?: string;
+  selectedDate?: string;
+  concertId?: string;
+};
+
+interface DashboardProps {
+  leads: Lead[];
+  colors: ThemeColors;
+  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>) => void;
+  onAddLead: (lead: Lead) => void;
+  metrics?: SocialMetric[];
+  concerts?: Concert[];
+  currentUser?: any;
+  bandName?: string;
+  currentBandId?: string;
+  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
+  rehearsals?: Rehearsal[];
+  onAddRehearsal?: (rehearsal: Rehearsal) => void;
+  bandUsers?: Array<{ id: string; name: string; instrument?: string }>;
+  epkConfig?: Partial<EPKConfig>;
+  tours?: Tour[];
+  fans?: Fan[];
+  posts?: SocialPost[];
+  setlists?: Setlist[];
+  songs?: Song[];
+  onNavigate?: (view: any, options?: NavigationOptions) => void;
+  onOpenProfileModal?: () => void;
+  isPromoPlan?: boolean;
+}
+
+const isMedio = (l?: Lead | null) => {
+  if (!l || !l.tipo) return false;
+  const s = String(l.tipo).trim().toLowerCase();
+  return (
+    s.includes("medio") ||
+    s.includes("radio") ||
+    s.includes("prensa") ||
+    s.includes("tv") ||
+    s.includes("podc")
+  );
+};
+
+const isManagement = (l?: Lead | null) => {
+  if (!l || !l.tipo) return false;
+  const s = String(l.tipo).trim().toLowerCase();
+  return [
+    "agencia",
+    "manager",
+    "productora",
+    "sello",
+    "promotora",
+    "management",
+  ].some((t) => s.includes(t));
+};
+
+export default function Dashboard({
+  leads,
+  colors,
+  onUpdateLead,
+  onAddLead,
+  metrics = [],
+  concerts = [],
+  rehearsals = [],
+  onAddRehearsal,
+  bandUsers = [],
+  currentUser,
+  bandName,
+  currentBandId,
+  availableBands = [],
+  epkConfig,
+  tours = [],
+  fans = [],
+  posts = [],
+  onNavigate,
+  onOpenProfileModal,
+  isPromoPlan: isPromoPlanProp,
+}: DashboardProps) {
+  const { setSongs: setPlayerSongs } = usePlayer();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [cityFilter, setCityFilter] = useState("todos");
+  const [genreFilter, setGenreFilter] = useState("todos");
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isQuickRehearsalOpen, setIsQuickRehearsalOpen] = useState(false);
+  const [showQuickAddMenu, setShowQuickAddMenu] = useState(false);
+  const [isEmailTemplatesOpen, setIsEmailTemplatesOpen] = useState(false);
+  const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
+  const [isAlertSettingsOpen, setIsAlertSettingsOpen] = useState(false);
+  const [isDashboardSettingsOpen, setIsDashboardSettingsOpen] = useState(false);
+  const [isEditDashboardMode, setIsEditDashboardMode] = useState(false);
+  const [viewDensityMode, setViewDensityMode] = useState<"clean" | "full">(
+    "clean",
+  );
+  const [syncLoading, setSyncLoading] = useState(false);
+
+  // Band view filter state:'all' (Todas las bandas asignadas por defecto) vs'active' (Solo la banda activa)
+  const [agendaFilterMode, setAgendaFilterMode] = useState<"active" | "all">(
+    "all",
+  );
+
+  const isPromo =
+    isPromoPlanProp ??
+    (normalizePlan(currentUser?.plan) === "promo" ||
+      normalizePlan(currentUser?.plan) === "promo_plus" ||
+      Boolean(
+        availableBands &&
+        availableBands.find(
+          (b) =>
+            (b.band_id === currentBandId || (b as any).id === currentBandId) &&
+            (normalizePlan((b as any).plan) === "promo" ||
+              normalizePlan((b as any).plan) === "promo_plus"),
+        ),
+      ));
+
+  // Scraper states
+  const [isScraping, setIsScraping] = useState(false);
+  const [scrapingStatus, setScrapingStatus] = useState("");
+  const [scrapedData, setScrapedData] = useState<{
+    email_contacto: string;
+    telefono: string;
+    website?: string;
+    instagram: string;
+    contacto_nombre?: string;
+    aforo?: number | null;
+    region?: string;
+    genero?: string;
+    contexto_extra?: string;
+    source_info: string;
+  } | null>(null);
+  const [scrapingError, setScrapingError] = useState<string | null>(null);
+
+  // Add new lead form states
+  const [newSala, setNewSala] = useState("");
+  const [newCiudad, setNewCiudad] = useState("");
+  const [newRegion, setNewRegion] = useState("");
+  const [newAforo, setNewAforo] = useState(300);
+  const [newGenero, setNewGenero] = useState("Ska / Reggae / Mestizaje");
+  const [newTipo, setNewTipo] = useState<LeadType>("sala");
+  const [newEmail, setNewEmail] = useState("");
+  const [newInstagram, setNewInstagram] = useState("");
+  const [newNotas, setNewNotas] = useState("");
+
+  const [songsCount, setSongsCount] = React.useState(0);
+  const [setlists, setSetlists] = React.useState<Setlist[]>([]);
+  const [songs, setSongs] = React.useState<Song[]>([]);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const loadRepertorioData = async () => {
+      try {
+        const [songsRes, setlistsRes] = await Promise.all([
+          api.getSongs(),
+          api.getSetlists(),
+        ]);
+
+        if (isMounted) {
+          if (songsRes?.songs && Array.isArray(songsRes.songs)) {
+            setSongs(songsRes.songs);
+            setSongsCount(songsRes.songs.length);
+            setPlayerSongs(songsRes.songs);
+          }
+          if (setlistsRes?.setlists && Array.isArray(setlistsRes.setlists)) {
+            setSetlists(setlistsRes.setlists);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load repertorio data:", err);
+        if (isMounted) {
+          setSongsCount(0);
+          setSongs([]);
+          setSetlists([]);
+          setPlayerSongs([]);
+        }
+      }
+    };
+    loadRepertorioData();
+    return () => {
+      isMounted = false;
+    };
+  }, [currentBandId, setPlayerSongs]);
+
+  const storedSongsCount = songsCount;
+
+  // Handle Sync simulation
+  const handleForceSync = () => {
+    setSyncLoading(true);
+    setTimeout(() => {
+      setSyncLoading(false);
+    }, 1200);
+  };
+
+  const handleScrapeContact = async (lead: Lead) => {
+    setIsScraping(true);
+    setScrapingError(null);
+    setScrapedData(null);
+
+    const steps = [
+      "Conectando con el Agente Scout...",
+      "Buscando perfiles oficiales en la web...",
+      "Extrayendo datos de Instagram y directorios...",
+      "Buscando datos de aforo y estilo musical...",
+      "Filtrando y validando emails de booking...",
+      "Consolidando resultados...",
+    ];
+
+    let currentStep = 0;
+    setScrapingStatus(steps[0]);
+
+    const interval = setInterval(() => {
+      currentStep++;
+      if (currentStep < steps.length) {
+        setScrapingStatus(steps[currentStep]);
+      }
+    }, 1000);
+
+    try {
+      const resData = await apiFetch<any>("/api/scrape-contact", {
+        method: "POST",
+        body: JSON.stringify({
+          leadId: lead.id,
+          nombre_sala: lead.nombre_sala,
+          ciudad: lead.ciudad,
+          region: lead.region,
+        }),
+      });
+
+      clearInterval(interval);
+
+      if (resData?.success && resData?.data) {
+        setScrapedData(resData.data);
+      } else {
+        throw new Error(
+          resData?.error || "No se pudieron extraer datos de contacto.",
+        );
+      }
+    } catch (err: any) {
+      clearInterval(interval);
+      setScrapingError(err.message || "Error en el proceso de raspado.");
+    } finally {
+      setIsScraping(false);
+    }
+  };
+
+  const getScrapedVal = (field: any) =>
+    typeof field === "object" && field !== null ? field.valor : field;
+  const getScrapedConf = (field: any) =>
+    typeof field === "object" && field !== null
+      ? field.confianza || "baja"
+      : "alta";
+
+  const handleApplyScrapedData = (lead: Lead) => {
+    if (!scrapedData) return;
+    const today = new Date().toISOString().split("T")[0];
+    const sourceSummary =
+      typeof scrapedData.source_info === "string"
+        ? scrapedData.source_info
+        : "Scout Scraper Grounding";
+    const updatedNotes = `*** [${today}] Datos enriquecidos vía Scout Scraper. ${sourceSummary} ***\n${lead.notas || ""}`;
+
+    const emailVal = getScrapedVal(scrapedData.email_contacto);
+    const telVal = getScrapedVal(scrapedData.telefono);
+    const webVal = getScrapedVal(scrapedData.website);
+    const instaVal = getScrapedVal(scrapedData.instagram);
+    const contactoVal = getScrapedVal(scrapedData.contacto_nombre);
+    const aforoVal = getScrapedVal(scrapedData.aforo);
+    const regionVal = getScrapedVal(scrapedData.region);
+    const generoVal = getScrapedVal(scrapedData.genero);
+    const contextoVal = getScrapedVal(scrapedData.contexto_extra);
+
+    const updatedFields: Partial<Lead> = {
+      email_contacto: emailVal || lead.email_contacto,
+      telefono: telVal || lead.telefono,
+      website: webVal || lead.website,
+      instagram: instaVal || lead.instagram,
+      contacto_nombre: contactoVal || lead.contacto_nombre,
+      aforo:
+        aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : lead.aforo,
+      region: regionVal || lead.region,
+      genero: generoVal || lead.genero,
+      contexto_extra:
+        contextoVal && typeof contextoVal === "string" && contextoVal.trim()
+          ? contextoVal.trim()
+          : lead.contexto_extra,
+      notas: updatedNotes,
+    };
+
+    onUpdateLead(lead.id, updatedFields);
+    setSelectedLead((prev) => (prev ? { ...prev, ...updatedFields } : null));
+    setScrapedData(null);
+  };
+
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSala || !newCiudad) return;
+
+    const newLeadItem: Lead = {
+      id: `lead-${Date.now()}`,
+      nombre_sala: newSala,
+      ciudad: newCiudad,
+      region: newRegion,
+      aforo: Number(newAforo),
+      genero: newGenero,
+      tipo: newTipo,
+      email_contacto: newEmail,
+      telefono: "",
+      instagram: newInstagram,
+      fuente: "Ingreso Manual (Jon)",
+      estado: "nuevo",
+      pitch_generado: "",
+      notas: newNotas || "Añadido manualmente desde el dashboard.",
+    };
+
+    onAddLead(newLeadItem);
+    setIsAddModalOpen(false);
+
+    // Reset Form
+    setNewSala("");
+    setNewCiudad("");
+    setNewRegion("");
+    setNewAforo(300);
+    setNewGenero("Ska / Reggae / Mestizaje");
+    setNewEmail("");
+    setNewInstagram("");
+    setNewNotas("");
+  };
+
+  // Unique cities and genres for filters
+  const cities = Array.from(new Set(leads.map((l) => l.ciudad))).filter(
+    Boolean,
+  );
+  const genres = Array.from(new Set(leads.map((l) => l.genero))).filter(
+    Boolean,
+  );
+
+  // Filter leads for search/scraper table
+  const filteredLeads = leads.filter((lead) => {
+    const matchesSearch =
+      lead.nombre_sala.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.ciudad.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCity = cityFilter === "todos" || lead.ciudad === cityFilter;
+    const matchesGenre = genreFilter === "todos" || lead.genero === genreFilter;
+    return matchesSearch && matchesCity && matchesGenre;
+  });
+
+  const isLightTheme =
+    (typeof document !== "undefined" &&
+      document.documentElement.dataset.theme === "light") ||
+    colors.mode === "light" ||
+    colors.name?.toLowerCase().includes("light") ||
+    colors.name?.toLowerCase().includes("claro") ||
+    colors.bg.includes("f8fafc") ||
+    colors.bg.includes("white") ||
+    colors.bg.includes("neutral-50") ||
+    false;
+  const subCardBg = "bg-[var(--bg)]/80 text-[var(--ink)]";
+  const textTitle = "text-[var(--ink)]";
+  const textSub = "text-[var(--ink-2)]";
+  const textMuted = "text-[var(--ink-2)]";
+
+  // Calculate real metrics from leads
+  const isMedio = (l: Lead) => {
+    if (!l.tipo) return false;
+    const s = String(l.tipo).trim().toLowerCase();
+    return (
+      s.includes("medio") ||
+      s.includes("radio") ||
+      s.includes("prensa") ||
+      s.includes("tv") ||
+      s.includes("podc")
+    );
+  };
+
+  const pendingApprovalCount = leads.filter(
+    (l) =>
+      l.estado === "pendiente_aprobacion" ||
+      (l.pitch_generado && l.estado === "nuevo"),
+  ).length;
+  const sentCount = leads.filter(
+    (l) => l.estado === "esperando_respuesta",
+  ).length;
+  const interestedCount = leads.filter(
+    (l) => l.estado === "interesado" || l.estado === "negociando",
+  ).length;
+  const approvedCount = leads.filter((l) => l.estado === "aprobado").length;
+  const mediosCount = leads.filter((l) => isMedio(l)).length;
+
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+
+  const activeBandId = currentBandId || currentUser?.band_id || "";
+  const activeBandName = bandName || currentUser?.bandName || "Tu Banda";
+
+  const activeBandConcerts = React.useMemo(() => {
+    return concerts.filter((c) => {
+      if (!c.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+      return isSameBandId(c.band_id, activeBandId);
+    });
+  }, [concerts, activeBandId]);
+
+  const activeBandRehearsals = React.useMemo(() => {
+    return rehearsals.filter((r) => {
+      if (!r.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+      return isSameBandId(r.band_id, activeBandId);
+    });
+  }, [rehearsals, activeBandId]);
+
+  // Filter concerts & rehearsals based on agendaFilterMode
+  const filteredConcerts = concerts.filter((c) => {
+    if (agendaFilterMode === "all") return true;
+    if (!c.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+    return isSameBandId(c.band_id, activeBandId);
+  });
+
+  const filteredRehearsals = rehearsals.filter((r) => {
+    if (agendaFilterMode === "all") return true;
+    if (!r.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+    return isSameBandId(r.band_id, activeBandId);
+  });
+
+  // Helper to resolve the correct band name for each event
+  const getEventBandName = (bandId?: string, explicitBandName?: string) => {
+    if (explicitBandName) return explicitBandName;
+    if (!bandId || isSameBandId(bandId, activeBandId)) return activeBandName;
+    const match = (availableBands || []).find(
+      (b) =>
+        isSameBandId(b.band_id, bandId) || isSameBandId((b as any).id, bandId),
+    );
+    return (
+      match?.bandName ||
+      match?.name ||
+      (isSameBandId(bandId, "band-bakandeya") ? "Bakandeya" : "Banda")
+    );
+  };
+
+  const hasMultipleBands =
+    (availableBands && availableBands.length > 1) ||
+    concerts.some((c) => c.band_id && !isSameBandId(c.band_id, activeBandId)) ||
+    rehearsals.some((r) => r.band_id && !isSameBandId(r.band_id, activeBandId));
+
+  // Build upcoming agenda dates
+  const upcomingEvents: Array<{
+    id: string;
+    type: "concierto" | "ensayo";
+    title: string;
+    dateStr: string;
+    day: string;
+    month: string;
+    location: string;
+    locationQuery?: string;
+    address?: string;
+    badge: string;
+    bandName: string;
+    details: string;
+  }> = [];
+
+  // Add concerts (ignoring past ones)
+  filteredConcerts.forEach((c) => {
+    if (c.fecha && c.fecha < todayStr) return;
+    const parts = c.fecha ? c.fecha.split("-") : [];
+    const day = parts[2] || "15";
+    const monthNames = [
+      "ENE",
+      "FEB",
+      "MAR",
+      "ABR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AGO",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DIC",
+    ];
+    const month = parts[1]
+      ? monthNames[parseInt(parts[1], 10) - 1] || "AGO"
+      : "AGO";
+
+    upcomingEvents.push({
+      id: c.id,
+      type: "concierto",
+      title: `Concierto: ${c.sala}`,
+      dateStr: c.fecha,
+      day,
+      month,
+      location: c.sala ? `${c.sala} (${c.ciudad})` : c.ciudad,
+      locationQuery: c.direccion || `${c.sala}, ${c.ciudad}`,
+      address: c.direccion,
+      badge: c.contrato_firmado ? "Contrato Firmado" : "Confirmado",
+      bandName: getEventBandName(c.band_id, c.bandName),
+      details: isPromo
+        ? c.aforo_total
+          ? `Aforo: ${c.aforo_total} pax`
+          : "Concierto confirmado"
+        : `Caché: ${c.cache ? `${c.cache}€` : "A convenir"} • Aforo: ${c.aforo_total || 500} pax`,
+    });
+  });
+
+  // Add rehearsals (ignoring past ones)
+  filteredRehearsals.forEach((r) => {
+    if (r.fecha && r.fecha < todayStr) return;
+    const parts = r.fecha ? r.fecha.split("-") : [];
+    const day = parts[2] || "10";
+    const monthNames = [
+      "ENE",
+      "FEB",
+      "MAR",
+      "ABR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AGO",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DIC",
+    ];
+    const month = parts[1]
+      ? monthNames[parseInt(parts[1], 10) - 1] || "AGO"
+      : "AGO";
+
+    upcomingEvents.push({
+      id: r.id,
+      type: "ensayo",
+      title: r.lugar ? `Ensayo en ${r.lugar}` : `Ensayo General`,
+      dateStr: r.fecha,
+      day,
+      month,
+      location: r.lugar || "Local de Ensayo",
+      locationQuery: `${r.lugar || "Local de Ensayo"}, Madrid`,
+      address: undefined,
+      badge: r.estado === "completado" ? "Completado" : "Programado",
+      bandName: getEventBandName(r.band_id, r.bandName),
+      details: `Horario: ${r.hora || "18:00"} • Asistentes: ${r.asistentes ? (Array.isArray(r.asistentes) ? r.asistentes.join(", ") : r.asistentes) : "Todos"}`,
+    });
+  });
+
+  // Antes, sin conciertos/ensayos reales todavía, se rellenaba la agenda con tres eventos
+  // inventados (un concierto en Sala Apolo con caché de 1.800€, un ensayo y un festival con
+  // caché de 3.500€) copiados de la banda insignia. Una agenda vacía es simplemente una agenda
+  // vacía: no se inventan conciertos que no existen.
+  upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
+
+  // Calculate urgent leads that need response or approval
+  const urgentRepliesNeeded = leads.filter(
+    (l) => l.estado === "interesado" || l.estado === "negociando",
+  );
+  const urgentApprovalsNeeded = leads.filter(
+    (l) =>
+      l.estado === "pendiente_aprobacion" ||
+      (l.pitch_generado && l.estado === "nuevo"),
+  );
+
+
+  // Generate intelligent industry alerts and booking milestones, strictly bound to user plan permissions
+  const managerAlerts = generateManagerAlerts(
+    leads,
+    concerts,
+    rehearsals,
+    epkConfig,
+    currentUser?.plan,
+  );
+
+  const handleExecuteAlertAction = (
+    alert: ManagerAlert,
+    actionOverride?: AlertAction,
+  ) => {
+    const targetType = actionOverride?.actionType || alert.actionType;
+
+    switch (targetType) {
+      case "open_campaign":
+        if (onNavigate) onNavigate("booking");
+        break;
+      case "scout_festivals":
+        setIsAddModalOpen(true);
+        setNewTipo("festival");
+        break;
+      case "open_autonomy":
+        setIsAutonomyModalOpen(true);
+        break;
+      case "view_leads_stale":
+        if (onNavigate)
+          onNavigate("booking", {
+            statusFilter:
+              actionOverride?.targetStatusFilter ||
+              alert.targetStatusFilter ||
+              "esperando_respuesta",
+          });
+        break;
+      case "view_drafts":
+        if (onNavigate)
+          onNavigate("booking", { statusFilter: "pendiente_aprobacion" });
+        break;
+      case "view_concerts":
+        if (onNavigate) onNavigate("calendario");
+        break;
+      case "open_epk":
+        if (onNavigate) onNavigate("epk");
+        break;
+      case "view_finanzas":
+        if (onNavigate) onNavigate("finanzas");
+        break;
+      case "view_ensayos":
+        if (onNavigate) onNavigate("ensayos");
+        break;
+      case "view_reels":
+        if (onNavigate) onNavigate("reels");
+        break;
+      default:
+        if (onNavigate) onNavigate("booking");
+    }
+  };
+
+  return (
+    <div
+      data-modulo="panel"
+      className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
+    >
+      {/* HEADER / TITULO PRINCIPAL */}
+      <div className="flex items-center justify-between gap-3 pb-1">
+        <div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="page-title">
+              Panel
+            </h1>
+            <span className="text-xs text-[var(--ink-2)] tabular-nums hidden sm:inline">
+              · {activeBandName} ({leads.length} en CRM ·{" "}
+              {upcomingEvents.length} fechas)
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <Button
+              variant="neutral"
+              size="sm"
+              type="button"
+              onClick={() => setShowQuickAddMenu((v) => !v)}
+              title="Añadir rápido"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+            {showQuickAddMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => setShowQuickAddMenu(false)}
+                />
+                <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
+                  <MenuItem
+                    type="button"
+                    onClick={() => {
+                      setShowQuickAddMenu(false);
+                      setIsAddModalOpen(true);
+                    }}
+                  >
+                    <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-2)]" />{" "}
+                    Lead rápido
+                  </MenuItem>
+                  <MenuItem
+                    type="button"
+                    onClick={() => {
+                      setShowQuickAddMenu(false);
+                      setIsQuickRehearsalOpen(true);
+                    }}
+                  >
+                    <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-2)]" />{" "}
+                    Ensayo rápido
+                  </MenuItem>
+                </div>
+              </>
+            )}
+          </div>
+          <Button
+            variant="neutral"
+            size="xs"
+            type="button"
+            id="quick-toggle-density-btn"
+            onClick={() =>
+              setViewDensityMode((prev) =>
+                prev === "clean" ? "full" : "clean",
+              )
+            }
+            className="items-center gap-1.5 max-sm:hidden"
+            title="Alternar entre vista esencial y vista completa"
+          >
+            <Eye className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+            <span>
+              {viewDensityMode === "clean"
+                ? "Vista Esencial"
+                : "Vista Completa"}
+            </span>
+          </Button>
+
+          {/* Engranaje Único de Ajustes del Dashboard */}
+          <div className="relative">
+            <Button
+              variant={isDashboardSettingsOpen || isEditDashboardMode ? "primary" : "neutral"}
+              size="sm"
+              type="button"
+              id="dashboard-settings-gear-btn"
+              onClick={() =>
+                setIsDashboardSettingsOpen(!isDashboardSettingsOpen)
+              }
+              title="Ajustes del Dashboard"
+            >
+              <Settings className="w-4 h-4" />
+            </Button>
+
+            {isDashboardSettingsOpen && (
+              <div className="absolute right-0 mt-2 w-64 p-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] z-50 animate-fade-in space-y-0.5">
+                <div className="px-2.5 py-1.5 mb-1 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[var(--ink-2)] block">
+                    Ajustes del Dashboard
+                  </span>
+                  <IconButton
+                    label="Cerrar"
+                    size="icon-xs"
+                    onClick={() => setIsDashboardSettingsOpen(false)}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </IconButton>
+                </div>
+
+                <button
+                  type="button"
+                  id="gear-menu-toggle-density-btn"
+                  onClick={() => {
+                    setViewDensityMode((prev) =>
+                      prev === "clean" ? "full" : "clean",
+                    );
+                    setIsDashboardSettingsOpen(false);
+                  }}
+                  className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Eye className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+                    <span>Modo vista</span>
+                  </div>
+                  <span className="text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
+                    {viewDensityMode === "clean" ? "Esencial" : "Completa"}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  id="gear-menu-edit-layout-btn"
+                  onClick={() => {
+                    setIsEditDashboardMode(!isEditDashboardMode);
+                    setIsDashboardSettingsOpen(false);
+                  }}
+                  className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+                    <span>Personalizar / reordenar</span>
+                  </div>
+                  {isEditDashboardMode && (
+                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  id="gear-menu-alerts-settings-btn"
+                  onClick={() => {
+                    setIsAlertSettingsOpen(true);
+                    setIsDashboardSettingsOpen(false);
+                  }}
+                  className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center gap-2 font-medium transition-colors cursor-pointer`}
+                >
+                  <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+                  <span>Alertas del mánager</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Móvil: próximo bolo y lo que te deben, siempre a la vista */}
+      <NextGigStrip concerts={concerts} onNavigate={onNavigate} />
+
+      {/* Solo se pinta si hay algo realmente esperando demasiado — no es un widget del catálogo
+ a propósito, es una alerta, no contenido que se pueda ordenar o quitar. */}
+      <NeedsAttentionBanner
+        concerts={concerts}
+        leads={leads}
+        onNavigate={onNavigate}
+      />
+
+      {/* RADAR DEL MÁNAGER: HITOS ESTACIONALES Y ALERTAS DE BOOKING */}
+      <ManagerAlertsWidget
+        alerts={managerAlerts}
+        onExecuteAction={handleExecuteAlertAction}
+        onOpenSettings={() => setIsAlertSettingsOpen(true)}
+        bandId={currentBandId || currentUser?.band_id || "active-band"}
+      />
+
+      {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD (incluye Resumen Ejecutivo como widget más) */}
+      <DashboardWidgetGrid
+        currentUser={currentUser}
+        concerts={concerts}
+        rehearsals={rehearsals}
+        leads={leads}
+        tours={tours}
+        fans={fans}
+        posts={posts}
+        setlists={setlists}
+        songs={songs}
+        epkConfig={epkConfig}
+        activeBandName={activeBandName}
+        colors={colors}
+        agendaFilterMode={agendaFilterMode}
+        onSetAgendaFilterMode={setAgendaFilterMode}
+        onNavigate={onNavigate}
+        isEditMode={isEditDashboardMode}
+        setIsEditMode={setIsEditDashboardMode}
+        viewDensityMode={viewDensityMode}
+        setViewDensityMode={setViewDensityMode}
+      />
+
+      {/* 3. SECCIÓN: ESTADO DE ENTRENAMIENTO & PREPARACIÓN DE AGENTES IA (Solo en Vista Completa) */}
+      {viewDensityMode === "full" && (
+        <ProfileCompletenessCard
+          epkConfig={epkConfig}
+          leads={leads}
+          concerts={concerts}
+          rehearsals={rehearsals}
+          metrics={metrics}
+          fans={fans}
+          tours={tours}
+          bandName={activeBandName}
+          currentUser={currentUser}
+          onNavigate={onNavigate}
+          onOpenAutonomyModal={() => setIsAutonomyModalOpen(true)}
+          onOpenProfileModal={onOpenProfileModal}
+        />
+      )}
+
+      {/* MODAL: PLANTILLAS Y EJEMPLOS REALES DE EMAIL */}
+      <EmailTemplatesModal
+        isOpen={isEmailTemplatesOpen}
+        onClose={() => setIsEmailTemplatesOpen(false)}
+        bandName={activeBandName}
+      />
+
+      {/* MODAL: AGREGAR NUEVA SALA */}
+      <AddLeadModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAddSubmit={handleAddSubmit}
+        newSala={newSala}
+        setNewSala={setNewSala}
+        newCiudad={newCiudad}
+        setNewCiudad={setNewCiudad}
+        newRegion={newRegion}
+        setNewRegion={setNewRegion}
+        newAforo={newAforo}
+        setNewAforo={setNewAforo}
+        newGenero={newGenero}
+        setNewGenero={setNewGenero}
+        newTipo={newTipo}
+        setNewTipo={setNewTipo}
+        newEmail={newEmail}
+        setNewEmail={setNewEmail}
+        newInstagram={newInstagram}
+        setNewInstagram={setNewInstagram}
+        newNotas={newNotas}
+        setNewNotas={setNewNotas}
+      />
+
+      {/* MODAL: CONVOCAR ENSAYO RÁPIDO — mismo componente que usa el módulo de Ensayos, solo
+ con la entrada más a mano desde el panel. */}
+      {isQuickRehearsalOpen && (
+        <ConvocarEnsayoModal
+          isOpen={isQuickRehearsalOpen}
+          onClose={() => setIsQuickRehearsalOpen(false)}
+          onSave={(rehearsal) => {
+            onAddRehearsal?.(rehearsal as Rehearsal);
+            setIsQuickRehearsalOpen(false);
+          }}
+          colors={colors}
+          setlists={setlists}
+          bandUsers={bandUsers}
+          currentBandId={currentBandId}
+          initialRehearsal={null}
+        />
+      )}
+
+      {/* MODAL / BOTTOM SHEET MOBILE FOR SELECTED LEAD IN DASHBOARD */}
+      {selectedLead && (
+        <MobileBottomSheet
+          selectedLead={selectedLead}
+          onClose={() => setSelectedLead(null)}
+          onUpdateLead={onUpdateLead}
+          getStatusBadgeClass={(status) =>
+            leadStatusBadgeClass(normalizeStatus(status))
+          }
+          getStatusLabel={(status) =>
+            leadStatusLabel(
+              normalizeStatus(status),
+              String(status).toUpperCase(),
+            )
+          }
+          getStatusDotColor={(status) =>
+            leadStatusDotColor(normalizeStatus(status))
+          }
+          normalizeStatus={normalizeStatus}
+          normalizeType={normalizeType}
+          autoDetectVenueAddress={autoDetectVenueAddress}
+          sectionTab="salas"
+        />
+      )}
+
+      <AgentAutonomySettingsModal
+        isOpen={isAutonomyModalOpen}
+        onClose={() => setIsAutonomyModalOpen(false)}
+        bandName={activeBandName}
+        bandId={currentBandId || currentUser?.band_id || ""}
+        currentUser={currentUser}
+        onOpenTemplatesSection={() => {
+          if (onNavigate) onNavigate("booking");
+        }}
+        onOpenBandProfile={() => {
+          if (onNavigate) onNavigate("bandas");
+        }}
+      />
+
+      <AlertSettingsModal
+        isOpen={isAlertSettingsOpen}
+        onClose={() => setIsAlertSettingsOpen(false)}
+        userPlan={currentUser?.plan || "de_gira"}
+        isLeaderOrManager={
+          currentUser?.rol === "leader" ||
+          currentUser?.rol === "manager" ||
+          true
+        }
+        userEmail={currentUser?.email || ""}
+        bandId={currentBandId || currentUser?.band_id || "active-band"}
+      />
+    </div>
+  );
+}

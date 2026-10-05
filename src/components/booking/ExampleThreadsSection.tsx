@@ -1,0 +1,370 @@
+import React, { useEffect, useState, useCallback } from "react";
+import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from "lucide-react";
+import { apiFetch } from "../../utils/api";
+import type { TemplateCategory } from "./TemplateConfigSection";
+import { IconButton, Input, LinkButton, Select, Textarea } from '../ui';
+
+interface ThreadMessage {
+  rol: "banda" | "sala";
+  texto: string;
+  orden: number;
+}
+
+interface ExampleThread {
+  id: string;
+  titulo: string;
+  mensajes: ThreadMessage[];
+  resultado: "positiva" | "negativa" | "neutral";
+  created_at: string;
+}
+
+interface ExampleThreadsSectionProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
+  category: TemplateCategory;
+  textSub: string;
+}
+
+const RESULTADO_LABEL: Record<string, string> = {
+  positiva: "✅ Salió bien",
+  negativa: "❌ No prosperó",
+  neutral: "➖ Neutro",
+};
+
+export function ExampleThreadsSection({
+  category,
+  textSub,
+}: ExampleThreadsSectionProps) {
+  const [threads, setThreads] = useState<ExampleThread[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [titulo, setTitulo] = useState("");
+  const [resultado, setResultado] = useState<
+    "positiva" | "negativa" | "neutral"
+  >("positiva");
+  const [mensajes, setMensajes] = useState<ThreadMessage[]>([
+    { rol: "banda", texto: "", orden: 0 },
+    { rol: "sala", texto: "", orden: 1 },
+  ]);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadThreads = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await apiFetch(
+        `/api/example-threads?category=${encodeURIComponent(category)}`,
+      );
+      if (res.success) setThreads(res.threads || []);
+    } catch (err) {
+      console.warn("No se pudieron cargar los hilos de ejemplo:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [category]);
+
+  useEffect(() => {
+    loadThreads();
+    setShowForm(false);
+    setError(null);
+  }, [loadThreads]);
+
+  const resetForm = () => {
+    setEditingId(null);
+    setTitulo("");
+    setResultado("positiva");
+    setMensajes([
+      { rol: "banda", texto: "", orden: 0 },
+      { rol: "sala", texto: "", orden: 1 },
+    ]);
+  };
+
+  const handleEdit = (thread: ExampleThread) => {
+    setEditingId(thread.id);
+    setTitulo(thread.titulo);
+    setResultado(thread.resultado);
+    setMensajes(
+      thread.mensajes.length > 0
+        ? thread.mensajes
+        : [{ rol: "banda", texto: "", orden: 0 }],
+    );
+    setError(null);
+    setShowForm(true);
+  };
+
+  const handleToggleForm = () => {
+    if (showForm) {
+      resetForm();
+      setShowForm(false);
+    } else {
+      resetForm();
+      setShowForm(true);
+    }
+  };
+
+  const handleAddMessageRow = () => {
+    setMensajes((prev) => {
+      const ultimoRol = prev[prev.length - 1]?.rol;
+      const nuevoRol: "banda" | "sala" =
+        ultimoRol === "banda" ? "sala" : "banda";
+      return [...prev, { rol: nuevoRol, texto: "", orden: prev.length }];
+    });
+  };
+
+  const handleRemoveMessageRow = (idx: number) => {
+    setMensajes((prev) =>
+      prev.filter((_, i) => i !== idx).map((m, i) => ({ ...m, orden: i })),
+    );
+  };
+
+  const handleMessageChange = (
+    idx: number,
+    field: "rol" | "texto",
+    value: string,
+  ) => {
+    setMensajes((prev) =>
+      prev.map((m, i) => (i === idx ? { ...m, [field]: value } : m)),
+    );
+  };
+
+  const handleSave = async () => {
+    setError(null);
+    const mensajesConTexto = mensajes.filter((m) => m.texto.trim());
+    if (mensajesConTexto.length === 0) {
+      setError("Añade al menos un mensaje con texto.");
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const res = editingId
+        ? await apiFetch(`/api/example-threads/${editingId}`, {
+            method: "PUT",
+            body: JSON.stringify({
+              titulo,
+              mensajes: mensajesConTexto,
+              resultado,
+            }),
+          })
+        : await apiFetch("/api/example-threads", {
+            method: "POST",
+            body: JSON.stringify({
+              category,
+              titulo,
+              mensajes: mensajesConTexto,
+              resultado,
+            }),
+          });
+      if (res.success) {
+        resetForm();
+        setShowForm(false);
+        await loadThreads();
+      } else {
+        setError(res.error || "No se pudo guardar el hilo.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Error al guardar el hilo.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await apiFetch(`/api/example-threads/${id}`, { method: "DELETE" });
+      setThreads((prev) => prev.filter((t) => t.id !== id));
+    } catch (err) {
+      console.warn("No se pudo borrar el hilo:", err);
+    }
+  };
+
+  return (
+    <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/5">
+      <div className="flex items-center justify-between">
+        <label className="block text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
+          <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos
+          de email reales de ejemplo
+        </label>
+        <LinkButton
+          size="xs"
+          type="button"
+          onClick={handleToggleForm}
+        >
+          <Plus className="w-3 h-3" /> {showForm ? "Cancelar" : "Pegar un hilo"}
+        </LinkButton>
+      </div>
+
+      <p className="text-micro text-[var(--acc)]/70 font-sans leading-tight">
+        Pega conversaciones reales (nuestro mensaje + la respuesta de la
+        sala/medio, y si la hubo, nuestra respuesta a esa respuesta) para esta
+        categoría. Se usan como ejemplo real tanto al redactar el primer
+        contacto como al generar respuestas a negociaciones.
+      </p>
+
+      {isLoading ? (
+        <div className="text-micro text-[var(--acc)]/70 flex items-center gap-1.5">
+          <Loader2 className="w-3 h-3 animate-spin" /> Cargando hilos…
+        </div>
+      ) : threads.length > 0 ? (
+        <div className="space-y-1.5">
+          {threads.map((t) => (
+            <div
+              key={t.id}
+              onClick={() => handleEdit(t)}
+              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-micro cursor-pointer hover:bg-[var(--acc-soft)] transition-colors"
+              title="Abrir para ver o editar este hilo"
+            >
+              <div className="min-w-0">
+                <span className="font-bold text-[var(--ink-2)]">
+                  {t.titulo || "Sin título"}
+                </span>
+                <span className="text-[var(--ink-2)] ml-2">
+                  {t.mensajes.length} mensaje(s) ·{" "}
+                  {RESULTADO_LABEL[t.resultado] || t.resultado}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <IconButton
+                  label="Ver / editar este hilo"
+                  size="icon-xs"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(t);
+                  }}
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </IconButton>
+                <IconButton
+                  label="Borrar este hilo de ejemplo"
+                  variant="danger"
+                  size="icon-xs"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(t.id);
+                  }}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </IconButton>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-micro text-[var(--acc)] italic">
+          Todavía no hay hilos de ejemplo guardados para esta categoría.
+        </div>
+      )}
+
+      {showForm && (
+        <div className="space-y-2.5 pt-2/20">
+          {editingId && (
+            <div className="text-micro text-[var(--acc)] font-sans font-bold">
+              Editando hilo guardado
+            </div>
+          )}
+          <Input
+            size="sm"
+            type="text"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+            placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
+            className="w-full"
+          />
+
+          {mensajes.map((m, idx) => (
+            <div key={idx} className="flex gap-2 items-start">
+              <Select
+                size="sm"
+                value={m.rol}
+                onChange={(e) =>
+                  handleMessageChange(idx, "rol", e.target.value)
+                }
+                wrapperClassName="shrink-0"
+              >
+                <option value="banda">Banda</option>
+                <option value="sala">Sala</option>
+              </Select>
+              <Textarea
+                rows={2}
+                value={m.texto}
+                onChange={(e) =>
+                  handleMessageChange(idx, "texto", e.target.value)
+                }
+                placeholder={
+                  m.rol === "banda"
+                    ? "Lo que escribimos nosotros..."
+                    : "Lo que respondió la sala..."
+                }
+                className="flex-1"
+              />
+              {mensajes.length > 1 && (
+                <IconButton
+                  label="Eliminar"
+                  variant="danger"
+                  size="icon-xs"
+                  type="button"
+                  onClick={() => handleRemoveMessageRow(idx)}
+                  className="shrink-0"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </IconButton>
+              )}
+            </div>
+          ))}
+
+          <LinkButton
+            size="xs"
+            type="button"
+            onClick={handleAddMessageRow}
+          >
+            <Plus className="w-3 h-3" /> Añadir mensaje al hilo
+          </LinkButton>
+
+          <div className="flex items-center gap-2">
+            <span className="text-micro text-[var(--ink-2)] font-sans">
+              Resultado:
+            </span>
+            {(["positiva", "neutral", "negativa"] as const).map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setResultado(r)}
+                className={`text-micro px-2 py-1 rounded-[var(--r-pill)] font-sans cursor-pointer ${resultado === r ? "bg-[var(--acc)]/30 text-[var(--ink)] font-bold" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
+              >
+                {RESULTADO_LABEL[r]}
+              </button>
+            ))}
+          </div>
+
+          {error && (
+            <div className="text-micro text-[var(--alert)] font-sans">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="w-full py-1.5 px-3 bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] font-bold text-micro rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+          >
+            {isSaving ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Plus className="w-3.5 h-3.5" />
+            )}
+            <span>
+              {isSaving
+                ? "Guardando..."
+                : editingId
+                  ? "Guardar cambios"
+                  : "Guardar hilo de ejemplo"}
+            </span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,724 @@
+import React, { useState, useMemo } from "react";
+import {
+  Music,
+  Sparkles,
+  QrCode,
+  FileText,
+  Rocket,
+  CheckCircle2,
+  ArrowLeft,
+  Check,
+  Loader2,
+  MessageSquare,
+  Users,
+  Radio,
+  ExternalLink,
+  ShieldCheck,
+  ChevronDown,
+  ChevronUp,
+  Sliders,
+} from "lucide-react";
+import {
+  FanFormLanguage,
+  DEFAULT_FAN_FORM_LANGUAGE,
+  FAN_FORM_LANGUAGES,
+  isFanFormLanguage,
+  idiomasDisponiblesParaConcierto,
+} from "../i18n/fansTranslations";
+import {
+  getMusiciansTranslations,
+  MusiciansLandingDict,
+} from "../i18n/musiciansTranslations";
+import { Input, Select, Textarea } from './ui';
+
+export const PublicMusiciansLanding: React.FC = () => {
+  // 1. Detect language from query params or browser
+  const initialLang = useMemo<FanFormLanguage>(() => {
+    if (typeof window === "undefined") return DEFAULT_FAN_FORM_LANGUAGE;
+    const params = new URLSearchParams(window.location.search);
+    const langParam = params.get("lang")?.toLowerCase();
+    if (isFanFormLanguage(langParam)) return langParam;
+    return DEFAULT_FAN_FORM_LANGUAGE;
+  }, []);
+
+  const [currentLang, setCurrentLang] = useState<FanFormLanguage>(initialLang);
+  const t: MusiciansLandingDict = useMemo(
+    () => getMusiciansTranslations(currentLang),
+    [currentLang],
+  );
+
+  // Regla contextual de idiomas (idéntica a FansLanding y Dossier EPK):
+  // - Si el idioma es italiano ('it'): Italia (🇮🇹), UK (🇬🇧) y España (🇪🇸).
+  // - Si es español ('es') o inglés ('en'): España (🇪🇸) y UK (🇬🇧).
+  // - Si es checo ('cs'): Chequia (🇨🇿), UK (🇬🇧) y España (🇪🇸).
+  const baseLangForFlags =
+    currentLang === "it" || currentLang === "cs"
+      ? currentLang
+      : initialLang === "it" || initialLang === "cs"
+        ? initialLang
+        : currentLang;
+  const availableCodes = useMemo(
+    () => idiomasDisponiblesParaConcierto(baseLangForFlags),
+    [baseLangForFlags],
+  );
+  const availableLanguages = useMemo(() => {
+    return FAN_FORM_LANGUAGES.filter((l) =>
+      availableCodes.includes(l.code),
+    ).sort(
+      (a, b) => availableCodes.indexOf(a.code) - availableCodes.indexOf(b.code),
+    );
+  }, [availableCodes]);
+
+  // Contextual params (if opened from another band's fan page)
+  const originInfo = useMemo(() => {
+    if (typeof window === "undefined") return { fromBand: "", fromConcert: "" };
+    const params = new URLSearchParams(window.location.search);
+    return {
+      fromBand: params.get("from_band") || params.get("band") || "",
+      fromConcert: params.get("from_concert") || params.get("concert") || "",
+    };
+  }, []);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    nombreBanda: "",
+    nombreContacto: "",
+    email: "",
+    instagram: "",
+    telefono: "",
+    ciudad: "",
+    genero: "",
+    enlaceMusica: "",
+    interesPrincipal: "",
+    notas: "",
+    consentimiento: false,
+  });
+
+  const [showOptionalDetails, setShowOptionalDetails] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleLanguageChange = (lang: FanFormLanguage) => {
+    setCurrentLang(lang);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", lang);
+      window.history.replaceState({}, "", url.toString());
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+
+    // Solo los imprescindibles son obligatorios: Nombre de la Banda y Email (o Instagram)
+    if (!formData.nombreBanda.trim() || !formData.email.trim()) {
+      setErrorMessage(t.errorRequired);
+      return;
+    }
+
+    if (!formData.consentimiento) {
+      setErrorMessage(t.errorRequired);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/public/musicians-waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          idioma: currentLang,
+          bandaOrigen: originInfo.fromBand || undefined,
+          conciertoOrigen: originInfo.fromConcert || undefined,
+          fechaSolicitud: new Date().toISOString(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || t.errorGeneric);
+      }
+
+      setSubmitted(true);
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    } catch (err: any) {
+      console.error("Error enviando registro de músico:", err);
+      setErrorMessage(err?.message || t.errorGeneric);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToOrigin = () => {
+    if (typeof window !== "undefined") {
+      if (originInfo.fromBand) {
+        const clean = originInfo.fromBand.replace(/^(band|reg)-/, "");
+        window.location.href = `/fans?band=${encodeURIComponent(clean)}&lang=${currentLang}`;
+      } else {
+        window.location.href = "/";
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[var(--sunken)] text-[var(--ink-2)] font-sans selection:bg-[var(--acc)] selection:text-[var(--ink)]">
+      {/* Background Ambient Glows */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[var(--acc)]/10 rounded-[var(--r-pill)] blur-[120px]" />
+        <div className="absolute top-[40%] right-[-5%] w-[450px] h-[450px] bg-[var(--accent-alt)]/10 rounded-[var(--r-pill)] blur-[140px]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[var(--accent-alt)]/10 rounded-[var(--r-pill)] blur-[140px]" />
+      </div>
+
+      {/* Sticky Navigation / Header */}
+      <header className="relative z-20  bg-[var(--bg)]/90 sticky top-0">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] p-0.5 flex items-center justify-center shrink-0">
+              <img
+                src="/bandmanageriodefinitiva.jpeg"
+                alt="BandManager.io logo"
+                className="w-full h-full object-contain rounded-[10px]"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    "/logo_bandmanager_official.svg";
+                }}
+              />
+            </div>
+            <div>
+              <span className="font-extrabold tracking-tight text-[var(--ink)] font-sans text-base flex items-center gap-0.5">
+                BandManager<span className="text-[var(--acc)]">.io</span>
+              </span>
+              <span className="text-micro font-sans text-[var(--acc)]/80 block -mt-1">
+                IA Agéntica para tu Banda
+              </span>
+            </div>
+          </div>
+
+          {/* Language Selector (Solo banderas, contextual) */}
+          <div
+            className="flex items-center gap-1.5 bg-[var(--surface)]/80 p-1 rounded-[var(--r-m)]"
+            role="group"
+            aria-label="Idioma / Language"
+          >
+            {availableLanguages.map((lang) => (
+              <button
+                key={lang.code}
+                type="button"
+                onClick={() => handleLanguageChange(lang.code)}
+                className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-ui ${
+                  currentLang === lang.code
+                    ? "bg-[var(--acc)]/20 text-[var(--ink)]  scale-105"
+                    : "bg-[var(--surface)]/60  hover:opacity-70 hover:opacity-100"
+                }`}
+                title={lang.label}
+                aria-label={lang.label}
+              >
+                <span className="text-base leading-none select-none">
+                  {lang.flag}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      {/* Main Container */}
+      <main className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-12">
+        {/* Optional Origin Band Badge */}
+        {originInfo.fromBand && (
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-xs font-sans text-[var(--ink)] animate-in fade-in">
+            <div className="flex items-center gap-2">
+              <Radio className="w-4 h-4 text-[var(--acc)]" />
+              <span>
+                {t.badgeFromBand.replace(
+                  "{bandName}",
+                  originInfo.fromBand.replace(/^(band|reg)-/, "").toUpperCase(),
+                )}
+              </span>
+            </div>
+            <button
+              onClick={handleBackToOrigin}
+              className="text-xs underline hover:text-[var(--ink)] flex items-center gap-1 font-bold"
+            >
+              <ArrowLeft className="w-3 h-3" />
+              {t.backToOrigin.replace(
+                "{bandName}",
+                originInfo.fromBand.replace(/^(band|reg)-/, ""),
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* HERO SECTION */}
+        <section className="text-center space-y-5 pt-2">
+          {/* Official BandManager Brand Logo */}
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-[var(--acc)]/30  rounded-[var(--r-xl)] blur-md opacity-70 group-hover:opacity-100 transition duration-300" />
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-[var(--surface)] p-1 flex items-center justify-center">
+                <img
+                  src="/bandmanageriodefinitiva.jpeg"
+                  alt="BandManager.io"
+                  className="w-full h-full object-contain rounded-[var(--r-m)]"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      "/logo_bandmanager_official.svg";
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs font-sans font-bold mt-1">
+              <span>{t.badge}</span>
+            </div>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[var(--ink)] max-w-3xl mx-auto leading-[1.15]">
+            {t.heroTitle}
+            {" "}
+            <span className="bg-[var(--acc)]  bg-clip-text text-transparent">
+              {t.heroHighlight}
+            </span>
+          </h1>
+
+          <p className="text-[var(--ink-2)] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-normal">
+            {t.heroSubtitle}
+          </p>
+        </section>
+
+        {/* FEATURE CARDS */}
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
+              <QrCode className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-[var(--ink)] text-base font-sans">
+              {t.feature1Title}
+            </h3>
+            <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
+              {t.feature1Desc}
+            </p>
+          </div>
+
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
+              <FileText className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-[var(--ink)] text-base font-sans">
+              {t.feature2Title}
+            </h3>
+            <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
+              {t.feature2Desc}
+            </p>
+          </div>
+
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--ink)]">
+              <Music className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-[var(--ink)] text-base font-sans">
+              {t.feature3Title}
+            </h3>
+            <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
+              {t.feature3Desc}
+            </p>
+          </div>
+        </section>
+
+        {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
+ concretas todavía por confirmar */}
+        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/10 ">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--ink)] shrink-0">
+            <Rocket className="w-5 h-5" />
+          </div>
+          <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
+            <span className="text-[var(--acc)] font-bold">
+              {t.roadmapTeaserLead}
+            </span>
+            {" "}
+            {t.roadmapTeaserText}
+          </p>
+        </section>
+
+        {/* REGISTRATION FORM CARD OR SUCCESS CARD */}
+        <section className="relative">
+          <div className="absolute inset-0 bg-[var(--acc)]/5  rounded-[var(--r-xl)] -z-10" />
+
+          {submitted ? (
+            /* SUCCESS CONFIRMATION */
+            <div className="p-8 sm:p-12 rounded-[var(--r-l)] bg-[var(--surface)] text-center space-y-6 animate-in fade-in zoom-in-95">
+              <div className="w-20 h-20 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-10 h-10" />
+              </div>
+
+              <div className="space-y-3">
+                <h2 className="text-2xl sm:text-3xl font-black text-[var(--ink)]">
+                  {t.successTitle}
+                </h2>
+                <p className="text-[var(--acc)] font-sans text-sm font-bold">
+                  {t.successSubtitle.replace(
+                    "{bandName}",
+                    formData.nombreBanda || "tu banda",
+                  )}
+                </p>
+                <p className="text-[var(--ink-2)] text-sm max-w-lg mx-auto leading-relaxed">
+                  {t.successMessage}
+                </p>
+              </div>
+
+              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                {originInfo.fromBand && (
+                  <button
+                    onClick={handleBackToOrigin}
+                    className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink)] font-sans text-xs font-bold transition"
+                  >
+                    {t.successBackToBand.replace(
+                      "{bandName}",
+                      originInfo.fromBand.replace(/^(band|reg)-/, ""),
+                    )}
+                  </button>
+                )}
+                <a
+                  href="/"
+                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--on-acc)] font-sans text-xs font-bold transition hover:brightness-110 flex items-center justify-center gap-2"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  {t.successExploreApp}
+                </a>
+              </div>
+            </div>
+          ) : (
+            /* EARLY ACCESS FORM */
+            <div className="p-6 sm:p-10 rounded-[var(--r-l)] bg-[var(--surface)] space-y-6">
+              <div className="space-y-2 pb-6 text-center sm:text-left">
+                <div className="inline-flex items-center gap-2 text-[var(--acc)] font-sans text-xs font-bold">
+                  <Users className="w-4 h-4" />
+                  <span>Lista de espera con acceso anticipado</span>
+                </div>
+                <h2 className="text-2xl font-black text-[var(--ink)]">
+                  {t.formTitle}
+                </h2>
+                <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
+                  {t.formSubtitle}
+                </p>
+              </div>
+
+              {errorMessage && (
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--alert)]/10 text-[var(--alert)] text-xs font-sans">
+                  {errorMessage}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* 1. DATOS IMPRESCINDIBLES (Prioritarios) */}
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Band Name */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                        <span>{t.labelBandName}</span>
+                        <span className="text-[var(--acc)] text-micro font-normal lowercase tracking-normal">
+                          imprescindible
+                        </span>
+                      </label>
+                      <Input
+                        type="text"
+                        required
+                        value={formData.nombreBanda}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            nombreBanda: e.target.value,
+                          })
+                        }
+                        placeholder={t.placeholderBandName}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                        <span>{t.labelEmail}</span>
+                        <span className="text-[var(--acc)] text-micro font-normal lowercase tracking-normal">
+                          imprescindible
+                        </span>
+                      </label>
+                      <Input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
+                        placeholder={t.placeholderEmail}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Instagram */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                        <span>{t.labelInstagram}</span>
+                        <span className="text-[var(--ink-2)] text-micro font-normal lowercase tracking-normal">
+                          recomendado
+                        </span>
+                      </label>
+                      <Input
+                        type="text"
+                        value={formData.instagram}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            instagram: e.target.value,
+                          })
+                        }
+                        placeholder={t.placeholderInstagram}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Contact Person Name */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                        <span>{t.labelContactName}</span>
+                        <span className="text-[var(--ink-2)] text-micro font-normal lowercase tracking-normal">
+                          opcional
+                        </span>
+                      </label>
+                      <Input
+                        type="text"
+                        value={formData.nombreContacto}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            nombreContacto: e.target.value,
+                          })
+                        }
+                        placeholder={t.placeholderContactName}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. BOTÓN DESPLEGABLE DE INFORMACIÓN ADICIONAL (OPCIONAL) */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowOptionalDetails(!showOptionalDetails)}
+                    className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/70 hover:bg-[var(--surface)] hover:text-xs font-sans text-[var(--ink-2)] flex items-center justify-between transition-colors group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
+                      <span className="group-hover:text-[var(--ink)] transition-colors font-medium">
+                        {showOptionalDetails
+                          ? t.moreInfoToggleClose
+                          : t.moreInfoToggleOpen}
+                      </span>
+                    </span>
+                    {showOptionalDetails ? (
+                      <ChevronUp className="w-4 h-4 text-[var(--ink-2)] group-hover:text-[var(--acc)] transition-colors" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-[var(--ink-2)] group-hover:text-[var(--acc)] transition-colors" />
+                    )}
+                  </button>
+                </div>
+
+                {/* 3. CAMPOS OPCIONALES DESPLEGABLES */}
+                {showOptionalDetails && (
+                  <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/90 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <p className="text-xs font-sans text-[var(--ink-2)] -mt-1">
+                      {t.moreInfoSubtitle}
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Music Genre */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
+                          {t.labelGenre}
+                        </label>
+                        <Input
+                          type="text"
+                          value={formData.genero}
+                          onChange={(e) =>
+                            setFormData({ ...formData, genero: e.target.value })
+                          }
+                          placeholder={t.placeholderGenre}
+                          className="w-full"
+                        />
+                      </div>
+
+                      {/* City */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
+                          {t.labelCity}
+                        </label>
+                        <Input
+                          type="text"
+                          value={formData.ciudad}
+                          onChange={(e) =>
+                            setFormData({ ...formData, ciudad: e.target.value })
+                          }
+                          placeholder={t.placeholderCity}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Phone / WhatsApp */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
+                          {t.labelPhone}
+                        </label>
+                        <Input
+                          type="tel"
+                          value={formData.telefono}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              telefono: e.target.value,
+                            })
+                          }
+                          placeholder={t.placeholderPhone}
+                          className="w-full"
+                        />
+                      </div>
+
+                      {/* Music link */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
+                          {t.labelMusicLink}
+                        </label>
+                        <Input
+                          type="text"
+                          value={formData.enlaceMusica}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              enlaceMusica: e.target.value,
+                            })
+                          }
+                          placeholder={t.placeholderMusicLink}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Priority Feature */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
+                        {t.labelMainInterest}
+                      </label>
+                      <Select
+                        value={formData.interesPrincipal}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            interesPrincipal: e.target.value,
+                          })
+                        }
+                        wrapperClassName="w-full"
+                      >
+                        <option value="">{t.optionSelectInterest}</option>
+                        <option value="fans">{t.optionInterestFans}</option>
+                        <option value="epk">{t.optionInterestEpk}</option>
+                        <option value="repertorio">
+                          {t.optionInterestRepertoire}
+                        </option>
+                        <option value="todo">{t.optionInterestAll}</option>
+                      </Select>
+                    </div>
+
+                    {/* Notes */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
+                        {t.labelNotes}
+                      </label>
+                      <Textarea
+                        rows={2}
+                        value={formData.notas}
+                        onChange={(e) =>
+                          setFormData({ ...formData, notas: e.target.value })
+                        }
+                        placeholder={t.placeholderNotes}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Consent checkbox */}
+                <div className="pt-2">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80 cursor-pointer group hover:transition">
+                    <input
+                      type="checkbox"
+                      required
+                      checked={formData.consentimiento}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          consentimiento: e.target.checked,
+                        })
+                      }
+                      className="mt-0.5 w-4 h-4 rounded bg-[var(--sunken)] text-[var(--acc)] focus:ring-[var(--acc)]"
+                    />
+                    <span className="text-xs font-sans text-[var(--ink-2)] group-hover:text-[var(--ink-2)] leading-relaxed">
+                      {t.consentCheckbox}
+                    </span>
+                  </label>
+                </div>
+
+                {/* Submit button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--on-acc)] font-sans font-bold text-sm hover:brightness-110 active:scale-[0.97] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>{t.submittingButton}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 text-[var(--ink)]" />
+                      <span>{t.submitButton}</span>
+                    </>
+                  )}
+                </button>
+              </form>
+
+              <div className="pt-2 text-center">
+                <p className="text-xs font-sans text-[var(--ink-2)] flex items-center justify-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" />
+                  <span>
+                    Tus datos se tratan con total privacidad y nunca se ceden a
+                    terceros.
+                  </span>
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* Footer */}
+        <footer className="text-center py-6 text-xs font-sans text-[var(--ink-2)]">
+          <p>{t.footerText}</p>
+        </footer>
+      </main>
+    </div>
+  );
+};
+
+export default PublicMusiciansLanding;

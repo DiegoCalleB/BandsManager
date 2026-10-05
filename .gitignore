@@ -1,0 +1,36 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+bin/
+public/uploads/
+bun.lock
+*.py
+!scripts/paleta-audit.py
+
+# Caché local de estado (server/state.ts) - espejo de Supabase con datos reales de
+# producción (emails, teléfonos de contacto de bandas/salas). Nunca debe versionarse.
+data.json
+public/clips/
+supabase/.temp/
+
+# Worktrees temporales de agentes de Claude Code (isolation: "worktree") - copias de
+# trabajo efímeras, nunca contenido real del proyecto. Pero settings.json/skills/hooks
+# SÍ son config real y compartida del repo (ver AGENTS.md §2.2 punto 7 y §7) - un .claude/
+# ignorado entero fue justo la causa de que los skills nunca se conectaran de verdad a
+# Claude Code (quedaron solo en /skills/, invisibles para el harness). No repetir eso.
+.claude/*
+!.claude/settings.json
+!.claude/skills/
+!.claude/hooks/
+
+# Salida de cada corrida de Playwright (e2e/) - informe HTML, trazas y capturas de fallos.
+playwright-report/
+test-results/
+
+# Sesión reutilizable de la suite visual (token, no se versiona)
+e2e/.auth/

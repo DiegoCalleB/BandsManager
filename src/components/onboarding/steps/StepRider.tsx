@@ -1,0 +1,227 @@
+import React, { useRef } from "react";
+import {
+  Layers,
+  Upload,
+  FileText,
+  CheckCircle2,
+  Loader2,
+  Trash2,
+  Check,
+} from "lucide-react";
+import { IconButton, Input, LinkButton, Textarea } from '../../ui';
+
+interface StepRiderProps {
+  riderTecnicoText: string;
+  setRiderTecnicoText: (text: string) => void;
+  riderPdfUrl: string;
+  setRiderPdfUrl: (url: string) => void;
+  riderPdfName: string;
+  setRiderPdfName: (name: string) => void;
+  isUploadingRider: boolean;
+  onRiderUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  canalesMesa: number;
+  setCanalesMesa: (n: number) => void;
+  llevaMicrofoniaPropia: boolean;
+  setLlevaMicrofoniaPropia: (v: boolean) => void;
+  llevaInEars: boolean;
+  setLlevaInEars: (v: boolean) => void;
+  necesitaBacklineBateria: boolean;
+  setNecesitaBacklineBateria: (v: boolean) => void;
+}
+
+export const StepRider: React.FC<StepRiderProps> = ({
+  riderTecnicoText,
+  setRiderTecnicoText,
+  riderPdfUrl,
+  setRiderPdfUrl,
+  riderPdfName,
+  setRiderPdfName,
+  isUploadingRider,
+  onRiderUpload,
+  canalesMesa,
+  setCanalesMesa,
+  llevaMicrofoniaPropia,
+  setLlevaMicrofoniaPropia,
+  llevaInEars,
+  setLlevaInEars,
+  necesitaBacklineBateria,
+  setNecesitaBacklineBateria,
+}) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-200">
+      <div className="flex items-center gap-2 pb-2">
+        <Layers className="w-5 h-5 text-[var(--acc)]" />
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Rider técnico, stage plot y requerimientos
+        </h3>
+      </div>
+
+      <p className="text-xs text-[var(--ink-2)]">
+        Facilita el trabajo de los técnicos de sonido de salas y festivales para
+        que todo suene perfecto desde la prueba de sonido.
+      </p>
+
+      {/* Quick Specs Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
+          <label className="block text-xs font-medium text-[var(--ink-2)]">
+            Canales de mesa mínimos
+          </label>
+          <Input size="sm" aria-label="Canales de mesa mínimos"
+            type="number"
+            min={4}
+            max={64}
+            value={canalesMesa}
+            onChange={(e) => setCanalesMesa(Number(e.target.value))}
+            className="w-full"
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setLlevaMicrofoniaPropia(!llevaMicrofoniaPropia)}
+          className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
+            llevaMicrofoniaPropia
+              ? "bg-[var(--acc)]/10  text-[var(--ink)]"
+              : "bg-[var(--bg)] text-[var(--ink-2)] "
+          } hover:brightness-95`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold">Microfonía propia</span>
+            {llevaMicrofoniaPropia && (
+              <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
+            )}
+          </div>
+          <span className="text-micro text-[var(--ink-2)] block mt-1">
+            Llevamos set propio de micros
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setLlevaInEars(!llevaInEars)}
+          className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
+            llevaInEars
+              ? "bg-[var(--acc)]/10  text-[var(--ink)]"
+              : "bg-[var(--bg)] text-[var(--ink-2)] "
+          } hover:brightness-95`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold">Monitoraje In-Ears</span>
+            {llevaInEars && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
+          </div>
+          <span className="text-micro text-[var(--ink-2)] block mt-1">
+            Sistema propio de monitores
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setNecesitaBacklineBateria(!necesitaBacklineBateria)}
+          className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
+            necesitaBacklineBateria
+              ? "bg-[var(--acc)]/10  text-[var(--ink)]"
+              : "bg-[var(--bg)] text-[var(--ink-2)] "
+          } hover:brightness-95`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold">Backline sala</span>
+            {necesitaBacklineBateria && (
+              <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
+            )}
+          </div>
+          <span className="text-micro text-[var(--ink-2)] block mt-1">
+            Batería básica aportada por sala
+          </span>
+        </button>
+      </div>
+
+      {/* Subida de Archivo PDF de Rider / Stage Plot */}
+      <div className="pt-2 space-y-3">
+        <label className="block text-xs font-medium text-[var(--ink-2)]">
+          Documento PDF de Rider Técnico / Plano de Escenario (Stage Plot)
+        </label>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={onRiderUpload}
+          accept=".pdf,image/*"
+          className="hidden"
+        />
+
+        {riderPdfUrl ? (
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10">
+            <div className="flex items-center gap-3">
+              <FileText className="w-6 h-6 text-[var(--ok)]" />
+              <div>
+                <span className="text-xs font-semibold text-[var(--ink-2)] block">
+                  {riderPdfName || "Rider_Tecnico_Oficial.pdf"}
+                </span>
+                <span className="text-micro text-[var(--ok)]/80">
+                  Documento listo en el EPK interactivo
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <LinkButton
+                tone="muted"
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Cambiar
+              </LinkButton>
+              <IconButton
+                label="Eliminar"
+                variant="danger"
+                size="icon-xs"
+                type="button"
+                onClick={() => {
+                  setRiderPdfUrl("");
+                  setRiderPdfName("");
+                }}
+              >
+                <Trash2 className="w-4 h-4" />
+              </IconButton>
+            </div>
+          </div>
+        ) : (
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="  rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
+          >
+            <Upload className="w-6 h-6 text-[var(--ink-2)] mx-auto mb-1.5" />
+            <span className="text-xs font-medium text-[var(--ink-2)] block">
+              Subir PDF de rider técnico o imagen de stage plot
+            </span>
+            <span className="text-micro text-[var(--ink-2)]">
+              PDF, JPG o PNG hasta 20 MB
+            </span>
+            {isUploadingRider && (
+              <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-[var(--acc)]">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Subiendo
+                rider…
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Notas técnicas en texto */}
+      <div className="pt-2">
+        <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+          Notas de escenario y requerimientos adicionales (texto)
+        </label>
+        <Textarea
+          rows={3}
+          value={riderTecnicoText}
+          onChange={(e) => setRiderTecnicoText(e.target.value)}
+          placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m…"
+          className="w-full"
+        />
+      </div>
+    </div>
+  );
+};

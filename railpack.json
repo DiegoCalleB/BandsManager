@@ -1,0 +1,18 @@
+{
+  "$schema": "https://railpack.com/config.schema.json",
+  "phases": {
+    "setup": {
+      "aptPkgs": ["libatomic1", "ffmpeg"],
+      "nixPkgs": ["nodejs_22", "yt-dlp", "python311", "python311Packages.pip"]
+    },
+    "install": {
+      "cmds": ["npm install", "python3 -m ensurepip --upgrade || true", "pip3 install --no-cache-dir pedalboard scipy || python3 -m pip install --no-cache-dir pedalboard scipy || true"]
+    },
+    "build": {
+      "cmds": ["npm run build"]
+    }
+  },
+  "start": {
+    "cmd": "npm start"
+  }
+}

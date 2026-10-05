@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Retrato ilustrado de oscar">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366F1"/><stop offset="1" stop-color="#0891B2"/></linearGradient></defs>
+<rect width="400" height="400" fill="url(#g)"/>
+<circle cx="330" cy="70" r="46" fill="#fff" opacity=".12"/><circle cx="60" cy="340" r="70" fill="#fff" opacity=".1"/>
+
+<path d="M70 400 C70 330 130 300 200 300 C270 300 330 330 330 400Z" fill="#374151"/>
+<rect x="176" y="262" width="48" height="52" rx="18" fill="#EFC2A0"/>
+<ellipse cx="200" cy="205" rx="68" ry="82" fill="#EFC2A0"/>
+<path d="M134 168 C132 100 168 78 200 78 C234 78 268 100 266 168 C250 138 236 128 200 128 C166 128 150 138 134 168Z" fill="#4B3621"/>
+
+<g fill="#1F2937"><ellipse cx="172" cy="208" rx="6" ry="7"/><ellipse cx="228" cy="208" rx="6" ry="7"/></g>
+<g fill="none" stroke="#111827" stroke-width="5"><circle cx="170" cy="205" r="22"/><circle cx="230" cy="205" r="22"/><path d="M192 205 H208"/></g>
+<path d="M178 245 Q200 262 222 245" fill="none" stroke="#7C2D12" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+</svg>

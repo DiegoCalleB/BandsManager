@@ -1,0 +1,404 @@
+import React, { useState, useEffect } from 'react';
+import {
+  X,
+  MessageCircle,
+  Copy,
+  Check,
+  ExternalLink,
+  Phone,
+  Smartphone,
+  Calendar,
+  Clock,
+  BookOpen,
+  AlertTriangle,
+  RotateCcw,
+} from 'lucide-react';
+import { Lead } from '../../types';
+import {
+  cleanPhoneForWhatsApp,
+  isLikelyMobile,
+  isLikelyLandline,
+  buildWhatsAppUrl,
+  formatLeadPitchForWhatsApp,
+  copyToClipboard,
+} from '../../utils/whatsappUtils';
+import { ModalPortal } from '../common/ModalPortal';
+import { Button, IconButton, Input, Textarea } from '../ui';
+
+interface WhatsAppPreviewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  lead: Lead;
+  bandName?: string;
+  isStitchLight?: boolean;
+  onLogInteraction?: (leadId: string, logData: { tipo: 'WhatsApp'; notas: string; resultado?: string }) => void;
+  onUpdateLeadPhone?: (leadId: string, updates: { telefono_movil?: string; telefono_fijo?: string; telefono?: string }) => void;
+}
+
+export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
+  isOpen,
+  onClose,
+  lead,
+  bandName = 'Nuestra Banda',
+  isStitchLight = false,
+  onLogInteraction,
+  onUpdateLeadPhone,
+}) => {
+  // Inicialización de teléfono seleccionado (prioridad: telefono_movil -> telefono -> telefono_fijo)
+  const initialPhone = lead.telefono_movil || lead.telefono || lead.telefono_fijo || '';
+  const [targetPhone, setTargetPhone] = useState(initialPhone);
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+
+  // Mensaje
+  const [message, setMessage] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [interactionLogged, setInteractionLogged] = useState(false);
+
+  // Fechas libres disponibles del radar
+  const detectedDates = lead.fechas_libres_detectadas || [];
+
+  useEffect(() => {
+    if (isOpen && lead) {
+      const bestPhone = lead.telefono_movil || lead.telefono || lead.telefono_fijo || '';
+      setTargetPhone(bestPhone);
+      const initialMsg = formatLeadPitchForWhatsApp(lead, bandName, detectedDates);
+      setMessage(initialMsg);
+      setCopied(false);
+      setInteractionLogged(false);
+      setIsEditingPhone(false);
+    }
+  }, [isOpen, lead.id]);
+
+  if (!isOpen) return null;
+
+  const cleanPhone = cleanPhoneForWhatsApp(targetPhone);
+  const hasValidPhone = cleanPhone.length >= 7;
+  const isMobile = isLikelyMobile(targetPhone);
+  const isLandline = isLikelyLandline(targetPhone);
+
+  const waLink = hasValidPhone ? buildWhatsAppUrl(targetPhone, message) : '';
+
+  const handleCopy = async () => {
+    const ok = await copyToClipboard(message);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
+  const handleOpenWhatsApp = () => {
+    if (!waLink) return;
+
+    // Auto-registrar en bitácora si no se ha hecho
+    if (onLogInteraction && !interactionLogged) {
+      onLogInteraction(lead.id, {
+        tipo: 'WhatsApp',
+        notas: `Mensaje directo abierto por WhatsApp para ${lead.contacto_nombre || lead.nombre_sala} (${targetPhone}). Texto:\n"${message.slice(0, 140)}..."`,
+        resultado: 'Seguimiento pendiente',
+      });
+      setInteractionLogged(true);
+    }
+
+    // Abrir wa.me
+    window.open(waLink, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleSavePhone = () => {
+    if (onUpdateLeadPhone && targetPhone.trim()) {
+      if (isMobile) {
+        onUpdateLeadPhone(lead.id, {
+          telefono_movil: targetPhone.trim(),
+          telefono: targetPhone.trim(),
+        });
+      } else {
+        onUpdateLeadPhone(lead.id, {
+          telefono_fijo: targetPhone.trim(),
+          telefono: lead.telefono_movil || targetPhone.trim(),
+        });
+      }
+    }
+    setIsEditingPhone(false);
+  };
+
+  const insertDateInMessage = (dateStr: string) => {
+    const addition = ` ¿Tendríais disponible el ${dateStr}?`;
+    if (!message.includes(dateStr)) {
+      setMessage((prev) => `${prev.trim()}\n${addition}`);
+    }
+  };
+
+  const resetMessage = () => {
+    setMessage(formatLeadPitchForWhatsApp(lead, bandName, detectedDates));
+  };
+
+  return (
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
+        <div
+          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto transition-ui ${
+            'bg-[var(--surface)] text-[var(--ink)] '
+          }`}
+        >
+          {/* Header */}
+          <div className="px-5 py-4 bg-[var(--ok)]/40 border-b border-[var(--ok)]/30 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ink)]">
+                <MessageCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold font-display tracking-tight text-[var(--ink)] flex items-center gap-1.5">
+                    <span>Mensaje directo por WhatsApp</span>
+                  </h3>
+                  <span className="text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] ">
+                    wa.me 1-Clic
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--ink-2)]">
+                  {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` : ''} · {lead.contacto_nombre || 'Programación'}
+                </p>
+              </div>
+            </div>
+            <IconButton
+              label="Cerrar"
+              onClick={onClose}
+            >
+              <X className="w-5 h-5" />
+            </IconButton>
+          </div>
+
+          {/* Body */}
+          <div className="p-5 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+            {/* Teléfono Destinatario */}
+            <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)]/70 space-y-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                  <Smartphone className="w-3.5 h-3.5 text-[var(--ok)]" />
+                  <span>Destinatario WhatsApp:</span>
+                </span>
+
+                <div className="flex items-center gap-2">
+                  {isMobile && (
+                    <span className="text-micro font-bold px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ink)] flex items-center gap-1">
+                      <Check className="w-3 h-3" /> Móvil detectado
+                    </span>
+                  )}
+                  {isLandline && (
+                    <span
+                      className="text-micro font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink)] flex items-center gap-1"
+                      title="Parece un teléfono fijo; puede no tener WhatsApp habilitado"
+                    >
+                      <AlertTriangle className="w-3 h-3" /> Posible fijo
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingPhone(!isEditingPhone)}
+                    className="text-micro font-bold text-[var(--ok)] hover:underline cursor-pointer"
+                  >
+                    {isEditingPhone ? 'Cancelar edición' : 'Cambiar número'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Selector / Editor de teléfono */}
+              {isEditingPhone ? (
+                <div className="flex items-center gap-2 pt-1">
+                  <Input
+                    size="sm"
+                    type="tel"
+                    value={targetPhone}
+                    onChange={(e) => setTargetPhone(e.target.value)}
+                    placeholder="Ej. +34 612 345 678"
+                    className="flex-1"
+                  />
+                  <Button
+                    variant="primary"
+                    size="xs"
+                    type="button"
+                    onClick={handleSavePhone}
+                  >
+                    Guardar
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between bg-[var(--sunken)] px-3 py-2 rounded-[var(--r-m)] ">
+                  <div className="flex items-center gap-2 font-mono text-[var(--ink-2)] font-bold">
+                    <span className="text-[var(--ok)]">{targetPhone || 'Sin teléfono asignado'}</span>
+                    {hasValidPhone && <span className="text-micro font-normal text-[var(--ink-2)]">(wa.me/{cleanPhone})</span>}
+                  </div>
+                  {/* Selector rápido si tiene ambos teléfonos guardados */}
+                  <div className="flex items-center gap-1.5">
+                    {lead.telefono_movil && lead.telefono_movil !== targetPhone && (
+                      <button
+                        type="button"
+                        onClick={() => setTargetPhone(lead.telefono_movil!)}
+                        className="text-micro px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] cursor-pointer"
+                      >
+                        Usar Móvil ({lead.telefono_movil})
+                      </button>
+                    )}
+                    {lead.telefono_fijo && lead.telefono_fijo !== targetPhone && (
+                      <button
+                        type="button"
+                        onClick={() => setTargetPhone(lead.telefono_fijo!)}
+                        className="text-micro px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] cursor-pointer"
+                      >
+                        Usar Fijo ({lead.telefono_fijo})
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {!hasValidPhone && (
+                <p className="text-xs text-[var(--alert)] flex items-center gap-1 pt-1">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                  <span>Introduce un teléfono con formato válido (mínimo 9 dígitos) para abrir WhatsApp.</span>
+                </p>
+              )}
+            </div>
+
+            {/* Chips de fechas libres detectadas por el radar de Wegow / Salas */}
+            {detectedDates.length > 0 && (
+              <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 space-y-1.5">
+                <span className="text-micro font-bold text-[var(--acc)] flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>Fechas libres detectadas por el Radar (haz clic para insertar):</span>
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {detectedDates.map((dateStr) => (
+                    <Button
+                      variant="neutral"
+                      size="xs"
+                      key={dateStr}
+                      type="button"
+                      onClick={() => insertDateInMessage(dateStr)}
+                      className="items-center gap-1"
+                    >
+                      <span>+ {dateStr}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Editor de Mensaje */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-[var(--ink-2)]">
+                <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1">
+                  <span>Mensaje redactado para WhatsApp:</span>
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={resetMessage}
+                    className="text-micro text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center gap-1 cursor-pointer"
+                    title="Restaurar propuesta inicial"
+                  >
+                    <RotateCcw className="w-3 h-3" /> Restaurar
+                  </button>
+                  <span className="text-micro text-[var(--ink-2)] font-mono">
+                    {message.length} caracteres · {message.split(/\s+/).filter(Boolean).length} palabras
+                  </span>
+                </div>
+              </div>
+
+              <div className="relative">
+                <Textarea
+                  rows={9}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Redacta el mensaje para el programador…"
+                  className="w-full"
+                />
+              </div>
+            </div>
+
+            {/* Ventajas & Info de Privacidad */}
+            <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/40 text-xs text-[var(--ink-2)] space-y-1">
+              <p className="flex items-center gap-1.5 text-[var(--ink-2)] font-semibold">
+                <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
+                <span>100% gratuito y seguro: No requiere APIs ni suscripciones de Meta.</span>
+              </p>
+              <p className="pl-5 text-[var(--ink-2)]">
+                Al pulsar en <strong>Abrir en WhatsApp</strong>, se abrirá tu WhatsApp Web o la App oficial con el chat del programador y el
+                texto listo para enviar.
+              </p>
+            </div>
+          </div>
+
+          {/* Footer Actions */}
+          <div className="px-5 py-3.5 bg-[var(--surface)]/80 border-t border-[var(--hair)] flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="neutral"
+                size="sm"
+                type="button"
+                onClick={handleCopy}
+                className="items-center gap-1.5"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
+                    <span className="text-[var(--ok)]">¡Copiado!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>Copiar texto</span>
+                  </>
+                )}
+              </Button>
+
+              {onLogInteraction && (
+                <Button
+                  variant={interactionLogged ? "primary" : "neutral"}
+                  size="sm"
+                  type="button"
+                  onClick={() => {
+                    onLogInteraction(lead.id, {
+                      tipo: 'WhatsApp',
+                      notas: `Registro manual de WhatsApp para ${lead.contacto_nombre || lead.nombre_sala} (${targetPhone}):\n"${message.slice(0, 140)}..."`,
+                      resultado: 'Seguimiento pendiente',
+                    });
+                    setInteractionLogged(true);
+                  }}
+                  disabled={interactionLogged}
+                  className="items-center gap-1.5"
+                  title="Guarda la interacción en la bitácora del lead"
+                >
+                  <BookOpen className="w-3.5 h-3.5 text-[var(--acc)]" />
+                  <span>{interactionLogged ? 'En Bitácora ✓' : 'Anotar en Bitácora'}</span>
+                </Button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold cursor-pointer"
+              >
+                Cerrar
+              </button>
+
+              <Button
+                variant={hasValidPhone ? "primary" : "neutral"}
+                size="sm"
+                type="button"
+                onClick={handleOpenWhatsApp}
+                disabled={!hasValidPhone}
+                className="items-center gap-2"
+              >
+                <MessageCircle className="w-4 h-4 fill-current" />
+                <span>Abrir en WhatsApp</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ModalPortal>
+  );
+};

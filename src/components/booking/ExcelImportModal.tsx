@@ -1,0 +1,1620 @@
+import React, { useState, useRef } from "react";
+import * as XLSX from "xlsx";
+import {
+  FileSpreadsheet,
+  Upload,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  ArrowLeft,
+  X,
+  Download,
+  Info,
+  Building2,
+  Trash2,
+  RefreshCw,
+  Eye,
+  Check,
+  Search,
+  Filter,
+} from "lucide-react";
+import { Lead, LeadType } from "../../types";
+import { apiFetch } from "../../utils/api";
+import { ModalPortal } from "../common/ModalPortal";
+import { ShowIcon } from '../ui/ShowIcon';
+import { Button, IconButton, Input, Select } from '../ui';
+
+interface ExcelImportModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: (importedLeads: Lead[], updatedCount: number) => void;
+  existingLeads: Lead[];
+}
+
+interface ColumnMapping {
+  nombre_sala: string;
+  ciudad: string;
+  region: string;
+  direccion: string;
+  aforo: string;
+  tipo: string;
+  email_contacto: string;
+  telefono: string;
+  telefono_movil: string;
+  telefono_fijo: string;
+  instagram: string;
+  website: string;
+  contacto_nombre: string;
+  genero: string;
+  notas: string;
+}
+
+interface ParsedRow {
+  id: string;
+  nombre_sala: string;
+  ciudad: string;
+  region: string;
+  direccion: string;
+  aforo: number;
+  tipo: LeadType;
+  email_contacto: string;
+  telefono: string;
+  telefono_movil?: string;
+  telefono_fijo?: string;
+  instagram: string;
+  website: string;
+  contacto_nombre: string;
+  genero: string;
+  notas: string;
+  isDuplicate: boolean;
+  selected: boolean;
+  originalData: Record<string, any>;
+}
+
+const CATEGORY_OPTIONS: { id: LeadType; label: string; icon: string }[] = [
+  { id: "sala", label: "Sala / Teatro", icon: "🏛️" },
+  { id: "ayuntamiento", label: "Ayuntamiento / Fiestas", icon: "🏛️" },
+  { id: "festival", label: "Festival / Feria", icon: "🎪" },
+  { id: "discoteca", label: "Discoteca / Club", icon: "🪩" },
+  { id: "grupo", label: "Grupo / Banda", icon: "🎸" },
+  { id: "agencia", label: "Agencia / Booking", icon: "💼" },
+  { id: "sello", label: "Sello Discográfico", icon: "💿" },
+  { id: "medio", label: "Medio / Radio", icon: "📻" },
+];
+
+export function ExcelImportModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  existingLeads,
+}: ExcelImportModalProps) {
+  // Step state: 1 = Upload, 2 = Map Columns, 3 = Preview & Validate, 4 = Result / Enriching
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [fileName, setFileName] = useState<string>("");
+  const [sheetNames, setSheetNames] = useState<string[]>([]);
+  const [selectedSheet, setSelectedSheet] = useState<string>("");
+  const [workbook, setWorkbook] = useState<XLSX.WorkBook | null>(null);
+  const [rawHeaders, setRawHeaders] = useState<string[]>([]);
+  const [rawRows, setRawRows] = useState<Record<string, any>[]>([]);
+
+  // Mapping
+  const [mapping, setMapping] = useState<ColumnMapping>({
+    nombre_sala: "",
+    ciudad: "",
+    region: "",
+    direccion: "",
+    aforo: "",
+    tipo: "",
+    email_contacto: "",
+    telefono: "",
+    telefono_movil: "",
+    telefono_fijo: "",
+    instagram: "",
+    website: "",
+    contacto_nombre: "",
+    genero: "",
+    notas: "",
+  });
+
+  // Parsed and validated rows
+  const [parsedRows, setParsedRows] = useState<ParsedRow[]>([]);
+  const [updateDuplicates, setUpdateDuplicates] = useState<boolean>(true);
+  const [enrichMissingWithAi, setEnrichMissingWithAi] =
+    useState<boolean>(false);
+  const [defaultCategory, setDefaultCategory] = useState<LeadType>("sala");
+
+  // Loading & statuses
+  const [isProcessingFile, setIsProcessingFile] = useState<boolean>(false);
+  const [isImporting, setIsImporting] = useState<boolean>(false);
+  const [importStatusMsg, setImportStatusMsg] = useState<string>("");
+  const [searchPreview, setSearchPreview] = useState<string>("");
+  const [filterDuplicatesOnly, setFilterDuplicatesOnly] =
+    useState<boolean>(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  if (!isOpen) return null;
+
+  // Auto-detect columns based on common names
+  const autoDetectColumns = (headers: string[]) => {
+    const clean = (s: string) =>
+      s
+        .toLowerCase()
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    const newMapping: ColumnMapping = {
+      nombre_sala: "",
+      ciudad: "",
+      region: "",
+      direccion: "",
+      aforo: "",
+      tipo: "",
+      email_contacto: "",
+      telefono: "",
+      telefono_movil: "",
+      telefono_fijo: "",
+      instagram: "",
+      website: "",
+      contacto_nombre: "",
+      genero: "",
+      notas: "",
+    };
+
+    headers.forEach((h) => {
+      const c = clean(h);
+      if (
+        !newMapping.nombre_sala &&
+        (c.includes("nombre") ||
+          c.includes("sala") ||
+          c.includes("venue") ||
+          c.includes("local") ||
+          c.includes("grupo") ||
+          c.includes("banda") ||
+          c.includes("espacio") ||
+          c.includes("ayto") ||
+          c.includes("ayuntamiento"))
+      ) {
+        newMapping.nombre_sala = h;
+      } else if (
+        !newMapping.ciudad &&
+        (c.includes("ciudad") ||
+          c.includes("poblacion") ||
+          c.includes("municipio") ||
+          c.includes("localidad") ||
+          c.includes("city") ||
+          c.includes("lugar"))
+      ) {
+        newMapping.ciudad = h;
+      } else if (
+        !newMapping.region &&
+        (c.includes("region") ||
+          c.includes("provincia") ||
+          c.includes("comunidad") ||
+          c.includes("ccaa") ||
+          c.includes("state"))
+      ) {
+        newMapping.region = h;
+      } else if (
+        !newMapping.email_contacto &&
+        (c.includes("email") ||
+          c.includes("mail") ||
+          c.includes("correo") ||
+          c.includes("e-mail"))
+      ) {
+        newMapping.email_contacto = h;
+      } else if (
+        !newMapping.telefono_movil &&
+        (c.includes("movil") ||
+          c.includes("móvil") ||
+          c.includes("whatsapp") ||
+          c.includes("celular") ||
+          c.includes("cell"))
+      ) {
+        newMapping.telefono_movil = h;
+      } else if (
+        !newMapping.telefono_fijo &&
+        (c.includes("fijo") || c.includes("landline"))
+      ) {
+        newMapping.telefono_fijo = h;
+      } else if (
+        !newMapping.telefono &&
+        (c.includes("telefono") || c.includes("tel") || c.includes("phone"))
+      ) {
+        newMapping.telefono = h;
+      } else if (
+        !newMapping.instagram &&
+        (c.includes("instagram") ||
+          c.includes("ig") ||
+          c.includes("redes") ||
+          c.includes("social"))
+      ) {
+        newMapping.instagram = h;
+      } else if (
+        !newMapping.website &&
+        (c.includes("web") ||
+          c.includes("sitio") ||
+          c.includes("url") ||
+          c.includes("link") ||
+          c.includes("pagina"))
+      ) {
+        newMapping.website = h;
+      } else if (
+        !newMapping.aforo &&
+        (c.includes("aforo") ||
+          c.includes("capacidad") ||
+          c.includes("capacity") ||
+          c.includes("personas") ||
+          c.includes("pax"))
+      ) {
+        newMapping.aforo = h;
+      } else if (
+        !newMapping.tipo &&
+        (c.includes("tipo") ||
+          c.includes("categoria") ||
+          c.includes("type") ||
+          c.includes("clase") ||
+          c.includes("rubro"))
+      ) {
+        newMapping.tipo = h;
+      } else if (
+        !newMapping.contacto_nombre &&
+        (c.includes("contacto") ||
+          c.includes("persona") ||
+          c.includes("responsable") ||
+          c.includes("programador") ||
+          c.includes("booker") ||
+          c.includes("encargado"))
+      ) {
+        newMapping.contacto_nombre = h;
+      } else if (
+        !newMapping.genero &&
+        (c.includes("genero") ||
+          c.includes("estilo") ||
+          c.includes("estilos") ||
+          c.includes("musica") ||
+          c.includes("genre"))
+      ) {
+        newMapping.genero = h;
+      } else if (
+        !newMapping.direccion &&
+        (c.includes("direccion") ||
+          c.includes("calle") ||
+          c.includes("address") ||
+          c.includes("ubicacion"))
+      ) {
+        newMapping.direccion = h;
+      } else if (
+        !newMapping.notas &&
+        (c.includes("nota") ||
+          c.includes("comentario") ||
+          c.includes("observacion") ||
+          c.includes("historial") ||
+          c.includes("info"))
+      ) {
+        newMapping.notas = h;
+      }
+    });
+
+    setMapping(newMapping);
+  };
+
+  const processFile = async (file: File) => {
+    try {
+      setIsProcessingFile(true);
+      setFileName(file.name);
+
+      const buffer = await file.arrayBuffer();
+      const wb = XLSX.read(buffer, { type: "array" });
+      setWorkbook(wb);
+      setSheetNames(wb.SheetNames);
+
+      if (wb.SheetNames.length > 0) {
+        const firstSheet = wb.SheetNames[0];
+        setSelectedSheet(firstSheet);
+        parseSheet(wb, firstSheet);
+      }
+    } catch (err: any) {
+      console.error("Error al leer archivo Excel:", err);
+      alert(
+        "Error al leer el archivo. Asegúrate de que es un archivo .xlsx, .xls o .csv válido.",
+      );
+    } finally {
+      setIsProcessingFile(false);
+    }
+  };
+
+  const parseSheet = (wb: XLSX.WorkBook, sheetName: string) => {
+    const ws = wb.Sheets[sheetName];
+    if (!ws) return;
+
+    const data: Record<string, any>[] = XLSX.utils.sheet_to_json(ws, {
+      defval: "",
+    });
+    if (data.length === 0) {
+      alert("La hoja seleccionada está vacía.");
+      return;
+    }
+
+    const headers = Object.keys(data[0]);
+    setRawHeaders(headers);
+    setRawRows(data);
+    autoDetectColumns(headers);
+    setStep(2);
+  };
+
+  const handleSheetChange = (sheetName: string) => {
+    setSelectedSheet(sheetName);
+    if (workbook) {
+      parseSheet(workbook, sheetName);
+    }
+  };
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processFile(e.target.files[0]);
+    }
+  };
+
+  // Build parsed rows from raw rows and column mapping
+  const buildParsedRows = () => {
+    if (!mapping.nombre_sala) {
+      alert(
+        'Debes asignar al menos la columna correspondiente al "Nombre de la Sala / Contacto / Banda".',
+      );
+      return;
+    }
+
+    const existingMap = new Set<string>();
+    existingLeads.forEach((l) => {
+      const key = `${(l.nombre_sala || "").toLowerCase().trim()}|${(l.ciudad || "").toLowerCase().trim()}`;
+      existingMap.add(key);
+      existingMap.add((l.nombre_sala || "").toLowerCase().trim());
+    });
+
+    const parsed: ParsedRow[] = rawRows
+      .map((row, idx) => {
+        const name = String(row[mapping.nombre_sala] || "").trim();
+        const city = mapping.ciudad
+          ? String(row[mapping.ciudad] || "").trim()
+          : "España";
+        const region = mapping.region
+          ? String(row[mapping.region] || "").trim()
+          : "España";
+        const address = mapping.direccion
+          ? String(row[mapping.direccion] || "").trim()
+          : "";
+        const email = mapping.email_contacto
+          ? String(row[mapping.email_contacto] || "").trim()
+          : "";
+        const rawMobile = mapping.telefono_movil
+          ? String(row[mapping.telefono_movil] || "").trim()
+          : "";
+        const rawFijo = mapping.telefono_fijo
+          ? String(row[mapping.telefono_fijo] || "").trim()
+          : "";
+        const rawPhone = mapping.telefono
+          ? String(row[mapping.telefono] || "").trim()
+          : "";
+
+        let telMovil = rawMobile;
+        let telFijo = rawFijo;
+        let phone = rawPhone;
+
+        if (!telMovil && !telFijo && phone) {
+          if (/^(?:\+?34\s*)?[67]/.test(phone)) {
+            telMovil = phone;
+          } else if (/^(?:\+?34\s*)?[89]/.test(phone)) {
+            telFijo = phone;
+          }
+        }
+        if (!phone) {
+          phone = telMovil || telFijo || "";
+        }
+
+        const rawIg = mapping.instagram
+          ? String(row[mapping.instagram] || "").trim()
+          : "";
+        const rawWeb = mapping.website
+          ? String(row[mapping.website] || "").trim()
+          : "";
+
+        const cleanField = (val: string) => {
+          const lower = val.toLowerCase();
+          if (
+            lower.startsWith("asunto:") ||
+            lower.startsWith("re:") ||
+            lower.startsWith("fw:") ||
+            lower.startsWith("¡buenas") ||
+            lower.includes("bakandeya") ||
+            lower === "0" ||
+            lower === "null"
+          )
+            return "";
+          if (val.includes("\n") || (val.includes(" ") && !val.includes("http")))
+            return "";
+          return val;
+        };
+
+        const ig = cleanField(rawIg);
+        const web = cleanField(rawWeb);
+        const contact = mapping.contacto_nombre
+          ? String(row[mapping.contacto_nombre] || "").trim()
+          : "";
+        const genre = mapping.genero
+          ? String(row[mapping.genero] || "").trim()
+          : "Música en Directo / Variado";
+        const notes = mapping.notas
+          ? String(row[mapping.notas] || "").trim()
+          : "";
+
+        const rawAforo = mapping.aforo ? row[mapping.aforo] : null;
+        let aforo = 0;
+        if (rawAforo) {
+          const num = parseInt(String(rawAforo).replace(/[^0-9]/g, ""), 10);
+          if (!isNaN(num)) aforo = num;
+        }
+
+        // Detect tipo
+        let resolvedType: LeadType = defaultCategory;
+        if (mapping.tipo && row[mapping.tipo]) {
+          const rawTipo = String(row[mapping.tipo]).toLowerCase().trim();
+          if (
+            rawTipo.includes("ayuntamiento") ||
+            rawTipo.includes("ayto") ||
+            rawTipo.includes("institucion") ||
+            rawTipo.includes("festejo") ||
+            rawTipo.includes("cultura")
+          )
+            resolvedType = "ayuntamiento";
+          else if (rawTipo.includes("discoteca") || rawTipo.includes("club"))
+            resolvedType = "discoteca";
+          else if (rawTipo.includes("teatro")) resolvedType = "sala";
+          else if (
+            rawTipo.includes("festival") ||
+            rawTipo.includes("feria") ||
+            rawTipo.includes("ciclo")
+          )
+            resolvedType = "festival";
+          else if (
+            rawTipo.includes("grupo") ||
+            rawTipo.includes("banda") ||
+            rawTipo.includes("artista")
+          )
+            resolvedType = "grupo";
+          else if (
+            rawTipo.includes("agencia") ||
+            rawTipo.includes("management") ||
+            rawTipo.includes("manager") ||
+            rawTipo.includes("promotor")
+          )
+            resolvedType = "agencia";
+          else if (
+            rawTipo.includes("sello") ||
+            rawTipo.includes("discografica")
+          )
+            resolvedType = "sello";
+          else if (
+            rawTipo.includes("medio") ||
+            rawTipo.includes("prensa") ||
+            rawTipo.includes("radio") ||
+            rawTipo.includes("podcast")
+          )
+            resolvedType = "medio";
+          else resolvedType = "sala";
+        }
+
+        const isDup =
+          existingMap.has(`${name.toLowerCase()}|${city.toLowerCase()}`) ||
+          existingMap.has(name.toLowerCase());
+
+        return {
+          id: `row-${idx}`,
+          nombre_sala: name,
+          ciudad: city || "España",
+          region: region || "España",
+          direccion: address,
+          aforo: aforo || (resolvedType === "sala" ? 250 : 0),
+          tipo: resolvedType,
+          email_contacto: email,
+          telefono: phone,
+          telefono_movil: telMovil,
+          telefono_fijo: telFijo,
+          instagram: ig,
+          website: web,
+          contacto_nombre: contact,
+          genero: genre,
+          notas: notes,
+          isDuplicate: isDup,
+          selected: name.length > 0,
+          originalData: row,
+        };
+      })
+      .filter((r) => r.nombre_sala.length > 0);
+
+    setParsedRows(parsed);
+    setStep(3);
+  };
+
+  const handleToggleSelectAll = (select: boolean) => {
+    setParsedRows((prev) => prev.map((r) => ({ ...r, selected: select })));
+  };
+
+  const handleRowTypeChange = (rowId: string, newType: LeadType) => {
+    setParsedRows((prev) =>
+      prev.map((r) => (r.id === rowId ? { ...r, tipo: newType } : r)),
+    );
+  };
+
+  const handleRowDelete = (rowId: string) => {
+    setParsedRows((prev) => prev.filter((r) => r.id !== rowId));
+  };
+
+  const handleDownloadTemplate = () => {
+    const templateData = [
+      {
+        "Nombre Sala / Contacto": "Sala El Sol",
+        Ciudad: "Madrid",
+        Región: "Comunidad de Madrid",
+        Dirección: "Calle Jardines 3",
+        Aforo: 300,
+        Tipo: "sala",
+        "Email Contacto": "conciertos@salaelsol.com",
+        Teléfono: "915326490",
+        Instagram: "@salaelsol",
+        "Sitio Web": "https://salaelsol.com",
+        "Contacto / Responsable": "Programación Musical",
+        "Estilo / Género": "Rock / Indie / Pop",
+        Notas: "Disponen de equipo de sonido completo y técnico de PA.",
+      },
+      {
+        "Nombre Sala / Contacto":
+          "Ayuntamiento de Alcorcón - Concejalía de Fiestas",
+        Ciudad: "Alcorcón",
+        Región: "Madrid",
+        Dirección: "Plaza de España 1",
+        Aforo: 5000,
+        Tipo: "ayuntamiento",
+        "Email Contacto": "festejos@ayto-alcorcon.es",
+        Teléfono: "916648100",
+        Instagram: "@aytoalcorcon",
+        "Sitio Web": "https://ayto-alcorcon.es",
+        "Contacto / Responsable": "Concejal de Festejos",
+        "Estilo / Género": "Fiestas Patronales / Conciertos",
+        Notas:
+          "Conciertos de fiestas patronales en septiembre en el recinto ferial.",
+      },
+      {
+        "Nombre Sala / Contacto": "Arde Bogotá",
+        Ciudad: "Cartagena",
+        Región: "Murcia",
+        Dirección: "",
+        Aforo: 0,
+        Tipo: "grupo",
+        "Email Contacto": "management@ardebogota.com",
+        Teléfono: "",
+        Instagram: "@balaperdida_oficial",
+        "Sitio Web": "https://ardebogota.es",
+        "Contacto / Responsable": "Booking / Manager",
+        "Estilo / Género": "Rock Alternativo",
+        Notas: "Banda afín para intercambio de fechas y colaboraciones.",
+      },
+      {
+        "Nombre Sala / Contacto": "Festival Sonorama Ribera",
+        Ciudad: "Aranda de Duero",
+        Región: "Burgos",
+        Dirección: "Recinto Ferial",
+        Aforo: 25000,
+        Tipo: "festival",
+        "Email Contacto": "booking@sonorama-aranda.com",
+        Teléfono: "",
+        Instagram: "@sonoramaribera",
+        "Sitio Web": "https://sonorama-aranda.com",
+        "Contacto / Responsable": "Comité de Programación",
+        "Estilo / Género": "Indie / Pop / Rock",
+        Notas: "Festival referente en agosto.",
+      },
+    ];
+
+    const ws = XLSX.utils.json_to_sheet(templateData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Salas_BandManager");
+    XLSX.writeFile(wb, "plantilla_importacion_salas_bandmanager.xlsx");
+  };
+
+  // Submit and Save to Backend / Supabase
+  const handleExecuteImport = async () => {
+    const selectedRows = parsedRows.filter((r) => r.selected);
+    if (selectedRows.length === 0) {
+      alert("Por favor selecciona al menos un contacto para importar.");
+      return;
+    }
+
+    try {
+      setIsImporting(true);
+      setImportStatusMsg(
+        `Guardando ${selectedRows.length} contactos en Supabase...`,
+      );
+
+      const leadsPayload = selectedRows.map((r) => ({
+        nombre_sala: r.nombre_sala,
+        ciudad: r.ciudad,
+        region: r.region,
+        direccion: r.direccion,
+        aforo: r.aforo,
+        tipo: r.tipo,
+        email_contacto: r.email_contacto,
+        telefono: r.telefono,
+        telefono_movil: r.telefono_movil || "",
+        telefono_fijo: r.telefono_fijo || "",
+        instagram: r.instagram,
+        website: r.website,
+        contacto_nombre: r.contacto_nombre,
+        genero: r.genero,
+        notas: r.notas,
+        fuente: `Importación Excel (${fileName || "Archivo"})`,
+        estado: "nuevo",
+      }));
+
+      const res = await apiFetch("/api/leads/import-excel", {
+        method: "POST",
+        body: JSON.stringify({
+          leads: leadsPayload,
+          updateDuplicates,
+          sourceName: `Excel: ${fileName || "Listado de Banda"}`,
+        }),
+      });
+
+      if (res.success) {
+        // Enriquecer con IA si se solicitó
+        if (
+          enrichMissingWithAi &&
+          Array.isArray(res.leads) &&
+          res.leads.length > 0
+        ) {
+          const leadsToEnrich = res.leads.filter(
+            (l: Lead) => !l.email_contacto || l.email_contacto.trim() === "",
+          );
+          if (leadsToEnrich.length > 0) {
+            setImportStatusMsg(
+              `⚡ Enriqueciendo ${leadsToEnrich.length} contactos sin email con el Agente de IA...`,
+            );
+            try {
+              await apiFetch("/api/leads/extract-emails", {
+                method: "POST",
+                body: JSON.stringify({
+                  places: leadsToEnrich.slice(0, 10).map((l: Lead) => ({
+                    place_id: l.id,
+                    nombre_sala: l.nombre_sala,
+                    ciudad: l.ciudad,
+                    website: l.website,
+                  })),
+                }),
+              });
+            } catch (enrichErr) {
+              console.warn(
+                "Error en enriquecimiento post-importación:",
+                enrichErr,
+              );
+            }
+          }
+        }
+
+        onSuccess(res.leads || [], res.updatedCount || 0);
+        onClose();
+      } else {
+        alert(res.error || "Error al importar los contactos.");
+      }
+    } catch (err: any) {
+      console.error("Error importing Excel leads:", err);
+      alert(err.message || "Error de conexión al importar contactos.");
+    } finally {
+      setIsImporting(false);
+      setImportStatusMsg("");
+    }
+  };
+
+  const filteredPreviewRows = parsedRows.filter((r) => {
+    if (filterDuplicatesOnly && !r.isDuplicate) return false;
+    if (!searchPreview) return true;
+    const q = searchPreview.toLowerCase();
+    return (
+      r.nombre_sala.toLowerCase().includes(q) ||
+      r.ciudad.toLowerCase().includes(q) ||
+      r.email_contacto.toLowerCase().includes(q) ||
+      r.tipo.toLowerCase().includes(q)
+    );
+  });
+
+  const selectedCount = parsedRows.filter((r) => r.selected).length;
+  const duplicatesCount = parsedRows.filter((r) => r.isDuplicate).length;
+
+  return (
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        <div
+          className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+        >
+          {/* MODAL HEADER */}
+          <div className="flex items-center justify-between px-5 py-4 bg-[var(--ok)]/30 ">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ink)]">
+                <FileSpreadsheet className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-bold font-display">
+                    Importar listado de salas, ayuntamientos o bandas
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink)]">
+                    Excel / CSV
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--ink-2)]">
+                  Sube tu propio listado, mapea las columnas, clasifícalas y
+                  enriquécelas automáticamente en Supabase.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="neutral"
+                size="xs"
+                type="button"
+                onClick={handleDownloadTemplate}
+                className="hidden items-center gap-1.5"
+                title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
+              >
+                <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
+                <span>Plantilla ejemplo</span>
+              </Button>
+              <IconButton
+                label="Cerrar"
+                type="button"
+                onClick={onClose}
+              >
+                <X className="w-5 h-5" />
+              </IconButton>
+            </div>
+          </div>
+
+          {/* STEP PROGRESS INDICATOR */}
+          <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 text-xs">
+            <div className="flex items-center gap-2">
+              <div
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink)]"}`}
+              >
+                {step > 1 ? <Check className="w-3 h-3" /> : "1"}
+              </div>
+              <span
+                className={
+                  step === 1
+                    ? "font-bold text-[var(--ink-2)]"
+                    : "text-[var(--ink-2)]"
+                }
+              >
+                1. Subir archivo
+              </span>
+            </div>
+            <div className="w-8 h-px bg-[var(--sunken)]" />
+            <div className="flex items-center gap-2">
+              <div
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--on-ok)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink)]"}`}
+              >
+                {step > 2 ? <Check className="w-3 h-3" /> : "2"}
+              </div>
+              <span
+                className={
+                  step === 2
+                    ? "font-bold text-[var(--ink-2)]"
+                    : "text-[var(--ink-2)]"
+                }
+              >
+                2. Mapear columnas
+              </span>
+            </div>
+            <div className="w-8 h-px bg-[var(--sunken)]" />
+            <div className="flex items-center gap-2">
+              <div
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink)]"}`}
+              >
+                3
+              </div>
+              <span
+                className={
+                  step === 3
+                    ? "font-bold text-[var(--ink-2)]"
+                    : "text-[var(--ink-2)]"
+                }
+              >
+                3. Validar y guardar
+              </span>
+            </div>
+          </div>
+
+          {/* MODAL BODY */}
+          <div className="flex-1 overflow-y-auto p-5 space-y-4 min-h-[350px]">
+            {/* STEP 1: UPLOAD */}
+            {step === 1 && (
+              <div className="flex flex-col items-center justify-center py-8 space-y-6">
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={handleFileDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full max-w-2xl p-10 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-ui flex flex-col items-center justify-center text-center cursor-pointer group"
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".xlsx, .xls, .csv"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--ok)]/10 group-hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mb-4 transition-ui ">
+                    <Upload className="w-8 h-8" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--ink)] group-hover:text-[var(--ink-2)] transition-colors">
+                    Haz clic para seleccionar o arrastra tu archivo Excel / CSV
+                  </h4>
+                  <p className="text-xs text-[var(--ink-2)] mt-1 max-w-md">
+                    Soporta formatos{" "}
+                    <strong className="text-[var(--ink)]">
+                      .xlsx, .xls y .csv
+                    </strong>{" "}
+                    de cualquier hoja de cálculo que use tu banda.
+                  </p>
+                  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 text-xs text-[var(--ink-2)]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
+                    <span>
+                      Detección automática de salas, ciudades, teléfonos, emails
+                      y aforos
+                    </span>
+                  </div>
+                </div>
+
+                {/* DOWNLOAD TEMPLATE CARD */}
+                <div className="w-full max-w-2xl p-4 rounded-[var(--r-m)] bg-[var(--bg)]/60 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <Info className="w-5 h-5 text-[var(--acc)] shrink-0" />
+                    <div className="text-xs text-[var(--ink-2)]">
+                      <p className="font-semibold text-[var(--ink)]">
+                        ¿No tienes claro el formato?
+                      </p>
+                      <p className="text-[var(--ink-2)]">
+                        Descarga nuestra plantilla oficial optimizada con
+                        ejemplos de salas, festivales y ayuntamientos.
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="neutral"
+                    size="sm"
+                    type="button"
+                    onClick={handleDownloadTemplate}
+                    className="items-center gap-1.5 shrink-0"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Descargar plantilla</span>
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2: COLUMN MAPPING */}
+            {step === 2 && (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between flex-wrap gap-2 pb-2">
+                  <div>
+                    <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
+                      Archivo cargado:{" "}
+                      <span className="text-[var(--ok)] font-sans">
+                        {fileName}
+                      </span>
+                    </h4>
+                    <p className="text-xs text-[var(--ink-2)]">
+                      Se han detectado {rawRows.length} filas. Revisa la
+                      correspondencia de columnas antes de importar.
+                    </p>
+                  </div>
+
+                  {sheetNames.length > 1 && (
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-[var(--ink-2)]">Pestaña:</span>
+                      <Select
+                        size="sm"
+                        value={selectedSheet}
+                        onChange={(e) => handleSheetChange(e.target.value)}
+                      >
+                        {sheetNames.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
+                  )}
+                </div>
+
+                {/* CATEGORY DEFAULT SELECTOR */}
+                <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-2 text-xs text-[var(--ink)]">
+                    <Building2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
+                    <span>
+                      Categoría por defecto si el Excel no especifica tipo:
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {CATEGORY_OPTIONS.map((cat) => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setDefaultCategory(cat.id)}
+                        className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                          defaultCategory === cat.id
+                            ? "bg-[var(--ink)] text-[var(--bg)] font-bold"
+                            : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                        }`}
+                      >
+                        <span><ShowIcon inline emoji={cat.icon} /></span>
+                        <span>{cat.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* MAPPING GRID */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                  {/* Nombre Sala (Obligatorio) */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)] flex items-center justify-between">
+                      <span>Nombre sala / contacto / banda *</span>
+                      <span className="text-micro text-[var(--ok)] font-sans">
+                        Requerido
+                      </span>
+                    </label>
+                    <Select size="sm" aria-label="Nombre sala / contacto / banda * requerido"
+                      value={mapping.nombre_sala}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          nombre_sala: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- Seleccionar columna --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Ciudad */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Ciudad / Población
+                    </label>
+                    <Select size="sm" aria-label="Ciudad / Población"
+                      value={mapping.ciudad}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          ciudad: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar (Usar 'España') --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Email */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Email de contacto
+                    </label>
+                    <Select size="sm" aria-label="Email de contacto"
+                      value={mapping.email_contacto}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          email_contacto: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Teléfono Móvil (WhatsApp) */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
+                      <span><ShowIcon inline emoji="📱" /></span>
+                      <span>Teléfono móvil (WhatsApp)</span>
+                    </label>
+                    <Select size="sm" aria-label="Teléfono móvil (WhatsApp)"
+                      value={mapping.telefono_movil}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          telefono_movil: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Teléfono Fijo */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--acc)] flex items-center gap-1.5">
+                      <span><ShowIcon inline emoji="☎️" /></span>
+                      <span>Teléfono fijo</span>
+                    </label>
+                    <Select size="sm" aria-label="Teléfono fijo"
+                      value={mapping.telefono_fijo}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          telefono_fijo: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Teléfono General */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                      <span><ShowIcon inline emoji="📞" /></span>
+                      <span>Teléfono general / otro</span>
+                    </label>
+                    <Select size="sm" aria-label="Teléfono general / otro"
+                      value={mapping.telefono}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          telefono: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Aforo */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Aforo / Capacidad
+                    </label>
+                    <Select size="sm" aria-label="Aforo / Capacidad"
+                      value={mapping.aforo}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          aforo: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">
+                        -- No asignar (Usar por defecto) --
+                      </option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Instagram */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Instagram / redes
+                    </label>
+                    <Select size="sm" aria-label="Instagram / redes"
+                      value={mapping.instagram}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          instagram: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Website */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Sitio web / link
+                    </label>
+                    <Select size="sm" aria-label="Sitio web / link"
+                      value={mapping.website}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          website: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Tipo / Categoría */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Tipo de entidad (columna)
+                    </label>
+                    <Select size="sm" aria-label="Tipo de entidad (columna)"
+                      value={mapping.tipo}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          tipo: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- Usar categoría por defecto --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Contacto Nombre */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Persona de contacto / booker
+                    </label>
+                    <Select size="sm" aria-label="Persona de contacto / booker"
+                      value={mapping.contacto_nombre}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          contacto_nombre: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Género / Estilo */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Género / estilo musical
+                    </label>
+                    <Select size="sm" aria-label="Género / estilo musical"
+                      value={mapping.genero}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          genero: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Dirección */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Dirección Física
+                    </label>
+                    <Select size="sm" aria-label="Dirección Física"
+                      value={mapping.direccion}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          direccion: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Notas / Observaciones */}
+                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
+                    <label className="text-xs font-bold text-[var(--ink-2)]">
+                      Notas / comentarios
+                    </label>
+                    <Select size="sm" aria-label="Notas / comentarios"
+                      value={mapping.notas}
+                      onChange={(e) =>
+                        setMapping((prev) => ({
+                          ...prev,
+                          notas: e.target.value,
+                        }))
+                      }
+                      wrapperClassName="w-full"
+                    >
+                      <option value="">-- No asignar --</option>
+                      {rawHeaders.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 3: PREVIEW & VALIDATION */}
+            {step === 3 && (
+              <div className="space-y-4">
+                {/* TOP BAR / FILTERS */}
+                <div className="flex items-center justify-between flex-wrap gap-2 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/70 text-xs">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="font-bold text-[var(--ink)]">
+                      {selectedCount} de {parsedRows.length} seleccionados
+                    </span>
+                    {duplicatesCount > 0 && (
+                      <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-semibold flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3" />
+                        {duplicatesCount} ya registrados en CRM
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-[var(--ink-2)]" />
+                      <Input
+                        size="sm"
+                        type="text"
+                        placeholder="Buscar en la vista previa…"
+                        value={searchPreview}
+                        onChange={(e) => setSearchPreview(e.target.value)}
+                        className="pl-8 pr-3"
+                      />
+                    </div>
+
+                    {duplicatesCount > 0 && (
+                      <Button
+                        variant={filterDuplicatesOnly ? "inverse" : "neutral"}
+                        size="xs"
+                        type="button"
+                        onClick={() =>
+                          setFilterDuplicatesOnly(!filterDuplicatesOnly)
+                        }
+                        className="items-center gap-1"
+                      >
+                        <Filter className="w-3 h-3" />
+                        <span>Solo duplicados</span>
+                      </Button>
+                    )}
+
+                    <Button
+                      variant="neutral"
+                      size="xs"
+                      type="button"
+                      onClick={() => handleToggleSelectAll(true)}
+                    >
+                      Seleccionar todos
+                    </Button>
+                    <Button
+                      variant="neutral"
+                      size="xs"
+                      type="button"
+                      onClick={() => handleToggleSelectAll(false)}
+                    >
+                      Deseleccionar todos
+                    </Button>
+                  </div>
+                </div>
+
+                {/* IMPORT OPTIONS CARDS */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 hover:bg-[var(--ok-soft)] transition-ui cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={updateDuplicates}
+                      onChange={(e) => setUpdateDuplicates(e.target.checked)}
+                      className="mt-0.5 rounded text-[var(--ok)] focus:ring-0"
+                    />
+                    <div className="text-xs">
+                      <p className="font-bold text-[var(--ink)]">
+                        Fusionar y actualizar contactos duplicados
+                      </p>
+                      <p className="text-[var(--ink-2)]">
+                        Si la sala ya existe, rellena los emails, teléfonos o
+                        datos que falten sin borrar tus notas previas.
+                      </p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 transition-ui cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={enrichMissingWithAi}
+                      onChange={(e) => setEnrichMissingWithAi(e.target.checked)}
+                      className="mt-0.5 rounded text-[var(--tentative)] focus:ring-0"
+                    />
+                    <div className="text-xs">
+                      <p className="font-bold text-[var(--tentative)] flex items-center gap-1.5">
+                        Enriquecer contactos sin email con IA
+                      </p>
+                      <p className="text-[var(--ink-2)]">
+                        Activa el Agente Scout tras guardar para investigar webs
+                        oficiales y rellenar emails verificados.
+                      </p>
+                    </div>
+                  </label>
+                </div>
+
+                {/* PREVIEW TABLE */}
+                <div className="rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 max-h-[380px] overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="sticky top-0 bg-[var(--bg)]/95 text-[var(--ink-2)] z-10 font-bold">
+                      <tr>
+                        <th className="p-2.5 w-8">
+                          <input
+                            type="checkbox"
+                            checked={
+                              parsedRows.length > 0 &&
+                              parsedRows.every((r) => r.selected)
+                            }
+                            onChange={(e) =>
+                              handleToggleSelectAll(e.target.checked)
+                            }
+                            className="rounded text-[var(--ok)]"
+                          />
+                        </th>
+                        <th className="p-2.5">Nombre</th>
+                        <th className="p-2.5">Ciudad</th>
+                        <th className="p-2.5">Tipo</th>
+                        <th className="p-2.5">Email</th>
+                        <th className="p-2.5">Teléfono / IG</th>
+                        <th className="p-2.5">Aforo</th>
+                        <th className="p-2.5 w-10"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {filteredPreviewRows.map((row) => (
+                        <tr
+                          key={row.id}
+                          className={`hover:bg-[var(--ink)]/5 transition-colors ${
+                            row.isDuplicate ? "bg-[var(--acc)]/5" : ""
+                          } ${!row.selected ? "opacity-40" : ""}`}
+                        >
+                          <td className="p-2.5">
+                            <input
+                              type="checkbox"
+                              checked={row.selected}
+                              onChange={() => {
+                                setParsedRows((prev) =>
+                                  prev.map((r) =>
+                                    r.id === row.id
+                                      ? { ...r, selected: !r.selected }
+                                      : r,
+                                  ),
+                                );
+                              }}
+                              className="rounded text-[var(--ok)] cursor-pointer"
+                            />
+                          </td>
+                          <td className="p-2.5 font-bold text-[var(--ink)]">
+                            <div className="flex items-center gap-1.5">
+                              <span>{row.nombre_sala}</span>
+                              {row.isDuplicate && (
+                                <span className="px-1.5 py-0.2 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)]">
+                                  Existente
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="p-2.5 text-[var(--ink-2)]">
+                            {row.ciudad}
+                          </td>
+                          <td className="p-2.5">
+                            <Select
+                              size="sm"
+                              value={row.tipo}
+                              onChange={(e) =>
+                                handleRowTypeChange(
+                                  row.id,
+                                  e.target.value as LeadType,
+                                )
+                              }
+                            >
+                              {CATEGORY_OPTIONS.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                  <ShowIcon inline emoji={c.icon} /> {c.label}
+                                </option>
+                              ))}
+                            </Select>
+                          </td>
+                          <td className="p-2.5">
+                            {row.email_contacto ? (
+                              <span className="text-[var(--ink-2)] font-sans">
+                                {row.email_contacto}
+                              </span>
+                            ) : (
+                              <span className="text-[var(--ink-2)] italic">
+                                Sin correo
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-2.5 text-[var(--ink-2)]">
+                            {row.telefono || row.instagram || "-"}
+                          </td>
+                          <td className="p-2.5 font-sans text-[var(--ink-2)]">
+                            {row.aforo > 0 ? `${row.aforo} pax` : "-"}
+                          </td>
+                          <td className="p-2.5 text-right">
+                            <IconButton
+                              label="Eliminar de la importación"
+                              variant="danger"
+                              size="icon-xs"
+                              type="button"
+                              onClick={() => handleRowDelete(row.id)}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </IconButton>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* MODAL FOOTER */}
+          <div className="flex items-center justify-between px-6 py-4 bg-[var(--bg)]">
+            <div>
+              {step === 2 && (
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Cambiar archivo</span>
+                </button>
+              )}
+
+              {step === 3 && (
+                <button
+                  type="button"
+                  disabled={isImporting}
+                  onClick={() => setStep(2)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer disabled:opacity-50"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Revisar mapeo</span>
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3">
+              {importStatusMsg && (
+                <span className="text-xs text-[var(--acc)]/70 font-medium">
+                  {importStatusMsg}
+                </span>
+              )}
+
+              {step === 2 && (
+                <Button
+                  variant="primary"
+                  type="button"
+                  onClick={buildParsedRows}
+                  className="items-center gap-1.5"
+                >
+                  <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              )}
+
+              {step === 3 && (
+                <Button
+                  variant="primary"
+                  type="button"
+                  disabled={isImporting || selectedCount === 0}
+                  onClick={handleExecuteImport}
+                  className="items-center gap-2"
+                >
+                  {isImporting ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Guardando…</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4" />
+                      <span>
+                        Confirmar e Importar {selectedCount} Contactos
+                      </span>
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ModalPortal>
+  );
+}

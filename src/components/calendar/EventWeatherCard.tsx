@@ -1,0 +1,552 @@
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Droplets,
+  Thermometer,
+  AlertTriangle,
+  RefreshCw,
+  Calendar,
+  ShieldAlert,
+  ChevronDown,
+  ChevronUp,
+  Wind,
+} from "lucide-react";
+import {
+  fetchEventWeather,
+  EventWeatherData,
+  WeatherAlert,
+} from "../../services/weatherService";
+import { AnimatedWeatherIcon } from "./AnimatedWeatherIcon";
+import { Button, IconButton } from '../ui';
+
+interface EventWeatherCardProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
+  city: string;
+  dateStr: string; // YYYY-MM-DD
+  timeStr?: string; // e.g."21:00"
+  onAlertsDetected?: (alerts: WeatherAlert[]) => void;
+  collapsible?: boolean;
+  defaultExpanded?: boolean;
+}
+
+export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
+  city,
+  dateStr,
+  timeStr,
+  onAlertsDetected,
+  collapsible = false,
+  defaultExpanded = false,
+}) => {
+  const [selectedSlot, setSelectedSlot] = useState<"show" | "soundcheck">(
+    "show",
+  );
+  const [weatherData, setWeatherData] = useState<EventWeatherData | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [expandedAlerts, setExpandedAlerts] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [isExpanded, setIsExpanded] = useState<boolean>(defaultExpanded);
+
+  // Calcular la hora a consultar según la pestaña
+  const activeTimeStr =
+    selectedSlot === "soundcheck" ? "18:00" : timeStr || "21:00";
+
+  const toggleAlertExpand = (alertId: string) => {
+    setExpandedAlerts((prev) => ({
+      ...prev,
+      [alertId]: !prev[alertId],
+    }));
+  };
+
+  const loadWeather = async () => {
+    if (!city || !dateStr) {
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const data = await fetchEventWeather({
+        city,
+        dateStr,
+        timeStr: activeTimeStr,
+      });
+      setWeatherData(data);
+      if (data.alerts && onAlertsDetected) {
+        onAlertsDetected(data.alerts);
+      }
+      // En móvil el aviso ya se ve en la píldora compacta: no se abre solo y empuja la ficha.
+      const esMovil = typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches;
+      if (!esMovil && data.alerts && data.alerts.some((a) => a.severity === "danger")) {
+        setIsExpanded(true);
+      }
+    } catch (err) {
+      console.warn("[EventWeatherCard] Failed to load weather:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadWeather();
+  }, [city, dateStr, activeTimeStr]);
+
+  const getWeatherIconBackdrop = (iconType?: EventWeatherData["iconType"]) => {
+    switch (iconType) {
+      case "cloud":
+      case "fog":
+        return "bg-[var(--sunken)]";
+      case "lightning":
+        return "bg-[var(--acc)]/35";
+      case "sun":
+      case "rain":
+      case "snow":
+        return "bg-[var(--acc)]/25";
+      default:
+        return "bg-[var(--acc)]/20";
+    }
+  };
+
+  // Si no hay ciudad, no mostramos nada invasivo
+  if (!city || !city.trim()) {
+    return null;
+  }
+
+  const hasAlerts = Boolean(
+    weatherData?.alerts && weatherData.alerts.length > 0,
+  );
+  const dangerAlertsCount =
+    weatherData?.alerts?.filter((a) => a.severity === "danger").length || 0;
+
+  // Modo compacto y simplificado para móvil / modal
+  if (collapsible && !isExpanded) {
+    return (
+      <div
+        className={`rounded-[var(--r-m)] px-3.5 py-2.5 transition-ui duration-200 flex items-center justify-between gap-3 ${
+          hasAlerts
+            ? "bg-[var(--acc-soft)]  text-[var(--ink-2)]"
+            : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
+        }`}
+      >
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <div
+            className={`p-1.5 rounded-[var(--r-s)] shrink-0 ${getWeatherIconBackdrop(weatherData?.iconType)}`}
+          >
+            <AnimatedWeatherIcon iconType={weatherData?.iconType} size="sm" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-bold font-sans text-[var(--acc)]">
+                {isLoading
+                  ? "..."
+                  : weatherData?.temperature !== undefined
+                    ? `${weatherData.temperature}°C`
+                    : "--"}
+              </span>
+              <span
+                className={`text-xs font-medium truncate ${"text-[var(--ink-2)]"}`}
+              >
+                {isLoading
+                  ? "Consultando tiempo..."
+                  : weatherData?.conditionText || "Clima"}
+              </span>
+              {weatherData?.rainProbability !== undefined && (
+                <span className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-0.5 font-semibold">
+                  <Droplets className="w-3 h-3" />
+                  {weatherData.rainProbability}% lluvia
+                </span>
+              )}
+              {weatherData?.windGusts !== undefined &&
+                weatherData.windGusts >= 25 && (
+                  <span className="text-xs font-sans text-[var(--acc)] flex items-center gap-0.5">
+                    <Wind className="w-3 h-3" />
+                    {weatherData.windGusts} km/h
+                  </span>
+                )}
+              {hasAlerts && (
+                <span
+                  className={`px-1.5 py-0.5 rounded text-micro font-sans font-bold ${
+                    dangerAlertsCount > 0
+                      ? "bg-[var(--alert)] text-[var(--on-alert)]"
+                      : "bg-[var(--acc)] text-[var(--on-acc)]"
+                  }`}
+                >
+                  {dangerAlertsCount > 0 ? "Alerta Clima" : "Aviso Meteo"}
+                </span>
+              )}
+            </div>
+            <span
+              className={`text-micro font-sans block truncate ${"text-[var(--ink-2)]"}`}
+            >
+              {weatherData?.cityName || city} · Show {timeStr || "21:00"}
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsExpanded(true)}
+          className="flex items-center gap-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold text-[var(--acc)]/70 hover:bg-[var(--acc)]/15 transition-colors shrink-0 min-h-[40px] cursor-pointer"
+          title="Ver previsión meteorológica detallada"
+          aria-label="Ver previsión meteorológica detallada"
+        >
+          <span>Previsión</span>
+          <ChevronDown className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`rounded-[var(--r-m)] p-4 transition-ui duration-200 ${
+        hasAlerts && dangerAlertsCount > 0
+          ? "bg-[var(--alert)]/15 text-[var(--ink)]"
+          : hasAlerts
+            ? "bg-[var(--ok)]/15 text-[var(--ink)]"
+            : "bg-[var(--surface)] text-[var(--ink-2)]"
+      }`}
+    >
+      {/* Barra superior del widget del tiempo */}
+      <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 ">
+        <div className="flex items-center gap-2">
+          <span
+            className={`p-1 rounded-[var(--r-s)] ${
+              hasAlerts
+                ? dangerAlertsCount > 0
+                  ? "bg-[var(--alert)]/20 text-[var(--ink)]"
+                  : "bg-[var(--acc)]/20 text-[var(--ink)]"
+                : "bg-[var(--acc)]/15 text-[var(--ink)]"
+            }`}
+          >
+            {hasAlerts ? (
+              <AlertTriangle className="w-3.5 h-3.5" />
+            ) : (
+              <Thermometer className="w-3.5 h-3.5" />
+            )}
+          </span>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-sans font-bold text-[var(--acc)]">
+                Previsión meteorológica
+              </span>
+              {hasAlerts && (
+                <span
+                  className={`px-1.5 py-0.2 rounded text-micro font-sans font-bold ${
+                    dangerAlertsCount > 0
+                      ? "bg-[var(--alert)] text-[var(--on-alert)]"
+                      : "bg-[var(--acc)] text-[var(--on-acc)]"
+                  }`}
+                >
+                  {dangerAlertsCount > 0 ? "Alerta Activa" : "Aviso Meteo"}
+                </span>
+              )}
+            </div>
+            <span
+              className={`text-micro font-sans block ${"text-[var(--ink-2)]"}`}
+            >
+              {weatherData?.cityName || city} · {dateStr}
+            </span>
+          </div>
+        </div>
+
+        {/* Pestañas Concierto vs Prueba de Sonido y Controles */}
+        <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)]">
+          <button
+            type="button"
+            onClick={() => setSelectedSlot("show")}
+            className={`px-2 py-0.5 rounded text-micro font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
+              selectedSlot === "show"
+                ? "bg-[var(--ink)] text-[var(--bg)]"
+                : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
+            }`}
+          >
+            <span>Show ({timeStr || "21:00"})</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedSlot("soundcheck")}
+            className={`px-2 py-0.5 rounded text-micro font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
+              selectedSlot === "soundcheck"
+                ? "bg-[var(--ink)] text-[var(--bg)]"
+                : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
+            }`}
+          >
+            <span>Prueba (18:00)</span>
+          </button>
+          <IconButton
+            label="Actualizar previsión"
+            size="icon-xs"
+            type="button"
+            onClick={loadWeather}
+          >
+            <RefreshCw
+              className={`w-3 h-3 ${isLoading ? "animate-spin text-[var(--acc)]" : ""}`}
+            />
+          </IconButton>
+          {collapsible && (
+            <button
+              type="button"
+              onClick={() => setIsExpanded(false)}
+              title="Minimizar widget del tiempo"
+              className="px-1.5 py-0.5 text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-micro font-sans flex items-center gap-0.5 transition-colors cursor-pointer  ml-0.5"
+            >
+              <span>Minimizar</span>
+              <ChevronUp className="w-3 h-3" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Contenido principal del tiempo */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-4 gap-2 text-xs font-sans text-[var(--ink-2)]">
+          <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
+          <span>Consultando satélites meteorológicos en directo…</span>
+        </div>
+      ) : weatherData?.status === "future" ? (
+        <div className="flex items-center gap-3 py-2 px-3 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-xs font-sans">
+          <Calendar className="w-5 h-5 text-[var(--acc)] shrink-0" />
+          <div>
+            <span className="font-bold text-[var(--acc)]/70 block">
+              Previsión a 14 días vista
+            </span>
+            <p className={"text-[var(--ink-2)] text-micro"}>
+              {weatherData.conditionText}
+            </p>
+          </div>
+        </div>
+      ) : weatherData?.status === "past" ? (
+        <div className="text-xs font-sans text-[var(--ink-2)] py-1">
+          ✓ {weatherData.conditionText}
+        </div>
+      ) : weatherData?.status === "error" ? (
+        <div className="text-micro font-sans text-[var(--ink-2)] py-1">
+          {weatherData.error || "Previsión no disponible para esta ubicación"}
+        </div>
+      ) : weatherData ? (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            {/* Clima e Icono con Micro-Animaciones */}
+            <div className="flex items-center gap-3">
+              <motion.div
+                whileHover={{ scale: 1.08 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                className={`p-2 rounded-[var(--r-l)] relative ${getWeatherIconBackdrop(weatherData.iconType)}`}
+              >
+                <AnimatedWeatherIcon
+                  iconType={weatherData.iconType}
+                  size="lg"
+                />
+              </motion.div>
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-2xl font-bold font-sans tracking-tight text-[var(--acc)]">
+                    {weatherData.temperature}°C
+                  </span>
+                  {weatherData.apparentTemperature !== undefined && (
+                    <span
+                      className={`text-micro font-sans ${"text-[var(--ink-2)]"}`}
+                    >
+                      (sensación {weatherData.apparentTemperature}°C)
+                    </span>
+                  )}
+                </div>
+                <p
+                  className={`text-xs font-medium flex items-center gap-1.5 ${"text-[var(--ink-2)]"}`}
+                >
+                  <span>{weatherData.conditionText}</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Métricas: Lluvia y Viento con Micro-Interacciones */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-ui ${
+                  (weatherData.rainProbability || 0) >= 40
+                    ? "bg-[var(--acc)]/20 text-[var(--ink)]"
+                    : "bg-[var(--sunken)] text-[var(--ink-2)]"
+                }`}
+              >
+                <div className="flex items-center gap-1 text-micro font-sans">
+                  {(weatherData.rainProbability || 0) >= 40 ? (
+                    <AnimatedWeatherIcon iconType="rain" size="xs" />
+                  ) : (
+                    <Droplets className="w-3 h-3 text-[var(--ink-2)]" />
+                  )}
+                  <span>Lluvia</span>
+                </div>
+                <span className="text-xs font-bold font-sans text-[var(--ink-2)] mt-0.5">
+                  {weatherData.rainProbability}%
+                </span>
+                {(weatherData.rainVolumeMm || 0) > 0 && (
+                  <span className="text-micro font-sans text-[var(--ink-2)]/80">
+                    {weatherData.rainVolumeMm} mm
+                  </span>
+                )}
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-ui ${
+                  (weatherData.windGusts || 0) >= 40
+                    ? "bg-[var(--acc)]/20  text-[var(--ink)]"
+                    : "bg-[var(--sunken)] text-[var(--ink-2)]"
+                }`}
+              >
+                <div className="flex items-center gap-1 text-micro font-sans">
+                  {(weatherData.windGusts || 0) >= 40 ? (
+                    <AnimatedWeatherIcon
+                      iconType="wind"
+                      size="xs"
+                      severity="warning"
+                    />
+                  ) : (
+                    <Wind className="w-3 h-3 text-[var(--acc)]" />
+                  )}
+                  <span>Viento</span>
+                </div>
+                <span className="text-xs font-bold font-sans text-[var(--acc)] mt-0.5">
+                  {weatherData.windGusts} km/h
+                </span>
+                <span className="text-micro font-sans text-[var(--ink-2)]">
+                  rachas
+                </span>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* SECCIÓN DESTACADA DE ALERTAS METEOROLÓGICAS (Lluvia, Frío Extremo, Viento Extremo) */}
+          {hasAlerts && (
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-micro font-sans font-bold text-[var(--alert)] flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3 text-[var(--alert)]" />
+                  Alertas de Escenario y Directo ({weatherData.alerts.length})
+                </span>
+                <span className="text-micro font-sans text-[var(--ink-2)]">
+                  Recomendaciones para rider y banda
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {weatherData.alerts.map((alert) => {
+                  const isExpanded = expandedAlerts[alert.id] ?? false;
+                  const isDanger = alert.severity === "danger";
+
+                  return (
+                    <motion.div
+                      key={alert.id}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`rounded-[var(--r-m)] p-3 transition-ui duration-200 ${
+                        isDanger
+                          ? "bg-[var(--alert-soft)]/50 text-[var(--alert)]"
+                          : "bg-[var(--acc-soft)]  text-[var(--acc)]"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2.5">
+                          <div
+                            className={`p-1.5 rounded-[var(--r-s)] shrink-0 mt-0.5 ${
+                              isDanger
+                                ? "bg-[var(--alert)]/20"
+                                : "bg-[var(--acc)]/20 "
+                            }`}
+                          >
+                            <AnimatedWeatherIcon
+                              iconType={alert.icon}
+                              size="sm"
+                              severity={alert.severity}
+                            />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                              <span className="font-bold font-sans text-xs text-[var(--ink-2)] tracking-tight">
+                                {alert.title}
+                              </span>
+                              <span
+                                className={`px-1.5 py-0.2 rounded text-micro font-sans font-bold ${
+                                  isDanger
+                                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
+                                    : "bg-[var(--acc)] text-[var(--on-acc)]"
+                                }`}
+                              >
+                                {isDanger ? "Peligro Extremo" : "Precaución"}
+                              </span>
+                            </div>
+                            <p className="text-xs leading-relaxed opacity-90 font-sans">
+                              {alert.shortAdvice}
+                            </p>
+                          </div>
+                        </div>
+
+                        <Button
+                          variant={isDanger ? "ghost" : "ghost"}
+                          size="xs"
+                          type="button"
+                          onClick={() => toggleAlertExpand(alert.id)}
+                          className="shrink-0"
+                          title={
+                            isExpanded
+                              ? "Ocultar recomendaciones"
+                              : "Ver recomendaciones técnicas"
+                          }
+                        >
+                          {isExpanded ? (
+                            <ChevronUp className="w-4 h-4" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </div>
+
+                      {/* Consejos técnicos y medidas de seguridad detalladas con micro-animación fluida */}
+                      <AnimatePresence>
+                        {isExpanded &&
+                          alert.fullAdvice &&
+                          alert.fullAdvice.length > 0 && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className={`mt-2.5 pt-2.5 space-y-1.5 text-micro font-sans overflow-hidden ${
+                                isDanger
+                                  ? "text-[var(--ink)]/90"
+                                  : " text-[var(--ink)]/90"
+                              }`}
+                            >
+                              <div className="font-sans text-micro font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">
+                                <ShieldAlert className="w-3 h-3 text-[var(--acc)]" />
+                                <span>Protocolo técnico recomendado:</span>
+                              </div>
+                              <ul className="space-y-1 pl-1">
+                                {alert.fullAdvice.map((tip, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="flex items-start gap-1.5 leading-tight"
+                                  >
+                                    <span className="text-[var(--acc)] font-bold shrink-0 mt-0.5">
+                                      •
+                                    </span>
+                                    <span>{tip}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                          )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+};

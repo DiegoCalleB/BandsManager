@@ -1,0 +1,633 @@
+/**
+ * Utility for ultra-low latency & clean audio capture, WebAudio DSP filtering,
+ * and background noise/speaker bleed suppression for multitrack recording.
+ */
+
+export interface StudioAudioStreamOptions {
+  echoCancellation?: boolean;
+  noiseSuppression?: boolean;
+  autoGainControl?: boolean;
+  highPassCutoff?: number; // default 80Hz
+}
+
+export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOptions): Promise<MediaStream> => {
+  if (!navigator?.mediaDevices?.getUserMedia) {
+    throw new Error('El entorno o navegador no dispone de soporte para captura de audio/micrófono.');
+  }
+
+  // Default to echo cancellation and noise suppression ON for multitrack overdubbing to prevent speaker bleed and room hiss
+  const useEchoCancellation = options?.echoCancellation ?? true;
+  const useNoiseSuppression = options?.noiseSuppression ?? true;
+  const useAutoGain = options?.autoGainControl ?? false;
+
+  try {
+    const audioConstraints: any = {
+      echoCancellation: useEchoCancellation,
+      noiseSuppression: useNoiseSuppression,
+      autoGainControl: useAutoGain,
+      channelCount: { ideal: 2 },
+      sampleRate: { ideal: 48000 },
+    };
+
+    return await navigator.mediaDevices.getUserMedia({
+      audio: audioConstraints,
+    });
+  } catch (err: any) {
+    const isPermissionError =
+      err?.name === 'NotAllowedError' ||
+      err?.name === 'PermissionDeniedError' ||
+      String(err?.message || '')
+        .toLowerCase()
+        .includes('permission denied');
+
+    if (isPermissionError) {
+      throw new Error('Permiso de micrófono denegado por el usuario o navegador.');
+    }
+
+    console.warn('Audio constraints rejected, falling back to standard audio stream:', err);
+    return await navigator.mediaDevices.getUserMedia({ audio: true });
+  }
+};
+
+/**
+ * Creates a WebAudio DSP cleaning pipeline for microphone recording streams.
+ * Removes low-frequency rumble (highpass at 80Hz), electrical hum (notch filter),
+ * and dynamic peaks before sending to MediaRecorder.
+ */
+export interface CleanPipelineResult {
+  cleanStream: MediaStream;
+  audioCtx: AudioContext;
+  cleanup: () => void;
+}
+
+export const createCleanAudioRecordingPipeline = (rawStream: MediaStream, existingCtx?: AudioContext | null): CleanPipelineResult => {
+  const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+  const audioCtx = existingCtx || new AudioCtxClass();
+
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(() => {});
+  }
+
+  const sourceNode = audioCtx.createMediaStreamSource(rawStream);
+
+  // 1. High-Pass Filter (cut off low frequency rumble < 80Hz)
+  const highpass = audioCtx.createBiquadFilter();
+  highpass.type = 'highpass';
+  highpass.frequency.setValueAtTime(80, audioCtx.currentTime);
+  highpass.Q.setValueAtTime(0.707, audioCtx.currentTime);
+
+  // 2. Notch Filter for 50Hz / 60Hz power hum
+  const notch50 = audioCtx.createBiquadFilter();
+  notch50.type = 'notch';
+  notch50.frequency.setValueAtTime(50, audioCtx.currentTime);
+  notch50.Q.setValueAtTime(5.0, audioCtx.currentTime);
+
+  const notch60 = audioCtx.createBiquadFilter();
+  notch60.type = 'notch';
+  notch60.frequency.setValueAtTime(60, audioCtx.currentTime);
+  notch60.Q.setValueAtTime(5.0, audioCtx.currentTime);
+
+  // 3. Dynamics Compressor to prevent clipping & stabilize dynamics
+  const compressor = audioCtx.createDynamicsCompressor();
+  compressor.threshold.setValueAtTime(-24, audioCtx.currentTime);
+  compressor.knee.setValueAtTime(20, audioCtx.currentTime);
+  compressor.ratio.setValueAtTime(8, audioCtx.currentTime);
+  compressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+  compressor.release.setValueAtTime(0.15, audioCtx.currentTime);
+
+  // 4. Output Destination for MediaRecorder
+  const destination = audioCtx.createMediaStreamDestination();
+
+  // Connect graph
+  sourceNode.connect(highpass);
+  highpass.connect(notch50);
+  notch50.connect(notch60);
+  notch60.connect(compressor);
+  compressor.connect(destination);
+
+  const cleanup = () => {
+    try {
+      sourceNode.disconnect();
+      highpass.disconnect();
+      notch50.disconnect();
+      notch60.disconnect();
+      compressor.disconnect();
+    } catch (_) {}
+  };
+
+  return {
+    cleanStream: destination.stream,
+    audioCtx,
+    cleanup,
+  };
+};
+
+/**
+ * Trims initial recording startup latency/buffer lag from an audio Blob.
+ * Removes the hardware buffer startup lag (default ~100ms - 120ms) so overdubbed tracks
+ * align sample-accurately with the backing tracks.
+ */
+export const trimAudioBlobLatency = async (audioBlob: Blob, latencyMs: number = 110): Promise<Blob> => {
+  if (latencyMs <= 0) return audioBlob;
+  try {
+    const arrayBuffer = await audioBlob.arrayBuffer();
+    const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const decodedBuffer = await tempCtx.decodeAudioData(arrayBuffer);
+    tempCtx.close();
+
+    const sampleRate = decodedBuffer.sampleRate;
+    const samplesToTrim = Math.min(
+      Math.floor((latencyMs / 1000) * sampleRate),
+      Math.floor(decodedBuffer.length * 0.4) // Safety: do not trim more than 40% of audio
+    );
+
+    if (samplesToTrim <= 0) return audioBlob;
+
+    const trimmedLength = decodedBuffer.length - samplesToTrim;
+    const offlineCtx = new OfflineAudioContext(decodedBuffer.numberOfChannels, trimmedLength, sampleRate);
+
+    const newBuffer = offlineCtx.createBuffer(decodedBuffer.numberOfChannels, trimmedLength, sampleRate);
+
+    for (let channel = 0; channel < decodedBuffer.numberOfChannels; channel++) {
+      const srcData = decodedBuffer.getChannelData(channel);
+      const destData = newBuffer.getChannelData(channel);
+      destData.set(srcData.subarray(samplesToTrim));
+    }
+
+    normalizeAudioBuffer(newBuffer, -1);
+    return audioBufferToWavBlob(newBuffer);
+  } catch (err) {
+    console.warn('Latency trimming failed, returning original blob:', err);
+    return audioBlob;
+  }
+};
+
+/**
+ * Normalizes an AudioBuffer to peak target level (default -1 dBFS / ~0.891 linear amplitude).
+ * Prevents recorded tracks from sounding quiet or distorted in the multitrack mix.
+ */
+export const normalizeAudioBuffer = (buffer: AudioBuffer, targetDb: number = -1): AudioBuffer => {
+  try {
+    let maxPeak = 0;
+    for (let c = 0; c < buffer.numberOfChannels; c++) {
+      const data = buffer.getChannelData(c);
+      for (let i = 0; i < data.length; i++) {
+        const abs = Math.abs(data[i]);
+        if (abs > maxPeak) maxPeak = abs;
+      }
+    }
+
+    if (maxPeak === 0 || !isFinite(maxPeak)) return buffer;
+
+    const targetLinear = Math.pow(10, targetDb / 20); // ~0.891 for -1dBFS
+    const gainScale = Math.min(targetLinear / maxPeak, 8.0); // Safety limit max gain to 8x (+18dB)
+
+    if (Math.abs(gainScale - 1.0) < 0.05) return buffer; // Skip if already optimal
+
+    for (let c = 0; c < buffer.numberOfChannels; c++) {
+      const data = buffer.getChannelData(c);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = data[i] * gainScale;
+      }
+    }
+  } catch (e) {
+    console.warn('Peak normalization error:', e);
+  }
+  return buffer;
+};
+
+/**
+ * Offline Audio Buffer signal cleaning pass.
+ * Filters out low-frequency noise, normalizes audio in memory, and optionally trims initial latency.
+ */
+export const cleanAudioBlobOffline = async (audioBlob: Blob, latencyTrimMs: number = 0): Promise<Blob> => {
+  try {
+    let inputBlob = audioBlob;
+    if (latencyTrimMs > 0) {
+      inputBlob = await trimAudioBlobLatency(audioBlob, latencyTrimMs);
+    }
+
+    const arrayBuffer = await inputBlob.arrayBuffer();
+    const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const decodedBuffer = await tempCtx.decodeAudioData(arrayBuffer);
+    tempCtx.close();
+
+    const offlineCtx = new OfflineAudioContext(decodedBuffer.numberOfChannels, decodedBuffer.length, decodedBuffer.sampleRate);
+
+    const source = offlineCtx.createBufferSource();
+    source.buffer = decodedBuffer;
+
+    // Highpass filter @ 85Hz
+    const hp = offlineCtx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 85;
+
+    // Dynamics Compressor
+    const comp = offlineCtx.createDynamicsCompressor();
+    comp.threshold.value = -20;
+    comp.ratio.value = 6;
+
+    source.connect(hp);
+    hp.connect(comp);
+    comp.connect(offlineCtx.destination);
+
+    source.start(0);
+    const renderedBuffer = await offlineCtx.startRendering();
+
+    // Convert AudioBuffer back to WAV Blob
+    return audioBufferToWavBlob(renderedBuffer);
+  } catch (err) {
+    console.warn('Offline audio cleaning failed, returning original blob:', err);
+    return audioBlob;
+  }
+};
+
+/**
+ * Utility to convert an AudioBuffer to a clean WAV Blob.
+ */
+function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
+  const numChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const format = 1; // PCM
+  const bitDepth = 16;
+
+  let result: Float32Array;
+  if (numChannels === 2) {
+    const left = buffer.getChannelData(0);
+    const right = buffer.getChannelData(1);
+    result = new Float32Array(left.length + right.length);
+    for (let i = 0; i < left.length; i++) {
+      result[i * 2] = left[i];
+      result[i * 2 + 1] = right[i];
+    }
+  } else {
+    result = buffer.getChannelData(0);
+  }
+
+  const dataLength = result.length * (bitDepth / 8);
+  const headerLength = 44;
+  const wavBuffer = new ArrayBuffer(headerLength + dataLength);
+  const view = new DataView(wavBuffer);
+
+  /* RIFF identifier */
+  writeString(view, 0, 'RIFF');
+  /* RIFF chunk length */
+  view.setUint32(4, 36 + dataLength, true);
+  /* RIFF type */
+  writeString(view, 8, 'WAVE');
+  /* format chunk identifier */
+  writeString(view, 12, 'fmt ');
+  /* format chunk length */
+  view.setUint32(16, 16, true);
+  /* sample format (raw) */
+  view.setUint16(20, format, true);
+  /* channel count */
+  view.setUint16(22, numChannels, true);
+  /* sample rate */
+  view.setUint32(24, sampleRate, true);
+  /* byte rate (sample rate * block align) */
+  view.setUint32(28, sampleRate * numChannels * (bitDepth / 8), true);
+  /* block align (channel count * bytes per sample) */
+  view.setUint16(32, numChannels * (bitDepth / 8), true);
+  /* bits per sample */
+  view.setUint16(34, bitDepth, true);
+  /* data chunk identifier */
+  writeString(view, 36, 'data');
+  /* data chunk length */
+  view.setUint32(40, dataLength, true);
+
+  // Write PCM samples
+  let offset = 44;
+  for (let i = 0; i < result.length; i++) {
+    const s = Math.max(-1, Math.min(1, result[i]));
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+    offset += 2;
+  }
+
+  return new Blob([wavBuffer], { type: 'audio/wav' });
+}
+
+function writeString(view: DataView, offset: number, string: string) {
+  for (let i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+}
+
+export const getSystemAudioLatencyMs = (audioContext?: AudioContext | null): number => {
+  if (!audioContext) return 0;
+  const outputLatencySecs = (audioContext as any).outputLatency || 0;
+  const baseLatencySecs = (audioContext as any).baseLatency || 0;
+  return Math.round((outputLatencySecs + baseLatencySecs) * 1000);
+};
+
+/**
+ * Automatically detects the exact hardware/recording latency offset (in milliseconds)
+ * between a master backing track and a newly recorded audio track.
+ * Uses envelope cross-correlation and transient attack detection.
+ */
+export const autoDetectAudioLatencyOffset = async (masterAudioUrl: string, recordedBlob: Blob): Promise<number> => {
+  try {
+    const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+    // 1. Fetch & decode Master Audio
+    const masterRes = await fetch(masterAudioUrl);
+    const masterArrBuffer = await masterRes.arrayBuffer();
+    const masterBuf = await tempCtx.decodeAudioData(masterArrBuffer);
+
+    // 2. Decode Recorded Audio
+    const recArrBuffer = await recordedBlob.arrayBuffer();
+    const recBuf = await tempCtx.decodeAudioData(recArrBuffer);
+
+    tempCtx.close();
+
+    // Downsample energy envelope to 10ms frame windows (100 Hz frame rate)
+    const frameMs = 10;
+    const sampleRate = masterBuf.sampleRate;
+    const samplesPerFrame = Math.floor((sampleRate * frameMs) / 1000);
+
+    const getEnvelope = (buffer: AudioBuffer) => {
+      const data = buffer.getChannelData(0);
+      const framesCount = Math.floor(data.length / samplesPerFrame);
+      const env = new Float32Array(framesCount);
+      for (let i = 0; i < framesCount; i++) {
+        let sum = 0;
+        const start = i * samplesPerFrame;
+        for (let j = 0; j < samplesPerFrame; j++) {
+          const val = data[start + j];
+          sum += val * val;
+        }
+        env[i] = Math.sqrt(sum / samplesPerFrame);
+      }
+      return env;
+    };
+
+    const masterEnv = getEnvelope(masterBuf);
+    const recEnv = getEnvelope(recBuf);
+
+    // Look for cross-correlation peak within 0ms to 600ms lag window
+    let maxCorr = -1;
+    let bestLagMs = 0;
+
+    const minFrameLag = 0;
+    const maxFrameLag = 60; // 600ms max lag
+    const compareLen = Math.min(masterEnv.length, recEnv.length - maxFrameLag);
+
+    if (compareLen > 50) {
+      for (let lag = minFrameLag; lag <= maxFrameLag; lag++) {
+        let corr = 0;
+        let normMaster = 0;
+        let normRec = 0;
+        for (let i = 0; i < compareLen; i++) {
+          const m = masterEnv[i + lag];
+          const r = recEnv[i];
+          corr += m * r;
+          normMaster += m * m;
+          normRec += r * r;
+        }
+        const denom = Math.sqrt(normMaster * normRec);
+        const normalizedCorr = denom > 0 ? corr / denom : 0;
+        if (normalizedCorr > maxCorr) {
+          maxCorr = normalizedCorr;
+          bestLagMs = lag * frameMs;
+        }
+      }
+    }
+
+    if (maxCorr > 0.25 && bestLagMs > 0) {
+      return bestLagMs;
+    }
+
+    // Fallback: Check first transient onset (attack > 5% peak)
+    let firstMasterOnsetMs = 0;
+    for (let i = 0; i < masterEnv.length; i++) {
+      if (masterEnv[i] > 0.05) {
+        firstMasterOnsetMs = i * frameMs;
+        break;
+      }
+    }
+    let firstRecOnsetMs = 0;
+    for (let i = 0; i < recEnv.length; i++) {
+      if (recEnv[i] > 0.05) {
+        firstRecOnsetMs = i * frameMs;
+        break;
+      }
+    }
+
+    const onsetDiff = firstRecOnsetMs - firstMasterOnsetMs;
+    if (onsetDiff > 20 && onsetDiff < 800) {
+      return onsetDiff;
+    }
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isMobile = isIOS || /Android/i.test(navigator.userAgent);
+    return isIOS ? 320 : isMobile ? 240 : 110;
+  } catch (err) {
+    console.warn('Auto latency detection fallback:', err);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isMobile = isIOS || /Android/i.test(navigator.userAgent);
+    return isIOS ? 320 : isMobile ? 240 : 110;
+  }
+};
+
+export interface MasterMixTrackInput {
+  audioUrl: string;
+  volumen?: number;
+  muted?: boolean;
+  pan?: number;
+  desfaseMs?: number;
+  eqLow?: number;
+  eqMid?: number;
+  eqHigh?: number;
+}
+
+/**
+ * Offline Master Mix Bounce renderer.
+ * Sums all multitrack audio inputs using OfflineAudioContext, applying per-track volume,
+ * stereo panner, 3-band EQ, and latency offsets, then normalizes and exports a single WAV Blob.
+ */
+export const exportMasterMixAudioBlob = async (
+  tracks: MasterMixTrackInput[],
+  resolveUrlFn?: (url: string) => Promise<string>
+): Promise<Blob> => {
+  const activeTracks = tracks.filter((t) => !t.muted && t.audioUrl);
+  if (activeTracks.length === 0) {
+    throw new Error('No hay pistas activas para mezclar.');
+  }
+
+  const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+  // 1. Fetch and decode all track audio buffers
+  const decodedTrackBuffers: { buffer: AudioBuffer; input: MasterMixTrackInput }[] = [];
+  let maxTotalDuration = 0;
+
+  for (const tr of activeTracks) {
+    try {
+      const resolved = resolveUrlFn ? await resolveUrlFn(tr.audioUrl) : tr.audioUrl;
+      const res = await fetch(resolved);
+
+      const arrBuf = await res.arrayBuffer();
+      const audioBuf = await tempCtx.decodeAudioData(arrBuf);
+      // desfaseMs negativo retrasa la ENTRADA de la pista en la mezcla (usado para colocar pistas
+      // generadas por IA en un punto concreto de la canción, no solo micro-ajustes de latencia) —
+      // igual que ya interpreta la reproducción en vivo. Antes solo se contaba la duración extra
+      // cuando el desfase era positivo, así que una pista retrasada se podía cortar al final del
+      // render por quedarse corto el buffer total.
+      const offsetSec = (tr.desfaseMs || 0) / 1000;
+      const entryDelaySec = offsetSec < 0 ? -offsetSec : 0;
+      const trackEndSec = audioBuf.duration + entryDelaySec;
+      if (trackEndSec > maxTotalDuration) {
+        maxTotalDuration = trackEndSec;
+      }
+      decodedTrackBuffers.push({ buffer: audioBuf, input: tr });
+    } catch (err) {
+      console.warn('Error decoding track for master mix:', tr.audioUrl, err);
+    }
+  }
+
+  tempCtx.close();
+
+  if (decodedTrackBuffers.length === 0 || maxTotalDuration === 0) {
+    throw new Error('No se pudo decodificar el audio de ninguna de las pistas.');
+  }
+
+  // 2. Setup OfflineAudioContext for rendering master mix
+  const sampleRate = 44100;
+  const totalFrames = Math.ceil(maxTotalDuration * sampleRate);
+  const offlineCtx = new OfflineAudioContext(2, totalFrames, sampleRate);
+
+  // Master Limiter to prevent digital clipping
+  const masterLimiter = offlineCtx.createDynamicsCompressor();
+  masterLimiter.threshold.value = -0.5;
+  masterLimiter.knee.value = 0;
+  masterLimiter.ratio.value = 20;
+  masterLimiter.attack.value = 0.001;
+  masterLimiter.release.value = 0.1;
+  masterLimiter.connect(offlineCtx.destination);
+
+  // 3. Connect each track's DSP chain (Source -> EQ Low -> EQ Mid -> EQ High -> Volume Gain -> Stereo Panner -> Master Limiter)
+  decodedTrackBuffers.forEach(({ buffer, input }) => {
+    const source = offlineCtx.createBufferSource();
+    source.buffer = buffer;
+
+    // EQ Low
+    const eqLow = offlineCtx.createBiquadFilter();
+    eqLow.type = 'lowshelf';
+    eqLow.frequency.value = 100;
+    eqLow.gain.value = input.eqLow ?? 0;
+
+    // EQ Mid
+    const eqMid = offlineCtx.createBiquadFilter();
+    eqMid.type = 'peaking';
+    eqMid.frequency.value = 1000;
+    eqMid.Q.value = 1.0;
+    eqMid.gain.value = input.eqMid ?? 0;
+
+    // EQ High
+    const eqHigh = offlineCtx.createBiquadFilter();
+    eqHigh.type = 'highshelf';
+    eqHigh.frequency.value = 8000;
+    eqHigh.gain.value = input.eqHigh ?? 0;
+
+    // Volume Gain
+    const gainNode = offlineCtx.createGain();
+    gainNode.gain.value = input.volumen ?? 1;
+
+    // Stereo Panner
+    const panner = offlineCtx.createStereoPanner ? offlineCtx.createStereoPanner() : null;
+    if (panner) {
+      panner.pan.value = Math.max(-1, Math.min(1, input.pan ?? 0));
+    }
+
+    // Connect chain
+    source.connect(eqLow);
+    eqLow.connect(eqMid);
+    eqMid.connect(eqHigh);
+    eqHigh.connect(gainNode);
+
+    if (panner) {
+      gainNode.connect(panner);
+      panner.connect(masterLimiter);
+    } else {
+      gainNode.connect(masterLimiter);
+    }
+
+    // desfaseMs > 0: la pista se adelanta dentro de su propio audio (micro-corrección de latencia
+    // clásica). desfaseMs < 0: la pista se retrasa en la mezcla — arranca más tarde en el render,
+    // desde el principio de su propio audio (usado para colocar pistas de IA en un punto concreto
+    // de la canción). Mismo criterio que la reproducción en vivo (ver SongStudioModal).
+    const desfaseSec = (input.desfaseMs || 0) / 1000;
+    const renderStartSec = desfaseSec < 0 ? -desfaseSec : 0;
+    const bufferOffsetSec = desfaseSec > 0 ? Math.min(desfaseSec, Math.max(0, buffer.duration - 0.01)) : 0;
+    source.start(renderStartSec, bufferOffsetSec);
+  });
+
+  // 4. Render master mix buffer offline
+  const renderedBuffer = await offlineCtx.startRendering();
+
+  // Normalize final master mix to -1 dBFS
+  normalizeAudioBuffer(renderedBuffer, -1);
+
+  return audioBufferToWavBlob(renderedBuffer);
+};
+
+export interface AutoBalanceTrackInput {
+  id: string;
+  audioUrl: string;
+}
+
+/**
+ * Analiza el RMS real de cada pista (no el pico, que engaña con transitorios) y devuelve el
+ * volumen sugerido (0-1) para nivelarlas todas al oído de la más floja — típicamente un bajo o
+ * una voz grabada de más lejos que una batería a saco. Solo puede atenuar, nunca subir por
+ * encima de 1.0: el fader no tiene margen para "amplificar" una pista floja sin clipping real,
+ * así que la nivelación va siempre hacia abajo respecto a la pista más silenciosa del grupo.
+ */
+export const computeAutoBalanceVolumes = async (
+  tracks: AutoBalanceTrackInput[],
+  resolveUrlFn?: (url: string) => Promise<string>
+): Promise<Record<string, number>> => {
+  const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const rmsById: Record<string, number> = {};
+
+  try {
+    for (const tr of tracks) {
+      try {
+        const resolved = resolveUrlFn ? await resolveUrlFn(tr.audioUrl) : tr.audioUrl;
+        const res = await fetch(resolved);
+        const arrBuf = await res.arrayBuffer();
+        const buffer = await tempCtx.decodeAudioData(arrBuf);
+
+        let sumSquares = 0;
+        let sampleCount = 0;
+        for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+          const data = buffer.getChannelData(ch);
+          // Muestreo cada N samples: con canciones de varios minutos no hace falta recorrer
+          // cada sample para tener una estimación de RMS fiable, y así no bloqueamos el hilo.
+          const step = Math.max(1, Math.floor(data.length / 200000));
+          for (let i = 0; i < data.length; i += step) {
+            sumSquares += data[i] * data[i];
+            sampleCount++;
+          }
+        }
+        rmsById[tr.id] = sampleCount > 0 ? Math.sqrt(sumSquares / sampleCount) : 0;
+      } catch (err) {
+        console.warn('[Auto-Balance] No se pudo analizar la pista para nivelar volumen:', tr.audioUrl, err);
+      }
+    }
+  } finally {
+    tempCtx.close();
+  }
+
+  const SILENCE_FLOOR = 0.0005;
+  const validRms = Object.values(rmsById).filter((v) => v > SILENCE_FLOOR);
+  if (validRms.length === 0) return {};
+
+  const minRms = Math.min(...validRms);
+  const volumes: Record<string, number> = {};
+  for (const [id, rms] of Object.entries(rmsById)) {
+    // Pista silenciosa o que no se pudo analizar: no tocar su volumen actual.
+    if (rms <= SILENCE_FLOOR) continue;
+    volumes[id] = Math.max(0.15, Math.min(1, minRms / rms));
+  }
+  return volumes;
+};

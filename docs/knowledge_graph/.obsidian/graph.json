@@ -1,0 +1,37 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "tag:#ui OR tag:#layer/frontend",
+      "color": { "a": 1, "rgb": 11883775 }
+    },
+    {
+      "query": "tag:#api OR tag:#layer/route",
+      "color": { "a": 1, "rgb": 3381759 }
+    },
+    {
+      "query": "tag:#agent OR tag:#layer/agent",
+      "color": { "a": 1, "rgb": 3394611 }
+    },
+    {
+      "query": "tag:#security OR tag:#layer/security",
+      "color": { "a": 1, "rgb": 16730419 }
+    },
+    {
+      "query": "tag:#database OR tag:#layer/db OR tag:#schema",
+      "color": { "a": 1, "rgb": 16766720 }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1.25,
+  "lineSizeMultiplier": 1,
+  "linkStrength": 1
+}

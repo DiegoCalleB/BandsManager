@@ -1,0 +1,221 @@
+import React, { useState } from "react";
+import { BookingCampaign, Lead } from "../../types";
+import { leadMatchesCampaign } from "../../utils/campaignMatch";
+import {
+  Target,
+  Calendar,
+  MapPin,
+  Users,
+  X,
+  Settings2,
+  Building2,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  Flame,
+  CheckCircle2,
+} from "lucide-react";
+import { ShowIcon } from '../ui/ShowIcon';
+import { IconButton } from '../ui';
+
+interface GlobalCampaignBarProps {
+  campaign: BookingCampaign;
+  allLeads?: Lead[];
+  onOpenManager: () => void;
+  onDeactivate: () => void;
+  onNavigate: (view: string, options?: any) => void;
+  currentView: string;
+}
+
+export function GlobalCampaignBar({
+  campaign,
+  allLeads = [],
+  onOpenManager,
+  onDeactivate,
+  onNavigate,
+  currentView,
+}: GlobalCampaignBarProps) {
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+
+  // Recuento de salas objetivo de la campaña: usa exactamente el mismo criterio que el listado
+  // real de Booking Salas (leadMatchesCampaign), para que este número nunca prometa más salas de
+  // las que luego aparecen al pulsar el botón.
+  const matchingLeads = allLeads.filter((l) =>
+    leadMatchesCampaign(l, campaign),
+  );
+
+  const firstTargetDate = campaign.targetDates?.[0];
+
+  return (
+    <div className="w-full mt-1 mb-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] p-2 sm:p-2.5 animate-fade-in relative shadow-2xs">
+      {/* Main Bar Content */}
+      <div className="flex items-center justify-between gap-2 relative z-10 flex-wrap sm:flex-nowrap">
+        {/* Left Side: Campaign Badge, Name & Toggle */}
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+          <div
+            className="w-6 h-6 sm:w-7 sm:h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0"
+            style={{
+              backgroundColor: `${campaign.color || "var(--acc)"}20`,
+              color: campaign.color || "var(--acc)",
+            }}
+          >
+            <Flame className="w-3.5 h-3.5" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)] shrink-0">
+                <ShowIcon inline emoji="🎯" /> CAMPAÑA
+              </span>
+              <h2
+                className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] truncate"
+                title={campaign.name}
+              >
+                {campaign.name}
+              </h2>
+            </div>
+
+            {/* Desktop / Tablet Inline details */}
+            <div className="hidden sm:flex flex-wrap items-center gap-2 text-micro text-[var(--ink-2)] mt-0.5">
+              <span className="inline-flex items-center gap-1 text-[var(--ink-2)] font-medium truncate max-w-[200px]">
+                <MapPin className="w-2.5 h-2.5 text-[var(--ink-2)] shrink-0" />
+                {campaign.targetCities?.join(",") || "Todas las ciudades"}
+              </span>
+              <span className="text-[var(--ink-2)]">•</span>
+              <span className="inline-flex items-center gap-1 text-[var(--ink-2)] font-sans">
+                <Users className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
+                {campaign.minCapacity}-{campaign.maxCapacity} pax
+              </span>
+              <span className="text-[var(--ink-2)]">•</span>
+              <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-sans font-semibold truncate max-w-[180px]">
+                <Calendar className="w-2.5 h-2.5 text-amber-500 shrink-0" />
+                {campaign.targetDatesText ||
+                  `${campaign.targetDates?.length || 0} fechas`}
+              </span>
+            </div>
+          </div>
+
+          {/* Mobile Info Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setIsMobileExpanded((prev) => !prev)}
+            className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
+            title={
+              isMobileExpanded ? "Ocultar detalles" : "Ver ciudades y fechas"
+            }
+          >
+            {isMobileExpanded ? (
+              <ChevronUp className="w-3.5 h-3.5" />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5" />
+            )}
+          </button>
+        </div>
+
+        {/* Right Side: Quick Action Pills & Settings */}
+        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 shrink-0">
+          {/* Quick CRM filter button */}
+          <button
+            type="button"
+            onClick={() =>
+              onNavigate("booking", { campaignFilter: campaign.id })
+            }
+            className={`px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+              currentView === "booking"
+                ? "bg-[var(--sunken)] text-[var(--ink)] border border-[var(--hair)]"
+                : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border border-[var(--hair)] hover:bg-[var(--sunken)]"
+            }`}
+            title="Ver salas objetivo de esta campaña en Booking CRM"
+          >
+            <Building2 className="w-3 h-3 text-[var(--acc)] shrink-0" />
+            <span>Salas ({matchingLeads.length})</span>
+          </button>
+
+          {/* Quick Calendar button */}
+          <button
+            type="button"
+            onClick={() =>
+              onNavigate("calendario", { selectedDate: firstTargetDate })
+            }
+            className={`px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+              currentView === "calendario"
+                ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40 font-extrabold"
+                : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/25 hover:bg-amber-500/20"
+            }`}
+            title="Ver fechas de la campaña en el Calendario"
+          >
+            <Calendar className="w-3 h-3 text-amber-500 shrink-0" />
+            <span>Calendario</span>
+          </button>
+
+          {/* Quick Band CRM button */}
+          <button
+            type="button"
+            onClick={() =>
+              onNavigate("bandas", { campaignCities: campaign.targetCities })
+            }
+            className={`px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+              currentView === "bandas"
+                ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40 font-extrabold"
+                : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 hover:bg-emerald-500/20"
+            }`}
+            title="Ver grupos en las ciudades objetivo para Co-booking"
+          >
+            <Users className="w-3 h-3 text-emerald-500 shrink-0" />
+            <span className="hidden sm:inline">Co-booking</span>
+            <span className="sm:hidden">Bandas</span>
+          </button>
+
+          {/* Settings / Switcher button */}
+          <IconButton
+            label="Gestionar o cambiar campaña activa"
+            size="icon-xs"
+            type="button"
+            onClick={onOpenManager}
+            className="shrink-0"
+          >
+            <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          </IconButton>
+
+          {/* Deactivate button */}
+          <IconButton
+            label="Desactivar modo campaña (volver a modo general)"
+            variant="danger"
+            size="icon-xs"
+            type="button"
+            onClick={onDeactivate}
+            className="shrink-0"
+          >
+            <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          </IconButton>
+        </div>
+      </div>
+
+      {/* Mobile Collapsible Details */}
+      {isMobileExpanded && (
+        <div className="sm:hidden pt-2 mt-2/20 text-micro text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
+          <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-medium">
+            <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
+            <span>
+              {campaign.targetCities?.join(", ") || "Todas las ciudades"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-[var(--ink-2)]">
+            <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-sans">
+              <Users className="w-3 h-3 text-[var(--acc)] shrink-0" />
+              {campaign.minCapacity} - {campaign.maxCapacity} pax
+            </span>
+            <span className="inline-flex items-center gap-1 text-[var(--alert)] font-sans font-semibold">
+              <Calendar className="w-3 h-3 text-[var(--alert)] shrink-0" />
+              {campaign.targetDatesText ||
+                `${campaign.targetDates?.length || 0} fechas`}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default GlobalCampaignBar;
