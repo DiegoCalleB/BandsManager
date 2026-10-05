@@ -19,9 +19,16 @@ import { dbGetCategoryTemplates } from "./categoryTemplates.js";
 import { defaultEpkConfigFor } from "../seeds/demoEpk.js";
 
 const bandStateCache = new Map<string, { timestamp: number; result: any }>();
-// TTL de caché en memoria para lecturas pasivas: 30 minutos por defecto (o configurable por BAND_CACHE_TTL_MS).
-// Cualquier mutación (crear lead, evento, etc.) invalida inmediatamente la clave con invalidateBandStateCache().
-const BAND_CACHE_TTL_MS = Number(process.env.BAND_CACHE_TTL_MS) || (30 * 60 * 1000);
+// TTL de caché en memoria para lecturas pasivas: 60 segundos por defecto (o BAND_CACHE_TTL_MS).
+//
+// Antes eran 30 minutos y el comentario aseguraba que "cualquier mutación invalida la clave", pero
+// en la práctica solo lo hacían EPK, acuerdos y usuarios: guardar una sala, un concierto, una
+// canción o un ensayo NO invalidaba nada, así que /api/state devolvía la ficha VIEJA hasta media
+// hora después (o hasta el siguiente redeploy) y el cambio "volvía" al recargar. Ahora:
+//   1. server.ts invalida la banda tras CUALQUIER escritura correcta en /api
+//      (invalidarCachePorEscritura, abajo), sin tener que acordarse en cada ruta nueva;
+//   2. el TTL corto acota lo que no pasa por HTTP (agentes, cron, webhooks).
+const BAND_CACHE_TTL_MS = Number(process.env.BAND_CACHE_TTL_MS) || 60 * 1000;
 
 export function invalidateBandStateCache(bandId?: string) {
   if (bandId) {
@@ -36,6 +43,45 @@ export function invalidateBandStateCache(bandId?: string) {
   } else {
     bandStateCache.clear();
   }
+}
+
+/** Todas las formas en que puede aparecer el id de una banda (band-x, reg-x, x) para invalidar sin fallos. */
+function variantesDeBanda(id: string): string[] {
+  const limpio = String(id || '').trim();
+  if (!limpio) return [];
+  const base = limpio.replace(/^(band|reg)-/, '');
+  return Array.from(new Set([limpio, base, `band-${base}`, `reg-${base}`]));
+}
+
+/** Bandas implicadas en una petición: la de la sesión y la que pida la cabecera x-band-id. */
+export function bandasDeLaPeticion(req: { headers?: any; user?: any }): string[] {
+  const ids = new Set<string>();
+  const sesion = req?.user?.band_id;
+  if (typeof sesion === 'string') variantesDeBanda(sesion).forEach((v) => ids.add(v));
+  const cabecera = req?.headers?.['x-band-id'];
+  if (typeof cabecera === 'string') variantesDeBanda(cabecera).forEach((v) => ids.add(v));
+  return Array.from(ids);
+}
+
+/**
+ * Middleware: tras cualquier escritura (POST/PUT/PATCH/DELETE) que termine bien, invalida la caché
+ * de estado de la banda afectada. Se monta una vez en server.ts, así una ruta nueva no depende de
+ * que alguien se acuerde de llamar a invalidateBandStateCache(). `invalidar` es inyectable para tests.
+ */
+export function invalidarCachePorEscritura(invalidar: (bandId: string) => void = invalidateBandStateCache) {
+  return (req: any, res: any, next: () => void) => {
+    const metodo = String(req?.method || '').toUpperCase();
+    if (metodo === 'GET' || metodo === 'HEAD' || metodo === 'OPTIONS') return next();
+    res.on('finish', () => {
+      if (res.statusCode >= 400) return;
+      try {
+        for (const id of bandasDeLaPeticion(req)) invalidar(id);
+      } catch (_) {
+        /* una caché no invalidada nunca debe romper una respuesta ya enviada */
+      }
+    });
+    next();
+  };
 }
 
 export async function loadStateFromSupabase(bandId: string, user?: any) {
