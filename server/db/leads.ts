@@ -382,7 +382,21 @@ export async function dbGetLeadById(id: string, bandId?: string) {
   return enrichLeadWithTelemetry(data);
 }
 
-export async function dbUpsertLead(lead: any, bandId: string) {
+/**
+ * Opciones de dbUpsertLead.
+ *
+ * `permitirVaciar`: lo usa la edición manual de una sala (PUT /api/leads/:id). Por defecto un
+ * campo vacío ("") significa "no sé este dato" y se conserva el valor que ya había —lo que
+ * necesitan los agentes, el Scout y las importaciones, que mandan fichas incompletas—. Eso
+ * mismo hacía IMPOSIBLE borrar a mano un email, un teléfono o una nota: al guardar, volvía el
+ * valor anterior. Con `permitirVaciar`, un campo de la ficha que llega como "" se guarda como "".
+ * Un campo que no llega (undefined) siempre conserva el valor existente.
+ */
+export interface UpsertLeadOptions {
+  permitirVaciar?: boolean;
+}
+
+export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLeadOptions = {}) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza: lo resuelve la ruta a partir de la sesión
   // (req.user.band_id). 'lead.band_id' viene del cuerpo de la petición sin validar, y
@@ -438,51 +452,36 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     rawTipo
   );
 
+  // Campo de texto de la ficha. Modo normal: el primer valor con contenido, o el existente.
+  // Modo `permitirVaciar`: el primer valor RECIBIDO (aunque sea ""), o el existente si no llegó.
+  const texto = (recibidos: any[], existente: any, porDefecto = ''): string => {
+    if (opciones.permitirVaciar) {
+      const recibido = recibidos.find((v) => v !== undefined && v !== null);
+      return recibido !== undefined ? String(recibido) : existente ?? porDefecto;
+    }
+    return recibidos.find(Boolean) || existente || porDefecto;
+  };
+
   const payload = {
     id: finalId,
     band_id: targetBandId,
     nombre_sala: finalCleanName || 'Espacio',
-    ciudad: lead.ciudad || existingRecord?.ciudad || '',
-    region: lead.region || existingRecord?.region || '',
-    direccion: lead.direccion || existingRecord?.direccion || '',
+    ciudad: texto([lead.ciudad], existingRecord?.ciudad),
+    region: texto([lead.region], existingRecord?.region),
+    direccion: texto([lead.direccion], existingRecord?.direccion),
     aforo: Number(lead.aforo || existingRecord?.aforo || 0),
-    genero: lead.genero || existingRecord?.genero || '',
+    genero: texto([lead.genero], existingRecord?.genero),
     tipo: finalCleanTipo,
-    email_contacto:
-      lead.email_contacto ||
-      lead.emailContacto ||
-      existingRecord?.email_contacto ||
-      '',
-    email_secundario:
-      lead.email_secundario ||
-      lead.emailSecundario ||
-      existingRecord?.email_secundario ||
-      '',
-    telefono:
-      lead.telefono ||
-      lead.telefono_movil ||
-      lead.telefono_fijo ||
-      existingRecord?.telefono ||
-      '',
-    telefono_movil:
-      lead.telefono_movil ||
-      lead.telefonoMovil ||
-      existingRecord?.telefono_movil ||
-      '',
-    telefono_fijo:
-      lead.telefono_fijo ||
-      lead.telefonoFijo ||
-      existingRecord?.telefono_fijo ||
-      '',
-    website: sanitizeWebsiteUrl(lead.website || existingRecord?.website || ''),
-    instagram: sanitizeInstagramHandle(
-      lead.instagram || existingRecord?.instagram || ''
-    ),
-    contacto_nombre:
-      lead.contacto_nombre ||
-      lead.contactoNombre ||
-      existingRecord?.contacto_nombre ||
-      '',
+    email_contacto: texto([lead.email_contacto, lead.emailContacto], existingRecord?.email_contacto),
+    email_secundario: texto([lead.email_secundario, lead.emailSecundario], existingRecord?.email_secundario),
+    telefono: opciones.permitirVaciar
+      ? texto([lead.telefono], existingRecord?.telefono)
+      : lead.telefono || lead.telefono_movil || lead.telefono_fijo || existingRecord?.telefono || '',
+    telefono_movil: texto([lead.telefono_movil, lead.telefonoMovil], existingRecord?.telefono_movil),
+    telefono_fijo: texto([lead.telefono_fijo, lead.telefonoFijo], existingRecord?.telefono_fijo),
+    website: sanitizeWebsiteUrl(texto([lead.website], existingRecord?.website)),
+    instagram: sanitizeInstagramHandle(texto([lead.instagram], existingRecord?.instagram)),
+    contacto_nombre: texto([lead.contacto_nombre, lead.contactoNombre], existingRecord?.contacto_nombre),
     fuente: lead.fuente || existingRecord?.fuente || 'manual',
     estado: lead.estado || existingRecord?.estado || 'nuevo',
     pitch_generado:
@@ -497,12 +496,8 @@ export async function dbUpsertLead(lead: any, bandId: string) {
       lead.fechaUltimaRespuesta ||
       existingRecord?.fecha_ultima_respuesta ||
       '',
-    contexto_extra:
-      lead.contexto_extra ||
-      lead.contextoExtra ||
-      existingRecord?.contexto_extra ||
-      '',
-    notas: lead.notas || existingRecord?.notas || '',
+    contexto_extra: texto([lead.contexto_extra, lead.contextoExtra], existingRecord?.contexto_extra),
+    notas: texto([lead.notas], existingRecord?.notas),
     icono: lead.icono || existingRecord?.icono || '🏛️',
     imagen_url:
       lead.imagen_url || lead.imagenUrl || existingRecord?.imagen_url || '',

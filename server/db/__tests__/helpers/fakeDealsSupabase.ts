@@ -6,7 +6,7 @@
  * `fallosPorTabla` solo la indicada (p. ej. tabla inexistente).
  */
 export function crearFakeDealsSupabase() {
-  const tablas: Record<string, any[]> = { concert_deals: [], deal_support_contributions: [] };
+  const tablas: Record<string, any[]> = { concert_deals: [], deal_support_contributions: [], leads: [] };
   const filas = tablas.concert_deals;
   const estado: {
     fallo: null | { code?: string; message: string };
@@ -54,6 +54,7 @@ export function crearFakeDealsSupabase() {
         return q;
       },
       eq: (c: string, v: any) => (filtros.push((f) => f[c] === v), q),
+      ilike: (c: string, v: string) => (filtros.push((f) => String(f[c] ?? '').toLowerCase() === String(v).toLowerCase()), q),
       gte: (c: string, v: any) => (filtros.push((f) => f[c] != null && f[c] >= v), q),
       in: (c: string, vs: any[]) => (filtros.push((f) => vs.includes(f[c])), q),
       order: (col: string, o?: { ascending?: boolean }) => ((orden = { col, asc: o?.ascending !== false }), q),
