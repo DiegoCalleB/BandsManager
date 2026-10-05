@@ -218,7 +218,8 @@ export const PublicDealView: React.FC = () => {
         throw new Error(data.error || 'Error al procesar la firma');
       }
 
-      setDeal(data.deal);
+      // La respuesta de /sign es parcial (solo estado y firma): se fusiona, no se sustituye
+      setDeal(prev => (prev ? { ...prev, ...data.deal } : data.deal));
       setSignSuccess(true);
     } catch (err: any) {
       alert(err.message || 'Error al confirmar el acuerdo');
@@ -259,11 +260,12 @@ export const PublicDealView: React.FC = () => {
   // Google Calendar URL Generator
   const googleCalendarUrl = React.useMemo(() => {
     if (!deal) return '#';
-    const cleanDate = deal.fecha_evento.replace(/-/g, '');
-    const startTime = (deal.hora_concierto || '21:30').replace(':', '') + '00';
+    if (!deal.fecha_evento) return '#';
+    const cleanDate = String(deal.fecha_evento).replace(/-/g, '');
+    const startTime = String(deal.hora_concierto || '21:30').replace(':', '') + '00';
     const endTime = '235900';
     const dates = `${cleanDate}T${startTime}/${cleanDate}T${endTime}`;
-    const text = encodeURIComponent(deal.nombre_evento);
+    const text = encodeURIComponent(deal.nombre_evento ?? '');
     const location = encodeURIComponent(`${deal.lugar_sala}, ${deal.ciudad}`);
     const details = encodeURIComponent(
       `Concierto confirmado con BandManager.io. Llegada: ${deal.hora_llegada}. Show: ${deal.hora_concierto}.`
