@@ -231,8 +231,18 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
   return results;
 }
 
-export async function autoEnrichLead(lead: any, userBandId: string): Promise<any> {
+export interface AutoEnrichOptions {
+  /**
+   * Campos que el usuario ha vaciado a propósito en esta edición. El enriquecimiento NO los
+   * vuelve a rellenar con lo que encuentre en la web de la sala (antes, borrar un email que
+   * aparecía en su web servía de poco: reaparecía en el guardado siguiente).
+   */
+  respetarVacios?: string[];
+}
+
+export async function autoEnrichLead(lead: any, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<any> {
   if (!lead || !lead.nombre_sala) return lead;
+  const respetarVacios = new Set(opciones.respetarVacios || []);
 
   let modified = false;
 
@@ -631,9 +641,14 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
     } catch (e) {}
   }
 
+  // Lo que el usuario vació a propósito se queda vacío, encuentre lo que encuentre la web.
+  for (const campo of respetarVacios) {
+    if (campo in lead) lead[campo] = '';
+  }
+
   if (modified) {
     console.log(`[AutoEnrich] Lead '${lead.nombre_sala}' enriquecido y guardado con éxito.`);
-    const savedEnriched = await dbUpsertLead(lead, userBandId);
+    const savedEnriched = await dbUpsertLead(lead, userBandId, { permitirVaciar: respetarVacios.size > 0 });
     const state = loadState();
     const idx = (state.leads || []).findIndex((l: any) => l.id === lead.id);
     if (idx !== -1) {

@@ -149,7 +149,12 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
       return res.status(400).json({ error: guarda.motivo, codigo: "email_contacto_invalido" });
     }
 
-    const saved = await dbUpsertLead(merged, userBandId);
+    // Edición manual: un campo que el usuario deja vacío se guarda vacío (antes volvía el valor
+    // anterior) y el enriquecimiento automático no vuelve a rellenarlo.
+    const camposVaciados = Object.keys(updatedFields || {}).filter(
+      (k) => updatedFields[k] === "" || updatedFields[k] === null
+    );
+    const saved = await dbUpsertLead(merged, userBandId, { permitirVaciar: true });
 
     // Dynamic Few-Shot & Self-Refining Tone DNA: registrar edición humana al aprobar o modificar el pitch
     const esAprobacion = updatedFields.estado === "aprobado" || updatedFields.estado === "aprobado_propuesta" || updatedFields.estado === "aprobado_respuesta";
@@ -170,7 +175,7 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
     }
 
     // Fire autoEnrichLead in background so request returns instantly
-    autoEnrichLead(saved, userBandId).catch(err => console.error("Error autoEnrichLead background:", err));
+    autoEnrichLead(saved, userBandId, { respetarVacios: camposVaciados }).catch(err => console.error("Error autoEnrichLead background:", err));
 
     res.json({ success: true, lead: saved });
   } catch (error: any) {
