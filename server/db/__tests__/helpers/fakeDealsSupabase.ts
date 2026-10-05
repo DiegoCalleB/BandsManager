@@ -19,6 +19,7 @@ export function crearFakeDealsSupabase() {
     let parche: any = null;
     let carga: any = null;
     let conflicto = 'id';
+    let ignorarDuplicados = false;
     let devuelve = false;
     const filtros: Array<(f: any) => boolean> = [];
     let limite = Infinity;
@@ -40,6 +41,7 @@ export function crearFakeDealsSupabase() {
         return { data: devuelve ? sel.map((f) => ({ ...f })) : null, error: null };
       }
       const i = datos.findIndex((f) => f[conflicto] === carga[conflicto]);
+      if (i >= 0 && ignorarDuplicados) return { data: devuelve ? [] : null, error: null };
       if (i >= 0) datos[i] = { ...datos[i], ...carga };
       else datos.push({ ...carga });
       const guardada = datos.find((f) => f[conflicto] === carga[conflicto]);
@@ -57,7 +59,9 @@ export function crearFakeDealsSupabase() {
       order: (col: string, o?: { ascending?: boolean }) => ((orden = { col, asc: o?.ascending !== false }), q),
       limit: (n: number) => ((limite = n), q),
       update: (p: any) => ((modo = 'update'), (parche = p), q),
-      upsert: (p: any, o?: { onConflict?: string }) => ((modo = 'upsert'), (carga = p), (conflicto = o?.onConflict || 'id'), q),
+      upsert: (p: any, o?: { onConflict?: string; ignoreDuplicates?: boolean }) => (
+        (modo = 'upsert'), (carga = p), (conflicto = o?.onConflict || 'id'), (ignorarDuplicados = !!o?.ignoreDuplicates), q
+      ),
       maybeSingle: async () => {
         const r: any = ejecutar();
         return { data: Array.isArray(r.data) ? r.data[0] ?? null : r.data, error: r.error };

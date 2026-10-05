@@ -71,6 +71,7 @@ export async function dbRecordDealSupport(input: {
   dealId: string;
   bandId: string;
   amountCents: number;
+  paymentIntentId?: string | null;
 }): Promise<boolean> {
   const { error } = await getSupabase()
     .from('deal_support_contributions')
@@ -80,9 +81,11 @@ export async function dbRecordDealSupport(input: {
         deal_id: input.dealId,
         band_id: cleanBandId(input.bandId),
         amount_cents: Math.max(0, Math.round(input.amountCents)),
+        stripe_payment_intent_id: input.paymentIntentId || null,
         paid_at: new Date().toISOString()
       },
-      { onConflict: 'id' }
+      // Si el webhook se repite, no se reescribe nada (ni paid_at ni los reembolsos ya anotados).
+      { onConflict: 'id', ignoreDuplicates: true }
     );
   if (error) {
     console.warn('[dealSupport] No se pudo registrar la aportación (el pago en Stripe sí se hizo):', error.message);
@@ -98,6 +101,7 @@ export async function dbRecordDealSupport(input: {
 export async function dbRecordDealSupportFromSession(session: {
   id?: string;
   amount_total?: number | null;
+  payment_intent?: string | { id?: string } | null;
   metadata?: Record<string, string> | null;
 }): Promise<boolean> {
   const bandId = session.metadata?.bandId;
@@ -110,6 +114,27 @@ export async function dbRecordDealSupportFromSession(session: {
     sessionId: session.id,
     dealId,
     bandId,
-    amountCents: session.amount_total ?? 0
+    amountCents: session.amount_total ?? 0,
+    paymentIntentId: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id
   });
+}
+
+/**
+ * Anota un reembolso (evento charge.refunded de Stripe). `amountRefundedCents` es el ACUMULADO
+ * que informa Stripe, no el delta, así que reaplicar el mismo evento es inocuo. Devuelve cuántas
+ * aportaciones se actualizaron: 0 si el cobro no era una aportación de bolo (p. ej. una
+ * donación de IA o una suscripción), lo cual es normal y se ignora sin ruido.
+ */
+export async function dbRecordDealSupportRefund(paymentIntentId: string, amountRefundedCents: number): Promise<number> {
+  if (!paymentIntentId) return 0;
+  const { data, error } = await getSupabase()
+    .from('deal_support_contributions')
+    .update({ reembolsado_cents: Math.max(0, Math.round(amountRefundedCents)) })
+    .eq('stripe_payment_intent_id', paymentIntentId)
+    .select('id');
+  if (error) {
+    if (!tablaAusente(error)) console.warn('[dealSupport] No se pudo anotar el reembolso:', error.message);
+    return 0;
+  }
+  return Array.isArray(data) ? data.length : 0;
 }
