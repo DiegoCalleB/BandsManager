@@ -1,5 +1,6 @@
 import express from "express";
 import Stripe from "stripe";
+import { dbRecordDealSupportFromSession } from "../db/dealSupport.js";
 import { getSupabase, dbUpsertRegisteredBand, normalizePlan, dbIsWebhookEventProcessed, dbRecordWebhookEvent, dbSettleAiDonation } from "../db.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 
@@ -734,6 +735,12 @@ async function handleWebhook(req: express.Request, res: express.Response) {
           } else {
             console.warn("[Stripe Webhook] Sesión de donación sin bandId en metadata; se ignora.");
           }
+          break;
+        }
+
+        // Aportación voluntaria al cerrar un bolo: se registra y NO toca ni el plan ni la deuda de IA.
+        if (session.metadata?.kind === "deal_support") {
+          await dbRecordDealSupportFromSession(session);
           break;
         }
 

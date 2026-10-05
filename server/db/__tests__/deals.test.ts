@@ -25,6 +25,7 @@ import {
   dbSignDeal,
   computeDealSha256,
   calcularComision,
+  COMISION_PORCENTAJE_DEFAULT,
   DealError
 } from '../deals.js';
 
@@ -78,28 +79,33 @@ describe('deals: capa de datos', () => {
     });
   });
 
-  describe('comisión: la fija el servidor', () => {
-    it('calcula el 5% y el neto con dos decimales', () => {
-      expect(calcularComision(600)).toEqual({ comision_porcentaje: 5, comision_importe: 30, neto_banda: 570 });
-      expect(calcularComision(333.33).comision_importe).toBe(16.67);
+  describe('comisión: la fija el servidor (de momento 0, aportación voluntaria)', () => {
+    it('por defecto no cobra comisión', () => {
+      expect(COMISION_PORCENTAJE_DEFAULT).toBe(0);
+      expect(calcularComision(600)).toEqual({ comision_porcentaje: 0, comision_importe: 0, neto_banda: 600 });
     });
 
-    it('ignora el porcentaje que intente mandar el cliente', async () => {
+    it('sigue calculando bien un porcentaje explícito (para cuando se active con Stripe Connect)', () => {
+      expect(calcularComision(600, 5)).toEqual({ comision_porcentaje: 5, comision_importe: 30, neto_banda: 570 });
+      expect(calcularComision(333.33, 5).comision_importe).toBe(16.67);
+    });
+
+    it('ignora cualquier comisión que intente mandar el cliente', async () => {
       const d = await dbUpsertDeal(
         {
           band_id: banda,
           lugar_sala: 'Sala X',
           fecha_evento: '2026-12-01',
           total_acordado: 1000,
-          comision_porcentaje: 0,
-          comision_importe: 0,
-          neto_banda: 1000
+          comision_porcentaje: 50,
+          comision_importe: 500,
+          neto_banda: 500
         },
         banda
       );
-      expect(d.comision_porcentaje).toBe(5);
-      expect(d.comision_importe).toBe(50);
-      expect(d.neto_banda).toBe(950);
+      expect(d.comision_porcentaje).toBe(0);
+      expect(d.comision_importe).toBe(0);
+      expect(d.neto_banda).toBe(1000);
     });
   });
 

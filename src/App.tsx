@@ -10,6 +10,7 @@ import { Lead, LeadStatus, ThemeName, ThemeColors } from "./types";
 import { THEMES, getEspectroColors } from "./utils/theme";
 import { useAuth } from "./hooks/useAuth";
 import { useAppData } from "./hooks/useAppData";
+import { DealSupportPrompt } from "./components/booking/DealSupportPrompt";
 import { api } from "./services/api";
 import { PlayerProvider } from "./context/PlayerContext";
 import { GlobalPlayer } from "./components/GlobalPlayer";
@@ -2776,6 +2777,13 @@ export default function App() {
             }}
             onSelectMission={(targetView) => handleNavigate(targetView)}
             bandName={currentActiveBandName}
+          />
+
+          {/* Aviso tras la firma de la sala: aportación voluntaria a BandManager (opcional) */}
+          <DealSupportPrompt
+            key={`apoyo-${cleanActiveBandId || "default"}`}
+            isLoggedIn={isLoggedIn}
+            bandId={currentUser?.band_id}
           />
 
           {/* Comprehensive Band Profile Setup Wizard */}
