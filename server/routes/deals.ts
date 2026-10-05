@@ -7,7 +7,8 @@ import {
   dbGetDealByLeadId,
   dbUpsertDeal,
   dbSignDeal,
-  DealData
+  DealData,
+  DealError
 } from '../db/deals.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import {
@@ -20,6 +21,26 @@ import { dbGetUsers } from '../db/users.js';
 import { invalidateBandStateCache } from '../db/sync.js';
 
 export const dealsRouter = Router();
+
+/** Código HTTP de un error de acuerdos: los DealError llevan el suyo (404/409/410/503...). */
+function estadoHttp(error: any, porDefecto: number): number {
+  return error instanceof DealError ? error.status : porDefecto;
+}
+
+/**
+ * IP del firmante para la traza de auditoría. La cabecera X-Forwarded-For la puede escribir el
+ * propio cliente (su valor va a la IZQUIERDA); el proxy de Railway añade la IP real con la que
+ * conectó a la DERECHA. Antes se cogía la primera entrada, o sea, la falsificable: cualquiera
+ * podía firmar "desde" otra IP. Se usa la última entrada, que añade la infraestructura.
+ */
+export function ipFirmante(req: Request): string {
+  const cadena = String(req.headers['x-forwarded-for'] || '')
+    .split(',')
+    .map((x) => x.trim())
+    .filter(Boolean);
+  const ip = cadena.length > 0 ? cadena[cadena.length - 1] : req.socket?.remoteAddress || req.ip || '127.0.0.1';
+  return ip.slice(0, 45);
+}
 
 // ============================================================================
 // 1. RUTAS PRIVADAS (Panel de la Banda con Auth y Multi-tenant Scoping)
@@ -148,9 +169,6 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
       tipo_remuneracion: tipo_remuneracion || 'cache_fijo',
       cache_base: Number(cache_base ?? 0),
       total_acordado: Number(total_acordado ?? cache_base ?? 0),
-      comision_porcentaje: Number(req.body.comision_porcentaje ?? 5),
-      comision_importe: Number(req.body.comision_importe ?? Math.round((Number(total_acordado ?? cache_base ?? 0) * 5) / 100)),
-      neto_banda: Number(req.body.neto_banda ?? (Number(total_acordado ?? cache_base ?? 0) - Math.round((Number(total_acordado ?? cache_base ?? 0) * 5) / 100))),
       forma_pago: forma_pago || 'efectivo',
       rider_incluido: rider_incluido ?? true,
       rider_texto: rider_texto ? sanitizeExternalText(rider_texto) : '',
@@ -168,7 +186,7 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error('[dealsRouter] Error al crear/actualizar acuerdo:', error);
-    return res.status(500).json({ error: error.message || 'Error al persistir acuerdo' });
+    return res.status(estadoHttp(error, 500)).json({ error: error.message || 'Error al persistir acuerdo' });
   }
 });
 
@@ -251,7 +269,7 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
     return res.status(200).json({ success: true, deal: publicDeal });
   } catch (error: any) {
     console.error('[dealsRouter] Error al obtener vista pública de acuerdo:', error);
-    return res.status(500).json({ error: 'Error al consultar el acuerdo' });
+    return res.status(estadoHttp(error, 500)).json({ error: 'Error al consultar el acuerdo' });
   }
 });
 
@@ -288,12 +306,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
     }
 
     // Trazabilidad de Auditoría (Audit Trail)
-    const ip = (
-      (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
-      req.socket.remoteAddress ||
-      req.ip ||
-      '127.0.0.1'
-    ).slice(0, 45);
+    const ip = ipFirmante(req);
 
     const userAgent = (req.headers['user-agent'] || 'Desconocido').slice(0, 255);
 
@@ -394,7 +407,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
     });
   } catch (error: any) {
     console.error('[dealsRouter] Error al firmar acuerdo:', error);
-    return res.status(400).json({ error: error.message || 'Error al procesar la firma del acuerdo' });
+    return res.status(estadoHttp(error, 400)).json({ error: error.message || 'Error al procesar la firma del acuerdo' });
   }
 });
 
