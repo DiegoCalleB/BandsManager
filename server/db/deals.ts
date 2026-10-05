@@ -5,6 +5,7 @@ import { dbUpsertConcert } from './concerts.js';
 import { dbUpsertLead, dbGetLeadById } from './leads.js';
 import { invalidateBandStateCache } from './sync.js';
 import { loadState, saveState } from '../state.js';
+import { normalizarApoyoPorcentaje } from '../utils/dealSupport.js';
 
 export interface DealData {
   id?: string;
@@ -24,6 +25,8 @@ export interface DealData {
   comision_porcentaje?: number;
   comision_importe?: number;
   neto_banda?: number;
+  /** Apoyo voluntario a BandManager elegido por la banda (NO forma parte del contrato ni del sello). */
+  apoyo_porcentaje?: number | null;
   forma_pago?: 'efectivo' | 'transferencia' | 'pago_diferido_ayto';
   rider_incluido?: boolean;
   rider_texto?: string;
@@ -230,6 +233,12 @@ export async function dbUpsertDeal(
     cache_base: cacheBase,
     total_acordado: totalAcordado,
     ...comision,
+    // null = no eligió (sugerencia por defecto), 0 = no apoyar, 0,5-20 = su elección. Si no llega en
+    // una edición, se conserva lo que ya había elegido.
+    apoyo_porcentaje:
+      deal.apoyo_porcentaje !== undefined
+        ? normalizarApoyoPorcentaje(deal.apoyo_porcentaje)
+        : (existing?.apoyo_porcentaje ?? null),
     forma_pago: deal.forma_pago || 'efectivo',
     rider_incluido: deal.rider_incluido ?? true,
     rider_texto: deal.rider_texto || '',
@@ -240,10 +249,18 @@ export async function dbUpsertDeal(
     updated_at: new Date().toISOString()
   };
 
-  const { data, error } = await tablaDeals()
+  let { data, error } = await tablaDeals()
     .upsert(payload, { onConflict: 'id' })
     .select('*')
     .maybeSingle();
+
+  // La columna apoyo_porcentaje es posterior al resto del esquema: si la migración aún no está
+  // aplicada, el acuerdo se guarda igualmente (sin esa preferencia) en vez de dejar de funcionar.
+  if (error && /apoyo_porcentaje/.test(String(error.message || ''))) {
+    console.warn('[deals] Falta la columna apoyo_porcentaje (migración 20261007): se guarda sin ella.');
+    const { apoyo_porcentaje: _omitida, ...sinApoyo } = payload;
+    ({ data, error } = await tablaDeals().upsert(sinApoyo, { onConflict: 'id' }).select('*').maybeSingle());
+  }
   if (error) fallo(error, 'guardar el');
 
   return (data as DealData) || payload;

@@ -58,9 +58,31 @@ describe('aportación voluntaria al cerrar un bolo', () => {
       const r = res();
       await handler('/donations/deal-support', 'get')({}, r);
       expect(r.body.deals).toEqual([
-        { deal_id: 'd1', lugar_sala: 'Sala Capitol', ciudad: 'Santiago', fecha_evento: '2026-12-01', total_acordado: 600, suggested_cents: 1800 }
+        { deal_id: 'd1', lugar_sala: 'Sala Capitol', ciudad: 'Santiago', fecha_evento: '2026-12-01', total_acordado: 600, suggested_cents: 1800, apoyo_porcentaje: null }
       ]);
       expect(r.body.min_cents).toBe(100);
+    });
+
+    it('usa el porcentaje que eligió la banda (5 % de 600 = 30 €) en la lista y en el checkout', async () => {
+      listSupportable.mockResolvedValue([
+        { id: 'd5', lugar_sala: 'Sala Capitol', ciudad: 'Santiago', fecha_evento: '2026-12-01', total_acordado: 600, apoyo_porcentaje: 5 }
+      ]);
+      const r = res();
+      await handler('/donations/deal-support', 'get')({}, r);
+      expect(r.body.deals[0]).toMatchObject({ suggested_cents: 3000, apoyo_porcentaje: 5 });
+
+      getDeal.mockResolvedValue({ id: 'd5', estado: 'confirmado', lugar_sala: 'S', total_acordado: 600, apoyo_porcentaje: 5 });
+      await handler('/donations/deal-support/create-checkout-session', 'post')({ body: { dealId: 'd5' } }, res());
+      expect(preciosCreate.mock.calls.at(-1)![0].custom_unit_amount.preset).toBe(3000);
+    });
+
+    it('sin elección previa usa la sugerencia por defecto (3 %)', async () => {
+      listSupportable.mockResolvedValue([
+        { id: 'dn', lugar_sala: 'S', ciudad: '', fecha_evento: '2026-12-01', total_acordado: 600, apoyo_porcentaje: null }
+      ]);
+      const r = res();
+      await handler('/donations/deal-support', 'get')({}, r);
+      expect(r.body.deals[0].suggested_cents).toBe(1800);
     });
 
     it('403 sin banda; y ante un fallo interno no rompe la app (lista vacía)', async () => {

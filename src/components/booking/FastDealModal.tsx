@@ -20,6 +20,15 @@ import {
   Info
 } from 'lucide-react';
 import { Button, Input } from '../ui';
+
+/** % que viene marcado por defecto y opciones rápidas. El importe real lo calcula el servidor. */
+const APOYO_PORCENTAJE_DEFECTO = 3;
+const APOYO_OPCIONES_RAPIDAS = [0, 3, 5];
+const APOYO_PORCENTAJE_MAX = 20;
+
+/** Solo para mostrar "≈ X €" en el formulario; la cifra que se propone la fija el servidor. */
+const apoyoAproximado = (cache: number, pct: number) =>
+  pct > 0 && cache > 0 ? Math.min(500, Math.max(1, Math.round((cache * pct) / 100))) : 0;
 import { useApoyableDeals } from '../../hooks/useApoyableDeals';
 import { DealSupportCard } from './DealSupportCard';
 
@@ -44,6 +53,10 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
   const [horaConcierto, setHoraConcierto] = useState('21:30');
   const [tipoRemuneracion, setTipoRemuneracion] = useState<'cache_fijo' | 'taquilla'>('cache_fijo');
   const [cacheBase, setCacheBase] = useState<number>(500);
+  // Apoyo voluntario a BandManager (0 = no apoyar). No se descuenta del caché ni entra en el
+  // contrato con la sala: solo fija el importe que se propondrá a la banda cuando la sala firme.
+  const [apoyoPorcentaje, setApoyoPorcentaje] = useState<number>(APOYO_PORCENTAJE_DEFECTO);
+  const [apoyoOtro, setApoyoOtro] = useState(false);
   const [formaPago, setFormaPago] = useState<'efectivo' | 'transferencia' | 'pago_diferido_ayto'>('efectivo');
   const [incluirRider, setIncluirRider] = useState(true);
   const [hospitalidadNotas, setHospitalidadNotas] = useState('');
@@ -101,6 +114,11 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
             setHoraLlegada(data.deal.hora_llegada || '18:30');
             setHoraConcierto(data.deal.hora_concierto || '21:30');
             setFormaPago(data.deal.forma_pago || 'efectivo');
+            if (data.deal.apoyo_porcentaje !== null && data.deal.apoyo_porcentaje !== undefined) {
+              const pct = Number(data.deal.apoyo_porcentaje);
+              setApoyoPorcentaje(pct);
+              setApoyoOtro(!APOYO_OPCIONES_RAPIDAS.includes(pct));
+            }
           } else {
             setDealGenerated(null);
           }
@@ -143,6 +161,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
           cache_base: Number(cacheBase) || 0,
           total_acordado: Number(cacheBase) || 0,
           forma_pago: formaPago,
+          apoyo_porcentaje: apoyoPorcentaje,
           rider_incluido: incluirRider,
           hospitalidad_notas: hospitalidadNotas
         })
@@ -334,19 +353,85 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                 </div>
               </div>
 
-              {/* LIQUIDACIÓN: sin comisión; la aportación a BandManager es voluntaria y llega al firmar la sala */}
-              <div className="rounded-[var(--r-s)] bg-[var(--sunken)] p-3 space-y-1.5">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[var(--ink-2)]">Caché que abona la sala</span>
-                  <span className="font-bold text-[var(--ink)] font-mono">{cacheBase || 0} €</span>
+              {/* LIQUIDACIÓN: sin comisión. El apoyo a BandManager es voluntario y se pide al firmar la sala. */}
+              <div className="rounded-[var(--r-s)] bg-[var(--sunken)] p-3 space-y-3">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--ink-2)]">Caché que abona la sala</span>
+                    <span className="font-bold text-[var(--ink)] font-mono">{cacheBase || 0} €</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--ink-2)]">Comisión de BandManager</span>
+                    <span className="font-bold text-[var(--ink)] font-mono">0 €</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[var(--ink-2)]">Comisión de BandManager</span>
-                  <span className="font-bold text-[var(--ink)] font-mono">0 €</span>
+
+                <div className="space-y-2">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="text-xs font-semibold text-[var(--ink)]">Apoyo voluntario a BandManager</span>
+                    <span className="text-[11px] text-[var(--ink-3)]">opcional</span>
+                  </div>
+
+                  <div role="radiogroup" aria-label="Apoyo voluntario a BandManager" className="flex flex-wrap items-center gap-1.5">
+                    {APOYO_OPCIONES_RAPIDAS.map((pct) => {
+                      const activo = !apoyoOtro && apoyoPorcentaje === pct;
+                      return (
+                        <Button
+                          key={pct}
+                          type="button"
+                          role="radio"
+                          aria-checked={activo}
+                          size="sm"
+                          variant={activo ? 'inverse' : 'raised'}
+                          onClick={() => {
+                            setApoyoOtro(false);
+                            setApoyoPorcentaje(pct);
+                          }}
+                        >
+                          {pct === 0 ? 'Ahora no' : `${pct} %`}
+                        </Button>
+                      );
+                    })}
+                    <Button
+                      type="button"
+                      role="radio"
+                      aria-checked={apoyoOtro}
+                      size="sm"
+                      variant={apoyoOtro ? 'inverse' : 'raised'}
+                      onClick={() => {
+                        setApoyoOtro(true);
+                        if (APOYO_OPCIONES_RAPIDAS.includes(apoyoPorcentaje)) setApoyoPorcentaje(10);
+                      }}
+                    >
+                      Otro
+                    </Button>
+                    {apoyoOtro && (
+                      <label className="flex items-center gap-1 text-xs text-[var(--ink-2)]">
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          min={0.5}
+                          max={APOYO_PORCENTAJE_MAX}
+                          step={0.5}
+                          value={apoyoPorcentaje}
+                          onChange={(e) => {
+                            const n = Number(e.target.value);
+                            setApoyoPorcentaje(Number.isFinite(n) ? Math.min(APOYO_PORCENTAJE_MAX, Math.max(0, n)) : 0);
+                          }}
+                          aria-label="Porcentaje de apoyo"
+                          className="w-16 rounded-[var(--r-s)] bg-[var(--surface)] px-2 py-1.5 text-xs text-[var(--ink)] focus:outline-none"
+                        />
+                        <span>%</span>
+                      </label>
+                    )}
+                  </div>
+
+                  <p className="text-[11px] leading-snug text-[var(--ink-3)]">
+                    {apoyoPorcentaje > 0
+                      ? `No se descuenta del caché ni forma parte del contrato con la sala. Cuando la sala firme te propondremos ≈ ${apoyoAproximado(Number(cacheBase) || 0, apoyoPorcentaje)} € y podrás cambiar la cifra o cerrar sin pagar.`
+                      : 'No te lo volveremos a pedir con este bolo.'}
+                  </p>
                 </div>
-                <p className="pt-1 text-[11px] leading-snug text-[var(--ink-3)]">
-                  El caché es íntegro para la banda. Cuando la sala firme, podrás apoyar BandManager con la cifra que quieras (opcional).
-                </p>
               </div>
             </div>
 
