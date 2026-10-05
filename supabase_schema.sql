@@ -299,6 +299,17 @@ CREATE TABLE IF NOT EXISTS epk_configs (
     plantilla TEXT DEFAULT 'stage',
     orden_secciones JSONB DEFAULT '[]'::jsonb,
     secciones_ocultas JSONB DEFAULT '[]'::jsonb,
+    genero TEXT DEFAULT '',
+    frase_impacto TEXT DEFAULT '',
+    bandas_similares JSONB DEFAULT '[]'::jsonb,
+    mostrar_bandas_similares BOOLEAN DEFAULT FALSE,
+    rider_config JSONB DEFAULT '{}'::jsonb,
+    idioma TEXT,
+    font_style TEXT,
+    tipografia TEXT,
+    audio_preview JSONB DEFAULT '{}'::jsonb,
+    cifras_clave JSONB DEFAULT '{}'::jsonb,
+    resenas_prensa JSONB DEFAULT '{}'::jsonb,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
